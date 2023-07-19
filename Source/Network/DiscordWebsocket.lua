@@ -58,7 +58,7 @@ function DiscordWebsocket.Prototype:CreateOperationalObservers()
 		if dataPacket then
 			self.OperationProvider:InvokeObservers("ClientReconnectAsync")
 		else
-			-- do something else!
+			error(`Discord session was invalidated, please ensure that the bot's permissions & token is correct!`)
 		end
 	end))
 
