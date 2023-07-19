@@ -6,10 +6,14 @@ local Event = require("../Dependencies/Event")
 
 local Observer = require("../Dependencies/Observer")
 local Provider = require("../Dependencies/Provider")
+local Buffer = require("../Dependencies/Buffer")
 
 local Net = require("@lune/net")
+local Serde = require("@lune/serde")
 local Process = require("@lune/process")
 local Task = require("@lune/task")
+
+local ZLIB_SUFFIX = "\120\156\133\84"
 
 local DiscordWebsocket = {}
 
@@ -111,7 +115,7 @@ end
 function DiscordWebsocket.Prototype:SendAsync(dataPacket)
 	return Promise.new(function(resolve, reject)
 		local messageSendOperationSuccessful, messageResult =
-			true, self.SocketInstance.send(Net.jsonEncode(dataPacket, false))
+			true, self.SocketInstance.send(Serde.encode("json", dataPacket))
 
 		if messageSendOperationSuccessful then
 			resolve()
@@ -131,8 +135,6 @@ function DiscordWebsocket.Prototype:IdentifyAsync()
 
 		-- // TO-DO: Implement the following settings:
 		-- sharding
-		-- compression
-		-- presence
 
 		self:SendAsync({
 			[WebsocketOperationKeys.OperationCode] = WebsocketOperationCodes.Identify,
@@ -144,7 +146,7 @@ function DiscordWebsocket.Prototype:IdentifyAsync()
 					["browser"] = "DiscordLuaU",
 					["device"] = "DiscordLuaU",
 				},
-				["compress"] = false,
+				["compress"] = true,
 				["large_threshold"] = 250,
 				["shard"] = { 0, 1 },
 			},
@@ -238,6 +240,7 @@ end
 function DiscordWebsocket.Interface.new(discordClient)
 	local websocket = setmetatable({
 		WebsocketActive = false,
+		WebsocketBuffer = Buffer.new(),
 
 		OnMessageRecv = Event.new(),
 		OnSocketDead = Event.new(),
@@ -259,7 +262,20 @@ function DiscordWebsocket.Interface.new(discordClient)
 	end)
 
 	websocket.OnMessageRecv:Connect(function(discordPacket)
-		local dataPacket = Net.jsonDecode(discordPacket)
+		local isJSON, dataPacket = pcall(Serde.decode, "json", discordPacket)
+
+		if not isJSON then
+			websocket.WebsocketBuffer:Add(discordPacket)
+
+			if string.sub(discordPacket, 1, 4) ~= ZLIB_SUFFIX then
+				return
+			end
+
+			local encodedDiscordPacket = websocket.WebsocketBuffer:Flush()
+			local decodedDiscordPacket = Serde.decompress("zlib", encodedDiscordPacket)
+
+			dataPacket = Serde.decode("json", decodedDiscordPacket)
+		end
 
 		websocket.WebsocketMessageSequence = dataPacket[WebsocketOperationKeys.Sequence]
 		websocket.OperationProvider:InvokeObservers(
