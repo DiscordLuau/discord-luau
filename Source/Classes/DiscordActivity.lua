@@ -1,3 +1,5 @@
+local Enumeration = require("../Dependencies/Enumeration")
+
 local DiscordActivity = {}
 
 DiscordActivity.Type = "DiscordActivity"
@@ -8,55 +10,46 @@ DiscordActivity.Prototype = {
 	Internal = DiscordActivity.Internal,
 }
 
-DiscordActivity.Interface.ActivityType = {
+DiscordActivity.Interface.Type = Enumeration.new({
 	Game = 0,
 	Streaming = 1,
 	Listening = 2,
 	Watching = 3,
-	Custom = 4,
 	Competing = 5,
-}
+})
 
-function DiscordActivity.Prototype:SetActivityName(activity) end
+function DiscordActivity.Prototype:SetActivityName(activityName)
+	self.Name = activityName
+end
 
-function DiscordActivity.Prototype:SetActivityType(activityType) end
+function DiscordActivity.Prototype:SetActivityType(activityType)
+	assert(DiscordActivity.Interface.Type:Is(activityType), `Expected 'activityType' to of class 'ActivityType'`)
 
-function DiscordActivity.Prototype:SetStreamingURL(streamURL) end
+	self.ActivityType = activityType
+end
 
-function DiscordActivity.Prototype:SetTimestamps(streamURL) end
+function DiscordActivity.Prototype:SetStreamingURL(streamURL)
+	if not string.find(streamURL, "youtube.com") and not string.find(streamURL, "twitch.tv") then
+		return
+	end
 
-function DiscordActivity.Prototype:SetApplicationId(applicationId) end
+	self.StreamingURL = streamURL
+end
 
-function DiscordActivity.Prototype:SetActivityDetails(detail) end
-
-function DiscordActivity.Prototype:SetActivityState(state) end
-
-function DiscordActivity.Prototype:SetActivityEmoji(emojiName, emojiId, emojiAnimated) end
-
-function DiscordActivity.Prototype:SetActivityParty(partyName, partySize) end
-
-function DiscordActivity.Prototype:SetActivityLargeImage(largeImageAsset, largeImageText) end
-
-function DiscordActivity.Prototype:SetActivitySmallImage(largeImageAsset, largeImageText) end
-
-function DiscordActivity.Prototype:SetActivityJoinSecret(joinSecret) end
-
-function DiscordActivity.Prototype:SetActivitySpectateSecret(joinSecret) end
-
-function DiscordActivity.Prototype:SetActivityMatchSecret(joinSecret) end
-
-function DiscordActivity.Prototype:AddButton(buttonLabel, buttonUrl) end
-
-function DiscordActivity.Prototype:RemoveButton(buttonLabel, buttonUrl) end
+function DiscordActivity.Prototype:ToJSONObject()
+	return {
+		name = self.Name or "",
+		type = self.ActivityType or 0,
+		url = self.StreamingURL
+	}
+end
 
 function DiscordActivity.Prototype:ToString()
-	return `{DiscordActivity.Type}<{"a"}>`
+	return `{DiscordActivity.Type}<{self.Name or "Unknown Activity"}>`
 end
 
 function DiscordActivity.Interface.new()
-	return setmetatable({
-		Object = {},
-	}, {
+	return setmetatable({ }, {
 		__index = DiscordActivity.Prototype,
 		__type = DiscordActivity.Type,
 		__tostring = function(self)
