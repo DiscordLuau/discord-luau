@@ -1,18 +1,20 @@
+local DotEnv = require("../.env")
 local DiscordLuaU = require("../Source/init")
 
-local DISCORD_BOT_TOKEN = "NzI2ODE5MTc5MDU0ODkxMTQ5.G65VEW.--------------------------------------"
+local DiscordSettings = DiscordLuaU.DiscordSettings.new(DotEnv.DISCORD_BOT_TOKEN)
 
-local DiscordClient = DiscordLuaU.DiscordClient.new({
-	token = DISCORD_BOT_TOKEN,
-	intents = DiscordLuaU.DiscordIntents.default(),
-})
+DiscordSettings:SetIntents(DiscordLuaU.DiscordIntents.all())
 
--- DiscordClient:Subscribe("OnMessage", function(discordUser, discordMessage)
--- 	print(discordUser, discordMessage)
--- end)
+local DiscordClient = DiscordLuaU.DiscordClient.new(DiscordSettings)
+
+-- DiscordClient:SetVerboseLogging(true)
+
+DiscordClient:Subscribe("OnMessage", function(discordMessage)
+	print(`User '{discordMessage.Author.GlobalName}': '{discordMessage.Content}'`)
+end)
 
 DiscordClient:Subscribe("OnReady", function()
-	print(`Bot '{DiscordClient.Username}#{DiscordClient.Discriminator}' is online!`)
+	print(`Aplication '{DiscordClient.User.Username}' is online!`)
 
 	local discordPresence = DiscordLuaU.DiscordPresence.new()
 	local discordActivity = DiscordLuaU.DiscordActivity.new()
@@ -24,9 +26,7 @@ DiscordClient:Subscribe("OnReady", function()
 	discordPresence:AddActivity(discordActivity)
 
 	DiscordClient:UpdatePresenceAsync(discordPresence):andThen(function()
-		print(
-			`Updated '{DiscordClient.Username}#{DiscordClient.Discriminator}' activity!`
-		)
+		print(`Updated Application '{DiscordClient.User.Username}' discord status!`)
 	end)
 end)
 
