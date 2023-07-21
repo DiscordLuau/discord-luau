@@ -1,0 +1,3 @@
+return {
+	BotGateway = "gateway/bot"
+}
