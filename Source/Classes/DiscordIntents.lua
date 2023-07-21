@@ -85,4 +85,10 @@ function DiscordIntents.Interface.default()
 	return DiscordIntents.Interface.new(defaultIntents)
 end
 
+function DiscordIntents.Interface.all()
+	local defaultIntents = table.clone(DiscordIntents.Interface.Intents)
+
+	return DiscordIntents.Interface.new(defaultIntents)
+end
+
 return DiscordIntents.Interface
