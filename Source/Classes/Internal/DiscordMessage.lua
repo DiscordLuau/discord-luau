@@ -1,5 +1,9 @@
 local Styleguide = require("../../Utils/Styleguide")
 
+local DiscordEndpoints = require("../../Enums/DiscordEndpoints")
+
+local Promise = require("../../Dependencies/Github/Promise")
+
 local DiscordMessage = {}
 
 DiscordMessage.Type = "DiscordMessage"
@@ -9,6 +13,27 @@ DiscordMessage.Interface = {}
 DiscordMessage.Prototype = {
 	Internal = DiscordMessage.Internal,
 }
+
+function DiscordMessage.Prototype:ReplyAsync(messageStr)
+	return Promise.new(function(resolve, reject)
+		self.DiscordClient.Gateway:PostAsync(string.format(
+			DiscordEndpoints.BotCreateMessage,
+			self.ChannelId
+		), {
+			content = messageStr,
+			message_reference = {
+				message_id = self.Id,
+				channel_id = self.ChannelId,
+				guild_id = self.GuildId,
+				fail_if_not_exists = false
+			}
+		}):andThen(function()
+			resolve()
+		end):catch(function(...)
+			reject(...)
+		end)
+	end)
+end
 
 function DiscordMessage.Prototype:ToString()
 	return `{DiscordMessage.Type}<{self.Id}>`
