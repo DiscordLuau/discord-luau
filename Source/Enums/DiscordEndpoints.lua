@@ -1,3 +1,6 @@
 return {
-	BotGateway = "gateway/bot"
+	BotGateway = "gateway/bot",
+
+	BotGetChannel = "channels/%s",
+	BotCreateMessage = "channels/%s/messages"
 }
