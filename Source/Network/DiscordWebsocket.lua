@@ -133,8 +133,6 @@ function DiscordWebsocket.Interface.new(discordClient)
 	end)
 
 	self.OnMessageRecv:Connect(function(discordPacket)
-		
-
 		local isJSON, dataPacket = pcall(Serde.decode, "json", discordPacket)
 
 		if not isJSON then
