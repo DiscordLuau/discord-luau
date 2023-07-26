@@ -15,10 +15,11 @@ local DiscordGateway = require("../Network/DiscordGateway")
 
 local DiscordUser = require("Internal/DiscordUser")
 local DiscordMember = require("Internal/DiscordMember")
-local DiscordMessage = require("Internal/DiscordMessage")
 local DiscordChannel = require("Internal/DiscordChannel")
 local DiscordApplication = require("Internal/DiscordApplication")
 local DiscordGuild = require("Internal/DiscordGuild")
+
+local DiscordMessage = require("DiscordMessage")
 
 local Task = require("@lune/task")
 

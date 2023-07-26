@@ -1,8 +1,8 @@
-local Styleguide = require("../../Utils/Styleguide")
+local Styleguide = require("../Utils/Styleguide")
 
-local DiscordEndpoints = require("../../Enums/DiscordEndpoints")
+local DiscordEndpoints = require("../Enums/DiscordEndpoints")
 
-local Promise = require("../../Dependencies/Github/Promise")
+local Promise = require("../Dependencies/Github/Promise")
 
 local DiscordMessage = {}
 
@@ -35,6 +35,31 @@ function DiscordMessage.Prototype:ReplyAsync(messageStr)
 	end)
 end
 
+function DiscordMessage.Prototype:AddEmbed(embedObject)
+	table.insert(self.Embeds, embedObject)
+end
+
+function DiscordMessage.Prototype:RemoveEmbed(embedObject)
+	local index = table.find(self.Embeds, embedObject)
+
+	if index then
+		table.remove(self.Embeds, index)
+	end
+end
+
+function DiscordMessage.Prototype:ToJSONObject()
+	local discordEmbeds = {}
+
+	for index, discordEmbed in self.Embeds do
+		discordEmbeds[index] = discordEmbed:ToJSONObject()
+	end
+
+	return {
+		content = self.Content,
+		embeds = discordEmbeds
+	}
+end
+
 function DiscordMessage.Prototype:ToString()
 	return `{DiscordMessage.Type}<{self.Id}>`
 end
@@ -56,6 +81,16 @@ function DiscordMessage.Interface.from(discordClient, rawJsonData, discordAuthor
 			return object:ToString()
 		end,
 	}))
+end
+
+function DiscordMessage.Interface.new(messageContent)
+	return setmetatable({ Content = messageContent, Embeds = { } }, {
+		__index = DiscordMessage.Prototype,
+		__type = DiscordMessage.Type,
+		__tostring = function(object)
+			return object:ToString()
+		end,
+	})
 end
 
 return DiscordMessage.Interface
