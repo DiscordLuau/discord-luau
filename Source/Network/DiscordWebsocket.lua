@@ -66,8 +66,6 @@ function DiscordWebsocket.Prototype:ConnectAsync(websocketUrl)
 			resolve()
 
 			while self.WebsocketActive.Value do
-				Task.wait(1)
-
 				if self.SocketInstance.closeCode then
 					self.WebsocketActive:Set(false)
 					self.OnSocketDead:Fire(self.SocketInstance.closeCode)
