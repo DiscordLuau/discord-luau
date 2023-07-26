@@ -47,7 +47,7 @@ function DiscordShard.Prototype:ObserveWebsocketOperations()
 		Task.wait(math.random())
 
 		self:HeartbeatAsync(true):andThen(function()
-			self:HeartbeatIn(data.heartbeat_interval)
+			self:HeartbeatIn(data.heartbeat_interval * math.random())
 		end)
 	end))
 
