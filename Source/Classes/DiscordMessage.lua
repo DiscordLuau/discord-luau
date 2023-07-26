@@ -14,20 +14,21 @@ DiscordMessage.Prototype = {
 	Internal = DiscordMessage.Internal,
 }
 
-function DiscordMessage.Prototype:ReplyAsync(messageStr)
+function DiscordMessage.Prototype:ReplyAsync(discordMessage)
+	local messageJson = discordMessage:ToJSONObject()
+
+	messageJson.message_reference = {
+		message_id = self.Id,
+		channel_id = self.ChannelId,
+		guild_id = self.GuildId,
+		fail_if_not_exists = false
+	}
+
 	return Promise.new(function(resolve, reject)
 		self.DiscordClient.Gateway:PostAsync(string.format(
 			DiscordEndpoints.BotCreateMessage,
 			self.ChannelId
-		), {
-			content = messageStr,
-			message_reference = {
-				message_id = self.Id,
-				channel_id = self.ChannelId,
-				guild_id = self.GuildId,
-				fail_if_not_exists = false
-			}
-		}):andThen(function()
+		), messageJson):andThen(function()
 			resolve()
 		end):catch(function(...)
 			reject(...)

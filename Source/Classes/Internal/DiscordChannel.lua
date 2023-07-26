@@ -14,14 +14,12 @@ DiscordChannel.Prototype = {
 	Internal = DiscordChannel.Internal,
 }
 
-function DiscordChannel.Prototype:SendMessageAsync(messageStr)
+function DiscordChannel.Prototype:SendMessageAsync(discordMessage)
 	return Promise.new(function(resolve, reject)
 		self.DiscordClient.Gateway:PostAsync(string.format(
 			DiscordEndpoints.BotCreateMessage,
 			self.Id
-		), {
-			content = messageStr,
-		}):andThen(function()
+		), discordMessage:ToJSONObject()):andThen(function()
 			resolve()
 		end):catch(function(...)
 			reject(...)
