@@ -10,14 +10,19 @@ local DiscordClient = DiscordLuaU.DiscordClient.new(DiscordSettings)
 DiscordClient:SetVerboseLogging(true)
 
 DiscordClient:Subscribe("OnReady", function()
+	local discordEmbed = DiscordLuaU.DiscordEmbed.new()
+		:SetTitle("Testing 101")
+		:SetDescription("My Awesome Description!")
+
 	DiscordClient:GetChannelAsync("1048686561685946489"):andThen(function(discordChannel)
-		for index = 1, 10 do
-			discordChannel:SendMessageAsync(`Hello, {index}!`):andThen(function()
-				print(`Sent {index} message!`)
-			end):catch(function(exception)
-				print(`Failed to send {index} message: {exception}`)
-			end)
-		end
+		local discordMessage = DiscordLuaU.DiscordMessage.new("Hello, World!")
+
+		discordMessage:AddEmbed(discordEmbed)
+		discordChannel:SendMessageAsync(discordMessage):andThen(function()
+			print(`Sent message!`)
+		end):catch(function(exception)
+			print(`Failed to send message: {exception}`)
+		end)
 	end)
 end)
 
