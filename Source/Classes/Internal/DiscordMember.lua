@@ -14,16 +14,16 @@ function DiscordMember.Prototype:ToString()
 	return `{DiscordMember.Type}<{self.Id}>`
 end
 
-function DiscordMember.Interface.from(discordClient, rawJsonData, discordMessage)
-	if discordClient:GetFromCache(`{discordMessage.Author.Id}_{discordMessage.GuildId}`) then
-		return discordClient:GetFromCache(`{discordMessage.Author.Id}_{discordMessage.GuildId}`)
+function DiscordMember.Interface.from(discordClient, rawJsonData, guildId)
+	if discordClient:GetFromCache(`MEMBER_{rawJsonData.user_id}_{guildId}`) then
+		return discordClient:GetFromCache(`MEMBER_{rawJsonData.user_id}_{guildId}`)
 	end
 
 	local objectData = Styleguide.new(rawJsonData):PascalCase()
 
 	objectData.DiscordClient = discordClient
 
-	return discordClient:AddToCache(`{discordMessage.Author.Id}_{discordMessage.GuildId}`, setmetatable(objectData, {
+	return discordClient:AddToCache(`MEMBER_{rawJsonData.user_id}_{guildId}`, setmetatable(objectData, {
 		__index = DiscordMember.Prototype,
 		__type = DiscordMember.Type,
 		__tostring = function(object)

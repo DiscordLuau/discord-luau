@@ -32,15 +32,15 @@ function DiscordChannel.Prototype:ToString()
 end
 
 function DiscordChannel.Interface.from(discordClient, rawJsonData)
-	if discordClient:GetFromCache(rawJsonData.id) then
-		return discordClient:GetFromCache(rawJsonData.id)
+	if discordClient:GetFromCache(`CHANNEL_{rawJsonData.id}`) then
+		return discordClient:GetFromCache(`CHANNEL_{rawJsonData.id}`)
 	end
 
 	local objectData = Styleguide.new(rawJsonData):PascalCase()
 
 	objectData.DiscordClient = discordClient
 
-	return discordClient:AddToCache(rawJsonData.id, setmetatable(objectData, {
+	return discordClient:AddToCache(`CHANNEL_{rawJsonData.id}`, setmetatable(objectData, {
 		__index = DiscordChannel.Prototype,
 		__type = DiscordChannel.Type,
 		__tostring = function(object)

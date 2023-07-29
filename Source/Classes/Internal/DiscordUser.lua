@@ -15,15 +15,15 @@ function DiscordUser.Prototype:ToString()
 end
 
 function DiscordUser.Interface.from(discordClient, rawJsonData)
-	if discordClient:GetFromCache(rawJsonData.id) then
-		return discordClient:GetFromCache(rawJsonData.id)
+	if discordClient:GetFromCache(`USER_{rawJsonData.id}`) then
+		return discordClient:GetFromCache(`USER_{rawJsonData.id}`)
 	end
 
 	local objectData = Styleguide.new(rawJsonData):PascalCase()
 
 	objectData.DiscordClient = discordClient
 
-	return discordClient:AddToCache(rawJsonData.id, setmetatable(objectData, {
+	return discordClient:AddToCache(`USER_{rawJsonData.id}`, setmetatable(objectData, {
 		__index = DiscordUser.Prototype,
 		__type = DiscordUser.Type,
 		__tostring = function(object)
