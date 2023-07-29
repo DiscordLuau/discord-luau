@@ -46,8 +46,9 @@ function DiscordShard.Prototype:ObserveWebsocketOperations()
 	self.DiscordWebsocket.OperationProvider:Subscribe(Observer.new(WebsocketOperationCodes.Hello, function(data)
 		Task.wait(math.random())
 
+		self.HeartbeatInterval = data.heartbeat_interval
 		self:HeartbeatAsync(true):andThen(function()
-			self:HeartbeatIn(data.heartbeat_interval * math.random())
+			self:HeartbeatIn(math.random(self.HeartbeatInterval / 2, self.HeartbeatInterval))
 		end)
 	end))
 
@@ -59,6 +60,9 @@ function DiscordShard.Prototype:ObserveWebsocketOperations()
 
 	self.DiscordWebsocket.OperationProvider:Subscribe(Observer.new(WebsocketOperationCodes.HeartbeatACK, function()
 		self.HeartbeatAck = true
+		self.HeartbeatPing = os.clock() - self.HeartbeatClockTime
+
+		self.Reporter:Debug(`HeartbeatACK - Ping: {self.HeartbeatPing}`)
 
 		if not self.Identified then
 			self.Identified = true
@@ -104,6 +108,8 @@ function DiscordShard.Prototype:HeartbeatAsync(ignoreHeartbeatAck)
 			self.HeartbeatAck = nil
 		end
 
+		self.HeartbeatClockTime = os.clock()
+
 		local success, response = self.DiscordWebsocket:SendAsync({
 			[WebsocketOperationKeys.OperationCode] = WebsocketOperationCodes.Heartbeat,
 			[WebsocketOperationKeys.Data] = self.DispatchSequence or false,
@@ -136,7 +142,7 @@ function DiscordShard.Prototype:IdentifyAsync()
 			[WebsocketOperationKeys.OperationCode] = WebsocketOperationCodes.Identify,
 			[WebsocketOperationKeys.Data] = {
 				["token"] = self.DiscordClient.DiscordToken,
-				["intents"] = self.DiscordClient.DiscordIntents:ToJSONObject(),
+				["intents"] = self.DiscordClient.DiscordIntents:GetValue(),
 				["properties"] = {
 					["os"] = Process.os,
 					["browser"] = LIBRARY_IDENTIFIER,
