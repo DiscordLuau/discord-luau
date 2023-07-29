@@ -139,7 +139,7 @@ function DiscordEmbed.Prototype:CreateEmbedField(fieldName, fieldValue, isInline
 	return self
 end
 
-function DiscordEmbed.Prototype:RemoveEmbedField(fieldName)
+function DiscordEmbed.Prototype:DeleteEmbedField(fieldName)
 	self.EmbedFields[fieldName] = nil
 
 	return self
