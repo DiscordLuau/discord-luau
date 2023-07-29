@@ -37,6 +37,8 @@ function DiscordIntents.Prototype:Add(intent)
 	end
 
 	table.insert(self.Intents, intent)
+
+	return self
 end
 
 function DiscordIntents.Prototype:Delete(intent)
@@ -47,6 +49,8 @@ function DiscordIntents.Prototype:Delete(intent)
 	end
 
 	table.remove(self.Intents, index)
+
+	return self
 end
 
 function DiscordIntents.Prototype:GetValue()

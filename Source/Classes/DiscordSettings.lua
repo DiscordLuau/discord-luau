@@ -12,10 +12,14 @@ DiscordSettings.Prototype = {
 
 function DiscordSettings.Prototype:SetDiscordToken(discordToken)
 	self.DiscordToken = discordToken
+
+	return self
 end
 
 function DiscordSettings.Prototype:SetIntents(discordIntents)
 	self.DiscordIntents = discordIntents
+
+	return self
 end
 
 function DiscordSettings.Prototype:ToString()
