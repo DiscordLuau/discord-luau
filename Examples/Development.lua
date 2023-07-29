@@ -9,20 +9,46 @@ local DiscordClient = DiscordLuaU.DiscordClient.new(DiscordSettings)
 
 DiscordClient:SetVerboseLogging(true)
 
+local function uiNameSelectionRow()
+	return DiscordLuaU.UI.ActionRowComponent.new()
+		:AddComponent(
+			DiscordLuaU.UI.TextInputComponent.new(`selection-test-0`)
+				:SetStyle(DiscordLuaU.UI.TextInputComponent.Style.Short)
+				:SetLabel("NAME")
+				:SetPlaceholder("discord-user#0000")
+				:SetMinLength(1)
+				:SetRequired(true)
+			)
+end
+
+local function uiContentSelectionRow()
+	return DiscordLuaU.UI.ActionRowComponent.new()
+		:AddComponent(
+			DiscordLuaU.UI.TextInputComponent.new(`selection-test-1`)
+				:SetStyle(DiscordLuaU.UI.TextInputComponent.Style.Paragraph)
+				:SetLabel("MESSAGE")
+				:SetPlaceholder("This won't actually send a message, just testing modal functioinality! :D")
+				:SetMinLength(20)
+				:SetRequired(true)
+			)
+end
+
+DiscordClient:Subscribe("OnInteraction", function(interactionObject)
+	local modalObject = DiscordLuaU.DiscordModal.new(`modal-test-0`)
+		:SetTitle("This is a modal test!")
+		:AddComponent(uiNameSelectionRow())
+		:AddComponent(uiContentSelectionRow())
+
+	interactionObject:SendModalAsync(modalObject)
+end)
+
 DiscordClient:Subscribe("OnReady", function()
-	local discordEmbed = DiscordLuaU.DiscordEmbed.new()
-		:SetTitle("Testing 101")
-		:SetDescription("My Awesome Description!")
+	local applicationCommand = DiscordLuaU.ApplicationCommand.new()
+		:SetType(DiscordLuaU.ApplicationCommand.Type.UserInput)
+		:SetName("popup-demo-modal")
 
-	DiscordClient:GetChannelAsync("1048686561685946489"):andThen(function(discordChannel)
-		local discordMessage = DiscordLuaU.DiscordMessage.new("Hello, World!")
-
-		discordMessage:AddEmbed(discordEmbed)
-		discordChannel:SendMessageAsync(discordMessage):andThen(function()
-			print(`Sent message!`)
-		end):catch(function(exception)
-			print(`Failed to send message: {exception}`)
-		end)
+	DiscordClient.Application:CreateGlobalCommandAsync(applicationCommand):andThen(function()
+		print("Discord Command Added!")
 	end)
 end)
 
