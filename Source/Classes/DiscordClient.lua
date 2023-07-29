@@ -17,6 +17,7 @@ local DiscordUser = require("Internal/DiscordUser")
 local DiscordMember = require("Internal/DiscordMember")
 local DiscordChannel = require("Internal/DiscordChannel")
 local DiscordApplication = require("Internal/DiscordApplication")
+local CommandInteraction = require("Internal/CommandInteraction")
 local DiscordGuild = require("Internal/DiscordGuild")
 
 local DiscordMessage = require("DiscordMessage")
@@ -74,13 +75,15 @@ function DiscordClient.Prototype:ConnectAsync()
 	end):andThen(function()
 		for shardId = 1, self.ShardCount do
 			self.DiscordShards[shardId].EventProvider:Subscribe(Observer.new(WebsocketEvents.MessageCreate, function(data)
-				local discordAuthor = DiscordUser.from(self, data.author)
-				local discordMessage = DiscordMessage.from(self, data, discordAuthor)
-				local discordMember = DiscordMember.from(self, data.member, discordMessage)
-
-				discordMessage.Member = discordMember
+				local discordMessage = DiscordMessage.from(self, data)
 
 				self.Provider:InvokeObservers("OnMessage", discordMessage)
+			end))
+
+			self.DiscordShards[shardId].EventProvider:Subscribe(Observer.new(WebsocketEvents.InteractionCreate, function(data)
+				local commandInteraction = CommandInteraction.from(self, data)
+
+				self.Provider:InvokeObservers("OnInteraction", commandInteraction)
 			end))
 
 			self.DiscordShards[shardId].EventProvider:Subscribe(Observer.new(WebsocketEvents.Ready, function(data)
@@ -134,7 +137,7 @@ function DiscordClient.Prototype:AddToCache(objectId, object)
 	return self.Cache[objectId]
 end
 
-function DiscordClient.Prototype:RemoveFromCache(objectId)
+function DiscordClient.Prototype:DeleteFromCache(objectId)
 	self.Cache[objectId] = nil
 end
 
@@ -175,6 +178,8 @@ function DiscordClient.Interface.new(discordSettings)
 	local self = setmetatable({
 		DiscordToken = discordSettings.DiscordToken,
 		DiscordIntents = discordSettings.DiscordIntents,
+
+		Reporter = Console.new("DiscordClient"),
 
 		DiscordShards = { },
 		Cache = { },
