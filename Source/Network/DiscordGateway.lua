@@ -30,15 +30,48 @@ function DiscordGateway.Prototype:GetDiscordAppUri()
 	return `{BASE_DISCORD_APP_URL}/{BASE_DISCORD_APP_API_PREFIX}`
 end
 
+function DiscordGateway.Prototype:ParseErrors(errorTable, source, depth)
+	source = source or ""
+	depth = depth or 0
+
+	for index, value in errorTable do
+		if index == "_errors" then
+			for _, errorObject in value do
+				source ..= `{string.rep(" ", depth)}{errorObject.code}: {errorObject.message}\n`
+			end
+		else
+			source ..= `{string.rep(" ", depth)}{index}:\n{self:ParseErrors(value, source, depth + 1)}\n`
+		end
+	end
+
+	return source
+end
+
+function DiscordGateway.Prototype:ParseDiscordAPIErrors(api, networkResponse)
+	local success, messageDecoded = pcall(Serde.decode, "json", networkResponse.body)
+
+	if success then
+		local discordErrorString = self:ParseErrors(messageDecoded.errors)
+
+		return `Discord API Error - {messageDecoded.code} ({messageDecoded.message}): \n\nAPI: {api}\n\nTRACE:\n{discordErrorString}`
+	end
+
+	return `Discord HTTP Error - {networkResponse.statusCode} ({networkResponse.statusMessage}): \n{networkResponse.body}`
+end
+
 function DiscordGateway.Prototype:RequestAsync(api, method, data)
 	return Promise.new(function(resolve, reject)
 		if self.EndpointRateLimits[api] and self.EndpointRateLimits[api]:IsConsumed() then
-			return reject(`RateLimit reached!`)
+			reject(`RateLimit reached!`)
+			
+			return
 		end
 
 		self.Scheduler:AddTaskAsync(function()
 			if self.EndpointRateLimits[api] and self.EndpointRateLimits[api]:IsConsumed() then
-				return reject(`RateLimit reached!`)
+				reject(`RateLimit reached!`)
+				
+				return
 			end
 
 			local networkResponse = Net.request({
@@ -64,12 +97,18 @@ function DiscordGateway.Prototype:RequestAsync(api, method, data)
 			self.Reporter:Debug(`{method} Rate Limit '{networkResponse.headers["x-ratelimit-limit"] - networkResponse.headers["x-ratelimit-remaining"]}/{networkResponse.headers["x-ratelimit-limit"]}, resetting in {networkResponse.headers["x-ratelimit-reset-after"]}'`)
 
 			if not networkResponse.ok then
-				reject(
-					`Failed to fetch discord gateway: {networkResponse.statusCode} - {networkResponse.statusMessage}`
-				)
+				reject(self:ParseDiscordAPIErrors(api, networkResponse))
+
+				return
 			end
 
-			resolve(Serde.decode("json", networkResponse.body))
+			if networkResponse.body == "" then
+				resolve()
+			else
+				resolve(Serde.decode("json", networkResponse.body))
+			end
+
+			return
 		end)
 	end)
 end
@@ -101,6 +140,14 @@ end
 
 function DiscordGateway.Prototype:PostAsync(api, data)
 	return self:RequestAsync(api, "POST", data)
+end
+
+function DiscordGateway.Prototype:DeleteAsync(api, data)
+	return self:RequestAsync(api, "DELETE", data)
+end
+
+function DiscordGateway.Prototype:PatchAsync(api, data)
+	return self:RequestAsync(api, "PATCH", data)
 end
 
 function DiscordGateway.Prototype:SetEndpointCache(endpoint, cache)
