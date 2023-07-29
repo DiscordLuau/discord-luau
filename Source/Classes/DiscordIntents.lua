@@ -39,7 +39,7 @@ function DiscordIntents.Prototype:Add(intent)
 	table.insert(self.Intents, intent)
 end
 
-function DiscordIntents.Prototype:Remove(intent)
+function DiscordIntents.Prototype:Delete(intent)
 	local index = table.find(self.Intents, intent)
 
 	if not index then
@@ -49,7 +49,7 @@ function DiscordIntents.Prototype:Remove(intent)
 	table.remove(self.Intents, index)
 end
 
-function DiscordIntents.Prototype:ToJSONObject()
+function DiscordIntents.Prototype:GetValue()
 	local intents = 0
 
 	for _, intentValue in self.Intents do
@@ -66,6 +66,7 @@ end
 function DiscordIntents.Interface.new(intents)
 	return setmetatable({
 		Intents = intents or {},
+		IntentInt = 0,
 	}, {
 		__index = DiscordIntents.Prototype,
 		__type = DiscordIntents.Type,
