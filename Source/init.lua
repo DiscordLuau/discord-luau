@@ -26,4 +26,6 @@ DiscordLuaU.Interface.DiscordModal = require("Classes/DiscordModal")
 DiscordLuaU.Interface.ApplicationCommand = require("Classes/ApplicationCommand")
 DiscordLuaU.Interface.ApplicationCommandOptions = require("Classes/ApplicationCommandOptions")
 
+DiscordLuaU.Interface.Console = require("Dependencies/Github/Console")
+
 return DiscordLuaU.Interface
