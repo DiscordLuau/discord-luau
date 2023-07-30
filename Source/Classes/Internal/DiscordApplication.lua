@@ -19,8 +19,8 @@ function DiscordApplication.Prototype:GetAllGlobalCommandsAsync()
 		self.DiscordClient.Gateway:GetAsync(string.format(
 			DiscordEndpoints.GetGlobalApplicationCommands,
 			self.Id
-		)):andThen(function()
-			resolve()
+		)):andThen(function(...)
+			resolve(...)
 		end):catch(function(...)
 			reject(...)
 		end)
