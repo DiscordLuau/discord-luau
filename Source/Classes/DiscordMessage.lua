@@ -39,6 +39,12 @@ function DiscordMessage.Prototype:ReplyAsync(discordMessage)
 	end)
 end
 
+function DiscordMessage.Prototype:SetContent(contentStr)
+	self.Content = contentStr
+
+	return self
+end
+
 function DiscordMessage.Prototype:AddEmbed(embedObject)
 	table.insert(self.Embeds, embedObject)
 
