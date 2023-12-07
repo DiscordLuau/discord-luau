@@ -44,3 +44,11 @@ end)
 
 DiscordClient:ConnectAsync():catch(print)
 ```
+
+## Project status
+
+Hello! A few months later now but I'm going to pick this project up again.
+
+One of my major conserns at the moment is the serious lack of type support. That and the obscure serialisation i'm doing..
+
+I'll be working on those getting started again 😅
