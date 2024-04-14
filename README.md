@@ -1,54 +1,8 @@
 # Discord-Luau
-A Luau discord API wrapper.
-
-## Documentation
-At the moment, there is no documentation for Discord-Luau, this being because this is a hobby project i'm doing in my free time.
-
-Ideally, moving forward the plan is to use 'Moonwave' to generate API documentation.
-
-## Example
-
-```lua
-local DiscordLuaU = require("../Source/init")
-
-local DiscordSettings = DiscordLuaU.DiscordSettings.new("DiscordBotToken")
-
-DiscordSettings:SetIntents(DiscordLuaU.DiscordIntents.all())
-
-local DiscordClient = DiscordLuaU.DiscordClient.new(DiscordSettings)
-
--- DiscordClient:SetVerboseLogging(true)
-
-DiscordClient:Subscribe("OnMessage", function(discordMessage)
-	print(`User '{discordMessage.Author.GlobalName}': '{discordMessage.Content}'`)
-
-	discordMessage:ReplyAsync("Testing! Whoo hoo!")
-end)
-
-DiscordClient:Subscribe("OnReady", function()
-	print(`Aplication '{DiscordClient.User.Username}' is online!`)
-
-	local discordPresence = DiscordLuaU.DiscordPresence.new()
-	local discordActivity = DiscordLuaU.DiscordActivity.new()
-
-	discordActivity:SetActivityName("I am Testing!")
-	discordActivity:SetActivityType(DiscordLuaU.DiscordActivity.Type.Game)
-
-	discordPresence:SetStatus(DiscordLuaU.DiscordPresence.Status.Online)
-	discordPresence:AddActivity(discordActivity)
-
-	DiscordClient:UpdatePresenceAsync(discordPresence):andThen(function()
-		print(`Updated Application '{DiscordClient.User.Username}' discord status!`)
-	end)
-end)
-
-DiscordClient:ConnectAsync():catch(print)
-```
+A Luau discord API wrapper. This is the 'refactor' branch, where I take what i've learned from my first impl, and create a better library from what i've learned..!
 
 ## Project status
 
-Hello! A few months later now but I'm going to pick this project up again.
+I'm activly working on this branch, ideally I have two days per week to commit/work on this project, so it's not going to be a quick library, but it'll be something!
 
-One of my major conserns at the moment is the serious lack of type support. That and the obscure serialisation i'm doing..
-
-I'll be working on those getting started again 😅
+:)

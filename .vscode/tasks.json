@@ -3,7 +3,6 @@
 	"tasks": [
 		{
 			"label": "Aftman: Install project tooling",
-			"detail": "Installs the tooling required to run the 'DiscordLuaU' library.",
 			"type": "shell",
 			"command": "aftman install --no-trust-check ",
 			"group": {
@@ -11,17 +10,7 @@
 			},
 		},
 		{
-			"label": "Lune: Execute Unit Tests",
-			"detail": "Execute Unit Tests for the 'DiscordLuaU' project",
-			"type": "shell",
-			"command": "lune Tests",
-			"group": {
-				"kind": "build"
-			},
-		},
-		{
 			"label": "Lune: Execute Example",
-			"detail": "Execute the 'Example' development project",
 			"type": "shell",
 			"command": "lune Examples/Development",
 			"group": {
