@@ -1,5 +1,10 @@
 local Construct = require("../../Utils/Construct")
 
+--[=[
+	@class Internal.EventOut
+
+	(sorry I will add docs for this lol, just haven't got around to it yet!)
+]=]
 local EventOut = {}
 
 EventOut.Prototype = {}

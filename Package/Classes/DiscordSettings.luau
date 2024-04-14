@@ -2,6 +2,23 @@ local DiscordIntents = require("DiscordIntents")
 
 local Construct = require("../Utils/Construct")
 
+--[=[
+	@class DiscordSettings
+
+	A simple class to retain some generic data before a Discord Client can be started, for inst;
+
+	- The discord bot Token/Authentication
+	- The discord bot Intents
+
+	```lua
+		local DiscordLuau = require("../Submodules/DiscordLuau")
+
+		local DiscordIntents = DiscordLuau.DiscordIntents.fromAll()
+		local DiscordSettings = DiscordLuau.DiscordSettings.new("BOT TOKEN", DiscordIntents)
+
+		...
+	```
+]=]
 local DiscordSettings = {}
 
 DiscordSettings.Interface = {}

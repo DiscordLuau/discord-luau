@@ -17,6 +17,20 @@ local Task = require("@lune/task")
 
 local CONCURRENT_IDENTIFY_YIELD = 5
 
+--[=[
+	@class DiscordClient
+
+	The base class that implements the various properties, methods and events that developers can use to interact with the Discord API.
+
+	```lua
+		local DiscordLuau = require("../Submodules/DiscordLuau")
+
+		local DiscordSettings = DiscordLuau.DiscordSettings.new("BOT TOKEN")
+		local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettings)
+
+		...
+	```
+]=]
 local DiscordClient = {}
 
 DiscordClient.Prototype = {}
@@ -24,6 +38,22 @@ DiscordClient.Interface = {}
 
 DiscordClient.Prototype.type = "DiscordClient"
 
+--[=[
+	@method connectAsync
+	@within DiscordClient
+
+	@return Future
+
+	Connect the current DiscordClient to the Discord API
+
+	```lua
+		local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettings)
+
+		DiscordClient:connectAsync():after(function()
+			print("Connected to the Discord API!")
+		end)
+	```
+]=]
 function DiscordClient.Prototype.connectAsync(self: DiscordClient)
 	return Future.try(function()
 		self.DiscordGateway:setEndpointCache(DiscordEndpoints.BotGateway, Cache.new(10))
@@ -61,20 +91,65 @@ function DiscordClient.Prototype.connectAsync(self: DiscordClient)
 	end)
 end
 
+--[=[
+	@function new
+	@within DiscordClient
+
+	@return DiscordClient
+
+	Constructor function for the Discord Client, this is where you'll be able to instantiate a Discord Client object.
+
+	```lua
+		local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettings)
+
+		DiscordClient:connectAsync():after(function()
+			print("Connected to the Discord API!")
+		end)
+	```
+]=]
 function DiscordClient.Interface.new(discordSettings: DiscordSettings.DiscordSettings)
 	local self = Construct({
+		--[=[
+			@prop discordSettings DiscordSettings
+			@within DiscordClient
+		]=]
 		discordSettings = discordSettings,
 
+		--[=[
+			@prop reporter Reporter
+			@within DiscordClient
+		]=]
 		reporter = Console.new("🎮 DiscordClient"),
 
+		--[=[
+			@prop websocketUrl string
+			@within DiscordClient
+		]=]
 		websocketUrl = "",
+
+		--[=[
+			@prop shardCount number
+			@within DiscordClient
+		]=]
 		shardCount = 0,
+
+		--[=[
+			@prop maxConcurrency number
+			@within DiscordClient
+		]=]
 		maxConcurrency = 0,
 
+		--[=[
+			@prop discordShards { DiscordShard }
+			@within DiscordClient
+		]=]
 		discordShards = { } :: { DiscordShard.DiscordShard },
-		cache = { },
 	}, DiscordClient.Prototype)
 
+	--[=[
+			@prop DiscordGateway DiscordGateway
+			@within DiscordClient
+		]=]
 	self.DiscordGateway = DiscordGateway.new(self)
 
 	return self

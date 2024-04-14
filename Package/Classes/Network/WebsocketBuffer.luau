@@ -1,5 +1,10 @@
 local Construct = require("../../Utils/Construct")
 
+--[=[
+	@class Internal.WebsocketBuffer
+
+	(sorry I will add docs for this lol, just haven't got around to it yet!)
+]=]
 local WebsocketBuffer = {}
 
 WebsocketBuffer.Prototype = {}

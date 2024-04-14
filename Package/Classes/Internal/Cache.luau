@@ -2,6 +2,11 @@ local Task = require("@lune/task")
 
 local Construct = require("../../Utils/Construct")
 
+--[=[
+	@class Internal.Cache
+
+	(sorry I will add docs for this lol, just haven't got around to it yet!)
+]=]
 local Cache = {}
 
 Cache.Prototype = {}

@@ -16,6 +16,11 @@ local Task = require("@lune/task")
 
 local LIBRARY_IDENTIFIER = "DiscordLuau"
 
+--[=[
+	@class Internal.DiscordShard
+
+	(sorry I will add docs for this lol, just haven't got around to it yet!)
+]=]
 local DiscordShard = {}
 
 DiscordShard.Interface = {}

@@ -3,6 +3,22 @@ local Intents = require("../Enums/Intents")
 local Construct = require("../Utils/Construct")
 local FetchKeys = require("../Utils/Dictionary/FetchKeys")
 
+--[=[
+	@class DiscordIntents
+
+	https://discord.com/developers/docs/topics/gateway#gateway-intents
+
+	(sorry I will add docs for this lol, just haven't got around to it yet!)
+
+	```lua
+		local DiscordLuau = require("../Submodules/DiscordLuau")
+
+		local DiscordIntents = DiscordLuau.DiscordIntents.fromAll()
+		local DiscordSettings = DiscordLuau.DiscordSettings.new("BOT TOKEN", DiscordIntents)
+
+		...
+	```
+]=]
 local DiscordIntents = {}
 
 DiscordIntents.Interface = {}

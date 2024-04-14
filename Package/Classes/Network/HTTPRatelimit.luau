@@ -2,6 +2,11 @@ local Task = require("@lune/task")
 
 local Construct = require("../../Utils/Construct")
 
+--[=[
+	@class Internal.HTTPRatelimit
+
+	(sorry I will add docs for this lol, just haven't got around to it yet!)
+]=]
 local HTTPRatelimit = {}
 
 HTTPRatelimit.Prototype = {}

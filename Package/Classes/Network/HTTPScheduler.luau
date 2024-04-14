@@ -6,6 +6,11 @@ local Console = require("../../Vendor/Console")
 
 local DEFAULT_QUEUE_FREQUENCY = 0
 
+--[=[
+	@class Internal.HTTPScheduler
+
+	(sorry I will add docs for this lol, just haven't got around to it yet!)
+]=]
 local HTTPScheduler = {}
 
 HTTPScheduler.Prototype = {}

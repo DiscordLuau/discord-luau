@@ -17,6 +17,11 @@ local DISCORD_API_VERSION = 9
 local BASE_DISCORD_APP_URL = "https://discord.com"
 local BASE_DISCORD_APP_API_PREFIX = "api"
 
+--[=[
+	@class Internal.DiscordGateway
+
+	(sorry I will add docs for this lol, just haven't got around to it yet!)
+]=]
 local DiscordGateway = {}
 
 DiscordGateway.Interface = {}
