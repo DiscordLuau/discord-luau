@@ -5,10 +5,10 @@ local FetchKeys = require("../Utils/Dictionary/FetchKeys")
 
 local DiscordIntents = {}
 
-DiscordIntents.Type = "DiscordIntents"
-
 DiscordIntents.Interface = {}
 DiscordIntents.Prototype = { }
+
+DiscordIntents.Prototype.type = "DiscordIntents"
 
 DiscordIntents.DispositionMap = {
 	[Intents.GuildMembers] = 1,
@@ -45,7 +45,7 @@ function DiscordIntents.Interface.new(intentList: { string })
 	end
 
 	return Construct({
-		Intents = intentsValue,
+		intents = intentsValue,
 	}, DiscordIntents.Prototype)
 end
 

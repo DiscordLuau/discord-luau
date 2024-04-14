@@ -5,20 +5,22 @@ local Construct = require("../Utils/Construct")
 local DiscordSettings = {}
 
 DiscordSettings.Interface = {}
-DiscordSettings.Prototype = { }
+DiscordSettings.Prototype = {}
+
+DiscordSettings.Prototype.type = "DiscordSettings"
 
 function DiscordSettings.Prototype.setDiscordToken(self: DiscordSettings, discordToken: string)
-	self.DiscordToken = discordToken
+	self.discordToken = discordToken
 end
 
 function DiscordSettings.Prototype.setIntents(self: DiscordSettings, discordIntents: DiscordIntents.DiscordIntents)
-	self.DiscordIntents = discordIntents
+	self.discordIntents = discordIntents
 end
 
 function DiscordSettings.Interface.new(discordToken: string, discordIntents: DiscordIntents.DiscordIntents?)
 	return Construct({
-		DiscordToken = discordToken,
-		DiscordIntents = discordIntents or DiscordIntents.fromDefault(),
+		discordToken = discordToken,
+		discordIntents = discordIntents or DiscordIntents.fromDefault(),
 	}, DiscordSettings.Prototype)
 end
 

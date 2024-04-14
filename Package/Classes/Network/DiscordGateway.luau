@@ -16,10 +16,10 @@ local BASE_DISCORD_APP_API_PREFIX = "api"
 
 local DiscordGateway = {}
 
-DiscordGateway.Type = "DiscordGateway"
-
 DiscordGateway.Interface = {}
 DiscordGateway.Prototype = {}
+
+DiscordGateway.Prototype.type = "DiscordGateway"
 
 function DiscordGateway.Prototype.parseErrors(self: DiscordGateway, errorTable: { [string]: string }, source: string?, depth: number?)
 	local _source = source or ""
@@ -54,12 +54,12 @@ end
 
 function DiscordGateway.Prototype.requestAsync(self: DiscordGateway, api: string, method: ("DELETE" | "GET" | "HEAD" | "OPTIONS" | "PATCH" | "POST" | "PUT"), data: { [any]: any })
 	return Future.try(function()
-		if self.EndpointRateLimits[api] and self.EndpointRateLimits[api]:isConsumed() then
+		if self.endpointRateLimits[api] and self.endpointRateLimits[api]:isConsumed() then
 			error(`HTTPRatelimit reached!`)
 		end
 
-		return self.DiscordScheduler:addTask(function()
-			if self.EndpointRateLimits[api] and self.EndpointRateLimits[api]:isConsumed() then
+		return self.discordScheduler:addTask(function()
+			if self.endpointRateLimits[api] and self.endpointRateLimits[api]:isConsumed() then
 				error(`HTTPRatelimit reached!`)
 			end
 
@@ -67,24 +67,24 @@ function DiscordGateway.Prototype.requestAsync(self: DiscordGateway, api: string
 				url = `{BASE_DISCORD_APP_URL}/{BASE_DISCORD_APP_API_PREFIX}/v{DISCORD_API_VERSION}/{api}`,
 				method = method,
 				headers = {
-					["authorization"] = `Bot {self.DiscordClient.DiscordSettings.DiscordToken}`,
+					["authorization"] = `Bot {self.discordClient.discordSettings.discordToken}`,
 					["content-type"] = "application/json"
 				},
 				body = data and Serde.encode("json", data)
 			})
 
-			self.Reporter:debug(`{method} Async to '{api}': {networkResponse.statusCode} - {networkResponse.statusMessage}`)
+			self.reporter:debug(`{method} Async to '{api}': {networkResponse.statusCode} - {networkResponse.statusMessage}`)
 
-			if not self.EndpointRateLimits[api] then
-				self.EndpointRateLimits[api] = HTTPRatelimit.new(
+			if not self.endpointRateLimits[api] then
+				self.endpointRateLimits[api] = HTTPRatelimit.new(
 					tonumber(networkResponse.headers["x-ratelimit-limit"]),
 					tonumber(networkResponse.headers["x-ratelimit-remaining"])
 				)
 			end
 
-			self.EndpointRateLimits[api]:resetAfter(tonumber(networkResponse.headers["x-ratelimit-reset-after"]))
+			self.endpointRateLimits[api]:resetAfter(tonumber(networkResponse.headers["x-ratelimit-reset-after"]))
 
-			self.Reporter:debug(`{method} Rate Limit '{networkResponse.headers["x-ratelimit-limit"] - networkResponse.headers["x-ratelimit-remaining"]}/{networkResponse.headers["x-ratelimit-limit"]}, resetting in {networkResponse.headers["x-ratelimit-reset-after"]}'`)
+			self.reporter:debug(`{method} Rate Limit '{networkResponse.headers["x-ratelimit-limit"] - networkResponse.headers["x-ratelimit-remaining"]}/{networkResponse.headers["x-ratelimit-limit"]}, resetting in {networkResponse.headers["x-ratelimit-reset-after"]}'`)
 
 			if not networkResponse.ok then
 				error(self:parseDiscordAPIErrors(api, networkResponse))
@@ -131,11 +131,11 @@ function DiscordGateway.Prototype.patchAsync(self: DiscordGateway, api: string, 
 end
 
 function DiscordGateway.Prototype.setEndpointCache(self: DiscordGateway, endpoint: string, cache: { [any]: any })
-	self.EndpointCaches[endpoint] = cache
+	self.endpointCaches[endpoint] = cache
 end
 
 function DiscordGateway.Prototype.getEndpointCache(self: DiscordGateway, endpoint: string)
-	return self.EndpointCaches[endpoint]
+	return self.endpointCaches[endpoint]
 end
 
 function DiscordGateway.Prototype.getApiVersion(self: DiscordGateway)
@@ -144,13 +144,13 @@ end
 
 function DiscordGateway.Interface.new(discordClient: any)
 	return Construct({
-		DiscordClient = discordClient,
-		DiscordScheduler = HTTPScheduler.new(1),
+		discordClient = discordClient,
+		discordScheduler = HTTPScheduler.new(1),
 
-		Reporter = Console.new("DiscordGateway"),
+		reporter = Console.new("🌉 DiscordGateway"),
 
-		EndpointRateLimits = {} :: { [string]: HTTPRatelimit.HTTPRatelimit },
-		EndpointCaches = {} :: { [string]: { [any]: any } }
+		endpointRateLimits = {} :: { [string]: HTTPRatelimit.HTTPRatelimit },
+		endpointCaches = {} :: { [string]: { [any]: any } }
 	}, DiscordGateway.Prototype)
 end
 

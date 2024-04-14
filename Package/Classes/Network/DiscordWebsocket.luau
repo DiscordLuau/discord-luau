@@ -19,10 +19,10 @@ local ZLIB_SUFFIX_END = "\84"
 
 local DiscordWebsocket = {}
 
-DiscordWebsocket.Type = "DiscordWebsocket"
-
 DiscordWebsocket.Interface = {}
 DiscordWebsocket.Prototype = {}
+
+DiscordWebsocket.Prototype.type = "DiscordWebsocket"
 
 function DiscordWebsocket.Prototype.sendAsync(self: DiscordWebsocket, dataPacket)
 	return Future.try(function()
@@ -30,7 +30,7 @@ function DiscordWebsocket.Prototype.sendAsync(self: DiscordWebsocket, dataPacket
 			pcall(self.SocketInstance.send, Serde.encode("json", dataPacket))
 
 		if messageSendOperationSuccessful then
-			self.Reporter:debug(`Discord Websocket Message Sent: {dataPacket[WebsocketOperationKeys.OperationCode]}`)
+			self.reporter:debug(`Discord Websocket Message Sent: {dataPacket[WebsocketOperationKeys.OperationCode]}`)
 
 			return
 		else
@@ -47,23 +47,23 @@ function DiscordWebsocket.Prototype.connectAsync(self: DiscordWebsocket, websock
 			error(self.SocketInstance)
 		end
 
-		self.WebsocketActive:set(true)
+		self.websocketActive:set(true)
 		self.WebsocketThread = Task.spawn(function()
-			while self.WebsocketActive.Value do
+			while self.websocketActive.Value do
 				if self.SocketInstance.closeCode then
-					self.WebsocketActive:set(false)
-					self.OnSocketDead:fire(self.SocketInstance.closeCode)
+					self.websocketActive:set(false)
+					self.onSocketDead:fire(self.SocketInstance.closeCode)
 				else
 					local websocketMessage = self.SocketInstance.next()
 
 					if not websocketMessage then
-						self.WebsocketActive:set(false)
-						self.OnSocketDead:fire(self.SocketInstance.closeCode)
+						self.websocketActive:set(false)
+						self.onSocketDead:fire(self.SocketInstance.closeCode)
 
 						continue
 					end
 
-					self.OnMessageRecv:fire(websocketMessage)
+					self.onMessageRecv:fire(websocketMessage)
 				end
 			end
 		end)
@@ -78,36 +78,34 @@ function DiscordWebsocket.Prototype.disconnectAsync(self: DiscordWebsocket, clos
 
 		self.SocketInstance.close(closingCode)
 
-		self.WebsocketActive:set(false)
-		self.OnSocketDead:fire(closingCode)
+		self.websocketActive:set(false)
+		self.onSocketDead:fire(closingCode)
 	end)
 end
 
-function DiscordWebsocket.Interface.new(discordClient: any)
+function DiscordWebsocket.Interface.new()
 	local self = Construct({
-		WebsocketActive = State.new(false),
-		WebsocketWebsocketBuffer = WebsocketBuffer.new(),
+		websocketActive = State.new(false),
+		websocketWebsocketBuffer = WebsocketBuffer.new(),
 
-		OnMessageRecv = Signal.new(),
-		OnSocketDead = Signal.new(),
-		OnOperationRecv = Signal.new(),
+		onMessageRecv = Signal.new(),
+		onSocketDead = Signal.new(),
+		onOperationRecv = Signal.new(),
 
-		Reporter = Console.new("DiscordWebsocket"),
-
-		DiscordClient = discordClient,
+		reporter = Console.new("🪁 DiscordWebsocket"),
 	}, DiscordWebsocket.Prototype)
 
-	self.WebsocketActive:observe(function(state)
-		self.Reporter:debug(`Discord Websocket {(state and "Connected") or "Disconnected"}!`)
+	self.websocketActive:observe(function(state)
+		self.reporter:debug(`Discord Websocket {(state and "Connected") or "Disconnected"}!`)
 	end)
 
-	self.OnMessageRecv:connect(function(discordPacket)
+	self.onMessageRecv:connect(function(discordPacket)
 		local isJSON, dataPacket = pcall(function()
 			return Serde.decode("json", discordPacket)
 		end)
 
 		if not isJSON then
-			self.WebsocketWebsocketBuffer:add(discordPacket)
+			self.websocketWebsocketBuffer:add(discordPacket)
 
 			if string.sub(discordPacket, 1, 1) ~= ZLIB_SUFFIX_START then
 				return
@@ -117,19 +115,19 @@ function DiscordWebsocket.Interface.new(discordClient: any)
 				return
 			end
 
-			local encodedDiscordPacket = self.WebsocketWebsocketBuffer:flush()
+			local encodedDiscordPacket = self.websocketWebsocketBuffer:flush()
 			local decodedDiscordPacket = Serde.decompress("zlib", encodedDiscordPacket)
 
 			dataPacket = Serde.decode("json", decodedDiscordPacket)
 		end
 
 		if dataPacket[WebsocketOperationKeys.OperationCode] == WebsocketOperationCodes.Dispatch then
-			self.Reporter:debug(`Discord Websocket Message Received: {dataPacket[WebsocketOperationKeys.OperationCode]} - {dataPacket[WebsocketOperationKeys.EventName]}`)
+			self.reporter:debug(`Discord Websocket Message Received: {dataPacket[WebsocketOperationKeys.OperationCode]} - {dataPacket[WebsocketOperationKeys.EventName]}`)
 		else
-			self.Reporter:debug(`Discord Websocket Message Received: {dataPacket[WebsocketOperationKeys.OperationCode]}`)
+			self.reporter:debug(`Discord Websocket Message Received: {dataPacket[WebsocketOperationKeys.OperationCode]}`)
 		end
 
-		self.OnOperationRecv:fire(
+		self.onOperationRecv:fire(
 			dataPacket[WebsocketOperationKeys.OperationCode],
 			dataPacket[WebsocketOperationKeys.Data],
 			dataPacket[WebsocketOperationKeys.EventName],

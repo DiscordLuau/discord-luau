@@ -2,26 +2,26 @@ local Construct = require("../../Utils/Construct")
 
 local WebsocketBuffer = {}
 
-WebsocketBuffer.Type = "WebsocketBuffer"
-
 WebsocketBuffer.Prototype = {}
 WebsocketBuffer.Interface = {}
 
-function WebsocketBuffer.Prototype.flush(self: WebsocketBuffer)
-	local data = self.Data
+WebsocketBuffer.Prototype.type = "WebsocketBuffer"
 
-	self.Data = ""
+function WebsocketBuffer.Prototype.flush(self: WebsocketBuffer)
+	local data = self.data
+
+	self.data = ""
 
 	return data
 end
 
 function WebsocketBuffer.Prototype.add(self: WebsocketBuffer, data: string)
-	self.Data ..= data
+	self.data ..= data
 end
 
 function WebsocketBuffer.Interface.new()
 	return Construct({
-		Data = ""
+		data = ""
 	}, WebsocketBuffer.Prototype)
 end
 

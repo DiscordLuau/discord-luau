@@ -22,6 +22,8 @@ local DiscordClient = {}
 DiscordClient.Prototype = {}
 DiscordClient.Interface = {}
 
+DiscordClient.Prototype.type = "DiscordClient"
+
 function DiscordClient.Prototype.connectAsync(self: DiscordClient)
 	return Future.try(function()
 		self.DiscordGateway:setEndpointCache(DiscordEndpoints.BotGateway, Cache.new(10))
@@ -29,26 +31,26 @@ function DiscordClient.Prototype.connectAsync(self: DiscordClient)
 		local data = self.DiscordGateway:getAsync(DiscordEndpoints.BotGateway):await()
 		local websocketVersion = self.DiscordGateway:getApiVersion()
 
-		self.WebsocketUrl = `{data.url}/?v={websocketVersion}`
-		self.ShardCount = data.shards
-		self.MaxConcurrency = data.session_start_limit.max_concurrency
+		self.websocketUrl = `{data.url}/?v={websocketVersion}`
+		self.shardCount = data.shards
+		self.maxConcurrency = data.session_start_limit.max_concurrency
 
-		for shardId = 1, self.ShardCount do
-			self.DiscordShards[shardId] = DiscordShard.new(self, shardId - 1)
+		for shardId = 1, self.shardCount do
+			self.discordShards[shardId] = DiscordShard.new(self, shardId - 1)
 		end
 
-		for bucketIndex = 1, self.ShardCount, self.MaxConcurrency do
-			for shardId = bucketIndex, (bucketIndex - 1) + self.MaxConcurrency do
-				self.DiscordShards[shardId]:connectAsync(self.WebsocketUrl)
+		for bucketIndex = 1, self.shardCount, self.maxConcurrency do
+			for shardId = bucketIndex, (bucketIndex - 1) + self.maxConcurrency do
+				self.discordShards[shardId]:connectAsync(self.websocketUrl)
 			end
 
-			if self.ShardCount > self.MaxConcurrency then
+			if self.shardCount > self.maxConcurrency then
 				Task.wait(CONCURRENT_IDENTIFY_YIELD)
 			end
 		end
 
-		for shardId = 1, self.ShardCount do
-			self.DiscordShards[shardId].OnEvent:connect(function(eventName, data)
+		for shardId = 1, self.shardCount do
+			self.discordShards[shardId].onEvent:connect(function(eventName, data)
 				if eventName == WebsocketEvents.Ready then
 					print("READY!")
 				elseif eventName == WebsocketEvents.MessageCreate then
@@ -61,16 +63,16 @@ end
 
 function DiscordClient.Interface.new(discordSettings: DiscordSettings.DiscordSettings)
 	local self = Construct({
-		DiscordSettings = discordSettings,
+		discordSettings = discordSettings,
 
-		Reporter = Console.new("DiscordClient"),
+		reporter = Console.new("🎮 DiscordClient"),
 
-		WebsocketUrl = "",
-		ShardCount = 0,
-		MaxConcurrency = 0,
+		websocketUrl = "",
+		shardCount = 0,
+		maxConcurrency = 0,
 
-		DiscordShards = { } :: { DiscordShard.DiscordShard },
-		Cache = { },
+		discordShards = { } :: { DiscordShard.DiscordShard },
+		cache = { },
 	}, DiscordClient.Prototype)
 
 	self.DiscordGateway = DiscordGateway.new(self)

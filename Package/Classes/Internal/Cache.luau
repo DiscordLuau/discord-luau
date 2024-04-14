@@ -4,37 +4,37 @@ local Construct = require("../../Utils/Construct")
 
 local Cache = {}
 
-Cache.Type = "Cache"
-
 Cache.Prototype = {}
 Cache.Interface = {}
 
+Cache.Prototype.type = "Cache"
+
 function Cache.Prototype.setExpiry(self: Cache, seconds: number)
-	self.Expiry = seconds
+	self.expiry = seconds
 end
 
 function Cache.Prototype.set(self: Cache, value: any)
-	self.Data = value
+	self.data = value
 
-	if self.ExpiryThread then
-		Task.cancel(self.ExpiryThread)
+	if self.expiryThread then
+		Task.cancel(self.expiryThread)
 	end
 
-	self.ExpiryThread = Task.spawn(function()
-		Task.wait(self.Expiry)
+	self.expiryThread = Task.spawn(function()
+		Task.wait(self.expiry)
 
-		self.Data = nil
-		self.ExpiryThread = nil
+		self.data = nil
+		self.expiryThread = nil
 	end)
 end
 
 function Cache.Prototype.get(self: Cache)
-	return self.Data
+	return self.data
 end
 
 function Cache.Interface.new(expiryTime: number?)
 	return Construct({
-		Expiry = expiryTime or 5
+		expiry = expiryTime or 5
 	}, Cache.Prototype)
 end
 

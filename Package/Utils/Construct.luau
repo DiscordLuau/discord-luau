@@ -36,12 +36,13 @@ return function<S, M>(source: S, prototype: M): S & M
 		__len = function(self) return failCall(self, "#") end,
 
 		__mode = "",
+		__type = prototype.type or "GenericClass",
 
 		-- __eq = ...
 		-- __gc = ...
 
 		__tostring = function()
-			return `DiscordLuau<'{prototype.Type or "GenericClass"}'>`
+			return `DiscordLuau<'{prototype.type or "GenericClass"}'>`
 		end,
 	})
 
