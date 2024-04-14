@@ -8,6 +8,9 @@ local Signal = require("../../Vendor/Signal")
 local Console = require("../../Vendor/Console")
 local State = require("../../Vendor/State")
 
+local EventIn = require("../Middleware/EventIn")
+local EventOut = require("../Middleware/EventOut")
+
 local WebsocketBuffer = require("WebsocketBuffer")
 
 local Net = require("@lune/net")
@@ -27,7 +30,7 @@ DiscordWebsocket.Prototype.type = "DiscordWebsocket"
 function DiscordWebsocket.Prototype.sendAsync(self: DiscordWebsocket, dataPacket)
 	return Future.try(function()
 		local messageSendOperationSuccessful, messageResult =
-			pcall(self.SocketInstance.send, Serde.encode("json", dataPacket))
+			pcall(self.SocketInstance.send, Serde.encode("json", self.gatewayEventOut:processJSON(dataPacket)))
 
 		if messageSendOperationSuccessful then
 			self.reporter:debug(`Discord Websocket Message Sent: {dataPacket[WebsocketOperationKeys.OperationCode]}`)
@@ -88,6 +91,9 @@ function DiscordWebsocket.Interface.new()
 		websocketActive = State.new(false),
 		websocketWebsocketBuffer = WebsocketBuffer.new(),
 
+		gatewayEventIn = EventIn.new(),
+		gatewayEventOut = EventOut.new(),
+
 		onMessageRecv = Signal.new(),
 		onSocketDead = Signal.new(),
 		onOperationRecv = Signal.new(),
@@ -129,7 +135,7 @@ function DiscordWebsocket.Interface.new()
 
 		self.onOperationRecv:fire(
 			dataPacket[WebsocketOperationKeys.OperationCode],
-			dataPacket[WebsocketOperationKeys.Data],
+			self.gatewayEventIn:processJSON(dataPacket[WebsocketOperationKeys.Data]),
 			dataPacket[WebsocketOperationKeys.EventName],
 			dataPacket[WebsocketOperationKeys.Sequence]
 		)

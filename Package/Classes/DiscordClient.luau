@@ -33,7 +33,7 @@ function DiscordClient.Prototype.connectAsync(self: DiscordClient)
 
 		self.websocketUrl = `{data.url}/?v={websocketVersion}`
 		self.shardCount = data.shards
-		self.maxConcurrency = data.session_start_limit.max_concurrency
+		self.maxConcurrency = data.sessionStartLimit.maxConcurrency
 
 		for shardId = 1, self.shardCount do
 			self.discordShards[shardId] = DiscordShard.new(self, shardId - 1)

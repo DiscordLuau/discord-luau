@@ -6,6 +6,9 @@ local Construct = require("../../Utils/Construct")
 local HTTPRatelimit = require("HTTPRatelimit")
 local HTTPScheduler = require("HTTPScheduler")
 
+local EventIn = require("../Middleware/EventIn")
+local EventOut = require("../Middleware/EventOut")
+
 local Serde = require("@lune/serde")
 local Net = require("@lune/net")
 
@@ -70,7 +73,7 @@ function DiscordGateway.Prototype.requestAsync(self: DiscordGateway, api: string
 					["authorization"] = `Bot {self.discordClient.discordSettings.discordToken}`,
 					["content-type"] = "application/json"
 				},
-				body = data and Serde.encode("json", data)
+				body = data and Serde.encode("json", self.gatewayEventOut:processJSON(data))
 			})
 
 			self.reporter:debug(`{method} Async to '{api}': {networkResponse.statusCode} - {networkResponse.statusMessage}`)
@@ -93,7 +96,7 @@ function DiscordGateway.Prototype.requestAsync(self: DiscordGateway, api: string
 			if networkResponse.body == "" then
 				return
 			else
-				return Serde.decode("json", networkResponse.body)
+				return self.gatewayEventIn:processJSON(Serde.decode("json", networkResponse.body))
 			end
 		end)
 	end)
@@ -146,6 +149,9 @@ function DiscordGateway.Interface.new(discordClient: any)
 	return Construct({
 		discordClient = discordClient,
 		discordScheduler = HTTPScheduler.new(1),
+
+		gatewayEventIn = EventIn.new(),
+		gatewayEventOut = EventOut.new(),
 
 		reporter = Console.new("🌉 DiscordGateway"),
 

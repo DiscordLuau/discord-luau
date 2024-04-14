@@ -28,7 +28,7 @@ function DiscordShard.Prototype.observeWebsocketEvents(self: DiscordShard)
 		if eventName == WebsocketEvents.Ready then
 			local websocketVersion = self.discordClient.DiscordGateway:getApiVersion()
 
-			self.reporter:log(`DiscordShard is active - id: "{data.session_id}"`)
+			self.reporter:log(`DiscordShard is active - id: "{data.sessionId}"`)
 
 			self.resumeSessionId = data.session_id
 			self.ResumeGatewayUrl = `{data.resume_gateway_url}/?v={websocketVersion}`
@@ -45,9 +45,9 @@ function DiscordShard.Prototype.observeWebsocketOperations(self: DiscordShard)
 		elseif operationCode == WebsocketOperationCodes.Hello then
 			Task.wait(math.random())
 
-			self.HeartbeatInterval = operationData.heartbeat_interval
+			self.heartbeatInterval = operationData.heartbeatInterval
 			self:heartbeatAsync(true):after(function()
-				self:heartbeatIn(math.random(self.HeartbeatInterval / 2, self.HeartbeatInterval))
+				self:heartbeatIn(math.random(self.heartbeatInterval / 2, self.heartbeatInterval))
 			end)
 		elseif operationCode == WebsocketOperationCodes.Heartbeat then
 			self.reporter:log(`Discord Websocket requested heartbeat, sending heartbeat!`)
@@ -187,6 +187,7 @@ function DiscordShard.Interface.new(discordClient: any, shardId: number)
 		heartbeatTask = nil,
 		resumeSessionId = nil,
 		dispatchSequence = nil,
+		heartbeatInterval = nil,
 
 		onEvent = Signal.new(),
 
