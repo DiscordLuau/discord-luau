@@ -7,11 +7,16 @@ local DiscordShard = require("Network/DiscordShard")
 
 local DiscordEndpoints = require("../Enums/DiscordEndpoints")
 local WebsocketEvents = require("../Enums/WebsocketEvents")
+local DiscordEvents = require("../Enums/DiscordEvents")
 
 local Cache = require("Internal/Cache")
+local DiscordCache = require("Internal/DiscordCache")
+local DiscordUser = require("Internal/DiscordUser")
+local DiscordApplication = require("Internal/DiscordApplication")
 
 local Console = require("../Vendor/Console")
 local Future = require("../Vendor/Future")
+local Signal = require("../Vendor/Signal")
 
 local Task = require("@lune/task")
 
@@ -82,13 +87,58 @@ function DiscordClient.Prototype.connectAsync(self: DiscordClient)
 		for shardId = 1, self.shardCount do
 			self.discordShards[shardId].onEvent:connect(function(eventName, data)
 				if eventName == WebsocketEvents.Ready then
-					print("READY!")
+					--[=[
+						@prop discordUser DiscordUser
+						@within DiscordClient
+					]=]
+					self.discordUser = DiscordUser.new(self, data.user.id, data.user)
+					--[=[
+						@prop discordApplication DiscordApplication
+						@within DiscordClient
+					]=]
+					self.discordApplication = DiscordApplication.new(self, data.application)
+
+					self.onEvent:fire(DiscordEvents.Ready)
 				elseif eventName == WebsocketEvents.MessageCreate then
 					print("MESSAGE CREATE!")
 				end
 			end)
 		end
 	end)
+end
+
+--[=[
+	@method fetchChannelAsync
+	@within DiscordClient
+
+	@return Future
+]=]
+function DiscordClient.Prototype.fetchChannelAsync(self: DiscordClient)
+	
+end
+
+--[=[
+	@method on
+	@within DiscordClient
+
+	@return Connection
+]=]
+function DiscordClient.Prototype.on(self: DiscordClient, targetEventName: string, eventCallback: () -> ())
+	return self.onEvent:connect(function(eventName: string, ...)
+		if eventName ~= targetEventName then
+			return
+		end
+
+		eventCallback(...)
+	end)
+end
+
+--[=[
+	@method setVerbose
+	@within DiscordClient
+]=]
+function DiscordClient.Prototype.setVerbose(self: DiscordClient, verbose: boolean)
+	Console.setGlobalLogLevel(verbose and Console.LogLevel.debug or Console.LogLevel.warn)
 end
 
 --[=[
@@ -107,13 +157,19 @@ end
 		end)
 	```
 ]=]
-function DiscordClient.Interface.new(discordSettings: DiscordSettings.DiscordSettings)
+function DiscordClient.Interface.new(discordSettings: DiscordSettings.DiscordSettings): DiscordClient
 	local self = Construct({
 		--[=[
 			@prop discordSettings DiscordSettings
 			@within DiscordClient
 		]=]
 		discordSettings = discordSettings,
+
+		--[=[
+			@prop discordCache DiscordCache
+			@within DiscordClient
+		]=]
+		discordCache = DiscordCache.new(),
 
 		--[=[
 			@prop reporter Reporter
@@ -144,19 +200,30 @@ function DiscordClient.Interface.new(discordSettings: DiscordSettings.DiscordSet
 			@within DiscordClient
 		]=]
 		discordShards = { } :: { DiscordShard.DiscordShard },
+
+		--[=[
+			@prop onEvent Signal
+			@within DiscordClient
+		]=]
+		onEvent = Signal.new(),
 	}, DiscordClient.Prototype)
 
 	--[=[
-			@prop DiscordGateway DiscordGateway
-			@within DiscordClient
-		]=]
+		@prop DiscordGateway DiscordGateway
+		@within DiscordClient
+	]=]
 	self.DiscordGateway = DiscordGateway.new(self)
 
 	return self
 end
 
+Console.setGlobalLogLevel(Console.LogLevel.warn)
+
 export type DiscordClient = typeof(DiscordClient.Interface.new()) & {
-	DiscordGateway: DiscordGateway.DiscordGateway
+	DiscordGateway: DiscordGateway.DiscordGateway,
+
+	DiscordUser: DiscordUser.DiscordUser,
+	DiscordApplication: DiscordApplication.DiscordApplication,
 }
 
 return DiscordClient.Interface
