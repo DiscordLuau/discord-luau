@@ -21,8 +21,8 @@ function DiscordUser.Interface.new(discordClient: any, userId: number, partialUs
 	bot: boolean,
 	verified: boolean,
 	discriminator: string
-}?)
-	local self = discordClient.discordCache:getDataOr(userId, function()
+}?)	
+	local self = discordClient.discordCache:getDataOr(`DiscordUser<{userId}>`, function()
 		return Construct({
 			id = userId,
 	

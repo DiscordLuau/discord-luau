@@ -24,4 +24,16 @@ DiscordLuau.DiscordSettings = require("Classes/DiscordSettings")
 ]=]
 DiscordLuau.DiscordClient = require("Classes/DiscordClient")
 
+--[=[
+	@prop ApplicationCommand ApplicationCommand
+	@within Discord-Luau
+]=]
+DiscordLuau.ApplicationCommand = require("Classes/ApplicationCommand")
+
+--[=[
+	@prop ApplicationCommandOption ApplicationCommandOption
+	@within Discord-Luau
+]=]
+DiscordLuau.ApplicationCommandOption = require("Classes/ApplicationCommandOption")
+
 return DiscordLuau

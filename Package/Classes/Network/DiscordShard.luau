@@ -31,7 +31,7 @@ DiscordShard.Prototype.type = "DiscordShard"
 function DiscordShard.Prototype.observeWebsocketEvents(self: DiscordShard)
 	self.onEvent:connect(function(eventName, data)
 		if eventName == WebsocketEvents.Ready then
-			local websocketVersion = self.discordClient.DiscordGateway:getApiVersion()
+			local websocketVersion = self.discordClient.discordGateway:getApiVersion()
 
 			self.reporter:log(`DiscordShard is active - id: "{data.sessionId}"`)
 

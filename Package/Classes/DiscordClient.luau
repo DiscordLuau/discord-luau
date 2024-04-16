@@ -61,10 +61,10 @@ DiscordClient.Prototype.type = "DiscordClient"
 ]=]
 function DiscordClient.Prototype.connectAsync(self: DiscordClient)
 	return Future.try(function()
-		self.DiscordGateway:setEndpointCache(DiscordEndpoints.BotGateway, Cache.new(10))
+		self.discordGateway:setEndpointCache(DiscordEndpoints.BotGateway, Cache.new(10))
 
-		local data = self.DiscordGateway:getAsync(DiscordEndpoints.BotGateway):await()
-		local websocketVersion = self.DiscordGateway:getApiVersion()
+		local data = self.discordGateway:getAsync(DiscordEndpoints.BotGateway):await()
+		local websocketVersion = self.discordGateway:getApiVersion()
 
 		self.websocketUrl = `{data.url}/?v={websocketVersion}`
 		self.shardCount = data.shards
@@ -209,10 +209,10 @@ function DiscordClient.Interface.new(discordSettings: DiscordSettings.DiscordSet
 	}, DiscordClient.Prototype)
 
 	--[=[
-		@prop DiscordGateway DiscordGateway
+		@prop discordGateway DiscordGateway
 		@within DiscordClient
 	]=]
-	self.DiscordGateway = DiscordGateway.new(self)
+	self.discordGateway = DiscordGateway.new(self)
 
 	return self
 end
@@ -220,10 +220,10 @@ end
 Console.setGlobalLogLevel(Console.LogLevel.warn)
 
 export type DiscordClient = typeof(DiscordClient.Interface.new()) & {
-	DiscordGateway: DiscordGateway.DiscordGateway,
+	discordGateway: DiscordGateway.DiscordGateway,
 
-	DiscordUser: DiscordUser.DiscordUser,
-	DiscordApplication: DiscordApplication.DiscordApplication,
+	discordUser: DiscordUser.DiscordUser,
+	discordApplication: DiscordApplication.DiscordApplication,
 }
 
 return DiscordClient.Interface

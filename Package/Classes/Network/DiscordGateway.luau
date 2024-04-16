@@ -46,7 +46,7 @@ function DiscordGateway.Prototype.parseErrors(self: DiscordGateway, errorTable: 
 	return _source
 end
 
-function DiscordGateway.Prototype.parseDiscordAPIErrors(self: DiscordGateway, api: string, networkResponse:{ body: string, statusCode: string, statusMessage: string })
+function DiscordGateway.Prototype.parseDiscordAPIErrors(self: DiscordGateway, api: string, networkResponse: { body: string, statusCode: string, statusMessage: string })
 	local success, messageDecoded = pcall(function()
 		return Serde.decode("json", networkResponse.body)
 	end)
