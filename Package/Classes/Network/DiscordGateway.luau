@@ -62,13 +62,11 @@ end
 
 function DiscordGateway.Prototype.requestAsync(self: DiscordGateway, api: string, method: ("DELETE" | "GET" | "HEAD" | "OPTIONS" | "PATCH" | "POST" | "PUT"), data: { [any]: any })
 	return Future.try(function()
-		if self.endpointRateLimits[api] and self.endpointRateLimits[api]:isConsumed() then
-			error(`HTTPRatelimit reached!`)
-		end
-
 		return self.discordScheduler:addTask(function()
 			if self.endpointRateLimits[api] and self.endpointRateLimits[api]:isConsumed() then
-				error(`HTTPRatelimit reached!`)
+				while self.endpointRateLimits[api]:isConsumed() do
+					task.wait()
+				end
 			end
 
 			local networkResponse = Net.request({
