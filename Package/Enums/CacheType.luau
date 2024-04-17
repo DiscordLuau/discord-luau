@@ -4,5 +4,7 @@ return {
 	DiscordGuild = "DiscordGuild",
 	DiscordGuildRole = "DiscordGuildRole",
 	DiscordUser = "DiscordUser",
-	DiscordChannel = "DiscordChannel"
+	DiscordChannel = "DiscordChannel",
+	DiscordMessage = "DiscordMessage",
+	DiscordMember = "DiscordMember"
 }

@@ -14,6 +14,7 @@ local DiscordCache = require("Internal/DiscordCache")
 local DiscordUser = require("Internal/DiscordUser")
 local DiscordGuild = require("Internal/DiscordGuild")
 local DiscordChannel = require("Internal/DiscordChannel")
+local DiscordMessage = require("Internal/DiscordMessage")
 local DiscordApplication = require("Internal/DiscordApplication")
 
 local Console = require("../Vendor/Console")
@@ -102,7 +103,9 @@ function DiscordClient.Prototype.connectAsync(self: DiscordClient)
 
 					self.onEvent:fire(DiscordEvents.Ready)
 				elseif eventName == WebsocketEvents.MessageCreate then
-					print("MESSAGE CREATE!")
+					local discordMessage = DiscordMessage.new(self, data)
+
+					self.onEvent:fire(DiscordEvents.Message, discordMessage)
 				end
 			end)
 		end

@@ -1,3 +1,4 @@
 return {
-	Ready = "Ready"
+	Ready = "Ready",
+	Message = "Message"
 }

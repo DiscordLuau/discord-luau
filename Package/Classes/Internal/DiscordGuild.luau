@@ -56,6 +56,68 @@ function DiscordGuild.Prototype.fetchSlashCommandsAsync(self: DiscordGuild)
 	end)
 end
 
+function DiscordGuild.Prototype.setSlashCommandsAsync(self: DiscordGuild, commands: { ApplicationCommand.ApplicationCommand })
+	return Future.try(function()
+		local allCommands = self:fetchSlashCommandsAsync():await()
+
+		local commandsToUpdate = {}
+		local commandsToCreate = {}
+		local commandsToDestroy = {}
+
+		for _, commandObject0 in allCommands do
+			local commandFoundInCommandsArray
+			local commandReference
+
+			for _, commandObject1 in commands do
+				if commandObject0.name ~= commandObject1.name then
+					continue
+				end
+
+				commandReference = commandObject1
+				commandFoundInCommandsArray = true
+				
+				break
+			end
+
+			if commandFoundInCommandsArray then
+				commandsToUpdate[commandReference.id] = commandObject0
+			else
+				table.insert(commandsToDestroy, commandObject0)
+			end
+		end
+
+		for _, commandObject0 in commands do
+			local commandFoundInUpdateCommandsArray
+
+			for _, commandObject1 in commandsToUpdate do
+				if commandObject0.name ~= commandObject1.name then
+					continue
+				end
+
+				commandFoundInUpdateCommandsArray = true
+
+				break
+			end
+
+			if not commandFoundInUpdateCommandsArray then
+				table.insert(commandsToCreate, commandObject0)
+			end
+		end
+
+		for _, commandStruct in commandsToDestroy do
+			self:deleteSlashCommandAsync(commandStruct.id):await()
+		end
+
+		for commandId: string, command: ApplicationCommand.ApplicationCommand in commandsToUpdate do
+			self:editSlashCommandAsync(commandId, command):await()
+		end
+
+		for _, command: ApplicationCommand.ApplicationCommand in commandsToCreate do
+			self:createSlashCommandAsync(command):await()
+		end
+	end)
+end
+
 function DiscordGuild.Interface.new(discordClient: any, guildData: {
 	id: string,
 	roles: { any },

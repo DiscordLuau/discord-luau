@@ -4,6 +4,10 @@ local Env = require("../.env")
 local DiscordSettings = DiscordLuau.DiscordSettings.new(Env.DISCORD_BOT_TOKEN)
 local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettings)
 
+DiscordClient:on("Message", function(message)
+	print(message.content)
+end)
+
 DiscordClient:on("Ready", function()
 	print(`🎉🎉 {DiscordClient.discordUser.username} is online! 🎉🎉`)
 
@@ -20,14 +24,14 @@ DiscordClient:on("Ready", function()
 	-- 	end)
 	-- end)
 
-	local discordGuild = DiscordClient:fetchGuildAsync("737382889947136000"):await()
-	local discordGuildCommands = discordGuild:fetchSlashCommandsAsync():await()
+	-- local discordGuild = DiscordClient:fetchGuildAsync("737382889947136000"):await()
+	-- local discordGuildCommands = discordGuild:fetchSlashCommandsAsync():await()
 
-	for _, discordCommand in discordGuildCommands do
-		discordGuild:deleteSlashCommandAsync(discordCommand.id):after(function()
-			print("deleted guild command; ", discordCommand.id)
-		end)
-	end
+	-- for _, discordCommand in discordGuildCommands do
+	-- 	discordGuild:deleteSlashCommandAsync(discordCommand.id):after(function()
+	-- 		print("deleted guild command; ", discordCommand.id)
+	-- 	end)
+	-- end
 end)
 
 DiscordClient:connectAsync()
