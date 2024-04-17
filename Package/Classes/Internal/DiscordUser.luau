@@ -1,5 +1,7 @@
 local Construct = require("../../Utils/Construct")
 
+local CacheType = require("../../Enums/CacheType")
+
 --[=[
 	@class Internal.DiscordUser
 
@@ -12,19 +14,19 @@ DiscordUser.Interface = {}
 
 DiscordUser.Prototype.type = "DiscordUser"
 
-function DiscordUser.Interface.new(discordClient: any, userId: number, partialUserData: {
-	username: string,
-	flags: number,
-	mfaEnabled: boolean,
-	avatar: string,
+function DiscordUser.Interface.new(discordClient: any, partialUserData: {
+	username: string?,
+	flags: number?,
+	mfaEnabled: boolean?,
+	avatar: string?,
 	id: string,
-	bot: boolean,
-	verified: boolean,
-	discriminator: string
-}?)	
-	local self = discordClient.discordCache:getDataOr(`DiscordUser<{userId}>`, function()
+	bot: boolean?,
+	verified: boolean?,
+	discriminator: string?
+})	
+	local self = discordClient.discordCache:getDataOr(CacheType.DiscordUser, partialUserData.id, function()
 		return Construct({
-			id = userId,
+			id = partialUserData.id,
 	
 			discordClient = discordClient
 		}, DiscordUser.Prototype)

@@ -12,6 +12,8 @@ local DiscordEvents = require("../Enums/DiscordEvents")
 local Cache = require("Internal/Cache")
 local DiscordCache = require("Internal/DiscordCache")
 local DiscordUser = require("Internal/DiscordUser")
+local DiscordGuild = require("Internal/DiscordGuild")
+local DiscordChannel = require("Internal/DiscordChannel")
 local DiscordApplication = require("Internal/DiscordApplication")
 
 local Console = require("../Vendor/Console")
@@ -91,7 +93,7 @@ function DiscordClient.Prototype.connectAsync(self: DiscordClient)
 						@prop discordUser DiscordUser
 						@within DiscordClient
 					]=]
-					self.discordUser = DiscordUser.new(self, data.user.id, data.user)
+					self.discordUser = DiscordUser.new(self, data.user)
 					--[=[
 						@prop discordApplication DiscordApplication
 						@within DiscordClient
@@ -108,13 +110,31 @@ function DiscordClient.Prototype.connectAsync(self: DiscordClient)
 end
 
 --[=[
+	@method fetchGuildAsync
+	@within DiscordClient
+
+	@return Future
+]=]
+function DiscordClient.Prototype.fetchGuildAsync(self: DiscordClient, guildId: string)
+	return Future.try(function()
+		local rawGuildData = self.discordGateway:getAsync(string.format(DiscordEndpoints.BotGetGuild, guildId)):await()
+
+		return DiscordGuild.new(self, rawGuildData)
+	end)
+end
+
+--[=[
 	@method fetchChannelAsync
 	@within DiscordClient
 
 	@return Future
 ]=]
-function DiscordClient.Prototype.fetchChannelAsync(self: DiscordClient)
-	
+function DiscordClient.Prototype.fetchChannelAsync(self: DiscordClient, channelId: string)
+	return Future.try(function()
+		local rawChannelData = self.discordGateway:getAsync(string.format(DiscordEndpoints.BotGetChannel, channelId)):await()
+
+		return DiscordChannel.new(self, rawChannelData)
+	end)
 end
 
 --[=[

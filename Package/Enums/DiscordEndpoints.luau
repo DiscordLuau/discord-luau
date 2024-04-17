@@ -1,6 +1,7 @@
 return {
 	BotGateway = "gateway/bot",
 
+	BotGetGuild = "guilds/%s",
 	BotGetChannel = "channels/%s",
 	BotCreateMessage = "channels/%s/messages",
 

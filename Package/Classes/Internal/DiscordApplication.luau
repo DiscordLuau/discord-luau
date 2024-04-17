@@ -5,6 +5,7 @@ local Future = require("../../Vendor/Future")
 local ApplicationCommand = require("../ApplicationCommand")
 
 local DiscordEndpoints = require("../../Enums/DiscordEndpoints")
+local CacheType = require("../../Enums/CacheType")
 
 --[=[
 	@class Internal.DiscordApplication
@@ -19,7 +20,7 @@ DiscordApplication.Interface = {}
 DiscordApplication.Prototype.type = "DiscordApplication"
 
 function DiscordApplication.Prototype.createSlashCommandAsync(self: DiscordApplication, command: ApplicationCommand.ApplicationCommand)
-	return Future.new(function()
+	return Future.try(function()
 		return self.discordClient.discordGateway:postAsync(
 			string.format(DiscordEndpoints.CreateGlobalApplicationCommand, self.id),
 			command:toJSONObject()
@@ -28,7 +29,7 @@ function DiscordApplication.Prototype.createSlashCommandAsync(self: DiscordAppli
 end
 
 function DiscordApplication.Prototype.deleteSlashCommandAsync(self: DiscordApplication, commandId: string)
-	return Future.new(function()
+	return Future.try(function()
 		return self.discordClient.discordGateway:deleteAsync(
 			string.format(DiscordEndpoints.DeleteGlobalApplicationCommand, self.id, commandId)
 		):await()
@@ -36,7 +37,7 @@ function DiscordApplication.Prototype.deleteSlashCommandAsync(self: DiscordAppli
 end
 
 function DiscordApplication.Prototype.editSlashCommandAsync(self: DiscordApplication, commandId: string, command: ApplicationCommand.ApplicationCommand)
-	return Future.new(function()
+	return Future.try(function()
 		return self.discordClient.discordGateway:patchAsync(
 			string.format(DiscordEndpoints.EditGlobalApplicationCommand, self.id, commandId),
 			command:toJSONObject()
@@ -45,7 +46,7 @@ function DiscordApplication.Prototype.editSlashCommandAsync(self: DiscordApplica
 end
 
 function DiscordApplication.Prototype.fetchSlashCommandsAsync(self: DiscordApplication)
-	return Future.new(function()
+	return Future.try(function()
 		return self.discordClient.discordGateway:getAsync(
 			string.format(DiscordEndpoints.GetGlobalApplicationCommands, self.id)
 		):await()
@@ -53,7 +54,7 @@ function DiscordApplication.Prototype.fetchSlashCommandsAsync(self: DiscordAppli
 end
 
 function DiscordApplication.Prototype.setSlashCommandsAsync(self: DiscordApplication, commands: { ApplicationCommand.ApplicationCommand })
-	return Future.new(function()
+	return Future.try(function()
 		local allCommands = self:fetchSlashCommandsAsync():await()
 
 		local commandsToUpdate = {}
@@ -118,7 +119,7 @@ function DiscordApplication.Interface.new(discordClient: any, applicationData: {
 	id: string,
 	flags: number
 })
-	return discordClient.discordCache:getDataOr(`DiscordApplication<{applicationData.id}>`, function()
+	return discordClient.discordCache:getDataOr(CacheType.Application, applicationData.id, function()
 		return Construct({
 			id = applicationData.id,
 			flags = applicationData.flags,
