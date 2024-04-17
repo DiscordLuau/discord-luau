@@ -36,4 +36,10 @@ DiscordLuau.ApplicationCommand = require("Classes/ApplicationCommand")
 ]=]
 DiscordLuau.ApplicationCommandOption = require("Classes/ApplicationCommandOption")
 
+local DiscordMessage = require("Types/DiscordMessage")
+export type DiscordMessage = DiscordMessage.DiscordMessage
+
+local DiscordGuild = require("Types/DiscordGuild")
+export type DiscordGuild = DiscordGuild.DiscordGuild
+
 return DiscordLuau

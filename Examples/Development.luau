@@ -4,8 +4,8 @@ local Env = require("../.env")
 local DiscordSettings = DiscordLuau.DiscordSettings.new(Env.DISCORD_BOT_TOKEN)
 local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettings)
 
-DiscordClient:on("Message", function(message)
-	print(message.content)
+DiscordClient:on("Message", function(message: DiscordLuau.DiscordMessage)
+	print(`DiscordUser '{message.author.username}' has said; {message.content}`)
 end)
 
 DiscordClient:on("Ready", function()

@@ -242,8 +242,16 @@ end
 
 Console.setGlobalLogLevel(Console.LogLevel.warn)
 
-export type DiscordClient = typeof(DiscordClient.Interface.new()) & {
+export type DiscordClient = typeof(DiscordClient.Prototype) & {
 	discordGateway: DiscordGateway.DiscordGateway,
+	discordSettings: DiscordSettings.DiscordSettings,
+	discordCache: DiscordCache.DiscordCache,
+
+	websocketUrl: string,
+	shardCount: number,
+	maxConcurrency: number,
+
+	discordShards: { DiscordShard.DiscordShard },
 
 	discordUser: DiscordUser.DiscordUser,
 	discordApplication: DiscordApplication.DiscordApplication,
