@@ -1,6 +1,11 @@
 local Construct = require("../../Utils/Construct")
 
 local CacheType = require("../../Enums/CacheType")
+local DiscordEndpoints = require("../../Enums/DiscordEndpoints")
+
+local Future = require("../../Vendor/Future")
+
+local DiscordMessageType = require("../../Types/DiscordMessage")
 
 local DiscordUser = require("DiscordUser")
 
@@ -16,6 +21,19 @@ DiscordChannel.Interface = {}
 
 DiscordChannel.Prototype.type = "DiscordChannel"
 
+function DiscordChannel.Prototype.sendMessageAsync(self: DiscordChannel, messageData: DiscordMessageType.MessageSchema)
+	return Future.try(function()
+		return self.discordClient.discordGateway:postAsync(string.format(DiscordEndpoints.BotCreateMessage, self.id), {
+			content = messageData.content or nil,
+			nonce = messageData.nonce or nil,
+			tts = messageData.tts or false,
+			sticker_ids = messageData.stickerIds,
+			flags = messageData.flags or nil, --fixme: should use a bitfield.
+			enforce_nonce = messageData.enforceNonce or false
+		}):await()
+	end)
+end
+
 function DiscordChannel.Interface.new(discordClient: any, channelData: {
 	id: string,
 	recipients: { any },
@@ -26,8 +44,10 @@ function DiscordChannel.Interface.new(discordClient: any, channelData: {
 			discordClient = discordClient
 		}
 
-		for index, value in channelData.recipients do
-			channelData.recipients[index] = DiscordUser.new(discordClient, value)
+		if channelData.recipients then
+			for index, value in channelData.recipients do
+				channelData.recipients[index] = DiscordUser.new(discordClient, value)
+			end
 		end
 
 		for index, value in channelData do

@@ -1,7 +1,7 @@
 export type DiscordMessage = {
 	mentionRoles: { string },
-	attachments: { unknown }, -- fixme: add Attachment support!
-	embeds: { unknown }, -- fixme: add Embed support!
+	-- attachments: { unknown },
+	-- embeds: { unknown },
 	tts: boolean,
 	mentionEveryone: boolean,
 	nonce: string,
@@ -22,7 +22,7 @@ export type DiscordMessage = {
 	pinned: boolean,
 	guildId: boolean,
 	channelId: boolean,
-	components: { unknown }, -- fixme: implement Component support!
+	-- components: { unknown },
 	member: {
 		flags: number,
 		deaf: boolean,
@@ -30,7 +30,25 @@ export type DiscordMessage = {
 		pending: boolean,
 		mute: boolean,
 		joinedAt: string
-	}
+	},
+
+	replyAsync: (self: DiscordMessage, messageData: MessageSchema) -> ()
+}
+
+export type MessageSchema = {
+	content: string?,
+	nonce: (string | number)?,
+	tts: boolean?,
+	-- embeds: { unknown },
+	-- allowedMentions: { unknown },
+	-- messageReference: {  },
+	-- components: { unknown },
+	stickerIds: { string }?,
+	-- files: { unknown },
+	-- payloadJson: { unknown }
+	-- attachments: { unknown }
+	flags: number?,
+	enforceNonce: boolean?
 }
 
 return "DiscordMessage"
