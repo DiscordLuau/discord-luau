@@ -107,7 +107,7 @@ local function Future<T..., A...>(Callback: (A...) -> T..., ...: A...): Future<T
 	return self
 end
 
-local function Try<T..., A...>(Callback: (A...) -> T..., ...: A...): Future<(boolean, T...)>
+local function Try<T..., A...>(Callback: (A...) -> T..., ...: A...): Future<T...>
 	return Future(function(...)
 		local data = { pcall(Callback, ...) }
 

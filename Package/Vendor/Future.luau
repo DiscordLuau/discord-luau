@@ -3,4 +3,9 @@
 
 	(sorry I will add docs for this lol, just haven't got around to it yet!)
 ]=]
-return require("Embedded/Redblox/Future")
+
+local Future = require("Embedded/Redblox/Future")
+
+export type Future<T> = Future.Future<T>
+
+return Future

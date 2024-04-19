@@ -36,9 +36,10 @@ end
 
 function DiscordChannel.Interface.new(discordClient: any, channelData: {
 	id: string,
-	recipients: { any },
-	[any]: any,
-})
+	recipients: { unknown },
+}): DiscordChannel
+	print(channelData)
+
 	return discordClient.discordCache:getDataOr(CacheType.DiscordChannel, channelData.id, function()
 		local channelStruct = {
 			discordClient = discordClient
@@ -58,6 +59,16 @@ function DiscordChannel.Interface.new(discordClient: any, channelData: {
 	end)
 end
 
-export type DiscordChannel = typeof(DiscordChannel.Interface.new())
+export type DiscordChannel = typeof(DiscordChannel.Prototype) & {
+	type: number,
+	nsfw: boolean,
+	id: string,
+	flags: number,
+	name: string,
+	position: number,
+	rateLimitPerUser: number,
+	lastMessageId: string,
+	guildId: string
+}
 
 return DiscordChannel.Interface

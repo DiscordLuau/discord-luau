@@ -5,8 +5,6 @@ local DiscordEndpoints = require("../../Enums/DiscordEndpoints")
 
 local Future = require("../../Vendor/Future")
 
-local DiscordMessageType = require("../../Types/DiscordMessage")
-
 --[=[
 	@class Internal.DiscordMessage
 
@@ -19,7 +17,7 @@ DiscordMessage.Interface = {}
 
 DiscordMessage.Prototype.type = "DiscordMessage"
 
-function DiscordMessage.Prototype.replyAsync(self: DiscordMessage, messageData: DiscordMessageType.MessageSchema)
+function DiscordMessage.Prototype.replyAsync(self: DiscordMessage, messageData: DiscordMessageSchema)
 	return Future.try(function()
 		return self.discordClient.discordGateway:postAsync(string.format(DiscordEndpoints.BotCreateMessage, self.channelId), {
 			content = messageData.content or nil,
@@ -49,6 +47,55 @@ function DiscordMessage.Interface.new(discordClient: any, messageData: {
 	end)
 end
 
-export type DiscordMessage = typeof(DiscordMessage.Interface.new()) & DiscordMessageType.DiscordMessage
+export type DiscordMessage = typeof(DiscordMessage.Interface.new()) & {
+	mentionRoles: { string },
+	-- components: { unknown },
+	-- attachments: { unknown },
+	-- embeds: { unknown },
+	tts: boolean,
+	mentionEveryone: boolean,
+	nonce: string,
+	id: string,
+	author: {
+		username: string,
+		globalName: string,
+		avatar: string,
+		id: string,
+		publicFlags: number,
+		discriminator: string,
+	},
+	content: string,
+	mentions: { string },
+	flags: number,
+	timestamp: string,
+	type: number,
+	pinned: boolean,
+	guildId: boolean,
+	channelId: boolean,
+	member: {
+		flags: number,
+		deaf: boolean,
+		roles: { [string]: string },
+		pending: boolean,
+		mute: boolean,
+		joinedAt: string
+	},
+}
+
+export type DiscordMessageSchema = {
+	content: string?,
+	nonce: (string | number)?,
+	tts: boolean?,
+	-- embeds: { unknown },
+	-- allowedMentions: { unknown },
+	-- messageReference: {  },
+	-- components: { unknown },
+	-- files: { unknown },
+	-- payloadJson: { unknown }
+	-- attachments: { unknown }
+	stickerIds: { string }?,
+	flags: number?,
+	enforceNonce: boolean?
+}
 
 return DiscordMessage.Interface

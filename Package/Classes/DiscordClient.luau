@@ -118,7 +118,7 @@ end
 
 	@return Future
 ]=]
-function DiscordClient.Prototype.fetchGuildAsync(self: DiscordClient, guildId: string)
+function DiscordClient.Prototype.fetchGuildAsync(self: DiscordClient, guildId: string): Future.Future<DiscordGuild.DiscordGuild>
 	return Future.try(function()
 		local rawGuildData = self.discordGateway:getAsync(string.format(DiscordEndpoints.BotGetGuild, guildId)):await()
 
@@ -132,7 +132,7 @@ end
 
 	@return Future
 ]=]
-function DiscordClient.Prototype.fetchChannelAsync(self: DiscordClient, channelId: string)
+function DiscordClient.Prototype.fetchChannelAsync(self: DiscordClient, channelId: string): Future.Future<DiscordChannel.DiscordChannel>
 	return Future.try(function()
 		local rawChannelData = self.discordGateway:getAsync(string.format(DiscordEndpoints.BotGetChannel, channelId)):await()
 
