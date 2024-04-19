@@ -96,7 +96,7 @@ function ApplicationCommand.Prototype.toJSONObject(self: ApplicationCommand)
 	local options = {}
 
 	for _, commandOption in self.Options do
-		table.insert(options, commandOption:ToJSONObject())
+		table.insert(options, commandOption:toJSONObject())
 	end
 
 	if self.CommandPermissions then

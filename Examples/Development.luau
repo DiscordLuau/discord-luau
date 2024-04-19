@@ -21,33 +21,19 @@ end)
 DiscordClient:on("Ready", function()
 	print(`🎉🎉 {DiscordClient.discordUser.username} is online! 🎉🎉`)
 
-	local discordChannel = DiscordClient:fetchChannelAsync("1048686561685946489"):await()
+	local discordPresence = DiscordLuau.DiscordPresence.new()
+	local discordActivity = DiscordLuau.DiscordActivity.new()
 
-	discordChannel:sendMessageAsync({
-		content = "Hello, World! I sent this through the Discord Channel API!"
-	})
+	discordActivity:setActivityName("AsyncMatrix program at 3AM")
+	discordActivity:setActivityType(DiscordLuau.DiscordActivity.Type.Watching)
 
-	-- local slashCommand = DiscordLuau.ApplicationCommand.new()
-	-- 	:setName("example-command")
-	-- 	:setDescription("Example Description")
+	discordPresence:setStatus(DiscordLuau.DiscordPresence.Status.Idle)
+	discordPresence:addActivity(discordActivity)
+	discordPresence:setSince(0)
 
-	-- DiscordClient.discordApplication:setSlashCommandsAsync({
-	-- 	slashCommand
-	-- }):after(function(data)
-	-- 	print("updated, fetching current commands..")
-	-- 	DiscordClient.discordApplication:fetchSlashCommandsAsync():after(function(...)
-	-- 		print(...)
-	-- 	end)
-	-- end)
-
-	-- local discordGuild = DiscordClient:fetchGuildAsync("737382889947136000"):await()
-	-- local discordGuildCommands = discordGuild:fetchSlashCommandsAsync():await()
-
-	-- for _, discordCommand in discordGuildCommands do
-	-- 	discordGuild:deleteSlashCommandAsync(discordCommand.id):after(function()
-	-- 		print("deleted guild command; ", discordCommand.id)
-	-- 	end)
-	-- end
+	DiscordClient:updatePresenceAsync(discordPresence):after(function()
+		print(`Updated '{DiscordClient.discordUser.username}' preasence!`)
+	end)
 end)
 
 DiscordClient:connectAsync()

@@ -8,6 +8,8 @@ local DiscordShard = require("Network/DiscordShard")
 local DiscordEndpoints = require("../Enums/DiscordEndpoints")
 local WebsocketEvents = require("../Enums/WebsocketEvents")
 local DiscordEvents = require("../Enums/DiscordEvents")
+local WebsocketOperationCodes = require("../Enums/WebsocketOperationCodes")
+local WebsocketOperationKeys = require("../Enums/WebsocketOperationKeys")
 
 local Cache = require("Internal/Cache")
 local DiscordCache = require("Internal/DiscordCache")
@@ -139,6 +141,27 @@ function DiscordClient.Prototype.fetchChannelAsync(self: DiscordClient, channelI
 		local rawChannelData = self.discordGateway:getAsync(string.format(DiscordEndpoints.BotGetChannel, channelId)):await()
 
 		return DiscordChannel.new(self, rawChannelData)
+	end)
+end
+
+--[=[
+	@method updatePresenceAsync
+	@within DiscordClient
+
+	@return Future
+]=]
+function DiscordClient.Prototype.updatePresenceAsync(self: DiscordClient, discordPresence): Future.Future<nil>
+	return Future.try(function()
+		for shardId = 1, self.shardCount do
+			(self.discordShards :: { DiscordShard.DiscordShard })[shardId].discordWebsocket:sendAsync(
+				{
+					[WebsocketOperationKeys.OperationCode] = WebsocketOperationCodes.PresenseUpdate,
+					[WebsocketOperationKeys.Data] = discordPresence:toJSONObject(),
+				}
+			):await()
+		end
+
+		return true
 	end)
 end
 

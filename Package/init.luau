@@ -25,6 +25,18 @@ DiscordLuau.DiscordSettings = require("Classes/DiscordSettings")
 DiscordLuau.DiscordClient = require("Classes/DiscordClient")
 
 --[=[
+	@prop DiscordActivity DiscordActivity
+	@within Discord-Luau
+]=]
+DiscordLuau.DiscordActivity = require("Classes/DiscordActivity")
+
+--[=[
+	@prop DiscordPresence DiscordPresence
+	@within Discord-Luau
+]=]
+DiscordLuau.DiscordPresence = require("Classes/DiscordPresence")
+
+--[=[
 	@prop ApplicationCommand ApplicationCommand
 	@within Discord-Luau
 ]=]
