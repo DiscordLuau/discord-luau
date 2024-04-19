@@ -72,18 +72,18 @@ function ApplicationCommand.Prototype.setAutocompleteEnabled(self: ApplicationCo
 end
 
 function ApplicationCommand.Prototype.addOption(self: ApplicationCommand, commandObject: ApplicationCommandObject.ApplicationCommandOptions)
-	table.insert(self.Options, commandObject)
+	table.insert(self.options, commandObject)
 
 	return self
 end
 
 function ApplicationCommand.Prototype.destroyOption(self: ApplicationCommand, commandName: string)
-	for index, commandObject in self.Options do
+	for index, commandObject in self.options do
 		if commandObject.CommandName ~= commandName then
 			continue
 		end
 
-		table.remove(self.Choices, index)
+		table.remove(self.choices, index)
 
 		return self
 	end
@@ -95,7 +95,7 @@ function ApplicationCommand.Prototype.toJSONObject(self: ApplicationCommand)
 	local permissionsInt = 0
 	local options = {}
 
-	for _, commandOption in self.Options do
+	for _, commandOption in self.options do
 		table.insert(options, commandOption:toJSONObject())
 	end
 
@@ -120,8 +120,8 @@ end
 
 function ApplicationCommand.Interface.new()
 	return Construct({
-		Choices = {},
-		Options = {}
+		choices = {},
+		options = {}
 	}, ApplicationCommand.Prototype)
 end
 
