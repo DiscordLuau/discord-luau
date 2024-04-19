@@ -182,7 +182,7 @@ function DiscordShard.Prototype.reconnectAsync(self: DiscordShard)
 	end)
 end
 
-function DiscordShard.Interface.new(discordClient: any, shardId: number)
+function DiscordShard.Interface.new(discordClient: any, shardId: number): DiscordShard
 	local self = Construct({
 		discordWebsocket = DiscordWebsocket.new(),
 		discordClient = discordClient,
@@ -205,6 +205,20 @@ function DiscordShard.Interface.new(discordClient: any, shardId: number)
 	return self
 end
 
-export type DiscordShard = typeof(DiscordShard.Interface.new(nil, 0))
+export type DiscordShard = typeof(DiscordShard.Prototype) & {
+	discordWebsocket: DiscordWebsocket.DiscordWebsocket,
+	discordClient: unknown,
+
+	reporter: unknown,
+
+	heartbeatTask: thread?,
+	resumeSessionId: string,
+	dispatchSequence: number,
+	heartbeatInterval: number,
+
+	onEvent: unknown,
+
+	shardId: number
+}
 
 return DiscordShard.Interface

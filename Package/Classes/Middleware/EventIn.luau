@@ -42,6 +42,6 @@ function EventIn.Interface.new()
 	return Construct({ }, EventIn.Prototype)
 end
 
-export type EventIn = typeof(EventIn.Interface.new())
+export type EventIn = typeof(EventIn.Prototype)
 
 return EventIn.Interface

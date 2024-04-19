@@ -149,6 +149,18 @@ function DiscordWebsocket.Interface.new()
 	return self
 end
 
-export type DiscordWebsocket = typeof(DiscordWebsocket.Interface.new())
+export type DiscordWebsocket = typeof(DiscordWebsocket.Prototype) & {
+	websocketActive: unknown,
+	websocketWebsocketBuffer: WebsocketBuffer.WebsocketBuffer,
+
+	gatewayEventIn: EventIn.EventIn,
+	gatewayEventOut: EventOut.EventOut,
+
+	onMessageRecv: unknown,
+	onSocketDead: unknown,
+	onOperationRecv: unknown,
+
+	reporter: unknown,
+}
 
 return DiscordWebsocket.Interface

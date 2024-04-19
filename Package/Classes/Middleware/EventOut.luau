@@ -20,6 +20,6 @@ function EventOut.Interface.new()
 	return Construct({ }, EventOut.Prototype)
 end
 
-export type EventOut = typeof(EventOut.Interface.new())
+export type EventOut = typeof(EventOut.Prototype)
 
 return EventOut.Interface

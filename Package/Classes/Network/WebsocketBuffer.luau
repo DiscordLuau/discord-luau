@@ -30,6 +30,8 @@ function WebsocketBuffer.Interface.new()
 	}, WebsocketBuffer.Prototype)
 end
 
-export type WebsocketBuffer = typeof(WebsocketBuffer.Interface.new())
+export type WebsocketBuffer = typeof(WebsocketBuffer.Prototype) & {
+	data: string
+}
 
 return WebsocketBuffer.Interface

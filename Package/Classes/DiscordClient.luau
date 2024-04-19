@@ -69,26 +69,28 @@ function DiscordClient.Prototype.connectAsync(self: DiscordClient)
 		local data = self.discordGateway:getAsync(DiscordEndpoints.BotGateway):await()
 		local websocketVersion = self.discordGateway:getApiVersion()
 
-		self.websocketUrl = `{data.url}/?v={websocketVersion}`
-		self.shardCount = data.shards
-		self.maxConcurrency = data.sessionStartLimit.maxConcurrency
+		self.websocketUrl = `{data.url}/?v={websocketVersion}` :: string
+		self.maxConcurrency = data.sessionStartLimit.maxConcurrency :: number
+		self.shardCount = data.shards :: number
 
 		for shardId = 1, self.shardCount do
-			self.discordShards[shardId] = DiscordShard.new(self, shardId - 1)
+			(self.discordShards :: { })[shardId] = DiscordShard.new(self, shardId - 1)
 		end
 
 		for bucketIndex = 1, self.shardCount, self.maxConcurrency do
 			for shardId = bucketIndex, (bucketIndex - 1) + self.maxConcurrency do
-				self.discordShards[shardId]:connectAsync(self.websocketUrl)
+				(self.discordShards :: { })[shardId]:connectAsync(self.websocketUrl)
 			end
 
-			if self.shardCount > self.maxConcurrency then
+			if (self.shardCount :: number) > (self.maxConcurrency :: number) then
 				Task.wait(CONCURRENT_IDENTIFY_YIELD)
 			end
 		end
 
 		for shardId = 1, self.shardCount do
-			self.discordShards[shardId].onEvent:connect(function(eventName, data)
+			local shard = (self.discordShards :: { })[shardId] :: DiscordShard.DiscordShard
+
+			shard.onEvent:connect(function(eventName, data)
 				if eventName == WebsocketEvents.Ready then
 					--[=[
 						@prop discordUser DiscordUser
@@ -222,7 +224,7 @@ function DiscordClient.Interface.new(discordSettings: DiscordSettings.DiscordSet
 			@prop discordShards { DiscordShard }
 			@within DiscordClient
 		]=]
-		discordShards = { } :: { DiscordShard.DiscordShard },
+		discordShards = {},
 
 		--[=[
 			@prop onEvent Signal
