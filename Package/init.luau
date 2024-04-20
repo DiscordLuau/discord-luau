@@ -31,6 +31,12 @@ DiscordLuau.DiscordClient = require("Classes/DiscordClient")
 DiscordLuau.DiscordActivity = require("Classes/DiscordActivity")
 
 --[=[
+	@prop DiscordPermissions DiscordPermissions
+	@within Discord-Luau
+]=]
+DiscordLuau.DiscordPermissions = require("Classes/DiscordPermissions")
+
+--[=[
 	@prop DiscordPresence DiscordPresence
 	@within Discord-Luau
 ]=]

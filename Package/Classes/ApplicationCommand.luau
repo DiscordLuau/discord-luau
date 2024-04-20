@@ -3,6 +3,8 @@ local Construct = require("../Utils/Construct")
 
 local ApplicationCommandObject = require("ApplicationCommandOption")
 
+local DiscordPermissions = require("DiscordPermissions")
+
 --[=[
 	@class ApplicationCommand
 
@@ -21,7 +23,7 @@ ApplicationCommand.Interface.Type = Enumerate.new({
 	MessageInput = 3,
 })
 
-function ApplicationCommand.Prototype.setType(self: ApplicationCommand, commandType: string)
+function ApplicationCommand.Prototype.setType(self: ApplicationCommand, commandType: string): ApplicationCommand
 	assert(ApplicationCommand.Interface.Type:Is(commandType), `Expected 'commandType' to of enum 'CommandType'`)
 
 	self.CommandType = commandType
@@ -29,55 +31,55 @@ function ApplicationCommand.Prototype.setType(self: ApplicationCommand, commandT
 	return self
 end
 
-function ApplicationCommand.Prototype.setLocalization(self: ApplicationCommand, localizationCode: string)
+function ApplicationCommand.Prototype.setLocalization(self: ApplicationCommand, localizationCode: string): ApplicationCommand
 	self.CommandLocalization = localizationCode
 
 	return self
 end
 
-function ApplicationCommand.Prototype.setDescription(self: ApplicationCommand, description: string)
+function ApplicationCommand.Prototype.setDescription(self: ApplicationCommand, description: string): ApplicationCommand
 	self.CommandDescription = description
 
 	return self
 end
 
-function ApplicationCommand.Prototype.setName(self: ApplicationCommand, name: string)
+function ApplicationCommand.Prototype.setName(self: ApplicationCommand, name: string): ApplicationCommand
 	self.CommandName = name
 
 	return self
 end
 
-function ApplicationCommand.Prototype.setNSFW(self: ApplicationCommand, isNSFW: boolean)
+function ApplicationCommand.Prototype.setNSFW(self: ApplicationCommand, isNSFW: boolean): ApplicationCommand
 	self.CommandNSFW = isNSFW
 
 	return self
 end
 
-function ApplicationCommand.Prototype.setDMPermission(self: ApplicationCommand, canDM: boolean)
+function ApplicationCommand.Prototype.setDMPermission(self: ApplicationCommand, canDM: boolean): ApplicationCommand
 	self.CommandDM = canDM
 
 	return self
 end
 
--- function ApplicationCommand.Prototype:SetGuildPermissions(permissionObject: any)
--- 	self.CommandPermissions = permissionObject
+function ApplicationCommand.Prototype:SetGuildPermissions(permissionObject: DiscordPermissions.DiscordPermissions): ApplicationCommand
+	self.commandPermissions = permissionObject
 
--- 	return self
--- end
+	return self
+end
 
-function ApplicationCommand.Prototype.setAutocompleteEnabled(self: ApplicationCommand, enabled: boolean)
+function ApplicationCommand.Prototype.setAutocompleteEnabled(self: ApplicationCommand, enabled: boolean): ApplicationCommand
 	self.AutocompleteEnabled = enabled
 
 	return self
 end
 
-function ApplicationCommand.Prototype.addOption(self: ApplicationCommand, commandObject: ApplicationCommandObject.ApplicationCommandOptions)
+function ApplicationCommand.Prototype.addOption(self: ApplicationCommand, commandObject: ApplicationCommandObject.ApplicationCommandOptions): ApplicationCommand
 	table.insert(self.options, commandObject)
 
 	return self
 end
 
-function ApplicationCommand.Prototype.destroyOption(self: ApplicationCommand, commandName: string)
+function ApplicationCommand.Prototype.destroyOption(self: ApplicationCommand, commandName: string): ApplicationCommand
 	for index, commandObject in self.options do
 		if commandObject.CommandName ~= commandName then
 			continue
@@ -92,15 +94,15 @@ function ApplicationCommand.Prototype.destroyOption(self: ApplicationCommand, co
 end
 
 function ApplicationCommand.Prototype.toJSONObject(self: ApplicationCommand)
-	local permissionsInt = 0
+	local permissions = 0
 	local options = {}
 
 	for _, commandOption in self.options do
 		table.insert(options, commandOption:toJSONObject())
 	end
 
-	if self.CommandPermissions then
-		permissionsInt = self.CommandPermissions:GetValue()
+	if self.commandPermissions then
+		permissions = self.commandPermissions:getValue()
 	end
 
 	return {
@@ -108,7 +110,7 @@ function ApplicationCommand.Prototype.toJSONObject(self: ApplicationCommand)
 		name = self.CommandName,
 		description = self.CommandDescription,
 
-		default_member_permissions = permissionsInt,
+		default_member_permissions = permissions,
 		dm_permission = self.CommandDM,
 
 		name_localizations = self.CommandLocalization,

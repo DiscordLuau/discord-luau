@@ -9,7 +9,7 @@ DiscordClient:on("Ready", function()
 
 	local permissions = DiscordLuau.DiscordPermissions.new()
 
-	permissions:addPermission(DiscordLuau.DiscordPermissions.Permissions.SendMessages)
+	permissions:addPermission(DiscordLuau.DiscordPermissions.Permissions.UseApplicationCommands)
 
 	local slashCommand = DiscordLuau.ApplicationCommand.new()
 		:setName("example-command")
@@ -20,7 +20,6 @@ DiscordClient:on("Ready", function()
 		slashCommand
 	}):after(function(data)
 		print("updated, fetching current commands..")
-
 		DiscordClient.discordApplication:fetchSlashCommandsAsync():after(function(...)
 			print(...)
 		end)
