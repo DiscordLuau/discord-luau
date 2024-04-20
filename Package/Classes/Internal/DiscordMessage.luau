@@ -1,3 +1,5 @@
+local DiscordComponentTypes = require("../../Types/DiscordComponent")
+
 local Construct = require("../../Utils/Construct")
 
 local CacheType = require("../../Enums/CacheType")
@@ -19,10 +21,19 @@ DiscordMessage.Prototype.type = "DiscordMessage"
 
 function DiscordMessage.Prototype.replyAsync(self: DiscordMessage, messageData: DiscordMessageSchema)
 	return Future.try(function()
+		local components = {}
+
+		if messageData.components then
+			for _, component in messageData.components do
+				table.insert(components, component:toJSONObject())
+			end
+		end
+
 		return self.discordClient.discordGateway:postAsync(string.format(DiscordEndpoints.BotCreateMessage, self.channelId), {
 			content = messageData.content or nil,
 			nonce = messageData.nonce or nil,
 			tts = messageData.tts or false,
+			components = components,
 			sticker_ids = messageData.stickerIds,
 			flags = messageData.flags or nil, --fixme: should use a bitfield.
 			enforce_nonce = messageData.enforceNonce or false
@@ -30,9 +41,14 @@ function DiscordMessage.Prototype.replyAsync(self: DiscordMessage, messageData: 
 	end)
 end
 
+function DiscordMessage.Prototype._updateMessageLocally(self: DiscordMessage, messageData: unknown)
+	for index, value in (messageData :: { }) do
+		(self :: { })[index] = value
+	end
+end
+
 function DiscordMessage.Interface.new(discordClient: any, messageData: {
-	id: string,
-	[any]: any,
+	id: string
 })
 	return discordClient.discordCache:getDataOr(CacheType.DiscordMessage, messageData.id, function()
 		local messageStruct = {
@@ -89,7 +105,7 @@ export type DiscordMessageSchema = {
 	-- embeds: { unknown },
 	-- allowedMentions: { unknown },
 	-- messageReference: {  },
-	-- components: { unknown },
+	components: { DiscordComponentTypes.DiscordComponent },
 	-- files: { unknown },
 	-- payloadJson: { unknown }
 	-- attachments: { unknown }

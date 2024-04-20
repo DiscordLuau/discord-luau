@@ -1,4 +1,9 @@
 return {
 	Ready = "Ready",
-	Message = "Message"
+
+	Message = "Message",
+	MessageChanged = "MessageChanged",
+	MessageDeleted = "MessageDeleted",
+
+	Interaction = "Interaction"
 }

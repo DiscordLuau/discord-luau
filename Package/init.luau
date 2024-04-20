@@ -7,6 +7,19 @@
 local DiscordLuau = {}
 
 --[=[
+	@prop Components { }
+	@within Discord-Luau
+
+	Contains all interface component objects.
+]=]
+DiscordLuau.Components = {
+	ActionRowComponent = require("Classes/Interface/ActionRowComponent"),
+	ButtonComponent = require("Classes/Interface/ButtonComponent"),
+	SelectionComponent = require("Classes/Interface/SelectionComponent"),
+	TextInputComponent = require("Classes/Interface/TextInputComponent")
+}
+
+--[=[
 	@prop DiscordIntents DiscordIntents
 	@within Discord-Luau
 ]=]
@@ -37,6 +50,12 @@ DiscordLuau.DiscordActivity = require("Classes/DiscordActivity")
 DiscordLuau.DiscordPermissions = require("Classes/DiscordPermissions")
 
 --[=[
+	@prop DiscordModal DiscordModal
+	@within Discord-Luau
+]=]
+DiscordLuau.DiscordModal = require("Classes/DiscordModal")
+
+--[=[
 	@prop DiscordPresence DiscordPresence
 	@within Discord-Luau
 ]=]
@@ -59,5 +78,8 @@ export type DiscordMessage = DiscordMessage.DiscordMessage
 
 local DiscordGuild = require("Types/DiscordGuild")
 export type DiscordGuild = DiscordGuild.DiscordGuild
+
+local DiscordInteraction = require("Types/DiscordInteraction")
+export type DiscordInteraction = DiscordInteraction.DiscordInteraction
 
 return DiscordLuau

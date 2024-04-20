@@ -18,6 +18,7 @@ local DiscordGuild = require("Internal/DiscordGuild")
 local DiscordChannel = require("Internal/DiscordChannel")
 local DiscordMessage = require("Internal/DiscordMessage")
 local DiscordApplication = require("Internal/DiscordApplication")
+local DiscordInteraction = require("Internal/DiscordInteraction")
 
 local Console = require("../Vendor/Console")
 local Future = require("../Vendor/Future")
@@ -110,6 +111,22 @@ function DiscordClient.Prototype.connectAsync(self: DiscordClient)
 					local discordMessage = DiscordMessage.new(self, data)
 
 					self.onEvent:fire(DiscordEvents.Message, discordMessage)
+				elseif eventName == WebsocketEvents.MessageUpdate then
+					local discordMessage = DiscordMessage.new(self, data)
+
+					discordMessage:_updateMessageLocally(data)
+
+					self.onEvent:fire(DiscordEvents.MessageChanged, discordMessage)
+				elseif eventName == WebsocketEvents.MessageDeleted then
+					local discordMessage = DiscordMessage.new(self, data)
+
+					self.onEvent:fire(DiscordEvents.MessageDeleted, discordMessage)
+				elseif eventName == WebsocketEvents.InteractionCreate then
+					local discordInteraction = DiscordInteraction.new(self, data)
+
+					self.onEvent:fire(DiscordEvents.Interaction, discordInteraction)
+				else
+					warn(eventName)
 				end
 			end)
 		end

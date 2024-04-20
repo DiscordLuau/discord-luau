@@ -122,27 +122,32 @@ function DiscordGuild.Interface.new(discordClient: any, guildData: {
 	id: string,
 	roles: { any },
 	emojis: { any },
-	[any]: any,
 })
-	return discordClient.discordCache:getDataOr(CacheType.DiscordGuild, guildData.id, function()
+	local self = discordClient.discordCache:getDataOr(CacheType.DiscordGuild, guildData.id, function()
 		local guildStruct = {
 			discordClient = discordClient
 		}
 
+		return Construct(guildStruct, DiscordGuild.Prototype)
+	end)
+
+	if guildData.roles then
 		for index, value in guildData.roles do
 			guildData.roles[index] = DiscordGuildRole.new(discordClient, value)
 		end
+	end
 
+	if guildData.emojis then
 		for index, value in guildData.emojis do
 			guildData.emojis[index] = DiscordEmoji.new(discordClient, value)
 		end
+	end
 
-		for index, value in guildData do
-			guildStruct[index] = value
-		end
+	for index, value in guildData do
+		self[index] = value
+	end
 
-		return Construct(guildStruct, DiscordGuild.Prototype)
-	end)
+	return self
 end
 
 export type DiscordGuild = typeof(DiscordGuild.Interface.new())

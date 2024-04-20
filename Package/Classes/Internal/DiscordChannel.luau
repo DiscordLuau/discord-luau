@@ -23,10 +23,19 @@ DiscordChannel.Prototype.type = "DiscordChannel"
 
 function DiscordChannel.Prototype.sendMessageAsync(self: DiscordChannel, messageData: DiscordMessageType.MessageSchema)
 	return Future.try(function()
+		local components = {}
+
+		if messageData.components then
+			for _, component in messageData.components do
+				table.insert(components, component:toJSONObject())
+			end
+		end
+
 		return self.discordClient.discordGateway:postAsync(string.format(DiscordEndpoints.BotCreateMessage, self.id), {
 			content = messageData.content or nil,
 			nonce = messageData.nonce or nil,
 			tts = messageData.tts or false,
+			components = components,
 			sticker_ids = messageData.stickerIds,
 			flags = messageData.flags or nil, --fixme: should use a bitfield.
 			enforce_nonce = messageData.enforceNonce or false
@@ -38,8 +47,6 @@ function DiscordChannel.Interface.new(discordClient: any, channelData: {
 	id: string,
 	recipients: { unknown },
 }): DiscordChannel
-	print(channelData)
-
 	return discordClient.discordCache:getDataOr(CacheType.DiscordChannel, channelData.id, function()
 		local channelStruct = {
 			discordClient = discordClient

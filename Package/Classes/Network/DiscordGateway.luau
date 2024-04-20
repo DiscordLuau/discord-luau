@@ -52,7 +52,11 @@ function DiscordGateway.Prototype.parseDiscordAPIErrors(self: DiscordGateway, ap
 	end)
 
 	if success then
-		local discordErrorString = self:parseErrors(messageDecoded.errors)
+		local discordErrorString = ""
+
+		if messageDecoded.errors then
+			discordErrorString = self:parseErrors(messageDecoded.errors)
+		end
 
 		return `Discord API Error - {messageDecoded.code} ({messageDecoded.message}): \n\nAPI: {api}\n\nTRACE:\n{discordErrorString}`
 	end
