@@ -56,23 +56,23 @@ function DiscordWebsocket.Prototype.connectAsync(self: DiscordWebsocket, websock
 			error(self.socketInstance)
 		end
 
-		self.websocketActive:set(true)
-		self.WebsocketThread = Task.spawn(function()
-			while self.websocketActive.Value do
+		self.socketActive:set(true)
+		self.socketThread = Task.spawn(function()
+			while self.socketActive.Value do
 				if self.socketInstance.closeCode then
-					self.websocketActive:set(false)
+					self.socketActive:set(false)
 					self.onSocketDead:fire(self.socketInstance.closeCode)
 				else
-					local websocketMessage = self.socketInstance.next()
+					local socketMessage = self.socketInstance.next()
 
-					if not websocketMessage then
-						self.websocketActive:set(false)
+					if not socketMessage then
+						self.socketActive:set(false)
 						self.onSocketDead:fire(self.socketInstance.closeCode)
 
 						continue
 					end
 
-					self.onMessageRecv:fire(websocketMessage)
+					self.onMessageRecv:fire(socketMessage)
 				end
 			end
 		end)
@@ -88,14 +88,14 @@ function DiscordWebsocket.Prototype.disconnectAsync(self: DiscordWebsocket, clos
 		self.socketInstance.send(`{closingCode}`)
 		self.socketInstance.close(closingCode)
 
-		self.websocketActive:set(false)
+		self.socketActive:set(false)
 		self.onSocketDead:fire(closingCode)
 	end)
 end
 
 function DiscordWebsocket.Interface.new()
 	local self = Construct({
-		websocketActive = State.new(false),
+		socketActive = State.new(false),
 		websocketWebsocketBuffer = WebsocketBuffer.new(),
 
 		gatewayEventIn = EventIn.new(),
@@ -108,7 +108,7 @@ function DiscordWebsocket.Interface.new()
 		reporter = Console.new("🪁 DiscordWebsocket"),
 	}, DiscordWebsocket.Prototype)
 
-	self.websocketActive:observe(function(state)
+	self.socketActive:observe(function(state)
 		self.reporter:debug(`Discord Websocket {(state and "Connected") or "Disconnected"} [{self.socketUrl or "unknown"}]`)
 	end)
 
@@ -152,7 +152,7 @@ function DiscordWebsocket.Interface.new()
 end
 
 export type DiscordWebsocket = typeof(DiscordWebsocket.Prototype) & {
-	websocketActive: unknown,
+	socketActive: unknown,
 	websocketWebsocketBuffer: WebsocketBuffer.WebsocketBuffer,
 
 	gatewayEventIn: EventIn.EventIn,

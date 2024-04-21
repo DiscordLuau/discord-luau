@@ -21,20 +21,18 @@ DiscordVoiceChannel.Prototype.type = "DiscordVoiceChannel"
 
 function DiscordVoiceChannel.Prototype.connectAsync(self: DiscordVoiceChannel): Future.Future<unknown>
 	return Future.try(function()
-		-- self.voiceConnection = DiscordVoiceConnection.new(self.discordClient, `voice-{self.id}`)
+		self.voiceConnection = DiscordVoiceConnection.new(self.discordClient, `voice-{self.id}`)
 
-		self.discordClient.reporter:debug(`Voice Chat isn't a functional feature in discord-luau!`)
-
-		-- return self.voiceConnection:connectAsync(
-		-- 	self.guildId,
-		-- 	self.id
-		-- ):await()
+		return self.voiceConnection:connectAsync(
+			self.guildId,
+			self.id
+		):await()
 	end)
 end
 
 function DiscordVoiceChannel.Prototype.disconnectAsync(self: DiscordVoiceChannel): Future.Future<unknown>
 	return Future.try(function()
-		-- return self.voiceConnection:disconnectAsync():await()
+		return self.voiceConnection:disconnectAsync():await()
 	end)
 end
 

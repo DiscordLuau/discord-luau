@@ -11,8 +11,10 @@ local Console = require("../../Vendor/Console")
 local Signal = require("../../Vendor/Signal")
 
 local DiscordWebsocket = require("DiscordWebsocket")
+local DiscordUDP = require("DiscordUDP")
 
 local Task = require("@lune/task")
+local Net = require("@lune/net")
 
 --[=[
 	@class Internal.DiscordVoiceConnection
@@ -27,7 +29,7 @@ DiscordVoiceConnection.Prototype = {}
 DiscordVoiceConnection.Prototype.type = "DiscordVoiceConnection"
 
 function DiscordVoiceConnection.Prototype.observeWebsocketOperations(self: DiscordVoiceConnection)
-	self.voiceWebsocket.onOperationRecv:connect(function(operationCode, operationData, eventName, sequence)
+	self.voiceWebsocket.onOperationRecv:connect(function(operationCode, operationData)
 		if operationCode == VoiceWebsocketOperationCodes.Hello then
 			Task.wait(math.random())
 
@@ -41,10 +43,45 @@ function DiscordVoiceConnection.Prototype.observeWebsocketOperations(self: Disco
 
 			self.reporter:debug(`HeartbeatACK - Ping: {self.heartbeatPing}`)
 		elseif operationCode == VoiceWebsocketOperationCodes.Ready then
-			-- IP Discovery
-			-- fixme: unable to create a UDP connection through lune 😥
+			local udpSocket = (Net :: any).udpSocket("0.0.0.0:6826")
 
-			-- print(operationData)
+			local data = string.pack(`>I2I2I4c64I2`, 1, 70, operationData.ssrc, operationData.ip, operationData.port)
+
+			udpSocket:connect(`{operationData.ip}:{operationData.port}`)
+			udpSocket:send(data)
+
+			local responseBuffer = udpSocket:next()
+			local responseData = { string.unpack(">I2I2I4c64I2", buffer.tostring(responseBuffer)) }
+			
+			(Net :: any).udpSocketClose(udpSocket)
+
+			local publicAddress = responseData[4]
+			local publicPort = responseData[5]
+
+			self.voiceUDP = DiscordUDP.new(`0.0.0.0:6827`)
+			self.voiceUDP:connectAsync(`{operationData.ip}:{operationData.port}`)
+
+			self.voiceWebsocket:sendAsync({
+				[WebsocketOperationKeys.OperationCode] = VoiceWebsocketOperationCodes.SelectProtocol,
+				[WebsocketOperationKeys.Data] = {
+					protocol = "udp",
+					data = {
+						address = publicAddress,
+						port = 6827,
+						mode = "xsalsa20_poly1305"
+					}
+				}
+			}):await()
+		elseif operationCode == VoiceWebsocketOperationCodes.SessionDescription then
+			local encryptionKey = buffer.create(64)
+
+			for index = 1, 32 do
+				buffer.writei16(encryptionKey, index, operationData.secretKey[tostring(index)])
+			end
+
+			print("encryption key: ", buffer.tostring(encryptionKey))
+
+			print(operationData)
 		end
 	end)
 end
@@ -189,6 +226,7 @@ end
 function DiscordVoiceConnection.Interface.new(discordClient: any, shardId: number): DiscordVoiceConnection
 	local self = Construct({
 		voiceWebsocket = DiscordWebsocket.new(),
+		-- voiceUDP = DiscordUDP.new(),
 		discordClient = discordClient,
 
 		reporter = Console.new(`🖲️  DiscordVoiceConnection {shardId}`),
@@ -209,6 +247,7 @@ end
 
 export type DiscordVoiceConnection = typeof(DiscordVoiceConnection.Prototype) & {
 	voiceWebsocket: DiscordWebsocket.DiscordWebsocket,
+	voiceUDP: DiscordUDP.DiscordUDP,
 	discordClient: unknown,
 
 	reporter: unknown,
