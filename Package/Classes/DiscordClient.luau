@@ -15,7 +15,8 @@ local Cache = require("Internal/Cache")
 local DiscordCache = require("Internal/DiscordCache")
 local DiscordUser = require("Internal/DiscordUser")
 local DiscordGuild = require("Internal/DiscordGuild")
-local DiscordChannel = require("Internal/DiscordChannel")
+local DiscordTextChannel = require("Internal/DiscordTextChannel")
+local DiscordVoiceChannel = require("Internal/DiscordVoiceChannel")
 local DiscordMessage = require("Internal/DiscordMessage")
 local DiscordApplication = require("Internal/DiscordApplication")
 local DiscordInteraction = require("Internal/DiscordInteraction")
@@ -126,7 +127,7 @@ function DiscordClient.Prototype.connectAsync(self: DiscordClient)
 
 					self.onEvent:fire(DiscordEvents.Interaction, discordInteraction)
 				else
-					warn(eventName)
+					-- warn(eventName)
 				end
 			end)
 		end
@@ -153,11 +154,21 @@ end
 
 	@return Future
 ]=]
-function DiscordClient.Prototype.fetchChannelAsync(self: DiscordClient, channelId: string): Future.Future<DiscordChannel.DiscordChannel>
+function DiscordClient.Prototype.fetchChannelAsync(self: DiscordClient, channelId: string): Future.Future<DiscordTextChannel.DiscordTextChannel | DiscordVoiceChannel.DiscordVoiceChannel>
 	return Future.try(function()
 		local rawChannelData = self.discordGateway:getAsync(string.format(DiscordEndpoints.BotGetChannel, channelId)):await()
+		local discordChannel
 
-		return DiscordChannel.new(self, rawChannelData)
+		-- https://discord.com/developers/docs/resources/channel#channel-object-channel-types
+		-- todo: support other channel types lol
+
+		if rawChannelData.type == 0 then
+			discordChannel = DiscordTextChannel.new(self, rawChannelData)
+		elseif rawChannelData.type == 2 then
+			discordChannel = DiscordVoiceChannel.new(self, rawChannelData)
+		end
+
+		return discordChannel 
 	end)
 end
 

@@ -80,7 +80,7 @@ function DiscordShard.Prototype.observeWebsocketOperations(self: DiscordShard)
 
 			self:reconnectAsync()
 		elseif operationCode == WebsocketOperationCodes.InvalidSession then
-			self.reporter:Warn(`Discord Websocket session invalid!`)
+			self.reporter:warn(`Discord Websocket session invalid!`)
 
 			if operationData == true then
 				self.reporter:log(`Attempting to reconnect from Invalid Session!`)
@@ -97,7 +97,7 @@ function DiscordShard.Prototype.heartbeatAsync(self: DiscordShard, ignoreHeartbe
 	return Future.try(function()
 		if not ignoreHeartbeatAck then
 			if not self.HeartbeatAck then
-				self.reporter:Warn(`Discord Websocket state has become zombified, attempting to reconnect!`)
+				self.reporter:warn(`Discord Websocket state has become zombified, attempting to reconnect!`)
 
 				self:reconnectAsync():await()
 			end

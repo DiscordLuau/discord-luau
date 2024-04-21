@@ -35,7 +35,7 @@ DiscordWebsocket.Prototype.type = "DiscordWebsocket"
 function DiscordWebsocket.Prototype.sendAsync(self: DiscordWebsocket, dataPacket)
 	return Future.try(function()
 		local messageSendOperationSuccessful, messageResult =
-			pcall(self.SocketInstance.send, Serde.encode("json", self.gatewayEventOut:processJSON(dataPacket)))
+			pcall(self.socketInstance.send, Serde.encode("json", self.gatewayEventOut:processJSON(dataPacket)))
 
 		if messageSendOperationSuccessful then
 			self.reporter:debug(`Discord Websocket Message Sent: {dataPacket[WebsocketOperationKeys.OperationCode]}`)
@@ -47,26 +47,27 @@ function DiscordWebsocket.Prototype.sendAsync(self: DiscordWebsocket, dataPacket
 	end)
 end
 
-function DiscordWebsocket.Prototype.connectAsync(self: DiscordWebsocket, websocketUrl)
+function DiscordWebsocket.Prototype.connectAsync(self: DiscordWebsocket, websocketUrl: string)
 	return Future.try(function()
-		self.SocketRequestSuccess, self.SocketInstance = pcall(Net.socket, websocketUrl)
+		self.socketUrl = websocketUrl
+		self.socketRequestSuccess, self.socketInstance = pcall(Net.socket, websocketUrl)
 
-		if not self.SocketRequestSuccess then
-			error(self.SocketInstance)
+		if not self.socketRequestSuccess then
+			error(self.socketInstance)
 		end
 
 		self.websocketActive:set(true)
 		self.WebsocketThread = Task.spawn(function()
 			while self.websocketActive.Value do
-				if self.SocketInstance.closeCode then
+				if self.socketInstance.closeCode then
 					self.websocketActive:set(false)
-					self.onSocketDead:fire(self.SocketInstance.closeCode)
+					self.onSocketDead:fire(self.socketInstance.closeCode)
 				else
-					local websocketMessage = self.SocketInstance.next()
+					local websocketMessage = self.socketInstance.next()
 
 					if not websocketMessage then
 						self.websocketActive:set(false)
-						self.onSocketDead:fire(self.SocketInstance.closeCode)
+						self.onSocketDead:fire(self.socketInstance.closeCode)
 
 						continue
 					end
@@ -80,11 +81,12 @@ end
 
 function DiscordWebsocket.Prototype.disconnectAsync(self: DiscordWebsocket, closingCode: string)
 	return Future.try(function()
-		if not self.SocketInstance then
+		if not self.socketInstance then
 			return
 		end
 
-		self.SocketInstance.close(closingCode)
+		self.socketInstance.send(`{closingCode}`)
+		self.socketInstance.close(closingCode)
 
 		self.websocketActive:set(false)
 		self.onSocketDead:fire(closingCode)
@@ -107,7 +109,7 @@ function DiscordWebsocket.Interface.new()
 	}, DiscordWebsocket.Prototype)
 
 	self.websocketActive:observe(function(state)
-		self.reporter:debug(`Discord Websocket {(state and "Connected") or "Disconnected"}!`)
+		self.reporter:debug(`Discord Websocket {(state and "Connected") or "Disconnected"} [{self.socketUrl or "unknown"}]`)
 	end)
 
 	self.onMessageRecv:connect(function(discordPacket)

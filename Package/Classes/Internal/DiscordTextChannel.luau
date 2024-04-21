@@ -7,21 +7,19 @@ local Future = require("../../Vendor/Future")
 
 local DiscordMessageType = require("../../Types/DiscordMessage")
 
-local DiscordUser = require("DiscordUser")
-
 --[=[
-	@class Internal.DiscordChannel
+	@class Internal.DiscordTextChannel
 
 	(sorry I will add docs for this lol, just haven't got around to it yet!)
 ]=]
-local DiscordChannel = {}
+local DiscordTextChannel = {}
 
-DiscordChannel.Prototype = {}
-DiscordChannel.Interface = {}
+DiscordTextChannel.Prototype = {}
+DiscordTextChannel.Interface = {}
 
-DiscordChannel.Prototype.type = "DiscordChannel"
+DiscordTextChannel.Prototype.type = "DiscordTextChannel"
 
-function DiscordChannel.Prototype.sendMessageAsync(self: DiscordChannel, messageData: DiscordMessageType.MessageSchema)
+function DiscordTextChannel.Prototype.sendMessageAsync(self: DiscordTextChannel, messageData: DiscordMessageType.MessageSchema)
 	return Future.try(function()
 		local components = {}
 
@@ -43,30 +41,32 @@ function DiscordChannel.Prototype.sendMessageAsync(self: DiscordChannel, message
 	end)
 end
 
-function DiscordChannel.Interface.new(discordClient: any, channelData: {
+function DiscordTextChannel.Interface.new(discordClient: any, channelData: {
 	id: string,
 	recipients: { unknown },
-}): DiscordChannel
-	return discordClient.discordCache:getDataOr(CacheType.DiscordChannel, channelData.id, function()
-		local channelStruct = {
+}): DiscordTextChannel
+	local self = discordClient.discordCache:getDataOr(CacheType.DiscordTextChannel, channelData.id, function()
+		return Construct({
+			id = channelData.id,
+	
 			discordClient = discordClient
-		}
-
-		if channelData.recipients then
-			for index, value in channelData.recipients do
-				channelData.recipients[index] = DiscordUser.new(discordClient, value)
-			end
-		end
-
-		for index, value in channelData do
-			channelStruct[index] = value
-		end
-
-		return Construct(channelStruct, DiscordChannel.Prototype)
+		}, DiscordTextChannel.Prototype)
 	end)
+
+	if channelData then
+		for index, value in channelData do
+			if self[index] ~= nil then
+				continue
+			end
+
+			self[index] = value
+		end
+	end
+
+	return self
 end
 
-export type DiscordChannel = typeof(DiscordChannel.Prototype) & {
+export type DiscordTextChannel = typeof(DiscordTextChannel.Prototype) & {
 	type: number,
 	nsfw: boolean,
 	id: string,
@@ -78,4 +78,4 @@ export type DiscordChannel = typeof(DiscordChannel.Prototype) & {
 	guildId: string
 }
 
-return DiscordChannel.Interface
+return DiscordTextChannel.Interface
