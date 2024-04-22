@@ -125,7 +125,8 @@ function DiscordGuild.Interface.new(discordClient: any, guildData: {
 })
 	local self = discordClient.discordCache:getDataOr(CacheType.DiscordGuild, guildData.id, function()
 		local guildStruct = {
-			discordClient = discordClient
+			discordClient = discordClient,
+			shardId = ((tonumber(guildData.id) :: number / 2^22) % discordClient.shardCount) + 1
 		}
 
 		return Construct(guildStruct, DiscordGuild.Prototype)
@@ -150,6 +151,8 @@ function DiscordGuild.Interface.new(discordClient: any, guildData: {
 	return self
 end
 
-export type DiscordGuild = typeof(DiscordGuild.Interface.new())
+export type DiscordGuild = typeof(DiscordGuild.Interface.new()) & {
+	shardId: number
+}
 
 return DiscordGuild.Interface

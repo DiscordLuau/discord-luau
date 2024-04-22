@@ -1,5 +1,6 @@
 local WebsocketOperationCodes = require("../../Enums/WebsocketOperationCodes")
 local WebsocketOperationKeys = require("../../Enums/WebsocketOperationKeys")
+local WebsocketCloseCodes = require("../../Enums/WebsocketCloseCodes")
 
 local WebsocketEvents = require("../../Enums/WebsocketEvents")
 
@@ -28,6 +29,38 @@ DiscordShard.Prototype = {}
 
 DiscordShard.Prototype.type = "DiscordShard"
 
+function DiscordShard.Prototype.observeWebsocketErrors(self: DiscordShard)
+	self.discordWebsocket.onSocketDead:connect(function(closeCode)
+		if closeCode == WebsocketCloseCodes.UnknownError then
+			self:reconnectAsync()
+		elseif closeCode == WebsocketCloseCodes.UnknownOperation then
+			self:reconnectAsync()
+		elseif closeCode == WebsocketCloseCodes.DecodeError then
+			self:reconnectAsync()
+		elseif closeCode == WebsocketCloseCodes.NotAuthenticated then
+			self.reporter:error(`Something has gone terribly wrong with Discord-Luau.. please create an issue! [{closeCode}]`)
+		elseif closeCode == WebsocketCloseCodes.AuthenticationFailed then
+			self.reporter:warn(`Failed to authenticate with the Discord API, is your token correct?`)
+		elseif closeCode == WebsocketCloseCodes.AlreadyAuthenticated then
+			self:reconnectAsync()
+		elseif closeCode == WebsocketCloseCodes.InvalidSequence then
+			self:reconnectAsync()
+		elseif closeCode == WebsocketCloseCodes.RateLimited then
+			self:reconnectAsync()
+		elseif closeCode == WebsocketCloseCodes.SessionTimedOut then
+			self:reconnectAsync()
+		elseif closeCode == WebsocketCloseCodes.InvalidShard then
+			self.reporter:error(`Something has gone terribly wrong with Discord-Luau.. please create an issue! [{closeCode}]`)
+		elseif closeCode == WebsocketCloseCodes.InvalidAPIVersion then
+			self.reporter:error(`Something has gone terribly wrong with Discord-Luau.. please create an issue! [{closeCode}]`)
+		elseif closeCode == WebsocketCloseCodes.InvalidIntents then
+			self.reporter:error(`Something has gone terribly wrong with Discord-Luau.. please create an issue! [{closeCode}]`)
+		elseif closeCode == WebsocketCloseCodes.DisallowedIntents then
+			self.reporter:warn(`Discord Bot intents are invalid, are you sure the bot has the chosen intents enabled?`)
+		end
+	end)
+end
+
 function DiscordShard.Prototype.observeWebsocketEvents(self: DiscordShard)
 	self.onEvent:connect(function(eventName, data)
 		if eventName == WebsocketEvents.Ready then
@@ -35,8 +68,8 @@ function DiscordShard.Prototype.observeWebsocketEvents(self: DiscordShard)
 
 			self.reporter:log(`DiscordShard is active - id: "{data.sessionId}"`)
 
-			self.resumeSessionId = data.session_id
-			self.ResumeGatewayUrl = `{data.resume_gateway_url}/?v={websocketVersion}`
+			self.resumeSessionId = data.sessionId
+			self.resumeGatewayUrl = `{data.resumeGatewayUrl}/?v={websocketVersion}`
 		end
 	end)
 end
@@ -87,7 +120,11 @@ function DiscordShard.Prototype.observeWebsocketOperations(self: DiscordShard)
 	
 				self:reconnectAsync()
 			else
-				error(`Discord session was invalidated, please ensure that the bot's permissions & token is correct!`)
+				if self.resumedConnection then
+					self:identifyAsync()
+				else
+					error(`Discord session was invalidated, unable to recover!`)
+				end
 			end
 		end
 	end)
@@ -156,8 +193,8 @@ end
 
 function DiscordShard.Prototype.resumeAsync(self: DiscordShard)
 	return Future.try(function()
-		self.discordWebsocket:connectAsync(self.ResumeGatewayUrl):await()
-		self.discordWebsocket:SendAsync({
+		self.discordWebsocket:connectAsync(self.resumeGatewayUrl):await()
+		self.discordWebsocket:sendAsync({
 			[WebsocketOperationKeys.OperationCode] = WebsocketOperationCodes.Resume,
 			[WebsocketOperationKeys.Data] = {
 				token = self.discordClient.discordSettings.discordToken,
@@ -165,6 +202,8 @@ function DiscordShard.Prototype.resumeAsync(self: DiscordShard)
 				seq = self.dispatchSequence
 			},
 		}):await()
+
+		self.resumedConnection = true
 	end)
 end
 
@@ -200,6 +239,7 @@ function DiscordShard.Interface.new(discordClient: any, shardId: number): Discor
 	}, DiscordShard.Prototype)
 
 	self:observeWebsocketEvents()
+	self:observeWebsocketErrors()
 	self:observeWebsocketOperations()
 
 	return self

@@ -33,6 +33,8 @@ DiscordWebsocket.Prototype = {}
 DiscordWebsocket.Prototype.type = "DiscordWebsocket"
 
 function DiscordWebsocket.Prototype.sendAsync(self: DiscordWebsocket, dataPacket)
+	local traceback = debug.traceback()
+
 	return Future.try(function()
 		local messageSendOperationSuccessful, messageResult =
 			pcall(self.socketInstance.send, Serde.encode("json", self.gatewayEventOut:processJSON(dataPacket)))
@@ -42,7 +44,7 @@ function DiscordWebsocket.Prototype.sendAsync(self: DiscordWebsocket, dataPacket
 
 			return
 		else
-			error(messageResult)
+			self.reporter:warn(`Socket error: {string.split(messageResult, "\n")[1]}, traceback:\n{traceback}`)
 		end
 	end)
 end
@@ -85,8 +87,9 @@ function DiscordWebsocket.Prototype.disconnectAsync(self: DiscordWebsocket, clos
 			return
 		end
 
-		self.socketInstance.send(`{closingCode}`)
-		self.socketInstance.close(closingCode)
+		if self.socketActive.Value then
+			self.socketInstance.close(closingCode)
+		end
 
 		self.socketActive:set(false)
 		self.onSocketDead:fire(closingCode)
@@ -108,8 +111,12 @@ function DiscordWebsocket.Interface.new()
 		reporter = Console.new("🪁 DiscordWebsocket"),
 	}, DiscordWebsocket.Prototype)
 
-	self.socketActive:observe(function(state)
-		self.reporter:debug(`Discord Websocket {(state and "Connected") or "Disconnected"} [{self.socketUrl or "unknown"}]`)
+	self.socketActive.Changed:connect(function(state)
+		local connectedLabel = state and "Connected" or "Disconnected"
+		local socketUrl = self.socketUrl and `[{self.socketUrl}]` or ""
+		local closeCode = self.socketInstance and self.socketInstance.closeCode and `[{self.socketInstance.closeCode}]` or ""
+
+		self.reporter:debug(`Discord Websocket {connectedLabel} {socketUrl} {closeCode}`)
 	end)
 
 	self.onMessageRecv:connect(function(discordPacket)

@@ -1,6 +1,3 @@
-local WebsocketOperationKeys = require("../../Enums/WebsocketOperationKeys")
-local WebsocketOperationCodes = require("../../Enums/WebsocketOperationCodes")
-
 local Construct = require("../../Utils/Construct")
 
 local Future = require("../../Vendor/Future")
@@ -8,14 +5,9 @@ local Signal = require("../../Vendor/Signal")
 local Console = require("../../Vendor/Console")
 local State = require("../../Vendor/State")
 
-local EventIn = require("../Middleware/EventIn")
-local EventOut = require("../Middleware/EventOut")
-
-local WebsocketBuffer = require("WebsocketBuffer")
-
 local Net = require("@lune/net")
-local Serde = require("@lune/serde")
 local Task = require("@lune/task")
+local FS = require("@lune/fs")
 
 --[=[
 	@class Internal.DiscordUDP
@@ -42,6 +34,7 @@ function DiscordUDP.Prototype.connectAsync(
 	return Future.try(function()
 		self.socketUrl = discordUdp
 		self.socketInstance:connect(discordUdp)
+		print(discordUdp)
 
 		self.socketActive:set(true)
 		self.socketThread = Task.spawn(function()
@@ -50,11 +43,11 @@ function DiscordUDP.Prototype.connectAsync(
 					self.socketActive:set(false)
 					self.onSocketDead:fire(self.socketInstance.closeCode)
 				else
+					print("LISTENING!")
 					local socketMessage = self.socketInstance:next()
+					print("NEXT COMPLETED!")
 
-					-- print(socketMessage)
-
-					self.onMessageRecv:fire(socketMessage)
+					self.onMessageRecv:fire(buffer.tostring(socketMessage))
 				end
 			end
 		end)
@@ -67,11 +60,13 @@ function DiscordUDP.Prototype.disconnectAsync(self: DiscordUDP, closingCode: str
 			return
 		end
 
-		-- todo: lol we didn't add closing!
+		(Net :: any).udpSocketClose(self.socketInstance)
 	end)
 end
 
 function DiscordUDP.Interface.new(publicUdp: string)
+	print("udp at: ", publicUdp)
+
 	local self = Construct({
 		publicUdp = publicUdp,
 		socketInstance = (Net :: any).udpSocket(publicUdp),
@@ -84,12 +79,17 @@ function DiscordUDP.Interface.new(publicUdp: string)
 		reporter = Console.new("🪁 DiscordUDP"),
 	}, DiscordUDP.Prototype)
 
-	self.socketActive:observe(function(state)
+	self.socketActive.Changed:connect(function(state)
 		self.reporter:debug(`Discord UDP Socket {(state and "Connected") or "Disconnected"} [{self.socketUrl or "unknown"}]`)
 	end)
 
+	local i = 0
+
 	self.onMessageRecv:connect(function(discordPacket)
 		print(discordPacket)
+		FS.writeFile("file-" .. tostring(i), discordPacket)
+
+		i += 1
 	end)
 
 	return self

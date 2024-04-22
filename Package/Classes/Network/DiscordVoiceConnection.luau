@@ -1,4 +1,5 @@
 local VoiceWebsocketOperationCodes = require("../../Enums/VoiceWebsocketOperationCodes")
+local VoiceWebsocketCloseCodes = require("../../Enums/VoiceWebsocketCloseCodes")
 local WebsocketOperationCodes = require("../../Enums/WebsocketOperationCodes")
 local WebsocketOperationKeys = require("../../Enums/WebsocketOperationKeys")
 
@@ -15,6 +16,9 @@ local DiscordUDP = require("DiscordUDP")
 
 local Task = require("@lune/task")
 local Net = require("@lune/net")
+local FS = require("@lune/fs")
+
+local BASE_VOICE_CONNECTION_PORT = 10003
 
 --[=[
 	@class Internal.DiscordVoiceConnection
@@ -23,10 +27,68 @@ local Net = require("@lune/net")
 ]=]
 local DiscordVoiceConnection = {}
 
+DiscordVoiceConnection.Internal = {}
 DiscordVoiceConnection.Interface = {}
 DiscordVoiceConnection.Prototype = {}
 
 DiscordVoiceConnection.Prototype.type = "DiscordVoiceConnection"
+
+DiscordVoiceConnection.Internal.publicAddress = nil
+DiscordVoiceConnection.Internal.publicPort = nil
+
+DiscordVoiceConnection.Internal.activeConnections = 0
+
+function DiscordVoiceConnection.Prototype.observeWebsocketErrors(self: DiscordVoiceConnection)
+	self.voiceWebsocket.onSocketDead:connect(function(closeCode)
+		if closeCode == VoiceWebsocketCloseCodes.UnknownError then
+			self:reconnectAsync()
+		elseif closeCode == VoiceWebsocketCloseCodes.UnknownOperation then
+			self:reconnectAsync()
+		elseif closeCode == VoiceWebsocketCloseCodes.DecodeError then
+			self:reconnectAsync()
+		elseif closeCode == VoiceWebsocketCloseCodes.NotAuthenticated then
+			self.reporter:error(`Something has gone terribly wrong with Discord-Luau.. please create an issue! [{closeCode}]`)
+		elseif closeCode == VoiceWebsocketCloseCodes.AuthenticationFailed then
+			self.reporter:warn(`Failed to authenticate with the Discord Voice Gateway, is your token correct?`)
+		elseif closeCode == VoiceWebsocketCloseCodes.AlreadyAuthenticated then
+			self:reconnectAsync()
+		elseif closeCode == VoiceWebsocketCloseCodes.SessionTimedOut then
+			self:reconnectAsync()
+		elseif closeCode == VoiceWebsocketCloseCodes.ServerNotFound then
+			self.reporter:error(`Voice Websocket unable to find server; '{self.guildId}'`)
+		elseif closeCode == VoiceWebsocketCloseCodes.UnknownProtocol then
+			self.reporter:error(`Something has gone terribly wrong with Discord-Luau.. please create an issue! [{closeCode}]`)
+		elseif closeCode == VoiceWebsocketCloseCodes.Disconnected then
+			self.reporter:debug(`Disconnected from Voice websocket`)
+		elseif closeCode == VoiceWebsocketCloseCodes.VoiceServerCrashed then
+			self:reconnectAsync()
+		elseif closeCode == VoiceWebsocketCloseCodes.UnknownEncryptionMode then
+			self.reporter:error(`Something has gone terribly wrong with Discord-Luau.. please create an issue! [{closeCode}]`)
+		end
+	end)
+end
+
+function DiscordVoiceConnection.Prototype.identifyPublicAddress(self: DiscordVoiceConnection, operationData)
+	if DiscordVoiceConnection.Internal.publicAddress then
+		return DiscordVoiceConnection.Internal.publicAddress, DiscordVoiceConnection.Internal.publicPort
+	end
+
+	local udpSocket = (Net :: any).udpSocket(`0.0.0.0:{BASE_VOICE_CONNECTION_PORT}`)
+	local data = string.pack(`>I2I2I4c64I2`, 1, 70, operationData.ssrc, operationData.ip, operationData.port)
+
+	udpSocket:connect(`{operationData.ip}:{operationData.port}`)
+	udpSocket:send(data)
+
+	local responseBuffer = udpSocket:next()
+	local responseData = { string.unpack(">I2I2I4c64I2", buffer.tostring(responseBuffer)) }
+
+	(Net :: any).udpSocketClose(udpSocket)
+
+	DiscordVoiceConnection.Internal.publicAddress = responseData[4]
+	DiscordVoiceConnection.Internal.publicPort = responseData[5]
+
+	return responseData[4], responseData[5]
+end
 
 function DiscordVoiceConnection.Prototype.observeWebsocketOperations(self: DiscordVoiceConnection)
 	self.voiceWebsocket.onOperationRecv:connect(function(operationCode, operationData)
@@ -43,23 +105,18 @@ function DiscordVoiceConnection.Prototype.observeWebsocketOperations(self: Disco
 
 			self.reporter:debug(`HeartbeatACK - Ping: {self.heartbeatPing}`)
 		elseif operationCode == VoiceWebsocketOperationCodes.Ready then
-			local udpSocket = (Net :: any).udpSocket("0.0.0.0:6826")
+			DiscordVoiceConnection.Internal.activeConnections += 1
 
-			local data = string.pack(`>I2I2I4c64I2`, 1, 70, operationData.ssrc, operationData.ip, operationData.port)
+			self.voiceUDP = DiscordUDP.new(`0.0.0.0:{BASE_VOICE_CONNECTION_PORT + DiscordVoiceConnection.Internal.activeConnections}`)
+			self.voiceUDP:connectAsync(`{operationData.ip}:{operationData.port}`):await()
 
-			udpSocket:connect(`{operationData.ip}:{operationData.port}`)
-			udpSocket:send(data)
+			local publicAddress = self:identifyPublicAddress(operationData)
 
-			local responseBuffer = udpSocket:next()
-			local responseData = { string.unpack(">I2I2I4c64I2", buffer.tostring(responseBuffer)) }
-			
-			(Net :: any).udpSocketClose(udpSocket)
-
-			local publicAddress = responseData[4]
-			local publicPort = responseData[5]
-
-			self.voiceUDP = DiscordUDP.new(`0.0.0.0:6827`)
-			self.voiceUDP:connectAsync(`{operationData.ip}:{operationData.port}`)
+			print({
+				address = publicAddress,
+				port = BASE_VOICE_CONNECTION_PORT + DiscordVoiceConnection.Internal.activeConnections,
+				mode = "xsalsa20_poly1305"
+			})
 
 			self.voiceWebsocket:sendAsync({
 				[WebsocketOperationKeys.OperationCode] = VoiceWebsocketOperationCodes.SelectProtocol,
@@ -67,21 +124,20 @@ function DiscordVoiceConnection.Prototype.observeWebsocketOperations(self: Disco
 					protocol = "udp",
 					data = {
 						address = publicAddress,
-						port = 6827,
+						port = BASE_VOICE_CONNECTION_PORT + DiscordVoiceConnection.Internal.activeConnections,
 						mode = "xsalsa20_poly1305"
 					}
 				}
 			}):await()
 		elseif operationCode == VoiceWebsocketOperationCodes.SessionDescription then
-			local encryptionKey = buffer.create(64)
+			self.encryptionKey = buffer.create(64)
+			self.mediaSessionId = operationData.mediaSessionId
 
 			for index = 1, 32 do
-				buffer.writei16(encryptionKey, index, operationData.secretKey[tostring(index)])
+				buffer.writei16(self.encryptionKey, index, operationData.secretKey[tostring(index)])
 			end
 
-			print("encryption key: ", buffer.tostring(encryptionKey))
-
-			print(operationData)
+			FS.writeFile("key", buffer.tostring(self.encryptionKey))
 		end
 	end)
 end
@@ -129,41 +185,39 @@ end
 
 function DiscordVoiceConnection.Prototype.connectAsync(self: DiscordVoiceConnection, guildId: string, channelId: string)
 	return Future.try(function()
-		local connections = {}
+		local guildObject = self.discordClient:fetchGuildAsync(guildId):await()
 
-		for shardId = 1, self.discordClient.shardCount do
-			table.insert(connections, self.discordClient.discordShards[shardId].onEvent:connect(function(eventName, data)
-				if eventName == WebsocketEvents.VoiceServerUpdate then
-					if data.guildId == guildId then
-						self.voiceServerUpdate = data
-					end
-				elseif eventName == WebsocketEvents.VoiceStateUpdate then
-					if data.userId == self.discordClient.discordUser.id then
-						self.voiceStateUpdate = data
-					end
+		local connection
+
+		connection = self.discordClient.discordShards[guildObject.shardId].onEvent:connect(function(eventName, data)
+			if eventName == WebsocketEvents.VoiceServerUpdate then
+				if data.guildId == guildId then
+					self.voiceServerUpdate = data
 				end
-			end))
+			elseif eventName == WebsocketEvents.VoiceStateUpdate then
+				if data.userId == self.discordClient.discordUser.id then
+					self.voiceStateUpdate = data
+				end
+			end
+		end)
 
-			self.discordClient.discordShards[shardId].discordWebsocket:sendAsync(
-				{
-					[WebsocketOperationKeys.OperationCode] = WebsocketOperationCodes.VoiceStateUpdate,
-					[WebsocketOperationKeys.Data] = {
-						guild_id = guildId,
-						channel_id = channelId,
-						self_mute = false,
-						self_deaf = false,
-					},
-				}
-			):await()
+		self.discordClient.discordShards[guildObject.shardId].discordWebsocket:sendAsync(
+			{
+				[WebsocketOperationKeys.OperationCode] = WebsocketOperationCodes.VoiceStateUpdate,
+				[WebsocketOperationKeys.Data] = {
+					guild_id = guildId,
+					channel_id = channelId,
+					self_mute = false,
+					self_deaf = false,
+				},
+			}
+		):await()
 
-			repeat
-				Task.wait(0.5)
-			until self.voiceServerUpdate and self.voiceStateUpdate
-		end
+		repeat
+			Task.wait(0.5)
+		until self.voiceServerUpdate and self.voiceStateUpdate
 
-		for _, connection in connections do
-			connection:disconnect()
-		end
+		connection:disconnect()
 
 		self.guildId = guildId
 		self.channelId = channelId
@@ -219,25 +273,36 @@ function DiscordVoiceConnection.Prototype.disconnectAsync(self: DiscordVoiceConn
 			Task.cancel(self.heartbeatTask)
 		end
 
+		local guildObject = self.discordClient:fetchGuildAsync(self.guildId):await()
+
+		self.discordClient.discordShards[guildObject.shardId].discordWebsocket:sendAsync(
+			{
+				[WebsocketOperationKeys.OperationCode] = WebsocketOperationCodes.VoiceStateUpdate,
+				[WebsocketOperationKeys.Data] = {
+					guild_id = self.guildId
+				},
+			}
+		):await()
+
 		self.voiceWebsocket:disconnectAsync(1000):await()
+
+		DiscordVoiceConnection.Internal.activeConnections -= 1
 	end)
 end
 
-function DiscordVoiceConnection.Interface.new(discordClient: any, shardId: number): DiscordVoiceConnection
+function DiscordVoiceConnection.Interface.new(discordClient: any, id: string): DiscordVoiceConnection
 	local self = Construct({
 		voiceWebsocket = DiscordWebsocket.new(),
 		-- voiceUDP = DiscordUDP.new(),
 		discordClient = discordClient,
 
-		reporter = Console.new(`🖲️  DiscordVoiceConnection {shardId}`),
+		reporter = Console.new(`🖲️  DiscordVoiceConnection {id}`),
 
 		heartbeatTask = nil,
 		resumeSessionId = nil,
 		heartbeatInterval = nil,
 
-		onEvent = Signal.new(),
-
-		shardId = shardId
+		onEvent = Signal.new()
 	}, DiscordVoiceConnection.Prototype)
 
 	self:observeWebsocketOperations()
@@ -269,8 +334,6 @@ export type DiscordVoiceConnection = typeof(DiscordVoiceConnection.Prototype) & 
 	},
 
 	onEvent: unknown,
-
-	shardId: number
 }
 
 return DiscordVoiceConnection.Interface

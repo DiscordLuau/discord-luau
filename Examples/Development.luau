@@ -1,3 +1,5 @@
+local Task = require("@lune/task")
+
 local DiscordLuau = require("..")
 local Env = require("../.env")
 
@@ -11,9 +13,13 @@ DiscordClient:on("Ready", function()
 
 	local voiceChannel = DiscordClient:fetchChannelAsync("1134076704495775844"):await()
 
-	voiceChannel:connectAsync():after(function()
-		print("Connected to voice channel!")
-	end)
+	voiceChannel:connectAsync():await()
+
+	-- Task.wait(5)
+
+	-- voiceChannel:disconnectAsync():await()
+
+	
 end)
 
 DiscordClient:connectAsync()
