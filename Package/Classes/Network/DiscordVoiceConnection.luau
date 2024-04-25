@@ -277,7 +277,6 @@ end
 function DiscordVoiceConnection.Interface.new(discordClient: any, id: string): DiscordVoiceConnection
 	local self = Construct({
 		voiceWebsocket = DiscordWebsocket.new(),
-		-- voiceUDP = DiscordUDP.new(),
 		discordClient = discordClient,
 
 		reporter = Console.new(`🖲️  DiscordVoiceConnection {id}`),
