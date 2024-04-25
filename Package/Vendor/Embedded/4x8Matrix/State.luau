@@ -1,6 +1,6 @@
 local Signal = require("../Sleitnick/Signal")
 
-local Task = require("@lune/task")
+local Task = require("../../../Std/Task")
 
 local MAX_RECORD_ALLOCATION = 15
 

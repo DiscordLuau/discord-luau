@@ -5,9 +5,8 @@ local Signal = require("../../Vendor/Signal")
 local Console = require("../../Vendor/Console")
 local State = require("../../Vendor/State")
 
-local Net = require("@lune/net")
-local Task = require("@lune/task")
-local FS = require("@lune/fs")
+local Net = require("../../Std/Net")
+local Task = require("../../Std/Task")
 
 --[=[
 	@class Internal.DiscordUDP
@@ -21,9 +20,9 @@ DiscordUDP.Prototype = {}
 
 DiscordUDP.Prototype.type = "DiscordUDP"
 
-function DiscordUDP.Prototype.sendAsync(self: DiscordUDP, dataPacket)
+function DiscordUDP.Prototype.sendAsync(self: DiscordUDP, dataPacket: string)
 	return Future.try(function()
-		
+		self.socketInstance:send(dataPacket)
 	end)
 end
 
@@ -34,18 +33,16 @@ function DiscordUDP.Prototype.connectAsync(
 	return Future.try(function()
 		self.socketUrl = discordUdp
 		self.socketInstance:connect(discordUdp)
-		print(discordUdp)
 
 		self.socketActive:set(true)
 		self.socketThread = Task.spawn(function()
 			while self.socketActive.Value do
 				if self.socketInstance.closeCode then
+					-- this isn't a thing, but in the real impl - it would be.
 					self.socketActive:set(false)
 					self.onSocketDead:fire(self.socketInstance.closeCode)
 				else
-					print("LISTENING!")
 					local socketMessage = self.socketInstance:next()
-					print("NEXT COMPLETED!")
 
 					self.onMessageRecv:fire(buffer.tostring(socketMessage))
 				end
@@ -65,8 +62,6 @@ function DiscordUDP.Prototype.disconnectAsync(self: DiscordUDP, closingCode: str
 end
 
 function DiscordUDP.Interface.new(publicUdp: string)
-	print("udp at: ", publicUdp)
-
 	local self = Construct({
 		publicUdp = publicUdp,
 		socketInstance = (Net :: any).udpSocket(publicUdp),
@@ -83,15 +78,6 @@ function DiscordUDP.Interface.new(publicUdp: string)
 		self.reporter:debug(`Discord UDP Socket {(state and "Connected") or "Disconnected"} [{self.socketUrl or "unknown"}]`)
 	end)
 
-	local i = 0
-
-	self.onMessageRecv:connect(function(discordPacket)
-		print(discordPacket)
-		FS.writeFile("file-" .. tostring(i), discordPacket)
-
-		i += 1
-	end)
-
 	return self
 end
 
@@ -101,7 +87,6 @@ export type DiscordUDP = typeof(DiscordUDP.Prototype) & {
 
 	onMessageRecv: unknown,
 	onSocketDead: unknown,
-	onOperationRecv: unknown,
 
 	reporter: unknown,
 }

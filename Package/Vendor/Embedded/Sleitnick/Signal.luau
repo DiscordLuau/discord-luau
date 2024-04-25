@@ -15,7 +15,7 @@
 --   sleitnick - August 3rd, 2021 - Modified for Knit.                        --
 -- -----------------------------------------------------------------------------
 
-local Task = require("@lune/task")
+local Task = require("../../../Std/Task")
 
 -- Signal types
 export type Connection = {

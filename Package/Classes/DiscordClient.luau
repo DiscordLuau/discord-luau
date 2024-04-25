@@ -25,7 +25,7 @@ local Console = require("../Vendor/Console")
 local Future = require("../Vendor/Future")
 local Signal = require("../Vendor/Signal")
 
-local Task = require("@lune/task")
+local Task = require("../Std/Task")
 
 local CONCURRENT_IDENTIFY_YIELD = 5
 

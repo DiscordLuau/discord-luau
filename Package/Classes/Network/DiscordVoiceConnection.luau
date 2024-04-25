@@ -14,11 +14,9 @@ local Signal = require("../../Vendor/Signal")
 local DiscordWebsocket = require("DiscordWebsocket")
 local DiscordUDP = require("DiscordUDP")
 
-local Task = require("@lune/task")
-local Net = require("@lune/net")
-local FS = require("@lune/fs")
+local Task = require("../../Std/Task")
 
-local BASE_VOICE_CONNECTION_PORT = 10003
+local BASE_VOICE_CONNECTION_PORT = 1050
 
 --[=[
 	@class Internal.DiscordVoiceConnection
@@ -68,28 +66,6 @@ function DiscordVoiceConnection.Prototype.observeWebsocketErrors(self: DiscordVo
 	end)
 end
 
-function DiscordVoiceConnection.Prototype.identifyPublicAddress(self: DiscordVoiceConnection, operationData)
-	if DiscordVoiceConnection.Internal.publicAddress then
-		return DiscordVoiceConnection.Internal.publicAddress, DiscordVoiceConnection.Internal.publicPort
-	end
-
-	local udpSocket = (Net :: any).udpSocket(`0.0.0.0:{BASE_VOICE_CONNECTION_PORT}`)
-	local data = string.pack(`>I2I2I4c64I2`, 1, 70, operationData.ssrc, operationData.ip, operationData.port)
-
-	udpSocket:connect(`{operationData.ip}:{operationData.port}`)
-	udpSocket:send(data)
-
-	local responseBuffer = udpSocket:next()
-	local responseData = { string.unpack(">I2I2I4c64I2", buffer.tostring(responseBuffer)) }
-
-	(Net :: any).udpSocketClose(udpSocket)
-
-	DiscordVoiceConnection.Internal.publicAddress = responseData[4]
-	DiscordVoiceConnection.Internal.publicPort = responseData[5]
-
-	return responseData[4], responseData[5]
-end
-
 function DiscordVoiceConnection.Prototype.observeWebsocketOperations(self: DiscordVoiceConnection)
 	self.voiceWebsocket.onOperationRecv:connect(function(operationCode, operationData)
 		if operationCode == VoiceWebsocketOperationCodes.Hello then
@@ -97,33 +73,43 @@ function DiscordVoiceConnection.Prototype.observeWebsocketOperations(self: Disco
 
 			self.heartbeatInterval = operationData.heartbeatInterval
 			self:heartbeatAsync(true):after(function()
-				self:heartbeatIn(math.random(self.heartbeatInterval / 2, self.heartbeatInterval))
+				self:heartbeatIn(self.heartbeatInterval)
 			end)
 		elseif operationCode == VoiceWebsocketOperationCodes.HeartbeatACK then
 			self.heartbeatAck = true
 			self.heartbeatPing = os.clock() - self.heartbeatClockTime
 
+			if operationData ~= self.heartbeatNonce then
+				self.reporter:warn(`HeartbeatACK - nonce recieved was incorrect`)
+			end
+
 			self.reporter:debug(`HeartbeatACK - Ping: {self.heartbeatPing}`)
 		elseif operationCode == VoiceWebsocketOperationCodes.Ready then
 			DiscordVoiceConnection.Internal.activeConnections += 1
 
+			local thread = coroutine.running()
+
 			self.voiceUDP = DiscordUDP.new(`0.0.0.0:{BASE_VOICE_CONNECTION_PORT + DiscordVoiceConnection.Internal.activeConnections}`)
+			
+			self.voiceUDP.onMessageRecv:once(function(packetData: string)
+				local responseData = { string.unpack(">I2I2I4c64I2", packetData) }
+
+				coroutine.resume(thread, responseData[4])
+			end)
+			
 			self.voiceUDP:connectAsync(`{operationData.ip}:{operationData.port}`):await()
+			self.voiceUDP:sendAsync(
+				string.pack(`>I2I2I4c64I2`, 1, 70, operationData.ssrc, operationData.ip, operationData.port)
+			)
 
-			local publicAddress = self:identifyPublicAddress(operationData)
-
-			print({
-				address = publicAddress,
-				port = BASE_VOICE_CONNECTION_PORT + DiscordVoiceConnection.Internal.activeConnections,
-				mode = "xsalsa20_poly1305"
-			})
+			local publicIp = coroutine.yield()
 
 			self.voiceWebsocket:sendAsync({
 				[WebsocketOperationKeys.OperationCode] = VoiceWebsocketOperationCodes.SelectProtocol,
 				[WebsocketOperationKeys.Data] = {
 					protocol = "udp",
 					data = {
-						address = publicAddress,
+						address = publicIp,
 						port = BASE_VOICE_CONNECTION_PORT + DiscordVoiceConnection.Internal.activeConnections,
 						mode = "xsalsa20_poly1305"
 					}
@@ -136,8 +122,6 @@ function DiscordVoiceConnection.Prototype.observeWebsocketOperations(self: Disco
 			for index = 1, 32 do
 				buffer.writei16(self.encryptionKey, index, operationData.secretKey[tostring(index)])
 			end
-
-			FS.writeFile("key", buffer.tostring(self.encryptionKey))
 		end
 	end)
 end

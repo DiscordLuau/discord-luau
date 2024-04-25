@@ -9,8 +9,8 @@ local HTTPScheduler = require("HTTPScheduler")
 local EventIn = require("../Middleware/EventIn")
 local EventOut = require("../Middleware/EventOut")
 
-local Serde = require("@lune/serde")
-local Net = require("@lune/net")
+local Serde = require("../../Std/Serde")
+local Net = require("../../Std/Net")
 
 local DISCORD_API_VERSION = 9
 

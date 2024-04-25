@@ -1,4 +1,4 @@
-local Task = require("@lune/task")
+local Task = require("../../../Std/Task")
 
 local FreeThreads: { thread } = {}
 

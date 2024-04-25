@@ -13,9 +13,9 @@ local EventOut = require("../Middleware/EventOut")
 
 local WebsocketBuffer = require("WebsocketBuffer")
 
-local Net = require("@lune/net")
-local Serde = require("@lune/serde")
-local Task = require("@lune/task")
+local Net = require("../../Std/Net")
+local Serde = require("../../Std/Serde")
+local Task = require("../../Std/Task")
 
 local ZLIB_SUFFIX_START = "\120"
 local ZLIB_SUFFIX_END = "\84"

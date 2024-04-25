@@ -12,8 +12,8 @@ local Signal = require("../../Vendor/Signal")
 
 local DiscordWebsocket = require("DiscordWebsocket")
 
-local Process = require("@lune/process")
-local Task = require("@lune/task")
+local Process = require("../../Std/Process")
+local Task = require("../../Std/Task")
 
 local LIBRARY_IDENTIFIER = "DiscordLuau"
 

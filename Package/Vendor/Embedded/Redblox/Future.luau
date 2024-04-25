@@ -2,7 +2,7 @@
 
 local Spawn = require("Spawn")
 
-local Task = require("@lune/task")
+local Task = require("../../../Std/Task")
 
 export type Future<T...> = {
 	valueList: { any }?,
