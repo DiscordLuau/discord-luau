@@ -2,5 +2,8 @@
   "luau-lsp.require.mode": "relativeToFile",
   "luau-lsp.require.directoryAliases": {
     "@lune/": "~/.lune/.typedefs/0.8.2/"
-  }
+  },
+  "rust-analyzer.linkedProjects": [
+    "Engines/crypto/Cargo.toml",
+  ]
 }

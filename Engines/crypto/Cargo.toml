@@ -1,0 +1,9 @@
+[package]
+name = "discord-luau-crypto-engine"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+arrayvec = "0.7.4"
+crypto_secretbox = "0.1.1"
+base64 = "0.22.0"

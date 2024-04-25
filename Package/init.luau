@@ -1,3 +1,5 @@
+local VERSION = "0.1.0"
+
 --[=[
 	@class Discord-Luau
 
@@ -5,6 +7,14 @@
 ]=]
 
 local DiscordLuau = {}
+
+--[=[
+	@prop _VERSION string
+	@within Discord-Luau
+
+	Returns the currently running version of Discord-Luau.
+]=]
+DiscordLuau._VERSION = VERSION
 
 --[=[
 	@prop Components { }
