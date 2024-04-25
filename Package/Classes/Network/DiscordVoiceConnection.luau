@@ -139,7 +139,7 @@ function DiscordVoiceConnection.Prototype.heartbeatAsync(self: DiscordVoiceConne
 		end
 
 		self.heartbeatClockTime = os.clock()
-		self.heartbeatNonce = math.random(1_000_000_000) -- fixme: validate nonce on Heartbeat ACK
+		self.heartbeatNonce = math.random(1_000_000_000)
 
 		self.voiceWebsocket:sendAsync({
 			[WebsocketOperationKeys.OperationCode] = VoiceWebsocketOperationCodes.Heartbeat,
@@ -170,7 +170,6 @@ end
 function DiscordVoiceConnection.Prototype.connectAsync(self: DiscordVoiceConnection, guildId: string, channelId: string)
 	return Future.try(function()
 		local guildObject = self.discordClient:fetchGuildAsync(guildId):await()
-
 		local connection
 
 		connection = self.discordClient.discordShards[guildObject.shardId].onEvent:connect(function(eventName, data)
