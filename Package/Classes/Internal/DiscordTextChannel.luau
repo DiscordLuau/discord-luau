@@ -5,6 +5,7 @@ local DiscordEndpoints = require("../../Enums/DiscordEndpoints")
 
 local Future = require("../../Vendor/Future")
 
+local DiscordMessage = require("../Internal/DiscordMessage")
 local DiscordMessageType = require("../../Types/DiscordMessage")
 
 --[=[
@@ -18,6 +19,40 @@ DiscordTextChannel.Prototype = {}
 DiscordTextChannel.Interface = {}
 
 DiscordTextChannel.Prototype.type = "DiscordTextChannel"
+
+function DiscordTextChannel.Prototype.getMessagesAsync(self: DiscordTextChannel, limit: number?)
+	return Future.try(function()
+		local url = string.format(DiscordEndpoints.BotGetChannelMessages, self.id)
+
+		if limit then
+			url ..= `?limit={limit}`
+		end
+
+		local messageObjects = self.discordClient.discordGateway:getAsync(url):await()
+
+		for index, messageObject in messageObjects do
+			messageObjects[index] = DiscordMessage.new(self.discordClient, messageObject)
+		end
+
+		return messageObjects
+	end)
+end
+
+function DiscordTextChannel.Prototype.getMessageAsync(self: DiscordTextChannel, messageId: string)
+	return Future.try(function()
+		local messageObject = self.discordClient.discordGateway:getAsync(string.format(DiscordEndpoints.BotGetChannelMessage, self.id, messageId)):await()
+		
+		return DiscordMessage.new(self.discordClient, messageObject)
+	end)
+end
+
+function DiscordTextChannel.Prototype.bulkDeleteMessagesAsync(self: DiscordTextChannel, messageIds: { string })
+	return Future.try(function()
+		return self.discordClient.discordGateway:postAsync(string.format(DiscordEndpoints.BotBulkDeleteMessages, self.id), {
+			messages = messageIds
+		}):await()
+	end)
+end
 
 function DiscordTextChannel.Prototype.sendMessageAsync(self: DiscordTextChannel, messageData: DiscordMessageType.MessageSchema)
 	return Future.try(function()

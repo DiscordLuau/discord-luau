@@ -64,7 +64,7 @@ function DiscordGateway.Prototype.parseDiscordAPIErrors(self: DiscordGateway, ap
 	return `Discord HTTP Error - {networkResponse.statusCode} ({networkResponse.statusMessage}): \n{networkResponse.body}`
 end
 
-function DiscordGateway.Prototype.requestAsync(self: DiscordGateway, api: string, method: ("DELETE" | "GET" | "HEAD" | "OPTIONS" | "PATCH" | "POST" | "PUT"), data: { [any]: any })
+function DiscordGateway.Prototype.requestAsync(self: DiscordGateway, api: string, method: ("DELETE" | "GET" | "HEAD" | "OPTIONS" | "PATCH" | "POST" | "PUT"), data: { [any]: any }?)
 	return Future.try(function()
 		return self.discordScheduler:addTask(function()
 			if self.endpointRateLimits[api] and self.endpointRateLimits[api]:isConsumed() then
@@ -109,7 +109,7 @@ function DiscordGateway.Prototype.requestAsync(self: DiscordGateway, api: string
 	end)
 end
 
-function DiscordGateway.Prototype.getAsync(self: DiscordGateway, api, data)
+function DiscordGateway.Prototype.getAsync(self: DiscordGateway, api: string)
 	return Future.try(function()
 		local cache = self:getEndpointCache(api)
 		local cacheValue = cache and cache:get()
@@ -118,7 +118,7 @@ function DiscordGateway.Prototype.getAsync(self: DiscordGateway, api, data)
 			return cacheValue
 		end
 
-		local response = self:requestAsync(api, "GET", data):await()
+		local response = self:requestAsync(api, "GET"):await()
 
 		if cache then
 			cache:set(response)

@@ -2,8 +2,12 @@ return {
 	BotGateway = "gateway/bot",
 
 	BotGetGuild = "guilds/%s",
+
 	BotGetChannel = "channels/%s",
 	BotCreateMessage = "channels/%s/messages",
+	BotGetChannelMessages = "channels/%s/messages",
+	BotGetChannelMessage = "channels/%s/messages/%s",
+	BotBulkDeleteMessages = "channels/%s/messages/bulk-delete",
 
 	CreateGlobalApplicationCommand = "applications/%s/commands",
 	EditGlobalApplicationCommand = "applications/%s/commands/%s",
