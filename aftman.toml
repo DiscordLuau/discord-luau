@@ -3,4 +3,4 @@
 
 # To add a new tool, add an entry to this table.
 [tools]
-lune = "filiptibell/lune@0.7.5"
+lune = "filiptibell/lune@0.8.2"
