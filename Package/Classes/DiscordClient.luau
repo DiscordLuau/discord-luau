@@ -15,6 +15,7 @@ local Cache = require("Internal/Cache")
 local DiscordCache = require("Internal/DiscordCache")
 local DiscordUser = require("Internal/DiscordUser")
 local DiscordGuild = require("Internal/DiscordGuild")
+local DiscordChannel = require("Internal/DiscordChannel")
 local DiscordTextChannel = require("Internal/DiscordTextChannel")
 local DiscordVoiceChannel = require("Internal/DiscordVoiceChannel")
 local DiscordMessage = require("Internal/DiscordMessage")
@@ -124,8 +125,60 @@ function DiscordClient.Prototype.connectAsync(self: DiscordClient)
 					local discordInteraction = DiscordInteraction.new(self, data)
 
 					self.onEvent:fire(DiscordEvents.Interaction, discordInteraction)
+				elseif eventName == WebsocketEvents.MessageBulkDeleted then
+					self.onEvent:fire(DiscordEvents.MessageBulkDeleted, data)
+				elseif eventName == WebsocketEvents.ChannelCreate then
+					local discordChannel = DiscordChannel.new(self, data)
+
+					self.onEvent:fire(DiscordEvents.ChannelCreate, discordChannel)
+				elseif eventName == WebsocketEvents.ChannelUpdate then
+					local discordChannel = DiscordChannel.new(self, data)
+
+					self.onEvent:fire(DiscordEvents.ChannelUpdate, discordChannel)
+				elseif eventName == WebsocketEvents.ChannelDeleted then
+					local discordChannel = DiscordChannel.new(self)
+
+					self.onEvent:fire(DiscordEvents.ChannelDelete, discordChannel)
+				elseif eventName == WebsocketEvents.UserUpdated then
+					self.discordUser = DiscordUser.new(self, data.user)
+					
+					self.onEvent:fire(DiscordEvents.UserUpdated, self.discordUser)
+				elseif eventName == WebsocketEvents.ChannelPinsUpdate then
+					self.onEvent:fire(DiscordEvents.ChannelPinsUpdate, data)
+				elseif eventName == WebsocketEvents.GuildCreate then
+					local discordGuild = DiscordGuild.new(self, data)
+
+					self.onEvent:fire(DiscordEvents.GuildCreate, discordGuild)
+				elseif eventName == WebsocketEvents.GuildUpdate then
+					local discordGuild = DiscordGuild.new(self, data)
+
+					self.onEvent:fire(DiscordEvents.GuildCreate, discordGuild)
+				elseif eventName == WebsocketEvents.GuildDeleted then
+					local discordGuild = DiscordGuild.new(self, data)
+
+					self.onEvent:fire(DiscordEvents.GuildCreate, discordGuild)
+				elseif eventName == WebsocketEvents.GuildMemberBanned then
+					data.user = DiscordUser.new(self, data.user)
+
+					self.onEvent:fire(DiscordEvents.GuildMemberBanned, data)
+				elseif eventName == WebsocketEvents.GuildMemberUnbanned then
+					data.user = DiscordUser.new(self, data.user)
+
+					self.onEvent:fire(DiscordEvents.GuildMemberBanned, data)
+				elseif eventName == WebsocketEvents.GuildMemberJoined then
+					data.user = DiscordUser.new(self, data.user)
+
+					self.onEvent:fire(DiscordEvents.GuildMemberJoined, data)
+				elseif eventName == WebsocketEvents.GuildMemberLeft then
+					data.user = DiscordUser.new(self, data.user)
+
+					self.onEvent:fire(DiscordEvents.GuildMemberLeft, data)
+				elseif eventName == WebsocketEvents.GuildMemberUpdated then
+					data.user = DiscordUser.new(self, data.user)
+
+					self.onEvent:fire(DiscordEvents.GuildMemberUpdated, data)
 				else
-					-- warn(eventName)
+					self.reporter:Debug(`Unknown Event: '{eventName}'`)
 				end
 			end)
 		end
@@ -155,18 +208,8 @@ end
 function DiscordClient.Prototype.fetchChannelAsync(self: DiscordClient, channelId: string): Future.Future<DiscordTextChannel.DiscordTextChannel | DiscordVoiceChannel.DiscordVoiceChannel>
 	return Future.try(function()
 		local rawChannelData = self.discordGateway:getAsync(string.format(DiscordEndpoints.BotGetChannel, channelId)):await()
-		local discordChannel
 
-		-- https://discord.com/developers/docs/resources/channel#channel-object-channel-types
-		-- todo: support other channel types lol
-
-		if rawChannelData.type == 0 then
-			discordChannel = DiscordTextChannel.new(self, rawChannelData)
-		elseif rawChannelData.type == 2 then
-			discordChannel = DiscordVoiceChannel.new(self, rawChannelData)
-		end
-
-		return discordChannel 
+		return DiscordChannel.new(self, rawChannelData) 
 	end)
 end
 
