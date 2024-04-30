@@ -115,8 +115,6 @@ function DiscordClient.Prototype.connectAsync(self: DiscordClient)
 				elseif eventName == WebsocketEvents.MessageUpdate then
 					local discordMessage = DiscordMessage.new(self, data)
 
-					discordMessage:_updateMessageLocally(data)
-
 					self.onEvent:fire(DiscordEvents.MessageChanged, discordMessage)
 				elseif eventName == WebsocketEvents.MessageDeleted then
 					local discordMessage = DiscordMessage.new(self, data)

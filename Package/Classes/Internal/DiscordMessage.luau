@@ -41,26 +41,62 @@ function DiscordMessage.Prototype.replyAsync(self: DiscordMessage, messageData: 
 	end)
 end
 
-function DiscordMessage.Prototype._updateMessageLocally(self: DiscordMessage, messageData: unknown)
-	for index, value in (messageData :: { }) do
-		(self :: { })[index] = value
-	end
+function DiscordMessage.Prototype.deleteAsync(self: DiscordMessage)
+	return Future.try(function()
+		return self.discordClient.discordGateway:deleteAsync(string.format(DiscordEndpoints.BotDeleteMessage, self.channelId, self.id)):await()
+	end)
+end
+
+function DiscordMessage.Prototype.pinAsync(self: DiscordMessage)
+	return Future.try(function()
+		return self.discordClient.discordGateway:putAsync(string.format(DiscordEndpoints.BotPinMessage, self.channelId, self.id)):await()
+	end)
+end
+
+function DiscordMessage.Prototype.unpinAsync(self: DiscordMessage)
+	return Future.try(function()
+		return self.discordClient.discordGateway:deleteAsync(string.format(DiscordEndpoints.BotUnpinMessage, self.channelId, self.id)):await()
+	end)
+end
+
+function DiscordMessage.Prototype.editAsync(self: DiscordMessage, messageData: DiscordMessageSchema)
+	return Future.try(function()
+		local components = {}
+
+		if messageData.components then
+			for _, component in messageData.components do
+				table.insert(components, component:toJSONObject())
+			end
+		end
+
+		return self.discordClient.discordGateway:patchAsync(string.format(DiscordEndpoints.BotEditMessage, self.channelId, self.id), {
+			content = messageData.content or nil,
+			nonce = messageData.nonce or nil,
+			tts = messageData.tts or false,
+			components = components,
+			sticker_ids = messageData.stickerIds,
+			flags = messageData.flags or nil, --fixme: should use a bitfield.
+			enforce_nonce = messageData.enforceNonce or false
+		}):await()
+	end)
 end
 
 function DiscordMessage.Interface.new(discordClient: any, messageData: {
 	id: string
 })
-	return discordClient.discordCache:getDataOr(CacheType.DiscordMessage, messageData.id, function()
+	local self = discordClient.discordCache:getDataOr(CacheType.DiscordMessage, messageData.id, function()
 		local messageStruct = {
 			discordClient = discordClient
 		}
 
-		for index, value in messageData do
-			messageStruct[index] = value
-		end
-
 		return Construct(messageStruct, DiscordMessage.Prototype)
 	end)
+
+	for index, value in messageData do
+		self[index] = value
+	end
+
+	return self
 end
 
 export type DiscordMessage = typeof(DiscordMessage.Interface.new()) & {

@@ -1,6 +1,7 @@
 local Construct = require("../../Utils/Construct")
 
 local CacheType = require("../../Enums/CacheType")
+local DiscordEndpoints = require("../../Enums/DiscordEndpoints")
 
 local Future = require("../../Vendor/Future")
 
@@ -33,6 +34,34 @@ end
 function DiscordVoiceChannel.Prototype.disconnectAsync(self: DiscordVoiceChannel): Future.Future<unknown>
 	return Future.try(function()
 		return self.voiceConnection:disconnectAsync():await()
+	end)
+end
+
+function DiscordVoiceChannel.Prototype.deleteAsync(self: DiscordVoiceChannel, messageIds: { string })
+	return Future.try(function()
+		return self.discordClient.discordGateway:deleteAsync(string.format(DiscordEndpoints.BotDeleteChannel, self.id)):await()
+	end)
+end
+
+function DiscordVoiceChannel.Prototype.triggerTypingIndicator(self: DiscordVoiceChannel)
+	return Future.try(function()
+		return self.discordClient.discordGateway:postAsync(string.format(DiscordEndpoints.BotTriggerTypingChannel, self.id), { }):await()
+	end)
+end
+
+function DiscordVoiceChannel.Prototype.modifyAsync(self: DiscordVoiceChannel, channelSchema: DiscordVoiceChannelSchema)
+	return Future.try(function()
+		return self.discordClient.discordGateway:patchAsync(string.format(DiscordEndpoints.BotModifyChannel, self.id), {
+			video_quality_mode = channelSchema.videoQualityMode,
+			rtc_region = channelSchema.rtcRegion,
+			parent_id = channelSchema.parentId,
+			user_limit = channelSchema.userLimit,
+			bitrate = channelSchema.bitrate,
+			rate_limit_per_user = channelSchema.rateLimitPerUser,
+			nsfw = channelSchema.nsfw,
+			position = channelSchema.position,
+			name = channelSchema.name
+		}):await()
 	end)
 end
 
@@ -74,6 +103,18 @@ export type DiscordVoiceChannel = typeof(DiscordVoiceChannel.Prototype) & {
 
 	voiceWebsocket: DiscordWebsocket.DiscordWebsocket,
 	voiceConnection: DiscordVoiceConnection.DiscordVoiceConnection
+}
+
+export type DiscordVoiceChannelSchema = {
+	videoQualityMode: number,
+	rtcRegion: string,
+	parentId: string,
+	userLimit: number,
+	bitrate: number,
+	rateLimitPerUser: number,
+	nsfw: boolean,
+	position: number,
+	name: string
 }
 
 return DiscordVoiceChannel.Interface
