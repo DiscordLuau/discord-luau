@@ -10,6 +10,9 @@ return {
 	BotDeleteMessage = "channels/%s/messages/%s",
 	BotEditMessage = "channels/%s/messages/%s",
 
+	BotGetInvites = "channels/%s/invites",
+	BotDeleteInvite = "invites/%s",
+
 	BotCreateReaction = "channels/%s/messages/%s/reactions/%s/@me",
 	BotDeleteReaction = "channels/%s/messages/%s/reactions/%s/@me",
 	BotDeleteUserReaction = "channels/%s/messages/%s/reactions/%s/%s",

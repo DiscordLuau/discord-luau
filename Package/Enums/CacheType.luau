@@ -9,4 +9,5 @@ return {
 	DiscordVoiceChannel = "DiscordVoiceChannel",
 	DiscordMessage = "DiscordMessage",
 	DiscordMember = "DiscordMember",
+	DiscordInvite = "DiscordInvite"
 }

@@ -6,7 +6,6 @@ local DiscordEndpoints = require("../../Enums/DiscordEndpoints")
 local Future = require("../../Vendor/Future")
 
 local DiscordMessage = require("../Internal/DiscordMessage")
-local DiscordMessageType = require("../../Types/DiscordMessage")
 
 --[=[
 	@class Internal.DiscordTextChannel
@@ -20,68 +19,6 @@ DiscordTextChannel.Interface = {}
 
 DiscordTextChannel.Prototype.type = "DiscordTextChannel"
 
-function DiscordTextChannel.Prototype.getMessagesAsync(self: DiscordTextChannel, limit: number?)
-	return Future.try(function()
-		local url = string.format(DiscordEndpoints.BotGetChannelMessages, self.id)
-
-		if limit then
-			url ..= `?limit={limit}`
-		end
-
-		local messageObjects = self.discordClient.discordGateway:getAsync(url):await()
-
-		for index, messageObject in messageObjects do
-			messageObjects[index] = DiscordMessage.new(self.discordClient, messageObject)
-		end
-
-		return messageObjects
-	end)
-end
-
-function DiscordTextChannel.Prototype.getMessageAsync(self: DiscordTextChannel, messageId: string)
-	return Future.try(function()
-		local messageObject = self.discordClient.discordGateway:getAsync(string.format(DiscordEndpoints.BotGetChannelMessage, self.id, messageId)):await()
-		
-		return DiscordMessage.new(self.discordClient, messageObject)
-	end)
-end
-
-function DiscordTextChannel.Prototype.bulkDeleteMessagesAsync(self: DiscordTextChannel, messageIds: { string })
-	return Future.try(function()
-		return self.discordClient.discordGateway:postAsync(string.format(DiscordEndpoints.BotBulkDeleteMessages, self.id), {
-			messages = messageIds
-		}):await()
-	end)
-end
-
-function DiscordTextChannel.Prototype.sendMessageAsync(self: DiscordTextChannel, messageData: DiscordMessageType.MessageSchema)
-	return Future.try(function()
-		local components = {}
-
-		if messageData.components then
-			for _, component in messageData.components do
-				table.insert(components, component:toJSONObject())
-			end
-		end
-
-		return self.discordClient.discordGateway:postAsync(string.format(DiscordEndpoints.BotCreateMessage, self.id), {
-			content = messageData.content or nil,
-			nonce = messageData.nonce or nil,
-			tts = messageData.tts or false,
-			components = components,
-			sticker_ids = messageData.stickerIds,
-			flags = messageData.flags or nil, --fixme: should use a bitfield.
-			enforce_nonce = messageData.enforceNonce or false
-		}):await()
-	end)
-end
-
-function DiscordTextChannel.Prototype.deleteAsync(self: DiscordTextChannel, messageIds: { string })
-	return Future.try(function()
-		return self.discordClient.discordGateway:deleteAsync(string.format(DiscordEndpoints.BotDeleteChannel, self.id)):await()
-	end)
-end
-
 function DiscordTextChannel.Prototype.modifyAsync(self: DiscordTextChannel, channelSchema: DiscordTextChannelSchema)
 	return Future.try(function()
 		return self.discordClient.discordGateway:patchAsync(string.format(DiscordEndpoints.BotModifyChannel, self.id), {
@@ -94,12 +31,6 @@ function DiscordTextChannel.Prototype.modifyAsync(self: DiscordTextChannel, chan
 			default_auto_archive_duration = channelSchema.defaultAutoArchiveDurection,
 			default_thread_rate_limit_per_user = channelSchema.defaultThreadRateLimitPerUser
 		}):await()
-	end)
-end
-
-function DiscordTextChannel.Prototype.triggerTypingIndicatorAsync(self: DiscordTextChannel)
-	return Future.try(function()
-		return self.discordClient.discordGateway:postAsync(string.format(DiscordEndpoints.BotTriggerTypingChannel, self.id), { }):await()
 	end)
 end
 

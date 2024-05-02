@@ -37,18 +37,6 @@ function DiscordVoiceChannel.Prototype.disconnectAsync(self: DiscordVoiceChannel
 	end)
 end
 
-function DiscordVoiceChannel.Prototype.deleteAsync(self: DiscordVoiceChannel, messageIds: { string })
-	return Future.try(function()
-		return self.discordClient.discordGateway:deleteAsync(string.format(DiscordEndpoints.BotDeleteChannel, self.id)):await()
-	end)
-end
-
-function DiscordVoiceChannel.Prototype.triggerTypingIndicator(self: DiscordVoiceChannel)
-	return Future.try(function()
-		return self.discordClient.discordGateway:postAsync(string.format(DiscordEndpoints.BotTriggerTypingChannel, self.id), { }):await()
-	end)
-end
-
 function DiscordVoiceChannel.Prototype.modifyAsync(self: DiscordVoiceChannel, channelSchema: DiscordVoiceChannelSchema)
 	return Future.try(function()
 		return self.discordClient.discordGateway:patchAsync(string.format(DiscordEndpoints.BotModifyChannel, self.id), {
