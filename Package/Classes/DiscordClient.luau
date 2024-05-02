@@ -178,7 +178,7 @@ function DiscordClient.Prototype.connectAsync(self: DiscordClient)
 
 					self.onEvent:fire(DiscordEvents.GuildMemberUpdated, data)
 				else
-					self.reporter:Debug(`Unknown Event: '{eventName}'`)
+					self.reporter:debug(`Unknown Event: '{eventName}'`)
 				end
 			end)
 		end
