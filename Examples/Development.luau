@@ -11,15 +11,9 @@ DiscordClient:setVerbose(true)
 DiscordClient:on("Ready", function()
 	print(`🎉🎉 {DiscordClient.discordUser.username} is online! 🎉🎉`)
 
-	local textChannel = DiscordClient:fetchChannelAsync("1048686561685946489"):await()
+	local guildObject = DiscordClient:fetchGuildAsync("737382889947136000"):await()
 
-	textChannel:getMessagesAsync(MESSAGE_DELETION_SIZE):after(function(messageQueue)
-		for _, message in messageQueue do
-			message:replyAsync({
-				content = message.content
-			})
-		end
-	end)
+	print(guildObject:getGuildAuditLogs():await())
 end)
 
 DiscordClient:connectAsync()

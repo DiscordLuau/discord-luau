@@ -129,10 +129,6 @@ function DiscordTextChannel.Interface.new(discordClient: any, channelData: {
 
 	if channelData then
 		for index, value in channelData do
-			if self[index] ~= nil then
-				continue
-			end
-
 			self[index] = value
 		end
 	end

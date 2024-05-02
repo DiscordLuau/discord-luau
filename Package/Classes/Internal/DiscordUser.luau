@@ -34,10 +34,6 @@ function DiscordUser.Interface.new(discordClient: any, partialUserData: {
 
 	if partialUserData then
 		for index, value in partialUserData do
-			if self[index] ~= nil then
-				continue
-			end
-
 			self[index] = value
 		end
 	end

@@ -10,6 +10,13 @@ return {
 	BotDeleteMessage = "channels/%s/messages/%s",
 	BotEditMessage = "channels/%s/messages/%s",
 
+	BotCreateReaction = "channels/%s/messages/%s/reactions/%s/@me",
+	BotDeleteReaction = "channels/%s/messages/%s/reactions/%s/@me",
+	BotDeleteUserReaction = "channels/%s/messages/%s/reactions/%s/%s",
+	BotGetReactions = "channels/%s/messages/%s/reactions/%s",
+	BotDeleteAllReactions = "channels/%s/messages/%s/reactions",
+	BotDeleteAllReactionsForEmoji = "channels/%s/messages/%s/reactions/%s",
+
 	BotDeleteChannel = "channels/%s",
 	BotModifyChannel = "channels/%s",
 	BotPinMessage = "channels/%s/pins/%s",
@@ -25,6 +32,8 @@ return {
 	GetGlobalApplicationCommands = "applications/%s/commands",
 	GetGlobalApplicationCommand = "applications/%s/commands/%s",
 	DeleteGlobalApplicationCommand = "applications/%s/commands/%s",
+
+	GetGuildAuditLogs = "guilds/%s/audit-logs",
 
 	CreateGuildApplicationCommand = "applications/%s/guilds/%s/commands",
 	EditGuildApplicationCommand = "applications/%s/guilds/%s/commands/%s",

@@ -7,6 +7,8 @@ local ApplicationCommand = require("../ApplicationCommand")
 
 local DiscordEmoji = require("DiscordEmoji")
 local DiscordGuildRole = require("DiscordGuildRole")
+local DiscordChannel = require("DiscordChannel")
+local DiscordUser = require("DiscordUser")
 
 local Future = require("../../Vendor/Future")
 
@@ -115,6 +117,24 @@ function DiscordGuild.Prototype.setSlashCommandsAsync(self: DiscordGuild, comman
 		for _, command: ApplicationCommand.ApplicationCommand in commandsToCreate do
 			self:createSlashCommandAsync(command):await()
 		end
+	end)
+end
+
+function DiscordGuild.Prototype.getGuildAuditLogs(self: DiscordGuild, commands: { ApplicationCommand.ApplicationCommand })
+	return Future.try(function()
+		local guildAuditLogs = self.discordClient.discordGateway:getAsync(
+			string.format(DiscordEndpoints.GetGuildAuditLogs, self.id)
+		):await()
+
+		for index, channelObject in guildAuditLogs.threads do
+			guildAuditLogs.threads[index] = DiscordChannel.new(self.discordClient, channelObject)
+		end
+
+		for index, userObject in guildAuditLogs.users do
+			guildAuditLogs.users[index] = DiscordUser.new(self.discordClient, userObject)
+		end
+
+		return guildAuditLogs
 	end)
 end
 

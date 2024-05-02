@@ -7,6 +7,8 @@ local DiscordEndpoints = require("../../Enums/DiscordEndpoints")
 
 local Future = require("../../Vendor/Future")
 
+local Net = require("../../Std/Net")
+
 --[=[
 	@class Internal.DiscordMessage
 
@@ -78,6 +80,64 @@ function DiscordMessage.Prototype.editAsync(self: DiscordMessage, messageData: D
 			flags = messageData.flags or nil, --fixme: should use a bitfield.
 			enforce_nonce = messageData.enforceNonce or false
 		}):await()
+	end)
+end
+
+function DiscordMessage.Prototype.addReactionAsync(self: DiscordMessage, reaction: string)
+	return Future.try(function()
+		local isBinary = string.find(reaction, ":") == nil
+
+		return self.discordClient.discordGateway:putAsync(
+			string.format(DiscordEndpoints.BotCreateReaction, self.channelId, self.id, Net.urlEncode(reaction, isBinary)), { }
+		):await()
+	end)
+end
+
+function DiscordMessage.Prototype.removeReactionAsync(self: DiscordMessage, reaction: string)
+	return Future.try(function()
+		local isBinary = string.find(reaction, ":") == nil
+
+		return self.discordClient.discordGateway:deleteAsync(
+			string.format(DiscordEndpoints.BotDeleteReaction, self.channelId, self.id, Net.urlEncode(reaction, isBinary)), { }
+		):await()
+	end)
+end
+
+function DiscordMessage.Prototype.removeUserReactionAsync(self: DiscordMessage, userId: string, reaction: string)
+	return Future.try(function()
+		local isBinary = string.find(reaction, ":") == nil
+
+		return self.discordClient.discordGateway:deleteAsync(
+			string.format(DiscordEndpoints.BotDeleteUserReaction, self.channelId, self.id, Net.urlEncode(reaction, isBinary), userId), { }
+		):await()
+	end)
+end
+
+function DiscordMessage.Prototype.getReactionsAsync(self: DiscordMessage, reaction: string)
+	return Future.try(function()
+		local isBinary = string.find(reaction, ":") == nil
+
+		return self.discordClient.discordGateway:getAsync(
+			string.format(DiscordEndpoints.BotGetReactions, self.channelId, self.id, Net.urlEncode(reaction, isBinary)), { }
+		):await()
+	end)
+end
+
+function DiscordMessage.Prototype.removeAllReactionsAsync(self: DiscordMessage)
+	return Future.try(function()
+		return self.discordClient.discordGateway:deleteAsync(
+			string.format(DiscordEndpoints.BotDeleteAllReactions, self.channelId, self.id), { }
+		):await()
+	end)
+end
+
+function DiscordMessage.Prototype.removeAllReactionsForEmojiAsync(self: DiscordMessage, reaction: string)
+	return Future.try(function()
+		local isBinary = string.find(reaction, ":") == nil
+
+		return self.discordClient.discordGateway:deleteAsync(
+			string.format(DiscordEndpoints.BotDeleteAllReactionsForEmoji, self.channelId, self.id, Net.urlEncode(reaction, isBinary)), { }
+		):await()
 	end)
 end
 
