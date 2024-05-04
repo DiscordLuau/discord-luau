@@ -88,7 +88,11 @@ function DiscordWebsocket.Prototype.disconnectAsync(self: DiscordWebsocket, clos
 		end
 
 		if self.socketActive.Value then
-			self.socketInstance.close(closingCode)
+			xpcall(function()
+				self.socketInstance.close(closingCode)
+			end, function(source: string)
+				self.reporter:warn(`Failed to close websocket: '{source}'`)
+			end)
 		end
 
 		self.socketActive:set(false)
