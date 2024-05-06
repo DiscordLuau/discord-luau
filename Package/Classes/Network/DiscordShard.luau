@@ -205,10 +205,6 @@ end
 function DiscordShard.Prototype.connectAsync(self: DiscordShard, websocketUrl: string)
 	self.websocketUrl = websocketUrl
 
-	Task.delay(15, function()
-		self.discordWebsocket.onOperationRecv:fire(WebsocketOperationCodes.InvalidSession, true)
-	end)
-
 	return self.discordWebsocket:connectAsync(websocketUrl)
 end
 
