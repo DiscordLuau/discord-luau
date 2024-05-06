@@ -42,6 +42,9 @@ function DiscordWebsocket.Prototype.sendAsync(self: DiscordWebsocket, dataPacket
 		if messageSendOperationSuccessful then
 			self.reporter:debug(`Discord Websocket Message Sent: {dataPacket[WebsocketOperationKeys.OperationCode]}`)
 
+			self.socketActive:set(false)
+			self.onSocketDead:fire(self.socketInstance.closeCode)
+
 			return
 		else
 			self.reporter:warn(`Socket error: {string.split(messageResult, "\n")[1]}, traceback:\n{traceback}`)
@@ -65,9 +68,9 @@ function DiscordWebsocket.Prototype.connectAsync(self: DiscordWebsocket, websock
 					self.socketActive:set(false)
 					self.onSocketDead:fire(self.socketInstance.closeCode)
 				else
-					local socketMessage = self.socketInstance.next()
+					local success, socketMessage = pcall(self.socketInstance.next)
 
-					if not socketMessage then
+					if not success or not socketMessage then
 						self.socketActive:set(false)
 						self.onSocketDead:fire(self.socketInstance.closeCode)
 
