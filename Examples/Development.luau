@@ -1,8 +1,6 @@
 local DiscordLuau = require("..")
 local Env = require("../.env")
 
-local MESSAGE_DELETION_SIZE = 5
-
 local DiscordSettings = DiscordLuau.DiscordSettings.new(Env.DISCORD_BOT_TOKEN)
 local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettings)
 
@@ -13,7 +11,14 @@ DiscordClient:on("Ready", function()
 
 	local channelObject = DiscordClient:fetchChannelAsync("1048686561685946489"):await()
 
-	print(channelObject:getInvitesAsync():await())
+	channelObject:sendMessageAsync({
+		embeds = {
+			DiscordLuau.DiscordEmbed.new()
+				:setTitle("Hello, World!")
+				:setColor(0xFF0000)
+				:setDescription("A test embed object!")
+		}
+	})
 end)
 
 DiscordClient:connectAsync()

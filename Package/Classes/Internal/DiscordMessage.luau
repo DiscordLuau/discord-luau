@@ -5,6 +5,8 @@ local Construct = require("../../Utils/Construct")
 local CacheType = require("../../Enums/CacheType")
 local DiscordEndpoints = require("../../Enums/DiscordEndpoints")
 
+local DiscordEmbed = require("../DiscordEmbed")
+
 local Future = require("../../Vendor/Future")
 
 local Net = require("../../Std/Net")
@@ -31,15 +33,10 @@ function DiscordMessage.Prototype.replyAsync(self: DiscordMessage, messageData: 
 			end
 		end
 
-		return self.discordClient.discordGateway:postAsync(string.format(DiscordEndpoints.BotCreateMessage, self.channelId), {
-			content = messageData.content or nil,
-			nonce = messageData.nonce or nil,
-			tts = messageData.tts or false,
-			components = components,
-			sticker_ids = messageData.stickerIds,
-			flags = messageData.flags or nil, --fixme: should use a bitfield.
-			enforce_nonce = messageData.enforceNonce or false
-		}):await()
+		return self.discordClient.discordGateway:postAsync(
+			string.format(DiscordEndpoints.BotCreateMessage, self.channelId),
+			DiscordMessage.Interface.intoJson(messageData)
+		):await()
 	end)
 end
 
@@ -71,15 +68,10 @@ function DiscordMessage.Prototype.editAsync(self: DiscordMessage, messageData: D
 			end
 		end
 
-		return self.discordClient.discordGateway:patchAsync(string.format(DiscordEndpoints.BotEditMessage, self.channelId, self.id), {
-			content = messageData.content or nil,
-			nonce = messageData.nonce or nil,
-			tts = messageData.tts or false,
-			components = components,
-			sticker_ids = messageData.stickerIds,
-			flags = messageData.flags or nil, --fixme: should use a bitfield.
-			enforce_nonce = messageData.enforceNonce or false
-		}):await()
+		return self.discordClient.discordGateway:patchAsync(
+			string.format(DiscordEndpoints.BotEditMessage, self.channelId, self.id),
+			DiscordMessage.Interface.intoJson(messageData)
+		):await()
 	end)
 end
 
@@ -159,6 +151,35 @@ function DiscordMessage.Interface.new(discordClient: any, messageData: {
 	return self
 end
 
+function DiscordMessage.Interface.intoJson(messageSchema: DiscordMessageSchema)
+	local components = {}
+	local embeds = {}
+
+	if messageSchema.components then
+		for _, component in messageSchema.components do
+			table.insert(components, component:toJSONObject())
+		end
+	end
+
+	if messageSchema.embeds then
+		for _, embed in messageSchema.embeds do
+			table.insert(embeds, embed:toJSONObject())
+		end
+	end
+
+	return {
+		content = messageSchema.content or nil,
+		nonce = messageSchema.nonce or nil,
+		tts = messageSchema.tts or false,
+		sticker_ids = messageSchema.stickerIds,
+		flags = messageSchema.flags or nil, --fixme: should use a bitfield.
+		enforce_nonce = messageSchema.enforceNonce or false,
+
+		embeds = embeds,
+		components = components,
+	}
+end
+
 export type DiscordMessage = typeof(DiscordMessage.Interface.new()) & {
 	mentionRoles: { string },
 	-- components: { unknown },
@@ -198,7 +219,7 @@ export type DiscordMessageSchema = {
 	content: string?,
 	nonce: (string | number)?,
 	tts: boolean?,
-	-- embeds: { unknown },
+	embeds: { DiscordEmbed.DiscordEmbed },
 	-- allowedMentions: { unknown },
 	-- messageReference: {  },
 	components: { DiscordComponentTypes.DiscordComponent },

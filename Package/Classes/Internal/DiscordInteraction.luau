@@ -22,27 +22,11 @@ DiscordInteraction.Prototype.type = "DiscordInteraction"
 
 function DiscordInteraction.Prototype.editMessageAsync(self: DiscordInteraction, messageData: DiscordMessage.DiscordMessageSchema)
 	return Future.new(function()
-		local components = {}
-
-		if messageData.components then
-			for _, component in messageData.components do
-				table.insert(components, component:toJSONObject())
-			end
-		end
-
 		return self.discordClient.discordGateway:patchAsync(string.format(
 			DiscordEndpoints.EditOriginalInteractionResponse,
 			self.discordClient.discordApplication.id,
 			self.token
-		), {
-			content = messageData.content or nil,
-			nonce = messageData.nonce or nil,
-			tts = messageData.tts or false,
-			components = components,
-			sticker_ids = messageData.stickerIds,
-			flags = messageData.flags or nil, --fixme: should use a bitfield.
-			enforce_nonce = messageData.enforceNonce or false
-		}):await()
+		), DiscordMessage.intoJson(messageData)):await()
 	end)
 end
 
@@ -64,29 +48,13 @@ function DiscordInteraction.Prototype.sendMessageAsync(self: DiscordInteraction,
 		return self:editMessageAsync(messageData)
 	else
 		return Future.new(function()
-			local components = {}
-
-			if messageData.components then
-				for _, component in messageData.components do
-					table.insert(components, component:toJSONObject())
-				end
-			end
-
 			return self.discordClient.discordGateway:postAsync(string.format(
 				DiscordEndpoints.CreateInteractionResponse,
 				self.id,
 				self.token
 			), {
 				type = 4,
-				data = {
-					content = messageData.content or nil,
-					nonce = messageData.nonce or nil,
-					tts = messageData.tts or false,
-					components = components,
-					sticker_ids = messageData.stickerIds,
-					flags = messageData.flags or nil, --fixme: should use a bitfield.
-					enforce_nonce = messageData.enforceNonce or false
-				}
+				data = DiscordMessage.intoJson(messageData)
 			}):await()
 		end)
 	end

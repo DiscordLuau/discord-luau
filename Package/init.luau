@@ -50,6 +50,12 @@ DiscordLuau.DiscordActivity = require("Classes/DiscordActivity")
 DiscordLuau.DiscordPermissions = require("Classes/DiscordPermissions")
 
 --[=[
+	@prop DiscordEmbed DiscordEmbed
+	@within Discord-Luau
+]=]
+DiscordLuau.DiscordEmbed = require("Classes/DiscordEmbed")
+
+--[=[
 	@prop DiscordModal DiscordModal
 	@within Discord-Luau
 ]=]

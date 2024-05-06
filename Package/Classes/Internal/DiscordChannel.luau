@@ -5,7 +5,6 @@ local DiscordEndpoints = require("../../Enums/DiscordEndpoints")
 local Future = require("../../Vendor/Future")
 
 local DiscordMessage = require("../Internal/DiscordMessage")
-local DiscordMessageType = require("../../Types/DiscordMessage")
 
 local DiscordTextChannel = require("DiscordTextChannel")
 local DiscordVoiceChannel = require("DiscordVoiceChannel")
@@ -69,25 +68,12 @@ function DiscordChannel.Prototype.bulkDeleteMessagesAsync(self: DiscordChannel, 
 	end)
 end
 
-function DiscordChannel.Prototype.sendMessageAsync(self: DiscordChannel, messageData: DiscordMessageType.MessageSchema)
+function DiscordChannel.Prototype.sendMessageAsync(self: DiscordChannel, messageData: DiscordMessage.DiscordMessageSchema)
 	return Future.try(function()
-		local components = {}
-
-		if messageData.components then
-			for _, component in messageData.components do
-				table.insert(components, component:toJSONObject())
-			end
-		end
-
-		return self.discordClient.discordGateway:postAsync(string.format(DiscordEndpoints.BotCreateMessage, self.id), {
-			content = messageData.content or nil,
-			nonce = messageData.nonce or nil,
-			tts = messageData.tts or false,
-			components = components,
-			sticker_ids = messageData.stickerIds,
-			flags = messageData.flags or nil, --fixme: should use a bitfield.
-			enforce_nonce = messageData.enforceNonce or false
-		}):await()
+		return self.discordClient.discordGateway:postAsync(
+			string.format(DiscordEndpoints.BotCreateMessage, self.id),
+			DiscordMessage.intoJson(messageData)
+		):await()
 	end)
 end
 
