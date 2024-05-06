@@ -1,5 +1,5 @@
 --[=[
-	@class Discord-Luau
+	@class DiscordLuau
 
 	A Discord API wrapper written in Luau, expected to run under the Lune runtime.
 ]=]
@@ -8,7 +8,7 @@ local DiscordLuau = {}
 
 --[=[
 	@prop Components { }
-	@within Discord-Luau
+	@within DiscordLuau
 
 	Contains all interface component objects.
 ]=]
@@ -20,62 +20,62 @@ DiscordLuau.Components = {
 }
 
 --[=[
-	@prop DiscordIntents DiscordIntents
-	@within Discord-Luau
+	@prop DiscordIntents !DiscordIntents
+	@within DiscordLuau
 ]=]
 DiscordLuau.DiscordIntents = require("Classes/DiscordIntents")
 
 --[=[
-	@prop DiscordSettings DiscordSettings
-	@within Discord-Luau
+	@prop DiscordSettings !DiscordSettings
+	@within DiscordLuau
 ]=]
 DiscordLuau.DiscordSettings = require("Classes/DiscordSettings")
 
 --[=[
-	@prop DiscordClient DiscordClient
-	@within Discord-Luau
+	@prop DiscordClient !DiscordClient
+	@within DiscordLuau
 ]=]
 DiscordLuau.DiscordClient = require("Classes/DiscordClient")
 
 --[=[
-	@prop DiscordActivity DiscordActivity
-	@within Discord-Luau
+	@prop DiscordActivity !DiscordActivity
+	@within DiscordLuau
 ]=]
 DiscordLuau.DiscordActivity = require("Classes/DiscordActivity")
 
 --[=[
-	@prop DiscordPermissions DiscordPermissions
-	@within Discord-Luau
+	@prop DiscordPermissions !DiscordPermissions
+	@within DiscordLuau
 ]=]
 DiscordLuau.DiscordPermissions = require("Classes/DiscordPermissions")
 
 --[=[
-	@prop DiscordEmbed DiscordEmbed
-	@within Discord-Luau
+	@prop DiscordEmbed !DiscordEmbed
+	@within DiscordLuau
 ]=]
 DiscordLuau.DiscordEmbed = require("Classes/DiscordEmbed")
 
 --[=[
-	@prop DiscordModal DiscordModal
-	@within Discord-Luau
+	@prop DiscordModal !DiscordModal
+	@within DiscordLuau
 ]=]
 DiscordLuau.DiscordModal = require("Classes/DiscordModal")
 
 --[=[
-	@prop DiscordPresence DiscordPresence
-	@within Discord-Luau
+	@prop DiscordPresence !DiscordPresence
+	@within DiscordLuau
 ]=]
 DiscordLuau.DiscordPresence = require("Classes/DiscordPresence")
 
 --[=[
-	@prop ApplicationCommand ApplicationCommand
-	@within Discord-Luau
+	@prop ApplicationCommand !ApplicationCommand
+	@within DiscordLuau
 ]=]
 DiscordLuau.ApplicationCommand = require("Classes/ApplicationCommand")
 
 --[=[
-	@prop ApplicationCommandOption ApplicationCommandOption
-	@within Discord-Luau
+	@prop ApplicationCommandOption !ApplicationCommandOption
+	@within DiscordLuau
 ]=]
 DiscordLuau.ApplicationCommandOption = require("Classes/ApplicationCommandOption")
 
