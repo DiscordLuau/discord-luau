@@ -30,7 +30,7 @@ DiscordShard.Prototype = {}
 DiscordShard.Prototype.type = "DiscordShard"
 
 function DiscordShard.Prototype.observeWebsocketErrors(self: DiscordShard)
-	self.discordWebsocket.onSocketDead:connect(function(closeCode)
+	table.insert(self.activeConnections, self.discordWebsocket.onSocketDead:connect(function(closeCode)
 		if closeCode == WebsocketCloseCodes.UnknownError then
 			self:reconnectAsync()
 		elseif closeCode == WebsocketCloseCodes.UnknownOperation then
@@ -58,11 +58,11 @@ function DiscordShard.Prototype.observeWebsocketErrors(self: DiscordShard)
 		elseif closeCode == WebsocketCloseCodes.DisallowedIntents then
 			self.reporter:warn(`Discord Bot intents are invalid, are you sure the bot has the chosen intents enabled?`)
 		end
-	end)
+	end))
 end
 
 function DiscordShard.Prototype.observeWebsocketEvents(self: DiscordShard)
-	self.onEvent:connect(function(eventName, data)
+	table.insert(self.activeConnections, self.onEvent:connect(function(eventName, data)
 		if eventName == WebsocketEvents.Ready then
 			local websocketVersion = self.discordClient.discordGateway:getApiVersion()
 
@@ -71,11 +71,11 @@ function DiscordShard.Prototype.observeWebsocketEvents(self: DiscordShard)
 			self.resumeSessionId = data.sessionId
 			self.resumeGatewayUrl = `{data.resumeGatewayUrl}/?v={websocketVersion}`
 		end
-	end)
+	end))
 end
 
 function DiscordShard.Prototype.observeWebsocketOperations(self: DiscordShard)
-	self.discordWebsocket.onOperationRecv:connect(function(operationCode, operationData, eventName, sequence)
+	table.insert(self.activeConnections, self.discordWebsocket.onOperationRecv:connect(function(operationCode, operationData, eventName, sequence)
 		if operationCode == WebsocketOperationCodes.Dispatch then
 			self.dispatchSequence = sequence
 
@@ -91,11 +91,11 @@ function DiscordShard.Prototype.observeWebsocketOperations(self: DiscordShard)
 			self.reporter:log(`Discord Websocket requested heartbeat, sending heartbeat!`)
 
 			self:heartbeatAsync(true)
-		elseif operationCode == WebsocketOperationCodes.HeartbeatACK then
-			self.HeartbeatAck = true
+		elseif operationCode == WebsocketOperationCodes.heartbeatAck then
+			self.heartbeatAck = true
 			self.HeartbeatPing = os.clock() - self.HeartbeatClockTime
 
-			self.reporter:debug(`HeartbeatACK - Ping: {self.HeartbeatPing}`)
+			self.reporter:debug(`heartbeatAck - Ping: {self.HeartbeatPing}`)
 
 			if not self.Identified then
 				self.Identified = true
@@ -120,26 +120,41 @@ function DiscordShard.Prototype.observeWebsocketOperations(self: DiscordShard)
 	
 				self:reconnectAsync()
 			else
-				if self.resumedConnection then
-					self:identifyAsync()
-				else
-					error(`Discord session was invalidated, unable to recover!`)
-				end
+				self.reporter:warn(`Unrecoverable InvalidSession, attempting to destroy and recreate websocket.`)
+
+				self.discordWebsocket:disconnectAsync(1005):await()
+
+				Task.wait(5)
+
+				self:initiateWebsocket()
+				self:connectAsync(self.websocketUrl)
 			end
 		end
-	end)
+	end))
 end
 
-function DiscordShard.Prototype.heartbeatAsync(self: DiscordShard, ignoreHeartbeatAck: boolean?)
+function DiscordShard.Prototype.initiateWebsocket(self: DiscordShard)
+	self.discordWebsocket = DiscordWebsocket.new(self.websocketUrl)
+
+	for _, connection in self.activeConnections do
+		connection:disconnect()
+	end
+
+	self:observeWebsocketEvents()
+	self:observeWebsocketErrors()
+	self:observeWebsocketOperations()
+end
+
+function DiscordShard.Prototype.heartbeatAsync(self: DiscordShard, ignoreheartbeatAck: boolean?)
 	return Future.try(function()
-		if not ignoreHeartbeatAck then
-			if not self.HeartbeatAck then
+		if not ignoreheartbeatAck then
+			if not self.heartbeatAck then
 				self.reporter:warn(`Discord Websocket state has become zombified, attempting to reconnect!`)
 
 				self:reconnectAsync():await()
 			end
 
-			self.HeartbeatAck = nil
+			self.heartbeatAck = nil
 		end
 
 		self.HeartbeatClockTime = os.clock()
@@ -187,8 +202,14 @@ function DiscordShard.Prototype.identifyAsync(self: DiscordShard)
 	end)
 end
 
-function DiscordShard.Prototype.connectAsync(self: DiscordShard, ...)
-	return self.discordWebsocket:connectAsync(...)
+function DiscordShard.Prototype.connectAsync(self: DiscordShard, websocketUrl: string)
+	self.websocketUrl = websocketUrl
+
+	Task.delay(15, function()
+		self.discordWebsocket.onOperationRecv:fire(WebsocketOperationCodes.InvalidSession, true)
+	end)
+
+	return self.discordWebsocket:connectAsync(websocketUrl)
 end
 
 function DiscordShard.Prototype.resumeAsync(self: DiscordShard)
@@ -202,8 +223,6 @@ function DiscordShard.Prototype.resumeAsync(self: DiscordShard)
 				seq = self.dispatchSequence
 			},
 		}):await()
-
-		self.resumedConnection = true
 	end)
 end
 
@@ -223,8 +242,11 @@ end
 
 function DiscordShard.Interface.new(discordClient: any, shardId: number): DiscordShard
 	local self = Construct({
-		discordWebsocket = DiscordWebsocket.new(),
 		discordClient = discordClient,
+		discordWebsocket = nil,
+		activeConnections = {},
+
+		websocketUrl = "",
 
 		reporter = Console.new(`🖲️  DiscordShard {shardId}`),
 
@@ -238,9 +260,7 @@ function DiscordShard.Interface.new(discordClient: any, shardId: number): Discor
 		shardId = shardId
 	}, DiscordShard.Prototype)
 
-	self:observeWebsocketEvents()
-	self:observeWebsocketErrors()
-	self:observeWebsocketOperations()
+	self:initiateWebsocket()
 
 	return self
 end
@@ -248,6 +268,8 @@ end
 export type DiscordShard = typeof(DiscordShard.Prototype) & {
 	discordWebsocket: DiscordWebsocket.DiscordWebsocket,
 	discordClient: unknown,
+
+	websocketUrl: string,
 
 	reporter: unknown,
 

@@ -42,6 +42,18 @@ function DiscordWebsocket.Prototype.sendAsync(self: DiscordWebsocket, dataPacket
 		if messageSendOperationSuccessful then
 			self.reporter:debug(`Discord Websocket Message Sent: {dataPacket[WebsocketOperationKeys.OperationCode]}`)
 		else
+			local resultType = typeof(messageResult)
+
+			if resultType == "userdata" then
+				local success = pcall(function()
+					messageResult = buffer.tostring(messageResult)
+				end)
+
+				if not success then
+					messageResult = tostring(messageResult)
+				end
+			end
+
 			self.reporter:warn(`Socket error: {string.split(messageResult, "\n")[1]}, traceback:\n{traceback}`)
 
 			self.socketActive:set(false)
