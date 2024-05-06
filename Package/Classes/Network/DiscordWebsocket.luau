@@ -41,13 +41,11 @@ function DiscordWebsocket.Prototype.sendAsync(self: DiscordWebsocket, dataPacket
 
 		if messageSendOperationSuccessful then
 			self.reporter:debug(`Discord Websocket Message Sent: {dataPacket[WebsocketOperationKeys.OperationCode]}`)
+		else
+			self.reporter:warn(`Socket error: {string.split(messageResult, "\n")[1]}, traceback:\n{traceback}`)
 
 			self.socketActive:set(false)
 			self.onSocketDead:fire(self.socketInstance.closeCode)
-
-			return
-		else
-			self.reporter:warn(`Socket error: {string.split(messageResult, "\n")[1]}, traceback:\n{traceback}`)
 		end
 	end)
 end
