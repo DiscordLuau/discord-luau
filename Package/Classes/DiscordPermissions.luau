@@ -69,7 +69,7 @@ DiscordPermissions.Interface.Permissions = Enumerate.new({
 	@method addPermission
 	@within DiscordPermissions
 
-	@permission permission DiscordPermissions.Permission
+	@param permission number
 
 	@return DiscordPermissions
 
@@ -93,7 +93,7 @@ end
 	@method deletePermission
 	@within DiscordPermissions
 
-	@permission permission DiscordPermissions.Permission
+	@param permission number
 
 	@return DiscordPermissions
 
@@ -119,7 +119,7 @@ end
 	@method hasPermission
 	@within DiscordPermissions
 
-	@permission permission DiscordPermissions.Permission
+	@param permission number
 
 	@return boolean
 

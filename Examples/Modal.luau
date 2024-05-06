@@ -68,7 +68,7 @@ DiscordClient:on("Ready", function()
 
 	local permissions = DiscordLuau.DiscordPermissions.new()
 
-	permissions:addPermission(DiscordLuau.DiscordPermissions.Permissions.SendMessages)
+	permissions:addPermission(DiscordLuau.DiscordPermissions.SendMessages)
 
 	local slashCommand = DiscordLuau.ApplicationCommand.new()
 		:setName("example-command")

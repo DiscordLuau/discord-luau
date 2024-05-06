@@ -9,7 +9,7 @@ DiscordClient:on("Ready", function()
 
 	local permissions = DiscordLuau.DiscordPermissions.new()
 
-	permissions:addPermission(DiscordLuau.DiscordPermissions.Permissions.UseApplicationCommands)
+	permissions:addPermission(DiscordLuau.DiscordPermissions.UseApplicationCommands)
 
 	local slashCommand = DiscordLuau.ApplicationCommand.new()
 		:setName("example-command")
