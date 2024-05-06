@@ -73,7 +73,7 @@ DiscordPermissions.Interface.Permissions = Enumerate.new({
 
 	@return DiscordPermissions
 
-	...
+	(yet-to-do!)
 
 	```lua
 		
@@ -97,7 +97,7 @@ end
 
 	@return DiscordPermissions
 
-	...
+	(yet-to-do!)
 
 	```lua
 		
@@ -123,7 +123,7 @@ end
 
 	@return boolean
 
-	...
+	(yet-to-do!)
 
 	```lua
 		
@@ -139,7 +139,7 @@ end
 
 	@return number
 
-	...
+	(yet-to-do!)
 
 	```lua
 		
@@ -161,7 +161,7 @@ end
 
 	@return DiscordPermissions
 
-	...
+	(yet-to-do!)
 
 	```lua
 		
@@ -179,7 +179,7 @@ end
 
 	@return DiscordPermissions
 
-	...
+	(yet-to-do!)
 
 	```lua
 		
@@ -195,7 +195,7 @@ end
 
 	@return DiscordPermissions
 
-	...
+	(yet-to-do!)
 
 	```lua
 		
@@ -219,7 +219,7 @@ end
 
 	@return DiscordPermissions
 
-	...
+	(yet-to-do!)
 
 	```lua
 		

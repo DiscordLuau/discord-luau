@@ -34,7 +34,7 @@ DiscordSettings.Prototype.type = "DiscordSettings"
 
 	@return DiscordSettings
 
-	...
+	(yet-to-do!)
 
 	```lua
 		
@@ -54,7 +54,7 @@ end
 
 	@return DiscordSettings
 
-	...
+	(yet-to-do!)
 
 	```lua
 		
@@ -75,7 +75,7 @@ end
 	
 	@return DiscordSettings
 
-	...
+	(yet-to-do!)
 
 	```lua
 		

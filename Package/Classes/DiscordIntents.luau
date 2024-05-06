@@ -57,7 +57,7 @@ DiscordIntents.DispositionMap = {
 
 	@return DiscordIntents
 
-	...
+	(yet-to-do!)
 
 	```lua
 
@@ -85,7 +85,7 @@ end
 
 	@return DiscordIntents
 
-	...
+	(yet-to-do!)
 
 	```lua
 
@@ -107,7 +107,7 @@ end
 
 	@return DiscordIntents
 
-	...
+	(yet-to-do!)
 
 	```lua
 

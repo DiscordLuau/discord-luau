@@ -33,7 +33,7 @@ DiscordPresence.Interface.Status = Enumerate.new({
 
 	@return DiscordPresence
 
-	...
+	(yet-to-do!)
 
 	```lua
 		
@@ -53,7 +53,7 @@ end
 
 	@return DiscordPresence
 
-	...
+	(yet-to-do!)
 
 	```lua
 		
@@ -73,7 +73,7 @@ end
 
 	@return DiscordPresence
 
-	...
+	(yet-to-do!)
 
 	```lua
 		
@@ -93,7 +93,7 @@ end
 
 	@return DiscordPresence
 
-	...
+	(yet-to-do!)
 
 	```lua
 		
@@ -109,9 +109,9 @@ end
 	@method toJSONObject
 	@within DiscordPresence
 
-	@return { ... }
+	@return { any }
 
-	...
+	(yet-to-do!)
 
 	```lua
 		
@@ -137,9 +137,9 @@ end
 	@function new
 	@within DiscordPresence
 
-	@return DiscordPresence
+	@return { any }
 
-	...
+	(yet-to-do!)
 
 	```lua
 		

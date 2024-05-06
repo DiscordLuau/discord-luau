@@ -21,7 +21,7 @@ DiscordModal.Prototype.type = "DiscordModal"
 
 	@return DiscordModal
 
-	...
+	(yet-to-do!)
 
 	```lua
 
@@ -41,7 +41,7 @@ end
 
 	@return DiscordModal
 
-	...
+	(yet-to-do!)
 
 	```lua
 
@@ -59,9 +59,9 @@ end
 	@method toJSONObject
 	@within DiscordModal
 
-	@return { ... }
+	@return { any }
 
-	...
+	(yet-to-do!)
 
 	```lua
 
@@ -89,7 +89,7 @@ end
 
 	@return DiscordModal
 
-	...
+	(yet-to-do!)
 
 	```lua
 
