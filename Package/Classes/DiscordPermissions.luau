@@ -1,8 +1,12 @@
 local Construct = require("../Utils/Construct")
 local Enumerate = require("../Utils/Enumerate")
 
-local DiscordPermissions = {}
+--[=[
+	@class DiscordPermissions
 
+	(sorry I will add docs for this lol, just haven't got around to it yet!)
+]=]
+local DiscordPermissions = {}
 
 DiscordPermissions.Interface = {}
 DiscordPermissions.Prototype = {}

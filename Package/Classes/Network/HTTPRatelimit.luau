@@ -3,7 +3,7 @@ local Task = require("../../Std/Task")
 local Construct = require("../../Utils/Construct")
 
 --[=[
-	@class Internal.HTTPRatelimit
+	@class Network.HTTPRatelimit
 
 	(sorry I will add docs for this lol, just haven't got around to it yet!)
 ]=]

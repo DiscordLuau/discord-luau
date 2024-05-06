@@ -19,7 +19,7 @@ local Task = require("../../Std/Task")
 local BASE_VOICE_CONNECTION_PORT = 1050
 
 --[=[
-	@class Internal.DiscordVoiceConnection
+	@class Network.DiscordVoiceConnection
 
 	(sorry I will add docs for this lol, just haven't got around to it yet!)
 ]=]

@@ -4,6 +4,11 @@ local ButtonComponent = require("ButtonComponent")
 local SelectionComponent = require("SelectionComponent")
 local TextInputComponent = require("TextInputComponent")
 
+--[=[
+	@class Interface.ActionRowComponent
+
+	(sorry I will add docs for this lol, just haven't got around to it yet!)
+]=]
 local ActionRowComponent = {}
 
 ActionRowComponent.Interface = {}

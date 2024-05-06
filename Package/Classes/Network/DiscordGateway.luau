@@ -18,7 +18,7 @@ local BASE_DISCORD_APP_URL = "https://discord.com"
 local BASE_DISCORD_APP_API_PREFIX = "api"
 
 --[=[
-	@class Internal.DiscordGateway
+	@class Network.DiscordGateway
 
 	(sorry I will add docs for this lol, just haven't got around to it yet!)
 ]=]

@@ -1,6 +1,11 @@
 local Construct = require("../Utils/Construct")
 local ComponentTypes = require("../Types/DiscordComponent")
 
+--[=[
+	@class DiscordModal
+
+	(sorry I will add docs for this lol, just haven't got around to it yet!)
+]=]
 local DiscordModal = {}
 
 DiscordModal.Interface = {}

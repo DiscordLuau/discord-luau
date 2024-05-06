@@ -3,6 +3,11 @@ local Enumerate = require("../Utils/Enumerate")
 
 local DiscordActivity = require("DiscordActivity")
 
+--[=[
+	@class DiscordPresence
+
+	(sorry I will add docs for this lol, just haven't got around to it yet!)
+]=]
 local DiscordPresence = {}
 
 DiscordPresence.Type = "DiscordPresence"

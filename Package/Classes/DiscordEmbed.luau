@@ -3,6 +3,11 @@ local Enumerate = require("../Utils/Enumerate")
 
 local datetime = require("@lune/datetime")
 
+--[=[
+	@class DiscordEmbed
+
+	(sorry I will add docs for this lol, just haven't got around to it yet!)
+]=]
 local DiscordEmbed = {}
 
 DiscordEmbed.Interface = {}

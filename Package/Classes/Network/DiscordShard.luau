@@ -18,7 +18,7 @@ local Task = require("../../Std/Task")
 local LIBRARY_IDENTIFIER = "DiscordLuau"
 
 --[=[
-	@class Internal.DiscordShard
+	@class Network.DiscordShard
 
 	(sorry I will add docs for this lol, just haven't got around to it yet!)
 ]=]

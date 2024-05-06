@@ -1,6 +1,11 @@
 local Enumerate = require("../Utils/Enumerate")
 local Construct = require("../Utils/Construct")
 
+--[=[
+	@class DiscordActivity
+
+	(sorry I will add docs for this lol, just haven't got around to it yet!)
+]=]
 local DiscordActivity = {}
 
 DiscordActivity.Interface = {}

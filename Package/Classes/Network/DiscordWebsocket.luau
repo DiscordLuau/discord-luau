@@ -21,7 +21,7 @@ local ZLIB_SUFFIX_START = "\120"
 local ZLIB_SUFFIX_END = "\84"
 
 --[=[
-	@class Internal.DiscordWebsocket
+	@class Network.DiscordWebsocket
 
 	(sorry I will add docs for this lol, just haven't got around to it yet!)
 ]=]

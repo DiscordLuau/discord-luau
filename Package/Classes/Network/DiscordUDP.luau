@@ -9,7 +9,7 @@ local Net = require("../../Std/Net")
 local Task = require("../../Std/Task")
 
 --[=[
-	@class Internal.DiscordUDP
+	@class Network.DiscordUDP
 
 	(sorry I will add docs for this lol, just haven't got around to it yet!)
 ]=]
