@@ -57,8 +57,6 @@ function DiscordShard.Prototype.observeWebsocketErrors(self: DiscordShard)
 			self.reporter:error(`Something has gone terribly wrong with Discord-Luau.. please create an issue! [{closeCode}]`)
 		elseif closeCode == WebsocketCloseCodes.DisallowedIntents then
 			self.reporter:warn(`Discord Bot intents are invalid, are you sure the bot has the chosen intents enabled?`)
-		else
-			self:reconnectAsync()
 		end
 	end)
 end
