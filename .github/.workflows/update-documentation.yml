@@ -1,0 +1,23 @@
+name: Signal Documentation Change
+
+on:
+  workflow_dispatch:
+
+  push:
+    branches:
+      - Master
+
+permissions:
+  contents: write
+
+jobs:
+  update-documentation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dcumentation Dispatch
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.PAT }}
+          repository: 4x8Matrix/Discord-Luau-Docs
+          event-type: update-documentation
+          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
