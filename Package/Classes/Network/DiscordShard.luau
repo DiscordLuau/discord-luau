@@ -91,11 +91,11 @@ function DiscordShard.Prototype.observeWebsocketOperations(self: DiscordShard)
 			self.reporter:log(`Discord Websocket requested heartbeat, sending heartbeat!`)
 
 			self:heartbeatAsync(true)
-		elseif operationCode == WebsocketOperationCodes.heartbeatAck then
+		elseif operationCode == WebsocketOperationCodes.HeartbeatACK then
 			self.heartbeatAck = true
 			self.HeartbeatPing = os.clock() - self.HeartbeatClockTime
 
-			self.reporter:debug(`heartbeatAck - Ping: {self.HeartbeatPing}`)
+			self.reporter:debug(`HeartbeatACK - Ping: {self.HeartbeatPing}`)
 
 			if not self.Identified then
 				self.Identified = true
@@ -145,9 +145,9 @@ function DiscordShard.Prototype.initiateWebsocket(self: DiscordShard)
 	self:observeWebsocketOperations()
 end
 
-function DiscordShard.Prototype.heartbeatAsync(self: DiscordShard, ignoreheartbeatAck: boolean?)
+function DiscordShard.Prototype.heartbeatAsync(self: DiscordShard, ignoreHeartbeatAck: boolean?)
 	return Future.try(function()
-		if not ignoreheartbeatAck then
+		if not ignoreHeartbeatAck then
 			if not self.heartbeatAck then
 				self.reporter:warn(`Discord Websocket state has become zombified, attempting to reconnect!`)
 
@@ -210,15 +210,20 @@ end
 
 function DiscordShard.Prototype.resumeAsync(self: DiscordShard)
 	return Future.try(function()
-		self.discordWebsocket:connectAsync(self.resumeGatewayUrl):await()
-		self.discordWebsocket:sendAsync({
-			[WebsocketOperationKeys.OperationCode] = WebsocketOperationCodes.Resume,
-			[WebsocketOperationKeys.Data] = {
-				token = self.discordClient.discordSettings.discordToken,
-				session_id = self.resumeSessionId,
-				seq = self.dispatchSequence
-			},
-		}):await()
+		local gatewayUrl = self.resumeGatewayUrl
+
+		self.discordWebsocket:connectAsync(gatewayUrl or self.websocketUrl):await()
+
+		if gatewayUrl then
+			self.discordWebsocket:sendAsync({
+				[WebsocketOperationKeys.OperationCode] = WebsocketOperationCodes.Resume,
+				[WebsocketOperationKeys.Data] = {
+					token = self.discordClient.discordSettings.discordToken,
+					session_id = self.resumeSessionId,
+					seq = self.dispatchSequence
+				},
+			}):await()
+		end
 	end)
 end
 
