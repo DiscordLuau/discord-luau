@@ -13,6 +13,10 @@ DiscordPermissions.Prototype = {}
 
 DiscordPermissions.Prototype.type = "DiscordPermissions"
 
+--[=[
+	@prop Permissions { ... }
+	@within DiscordPermissions
+]=]
 DiscordPermissions.Interface.Permissions = Enumerate.new({
 	CreateInstantInvite = 0,
 	KickMembers = 1,
@@ -61,28 +65,86 @@ DiscordPermissions.Interface.Permissions = Enumerate.new({
 	SendVoiceMessages = 46
 })
 
+--[=[
+	@method addPermission
+	@within DiscordPermissions
+
+	@permission permission DiscordPermissions.Permission
+
+	@return DiscordPermissions
+
+	...
+
+	```lua
+		
+	```
+]=]
 function DiscordPermissions.Prototype.addPermission(self: DiscordPermissions, permission: number)
 	if table.find(self.permissions, permission) then
 		return
 	end
 
 	table.insert(self.permissions, permission)
+
+	return self
 end
 
-function DiscordPermissions.Prototype.hasPermission(self: DiscordPermissions, permission: number)
-	return table.find(self.permissions, permission) ~= nil
-end
+--[=[
+	@method deletePermission
+	@within DiscordPermissions
 
+	@permission permission DiscordPermissions.Permission
+
+	@return DiscordPermissions
+
+	...
+
+	```lua
+		
+	```
+]=]
 function DiscordPermissions.Prototype.deletePermission(self: DiscordPermissions, permission: number)
 	local index = table.find(self.permissions, permission)
 
 	if not index then
-		return
+		return self
 	end
 
 	table.remove(self.permissions, index)
+
+	return self
 end
 
+--[=[
+	@method hasPermission
+	@within DiscordPermissions
+
+	@permission permission DiscordPermissions.Permission
+
+	@return boolean
+
+	...
+
+	```lua
+		
+	```
+]=]
+function DiscordPermissions.Prototype.hasPermission(self: DiscordPermissions, permission: number)
+	return table.find(self.permissions, permission) ~= nil
+end
+
+--[=[
+	@method getValue
+	@within DiscordPermissions
+
+	@return number
+
+	...
+
+	```lua
+		
+	```
+]=]
 function DiscordPermissions.Prototype.getValue(self: DiscordPermissions)
 	local permissionsInt = 0
 
@@ -93,16 +155,52 @@ function DiscordPermissions.Prototype.getValue(self: DiscordPermissions)
 	return tostring(permissionsInt)
 end
 
+--[=[
+	@function new
+	@within DiscordPermissions
+
+	@return DiscordPermissions
+
+	...
+
+	```lua
+		
+	```
+]=]
 function DiscordPermissions.Interface.new()
 	return Construct({
 		permissions = {}
 	}, DiscordPermissions.Prototype)
 end
 
+--[=[
+	@function none
+	@within DiscordPermissions
+
+	@return DiscordPermissions
+
+	...
+
+	```lua
+		
+	```
+]=]
 function DiscordPermissions.Interface.none()
 	return DiscordPermissions.Interface.new()
 end
 
+--[=[
+	@function all
+	@within DiscordPermissions
+
+	@return DiscordPermissions
+
+	...
+
+	```lua
+		
+	```
+]=]
 function DiscordPermissions.Interface.all()
 	local permissions = DiscordPermissions.Interface.new()
 
@@ -113,6 +211,20 @@ function DiscordPermissions.Interface.all()
 	return permissions
 end
 
+--[=[
+	@function from
+	@within DiscordPermissions
+
+	@param bitfield number
+
+	@return DiscordPermissions
+
+	...
+
+	```lua
+		
+	```
+]=]
 function DiscordPermissions.Interface.from(bitfield: string)
 	local permissions = DiscordPermissions.Interface.new()
 	local numberBitfield = tonumber(bitfield)

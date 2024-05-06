@@ -49,6 +49,20 @@ DiscordIntents.DispositionMap = {
 	[Intents.GuildModerationExecution] = 21,
 }
 
+--[=[
+	@function new
+	@within DiscordIntents
+
+	@param intentList { string }
+
+	@return DiscordIntents
+
+	...
+
+	```lua
+
+	```
+]=]
 function DiscordIntents.Interface.new(intentList: { string })
 	local intentsValue = 0
 
@@ -65,6 +79,18 @@ function DiscordIntents.Interface.new(intentList: { string })
 	}, DiscordIntents.Prototype)
 end
 
+--[=[
+	@function fromDefault
+	@within DiscordIntents
+
+	@return DiscordIntents
+
+	...
+
+	```lua
+
+	```
+]=]
 function DiscordIntents.Interface.fromDefault()
 	local defaultIntents = table.clone(Intents)
 
@@ -75,6 +101,18 @@ function DiscordIntents.Interface.fromDefault()
 	return DiscordIntents.Interface.new(FetchKeys(defaultIntents))
 end
 
+--[=[
+	@function fromAll
+	@within DiscordIntents
+
+	@return DiscordIntents
+
+	...
+
+	```lua
+
+	```
+]=]
 function DiscordIntents.Interface.fromAll()
 	local allIntents = table.clone(Intents)
 

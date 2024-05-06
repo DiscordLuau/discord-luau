@@ -13,12 +13,40 @@ DiscordModal.Prototype = {}
 
 DiscordModal.Prototype.type = "DiscordModal"
 
-function DiscordModal.Prototype.setTitle(self: DiscordModal, titleString: string): DiscordModal
-	self.ModalTitle = titleString
+--[=[
+	@method setTitle
+	@within DiscordModal
+
+	@param title string
+
+	@return DiscordModal
+
+	...
+
+	```lua
+
+	```
+]=]
+function DiscordModal.Prototype.setTitle(self: DiscordModal, title: string): DiscordModal
+	self.modalTitle = title
 
 	return self
 end
 
+--[=[
+	@method addComponent
+	@within DiscordModal
+
+	@param componentObject !Interface
+
+	@return DiscordModal
+
+	...
+
+	```lua
+
+	```
+]=]
 function DiscordModal.Prototype.addComponent(self: DiscordModal, componentObject: ComponentTypes.DiscordComponent): DiscordModal
 	assert(#self.components + 1 <= 5, "Action Row objects can only contain up to five components!")
 
@@ -27,16 +55,18 @@ function DiscordModal.Prototype.addComponent(self: DiscordModal, componentObject
 	return self
 end
 
-function DiscordModal.Prototype.destroyComponent(self: DiscordModal, componentObject: ComponentTypes.DiscordComponent): DiscordModal
-	local index = table.find(self.components, componentObject)
+--[=[
+	@method toJSONObject
+	@within DiscordModal
 
-	if index then
-		table.remove(self.components, index)
-	end
+	@return { ... }
 
-	return self
-end
+	...
 
+	```lua
+
+	```
+]=]
 function DiscordModal.Prototype.toJSONObject(self: DiscordModal)
 	local components = {}
 
@@ -45,12 +75,26 @@ function DiscordModal.Prototype.toJSONObject(self: DiscordModal)
 	end
 
 	return {
-		title = self.ModalTitle,
+		title = self.modalTitle,
 		custom_id = self.modalId,
 		components = components
 	}
 end
 
+--[=[
+	@function new
+	@within DiscordModal
+
+	@param modalId string
+
+	@return DiscordModal
+
+	...
+
+	```lua
+
+	```
+]=]
 function DiscordModal.Interface.new(modalId: string)
 	return Construct({
 		components = {},

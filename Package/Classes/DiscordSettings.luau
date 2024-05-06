@@ -26,14 +26,61 @@ DiscordSettings.Prototype = {}
 
 DiscordSettings.Prototype.type = "DiscordSettings"
 
+--[=[
+	@method setDiscordToken
+	@within DiscordSettings
+
+	@param discordToken string
+
+	@return DiscordSettings
+
+	...
+
+	```lua
+		
+	```
+]=]
 function DiscordSettings.Prototype.setDiscordToken(self: DiscordSettings, discordToken: string)
 	self.discordToken = discordToken
+
+	return self
 end
 
+--[=[
+	@method setIntents
+	@within DiscordSettings
+
+	@param discordIntents !DiscordIntents
+
+	@return DiscordSettings
+
+	...
+
+	```lua
+		
+	```
+]=]
 function DiscordSettings.Prototype.setIntents(self: DiscordSettings, discordIntents: DiscordIntents.DiscordIntents)
 	self.discordIntents = discordIntents
+
+	return self
 end
 
+--[=[
+	@function new
+	@within DiscordSettings
+
+	@param discordToken string
+	@param discordIntents !DiscordIntents
+	
+	@return DiscordSettings
+
+	...
+
+	```lua
+		
+	```
+]=]
 function DiscordSettings.Interface.new(discordToken: string, discordIntents: DiscordIntents.DiscordIntents?)
 	return Construct({
 		discordToken = discordToken,

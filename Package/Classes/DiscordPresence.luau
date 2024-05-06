@@ -25,30 +25,98 @@ DiscordPresence.Interface.Status = Enumerate.new({
 	Offline = "offline",
 })
 
+--[=[
+	@method addActivity
+	@within DiscordPresence
+
+	@param activity !DiscordActivity
+
+	@return DiscordPresence
+
+	...
+
+	```lua
+		
+	```
+]=]
 function DiscordPresence.Prototype.addActivity(self: DiscordPresence, activity: DiscordActivity.DiscordActivity)
 	table.insert(self.activities, activity)
+
+	return self
 end
 
-function DiscordPresence.Prototype.removeActivity(self: DiscordPresence, activity: DiscordActivity.DiscordActivity)
-	local index = table.find(self.activities, activity)
+--[=[
+	@method setStatus
+	@within DiscordPresence
 
-	if index then
-		table.remove(self.activities)
-	end
-end
+	@param status boolean
 
+	@return DiscordPresence
+
+	...
+
+	```lua
+		
+	```
+]=]
 function DiscordPresence.Prototype.setStatus(self: DiscordPresence, status: string)
 	self.status = status
+
+	return self
 end
 
-function DiscordPresence.Prototype.setAfk(self: DiscordPresence, status: boolean)
-	self.idle = status
+--[=[
+	@method setAfk
+	@within DiscordPresence
+
+	@param isAfk boolean
+
+	@return DiscordPresence
+
+	...
+
+	```lua
+		
+	```
+]=]
+function DiscordPresence.Prototype.setAfk(self: DiscordPresence, isAfk: boolean)
+	self.idle = isAfk
+
+	return self
 end
 
+--[=[
+	@method setSince
+	@within DiscordPresence
+
+	@param delta number
+
+	@return DiscordPresence
+
+	...
+
+	```lua
+		
+	```
+]=]
 function DiscordPresence.Prototype.setSince(self: DiscordPresence, delta: number)
 	self.since = delta
+
+	return self
 end
 
+--[=[
+	@method toJSONObject
+	@within DiscordPresence
+
+	@return { ... }
+
+	...
+
+	```lua
+		
+	```
+]=]
 function DiscordPresence.Prototype.toJSONObject(self: DiscordPresence)
 	local activities = {}
 
@@ -65,6 +133,18 @@ function DiscordPresence.Prototype.toJSONObject(self: DiscordPresence)
 	}
 end
 
+--[=[
+	@function new
+	@within DiscordPresence
+
+	@return DiscordPresence
+
+	...
+
+	```lua
+		
+	```
+]=]
 function DiscordPresence.Interface.new()
 	return Construct({
 		activities = {}
