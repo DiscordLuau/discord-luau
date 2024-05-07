@@ -13,6 +13,10 @@ ApplicationCommandOptions.Prototype = {}
 
 ApplicationCommandOptions.Prototype.type = "ApplicationCommandOptions"
 
+--[=[
+	@prop Type { ... }
+	@within ApplicationCommandOptions
+]=]
 ApplicationCommandOptions.Interface.Type = Enumerate.new({
 	SubCommand = 1,
 	SubCommandGroup = 2,
@@ -27,6 +31,10 @@ ApplicationCommandOptions.Interface.Type = Enumerate.new({
 	Attachment = 11
 })
 
+--[=[
+	@prop ChannelType { ... }
+	@within ApplicationCommandOptions
+]=]
 ApplicationCommandOptions.Interface.ChannelType = Enumerate.new({
 	GuildText = 0,
 	DirectMessage = 1,
@@ -42,110 +50,285 @@ ApplicationCommandOptions.Interface.ChannelType = Enumerate.new({
 	GuildForum = 15,
 })
 
+--[=[
+	@method setType
+	@within ApplicationCommandOptions
+
+	@param optionType string
+
+	@return ApplicationCommandOptions
+
+	(yet-to-do!)
+
+	```lua
+
+	```
+]=]
 function ApplicationCommandOptions.Prototype.setType(self: ApplicationCommandOptions, optionType: string)
-	assert(ApplicationCommandOptions.Interface.Type:Is(optionType), `Expected 'optionType' to of enum 'OptionType'`)
+	assert(ApplicationCommandOptions.Interface.Type:Is(optionType), `Expected 'optionType' to of enum 'optionType'`)
 
-	self.OptionType = optionType
+	self.optionType = optionType
 
 	return self
 end
 
+--[=[
+	@method setName
+	@within ApplicationCommandOptions
+
+	@param optionName string
+
+	@return ApplicationCommandOptions
+
+	(yet-to-do!)
+
+	```lua
+
+	```
+]=]
 function ApplicationCommandOptions.Prototype.setName(self: ApplicationCommandOptions, optionName: string)
-	self.OptionName = optionName
+	self.optionName = optionName
 
 	return self
 end
 
+--[=[
+	@method setLocalization
+	@within ApplicationCommandOptions
+
+	@param localizationCode string
+
+	@return ApplicationCommandOptions
+
+	(yet-to-do!)
+
+	```lua
+
+	```
+]=]
 function ApplicationCommandOptions.Prototype.setLocalization(self: ApplicationCommandOptions, localizationCode: string)
-	self.OptionLocalization = localizationCode
+	self.optionLocalization = localizationCode
 
 	return self
 end
 
+--[=[
+	@method setDescription
+	@within ApplicationCommandOptions
+
+	@param optionDescription string
+
+	@return ApplicationCommandOptions
+
+	(yet-to-do!)
+
+	```lua
+
+	```
+]=]
 function ApplicationCommandOptions.Prototype.setDescription(self: ApplicationCommandOptions, optionDescription: string)
-	self.OptionDescription = optionDescription
+	self.optionDescription = optionDescription
 
 	return self
 end
 
+--[=[
+	@method setRequired
+	@within ApplicationCommandOptions
+
+	@param isRequired boolean
+
+	@return ApplicationCommandOptions
+
+	(yet-to-do!)
+
+	```lua
+
+	```
+]=]
 function ApplicationCommandOptions.Prototype.setRequired(self: ApplicationCommandOptions, isRequired: boolean)
-	self.OptionRequired = isRequired
+	self.optionRequired = isRequired
 
 	return self
 end
 
+--[=[
+	@method setChannelTypes
+	@within ApplicationCommandOptions
+
+	@param channelTypes ...
+
+	@return ApplicationCommandOptions
+
+	(yet-to-do!)
+
+	```lua
+
+	```
+]=]
 function ApplicationCommandOptions.Prototype.setChannelTypes(self: ApplicationCommandOptions, ...)
 	for _, channelType in { ... } do
 		assert(ApplicationCommandOptions.Interface.ChannelType:Is(channelType), `Expected 'channelType' to of enum 'ChannelType'`)
 	end
 
-	self.OptionChannelTypes = { ... }
+	self.optionChannelTypes = { ... }
 
 	return self
 end
 
+--[=[
+	@method setMinValue
+	@within ApplicationCommandOptions
+
+	@param minValue number
+
+	@return ApplicationCommandOptions
+
+	(yet-to-do!)
+
+	```lua
+
+	```
+]=]
 function ApplicationCommandOptions.Prototype.setMinValue(self: ApplicationCommandOptions, minValue: number)
-	self.OptionMinValue = minValue
+	self.optionMinValue = minValue
 
 	return self
 end
 
+--[=[
+	@method setMaxValue
+	@within ApplicationCommandOptions
+
+	@param maxValue number
+
+	@return ApplicationCommandOptions
+
+	(yet-to-do!)
+
+	```lua
+
+	```
+]=]
 function ApplicationCommandOptions.Prototype.setMaxValue(self: ApplicationCommandOptions, maxValue: number)
-	self.OptionMaxValue = maxValue
+	self.optionMaxValue = maxValue
 
 	return self
 end
 
+--[=[
+	@method setMinLength
+	@within ApplicationCommandOptions
+
+	@param minLength number
+
+	@return ApplicationCommandOptions
+
+	(yet-to-do!)
+
+	```lua
+
+	```
+]=]
 function ApplicationCommandOptions.Prototype.setMinLength(self: ApplicationCommandOptions, minLength: number)
-	self.OptionMinLength = minLength
+	self.optionMinLength = minLength
 
 	return self
 end
 
+--[=[
+	@method setMaxLength
+	@within ApplicationCommandOptions
+
+	@param maxLength number
+
+	@return ApplicationCommandOptions
+
+	(yet-to-do!)
+
+	```lua
+
+	```
+]=]
 function ApplicationCommandOptions.Prototype.setMaxLength(self: ApplicationCommandOptions, maxLength: number)
-	self.OptionMaxLength = maxLength
+	self.optionMaxLength = maxLength
 
 	return self
 end
 
+--[=[
+	@method setAutocompleteEnabled
+	@within ApplicationCommandOptions
+
+	@param autocomplete boolean
+
+	@return ApplicationCommandOptions
+
+	(yet-to-do!)
+
+	```lua
+
+	```
+]=]
 function ApplicationCommandOptions.Prototype.setAutocompleteEnabled(self: ApplicationCommandOptions, autocomplete: boolean)
-	self.OptionAutocomplete = autocomplete
+	self.optionAutocomplete = autocomplete
 
 	return self
 end
 
+--[=[
+	@method addOption
+	@within ApplicationCommandOptions
+
+	@param commandOption ApplicationCommandOptions
+
+	@return ApplicationCommandOptions
+
+	(yet-to-do!)
+
+	```lua
+
+	```
+]=]
 function ApplicationCommandOptions.Prototype.addOption(self: ApplicationCommandOptions, commandOption: ApplicationCommandOptions)
 	table.insert(self.Options, commandOption)
 
 	return self
 end
 
-function ApplicationCommandOptions.Prototype.destroyOption(self: ApplicationCommandOptions, optionName: string)
-	for index, commandObject in self.Options do
-		if commandObject.OptionName ~= optionName then
-			continue
-		end
+--[=[
+	@method addChoice
+	@within ApplicationCommandOptions
 
-		table.remove(self.Choices, index)
+	@param choiceName string
+	@param choiceValue any
 
-		return self
-	end
+	@return ApplicationCommandOptions
 
-	return self
-end
+	(yet-to-do!)
 
-function ApplicationCommandOptions.Prototype.addChoice(self: ApplicationCommandOptions, choiceName: string, choiceValue: string)
-	self.Choices[choiceName] = choiceValue
+	```lua
 
-	return self
-end
-
-function ApplicationCommandOptions.Prototype.destroyChoice(self: ApplicationCommandOptions, choiceName: string)
-	self.Choices[choiceName] = nil
+	```
+]=]
+function ApplicationCommandOptions.Prototype.addChoice(self: ApplicationCommandOptions, choiceName: string, choiceValue: any)
+	self.choices[choiceName] = choiceValue
 
 	return self
 end
 
+--[=[
+	@method toJSONObject
+	@within ApplicationCommandOptions
+
+	@return { ... }
+
+	(yet-to-do!)
+
+	```lua
+
+	```
+]=]
 function ApplicationCommandOptions.Prototype.toJSONObject(self: ApplicationCommandOptions)
 	local options = {}
 	local choices = {}
@@ -154,42 +337,54 @@ function ApplicationCommandOptions.Prototype.toJSONObject(self: ApplicationComma
 		table.insert(options, commandOption:toJSONObject())
 	end
 
-	for choiceName, choiceValue in self.Choices do
+	for choiceName, choiceValue in self.choices do
 		table.insert(choices, {
 			name = choiceName,
 			value = choiceValue,
-			name_localizations = self.OptionLocalization
+			name_localizations = self.optionLocalization
 		})
 	end
 
 	return {
-		type = self.OptionType,
-		name = self.OptionName,
-		description = self.OptionDescription,
+		type = self.optionType,
+		name = self.optionName,
+		description = self.optionDescription,
 
-		required = self.OptionRequired,
+		required = self.optionRequired,
 
-		name_localizations = self.OptionLocalization,
-		description_localizations = self.OptionLocalization,
+		name_localizations = self.optionLocalization,
+		description_localizations = self.optionLocalization,
 
 		options = options,
 		choices = choices,
 
-		channel_types = self.OptionChannelTypes,
+		channel_types = self.optionChannelTypes,
 
-		min_value = self.OptionMinValue,
-		max_value = self.OptionMaxValue,
+		min_value = self.optionMinValue,
+		max_value = self.optionMaxValue,
 
-		min_length = self.OptionMinLength,
-		max_length = self.OptionMaxLength,
+		min_length = self.optionMinLength,
+		max_length = self.optionMaxLength,
 
-		autocomplete = self.OptionAutocomplete
+		autocomplete = self.optionAutocomplete
 	}
 end
 
+--[=[
+	@function new
+	@within ApplicationCommandOptions
+
+	@return ApplicationCommandOptions
+
+	(yet-to-do!)
+
+	```lua
+
+	```
+]=]
 function ApplicationCommandOptions.Interface.new()
 	return Construct({
-		Choices = {},
+		choices = {},
 		Options = {}
 	}, ApplicationCommandOptions.Prototype)
 end

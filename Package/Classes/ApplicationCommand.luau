@@ -17,82 +17,210 @@ ApplicationCommand.Prototype = { }
 
 ApplicationCommand.Prototype.type = "ApplicationCommand"
 
+--[=[
+	@prop Type { ... }
+	@within ApplicationCommand
+]=]
 ApplicationCommand.Interface.Type = Enumerate.new({
 	ChatInput = 1,
 	UserInput = 2,
 	MessageInput = 3,
 })
 
+--[=[
+	@method setType
+	@within ApplicationCommand
+
+	@param commandType string
+
+	@return ApplicationCommand
+
+	(yet-to-do!)
+
+	```lua
+
+	```
+]=]
 function ApplicationCommand.Prototype.setType(self: ApplicationCommand, commandType: string): ApplicationCommand
-	assert(ApplicationCommand.Interface.Type:Is(commandType), `Expected 'commandType' to of enum 'CommandType'`)
+	assert(ApplicationCommand.Interface.Type:Is(commandType), `Expected 'commandType' to of enum 'commandType'`)
 
-	self.CommandType = commandType
+	self.commandType = commandType
 
 	return self
 end
 
+--[=[
+	@method setLocalization
+	@within ApplicationCommand
+
+	@param localizationCode string
+
+	@return ApplicationCommand
+
+	(yet-to-do!)
+
+	```lua
+
+	```
+]=]
 function ApplicationCommand.Prototype.setLocalization(self: ApplicationCommand, localizationCode: string): ApplicationCommand
-	self.CommandLocalization = localizationCode
+	self.commandLocalization = localizationCode
 
 	return self
 end
 
+--[=[
+	@method setDescription
+	@within ApplicationCommand
+
+	@param description string
+
+	@return ApplicationCommand
+
+	(yet-to-do!)
+
+	```lua
+
+	```
+]=]
 function ApplicationCommand.Prototype.setDescription(self: ApplicationCommand, description: string): ApplicationCommand
-	self.CommandDescription = description
+	self.commandDescription = description
 
 	return self
 end
 
+--[=[
+	@method setName
+	@within ApplicationCommand
+
+	@param name string
+
+	@return ApplicationCommand
+
+	(yet-to-do!)
+
+	```lua
+
+	```
+]=]
 function ApplicationCommand.Prototype.setName(self: ApplicationCommand, name: string): ApplicationCommand
-	self.CommandName = name
+	self.commandName = name
 
 	return self
 end
 
+--[=[
+	@method setNSFW
+	@within ApplicationCommand
+
+	@param isNSFW boolean
+
+	@return ApplicationCommand
+
+	(yet-to-do!)
+
+	```lua
+
+	```
+]=]
 function ApplicationCommand.Prototype.setNSFW(self: ApplicationCommand, isNSFW: boolean): ApplicationCommand
-	self.CommandNSFW = isNSFW
+	self.commandNSFW = isNSFW
 
 	return self
 end
 
+--[=[
+	@method setDMPermission
+	@within ApplicationCommand
+
+	@param canDM boolean
+
+	@return ApplicationCommand
+
+	(yet-to-do!)
+
+	```lua
+
+	```
+]=]
 function ApplicationCommand.Prototype.setDMPermission(self: ApplicationCommand, canDM: boolean): ApplicationCommand
-	self.CommandDM = canDM
+	self.commandDM = canDM
 
 	return self
 end
 
-function ApplicationCommand.Prototype:SetGuildPermissions(permissionObject: DiscordPermissions.DiscordPermissions): ApplicationCommand
+--[=[
+	@method setGuildPermissions
+	@within ApplicationCommand
+
+	@param permissionObject !DiscordPermissions
+
+	@return ApplicationCommand
+
+	(yet-to-do!)
+
+	```lua
+
+	```
+]=]
+function ApplicationCommand.Prototype.setGuildPermissions(self: ApplicationCommand, permissionObject: DiscordPermissions.DiscordPermissions): ApplicationCommand
 	self.commandPermissions = permissionObject
 
 	return self
 end
 
+--[=[
+	@method setAutocompleteEnabled
+	@within ApplicationCommand
+
+	@param enabled boolean
+
+	@return ApplicationCommand
+
+	(yet-to-do!)
+
+	```lua
+
+	```
+]=]
 function ApplicationCommand.Prototype.setAutocompleteEnabled(self: ApplicationCommand, enabled: boolean): ApplicationCommand
 	self.AutocompleteEnabled = enabled
 
 	return self
 end
 
+--[=[
+	@method addOption
+	@within ApplicationCommand
+
+	@param commandObject !ApplicationCommandOption
+
+	@return ApplicationCommand
+
+	(yet-to-do!)
+
+	```lua
+
+	```
+]=]
 function ApplicationCommand.Prototype.addOption(self: ApplicationCommand, commandObject: ApplicationCommandObject.ApplicationCommandOptions): ApplicationCommand
 	table.insert(self.options, commandObject)
 
 	return self
 end
 
-function ApplicationCommand.Prototype.destroyOption(self: ApplicationCommand, commandName: string): ApplicationCommand
-	for index, commandObject in self.options do
-		if commandObject.CommandName ~= commandName then
-			continue
-		end
+--[=[
+	@method toJSONObject
+	@within ApplicationCommand
 
-		table.remove(self.choices, index)
+	@return { ... }
 
-		return self
-	end
+	(yet-to-do!)
 
-	return self
-end
+	```lua
 
+	```
+]=]
 function ApplicationCommand.Prototype.toJSONObject(self: ApplicationCommand)
 	local permissions = 0
 	local options = {}
@@ -106,20 +234,32 @@ function ApplicationCommand.Prototype.toJSONObject(self: ApplicationCommand)
 	end
 
 	return {
-		type = self.CommandType,
-		name = self.CommandName,
-		description = self.CommandDescription,
+		type = self.commandType,
+		name = self.commandName,
+		description = self.commandDescription,
 
 		default_member_permissions = permissions,
-		dm_permission = self.CommandDM,
+		dm_permission = self.commandDM,
 
-		name_localizations = self.CommandLocalization,
-		description_localizations = self.CommandLocalization,
+		name_localizations = self.commandLocalization,
+		description_localizations = self.commandLocalization,
 
 		options = (#options > 0 and options) or nil,
 	}
 end
 
+--[=[
+	@function new
+	@within ApplicationCommand
+
+	@return ApplicationCommand
+
+	(yet-to-do!)
+
+	```lua
+
+	```
+]=]
 function ApplicationCommand.Interface.new()
 	return Construct({
 		choices = {},

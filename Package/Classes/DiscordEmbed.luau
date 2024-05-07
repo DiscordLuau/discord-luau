@@ -15,6 +15,10 @@ DiscordEmbed.Prototype = {}
 
 DiscordEmbed.Prototype.type = "DiscordEmbed"
 
+--[=[
+	@prop Type { ... }
+	@within DiscordEmbed 
+]=]
 DiscordEmbed.Interface.Type = Enumerate.new({
 	Rich = "rich",
 	Image = "image",
@@ -24,42 +28,140 @@ DiscordEmbed.Interface.Type = Enumerate.new({
 	Link = "link"
 })
 
+--[=[
+	@method setTitle
+	@within DiscordEmbed
+
+	@param title string
+
+	@return DiscordEmbed
+
+	(yet-to-do!)
+
+	```lua
+
+	```
+]=]
 function DiscordEmbed.Prototype.setTitle(self: DiscordEmbed, title: string)
 	self.title = title
 
 	return self
 end
 
+--[=[
+	@method setType
+	@within DiscordEmbed
+
+	@param type string
+
+	@return DiscordEmbed
+
+	(yet-to-do!)
+
+	```lua
+
+	```
+]=]
 function DiscordEmbed.Prototype.setType(self: DiscordEmbed, type: string)
 	self.type = type
 
 	return self
 end
 
+--[=[
+	@method setDescription
+	@within DiscordEmbed
+
+	@param description string
+
+	@return DiscordEmbed
+
+	(yet-to-do!)
+
+	```lua
+
+	```
+]=]
 function DiscordEmbed.Prototype.setDescription(self: DiscordEmbed, description: string)
 	self.description = description
 
 	return self
 end
 
+--[=[
+	@method setUrl
+	@within DiscordEmbed
+
+	@param url string
+
+	@return DiscordEmbed
+
+	(yet-to-do!)
+
+	```lua
+
+	```
+]=]
 function DiscordEmbed.Prototype.setUrl(self: DiscordEmbed, url: string)
 	self.url = url
 
 	return self
 end
 
+--[=[
+	@method setTimestamp
+	@within DiscordEmbed
+
+	@param epoch number
+
+	@return DiscordEmbed
+
+	(yet-to-do!)
+
+	```lua
+
+	```
+]=]
 function DiscordEmbed.Prototype.setTimestamp(self: DiscordEmbed, epoch: number)
 	self.timestamp = datetime.fromUniversalTime(epoch :: any):toIsoDate()
 
 	return self
 end
 
+--[=[
+	@method setColor
+	@within DiscordEmbed
+
+	@param colorHex number
+
+	@return DiscordEmbed
+
+	(yet-to-do!)
+
+	```lua
+
+	```
+]=]
 function DiscordEmbed.Prototype.setColor(self: DiscordEmbed, colorHex: number)
 	self.color = colorHex
 
 	return self
 end
 
+--[=[
+	@method setFooter
+	@within DiscordEmbed
+
+	@param footerSettings { text: string, icon: string }
+
+	@return DiscordEmbed
+
+	(yet-to-do!)
+
+	```lua
+
+	```
+]=]
 function DiscordEmbed.Prototype.setFooter(self: DiscordEmbed, footerSettings: {
 	text: string,
 	icon: string
@@ -69,6 +171,20 @@ function DiscordEmbed.Prototype.setFooter(self: DiscordEmbed, footerSettings: {
 	return self
 end
 
+--[=[
+	@method setFooter
+	@within DiscordEmbed
+
+	@param imageSettings { imageUrl: string, height: number, width: number }
+
+	@return DiscordEmbed
+
+	(yet-to-do!)
+
+	```lua
+
+	```
+]=]
 function DiscordEmbed.Prototype.setImage(self: DiscordEmbed, imageSettings: {
 	imageUrl: string,
 	height: number,
@@ -79,6 +195,20 @@ function DiscordEmbed.Prototype.setImage(self: DiscordEmbed, imageSettings: {
 	return self
 end
 
+--[=[
+	@method setThumbnail
+	@within DiscordEmbed
+
+	@param thumbnailSettings { thumbnailUrl: string, height: number, width: number }
+
+	@return DiscordEmbed
+
+	(yet-to-do!)
+
+	```lua
+
+	```
+]=]
 function DiscordEmbed.Prototype.setThumbnail(self: DiscordEmbed, thumbnailSettings: {
 	thumbnailUrl: string,
 	height: number,
@@ -89,6 +219,20 @@ function DiscordEmbed.Prototype.setThumbnail(self: DiscordEmbed, thumbnailSettin
 	return self
 end
 
+--[=[
+	@method setVideo
+	@within DiscordEmbed
+
+	@param videoSettings { videoUrl: string, height: number, width: number }
+
+	@return DiscordEmbed
+
+	(yet-to-do!)
+
+	```lua
+
+	```
+]=]
 function DiscordEmbed.Prototype.setVideo(self: DiscordEmbed, videoSettings: {
 	videoUrl: string,
 	height: number,
@@ -99,6 +243,20 @@ function DiscordEmbed.Prototype.setVideo(self: DiscordEmbed, videoSettings: {
 	return self
 end
 
+--[=[
+	@method setProvider
+	@within DiscordEmbed
+
+	@param providerSettings { name: string, url: string }
+
+	@return DiscordEmbed
+
+	(yet-to-do!)
+
+	```lua
+
+	```
+]=]
 function DiscordEmbed.Prototype.setProvider(self: DiscordEmbed, providerSettings: {
 	name: string,
 	url: string
@@ -108,7 +266,20 @@ function DiscordEmbed.Prototype.setProvider(self: DiscordEmbed, providerSettings
 	return self
 end
 
+--[=[
+	@method setAuthor
+	@within DiscordEmbed
 
+	@param authorSettings { name: string, url: string, iconUrl: string }
+
+	@return DiscordEmbed
+
+	(yet-to-do!)
+
+	```lua
+
+	```
+]=]
 function DiscordEmbed.Prototype.setAuthor(self: DiscordEmbed, authorSettings: {
 	iconUrl: string,
 	name: string,
@@ -119,6 +290,20 @@ function DiscordEmbed.Prototype.setAuthor(self: DiscordEmbed, authorSettings: {
 	return self
 end
 
+--[=[
+	@method addField
+	@within DiscordEmbed
+
+	@param fieldSettings { name: string, value: string, footer: string, author: string }
+
+	@return DiscordEmbed
+
+	(yet-to-do!)
+
+	```lua
+
+	```
+]=]
 function DiscordEmbed.Prototype.addField(self: DiscordEmbed, fieldSettings: {
 	name: string,
 	value: string,
@@ -130,6 +315,18 @@ function DiscordEmbed.Prototype.addField(self: DiscordEmbed, fieldSettings: {
 	return self
 end
 
+--[=[
+	@method toJSONObject
+	@within DiscordEmbed
+
+	@return { ... }
+
+	(yet-to-do!)
+
+	```lua
+
+	```
+]=]
 function DiscordEmbed.Prototype.toJSONObject(self: DiscordEmbed)
 	local fields = {}
 
@@ -183,6 +380,18 @@ function DiscordEmbed.Prototype.toJSONObject(self: DiscordEmbed)
 	}
 end
 
+--[=[
+	@function new
+	@within DiscordEmbed
+
+	@return DiscordEmbed
+
+	(yet-to-do!)
+
+	```lua
+
+	```
+]=]
 function DiscordEmbed.Interface.new()
 	return Construct({
 		fields = {}
