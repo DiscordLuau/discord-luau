@@ -14,7 +14,7 @@ local DiscordGuild = require("DiscordGuild")
 local DiscordMessage = require("DiscordMessage")
 
 --[=[
-	@class DiscordInteraction
+	@class Internal.DiscordInteraction
 
 	(sorry I will add docs for this lol, just haven't got around to it yet!)
 ]=]
