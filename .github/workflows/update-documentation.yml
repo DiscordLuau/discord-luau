@@ -18,6 +18,6 @@ jobs:
         uses: peter-evans/repository-dispatch@v2
         with:
           token: ${{ secrets.PAT }}
-          repository: 4x8Matrix/Discord-Luau-Docs
+          repository: DiscordLuau/Discord-Luau-Site
           event-type: update-documentation
           client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
