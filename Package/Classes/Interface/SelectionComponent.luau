@@ -78,18 +78,21 @@ function SelectionComponent.Prototype.addChoice(
 	choiceValue: string,
 	choiceDescription: string,
 	isDefault: boolean,
-	emojiId: string,
-	emojiName: string
+	emojiId: string?,
+	emojiName: string?
 ): SelectionComponent
 	self.choices[choiceName] = {
 		value = choiceValue,
 		description = choiceDescription,
-		emoji = ((emojiId or emojiName) and {
-			id = emojiId,
-			name = emojiName
-		}) or nil,
 		default = isDefault
 	}
+
+	if emojiId and emojiName then
+		self.choices[choiceName].emoji = {
+			id = emojiId,
+			name = emojiName
+		}
+	end
 
 	return self
 end
@@ -141,7 +144,25 @@ function SelectionComponent.Interface.new(selectionId: string)
 end
 
 export type SelectionComponent = typeof(SelectionComponent.Prototype) & {
-	
+	selectionType: number?,
+	selectionId: string?,
+	selectionChannelTypes: { number }?,
+	selectionPlaceholder: string?,
+	selectionMinValue: number?,
+	selectionMaxValue: number?,
+	selectionDisabled: boolean?,
+
+	choices: {
+		[string]: {
+			value: any?,
+			default: boolean?,
+			description: string?,
+			emoji: {
+				id: string,
+				name: string,
+			}?
+		}
+	}
 }
 
 return SelectionComponent.Interface

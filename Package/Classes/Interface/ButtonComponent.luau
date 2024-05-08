@@ -22,7 +22,7 @@ ButtonComponent.Interface.Style = Enumerate.new({
 	Link = 5,
 })
 
-function ButtonComponent.Prototype.setStyle(self: ButtonComponent, buttonStyle: string)
+function ButtonComponent.Prototype.setStyle(self: ButtonComponent, buttonStyle: number)
 	self.buttonStyle = buttonStyle
 
 	return self
@@ -77,7 +77,15 @@ function ButtonComponent.Interface.new(buttonId: string)
 end
 
 export type ButtonComponent = typeof(ButtonComponent.Prototype) & {
-
+	buttonStyle: number?,
+	buttonLabel: string?,
+	buttonId: string?,
+	buttonUrl: string?,
+	buttonDisabled: boolean?,
+	buttonEmoji: {
+		id: string,
+		name: string,
+	}?
 }
 
 return ButtonComponent.Interface

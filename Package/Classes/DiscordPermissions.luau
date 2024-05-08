@@ -148,7 +148,7 @@ end
 function DiscordPermissions.Prototype.getValue(self: DiscordPermissions)
 	local permissionsInt = 0
 
-	for _, intentValue in (self.permissions :: { }) do
+	for _, intentValue in self.permissions do
 		permissionsInt += bit32.lshift(1, intentValue)
 	end
 
@@ -228,6 +228,8 @@ end
 function DiscordPermissions.Interface.from(bitfield: string)
 	local permissions = DiscordPermissions.Interface.new()
 	local numberBitfield = tonumber(bitfield)
+
+	assert(numberBitfield, `Invalid BitField '{bitfield}'`)
 
 	for _, value in DiscordPermissions.Interface.Permissions do
 		if bit32.band(numberBitfield, value) == value then

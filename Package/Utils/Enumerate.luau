@@ -20,9 +20,12 @@ function Enumeration.Prototype:ToString()
 end
 
 function Enumeration.Interface.new(items)
-	return setmetatable(items, {
+	return setmetatable(items :: any, {
 		__index = Enumeration.Prototype,
 		__type = Enumeration.Type,
+		__iter = function(...)
+			return next, items, ...
+		end,
 		__tostring = function(self)
 			return self:ToString()
 		end,

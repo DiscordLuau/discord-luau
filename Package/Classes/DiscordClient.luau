@@ -79,21 +79,21 @@ function DiscordClient.Prototype.connectAsync(self: DiscordClient)
 		self.shardCount = data.shards :: number
 
 		for shardId = 1, self.shardCount do
-			(self.discordShards :: { })[shardId] = DiscordShard.new(self, shardId - 1)
+			self.discordShards[shardId] = DiscordShard.new(self, shardId - 1)
 		end
 
 		for bucketIndex = 1, self.shardCount, self.maxConcurrency do
 			for shardId = bucketIndex, (bucketIndex - 1) + self.maxConcurrency do
-				(self.discordShards :: { })[shardId]:connectAsync(self.websocketUrl)
+				self.discordShards[shardId]:connectAsync(self.websocketUrl)
 			end
 
-			if (self.shardCount :: number) > (self.maxConcurrency :: number) then
+			if self.shardCount > self.maxConcurrency then
 				Task.wait(CONCURRENT_IDENTIFY_YIELD)
 			end
 		end
 
 		for shardId = 1, self.shardCount do
-			local shard = (self.discordShards :: { })[shardId] :: DiscordShard.DiscordShard
+			local shard = self.discordShards[shardId]
 
 			shard.onEvent:connect(function(eventName, data)
 				if eventName == WebsocketEvents.Ready then
@@ -274,7 +274,7 @@ end
 		end)
 	```
 ]=]
-function DiscordClient.Interface.new(discordSettings: DiscordSettings.DiscordSettings): DiscordClient
+function DiscordClient.Interface.new(discordSettings: DiscordSettings.DiscordSettings)
 	local self = Construct({
 		--[=[
 			@prop discordSettings DiscordSettings

@@ -1,0 +1,7 @@
+{
+	"languageMode": "strict",
+	"lint": {
+		// Lints are handled by Selene
+		"*": false
+	}
+}

@@ -152,7 +152,10 @@ function DiscordPresence.Interface.new()
 end
 
 export type DiscordPresence = typeof(DiscordPresence.Prototype) & {
-	activities: { DiscordActivity.DiscordActivity }
+	activities: { DiscordActivity.DiscordActivity },
+	since: number?,
+	idle: boolean?,
+	status: string?
 }
 
 return DiscordPresence.Interface

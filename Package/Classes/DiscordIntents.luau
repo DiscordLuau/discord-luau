@@ -92,7 +92,7 @@ end
 	```
 ]=]
 function DiscordIntents.Interface.fromDefault()
-	local defaultIntents = table.clone(Intents)
+	local defaultIntents = table.clone(Intents) :: { [string]: any }
 
 	defaultIntents.GuildPresences = nil
 	defaultIntents.GuildMembers = nil
@@ -119,6 +119,6 @@ function DiscordIntents.Interface.fromAll()
 	return DiscordIntents.Interface.new(FetchKeys(allIntents))
 end
 
-export type DiscordIntents = typeof(DiscordIntents.Interface.new({ }))
+export type DiscordIntents = typeof(DiscordIntents.Prototype) & {}
 
 return DiscordIntents.Interface

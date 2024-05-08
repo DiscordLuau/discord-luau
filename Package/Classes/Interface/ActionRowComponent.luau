@@ -33,7 +33,7 @@ end
 function ActionRowComponent.Prototype.toJSONObject(self: ActionRowComponent)
 	local components = {}
 
-	for index, componentObject in self.components do
+	for index, componentObject in self.components :: { any } do
 		components[index] = componentObject:toJSONObject()
 	end
 
@@ -50,7 +50,12 @@ function ActionRowComponent.Interface.new()
 end
 
 export type ActionRowComponent = typeof(ActionRowComponent.Prototype) & {
-
+	components: {
+		ActionRowComponent
+		| ButtonComponent.ButtonComponent
+		| SelectionComponent.SelectionComponent
+		| TextInputComponent.TextInputComponent
+	}
 }
 
 return ActionRowComponent.Interface

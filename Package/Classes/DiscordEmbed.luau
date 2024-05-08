@@ -330,7 +330,7 @@ end
 function DiscordEmbed.Prototype.toJSONObject(self: DiscordEmbed)
 	local fields = {}
 
-	for _, fieldObject in self.fields :: { } do
+	for _, fieldObject in self.fields do
 		table.insert(fields, {
 			name = fieldObject.name,
 			value = fieldObject.value,
@@ -405,7 +405,7 @@ export type DiscordEmbed = typeof(DiscordEmbed.Prototype) & {
 			value: string,
 			footer: string,
 			author: string
-		}?
+		}
 	},
 	title: string?,
 	type: string?,

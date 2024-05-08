@@ -70,7 +70,7 @@ end
 function DiscordModal.Prototype.toJSONObject(self: DiscordModal)
 	local components = {}
 
-	for index, componentObject in (self.components :: {}) do
+	for index, componentObject in self.components :: { any } do
 		components[index] = componentObject:toJSONObject()
 	end
 
@@ -104,7 +104,8 @@ end
 
 export type DiscordModal = typeof(DiscordModal.Prototype) & {
 	components: { ComponentTypes.DiscordComponent },
-	modalId: string?
+	modalId: string?,
+	modalTitle: string?
 }
 
 return DiscordModal.Interface
