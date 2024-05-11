@@ -115,7 +115,7 @@ function DiscordChannel.Interface.new(discordClient: any, rawChannelData: any)
 		baseChannelObject = rawChannelData
 	end
 
-	return Inherit(DiscordChannel.Prototype, baseChannelObject)
+	return (Inherit(DiscordChannel.Prototype, baseChannelObject) :: unknown) :: DiscordChannel
 end
 
 export type DiscordChannel = (DiscordTextChannel.DiscordTextChannel | DiscordVoiceChannel.DiscordVoiceChannel) & typeof(DiscordChannel.Prototype)

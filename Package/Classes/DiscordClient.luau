@@ -205,11 +205,11 @@ end
 
 	@return Future
 ]=]
-function DiscordClient.Prototype.fetchChannelAsync(self: DiscordClient, channelId: string): Future.Future<DiscordTextChannel.DiscordTextChannel | DiscordVoiceChannel.DiscordVoiceChannel>
+function DiscordClient.Prototype.fetchChannelAsync(self: DiscordClient, channelId: string): Future.Future<DiscordChannel.DiscordChannel>
 	return Future.try(function()
 		local rawChannelData = self.discordGateway:getAsync(string.format(DiscordEndpoints.BotGetChannel, channelId)):await()
 
-		return DiscordChannel.new(self, rawChannelData) 
+		return DiscordChannel.new(self, rawChannelData) :: DiscordChannel.DiscordChannel
 	end)
 end
 
@@ -219,7 +219,7 @@ end
 
 	@return Future
 ]=]
-function DiscordClient.Prototype.updatePresenceAsync(self: DiscordClient, discordPresence): Future.Future<nil>
+function DiscordClient.Prototype.updatePresenceAsync(self: DiscordClient, discordPresence): Future.Future<boolean>
 	return Future.try(function()
 		for shardId = 1, self.shardCount do
 			(self.discordShards :: { DiscordShard.DiscordShard })[shardId].discordWebsocket:sendAsync(
@@ -240,7 +240,7 @@ end
 
 	@return Connection
 ]=]
-function DiscordClient.Prototype.on(self: DiscordClient, targetEventName: string, eventCallback: () -> ())
+function DiscordClient.Prototype.on(self: DiscordClient, targetEventName: string, eventCallback: (...any) -> ())
 	return self.onEvent:connect(function(eventName: string, ...)
 		if eventName ~= targetEventName then
 			return
@@ -275,7 +275,7 @@ end
 	```
 ]=]
 function DiscordClient.Interface.new(discordSettings: DiscordSettings.DiscordSettings)
-	local self = Construct({
+	local self = (Construct({
 		--[=[
 			@prop discordSettings DiscordSettings
 			@within DiscordClient
@@ -323,7 +323,7 @@ function DiscordClient.Interface.new(discordSettings: DiscordSettings.DiscordSet
 			@within DiscordClient
 		]=]
 		onEvent = Signal.new(),
-	}, DiscordClient.Prototype)
+	}, DiscordClient.Prototype) :: unknown) :: DiscordClient
 
 	--[=[
 		@prop discordGateway DiscordGateway
@@ -344,6 +344,10 @@ export type DiscordClient = typeof(DiscordClient.Prototype) & {
 	websocketUrl: string,
 	shardCount: number,
 	maxConcurrency: number,
+
+	onEvent: Signal.Signal<string, { [any]: any }?>,
+
+	reporter: Console.Console,
 
 	discordShards: { DiscordShard.DiscordShard },
 

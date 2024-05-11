@@ -64,7 +64,7 @@ ApplicationCommandOptions.Interface.ChannelType = Enumerate.new({
 
 	```
 ]=]
-function ApplicationCommandOptions.Prototype.setType(self: ApplicationCommandOptions, optionType: string)
+function ApplicationCommandOptions.Prototype.setType(self: ApplicationCommandOptions, optionType: number)
 	assert(ApplicationCommandOptions.Interface.Type:Is(optionType), `Expected 'optionType' to of enum 'optionType'`)
 
 	self.optionType = optionType
@@ -291,7 +291,7 @@ end
 	```
 ]=]
 function ApplicationCommandOptions.Prototype.addOption(self: ApplicationCommandOptions, commandOption: ApplicationCommandOptions)
-	table.insert(self.Options, commandOption)
+	table.insert(self.options, commandOption)
 
 	return self
 end
@@ -333,7 +333,7 @@ function ApplicationCommandOptions.Prototype.toJSONObject(self: ApplicationComma
 	local options = {}
 	local choices = {}
 
-	for _, commandOption in self.Options do
+	for _, commandOption in self.options do
 		table.insert(options, commandOption:toJSONObject())
 	end
 
@@ -385,10 +385,31 @@ end
 function ApplicationCommandOptions.Interface.new()
 	return Construct({
 		choices = {},
-		Options = {}
+		options = {}
 	}, ApplicationCommandOptions.Prototype)
 end
 
-export type ApplicationCommandOptions = typeof(ApplicationCommandOptions.Interface.new())
+export type ApplicationCommandOptions = typeof(ApplicationCommandOptions.Prototype) & {
+	optionAutocomplete: boolean,
+
+	optionMaxLength: number,
+	optionMinLength: number,
+
+	optionMaxValue: number,
+	optionMinValue: number,
+
+	optionLocalization: string,
+	optionRequired: boolean,
+
+	optionDescription: string,
+	optionName: string,
+
+	optionType: number,
+
+	optionChannelTypes: { number },
+
+	choices: { [string]: string },
+	options: { ApplicationCommandOptions }
+}
 
 return ApplicationCommandOptions.Interface

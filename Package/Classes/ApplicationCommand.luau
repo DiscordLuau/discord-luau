@@ -1,7 +1,7 @@
 local Enumerate = require("../Utils/Enumerate")
 local Construct = require("../Utils/Construct")
 
-local ApplicationCommandObject = require("ApplicationCommandOption")
+local ApplicationCommandOption = require("ApplicationCommandOption")
 
 local DiscordPermissions = require("DiscordPermissions")
 
@@ -28,6 +28,16 @@ ApplicationCommand.Interface.Type = Enumerate.new({
 })
 
 --[=[
+	@prop Context { ... }
+	@within ApplicationCommand
+]=]
+ApplicationCommand.Interface.Context = Enumerate.new({
+	Guild = 0,
+	BotDM = 1,
+	PrivateChannel = 2,
+})
+
+--[=[
 	@method setType
 	@within ApplicationCommand
 
@@ -41,7 +51,7 @@ ApplicationCommand.Interface.Type = Enumerate.new({
 
 	```
 ]=]
-function ApplicationCommand.Prototype.setType(self: ApplicationCommand, commandType: string): ApplicationCommand
+function ApplicationCommand.Prototype.setType(self: ApplicationCommand, commandType: number): ApplicationCommand
 	assert(ApplicationCommand.Interface.Type:Is(commandType), `Expected 'commandType' to of enum 'commandType'`)
 
 	self.commandType = commandType
@@ -170,26 +180,6 @@ function ApplicationCommand.Prototype.setGuildPermissions(self: ApplicationComma
 end
 
 --[=[
-	@method setAutocompleteEnabled
-	@within ApplicationCommand
-
-	@param enabled boolean
-
-	@return ApplicationCommand
-
-	(yet-to-do!)
-
-	```lua
-
-	```
-]=]
-function ApplicationCommand.Prototype.setAutocompleteEnabled(self: ApplicationCommand, enabled: boolean): ApplicationCommand
-	self.AutocompleteEnabled = enabled
-
-	return self
-end
-
---[=[
 	@method addOption
 	@within ApplicationCommand
 
@@ -203,8 +193,28 @@ end
 
 	```
 ]=]
-function ApplicationCommand.Prototype.addOption(self: ApplicationCommand, commandObject: ApplicationCommandObject.ApplicationCommandOptions): ApplicationCommand
+function ApplicationCommand.Prototype.addOption(self: ApplicationCommand, commandObject: ApplicationCommandOption.ApplicationCommandOptions): ApplicationCommand
 	table.insert(self.options, commandObject)
+
+	return self
+end
+
+--[=[
+	@method addContext
+	@within ApplicationCommand
+
+	@param commandObject !ApplicationCommandOption
+
+	@return ApplicationCommand
+
+	(yet-to-do!)
+
+	```lua
+
+	```
+]=]
+function ApplicationCommand.Prototype.addContext(self: ApplicationCommand, context: number): ApplicationCommand
+	table.insert(self.contexts, context)
 
 	return self
 end
@@ -222,7 +232,7 @@ end
 	```
 ]=]
 function ApplicationCommand.Prototype.toJSONObject(self: ApplicationCommand)
-	local permissions = 0
+	local permissions = "0"
 	local options = {}
 
 	for _, commandOption in self.options do
@@ -238,8 +248,12 @@ function ApplicationCommand.Prototype.toJSONObject(self: ApplicationCommand)
 		name = self.commandName,
 		description = self.commandDescription,
 
+		nsfw = self.commandNSFW,
+
 		default_member_permissions = permissions,
 		dm_permission = self.commandDM,
+
+		contexts = self.contexts,
 
 		name_localizations = self.commandLocalization,
 		description_localizations = self.commandLocalization,
@@ -263,10 +277,23 @@ end
 function ApplicationCommand.Interface.new()
 	return Construct({
 		choices = {},
-		options = {}
+		options = {},
+		contexts = {}
 	}, ApplicationCommand.Prototype)
 end
 
-export type ApplicationCommand = typeof(ApplicationCommand.Interface.new())
+export type ApplicationCommand = typeof(ApplicationCommand.Prototype) & {
+	commandLocalization: string,
+	commandDM: boolean,
+
+	commandDescription: string,
+	commandName: string,
+	commandType: number,
+	commandNSFW: boolean,
+
+	contexts: { number },
+	commandPermissions: DiscordPermissions.DiscordPermissions,
+	options: { ApplicationCommandOption.ApplicationCommandOptions }
+}
 
 return ApplicationCommand.Interface
