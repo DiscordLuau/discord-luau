@@ -3,4 +3,8 @@
 
 	(sorry I will add docs for this lol, just haven't got around to it yet!)
 ]=]
-return require("Embedded/4x8Matrix/Console")
+local Console = require("Embedded/4x8Matrix/Console")
+
+export type Console = Console.Console
+
+return Console

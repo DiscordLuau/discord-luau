@@ -690,12 +690,14 @@ function Console.Interface.is(object: Console?): boolean
 	return metatable and metatable.__type == Console.Type
 end
 
-export type Console = typeof(Console.Prototype) & {
-	id: string,
-	level: number,
-	schema: string,
-	enabled: boolean,
-	logs: {},
-}
+-- export type Console = typeof(Console.Prototype) & {
+-- 	id: string,
+-- 	level: number,
+-- 	schema: string,
+-- 	enabled: boolean,
+-- 	logs: {},
+-- }
+
+export type Console = typeof(Console.Interface.new())
 
 return Console.Interface

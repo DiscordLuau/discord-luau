@@ -32,11 +32,11 @@ function HTTPScheduler.Prototype.spawnWorker(self: HTTPScheduler)
 end
 
 function HTTPScheduler.Prototype.stopWorker(self: HTTPScheduler)
-	if #self.workers == 0 then
+	local thread = table.remove(self.workers, 1)
+
+	if not thread then
 		return
 	end
-
-	local thread = table.remove(self.workers, 1)
 
 	Task.cancel(thread)
 end
@@ -54,10 +54,10 @@ function HTTPScheduler.Prototype.cycle(self: HTTPScheduler)
 
 	table.insert(self.processing, true)
 
-	local success, response = pcall(item)
+	local values = { pcall(item) }
 
-	if not success then
-		self.reporter:warn(`HTTP Shceduled call failed: '{response}'`)
+	if not values[1] then
+		self.reporter:warn(`HTTP Shceduled call failed: '{values[2]}'`)
 	end
 
 	table.remove(self.processing, 1)
@@ -71,7 +71,7 @@ function HTTPScheduler.Prototype.setLimit(self: HTTPScheduler, limit: number)
 	self.limit = limit
 end
 
-function HTTPScheduler.Prototype.removeTask(self: HTTPScheduler, object: (...any) -> ())
+function HTTPScheduler.Prototype.removeTask<T>(self: HTTPScheduler, object: (...T) -> ...T)
 	local taskIndex = table.find(self.stack, object)
 
 	if taskIndex then
@@ -79,19 +79,17 @@ function HTTPScheduler.Prototype.removeTask(self: HTTPScheduler, object: (...any
 	end
 end
 
-function HTTPScheduler.Prototype.addTask(self: HTTPScheduler, object: (...any) -> ())
+function HTTPScheduler.Prototype.addTask<T>(self: HTTPScheduler, object: (...T) -> ...T)
 	local thread = coroutine.running()
 
 	table.insert(self.stack, function()
-		local response = object()
-
-		coroutine.resume(thread, response)
+		coroutine.resume(thread, object())
 	end)
 
 	return coroutine.yield()
 end
 
-function HTTPScheduler.Interface.new(threadCount: number?)
+function HTTPScheduler.Interface.new(threadCount: number?): HTTPScheduler
 	local self = Construct({
 		stack = {},
 		processing = {},
@@ -110,6 +108,15 @@ function HTTPScheduler.Interface.new(threadCount: number?)
 	return self
 end
 
-export type HTTPScheduler = typeof(HTTPScheduler.Interface.new(0))
+export type HTTPScheduler = typeof(HTTPScheduler.Prototype) & {
+	stack: { () -> () },
+	processing: { boolean },
+	workers: { thread },
+
+	reporter: Console.Console,
+
+	limit: number?,
+	frequency: number,
+}
 
 return HTTPScheduler.Interface

@@ -77,7 +77,7 @@ function DiscordVoiceConnection.Prototype.observeWebsocketOperations(self: Disco
 			end)
 		elseif operationCode == VoiceWebsocketOperationCodes.HeartbeatACK then
 			self.heartbeatAck = true
-			self.heartbeatPing = os.clock() - self.heartbeatClockTime
+			self.heartbeatPing = os.clock() - self.heartbeatClockTime :: number
 
 			if operationData ~= self.heartbeatNonce then
 				self.reporter:warn(`HeartbeatACK - nonce recieved was incorrect`)
@@ -89,7 +89,9 @@ function DiscordVoiceConnection.Prototype.observeWebsocketOperations(self: Disco
 
 			local thread = coroutine.running()
 
-			self.voiceUDP = DiscordUDP.new(`0.0.0.0:{BASE_VOICE_CONNECTION_PORT + DiscordVoiceConnection.Internal.activeConnections}`)
+			self.voiceUDP = (DiscordUDP.new(
+				`0.0.0.0:{BASE_VOICE_CONNECTION_PORT + DiscordVoiceConnection.Internal.activeConnections}`
+			) :: unknown) :: DiscordUDP.DiscordUDP
 			
 			self.voiceUDP.onMessageRecv:once(function(packetData: string)
 				local responseData = { string.unpack(">I2I2I4c64I2", packetData) }
@@ -170,9 +172,10 @@ end
 function DiscordVoiceConnection.Prototype.connectAsync(self: DiscordVoiceConnection, guildId: string, channelId: string)
 	return Future.try(function()
 		local guildObject = self.discordClient:fetchGuildAsync(guildId):await()
+		local websocket: DiscordWebsocket.DiscordWebsocket = self.discordClient.discordShards[guildObject.shardId].discordWebsocket
 		local connection
 
-		connection = self.discordClient.discordShards[guildObject.shardId].onEvent:connect(function(eventName, data)
+		connection = self.discordClient.discordShards[guildObject.shardId].onEvent:connect(function(eventName, data: {[any]: any})
 			if eventName == WebsocketEvents.VoiceServerUpdate then
 				if data.guildId == guildId then
 					self.voiceServerUpdate = data
@@ -184,7 +187,7 @@ function DiscordVoiceConnection.Prototype.connectAsync(self: DiscordVoiceConnect
 			end
 		end)
 
-		self.discordClient.discordShards[guildObject.shardId].discordWebsocket:sendAsync(
+		websocket:sendAsync(
 			{
 				[WebsocketOperationKeys.OperationCode] = WebsocketOperationCodes.VoiceStateUpdate,
 				[WebsocketOperationKeys.Data] = {
@@ -242,7 +245,7 @@ function DiscordVoiceConnection.Prototype.reconnectAsync(self: DiscordVoiceConne
 	end
 
 	return Future.try(function()
-		self.voiceWebsocket:disconnectAsync(1005):await()
+		self.voiceWebsocket:disconnectAsync(tostring(1005)):await()
 
 		Task.wait(math.random())
 	
@@ -257,8 +260,9 @@ function DiscordVoiceConnection.Prototype.disconnectAsync(self: DiscordVoiceConn
 		end
 
 		local guildObject = self.discordClient:fetchGuildAsync(self.guildId):await()
+		local websocket: DiscordWebsocket.DiscordWebsocket = self.discordClient.discordShards[guildObject.shardId].discordWebsocket
 
-		self.discordClient.discordShards[guildObject.shardId].discordWebsocket:sendAsync(
+		websocket:sendAsync(
 			{
 				[WebsocketOperationKeys.OperationCode] = WebsocketOperationCodes.VoiceStateUpdate,
 				[WebsocketOperationKeys.Data] = {
@@ -267,14 +271,14 @@ function DiscordVoiceConnection.Prototype.disconnectAsync(self: DiscordVoiceConn
 			}
 		):await()
 
-		self.voiceWebsocket:disconnectAsync(1000):await()
+		self.voiceWebsocket:disconnectAsync(tostring(1000)):await()
 
 		DiscordVoiceConnection.Internal.activeConnections -= 1
 	end)
 end
 
-function DiscordVoiceConnection.Interface.new(discordClient: any, id: string): DiscordVoiceConnection
-	local self = Construct({
+function DiscordVoiceConnection.Interface.new(discordClient: any, id: string)
+	local self = (Construct({
 		voiceWebsocket = DiscordWebsocket.new(),
 		discordClient = discordClient,
 
@@ -285,7 +289,7 @@ function DiscordVoiceConnection.Interface.new(discordClient: any, id: string): D
 		heartbeatInterval = nil,
 
 		onEvent = Signal.new()
-	}, DiscordVoiceConnection.Prototype)
+	}, DiscordVoiceConnection.Prototype) :: unknown) :: DiscordVoiceConnection
 
 	self:observeWebsocketOperations()
 
@@ -295,13 +299,24 @@ end
 export type DiscordVoiceConnection = typeof(DiscordVoiceConnection.Prototype) & {
 	voiceWebsocket: DiscordWebsocket.DiscordWebsocket,
 	voiceUDP: DiscordUDP.DiscordUDP,
-	discordClient: unknown,
+	discordClient: any,
 
-	reporter: unknown,
+	reporter: Console.Console,
 
 	heartbeatTask: thread?,
 	resumeSessionId: string,
 	heartbeatInterval: number,
+
+	heartbeatAck: boolean?,
+	heartbeatPing: number?,
+	heartbeatNonce: number?,
+	heartbeatClockTime: number?,
+
+	encryptionKey: buffer,
+	mediaSessionId: string,
+
+	channelId: string,
+	guildId: string,
 
 	voiceServerUpdate: {
 		endpoint: string,
@@ -311,8 +326,6 @@ export type DiscordVoiceConnection = typeof(DiscordVoiceConnection.Prototype) & 
 
 	voiceStateUpdate: {
 		sessionId: string,
-
-		-- there are other props here i'm too lazy to add lol.
 	},
 
 	onEvent: unknown,

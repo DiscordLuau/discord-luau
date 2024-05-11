@@ -29,7 +29,7 @@ DiscordGateway.Prototype = {}
 
 DiscordGateway.Prototype.type = "DiscordGateway"
 
-function DiscordGateway.Prototype.parseErrors(self: DiscordGateway, errorTable: { [string]: string }, source: string?, depth: number?)
+function DiscordGateway.Prototype.parseErrors(self: DiscordGateway, errorTable: { [any]: any }, source: string?, depth: number?)
 	local _source = source or ""
 	local _depth = depth or 0
 
@@ -46,7 +46,7 @@ function DiscordGateway.Prototype.parseErrors(self: DiscordGateway, errorTable: 
 	return _source
 end
 
-function DiscordGateway.Prototype.parseDiscordAPIErrors(self: DiscordGateway, api: string, networkResponse: { body: string, statusCode: string, statusMessage: string })
+function DiscordGateway.Prototype.parseDiscordAPIErrors(self: DiscordGateway, api: string, networkResponse: Net.FetchResponse)
 	local success, messageDecoded = pcall(function()
 		return Serde.decode("json", networkResponse.body)
 	end)
@@ -85,16 +85,23 @@ function DiscordGateway.Prototype.requestAsync(self: DiscordGateway, api: string
 
 			self.reporter:debug(`{method} Async to '{api}': {networkResponse.statusCode} - {networkResponse.statusMessage}`)
 
-			if not self.endpointRateLimits[api] then
-				self.endpointRateLimits[api] = HTTPRatelimit.new(
-					tonumber(networkResponse.headers["x-ratelimit-limit"]),
-					tonumber(networkResponse.headers["x-ratelimit-remaining"])
-				)
+			local ratelimitLimit = tonumber(networkResponse.headers["x-ratelimit-limit"])
+			local ratelimitRemaining = tonumber(networkResponse.headers["x-ratelimit-remaining"])
+			local ratelimitResetAfter = tonumber(networkResponse.headers["x-ratelimit-reset-after"])
+
+			if ratelimitLimit and ratelimitRemaining and ratelimitResetAfter then
+				if not self.endpointRateLimits[api] then
+					self.endpointRateLimits[api] = (HTTPRatelimit.new(
+						ratelimitLimit,
+						ratelimitRemaining
+					) :: unknown) :: HTTPRatelimit.HTTPRatelimit
+				end
+	
+				self.endpointRateLimits[api]:resetAfter(ratelimitResetAfter)
+	
+				self.reporter:debug(`{method} Rate Limit '{ratelimitLimit - ratelimitRemaining}/{ratelimitLimit}, resetting in {ratelimitResetAfter}'`)
+	
 			end
-
-			self.endpointRateLimits[api]:resetAfter(tonumber(networkResponse.headers["x-ratelimit-reset-after"]))
-
-			self.reporter:debug(`{method} Rate Limit '{networkResponse.headers["x-ratelimit-limit"] - networkResponse.headers["x-ratelimit-remaining"]}/{networkResponse.headers["x-ratelimit-limit"]}, resetting in {networkResponse.headers["x-ratelimit-reset-after"]}'`)
 
 			if not networkResponse.ok then
 				error(self:parseDiscordAPIErrors(api, networkResponse))

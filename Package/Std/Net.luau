@@ -1,4 +1,4 @@
-local net = require("@lune/net") :: any
+local net = require("@lune/net")
 
 --[[
 	because 'udpSocket' is not actually apart of @lune/net, instead it was apart of a fork of @lune
@@ -6,10 +6,10 @@ local net = require("@lune/net") :: any
 		which simulates a 'udpSocket' but won't ever connect, send or recieve data.
 ]]
 
-local udpSocket = net.udpSocket
-local udpSocketClose = net.udpSocketClose
+local udpSocket = (net :: any).udpSocket
+local udpSocketClose = (net :: any).udpSocketClose
 
-if not net.udpSocket then
+if not (net :: any).udpSocket then
 	udpSocket = function()
 		local self = {}
 
@@ -23,9 +23,12 @@ if not net.udpSocket then
 	udpSocketClose = function() end
 end
 
+export type WebSocket = net.WebSocket
+export type FetchResponse = net.FetchResponse
+
 return setmetatable({
 	udpSocket = udpSocket,
 	udpSocketClose = udpSocketClose
 }, {
-	__index = require("@lune/net")
+	__index = net
 })

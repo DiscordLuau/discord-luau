@@ -3,7 +3,6 @@ local Construct = require("../../Utils/Construct")
 local Future = require("../../Vendor/Future")
 local Signal = require("../../Vendor/Signal")
 local Console = require("../../Vendor/Console")
-local State = require("../../Vendor/State")
 
 local Net = require("../../Std/Net")
 local Task = require("../../Std/Task")
@@ -22,7 +21,11 @@ DiscordUDP.Prototype.type = "DiscordUDP"
 
 function DiscordUDP.Prototype.sendAsync(self: DiscordUDP, dataPacket: string)
 	return Future.try(function()
-		self.socketInstance:send(dataPacket)
+		if not self.socketInstance then
+			error(`Socket Instance isn't avaliable!`)
+		end
+
+		self.socketInstance.send(dataPacket)
 	end)
 end
 
@@ -31,18 +34,26 @@ function DiscordUDP.Prototype.connectAsync(
 	discordUdp: string
 )
 	return Future.try(function()
-		self.socketUrl = discordUdp
-		self.socketInstance:connect(discordUdp)
+		local socket = self.socketInstance :: any
 
-		self.socketActive:set(true)
+		self.socketUrl = discordUdp
+
+		socket:connect(discordUdp)
+
+		self.socketActive = true
 		self.socketThread = Task.spawn(function()
-			while self.socketActive.Value do
-				if self.socketInstance.closeCode then
+			while self.socketActive do
+				if not socket then
+					return
+				end
+
+				if socket.closeCode then
 					-- this isn't a thing, but in the real impl - it would be.
-					self.socketActive:set(false)
-					self.onSocketDead:fire(self.socketInstance.closeCode)
+					self.socketActive = false
+
+					self.onSocketDead:fire(socket.closeCode)
 				else
-					local socketMessage = self.socketInstance:next()
+					local socketMessage = socket.next()
 
 					self.onMessageRecv:fire(buffer.tostring(socketMessage))
 				end
@@ -66,15 +77,18 @@ function DiscordUDP.Interface.new(publicUdp: string)
 		publicUdp = publicUdp,
 		socketInstance = (Net :: any).udpSocket(publicUdp),
 
-		socketActive = State.new(false),
+		socketActive = false,
+		socketActiveChanged = Signal.new(),
+
 		onMessageRecv = Signal.new(),
 		onSocketDead = Signal.new(),
-		onOperationRecv = Signal.new(),
+
+		socketUrl = nil,
 
 		reporter = Console.new("🪁 DiscordUDP"),
 	}, DiscordUDP.Prototype)
 
-	self.socketActive.Changed:connect(function(state)
+	self.socketActiveChanged:connect(function(state)
 		self.reporter:debug(`Discord UDP Socket {(state and "Connected") or "Disconnected"} [{self.socketUrl or "unknown"}]`)
 	end)
 
@@ -82,13 +96,21 @@ function DiscordUDP.Interface.new(publicUdp: string)
 end
 
 export type DiscordUDP = typeof(DiscordUDP.Prototype) & {
-	udpActive: unknown,
+	udpActive: boolean,
 	publicUdp: string,
 
-	onMessageRecv: unknown,
-	onSocketDead: unknown,
+	onMessageRecv: Signal.Signal<string>,
+	onSocketDead: Signal.Signal<number?>,
 
-	reporter: unknown,
+	socketInstance: Net.WebSocket?,
+
+	reporter: Console.Console,
+
+	socketUrl: string?,
+	socketActive: boolean,
+	socketActiveChanged: Signal.Signal<boolean>,
+
+	socketThread: thread?
 }
 
 return DiscordUDP.Interface

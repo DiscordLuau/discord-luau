@@ -19,11 +19,11 @@ function HTTPRatelimit.Prototype.setRemaining(self: HTTPRatelimit, remaining: nu
 end
 
 function HTTPRatelimit.Prototype.resetAfter(self: HTTPRatelimit, seconds: number)
-	if self.ResetAfterThread then
-		Task.cancel(self.ResetAfterThread)
+	if self.resetAfterThread then
+		Task.cancel(self.resetAfterThread)
 	end
 
-	self.ResetAfterThread = Task.delay(seconds, function()
+	self.resetAfterThread = Task.delay(seconds, function()
 		self.remaining = self.limit
 	end)
 end
@@ -43,6 +43,11 @@ function HTTPRatelimit.Interface.new(remaining: number?, limit: number?)
 	}, HTTPRatelimit.Prototype)
 end
 
-export type HTTPRatelimit = typeof(HTTPRatelimit.Interface.new())
+export type HTTPRatelimit = typeof(HTTPRatelimit.Prototype) & {
+	remaining: number,
+	limit: number,
+
+	resetAfterThread: thread?
+}
 
 return HTTPRatelimit.Interface

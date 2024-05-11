@@ -6,7 +6,6 @@ local Construct = require("../../Utils/Construct")
 local Future = require("../../Vendor/Future")
 local Signal = require("../../Vendor/Signal")
 local Console = require("../../Vendor/Console")
-local State = require("../../Vendor/State")
 
 local EventIn = require("../Middleware/EventIn")
 local EventOut = require("../Middleware/EventOut")
@@ -32,31 +31,39 @@ DiscordWebsocket.Prototype = {}
 
 DiscordWebsocket.Prototype.type = "DiscordWebsocket"
 
-function DiscordWebsocket.Prototype.sendAsync(self: DiscordWebsocket, dataPacket)
+function DiscordWebsocket.Prototype.sendAsync(self: DiscordWebsocket, dataPacket: { [any]: any })
 	local traceback = debug.traceback()
 
 	return Future.try(function()
-		local messageSendOperationSuccessful, messageResult =
-			pcall(self.socketInstance.send, Serde.encode("json", self.gatewayEventOut:processJSON(dataPacket)))
+		if not self.socketInstance then
+			error(`No WebSocket avaliable!`)
+		end
+
+		local messageSendOperationSuccessful, result = pcall(function()
+			return (self.socketInstance.send(
+				Serde.encode("json", self.gatewayEventOut:processJSON(dataPacket))
+			) :: unknown) :: buffer
+		end)
 
 		if messageSendOperationSuccessful then
 			self.reporter:debug(`Discord Websocket Message Sent: {dataPacket[WebsocketOperationKeys.OperationCode]}`)
 		else
-			local resultType = typeof(messageResult)
+			local resultType: string = typeof(result)
+			local messageResult
 
 			if resultType == "userdata" then
 				local success = pcall(function()
-					messageResult = buffer.tostring(messageResult)
+					messageResult = buffer.tostring(result)
 				end)
 
 				if not success then
-					messageResult = tostring(messageResult)
+					messageResult = tostring(result)
 				end
 			end
 
 			self.reporter:warn(`Socket error: {string.split(messageResult, "\n")[1]}, traceback:\n{traceback}`)
 
-			self.socketActive:set(false)
+			self.socketActive = false
 			self.onSocketDead:fire(self.socketInstance.closeCode)
 		end
 	end)
@@ -71,17 +78,21 @@ function DiscordWebsocket.Prototype.connectAsync(self: DiscordWebsocket, websock
 			error(self.socketInstance)
 		end
 
-		self.socketActive:set(true)
+		self.socketActive = true
 		self.socketThread = Task.spawn(function()
-			while self.socketActive.Value do
+			while self.socketActive do
+				if not self.socketInstance then
+					return
+				end
+
 				if self.socketInstance.closeCode then
-					self.socketActive:set(false)
+					self.socketActive = false
 					self.onSocketDead:fire(self.socketInstance.closeCode)
 				else
 					local success, socketMessage = pcall(self.socketInstance.next)
 
 					if not success or not socketMessage then
-						self.socketActive:set(false)
+						self.socketActive = false
 						self.onSocketDead:fire(self.socketInstance.closeCode)
 
 						continue
@@ -100,36 +111,45 @@ function DiscordWebsocket.Prototype.disconnectAsync(self: DiscordWebsocket, clos
 			return
 		end
 
-		if self.socketActive.Value then
+		if self.socketActive then
 			xpcall(function()
-				self.socketInstance.close(closingCode)
+				self.socketInstance.close(tonumber(closingCode))
 			end, function(source: string)
 				self.reporter:warn(`Failed to close websocket: '{source}'`)
 			end)
 		end
 
-		self.socketActive:set(false)
-		self.onSocketDead:fire(closingCode)
+		self.socketActive = false
+		self.onSocketDead:fire(tonumber(closingCode))
 	end)
 end
 
 function DiscordWebsocket.Interface.new()
 	local self = Construct({
-		socketActive = State.new(false),
 		websocketWebsocketBuffer = WebsocketBuffer.new(),
-
+		
 		gatewayEventIn = EventIn.new(),
 		gatewayEventOut = EventOut.new(),
-
+		
 		onMessageRecv = Signal.new(),
 		onSocketDead = Signal.new(),
 		onOperationRecv = Signal.new(),
-
+		
 		reporter = Console.new("🪁 DiscordWebsocket"),
+
+		socketActiveChanged = Signal.new(),
+		socketActive = false,
+
+		socketUrl = nil,
+		socketInstance = nil,
+
+		socketRequestSuccess = nil,
+		socketThread = nil,
 	}, DiscordWebsocket.Prototype)
 
-	self.socketActive.Changed:connect(function(state)
+	self.socketActiveChanged:connect(function(state)
 		local connectedLabel = state and "Connected" or "Disconnected"
+
 		local socketUrl = self.socketUrl and `[{self.socketUrl}]` or ""
 		local closeCode = self.socketInstance and self.socketInstance.closeCode and `[{self.socketInstance.closeCode}]` or ""
 
@@ -176,17 +196,25 @@ function DiscordWebsocket.Interface.new()
 end
 
 export type DiscordWebsocket = typeof(DiscordWebsocket.Prototype) & {
-	socketActive: unknown,
 	websocketWebsocketBuffer: WebsocketBuffer.WebsocketBuffer,
+
+	socketActiveChanged: Signal.Signal<boolean>,
+	socketActive: boolean,
 
 	gatewayEventIn: EventIn.EventIn,
 	gatewayEventOut: EventOut.EventOut,
 
-	onMessageRecv: unknown,
-	onSocketDead: unknown,
-	onOperationRecv: unknown,
+	onMessageRecv: Signal.Signal<string>,
+	onSocketDead: Signal.Signal<number?>,
+	onOperationRecv: Signal.Signal<number, any, string?, number?>,
 
-	reporter: unknown,
+	reporter: Console.Console,
+
+	socketUrl: string?,
+	socketInstance: Net.WebSocket?,
+
+	socketRequestSuccess: boolean?,
+	socketThread: thread?
 }
 
 return DiscordWebsocket.Interface

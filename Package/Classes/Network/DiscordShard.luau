@@ -77,9 +77,9 @@ end
 function DiscordShard.Prototype.observeWebsocketOperations(self: DiscordShard)
 	table.insert(self.activeConnections, self.discordWebsocket.onOperationRecv:connect(function(operationCode, operationData, eventName, sequence)
 		if operationCode == WebsocketOperationCodes.Dispatch then
-			self.dispatchSequence = sequence
+			self.dispatchSequence = sequence :: number
 
-			self.onEvent:fire(eventName, operationData)
+			self.onEvent:fire(eventName :: string, operationData)
 		elseif operationCode == WebsocketOperationCodes.Hello then
 			Task.wait(math.random())
 
@@ -93,19 +93,19 @@ function DiscordShard.Prototype.observeWebsocketOperations(self: DiscordShard)
 			self:heartbeatAsync(true)
 		elseif operationCode == WebsocketOperationCodes.HeartbeatACK then
 			self.heartbeatAck = true
-			self.HeartbeatPing = os.clock() - self.HeartbeatClockTime
+			self.heartbeatPing = os.clock() - self.heartbeatClockTime :: number
 
-			self.reporter:debug(`HeartbeatACK - Ping: {self.HeartbeatPing}`)
+			self.reporter:debug(`HeartbeatACK - Ping: {self.heartbeatPing}`)
 
-			if not self.Identified then
-				self.Identified = true
+			if not self.identified then
+				self.identified = true
 
 				xpcall(function()
 					self:identifyAsync():await()
 				end, function(exception)
 					self.reporter:warn(`:identifyAsync call failed: '{exception}'`)
 
-					self.Identified = nil
+					self.identified = nil
 				end)
 			end
 		elseif operationCode == WebsocketOperationCodes.Reconnect then
@@ -122,7 +122,7 @@ function DiscordShard.Prototype.observeWebsocketOperations(self: DiscordShard)
 			else
 				self.reporter:warn(`Unrecoverable InvalidSession, attempting to destroy and recreate websocket.`)
 
-				self.discordWebsocket:disconnectAsync(1005):await()
+				self.discordWebsocket:disconnectAsync(tostring(1005)):await()
 
 				Task.wait(5)
 
@@ -134,7 +134,7 @@ function DiscordShard.Prototype.observeWebsocketOperations(self: DiscordShard)
 end
 
 function DiscordShard.Prototype.initiateWebsocket(self: DiscordShard)
-	self.discordWebsocket = DiscordWebsocket.new(self.websocketUrl)
+	self.discordWebsocket = DiscordWebsocket.new()
 
 	for _, connection in self.activeConnections do
 		connection:disconnect()
@@ -157,7 +157,7 @@ function DiscordShard.Prototype.heartbeatAsync(self: DiscordShard, ignoreHeartbe
 			self.heartbeatAck = nil
 		end
 
-		self.HeartbeatClockTime = os.clock()
+		self.heartbeatClockTime = os.clock()
 
 		self.discordWebsocket:sendAsync({
 			[WebsocketOperationKeys.OperationCode] = WebsocketOperationCodes.Heartbeat,
@@ -233,7 +233,7 @@ function DiscordShard.Prototype.reconnectAsync(self: DiscordShard)
 	end
 
 	return Future.try(function()
-		self.discordWebsocket:disconnectAsync(1005):await()
+		self.discordWebsocket:disconnectAsync(tostring(1005)):await()
 
 		Task.wait(math.random())
 	
@@ -241,8 +241,8 @@ function DiscordShard.Prototype.reconnectAsync(self: DiscordShard)
 	end)
 end
 
-function DiscordShard.Interface.new(discordClient: any, shardId: number): DiscordShard
-	local self = Construct({
+function DiscordShard.Interface.new(discordClient: any, shardId: number)
+	local self = (Construct({
 		discordClient = discordClient,
 		discordWebsocket = nil,
 		activeConnections = {},
@@ -259,7 +259,7 @@ function DiscordShard.Interface.new(discordClient: any, shardId: number): Discor
 		onEvent = Signal.new(),
 
 		shardId = shardId
-	}, DiscordShard.Prototype)
+	}, DiscordShard.Prototype) :: unknown) :: DiscordShard
 
 	self:initiateWebsocket()
 
@@ -268,18 +268,29 @@ end
 
 export type DiscordShard = typeof(DiscordShard.Prototype) & {
 	discordWebsocket: DiscordWebsocket.DiscordWebsocket,
-	discordClient: unknown,
+	discordClient: any,
 
 	websocketUrl: string,
 
-	reporter: unknown,
+	reporter: Console.Console,
 
 	heartbeatTask: thread?,
 	resumeSessionId: string,
 	dispatchSequence: number,
 	heartbeatInterval: number,
+	heartbeatClockTime: number,
+	heartbeatPing: number,
+	
+	identified: boolean?,
 
-	onEvent: unknown,
+	resumeGatewayUrl: string?,
+
+	heartbeatAck: boolean?,
+	heartbeatClockTime: number?,
+
+	activeConnections: { Signal.Connection },
+
+	onEvent: Signal.Signal<string, { [any]: any }>,
 
 	shardId: number
 }
