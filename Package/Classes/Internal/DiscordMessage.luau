@@ -25,14 +25,6 @@ DiscordMessage.Prototype.type = "DiscordMessage"
 
 function DiscordMessage.Prototype.replyAsync(self: DiscordMessage, messageData: DiscordMessageSchema)
 	return Future.try(function()
-		local components = {}
-
-		if messageData.components then
-			for _, component in messageData.components do
-				table.insert(components, component:toJSONObject())
-			end
-		end
-
 		return self.discordClient.discordGateway:postAsync(
 			string.format(DiscordEndpoints.BotCreateMessage, self.channelId),
 			DiscordMessage.Interface.intoJson(messageData)
@@ -60,14 +52,6 @@ end
 
 function DiscordMessage.Prototype.editAsync(self: DiscordMessage, messageData: DiscordMessageSchema)
 	return Future.try(function()
-		local components = {}
-
-		if messageData.components then
-			for _, component in messageData.components do
-				table.insert(components, component:toJSONObject())
-			end
-		end
-
 		return self.discordClient.discordGateway:patchAsync(
 			string.format(DiscordEndpoints.BotEditMessage, self.channelId, self.id),
 			DiscordMessage.Interface.intoJson(messageData)
@@ -157,7 +141,7 @@ function DiscordMessage.Interface.intoJson(messageSchema: DiscordMessageSchema)
 
 	if messageSchema.components then
 		for _, component in messageSchema.components do
-			table.insert(components, component:toJSONObject())
+			table.insert(components, (component :: any):toJSONObject())
 		end
 	end
 
@@ -180,9 +164,11 @@ function DiscordMessage.Interface.intoJson(messageSchema: DiscordMessageSchema)
 	}
 end
 
-export type DiscordMessage = typeof(DiscordMessage.Interface.new()) & {
+export type DiscordMessage = typeof(DiscordMessage.Prototype) & {
+	discordClient: any,
+
 	mentionRoles: { string },
-	-- components: { unknown },
+	components: { DiscordComponentTypes.DiscordComponent },
 	-- attachments: { unknown },
 	-- embeds: { unknown },
 	tts: boolean,

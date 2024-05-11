@@ -20,8 +20,8 @@ DiscordVoiceChannel.Interface = {}
 
 DiscordVoiceChannel.Prototype.type = "DiscordVoiceChannel"
 
-function DiscordVoiceChannel.Prototype.connectAsync(self: DiscordVoiceChannel): Future.Future<unknown>
-	return Future.try(function()
+function DiscordVoiceChannel.Prototype.connectAsync(self: DiscordVoiceChannel): Future.Future<boolean>
+	return Future.try(function(): boolean
 		self.voiceConnection = DiscordVoiceConnection.new(self.discordClient, `voice-{self.id}`)
 
 		return self.voiceConnection:connectAsync(
@@ -79,6 +79,8 @@ function DiscordVoiceChannel.Interface.new(discordClient: any, channelData: {
 end
 
 export type DiscordVoiceChannel = typeof(DiscordVoiceChannel.Prototype) & {
+	discordClient: any,
+
 	type: number,
 	nsfw: boolean,
 	id: string,

@@ -41,6 +41,15 @@ function DiscordUser.Interface.new(discordClient: any, partialUserData: {
 	return self
 end
 
-export type DiscordUser = typeof(DiscordUser.Interface.new())
+export type DiscordUser = typeof(DiscordUser.Prototype) & {
+	username: string?,
+	flags: number?,
+	mfaEnabled: boolean?,
+	avatar: string?,
+	id: string,
+	bot: boolean?,
+	verified: boolean?,
+	discriminator: string?
+}
 
 return DiscordUser.Interface

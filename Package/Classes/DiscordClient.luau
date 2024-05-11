@@ -11,7 +11,7 @@ local DiscordEvents = require("../Enums/DiscordEvents")
 local WebsocketOperationCodes = require("../Enums/WebsocketOperationCodes")
 local WebsocketOperationKeys = require("../Enums/WebsocketOperationKeys")
 
-local Cache = require("Internal/Cache")
+local EndpointCache = require("Internal/EndpointCache")
 local DiscordCache = require("Internal/DiscordCache")
 local DiscordUser = require("Internal/DiscordUser")
 local DiscordGuild = require("Internal/DiscordGuild")
@@ -69,7 +69,7 @@ DiscordClient.Prototype.type = "DiscordClient"
 ]=]
 function DiscordClient.Prototype.connectAsync(self: DiscordClient)
 	return Future.try(function()
-		self.discordGateway:setEndpointCache(DiscordEndpoints.BotGateway, Cache.new(10))
+		self.discordGateway:setEndpointCache(DiscordEndpoints.BotGateway, EndpointCache.new(10))
 
 		local data = self.discordGateway:getAsync(DiscordEndpoints.BotGateway):await()
 		local websocketVersion = self.discordGateway:getApiVersion()

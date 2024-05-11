@@ -66,7 +66,7 @@ function DiscordApplication.Prototype.setSlashCommandsAsync(self: DiscordApplica
 			local commandReference
 
 			for _, commandObject1 in commands do
-				if commandObject0.name ~= commandObject1.name then
+				if commandObject0.name ~= commandObject1.commandName then
 					continue
 				end
 
@@ -77,7 +77,7 @@ function DiscordApplication.Prototype.setSlashCommandsAsync(self: DiscordApplica
 			end
 
 			if commandFoundInCommandsArray then
-				commandsToUpdate[commandReference.id] = commandObject0
+				commandsToUpdate[commandObject0.id] = commandReference
 			else
 				table.insert(commandsToDestroy, commandObject0)
 			end
@@ -87,7 +87,7 @@ function DiscordApplication.Prototype.setSlashCommandsAsync(self: DiscordApplica
 			local commandFoundInUpdateCommandsArray
 
 			for _, commandObject1 in commandsToUpdate do
-				if commandObject0.name ~= commandObject1.name then
+				if commandObject0.commandName ~= commandObject1.commandName then
 					continue
 				end
 
@@ -129,6 +129,11 @@ function DiscordApplication.Interface.new(discordClient: any, applicationData: {
 	end)
 end
 
-export type DiscordApplication = typeof(DiscordApplication.Interface.new())
+export type DiscordApplication = typeof(DiscordApplication.Prototype) & {
+	id: string,
+	flags: number,
+
+	discordClient: any,
+}
 
 return DiscordApplication.Interface

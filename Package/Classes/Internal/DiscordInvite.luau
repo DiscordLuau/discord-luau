@@ -42,6 +42,9 @@ function DiscordInvite.Interface.new(discordClient: any, inviteData: {
 	return self
 end
 
-export type DiscordInvite = typeof(DiscordInvite.Interface.new())
+export type DiscordInvite = typeof(DiscordInvite.Prototype) & {
+	discordClient: any,
+	code: string,
+}
 
 return DiscordInvite.Interface

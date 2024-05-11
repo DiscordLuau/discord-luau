@@ -37,6 +37,15 @@ function DiscordGuildRole.Interface.new(discordClient: any, roleData: {
 	end)
 end
 
-export type DiscordGuildRole = typeof(DiscordGuildRole.Interface.new())
+export type DiscordGuildRole = typeof(DiscordGuildRole.Prototype) & {
+	id: string,
+	name: string,
+	permissions: string,
+	position: number,
+	color: number,
+	hoist: boolean,
+	managed: boolean,
+	mentionable: boolean
+}
 
 return DiscordGuildRole.Interface

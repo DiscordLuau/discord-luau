@@ -71,7 +71,7 @@ function DiscordGuild.Prototype.setSlashCommandsAsync(self: DiscordGuild, comman
 			local commandReference
 
 			for _, commandObject1 in commands do
-				if commandObject0.name ~= commandObject1.name then
+				if commandObject0.name ~= commandObject1.commandName then
 					continue
 				end
 
@@ -82,7 +82,7 @@ function DiscordGuild.Prototype.setSlashCommandsAsync(self: DiscordGuild, comman
 			end
 
 			if commandFoundInCommandsArray then
-				commandsToUpdate[commandReference.id] = commandObject0
+				commandsToUpdate[commandObject0.id] = commandReference
 			else
 				table.insert(commandsToDestroy, commandObject0)
 			end
@@ -92,7 +92,7 @@ function DiscordGuild.Prototype.setSlashCommandsAsync(self: DiscordGuild, comman
 			local commandFoundInUpdateCommandsArray
 
 			for _, commandObject1 in commandsToUpdate do
-				if commandObject0.name ~= commandObject1.name then
+				if commandObject0.commandName ~= commandObject1.commandName then
 					continue
 				end
 
@@ -171,8 +171,14 @@ function DiscordGuild.Interface.new(discordClient: any, guildData: {
 	return self
 end
 
-export type DiscordGuild = typeof(DiscordGuild.Interface.new()) & {
-	shardId: number
+export type DiscordGuild = typeof(DiscordGuild.Prototype) & {
+	discordClient: any,
+	shardId: number,
+
+	id: string,
+
+	roles: { DiscordGuildRole.DiscordGuildRole },
+	emojis: { DiscordEmoji.DiscordEmoji },
 }
 
 return DiscordGuild.Interface

@@ -68,6 +68,8 @@ function DiscordTextChannel.Interface.new(discordClient: any, channelData: {
 end
 
 export type DiscordTextChannel = typeof(DiscordTextChannel.Prototype) & {
+	discordClient: any,
+
 	type: number,
 	nsfw: boolean,
 	id: string,

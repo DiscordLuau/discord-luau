@@ -108,9 +108,9 @@ function DiscordChannel.Interface.new(discordClient: any, rawChannelData: any)
 	local baseChannelObject
 
 	if rawChannelData.type == 0 then
-		baseChannelObject = DiscordTextChannel.new(discordClient, rawChannelData)
+		baseChannelObject = DiscordTextChannel.new(discordClient, rawChannelData) :: any
 	elseif rawChannelData.type == 2 then
-		baseChannelObject = DiscordVoiceChannel.new(discordClient, rawChannelData)
+		baseChannelObject = DiscordVoiceChannel.new(discordClient, rawChannelData) :: any
 	else
 		baseChannelObject = rawChannelData
 	end

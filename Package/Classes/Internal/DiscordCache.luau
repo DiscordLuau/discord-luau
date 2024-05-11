@@ -34,10 +34,12 @@ end
 
 function DiscordCache.Interface.new()
 	return Construct({
-		cache = { } :: { [number]: any }
+		cache = {}
 	}, DiscordCache.Prototype)
 end
 
-export type DiscordCache = typeof(DiscordCache.Interface.new())
+export type DiscordCache = typeof(DiscordCache.Prototype) & {
+	cache: { [string]: any }
+}
 
 return DiscordCache.Interface

@@ -102,6 +102,8 @@ function DiscordInteraction.Interface.new(discordClient: any, jsonData: { [any]:
 end
 
 export type DiscordInteraction = typeof(DiscordInteraction.Prototype) & {
+	discordClient: any,
+
 	channel: DiscordTextChannel.DiscordTextChannel,
 	guild: DiscordGuild.DiscordGuild,
 	user: DiscordUser.DiscordUser,
@@ -123,7 +125,7 @@ export type DiscordInteraction = typeof(DiscordInteraction.Prototype) & {
 	entitlements: { unknown },
 	entitlementSkuIds: { unknown },
 
-	defered: boolean
+	defered: boolean,
 }
 
 return DiscordInteraction.Interface

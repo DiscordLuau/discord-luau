@@ -36,6 +36,14 @@ function DiscordEmoji.Interface.new(discordClient: any, emojiData: {
 	end)
 end
 
-export type DiscordEmoji = typeof(DiscordEmoji.Interface.new())
+export type DiscordEmoji = typeof(DiscordEmoji.Prototype) & {
+	id: string,
+	name: string,
+	roles: { string },
+	requireColons: boolean,
+	managed: boolean,
+	animated: boolean,
+	avaliable: boolean
+}
 
 return DiscordEmoji.Interface
