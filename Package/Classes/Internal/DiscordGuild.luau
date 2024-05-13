@@ -10,6 +10,8 @@ local DiscordGuildRole = require("DiscordGuildRole")
 local DiscordChannel = require("DiscordChannel")
 local DiscordUser = require("DiscordUser")
 
+local DiscordGuildMember = require("DiscordGuildMember")
+
 local Future = require("../../Vendor/Future")
 
 --[=[
@@ -51,6 +53,14 @@ function DiscordGuild.Prototype.editSlashCommandAsync(self: DiscordGuild, comman
 end
 
 function DiscordGuild.Prototype.fetchSlashCommandsAsync(self: DiscordGuild)
+	return Future.try(function()
+		return self.discordClient.discordGateway:getAsync(
+			string.format(DiscordEndpoints.GetGuildApplicationCommands, self.discordClient.discordApplication.id, self.id)
+		):await()
+	end)
+end
+
+function DiscordGuild.Prototype.fetchGuildChannels(self: DiscordGuild)
 	return Future.try(function()
 		return self.discordClient.discordGateway:getAsync(
 			string.format(DiscordEndpoints.GetGuildApplicationCommands, self.discordClient.discordApplication.id, self.id)
@@ -138,6 +148,94 @@ function DiscordGuild.Prototype.getGuildAuditLogs(self: DiscordGuild, commands: 
 	end)
 end
 
+function DiscordGuild.Prototype.modifyAsync(self: DiscordGuild, guildSchema: DiscordGuildSchema)
+	return Future.try(function()
+		return self.discordClient.discordGateway:patchAsync(string.format(DiscordEndpoints.BotModifyGuild, self.id), {
+			name = guildSchema.name,
+			region = guildSchema.region,
+			verification_level = guildSchema.verificationLevel,
+			default_message_notifications = guildSchema.defaultMessageNotifications,
+			explicit_content_filter = guildSchema.explicitContentFilter,
+			afk_channel_id = guildSchema.afkChannelId,
+			afk_timeout = guildSchema.afkTimeout,
+			owner_id = guildSchema.ownerId,
+			system_channel_id = guildSchema.systemChannelId,
+			system_channel_flags = guildSchema.systemChannelFlags,
+			rules_channel_id = guildSchema.rulesChannelId,
+			public_update_channel_id = guildSchema.publicUpdateChannelId,
+			preferred_locale = guildSchema.preferredLocale,
+			features = guildSchema.features,
+			description = guildSchema.description,
+			premium_progress_bar_enabled = guildSchema.premiumProgressBarEnabled,
+			safety_alerts_channel_id = guildSchema.safetyAlertsChanneId
+		}):await()
+	end)
+end
+
+function DiscordGuild.Prototype.deleteAsync(self: DiscordGuild)
+	return Future.try(function()
+		return self.discordClient.discordGateway:deleteAsync(string.format(DiscordEndpoints.BotDeleteGuild, self.id)):await()
+	end)
+end
+
+function DiscordGuild.Prototype.getChannelsAsync(self: DiscordGuild)
+	return Future.try(function()
+		local rawChannelDatas = self.discordClient.discordGateway:getAsync(string.format(DiscordEndpoints.BotGetGuildChannels, self.id)):await()
+
+		for index, value in rawChannelDatas do
+			rawChannelDatas[index] = DiscordChannel.new(self.discordClient, value)
+		end
+
+		return rawChannelDatas
+	end)
+end
+
+function DiscordGuild.Prototype.getMemberAsync(self: DiscordGuild, userId: string)
+	return Future.try(function()
+		local discordMember = self.discordClient.discordGateway:getAsync(string.format(DiscordEndpoints.BotGetGuildMember, self.id, userId)):await()
+
+		return DiscordGuildMember.new(self.discordClient, userId, self.id, discordMember)
+	end)
+end
+
+function DiscordGuild.Prototype.fetchGuildMembersAsync(self: DiscordGuild, limit: number, lastUserId: number?)
+	return Future.try(function()
+		local discordMembers = self.discordClient.discordGateway:getAsync(string.format(DiscordEndpoints.BotGetGuildMembers, self.id, limit or 100, lastUserId or "0")):await()
+
+		for index, memberObject in discordMembers do
+			discordMembers[index] = DiscordGuildMember.new(self.discordClient, memberObject.user.id, self.id, memberObject)
+		end
+
+		return discordMembers
+	end)
+end
+
+function DiscordGuild.Prototype.fetchGuildMembersAsync(self: DiscordGuild, limit: number?, after: number?)
+	return Future.try(function()
+		local discordMembers = self.discordClient.discordGateway:getAsync(string.format(DiscordEndpoints.BotGetGuildMembers, self.id, limit or 100, after or "")):await()
+
+		for index, memberObject in discordMembers do
+			discordMembers[index] = DiscordGuildMember.new(self.discordClient, memberObject.user.id, self.id, memberObject)
+		end
+
+		return discordMembers
+	end)
+end
+
+function DiscordGuild.Prototype.searchGuildMembersAsync(self: DiscordGuild, query: string, limit: number?)
+	return Future.try(function()
+		local discordMembers = self.discordClient.discordGateway:getAsync(
+			string.format(DiscordEndpoints.BotSearchGuildMembers, self.id, query, limit or "100")
+		):await()
+
+		for index, memberObject in discordMembers do
+			discordMembers[index] = DiscordGuildMember.new(self.discordClient, memberObject.user.id, self.id, memberObject)
+		end
+
+		return discordMembers
+	end)
+end
+
 function DiscordGuild.Interface.new(discordClient: any, guildData: {
 	id: string,
 	roles: { any },
@@ -179,6 +277,30 @@ export type DiscordGuild = typeof(DiscordGuild.Prototype) & {
 
 	roles: { DiscordGuildRole.DiscordGuildRole },
 	emojis: { DiscordEmoji.DiscordEmoji },
+}
+
+export type DiscordGuildSchema = {
+	name: string,
+	region: string?,
+	verificationLevel: number,
+	defaultMessageNotifications: number,
+	explicitContentFilter: number,
+	afkChannelId: string,
+	afkTimeout: number,
+	-- icon,
+	ownerId: string,
+	-- splash,
+	-- discoverySplash,
+	-- banner,
+	systemChannelId: string,
+	systemChannelFlags: number,
+	rulesChannelId: string,
+	publicUpdateChannelId: string,
+	preferredLocale: string,
+	features: { string },
+	description: string,
+	premiumProgressBarEnabled: boolean,
+	safetyAlertsChanneId: string
 }
 
 return DiscordGuild.Interface

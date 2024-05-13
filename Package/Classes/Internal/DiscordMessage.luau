@@ -6,6 +6,7 @@ local CacheType = require("../../Enums/CacheType")
 local DiscordEndpoints = require("../../Enums/DiscordEndpoints")
 
 local DiscordEmbed = require("../DiscordEmbed")
+local DiscordGuildMember = require("../Internal/DiscordGuildMember")
 
 local Future = require("../../Vendor/Future")
 
@@ -118,7 +119,23 @@ function DiscordMessage.Prototype.removeAllReactionsForEmojiAsync(self: DiscordM
 end
 
 function DiscordMessage.Interface.new(discordClient: any, messageData: {
-	id: string
+	id: string,
+
+	guildId: string,
+	channelId: string,
+
+	author: {
+		username: string,
+		avatar: string,
+		id: string,
+		bot: boolean,
+		discriminator: string,
+		publicFlags: number
+	},
+
+	member: {
+		[any]: any
+	}
 })
 	local self = discordClient.discordCache:getDataOr(CacheType.DiscordMessage, messageData.id, function()
 		local messageStruct = {
@@ -127,6 +144,8 @@ function DiscordMessage.Interface.new(discordClient: any, messageData: {
 
 		return Construct(messageStruct, DiscordMessage.Prototype)
 	end)
+
+	messageData.member = DiscordGuildMember.new(self.discordClient, messageData.author.id, messageData.guildId, messageData.member)
 
 	for index, value in messageData do
 		self[index] = value

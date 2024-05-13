@@ -275,11 +275,11 @@ end
 	```
 ]=]
 function ApplicationCommand.Interface.new()
-	return Construct({
+	return (Construct({
 		choices = {},
 		options = {},
 		contexts = {}
-	}, ApplicationCommand.Prototype)
+	}, ApplicationCommand.Prototype) :: unknown) :: ApplicationCommand
 end
 
 export type ApplicationCommand = typeof(ApplicationCommand.Prototype) & {

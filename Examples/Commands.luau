@@ -9,12 +9,12 @@ DiscordClient:on("Ready", function()
 
 	local permissions = DiscordLuau.DiscordPermissions.new()
 
-	permissions:addPermission(DiscordLuau.DiscordPermissions.UseApplicationCommands)
+	permissions:addPermission(DiscordLuau.DiscordPermissions.Permissions.UseApplicationCommands)
 
 	local slashCommand = DiscordLuau.ApplicationCommand.new()
 		:setName("example-command")
 		:setDescription("Example Description")
-		:SetGuildPermissions(permissions)
+		:setGuildPermissions(permissions)
 
 	DiscordClient.discordApplication:setSlashCommandsAsync({
 		slashCommand

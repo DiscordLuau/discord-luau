@@ -7,6 +7,8 @@ local Construct = require("../../Utils/Construct")
 local DiscordModal = require("../DiscordModal")
 local DiscordPermissions = require("../DiscordPermissions")
 
+local DiscordGuildMember = require("DiscordGuildMember")
+
 local DiscordTextChannel = require("DiscordTextChannel")
 local DiscordUser = require("DiscordUser")
 local DiscordGuild = require("DiscordGuild")
@@ -90,6 +92,7 @@ function DiscordInteraction.Interface.new(discordClient: any, jsonData: { [any]:
 	jsonData.channel = DiscordTextChannel.new(discordClient, jsonData.channel)
 	jsonData.guild = DiscordGuild.new(discordClient, jsonData.guild)
 	jsonData.user = DiscordUser.new(discordClient, jsonData.member.user)
+	jsonData.member = DiscordGuildMember.new(discordClient, jsonData.member.user.id, jsonData.guild.id, jsonData.member)
 	jsonData.appPermissions = DiscordPermissions.from(jsonData.appPermissions)
 
 	jsonData.member.user = nil

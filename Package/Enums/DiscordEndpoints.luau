@@ -37,6 +37,13 @@ return {
 	DeleteGlobalApplicationCommand = "applications/%s/commands/%s",
 
 	GetGuildAuditLogs = "guilds/%s/audit-logs",
+	BotModifyGuild = "guilds/%s",
+	BotDeleteGuild = "guilds/%s",
+	BotGetGuildChannels = "guilds/%s/channels",
+	BotGetGuildMember = "guilds/%s/members/%s",
+	BotGetGuildMembers = "guilds/%s/members?limit=%s&after=%s",
+	BotSearchGuildMembers = "guilds/%s/members/search?query=%s&limit=%s",
+	BotModifyGuildChannelPosition = "channels/%s/channels",
 
 	CreateGuildApplicationCommand = "applications/%s/guilds/%s/commands",
 	EditGuildApplicationCommand = "applications/%s/guilds/%s/commands/%s",

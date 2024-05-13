@@ -101,6 +101,17 @@ function DiscordChannel.Prototype.createInviteAsync(self: DiscordChannel, maxAge
 	end)
 end
 
+function DiscordChannel.Prototype.setPositionAsync(self: DiscordChannel, position: number, parentId: string?, syncPermissions: boolean?)
+	return Future.try(function()
+		return self.discordClient.discordGateway:patchAsync(string.format(DiscordEndpoints.BotModifyGuildChannelPosition, self.id), {
+			id = self.id,
+			position = position,
+			parent_id = parentId,
+			lock_permissions = syncPermissions
+		}):await()
+	end)
+end
+
 function DiscordChannel.Interface.new(discordClient: any, rawChannelData: any)
 	-- https://discord.com/developers/docs/resources/channel#channel-object-channel-types
 	-- todo: support other channel types lol
