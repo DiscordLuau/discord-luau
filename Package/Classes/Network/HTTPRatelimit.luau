@@ -19,12 +19,8 @@ function HTTPRatelimit.Prototype.setRemaining(self: HTTPRatelimit, remaining: nu
 end
 
 function HTTPRatelimit.Prototype.resetAfter(self: HTTPRatelimit, seconds: number)
-	if self.resetAfterThread then
-		Task.cancel(self.resetAfterThread)
-	end
-
-	self.resetAfterThread = Task.delay(seconds, function()
-		self.remaining = self.limit
+	Task.delay(seconds, function()
+		self.remaining = math.min(self.remaining + 1, self.limit)
 	end)
 end
 

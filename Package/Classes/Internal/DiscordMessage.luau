@@ -142,10 +142,10 @@ function DiscordMessage.Interface.new(discordClient: any, messageData: {
 			discordClient = discordClient
 		}
 
+		messageData.member = DiscordGuildMember.new(discordClient, messageData.author.id, messageData.guildId, messageData.member)
+
 		return Construct(messageStruct, DiscordMessage.Prototype)
 	end)
-
-	messageData.member = DiscordGuildMember.new(self.discordClient, messageData.author.id, messageData.guildId, messageData.member)
 
 	for index, value in messageData do
 		self[index] = value

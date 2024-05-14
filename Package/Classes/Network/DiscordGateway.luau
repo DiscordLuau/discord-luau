@@ -11,6 +11,7 @@ local EventOut = require("../Middleware/EventOut")
 
 local Serde = require("../../Std/Serde")
 local Net = require("../../Std/Net")
+local Task = require("../../Std/Task")
 
 local DISCORD_API_VERSION = 9
 
@@ -67,9 +68,11 @@ end
 function DiscordGateway.Prototype.requestAsync(self: DiscordGateway, api: string, method: ("DELETE" | "GET" | "HEAD" | "OPTIONS" | "PATCH" | "POST" | "PUT"), data: { [any]: any }?)
 	return Future.try(function()
 		return self.discordScheduler:addTask(function()
-			if self.endpointRateLimits[api] and self.endpointRateLimits[api]:isConsumed() then
-				while self.endpointRateLimits[api]:isConsumed() do
-					task.wait()
+			local ratelimitApi = string.gsub(api, "%d+", "-")
+
+			if self.endpointRateLimits[ratelimitApi] and self.endpointRateLimits[ratelimitApi]:isConsumed() then
+				while self.endpointRateLimits[ratelimitApi]:isConsumed() do
+					Task.wait()
 				end
 			end
 
@@ -90,17 +93,17 @@ function DiscordGateway.Prototype.requestAsync(self: DiscordGateway, api: string
 			local ratelimitResetAfter = tonumber(networkResponse.headers["x-ratelimit-reset-after"])
 
 			if ratelimitLimit and ratelimitRemaining and ratelimitResetAfter then
-				if not self.endpointRateLimits[api] then
-					self.endpointRateLimits[api] = (HTTPRatelimit.new(
+				if not self.endpointRateLimits[ratelimitApi] then
+					self.endpointRateLimits[ratelimitApi] = (HTTPRatelimit.new(
 						ratelimitLimit,
 						ratelimitRemaining
 					) :: unknown) :: HTTPRatelimit.HTTPRatelimit
 				end
-	
-				self.endpointRateLimits[api]:resetAfter(ratelimitResetAfter)
-	
+
+				self.endpointRateLimits[ratelimitApi]:setRemaining(ratelimitRemaining)
+				self.endpointRateLimits[ratelimitApi]:resetAfter(ratelimitResetAfter + 1)
+
 				self.reporter:debug(`{method} Rate Limit '{ratelimitLimit - ratelimitRemaining}/{ratelimitLimit}, resetting in {ratelimitResetAfter}'`)
-	
 			end
 
 			if not networkResponse.ok then
