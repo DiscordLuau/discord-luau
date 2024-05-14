@@ -224,10 +224,10 @@ export type DiscordMessageSchema = {
 	content: string?,
 	nonce: (string | number)?,
 	tts: boolean?,
-	embeds: { DiscordEmbed.DiscordEmbed },
+	embeds: { DiscordEmbed.DiscordEmbed }?,
 	-- allowedMentions: { unknown },
 	-- messageReference: {  },
-	components: { DiscordComponentTypes.DiscordComponent },
+	components: { DiscordComponentTypes.DiscordComponent }?,
 	-- files: { unknown },
 	-- payloadJson: { unknown }
 	-- attachments: { unknown }

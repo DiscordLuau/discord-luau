@@ -24,7 +24,7 @@ function Enumeration.Interface.new(items)
 		__index = Enumeration.Prototype,
 		__type = Enumeration.Type,
 		__iter = function(...)
-			return next, items, ...
+			return next, ...
 		end,
 		__tostring = function(self)
 			return self:ToString()
