@@ -9,16 +9,32 @@ DiscordClient:setVerbose(true)
 DiscordClient:on("Ready", function()
 	print(`🎉🎉 {DiscordClient.discordUser.username} is online! 🎉🎉`)
 
-	local channelObject = DiscordClient:fetchChannelAsync("1048686561685946489"):await()
+	local permissions = DiscordLuau.DiscordPermissions.new()
 
-	channelObject:sendMessageAsync({
-		embeds = {
-			DiscordLuau.DiscordEmbed.new()
-				:setTitle("Hello, World!")
-				:setColor(0xFF0000)
-				:setDescription("A test embed object!")
-		}
-	})
+	permissions:addPermission(DiscordLuau.DiscordPermissions.Permissions.UseApplicationCommands)
+
+	local slashCommand0 = DiscordLuau.ApplicationCommand.new()
+		:setName("example-0")
+		:setDescription("...")
+		:setGuildPermissions(permissions)
+		:addContext(DiscordLuau.ApplicationCommand.Context.Guild)
+		:setType(DiscordLuau.ApplicationCommand.Type.ChatInput)
+
+	local slashCommand1 = DiscordLuau.ApplicationCommand.new()
+		:setName("example-1")
+		:setDescription("abc!")
+		:setGuildPermissions(permissions)
+		:addContext(DiscordLuau.ApplicationCommand.Context.Guild)
+		:setType(DiscordLuau.ApplicationCommand.Type.ChatInput)
+
+	DiscordClient.discordApplication:setSlashCommandsAsync({
+		slashCommand0, slashCommand1
+	}):after(function(data)
+		print("updated, fetching current commands..")
+		-- DiscordClient.discordApplication:fetchSlashCommandsAsync():after(function(...)
+		-- 	print(...)
+		-- end)
+	end)
 end)
 
 DiscordClient:connectAsync()

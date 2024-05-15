@@ -1,4 +1,7 @@
 local Construct = require("../../Utils/Construct")
+local IsUnique = require("../../Utils/Dictionary/IsUnique")
+
+local EventIn = require("../Middleware/EventIn")
 
 local Future = require("../../Vendor/Future")
 
@@ -106,7 +109,26 @@ function DiscordApplication.Prototype.setSlashCommandsAsync(self: DiscordApplica
 		end
 
 		for commandId: string, command: ApplicationCommand.ApplicationCommand in commandsToUpdate do
-			self:editSlashCommandAsync(commandId, command):await()
+			local existingCommandJson
+
+			for _, commandObject in allCommands do
+				if commandObject.id == commandId then
+					existingCommandJson = commandObject
+
+					break
+				end
+			end
+
+			local existingCommandJsonClone = table.clone(existingCommandJson)
+			local existingCommandClone = self.eventInMiddleware:processJSON(command:toJSONObject() :: any)
+
+			-- fixme: contexts seem to be reported incorrectly?
+			existingCommandClone.contexts = nil
+			existingCommandJsonClone.contexts = nil
+
+			if IsUnique(existingCommandClone, existingCommandJsonClone) then
+				self:editSlashCommandAsync(commandId, command):await()
+			end
 		end
 
 		for _, command: ApplicationCommand.ApplicationCommand in commandsToCreate do
@@ -123,6 +145,8 @@ function DiscordApplication.Interface.new(discordClient: any, applicationData: {
 		return Construct({
 			id = applicationData.id,
 			flags = applicationData.flags,
+
+			eventInMiddleware = EventIn.new(),
 	
 			discordClient = discordClient
 		}, DiscordApplication.Prototype)
@@ -132,6 +156,8 @@ end
 export type DiscordApplication = typeof(DiscordApplication.Prototype) & {
 	id: string,
 	flags: number,
+
+	eventInMiddleware: EventIn.EventIn,
 
 	discordClient: any,
 }

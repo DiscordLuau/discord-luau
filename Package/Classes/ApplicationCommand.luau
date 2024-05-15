@@ -51,7 +51,7 @@ ApplicationCommand.Interface.Context = Enumerate.new({
 
 	```
 ]=]
-function ApplicationCommand.Prototype.setType(self: ApplicationCommand, commandType: number): ApplicationCommand
+function ApplicationCommand.Prototype.setType(self: ApplicationCommand, commandType: number)
 	assert(ApplicationCommand.Interface.Type:Is(commandType), `Expected 'commandType' to of enum 'commandType'`)
 
 	self.commandType = commandType
@@ -73,7 +73,7 @@ end
 
 	```
 ]=]
-function ApplicationCommand.Prototype.setLocalization(self: ApplicationCommand, localizationCode: string): ApplicationCommand
+function ApplicationCommand.Prototype.setLocalization(self: ApplicationCommand, localizationCode: string)
 	self.commandLocalization = localizationCode
 
 	return self
@@ -93,7 +93,7 @@ end
 
 	```
 ]=]
-function ApplicationCommand.Prototype.setDescription(self: ApplicationCommand, description: string): ApplicationCommand
+function ApplicationCommand.Prototype.setDescription(self: ApplicationCommand, description: string)
 	self.commandDescription = description
 
 	return self
@@ -113,7 +113,7 @@ end
 
 	```
 ]=]
-function ApplicationCommand.Prototype.setName(self: ApplicationCommand, name: string): ApplicationCommand
+function ApplicationCommand.Prototype.setName(self: ApplicationCommand, name: string)
 	self.commandName = name
 
 	return self
@@ -133,7 +133,7 @@ end
 
 	```
 ]=]
-function ApplicationCommand.Prototype.setNSFW(self: ApplicationCommand, isNSFW: boolean): ApplicationCommand
+function ApplicationCommand.Prototype.setNSFW(self: ApplicationCommand, isNSFW: boolean)
 	self.commandNSFW = isNSFW
 
 	return self
@@ -153,7 +153,7 @@ end
 
 	```
 ]=]
-function ApplicationCommand.Prototype.setDMPermission(self: ApplicationCommand, canDM: boolean): ApplicationCommand
+function ApplicationCommand.Prototype.setDMPermission(self: ApplicationCommand, canDM: boolean)
 	self.commandDM = canDM
 
 	return self
@@ -173,7 +173,7 @@ end
 
 	```
 ]=]
-function ApplicationCommand.Prototype.setGuildPermissions(self: ApplicationCommand, permissionObject: DiscordPermissions.DiscordPermissions): ApplicationCommand
+function ApplicationCommand.Prototype.setGuildPermissions(self: ApplicationCommand, permissionObject: DiscordPermissions.DiscordPermissions)
 	self.commandPermissions = permissionObject
 
 	return self
@@ -193,8 +193,28 @@ end
 
 	```
 ]=]
-function ApplicationCommand.Prototype.addOption(self: ApplicationCommand, commandObject: ApplicationCommandOption.ApplicationCommandOptions): ApplicationCommand
+function ApplicationCommand.Prototype.addOption(self: ApplicationCommand, commandObject: ApplicationCommandOption.ApplicationCommandOptions)
 	table.insert(self.options, commandObject)
+
+	return self
+end
+
+--[=[
+	@method addOption
+	@within ApplicationCommand
+
+	@param commandObject !ApplicationCommandOption
+
+	@return ApplicationCommand
+
+	(yet-to-do!)
+
+	```lua
+
+	```
+]=]
+function ApplicationCommand.Prototype.setDefaultPermissionEnabled(self: ApplicationCommand, enabled: boolean)
+	self.defaultPermissionEnabled = enabled
 
 	return self
 end
@@ -213,7 +233,7 @@ end
 
 	```
 ]=]
-function ApplicationCommand.Prototype.addContext(self: ApplicationCommand, context: number): ApplicationCommand
+function ApplicationCommand.Prototype.addContext(self: ApplicationCommand, context: number)
 	table.insert(self.contexts, context)
 
 	return self
@@ -233,6 +253,7 @@ end
 ]=]
 function ApplicationCommand.Prototype.toJSONObject(self: ApplicationCommand)
 	local permissions = "0"
+	local contexts = {}
 	local options = {}
 
 	for _, commandOption in self.options do
@@ -243,6 +264,10 @@ function ApplicationCommand.Prototype.toJSONObject(self: ApplicationCommand)
 		permissions = self.commandPermissions:getValue()
 	end
 
+	for index, context in self.contexts do
+		contexts[tostring(index)] = context
+	end
+
 	return {
 		type = self.commandType,
 		name = self.commandName,
@@ -250,10 +275,11 @@ function ApplicationCommand.Prototype.toJSONObject(self: ApplicationCommand)
 
 		nsfw = self.commandNSFW,
 
+		default_permission = self.defaultPermissionEnabled,
 		default_member_permissions = permissions,
 		dm_permission = self.commandDM,
 
-		contexts = self.contexts,
+		contexts = contexts,
 
 		name_localizations = self.commandLocalization,
 		description_localizations = self.commandLocalization,
@@ -290,6 +316,8 @@ export type ApplicationCommand = typeof(ApplicationCommand.Prototype) & {
 	commandName: string,
 	commandType: number,
 	commandNSFW: boolean,
+
+	defaultPermissionEnabled: boolean?,
 
 	contexts: { number },
 	commandPermissions: DiscordPermissions.DiscordPermissions,
