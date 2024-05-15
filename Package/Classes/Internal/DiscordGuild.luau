@@ -210,18 +210,6 @@ function DiscordGuild.Prototype.fetchGuildMembersAsync(self: DiscordGuild, limit
 	end)
 end
 
-function DiscordGuild.Prototype.fetchGuildMembersAsync(self: DiscordGuild, limit: number?, after: number?)
-	return Future.try(function()
-		local discordMembers = self.discordClient.discordGateway:getAsync(string.format(DiscordEndpoints.BotGetGuildMembers, self.id, limit or 100, after or "")):await()
-
-		for index, memberObject in discordMembers do
-			discordMembers[index] = DiscordGuildMember.new(self.discordClient, memberObject.user.id, self.id, memberObject)
-		end
-
-		return discordMembers
-	end)
-end
-
 function DiscordGuild.Prototype.searchGuildMembersAsync(self: DiscordGuild, query: string, limit: number?)
 	return Future.try(function()
 		local discordMembers = self.discordClient.discordGateway:getAsync(
