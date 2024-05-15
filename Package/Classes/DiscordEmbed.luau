@@ -307,8 +307,7 @@ end
 function DiscordEmbed.Prototype.addField(self: DiscordEmbed, fieldSettings: {
 	name: string,
 	value: string,
-	footer: string,
-	author: string
+	inline: boolean?
 })
 	table.insert(self.fields, fieldSettings)
 
@@ -334,8 +333,7 @@ function DiscordEmbed.Prototype.toJSONObject(self: DiscordEmbed)
 		table.insert(fields, {
 			name = fieldObject.name,
 			value = fieldObject.value,
-			footer = fieldObject.footer,
-			author = fieldObject.author
+			inline = fieldObject.inline
 		})
 	end
 
@@ -403,8 +401,7 @@ export type DiscordEmbed = typeof(DiscordEmbed.Prototype) & {
 		{
 			name: string,
 			value: string,
-			footer: string,
-			author: string
+			inline: boolean?
 		}
 	},
 	title: string?,
