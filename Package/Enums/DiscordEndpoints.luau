@@ -44,6 +44,10 @@ return {
 	BotGetGuildMembers = "guilds/%s/members?limit=%s&after=%s",
 	BotBanGuildMember = "guilds/%s/members/%s",
 	BotRemoveGuildMember = "guilds/%s/members/%s",
+	BotRemoveGuildMemberBan = "guilds/%s/bans/%s",
+	BotAddGuildMemberRole = "guilds/%s/members/%s/roles/%s",
+	BotRemoveGuildMemberRole = "guilds/%s/members/%s/roles/%s",
+	BotModifyGuildMember = "guilds/%s/members/%s",
 	BotSearchGuildMembers = "guilds/%s/members/search?query=%s&limit=%s",
 	BotModifyGuildChannelPosition = "channels/%s/channels",
 
