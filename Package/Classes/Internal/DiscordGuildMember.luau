@@ -20,6 +20,16 @@ DiscordGuildMember.Interface = {}
 
 DiscordGuildMember.Prototype.type = "DiscordGuildMember"
 
+function DiscordGuildMember.Prototype.kickAsync(self: DiscordGuildMember, deleteMessagesSeconds: number?)
+	return self.discordClient.discordGateway:putAsync(string.format(DiscordEndpoints.BotBanGuildMember, self.guildId, self.user.id), {
+		delete_message_seconds = deleteMessagesSeconds or 0
+	}):await()
+end
+
+function DiscordGuildMember.Prototype.banAsync(self: DiscordGuildMember, deleteMessagesSeconds: number?)
+	return self.discordClient.discordGateway:deleteAsync(string.format(DiscordEndpoints.BotRemoveGuildMember, self.guildId, self.user.id)):await()
+end
+
 function DiscordGuildMember.Interface.new(discordClient: any, userId: string, guildId: string, memberData: { [any]: any })
 	local self = discordClient.discordCache:getDataOr(CacheType.DiscordMember, `{guildId}-{userId}`, function()
 		return Construct({
@@ -31,6 +41,8 @@ function DiscordGuildMember.Interface.new(discordClient: any, userId: string, gu
 		memberData.user = DiscordUser.new(self.discordClient, memberData.user)
 	end
 
+	memberData.guildId = guildId
+
 	for index, value in memberData do
 		self[index] = value
 	end
@@ -40,7 +52,8 @@ end
 
 export type DiscordGuildMember = typeof(DiscordGuildMember.Prototype) & {
 	discordClient: any,
-	code: string,
+	user: DiscordUser.DiscordUser,
+	guildId: number,
 }
 
 return DiscordGuildMember.Interface
