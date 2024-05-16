@@ -36,11 +36,11 @@ function DiscordGuildMember.Prototype.unbanAsync(self: DiscordGuildMember)
 	return self.discordClient.discordGateway:deleteAsync(string.format(DiscordEndpoints.BotRemoveGuildMemberBan, self.guildId, self.user.id)):await()
 end
 
-function DiscordGuildMember.Prototype.addRole(self: DiscordGuildMember, roleId: string)
+function DiscordGuildMember.Prototype.addRoleAsync(self: DiscordGuildMember, roleId: string)
 	return self.discordClient.discordGateway:putAsync(string.format(DiscordEndpoints.BotAddGuildMemberRole, self.guildId, self.user.id, roleId)):await()
 end
 
-function DiscordGuildMember.Prototype.removeRole(self: DiscordGuildMember, roleId: string)
+function DiscordGuildMember.Prototype.removeRoleAsync(self: DiscordGuildMember, roleId: string)
 	return self.discordClient.discordGateway:deleteAsync(string.format(DiscordEndpoints.BotRemoveGuildMemberRole, self.guildId, self.user.id, roleId)):await()
 end
 

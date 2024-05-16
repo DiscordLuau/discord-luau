@@ -9,25 +9,26 @@ DiscordClient:setVerbose(true)
 DiscordClient:on("Ready", function()
 	print(`🎉🎉 {DiscordClient.discordUser.username} is online! 🎉🎉`)
 
+	local guild = DiscordClient:fetchGuildAsync("737382889947136000"):await()
 	local permissions = DiscordLuau.DiscordPermissions.new()
 
 	permissions:addPermission(DiscordLuau.DiscordPermissions.Permissions.UseApplicationCommands)
 
 	local slashCommand0 = DiscordLuau.ApplicationCommand.new()
-		:setName("example-0")
+		:setName("example-1")
 		:setDescription("...")
 		:setGuildPermissions(permissions)
 		:addContext(DiscordLuau.ApplicationCommand.Context.Guild)
 		:setType(DiscordLuau.ApplicationCommand.Type.ChatInput)
 
 	local slashCommand1 = DiscordLuau.ApplicationCommand.new()
-		:setName("example-1")
+		:setName("example-2-server")
 		:setDescription("abc!")
 		:setGuildPermissions(permissions)
 		:addContext(DiscordLuau.ApplicationCommand.Context.Guild)
 		:setType(DiscordLuau.ApplicationCommand.Type.ChatInput)
 
-	DiscordClient.discordApplication:setSlashCommandsAsync({
+	guild:setSlashCommandsAsync({
 		slashCommand0, slashCommand1
 	}):after(function(data)
 		print("updated, fetching current commands..")
