@@ -79,7 +79,9 @@ end
 
 function DiscordChannel.Prototype.getInvitesAsync(self: DiscordChannel)
 	return Future.try(function()
-		local invites = self.discordClient.discordGateway:getAsync(string.format(DiscordEndpoints.BotGetInvites, self.id), { }):await()
+		local invites = self.discordClient.discordGateway:getAsync(
+			string.format(DiscordEndpoints.BotGetInvites, self.id)
+		):await()
 
 		for index, inviteData in invites do
 			invites[index] = DiscordInvite.new(self.discordClient, inviteData)
@@ -91,7 +93,7 @@ end
 
 function DiscordChannel.Prototype.createInviteAsync(self: DiscordChannel, maxAge: number?, maxUses: number?, temporary: boolean?)
 	return Future.try(function()
-		local inviteData = self.discordClient.discordGateway:getAsync(string.format(DiscordEndpoints.BotGetInvites, self.id), {
+		local inviteData = self.discordClient.discordGateway:postAsync(string.format(DiscordEndpoints.BotGetInvites, self.id), {
 			max_age = maxAge,
 			max_uses = maxUses,
 			temporary = temporary
