@@ -142,6 +142,10 @@ function DiscordGateway.Prototype.postAsync(self: DiscordGateway, api: string, d
 	return self:requestAsync(api, "POST", data)
 end
 
+function DiscordGateway.Prototype.putAsync(self: DiscordGateway, api: string, data: { [any]: any })
+	return self:requestAsync(api, "PUT", data)
+end
+
 function DiscordGateway.Prototype.deleteAsync(self: DiscordGateway, api: string, data: { [any]: any })
 	return self:requestAsync(api, "DELETE", data)
 end

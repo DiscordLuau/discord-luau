@@ -15,18 +15,24 @@ DiscordClient:on("Ready", function()
 	permissions:addPermission(DiscordLuau.DiscordPermissions.Permissions.UseApplicationCommands)
 
 	local slashCommand0 = DiscordLuau.ApplicationCommand.new()
-		:setName("example-1")
+		:setName("server-0")
 		:setDescription("...")
 		:setGuildPermissions(permissions)
 		:addContext(DiscordLuau.ApplicationCommand.Context.Guild)
 		:setType(DiscordLuau.ApplicationCommand.Type.ChatInput)
 
 	local slashCommand1 = DiscordLuau.ApplicationCommand.new()
-		:setName("example-2-server")
+		:setName("server-1")
 		:setDescription("abc!")
 		:setGuildPermissions(permissions)
 		:addContext(DiscordLuau.ApplicationCommand.Context.Guild)
 		:setType(DiscordLuau.ApplicationCommand.Type.ChatInput)
+		:addOption(
+			DiscordLuau.ApplicationCommandOption.new()
+				:setType(DiscordLuau.ApplicationCommandOption.Type.SubCommand)
+				:setName("example")
+				:setDescription("hello, example, this is really just a sub command.")
+	)
 
 	guild:setSlashCommandsAsync({
 		slashCommand0, slashCommand1
