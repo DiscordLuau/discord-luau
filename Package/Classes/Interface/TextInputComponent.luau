@@ -78,10 +78,10 @@ function TextInputComponent.Prototype.toJSONObject(self: TextInputComponent)
 	}
 end
 
-function TextInputComponent.Interface.new(textInputId: string)
+function TextInputComponent.Interface.new(textInputId: string): TextInputComponent
 	return Construct({
 		textInputId = textInputId
-	}, TextInputComponent.Prototype)
+	}, TextInputComponent.Prototype) :: any
 end
 
 export type TextInputComponent = typeof(TextInputComponent.Prototype) & {

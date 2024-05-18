@@ -136,11 +136,11 @@ function SelectionComponent.Prototype.toJSONObject(self: SelectionComponent)
 	}
 end
 
-function SelectionComponent.Interface.new(selectionId: string)
+function SelectionComponent.Interface.new(selectionId: string): SelectionComponent
 	return Construct({
 		selectionId = selectionId,
 		choices = {}
-	}, SelectionComponent.Prototype)
+	}, SelectionComponent.Prototype) :: any
 end
 
 export type SelectionComponent = typeof(SelectionComponent.Prototype) & {

@@ -1,3 +1,23 @@
+export type DiscordEvent = "Ready"
+	| "Message"
+	| "MessageChanged"
+	| "MessageDeleted"
+	| "MessageDeleteBulk"
+	| "ChannelCreate"
+	| "ChannelUpdate"
+	| "ChannelDelete"
+	| "UserUpdate"
+	| "ChannelPinsUpdate"
+	| "GuildCreate"
+	| "GuildUpdate"
+	| "GuildDelete"
+	| "GuildBanAdded"
+	| "GuildBanRemoved"
+	| "GuildMemberJoined"
+	| "GuildMemberRemove"
+	| "GuildMemberUpdate"
+	| "Interaction"
+
 return {
 	Ready = "Ready",
 

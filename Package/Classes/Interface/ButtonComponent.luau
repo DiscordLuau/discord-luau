@@ -70,10 +70,10 @@ function ButtonComponent.Prototype.toJSONObject(self: ButtonComponent)
 	}
 end
 
-function ButtonComponent.Interface.new(buttonId: string)
+function ButtonComponent.Interface.new(buttonId: string): ButtonComponent
 	return Construct({
 		buttonId = buttonId
-	}, ButtonComponent.Prototype)
+	}, ButtonComponent.Prototype) :: any
 end
 
 export type ButtonComponent = typeof(ButtonComponent.Prototype) & {

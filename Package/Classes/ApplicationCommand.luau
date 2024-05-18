@@ -300,12 +300,12 @@ end
 
 	```
 ]=]
-function ApplicationCommand.Interface.new()
-	return (Construct({
+function ApplicationCommand.Interface.new(): ApplicationCommand
+	return Construct({
 		choices = {},
 		options = {},
 		contexts = {}
-	}, ApplicationCommand.Prototype) :: unknown) :: ApplicationCommand
+	}, ApplicationCommand.Prototype) :: any
 end
 
 export type ApplicationCommand = typeof(ApplicationCommand.Prototype) & {

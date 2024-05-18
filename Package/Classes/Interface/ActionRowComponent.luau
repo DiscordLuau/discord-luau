@@ -43,7 +43,7 @@ function ActionRowComponent.Prototype.toJSONObject(self: ActionRowComponent)
 	}
 end
 
-function ActionRowComponent.Interface.new()
+function ActionRowComponent.Interface.new(): ActionRowComponent
 	return Construct({
 		components = { }
 	}, ActionRowComponent.Prototype)

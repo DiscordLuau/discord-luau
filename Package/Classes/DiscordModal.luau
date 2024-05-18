@@ -95,11 +95,11 @@ end
 
 	```
 ]=]
-function DiscordModal.Interface.new(modalId: string)
+function DiscordModal.Interface.new(modalId: string): DiscordModal
 	return Construct({
 		components = {},
 		modalId = modalId
-	}, DiscordModal.Prototype)
+	}, DiscordModal.Prototype) :: any
 end
 
 export type DiscordModal = typeof(DiscordModal.Prototype) & {

@@ -21,6 +21,7 @@ local DiscordVoiceChannel = require("Internal/DiscordVoiceChannel")
 local DiscordMessage = require("Internal/DiscordMessage")
 local DiscordApplication = require("Internal/DiscordApplication")
 local DiscordInteraction = require("Internal/DiscordInteraction")
+local EventManager = require("Internal/EventManager")
 
 local Console = require("../Vendor/Console")
 local Future = require("../Vendor/Future")
@@ -164,7 +165,7 @@ function DiscordClient.Prototype.connectAsync(self: DiscordClient)
 				elseif eventName == WebsocketEvents.GuildMemberUnbanned then
 					data.user = DiscordUser.new(self, data.user)
 
-					self.onEvent:fire(DiscordEvents.GuildMemberBanned, data)
+					self.onEvent:fire(DiscordEvents.GuildMemberUnbanned, data)
 				elseif eventName == WebsocketEvents.GuildMemberJoined then
 					data.user = DiscordUser.new(self, data.user)
 
@@ -235,22 +236,6 @@ function DiscordClient.Prototype.updatePresenceAsync(self: DiscordClient, discor
 end
 
 --[=[
-	@method on
-	@within DiscordClient
-
-	@return Connection
-]=]
-function DiscordClient.Prototype.on(self: DiscordClient, targetEventName: string, eventCallback: (...any) -> ())
-	return self.onEvent:connect(function(eventName: string, ...)
-		if eventName ~= targetEventName then
-			return
-		end
-
-		eventCallback(...)
-	end)
-end
-
---[=[
 	@method setVerbose
 	@within DiscordClient
 ]=]
@@ -274,8 +259,8 @@ end
 		end)
 	```
 ]=]
-function DiscordClient.Interface.new(discordSettings: DiscordSettings.DiscordSettings)
-	local self = (Construct({
+function DiscordClient.Interface.new(discordSettings: DiscordSettings.DiscordSettings): DiscordClient
+	local self = Construct({
 		--[=[
 			@prop discordSettings DiscordSettings
 			@within DiscordClient
@@ -323,13 +308,20 @@ function DiscordClient.Interface.new(discordSettings: DiscordSettings.DiscordSet
 			@within DiscordClient
 		]=]
 		onEvent = Signal.new(),
-	}, DiscordClient.Prototype) :: unknown) :: DiscordClient
+
+	}, DiscordClient.Prototype) :: any
 
 	--[=[
 		@prop discordGateway DiscordGateway
 		@within DiscordClient
 	]=]
-	self.discordGateway = DiscordGateway.new(self)
+	self.discordGateway = DiscordGateway.new(self :: any)
+
+	--[=[
+		@prop eventManager EventManager
+		@within DiscordClient
+	]=]
+	self.eventManager = EventManager.new(self :: any)
 
 	return self
 end
@@ -340,6 +332,8 @@ export type DiscordClient = typeof(DiscordClient.Prototype) & {
 	discordGateway: DiscordGateway.DiscordGateway,
 	discordSettings: DiscordSettings.DiscordSettings,
 	discordCache: DiscordCache.DiscordCache,
+
+	eventManager: EventManager.EventManager,
 
 	websocketUrl: string,
 	shardCount: number,
@@ -353,6 +347,36 @@ export type DiscordClient = typeof(DiscordClient.Prototype) & {
 
 	discordUser: DiscordUser.DiscordUser,
 	discordApplication: DiscordApplication.DiscordApplication,
+
+	events: {
+		Ready: Signal.Signal<nil>,
+
+		Message: Signal.Signal<DiscordMessage.DiscordMessage>,
+		MessageChanged: Signal.Signal<nil>,
+		MessageDeleted: Signal.Signal<nil>,
+		MessageBulkDeleted: Signal.Signal<nil>,
+
+		ChannelCreate: Signal.Signal<nil>,
+		ChannelUpdate: Signal.Signal<nil>,
+		ChannelDelete: Signal.Signal<nil>,
+
+		UserUpdated: Signal.Signal<nil>,
+
+		ChannelPinsUpdate: Signal.Signal<nil>,
+
+		GuildCreate: Signal.Signal<nil>,
+		GuildUpdate: Signal.Signal<nil>,
+		GuildDelete: Signal.Signal<nil>,
+
+		GuildMemberBanned: Signal.Signal<nil>,
+		GuildMemberUnbanned: Signal.Signal<nil>,
+
+		GuildMemberJoined: Signal.Signal<nil>,
+		GuildMemberLeft: Signal.Signal<nil>,
+		GuildMemberUpdated: Signal.Signal<nil>,
+
+		Interaction: Signal.Signal<nil>,
+	}
 }
 
 return DiscordClient.Interface

@@ -145,7 +145,7 @@ end
 		
 	```
 ]=]
-function DiscordPresence.Interface.new()
+function DiscordPresence.Interface.new(): DiscordPresence
 	return Construct({
 		activities = {}
 	}, DiscordPresence.Prototype)

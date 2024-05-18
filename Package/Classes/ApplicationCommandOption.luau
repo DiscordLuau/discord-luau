@@ -382,11 +382,11 @@ end
 
 	```
 ]=]
-function ApplicationCommandOptions.Interface.new()
+function ApplicationCommandOptions.Interface.new(): ApplicationCommandOptions
 	return Construct({
 		choices = {},
 		options = {}
-	}, ApplicationCommandOptions.Prototype)
+	}, ApplicationCommandOptions.Prototype) :: any
 end
 
 export type ApplicationCommandOptions = typeof(ApplicationCommandOptions.Prototype) & {

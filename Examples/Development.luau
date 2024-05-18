@@ -6,7 +6,7 @@ local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettings)
 
 DiscordClient:setVerbose(true)
 
-DiscordClient:on("Ready", function()
+DiscordClient.eventManager.onReady:connect(function()
 	print(`🎉🎉 {DiscordClient.discordUser.username} is online! 🎉🎉`)
 
 	local guild = DiscordClient:fetchGuildAsync("737382889947136000"):await()
@@ -38,9 +38,9 @@ DiscordClient:on("Ready", function()
 		slashCommand0, slashCommand1
 	}):after(function(data)
 		print("updated, fetching current commands..")
-		-- DiscordClient.discordApplication:fetchSlashCommandsAsync():after(function(...)
-		-- 	print(...)
-		-- end)
+		DiscordClient.discordApplication:fetchSlashCommandsAsync():after(function(...)
+			print(...)
+		end)
 	end)
 end)
 

@@ -241,8 +241,8 @@ function DiscordShard.Prototype.reconnectAsync(self: DiscordShard)
 	end)
 end
 
-function DiscordShard.Interface.new(discordClient: any, shardId: number)
-	local self = (Construct({
+function DiscordShard.Interface.new(discordClient: any, shardId: number): DiscordShard
+	local self = Construct({
 		discordClient = discordClient,
 		discordWebsocket = nil,
 		activeConnections = {},
@@ -259,7 +259,7 @@ function DiscordShard.Interface.new(discordClient: any, shardId: number)
 		onEvent = Signal.new(),
 
 		shardId = shardId
-	}, DiscordShard.Prototype) :: unknown) :: DiscordShard
+	}, DiscordShard.Prototype) :: any
 
 	self:initiateWebsocket()
 

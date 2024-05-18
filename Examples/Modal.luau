@@ -6,7 +6,7 @@ local Env = require("../.env")
 local DiscordSettings = DiscordLuau.DiscordSettings.new(Env.DISCORD_BOT_TOKEN)
 local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettings)
 
-DiscordClient:on("Interaction", function(interaction: DiscordLuau.DiscordInteraction)
+DiscordClient.eventManager.onInteraction:connect(function(interaction)
 	if interaction.data.name == "example-command" then
 		local discordModal = DiscordLuau.DiscordModal.new("response-modal")
 
@@ -63,17 +63,17 @@ DiscordClient:on("Interaction", function(interaction: DiscordLuau.DiscordInterac
 	end
 end)
 
-DiscordClient:on("Ready", function()
+DiscordClient.eventManager.onReady:connect(function()
 	print(`🎉🎉 {DiscordClient.discordUser.username} is online! 🎉🎉`)
 
 	local permissions = DiscordLuau.DiscordPermissions.new()
 
-	permissions:addPermission(DiscordLuau.DiscordPermissions.SendMessages)
+	permissions:addPermission(DiscordLuau.DiscordPermissions.Permissions.SendMessages)
 
 	local slashCommand = DiscordLuau.ApplicationCommand.new()
 		:setName("example-command")
 		:setDescription("Example Description")
-		:SetGuildPermissions(permissions)
+		:setGuildPermissions(permissions)
 
 	DiscordClient.discordApplication:setSlashCommandsAsync({
 		slashCommand

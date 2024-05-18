@@ -6,7 +6,7 @@ local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettings)
 
 DiscordClient:setVerbose(true)
 
-DiscordClient:on("Ready", function()
+DiscordClient.eventManager.onReady:connect(function()
 	print(`🎉🎉 {DiscordClient.discordUser.username} is online! 🎉🎉`)
 
 	local permissions = DiscordLuau.DiscordPermissions.new()

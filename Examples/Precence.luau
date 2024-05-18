@@ -4,7 +4,7 @@ local Env = require("../.env")
 local DiscordSettings = DiscordLuau.DiscordSettings.new(Env.DISCORD_BOT_TOKEN)
 local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettings)
 
-DiscordClient:on("Ready", function()
+DiscordClient.eventManager.onReady:connect(function()
 	print(`🎉🎉 {DiscordClient.discordUser.username} is online! 🎉🎉`)
 
 	local discordPresence = DiscordLuau.DiscordPresence.new()

@@ -114,7 +114,7 @@ function DiscordChannel.Prototype.setPositionAsync(self: DiscordChannel, positio
 	end)
 end
 
-function DiscordChannel.Interface.new(discordClient: any, rawChannelData: any)
+function DiscordChannel.Interface.new(discordClient: any, rawChannelData: any): DiscordChannel
 	-- https://discord.com/developers/docs/resources/channel#channel-object-channel-types
 	-- todo: support other channel types lol
 
@@ -128,7 +128,7 @@ function DiscordChannel.Interface.new(discordClient: any, rawChannelData: any)
 		baseChannelObject = rawChannelData
 	end
 
-	return (Inherit(DiscordChannel.Prototype, baseChannelObject) :: unknown) :: DiscordChannel
+	return Inherit(DiscordChannel.Prototype, baseChannelObject)
 end
 
 export type DiscordChannel = (DiscordTextChannel.DiscordTextChannel | DiscordVoiceChannel.DiscordVoiceChannel) & typeof(DiscordChannel.Prototype)

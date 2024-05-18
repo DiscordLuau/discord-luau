@@ -277,8 +277,8 @@ function DiscordVoiceConnection.Prototype.disconnectAsync(self: DiscordVoiceConn
 	end)
 end
 
-function DiscordVoiceConnection.Interface.new(discordClient: any, id: string)
-	local self = (Construct({
+function DiscordVoiceConnection.Interface.new(discordClient: any, id: string): DiscordVoiceConnection
+	local self = Construct({
 		voiceWebsocket = DiscordWebsocket.new(),
 		discordClient = discordClient,
 
@@ -289,7 +289,7 @@ function DiscordVoiceConnection.Interface.new(discordClient: any, id: string)
 		heartbeatInterval = nil,
 
 		onEvent = Signal.new()
-	}, DiscordVoiceConnection.Prototype) :: unknown) :: DiscordVoiceConnection
+	}, DiscordVoiceConnection.Prototype) :: any
 
 	self:observeWebsocketOperations()
 
