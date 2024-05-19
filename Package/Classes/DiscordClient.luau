@@ -347,36 +347,6 @@ export type DiscordClient = typeof(DiscordClient.Prototype) & {
 
 	discordUser: DiscordUser.DiscordUser,
 	discordApplication: DiscordApplication.DiscordApplication,
-
-	events: {
-		Ready: Signal.Signal<nil>,
-
-		Message: Signal.Signal<DiscordMessage.DiscordMessage>,
-		MessageChanged: Signal.Signal<nil>,
-		MessageDeleted: Signal.Signal<nil>,
-		MessageBulkDeleted: Signal.Signal<nil>,
-
-		ChannelCreate: Signal.Signal<nil>,
-		ChannelUpdate: Signal.Signal<nil>,
-		ChannelDelete: Signal.Signal<nil>,
-
-		UserUpdated: Signal.Signal<nil>,
-
-		ChannelPinsUpdate: Signal.Signal<nil>,
-
-		GuildCreate: Signal.Signal<nil>,
-		GuildUpdate: Signal.Signal<nil>,
-		GuildDelete: Signal.Signal<nil>,
-
-		GuildMemberBanned: Signal.Signal<nil>,
-		GuildMemberUnbanned: Signal.Signal<nil>,
-
-		GuildMemberJoined: Signal.Signal<nil>,
-		GuildMemberLeft: Signal.Signal<nil>,
-		GuildMemberUpdated: Signal.Signal<nil>,
-
-		Interaction: Signal.Signal<nil>,
-	}
 }
 
 return DiscordClient.Interface
