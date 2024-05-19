@@ -12,6 +12,8 @@ local DiscordUser = require("DiscordUser")
 
 local DiscordGuildMember = require("DiscordGuildMember")
 
+local DiscordAutomoderationRule = require("DiscordAutomoderationRule")
+
 local Future = require("../../Vendor/Future")
 
 --[=[
@@ -219,6 +221,40 @@ function DiscordGuild.Prototype.searchGuildMembersAsync(self: DiscordGuild, quer
 		for index, memberObject in discordMembers do
 			discordMembers[index] = DiscordGuildMember.new(self.discordClient, memberObject.user.id, self.id, memberObject)
 		end
+
+		return discordMembers
+	end)
+end
+
+function DiscordGuild.Prototype.listAutomoderationRulesAsync(self: DiscordGuild)
+	return Future.try(function()
+		local discordAutomoderationRules = self.discordClient.discordGateway:getAsync(
+			string.format(DiscordEndpoints.BotListAutomoderationRules, self.id)
+		):await()
+
+		for index, value in discordAutomoderationRules do
+			discordAutomoderationRules[index] = DiscordAutomoderationRule.new(self.discordClient, value)
+		end
+
+		return discordAutomoderationRules
+	end)
+end
+
+function DiscordGuild.Prototype.getAutomoderationRuleAsync(self: DiscordGuild, ruleId: string)
+	return Future.try(function()
+		local discordAutomoderationRule = self.discordClient.discordGateway:getAsync(
+			string.format(DiscordEndpoints.BotGetAutomoderationRule, self.id)
+		):await()
+
+		return DiscordAutomoderationRule.new(self.discordClient, discordAutomoderationRule)
+	end)
+end
+
+function DiscordGuild.Prototype.createAutomoderationRuleAsync(self: DiscordGuild)
+	return Future.try(function()
+		local discordMembers = self.discordClient.discordGateway:getAsync(
+			string.format(DiscordEndpoints.BotSearchGuildMembers, self.id, query, limit or "100")
+		):await()
 
 		return discordMembers
 	end)

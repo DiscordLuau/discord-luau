@@ -51,6 +51,12 @@ return {
 	BotSearchGuildMembers = "guilds/%s/members/search?query=%s&limit=%s",
 	BotModifyGuildChannelPosition = "channels/%s/channels",
 
+	BotListAutomoderationRules = "guilds/%s/auto-moderation/rules",
+	BotGetAutomoderationRule = "guilds/%s/auto-moderation/rules/%s",
+	BotCreateAutomoderationRule = "guilds/%s/auto-moderation/rules",
+	BotModifyAutomoderationRule = "guilds/%s/auto-moderation/rules/%s",
+	BotDeleteAutomoderationRule = "guilds/%s/auto-moderation/rules/%s",
+
 	CreateGuildApplicationCommand = "applications/%s/guilds/%s/commands",
 	EditGuildApplicationCommand = "applications/%s/guilds/%s/commands/%s",
 	GetGuildApplicationCommands = "applications/%s/guilds/%s/commands",

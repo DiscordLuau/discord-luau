@@ -9,5 +9,6 @@ return {
 	DiscordVoiceChannel = "DiscordVoiceChannel",
 	DiscordMessage = "DiscordMessage",
 	DiscordMember = "DiscordMember",
-	DiscordInvite = "DiscordInvite"
+	DiscordInvite = "DiscordInvite",
+	AutoModeration = "AutoModeration",
 }
