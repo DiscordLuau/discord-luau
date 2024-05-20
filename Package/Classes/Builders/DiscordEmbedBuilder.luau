@@ -4,22 +4,22 @@ local Enumerate = require("../../Utils/Enumerate")
 local datetime = require("@lune/datetime")
 
 --[=[
-	@class DiscordEmbed
+	@class DiscordEmbedBuilder
 
 	(sorry I will add docs for this lol, just haven't got around to it yet!)
 ]=]
-local DiscordEmbed = {}
+local DiscordEmbedBuilder = {}
 
-DiscordEmbed.Interface = {}
-DiscordEmbed.Prototype = {}
+DiscordEmbedBuilder.Interface = {}
+DiscordEmbedBuilder.Prototype = {}
 
-DiscordEmbed.Prototype.type = "DiscordEmbed"
+DiscordEmbedBuilder.Prototype.type = "DiscordEmbedBuilder"
 
 --[=[
 	@prop Type { ... }
-	@within DiscordEmbed 
+	@within DiscordEmbedBuilder 
 ]=]
-DiscordEmbed.Interface.Type = Enumerate.new({
+DiscordEmbedBuilder.Interface.Type = Enumerate.new({
 	Rich = "rich",
 	Image = "image",
 	Video = "video",
@@ -30,11 +30,11 @@ DiscordEmbed.Interface.Type = Enumerate.new({
 
 --[=[
 	@method setTitle
-	@within DiscordEmbed
+	@within DiscordEmbedBuilder
 
 	@param title string
 
-	@return DiscordEmbed
+	@return DiscordEmbedBuilder
 
 	(yet-to-do!)
 
@@ -42,7 +42,7 @@ DiscordEmbed.Interface.Type = Enumerate.new({
 
 	```
 ]=]
-function DiscordEmbed.Prototype.setTitle(self: DiscordEmbed, title: string)
+function DiscordEmbedBuilder.Prototype.setTitle(self: DiscordEmbedBuilder, title: string)
 	self.title = title
 
 	return self
@@ -50,11 +50,11 @@ end
 
 --[=[
 	@method setType
-	@within DiscordEmbed
+	@within DiscordEmbedBuilder
 
 	@param type string
 
-	@return DiscordEmbed
+	@return DiscordEmbedBuilder
 
 	(yet-to-do!)
 
@@ -62,7 +62,7 @@ end
 
 	```
 ]=]
-function DiscordEmbed.Prototype.setType(self: DiscordEmbed, type: string)
+function DiscordEmbedBuilder.Prototype.setType(self: DiscordEmbedBuilder, type: string)
 	self.type = type
 
 	return self
@@ -70,11 +70,11 @@ end
 
 --[=[
 	@method setDescription
-	@within DiscordEmbed
+	@within DiscordEmbedBuilder
 
 	@param description string
 
-	@return DiscordEmbed
+	@return DiscordEmbedBuilder
 
 	(yet-to-do!)
 
@@ -82,7 +82,7 @@ end
 
 	```
 ]=]
-function DiscordEmbed.Prototype.setDescription(self: DiscordEmbed, description: string)
+function DiscordEmbedBuilder.Prototype.setDescription(self: DiscordEmbedBuilder, description: string)
 	self.description = description
 
 	return self
@@ -90,11 +90,11 @@ end
 
 --[=[
 	@method setUrl
-	@within DiscordEmbed
+	@within DiscordEmbedBuilder
 
 	@param url string
 
-	@return DiscordEmbed
+	@return DiscordEmbedBuilder
 
 	(yet-to-do!)
 
@@ -102,7 +102,7 @@ end
 
 	```
 ]=]
-function DiscordEmbed.Prototype.setUrl(self: DiscordEmbed, url: string)
+function DiscordEmbedBuilder.Prototype.setUrl(self: DiscordEmbedBuilder, url: string)
 	self.url = url
 
 	return self
@@ -110,11 +110,11 @@ end
 
 --[=[
 	@method setTimestamp
-	@within DiscordEmbed
+	@within DiscordEmbedBuilder
 
 	@param epoch number
 
-	@return DiscordEmbed
+	@return DiscordEmbedBuilder
 
 	(yet-to-do!)
 
@@ -122,7 +122,7 @@ end
 
 	```
 ]=]
-function DiscordEmbed.Prototype.setTimestamp(self: DiscordEmbed, epoch: number)
+function DiscordEmbedBuilder.Prototype.setTimestamp(self: DiscordEmbedBuilder, epoch: number)
 	self.timestamp = datetime.fromUniversalTime(epoch :: any):toIsoDate()
 
 	return self
@@ -130,11 +130,11 @@ end
 
 --[=[
 	@method setColor
-	@within DiscordEmbed
+	@within DiscordEmbedBuilder
 
 	@param colorHex number
 
-	@return DiscordEmbed
+	@return DiscordEmbedBuilder
 
 	(yet-to-do!)
 
@@ -142,7 +142,7 @@ end
 
 	```
 ]=]
-function DiscordEmbed.Prototype.setColor(self: DiscordEmbed, colorHex: number)
+function DiscordEmbedBuilder.Prototype.setColor(self: DiscordEmbedBuilder, colorHex: number)
 	self.color = colorHex
 
 	return self
@@ -150,11 +150,11 @@ end
 
 --[=[
 	@method setFooter
-	@within DiscordEmbed
+	@within DiscordEmbedBuilder
 
 	@param footerSettings { text: string, icon: string }
 
-	@return DiscordEmbed
+	@return DiscordEmbedBuilder
 
 	(yet-to-do!)
 
@@ -162,7 +162,7 @@ end
 
 	```
 ]=]
-function DiscordEmbed.Prototype.setFooter(self: DiscordEmbed, footerSettings: {
+function DiscordEmbedBuilder.Prototype.setFooter(self: DiscordEmbedBuilder, footerSettings: {
 	text: string,
 	icon: string
 })
@@ -173,11 +173,11 @@ end
 
 --[=[
 	@method setFooter
-	@within DiscordEmbed
+	@within DiscordEmbedBuilder
 
 	@param imageSettings { imageUrl: string, height: number, width: number }
 
-	@return DiscordEmbed
+	@return DiscordEmbedBuilder
 
 	(yet-to-do!)
 
@@ -185,7 +185,7 @@ end
 
 	```
 ]=]
-function DiscordEmbed.Prototype.setImage(self: DiscordEmbed, imageSettings: {
+function DiscordEmbedBuilder.Prototype.setImage(self: DiscordEmbedBuilder, imageSettings: {
 	imageUrl: string,
 	height: number,
 	width: number
@@ -197,11 +197,11 @@ end
 
 --[=[
 	@method setThumbnail
-	@within DiscordEmbed
+	@within DiscordEmbedBuilder
 
 	@param thumbnailSettings { thumbnailUrl: string, height: number, width: number }
 
-	@return DiscordEmbed
+	@return DiscordEmbedBuilder
 
 	(yet-to-do!)
 
@@ -209,7 +209,7 @@ end
 
 	```
 ]=]
-function DiscordEmbed.Prototype.setThumbnail(self: DiscordEmbed, thumbnailSettings: {
+function DiscordEmbedBuilder.Prototype.setThumbnail(self: DiscordEmbedBuilder, thumbnailSettings: {
 	thumbnailUrl: string,
 	height: number,
 	width: number
@@ -221,11 +221,11 @@ end
 
 --[=[
 	@method setVideo
-	@within DiscordEmbed
+	@within DiscordEmbedBuilder
 
 	@param videoSettings { videoUrl: string, height: number, width: number }
 
-	@return DiscordEmbed
+	@return DiscordEmbedBuilder
 
 	(yet-to-do!)
 
@@ -233,7 +233,7 @@ end
 
 	```
 ]=]
-function DiscordEmbed.Prototype.setVideo(self: DiscordEmbed, videoSettings: {
+function DiscordEmbedBuilder.Prototype.setVideo(self: DiscordEmbedBuilder, videoSettings: {
 	videoUrl: string,
 	height: number,
 	width: number
@@ -245,11 +245,11 @@ end
 
 --[=[
 	@method setProvider
-	@within DiscordEmbed
+	@within DiscordEmbedBuilder
 
 	@param providerSettings { name: string, url: string }
 
-	@return DiscordEmbed
+	@return DiscordEmbedBuilder
 
 	(yet-to-do!)
 
@@ -257,7 +257,7 @@ end
 
 	```
 ]=]
-function DiscordEmbed.Prototype.setProvider(self: DiscordEmbed, providerSettings: {
+function DiscordEmbedBuilder.Prototype.setProvider(self: DiscordEmbedBuilder, providerSettings: {
 	name: string,
 	url: string
 })
@@ -268,11 +268,11 @@ end
 
 --[=[
 	@method setAuthor
-	@within DiscordEmbed
+	@within DiscordEmbedBuilder
 
 	@param authorSettings { name: string, url: string, iconUrl: string }
 
-	@return DiscordEmbed
+	@return DiscordEmbedBuilder
 
 	(yet-to-do!)
 
@@ -280,7 +280,7 @@ end
 
 	```
 ]=]
-function DiscordEmbed.Prototype.setAuthor(self: DiscordEmbed, authorSettings: {
+function DiscordEmbedBuilder.Prototype.setAuthor(self: DiscordEmbedBuilder, authorSettings: {
 	iconUrl: string,
 	name: string,
 	url: string,
@@ -292,11 +292,11 @@ end
 
 --[=[
 	@method addField
-	@within DiscordEmbed
+	@within DiscordEmbedBuilder
 
 	@param fieldSettings { name: string, value: string, footer: string, author: string }
 
-	@return DiscordEmbed
+	@return DiscordEmbedBuilder
 
 	(yet-to-do!)
 
@@ -304,7 +304,7 @@ end
 
 	```
 ]=]
-function DiscordEmbed.Prototype.addField(self: DiscordEmbed, fieldSettings: {
+function DiscordEmbedBuilder.Prototype.addField(self: DiscordEmbedBuilder, fieldSettings: {
 	name: string,
 	value: string,
 	inline: boolean?
@@ -316,7 +316,7 @@ end
 
 --[=[
 	@method toJSONObject
-	@within DiscordEmbed
+	@within DiscordEmbedBuilder
 
 	@return { ... }
 
@@ -326,7 +326,7 @@ end
 
 	```
 ]=]
-function DiscordEmbed.Prototype.toJSONObject(self: DiscordEmbed)
+function DiscordEmbedBuilder.Prototype.toJSONObject(self: DiscordEmbedBuilder)
 	local fields = {}
 
 	for _, fieldObject in self.fields do
@@ -380,9 +380,9 @@ end
 
 --[=[
 	@function new
-	@within DiscordEmbed
+	@within DiscordEmbedBuilder
 
-	@return DiscordEmbed
+	@return DiscordEmbedBuilder
 
 	(yet-to-do!)
 
@@ -390,13 +390,13 @@ end
 
 	```
 ]=]
-function DiscordEmbed.Interface.new()
+function DiscordEmbedBuilder.Interface.new()
 	return Construct({
 		fields = {}
-	}, DiscordEmbed.Prototype)
+	}, DiscordEmbedBuilder.Prototype)
 end
 
-export type DiscordEmbed = typeof(DiscordEmbed.Prototype) & {
+export type DiscordEmbedBuilder = typeof(DiscordEmbedBuilder.Prototype) & {
 	fields: {
 		{
 			name: string,
@@ -440,4 +440,4 @@ export type DiscordEmbed = typeof(DiscordEmbed.Prototype) & {
 	}?
 }
 
-return DiscordEmbed.Interface
+return DiscordEmbedBuilder.Interface

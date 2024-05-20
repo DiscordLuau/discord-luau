@@ -4,8 +4,8 @@ local Future = require("../../Vendor/Future")
 
 local Construct = require("../../Utils/Construct")
 
-local DiscordModal = require("../Builders/DiscordModal")
-local DiscordPermissions = require("../Builders/DiscordPermissions")
+local DiscordModalBuilder = require("../Builders/DiscordModalBuilder")
+local DiscordPermissionsBuilder = require("../Builders/DiscordPermissionsBuilder")
 
 local DiscordGuildMember = require("DiscordGuildMember")
 
@@ -37,7 +37,7 @@ function DiscordInteraction.Prototype.editMessageAsync(self: DiscordInteraction,
 	end)
 end
 
-function DiscordInteraction.Prototype.sendModalAsync(self: DiscordInteraction, modalObject: DiscordModal.DiscordModal)
+function DiscordInteraction.Prototype.sendModalAsync(self: DiscordInteraction, modalObject: DiscordModalBuilder.DiscordModalBuilder)
 	return Future.new(function()
 		return self.discordClient.discordGateway:postAsync(string.format(
 			DiscordEndpoints.CreateInteractionResponse,
@@ -93,7 +93,7 @@ function DiscordInteraction.Interface.new(discordClient: any, jsonData: { [any]:
 	jsonData.guild = DiscordGuild.new(discordClient, jsonData.guild)
 	jsonData.user = DiscordUser.new(discordClient, jsonData.member.user)
 	jsonData.member = DiscordGuildMember.new(discordClient, jsonData.member.user.id, jsonData.guild.id, jsonData.member)
-	jsonData.appPermissions = DiscordPermissions.from(jsonData.appPermissions)
+	jsonData.appPermissions = DiscordPermissionsBuilder.from(jsonData.appPermissions)
 
 	jsonData.member.user = nil
 
@@ -122,7 +122,7 @@ export type DiscordInteraction = typeof(DiscordInteraction.Prototype) & {
 	channelId: string,
 	guilldId: string,
 	version: number,
-	appPermissions: DiscordPermissions.DiscordPermissions,
+	appPermissions: DiscordPermissionsBuilder.DiscordPermissionsBuilder,
 	guildLocale: string,
 	locale: string,
 	entitlements: { unknown },

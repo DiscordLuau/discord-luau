@@ -4,7 +4,7 @@ local Construct = require("../../Utils/Construct")
 local FetchKeys = require("../../Utils/Dictionary/FetchKeys")
 
 --[=[
-	@class DiscordIntents
+	@class DiscordIntentsBuilder
 
 	https://discord.com/developers/docs/topics/gateway#gateway-intents
 
@@ -13,20 +13,20 @@ local FetchKeys = require("../../Utils/Dictionary/FetchKeys")
 	```lua
 		local DiscordLuau = require("../Submodules/DiscordLuau")
 
-		local DiscordIntents = DiscordLuau.DiscordIntents.fromAll()
-		local DiscordSettings = DiscordLuau.DiscordSettings.new("BOT TOKEN", DiscordIntents)
+		local DiscordIntentsBuilder = DiscordLuau.DiscordIntentsBuilder.fromAll()
+		local DiscordSettings = DiscordLuau.DiscordSettings.new("BOT TOKEN", DiscordIntentsBuilder)
 
 		...
 	```
 ]=]
-local DiscordIntents = {}
+local DiscordIntentsBuilder = {}
 
-DiscordIntents.Interface = {}
-DiscordIntents.Prototype = { }
+DiscordIntentsBuilder.Interface = {}
+DiscordIntentsBuilder.Prototype = { }
 
-DiscordIntents.Prototype.type = "DiscordIntents"
+DiscordIntentsBuilder.Prototype.type = "DiscordIntentsBuilder"
 
-DiscordIntents.DispositionMap = {
+DiscordIntentsBuilder.DispositionMap = {
 	[Intents.GuildMembers] = 1,
 	[Intents.GuildModeration] = 2,
 	[Intents.GuildEmojisAndStickers] = 3,
@@ -51,11 +51,11 @@ DiscordIntents.DispositionMap = {
 
 --[=[
 	@function new
-	@within DiscordIntents
+	@within DiscordIntentsBuilder
 
 	@param intentList { string }
 
-	@return DiscordIntents
+	@return DiscordIntentsBuilder
 
 	(yet-to-do!)
 
@@ -63,11 +63,11 @@ DiscordIntents.DispositionMap = {
 
 	```
 ]=]
-function DiscordIntents.Interface.new(intentList: { string })
+function DiscordIntentsBuilder.Interface.new(intentList: { string })
 	local intentsValue = 0
 
 	for _, intentEnum in intentList do
-		local intentDisposition = DiscordIntents.DispositionMap[intentEnum]
+		local intentDisposition = DiscordIntentsBuilder.DispositionMap[intentEnum]
 
 		assert(intentDisposition, `Unexpected intent '{intentEnum}'`)
 
@@ -76,14 +76,14 @@ function DiscordIntents.Interface.new(intentList: { string })
 
 	return Construct({
 		intents = intentsValue,
-	}, DiscordIntents.Prototype)
+	}, DiscordIntentsBuilder.Prototype)
 end
 
 --[=[
 	@function fromDefault
-	@within DiscordIntents
+	@within DiscordIntentsBuilder
 
-	@return DiscordIntents
+	@return DiscordIntentsBuilder
 
 	(yet-to-do!)
 
@@ -91,21 +91,21 @@ end
 
 	```
 ]=]
-function DiscordIntents.Interface.fromDefault()
+function DiscordIntentsBuilder.Interface.fromDefault()
 	local defaultIntents = table.clone(Intents) :: { [string]: any }
 
 	defaultIntents.GuildPresences = nil
 	defaultIntents.GuildMembers = nil
 	defaultIntents.GuildMessageContent = nil
 
-	return DiscordIntents.Interface.new(FetchKeys(defaultIntents))
+	return DiscordIntentsBuilder.Interface.new(FetchKeys(defaultIntents))
 end
 
 --[=[
 	@function fromAll
-	@within DiscordIntents
+	@within DiscordIntentsBuilder
 
-	@return DiscordIntents
+	@return DiscordIntentsBuilder
 
 	(yet-to-do!)
 
@@ -113,12 +113,12 @@ end
 
 	```
 ]=]
-function DiscordIntents.Interface.fromAll()
+function DiscordIntentsBuilder.Interface.fromAll()
 	local allIntents = table.clone(Intents)
 
-	return DiscordIntents.Interface.new(FetchKeys(allIntents))
+	return DiscordIntentsBuilder.Interface.new(FetchKeys(allIntents))
 end
 
-export type DiscordIntents = typeof(DiscordIntents.Prototype) & {}
+export type DiscordIntentsBuilder = typeof(DiscordIntentsBuilder.Prototype) & {}
 
-return DiscordIntents.Interface
+return DiscordIntentsBuilder.Interface

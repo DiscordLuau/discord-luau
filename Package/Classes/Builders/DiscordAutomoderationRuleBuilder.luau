@@ -4,53 +4,53 @@ local Enumerate = require("../../Utils/Enumerate")
 local CacheType = require("../../Enums/CacheType")
 
 --[=[
-	@class Objects.DiscordAutomoderationRule
+	@class Objects.DiscordAutomoderationRuleBuilder
 
 	(sorry I will add docs for this lol, just haven't got around to it yet!)
 ]=]
-local DiscordAutomoderationRule = {}
+local DiscordAutomoderationRuleBuilder = {}
 
-DiscordAutomoderationRule.Prototype = {}
-DiscordAutomoderationRule.Interface = {}
+DiscordAutomoderationRuleBuilder.Prototype = {}
+DiscordAutomoderationRuleBuilder.Interface = {}
 
-DiscordAutomoderationRule.Prototype.type = "DiscordAutomoderationRule"
+DiscordAutomoderationRuleBuilder.Prototype.type = "DiscordAutomoderationRuleBuilder"
 
-DiscordAutomoderationRule.Interface.EventType = Enumerate.new({
+DiscordAutomoderationRuleBuilder.Interface.EventType = Enumerate.new({
 	MessageSend = 1
 })
 
-DiscordAutomoderationRule.Interface.TriggerType = Enumerate.new({
+DiscordAutomoderationRuleBuilder.Interface.TriggerType = Enumerate.new({
 	Keyword = 1,
 	Spam = 3,
 	KeywordPreset = 4,
 	MentionSpam = 5
 })
 
-DiscordAutomoderationRule.Interface.KeywordPresets = Enumerate.new({
+DiscordAutomoderationRuleBuilder.Interface.KeywordPresets = Enumerate.new({
 	Profanity = 1,
 	SexualContent = 2,
 	Slurs = 3,
 })
 
-DiscordAutomoderationRule.Interface.ActionType = Enumerate.new({
+DiscordAutomoderationRuleBuilder.Interface.ActionType = Enumerate.new({
 	BlockMessage = 1,
 	SendAlertMessage = 2,
 	Timeout = 3,
 })
 
-function DiscordAutomoderationRule.Prototype.setName(self: DiscordAutomoderationRule, name: string)
+function DiscordAutomoderationRuleBuilder.Prototype.setName(self: DiscordAutomoderationRuleBuilder, name: string)
 	self.ruleName = name
 end
 
-function DiscordAutomoderationRule.Prototype.setEventType(self: DiscordAutomoderationRule, eventType: number)
+function DiscordAutomoderationRuleBuilder.Prototype.setEventType(self: DiscordAutomoderationRuleBuilder, eventType: number)
 	self.roleEventType = eventType	
 end
 
-function DiscordAutomoderationRule.Prototype.setTriggerType(self: DiscordAutomoderationRule, triggerType: number)
+function DiscordAutomoderationRuleBuilder.Prototype.setTriggerType(self: DiscordAutomoderationRuleBuilder, triggerType: number)
 	self.ruleTriggerType = triggerType
 end
 
-function DiscordAutomoderationRule.Prototype.setTriggerMetadata(self: DiscordAutomoderationRule, triggerMetadata: {
+function DiscordAutomoderationRuleBuilder.Prototype.setTriggerMetadata(self: DiscordAutomoderationRuleBuilder, triggerMetadata: {
 	keywordFilter: { string }?,
 	regexPattern: { string }?,
 	presets: { number }?,
@@ -68,7 +68,7 @@ function DiscordAutomoderationRule.Prototype.setTriggerMetadata(self: DiscordAut
 	}
 end
 
-function DiscordAutomoderationRule.Prototype.addAction(self: DiscordAutomoderationRule, actionType: number, actionMetadata: {
+function DiscordAutomoderationRuleBuilder.Prototype.addAction(self: DiscordAutomoderationRuleBuilder, actionType: number, actionMetadata: {
 	channelId: string?,
 	durationSeconds: number?,
 	customMessage: string?
@@ -83,19 +83,19 @@ function DiscordAutomoderationRule.Prototype.addAction(self: DiscordAutomoderati
 	})
 end
 
-function DiscordAutomoderationRule.Prototype.setEnabled(self: DiscordAutomoderationRule, enabled: boolean)
+function DiscordAutomoderationRuleBuilder.Prototype.setEnabled(self: DiscordAutomoderationRuleBuilder, enabled: boolean)
 	self.ruleEnabled = enabled
 end
 
-function DiscordAutomoderationRule.Prototype.addExemptRole(self: DiscordAutomoderationRule, roleId: string)
+function DiscordAutomoderationRuleBuilder.Prototype.addExemptRole(self: DiscordAutomoderationRuleBuilder, roleId: string)
 	table.insert(self.exemptRoles, roleId)
 end
 
-function DiscordAutomoderationRule.Prototype.addExemptChannel(self: DiscordAutomoderationRule, channelId: string)
+function DiscordAutomoderationRuleBuilder.Prototype.addExemptChannel(self: DiscordAutomoderationRuleBuilder, channelId: string)
 	table.insert(self.exemptChannels, channelId)
 end
 
-function DiscordAutomoderationRule.Prototype.toJSONObject(self: DiscordAutomoderationRule)
+function DiscordAutomoderationRuleBuilder.Prototype.toJSONObject(self: DiscordAutomoderationRuleBuilder)
 	local triggerMetadata = {}
 	local actions = {}
 
@@ -122,15 +122,15 @@ function DiscordAutomoderationRule.Prototype.toJSONObject(self: DiscordAutomoder
 	}
 end
 
-function DiscordAutomoderationRule.Interface.new(): DiscordAutomoderationRule
+function DiscordAutomoderationRuleBuilder.Interface.new(): DiscordAutomoderationRuleBuilder
 	return Construct({
 		actions = {},
 		exemptRoles = {},
 		exemptChannels = {}
-	}, DiscordAutomoderationRule.Prototype) :: any
+	}, DiscordAutomoderationRuleBuilder.Prototype) :: any
 end
 
-export type DiscordAutomoderationRule = typeof(DiscordAutomoderationRule.Prototype) & {
+export type DiscordAutomoderationRuleBuilder = typeof(DiscordAutomoderationRuleBuilder.Prototype) & {
 	exemptChannels: { string },
 	exemptRoles: { string },
 	actions: {
@@ -159,4 +159,4 @@ export type DiscordAutomoderationRule = typeof(DiscordAutomoderationRule.Prototy
 	roleEventType: number
 }
 
-return DiscordAutomoderationRule.Interface
+return DiscordAutomoderationRuleBuilder.Interface

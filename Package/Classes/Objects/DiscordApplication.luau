@@ -3,7 +3,7 @@ local IsUnique = require("../../Utils/Dictionary/IsUnique")
 
 local Future = require("../../Vendor/Future")
 
-local ApplicationCommand = require("../Builders/ApplicationCommand")
+local ApplicationCommandBuilder = require("../Builders/ApplicationCommandBuilder")
 
 local DiscordEndpoints = require("../../Data/DiscordEndpoints")
 local CacheType = require("../../Enums/CacheType")
@@ -20,7 +20,7 @@ DiscordApplication.Interface = {}
 
 DiscordApplication.Prototype.type = "DiscordApplication"
 
-function DiscordApplication.Prototype.createSlashCommandAsync(self: DiscordApplication, command: ApplicationCommand.ApplicationCommand)
+function DiscordApplication.Prototype.createSlashCommandAsync(self: DiscordApplication, command: ApplicationCommandBuilder.ApplicationCommandBuilder)
 	return Future.try(function()
 		return self.discordClient.discordGateway:postAsync(
 			string.format(DiscordEndpoints.CreateGlobalApplicationCommand, self.id),
@@ -37,7 +37,7 @@ function DiscordApplication.Prototype.deleteSlashCommandAsync(self: DiscordAppli
 	end)
 end
 
-function DiscordApplication.Prototype.editSlashCommandAsync(self: DiscordApplication, commandId: string, command: ApplicationCommand.ApplicationCommand)
+function DiscordApplication.Prototype.editSlashCommandAsync(self: DiscordApplication, commandId: string, command: ApplicationCommandBuilder.ApplicationCommandBuilder)
 	return Future.try(function()
 		return self.discordClient.discordGateway:patchAsync(
 			string.format(DiscordEndpoints.EditGlobalApplicationCommand, self.id, commandId),
@@ -54,7 +54,7 @@ function DiscordApplication.Prototype.fetchSlashCommandsAsync(self: DiscordAppli
 	end)
 end
 
-function DiscordApplication.Prototype.setSlashCommandsAsync(self: DiscordApplication, commands: { ApplicationCommand.ApplicationCommand })
+function DiscordApplication.Prototype.setSlashCommandsAsync(self: DiscordApplication, commands: { ApplicationCommandBuilder.ApplicationCommandBuilder })
 	return Future.try(function()
 		local allCommands = self:fetchSlashCommandsAsync():await()
 
@@ -106,7 +106,7 @@ function DiscordApplication.Prototype.setSlashCommandsAsync(self: DiscordApplica
 			self:deleteSlashCommandAsync(commandStruct.id):await()
 		end
 
-		for commandId: string, command: ApplicationCommand.ApplicationCommand in commandsToUpdate do
+		for commandId: string, command: ApplicationCommandBuilder.ApplicationCommandBuilder in commandsToUpdate do
 			local existingCommandJson
 
 			for _, commandObject in allCommands do
@@ -129,7 +129,7 @@ function DiscordApplication.Prototype.setSlashCommandsAsync(self: DiscordApplica
 			end
 		end
 
-		for _, command: ApplicationCommand.ApplicationCommand in commandsToCreate do
+		for _, command: ApplicationCommandBuilder.ApplicationCommandBuilder in commandsToCreate do
 			self:createSlashCommandAsync(command):await()
 		end
 	end)

@@ -1,4 +1,4 @@
-local DiscordSettings = require("Builders/DiscordSettings")
+local DiscordSettingsBuilder = require("Builders/DiscordSettingsBuilder")
 
 local Construct = require("../Utils/Construct")
 
@@ -39,8 +39,8 @@ local CONCURRENT_IDENTIFY_YIELD = 5
 	```lua
 		local DiscordLuau = require("../Submodules/DiscordLuau")
 
-		local DiscordSettings = DiscordLuau.DiscordSettings.new("BOT TOKEN")
-		local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettings)
+		local DiscordSettingsBuilder = DiscordLuau.DiscordSettingsBuilder.new("BOT TOKEN")
+		local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettingsBuilder)
 
 		...
 	```
@@ -61,7 +61,7 @@ DiscordClient.Prototype.type = "DiscordClient"
 	Connect the current DiscordClient to the Discord API
 
 	```lua
-		local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettings)
+		local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettingsBuilder)
 
 		DiscordClient:connectAsync():after(function()
 			print("Connected to the Discord API!")
@@ -252,17 +252,17 @@ end
 	Constructor function for the Discord Client, this is where you'll be able to instantiate a Discord Client object.
 
 	```lua
-		local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettings)
+		local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettingsBuilder)
 
 		DiscordClient:connectAsync():after(function()
 			print("Connected to the Discord API!")
 		end)
 	```
 ]=]
-function DiscordClient.Interface.new(discordSettings: DiscordSettings.DiscordSettings): DiscordClient
+function DiscordClient.Interface.new(discordSettings: DiscordSettingsBuilder.DiscordSettingsBuilder): DiscordClient
 	local self = Construct({
 		--[=[
-			@prop discordSettings DiscordSettings
+			@prop discordSettings DiscordSettingsBuilder
 			@within DiscordClient
 		]=]
 		discordSettings = discordSettings,
@@ -330,7 +330,7 @@ Console.setGlobalLogLevel(Console.LogLevel.warn)
 
 export type DiscordClient = typeof(DiscordClient.Prototype) & {
 	discordGateway: DiscordGateway.DiscordGateway,
-	discordSettings: DiscordSettings.DiscordSettings,
+	discordSettings: DiscordSettingsBuilder.DiscordSettingsBuilder,
 	discordCache: DiscordCache.DiscordCache,
 
 	eventManager: EventManager.EventManager,

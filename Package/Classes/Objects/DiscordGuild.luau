@@ -3,8 +3,8 @@ local Construct = require("../../Utils/Construct")
 local CacheType = require("../../Enums/CacheType")
 local DiscordEndpoints = require("../../Data/DiscordEndpoints")
 
-local ApplicationCommand = require("../Builders/ApplicationCommand")
-local DiscordAutomoderationRuleBuilder = require("../Builders/DiscordAutomoderationRule")
+local ApplicationCommandBuilder = require("../Builders/ApplicationCommandBuilder")
+local DiscordAutomoderationRuleBuilder = require("../Builders/DiscordAutomoderationRuleBuilder")
 
 local DiscordEmoji = require("DiscordEmoji")
 local DiscordGuildRole = require("DiscordGuildRole")
@@ -29,7 +29,7 @@ DiscordGuild.Interface = {}
 
 DiscordGuild.Prototype.type = "DiscordGuild"
 
-function DiscordGuild.Prototype.createSlashCommandAsync(self: DiscordGuild, command: ApplicationCommand.ApplicationCommand)
+function DiscordGuild.Prototype.createSlashCommandAsync(self: DiscordGuild, command: ApplicationCommandBuilder.ApplicationCommandBuilder)
 	return Future.try(function()
 		return self.discordClient.discordGateway:postAsync(
 			string.format(DiscordEndpoints.CreateGuildApplicationCommand, self.discordClient.discordApplication.id, self.id),
@@ -46,7 +46,7 @@ function DiscordGuild.Prototype.deleteSlashCommandAsync(self: DiscordGuild, comm
 	end)
 end
 
-function DiscordGuild.Prototype.editSlashCommandAsync(self: DiscordGuild, commandId: string, command: ApplicationCommand.ApplicationCommand)
+function DiscordGuild.Prototype.editSlashCommandAsync(self: DiscordGuild, commandId: string, command: ApplicationCommandBuilder.ApplicationCommandBuilder)
 	return Future.try(function()
 		return self.discordClient.discordGateway:patchAsync(
 			string.format(DiscordEndpoints.EditGuildApplicationCommand, self.discordClient.discordApplication.id, self.id, commandId),
@@ -71,7 +71,7 @@ function DiscordGuild.Prototype.fetchGuildChannels(self: DiscordGuild)
 	end)
 end
 
-function DiscordGuild.Prototype.setSlashCommandsAsync(self: DiscordGuild, commands: { ApplicationCommand.ApplicationCommand })
+function DiscordGuild.Prototype.setSlashCommandsAsync(self: DiscordGuild, commands: { ApplicationCommandBuilder.ApplicationCommandBuilder })
 	return Future.try(function()
 		local allCommands = self:fetchSlashCommandsAsync():await()
 
@@ -123,17 +123,17 @@ function DiscordGuild.Prototype.setSlashCommandsAsync(self: DiscordGuild, comman
 			self:deleteSlashCommandAsync(commandStruct.id):await()
 		end
 
-		for commandId: string, command: ApplicationCommand.ApplicationCommand in commandsToUpdate do
+		for commandId: string, command: ApplicationCommandBuilder.ApplicationCommandBuilder in commandsToUpdate do
 			self:editSlashCommandAsync(commandId, command):await()
 		end
 
-		for _, command: ApplicationCommand.ApplicationCommand in commandsToCreate do
+		for _, command: ApplicationCommandBuilder.ApplicationCommandBuilder in commandsToCreate do
 			self:createSlashCommandAsync(command):await()
 		end
 	end)
 end
 
-function DiscordGuild.Prototype.getGuildAuditLogs(self: DiscordGuild, commands: { ApplicationCommand.ApplicationCommand })
+function DiscordGuild.Prototype.getGuildAuditLogs(self: DiscordGuild, commands: { ApplicationCommandBuilder.ApplicationCommandBuilder })
 	return Future.try(function()
 		local guildAuditLogs = self.discordClient.discordGateway:getAsync(
 			string.format(DiscordEndpoints.GetGuildAuditLogs, self.id)
@@ -251,7 +251,7 @@ function DiscordGuild.Prototype.getAutomoderationRuleAsync(self: DiscordGuild, r
 	end)
 end
 
-function DiscordGuild.Prototype.createAutomoderationRuleAsync(self: DiscordGuild, getAutomoderationRuleBuilder: DiscordAutomoderationRuleBuilder.DiscordAutomoderationRule)
+function DiscordGuild.Prototype.createAutomoderationRuleAsync(self: DiscordGuild, getAutomoderationRuleBuilder: DiscordAutomoderationRuleBuilder.DiscordAutomoderationRuleBuilder)
 	return Future.try(function()
 		local discordAutomoderationRule = self.discordClient.discordGateway:postAsync(
 			string.format(DiscordEndpoints.BotCreateAutomoderationRule, self.id),

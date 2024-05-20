@@ -3,34 +3,34 @@ local Construct = require("../../Utils/Construct")
 local CacheType = require("../../Enums/CacheType")
 local DiscordEndpoints = require("../../Data/DiscordEndpoints")
 
-local DiscordAutomoderationRuleBuilder = require("../Builders/DiscordAutomoderationRule")
+local DiscordAutomoderationRuleBuilder = require("../Builders/DiscordAutomoderationRuleBuilder")
 
 --[=[
-	@class Objects.DiscordAutomoderationRule
+	@class Objects.DiscordAutomoderationRuleBuilder
 
 	(sorry I will add docs for this lol, just haven't got around to it yet!)
 ]=]
-local DiscordAutomoderationRule = {}
+local DiscordAutomoderationRuleBuilder = {}
 
-DiscordAutomoderationRule.Prototype = {}
-DiscordAutomoderationRule.Interface = {}
+DiscordAutomoderationRuleBuilder.Prototype = {}
+DiscordAutomoderationRuleBuilder.Interface = {}
 
-DiscordAutomoderationRule.Prototype.type = "DiscordAutomoderationRule"
+DiscordAutomoderationRuleBuilder.Prototype.type = "DiscordAutomoderationRuleBuilder"
 
-function DiscordAutomoderationRule.Prototype.modifyAsync(self: DiscordAutomoderationRule, moderationRoleBuilder: DiscordAutomoderationRuleBuilder.DiscordAutomoderationRule)
+function DiscordAutomoderationRuleBuilder.Prototype.modifyAsync(self: DiscordAutomoderationRule, moderationRoleBuilder: DiscordAutomoderationRuleBuilder.DiscordAutomoderationRuleBuilder)
 	return self.discordClient.discordGateway:patchAsync(
 		string.format(DiscordEndpoints.BotModifyAutomoderationRule, self.guildId, self.id),
 		moderationRoleBuilder:toJSONObject()
 	)
 end
 
-function DiscordAutomoderationRule.Prototype.deleteAsync(self: DiscordAutomoderationRule)
+function DiscordAutomoderationRuleBuilder.Prototype.deleteAsync(self: DiscordAutomoderationRule)
 	return self.discordClient.discordGateway:postAsync(
 		string.format(DiscordEndpoints.BotDeleteAutomoderationRule, self.guildId, self.id)
 	)
 end
 
-function DiscordAutomoderationRule.Interface.new(discordClient: any, automoderationData: {
+function DiscordAutomoderationRuleBuilder.Interface.new(discordClient: any, automoderationData: {
 	id: string,
 }): DiscordAutomoderationRule
 	local self = discordClient.discordCache:getDataOr(CacheType.AutoModeration, automoderationData.id, function()
@@ -38,7 +38,7 @@ function DiscordAutomoderationRule.Interface.new(discordClient: any, automoderat
 			id = automoderationData.id,
 	
 			discordClient = discordClient
-		}, DiscordAutomoderationRule.Prototype)
+		}, DiscordAutomoderationRuleBuilder.Prototype)
 	end)
 
 	for index, value in automoderationData do
@@ -48,7 +48,7 @@ function DiscordAutomoderationRule.Interface.new(discordClient: any, automoderat
 	return self
 end
 
-export type DiscordAutomoderationRule = typeof(DiscordAutomoderationRule.Prototype) & {
+export type DiscordAutomoderationRule = typeof(DiscordAutomoderationRuleBuilder.Prototype) & {
 	discordClient: any,
 
 	id: string,
@@ -78,4 +78,4 @@ export type DiscordAutomoderationRule = typeof(DiscordAutomoderationRule.Prototy
 	}
 }
 
-return DiscordAutomoderationRule.Interface
+return DiscordAutomoderationRuleBuilder.Interface

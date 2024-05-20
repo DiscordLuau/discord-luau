@@ -5,7 +5,7 @@ local Construct = require("../../Utils/Construct")
 local CacheType = require("../../Enums/CacheType")
 local DiscordEndpoints = require("../../Data/DiscordEndpoints")
 
-local DiscordEmbed = require("../Builders/DiscordEmbed")
+local DiscordEmbedBuilder = require("../Builders/DiscordEmbedBuilder")
 local DiscordGuildMember = require("../Objects/DiscordGuildMember")
 
 local Future = require("../../Vendor/Future")
@@ -224,7 +224,7 @@ export type DiscordMessageSchema = {
 	content: string?,
 	nonce: (string | number)?,
 	tts: boolean?,
-	embeds: { DiscordEmbed.DiscordEmbed }?,
+	embeds: { DiscordEmbedBuilder.DiscordEmbedBuilder }?,
 	-- allowedMentions: { unknown },
 	-- messageReference: {  },
 	components: { DiscordComponentTypes.DiscordComponent }?,

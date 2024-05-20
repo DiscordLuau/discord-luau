@@ -5,17 +5,17 @@
 ]=]
 
 -- Builders
-local ApplicationCommand = require("Classes/Builders/ApplicationCommand")
-local ApplicationCommandOption = require("Classes/Builders/ApplicationCommandOption")
+local ApplicationCommandBuilder = require("Classes/Builders/ApplicationCommandBuilder")
+local ApplicationCommandOptionBuilder = require("Classes/Builders/ApplicationCommandOptionBuilder")
 
-local DiscordActivity = require("Classes/Builders/DiscordActivity")
-local DiscordAutomoderationRule = require("Classes/Builders/DiscordAutomoderationRule")
-local DiscordEmbed = require("Classes/Builders/DiscordEmbed")
-local DiscordIntents = require("Classes/Builders/DiscordIntents")
-local DiscordModal = require("Classes/Builders/DiscordModal")
-local DiscordPermissions = require("Classes/Builders/DiscordPermissions")
-local DiscordPresence = require("Classes/Builders/DiscordPresence")
-local DiscordSettings = require("Classes/Builders/DiscordSettings")
+local DiscordActivityBuilder = require("Classes/Builders/DiscordActivityBuilder")
+local DiscordAutomoderationRuleBuilder = require("Classes/Builders/DiscordAutomoderationRuleBuilder")
+local DiscordEmbedBuilder = require("Classes/Builders/DiscordEmbedBuilder")
+local DiscordIntentsBuilder = require("Classes/Builders/DiscordIntentsBuilder")
+local DiscordModalBuilder = require("Classes/Builders/DiscordModalBuilder")
+local DiscordPermissionsBuilder = require("Classes/Builders/DiscordPermissionsBuilder")
+local DiscordPresenceBuilder = require("Classes/Builders/DiscordPresenceBuilder")
+local DiscordSettingsBuilder = require("Classes/Builders/DiscordSettingsBuilder")
 
 -- Objects
 local DiscordApplication = require("Classes/Objects/DiscordApplication")
@@ -41,35 +41,35 @@ local DiscordLuau = {}
 --#region
 --#MARK: Discord-Luau Builders
 
-export type ApplicationCommandBuilder = ApplicationCommand.ApplicationCommand
-DiscordLuau.ApplicationCommand = ApplicationCommand
+export type ApplicationCommandBuilder = ApplicationCommandBuilder.ApplicationCommandBuilder
+DiscordLuau.ApplicationCommandBuilder = ApplicationCommandBuilder
 
-export type ApplicationCommandOptionBuilder = ApplicationCommandOption.ApplicationCommandOptions
-DiscordLuau.ApplicationCommandOption = ApplicationCommandOption
+export type ApplicationCommandOptionBuilder = ApplicationCommandOptionBuilder.ApplicationCommandOptionBuilder
+DiscordLuau.ApplicationCommandOptionBuilder = ApplicationCommandOptionBuilder
 
-export type DiscordActivityBuilder = DiscordActivity.DiscordActivity
-DiscordLuau.DiscordActivity = DiscordActivity
+export type DiscordActivityBuilder = DiscordActivityBuilder.DiscordActivityBuilder
+DiscordLuau.DiscordActivityBuilder = DiscordActivityBuilder
 
-export type DiscordAutomoderationRuleBuilder = DiscordAutomoderationRule.DiscordAutomoderationRule
-DiscordLuau.DiscordAutomoderationRule = DiscordAutomoderationRule
+export type DiscordAutomoderationRuleBuilder = DiscordAutomoderationRuleBuilder.DiscordAutomoderationRuleBuilder
+DiscordLuau.DiscordAutomoderationRuleBuilder = DiscordAutomoderationRuleBuilder
 
-export type DiscordEmbedBuilder = DiscordEmbed.DiscordEmbed
-DiscordLuau.DiscordEmbed = DiscordEmbed
+export type DiscordEmbedBuilder = DiscordEmbedBuilder.DiscordEmbedBuilder
+DiscordLuau.DiscordEmbedBuilder = DiscordEmbedBuilder
 
-export type DiscordIntentsBuilder = DiscordIntents.DiscordIntents
-DiscordLuau.DiscordIntents = DiscordIntents
+export type DiscordIntentsBuilder = DiscordIntentsBuilder.DiscordIntentsBuilder
+DiscordLuau.DiscordIntentsBuilder = DiscordIntentsBuilder
 
-export type DiscordModalBuilder = DiscordModal.DiscordModal
-DiscordLuau.DiscordModal = DiscordModal
+export type DiscordModalBuilder = DiscordModalBuilder.DiscordModalBuilder
+DiscordLuau.DiscordModalBuilder = DiscordModalBuilder
 
-export type DiscordPermissionsBuilder = DiscordPermissions.DiscordPermissions
-DiscordLuau.DiscordPermissions = DiscordPermissions
+export type DiscordPermissionsBuilder = DiscordPermissionsBuilder.DiscordPermissionsBuilder
+DiscordLuau.DiscordPermissionsBuilder = DiscordPermissionsBuilder
 
-export type DiscordPresenceBuilder = DiscordPresence.DiscordPresence
-DiscordLuau.DiscordPresence = DiscordPresence
+export type DiscordPresenceBuilder = DiscordPresenceBuilder.DiscordPresenceBuilder
+DiscordLuau.DiscordPresenceBuilder = DiscordPresenceBuilder
 
-export type DiscordSettingsBuilder = DiscordSettings.DiscordSettings
-DiscordLuau.DiscordSettings = DiscordSettings
+export type DiscordSettingsBuilder = DiscordSettingsBuilder.DiscordSettingsBuilder
+DiscordLuau.DiscordSettingsBuilder = DiscordSettingsBuilder
 
 --#endregion
 

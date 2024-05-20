@@ -2,22 +2,22 @@ local Construct = require("../../Utils/Construct")
 local Enumerate = require("../../Utils/Enumerate")
 
 --[=[
-	@class DiscordPermissions
+	@class DiscordPermissionsBuilder
 
 	(sorry I will add docs for this lol, just haven't got around to it yet!)
 ]=]
-local DiscordPermissions = {}
+local DiscordPermissionsBuilder = {}
 
-DiscordPermissions.Interface = {}
-DiscordPermissions.Prototype = {}
+DiscordPermissionsBuilder.Interface = {}
+DiscordPermissionsBuilder.Prototype = {}
 
-DiscordPermissions.Prototype.type = "DiscordPermissions"
+DiscordPermissionsBuilder.Prototype.type = "DiscordPermissionsBuilder"
 
 --[=[
 	@prop Permissions { ... }
-	@within DiscordPermissions
+	@within DiscordPermissionsBuilder
 ]=]
-DiscordPermissions.Interface.Permissions = Enumerate.new({
+DiscordPermissionsBuilder.Interface.Permissions = Enumerate.new({
 	CreateInstantInvite = 0,
 	KickMembers = 1,
 	BanMembers = 2,
@@ -67,11 +67,11 @@ DiscordPermissions.Interface.Permissions = Enumerate.new({
 
 --[=[
 	@method addPermission
-	@within DiscordPermissions
+	@within DiscordPermissionsBuilder
 
 	@param permission number
 
-	@return DiscordPermissions
+	@return DiscordPermissionsBuilder
 
 	(yet-to-do!)
 
@@ -79,7 +79,7 @@ DiscordPermissions.Interface.Permissions = Enumerate.new({
 		
 	```
 ]=]
-function DiscordPermissions.Prototype.addPermission(self: DiscordPermissions, permission: number)
+function DiscordPermissionsBuilder.Prototype.addPermission(self: DiscordPermissionsBuilder, permission: number)
 	if table.find(self.permissions, permission) then
 		return
 	end
@@ -91,11 +91,11 @@ end
 
 --[=[
 	@method deletePermission
-	@within DiscordPermissions
+	@within DiscordPermissionsBuilder
 
 	@param permission number
 
-	@return DiscordPermissions
+	@return DiscordPermissionsBuilder
 
 	(yet-to-do!)
 
@@ -103,7 +103,7 @@ end
 		
 	```
 ]=]
-function DiscordPermissions.Prototype.deletePermission(self: DiscordPermissions, permission: number)
+function DiscordPermissionsBuilder.Prototype.deletePermission(self: DiscordPermissionsBuilder, permission: number)
 	local index = table.find(self.permissions, permission)
 
 	if not index then
@@ -117,7 +117,7 @@ end
 
 --[=[
 	@method hasPermission
-	@within DiscordPermissions
+	@within DiscordPermissionsBuilder
 
 	@param permission number
 
@@ -129,13 +129,13 @@ end
 		
 	```
 ]=]
-function DiscordPermissions.Prototype.hasPermission(self: DiscordPermissions, permission: number)
+function DiscordPermissionsBuilder.Prototype.hasPermission(self: DiscordPermissionsBuilder, permission: number)
 	return table.find(self.permissions, permission) ~= nil
 end
 
 --[=[
 	@method getValue
-	@within DiscordPermissions
+	@within DiscordPermissionsBuilder
 
 	@return number
 
@@ -145,7 +145,7 @@ end
 		
 	```
 ]=]
-function DiscordPermissions.Prototype.getValue(self: DiscordPermissions)
+function DiscordPermissionsBuilder.Prototype.getValue(self: DiscordPermissionsBuilder)
 	local permissionsInt = 0
 
 	for _, intentValue in self.permissions do
@@ -157,9 +157,9 @@ end
 
 --[=[
 	@function new
-	@within DiscordPermissions
+	@within DiscordPermissionsBuilder
 
-	@return DiscordPermissions
+	@return DiscordPermissionsBuilder
 
 	(yet-to-do!)
 
@@ -167,17 +167,17 @@ end
 		
 	```
 ]=]
-function DiscordPermissions.Interface.new()
+function DiscordPermissionsBuilder.Interface.new()
 	return Construct({
 		permissions = {}
-	}, DiscordPermissions.Prototype)
+	}, DiscordPermissionsBuilder.Prototype)
 end
 
 --[=[
 	@function none
-	@within DiscordPermissions
+	@within DiscordPermissionsBuilder
 
-	@return DiscordPermissions
+	@return DiscordPermissionsBuilder
 
 	(yet-to-do!)
 
@@ -185,15 +185,15 @@ end
 		
 	```
 ]=]
-function DiscordPermissions.Interface.none()
-	return DiscordPermissions.Interface.new()
+function DiscordPermissionsBuilder.Interface.none()
+	return DiscordPermissionsBuilder.Interface.new()
 end
 
 --[=[
 	@function all
-	@within DiscordPermissions
+	@within DiscordPermissionsBuilder
 
-	@return DiscordPermissions
+	@return DiscordPermissionsBuilder
 
 	(yet-to-do!)
 
@@ -201,10 +201,10 @@ end
 		
 	```
 ]=]
-function DiscordPermissions.Interface.all()
-	local permissions = DiscordPermissions.Interface.new()
+function DiscordPermissionsBuilder.Interface.all()
+	local permissions = DiscordPermissionsBuilder.Interface.new()
 
-	for _, value in DiscordPermissions.Interface.Permissions :: { } do
+	for _, value in DiscordPermissionsBuilder.Interface.Permissions :: { } do
 		permissions:addPermission(value :: number)
 	end
 
@@ -213,11 +213,11 @@ end
 
 --[=[
 	@function from
-	@within DiscordPermissions
+	@within DiscordPermissionsBuilder
 
 	@param bitfield number
 
-	@return DiscordPermissions
+	@return DiscordPermissionsBuilder
 
 	(yet-to-do!)
 
@@ -225,13 +225,13 @@ end
 		
 	```
 ]=]
-function DiscordPermissions.Interface.from(bitfield: string)
-	local permissions = DiscordPermissions.Interface.new()
+function DiscordPermissionsBuilder.Interface.from(bitfield: string)
+	local permissions = DiscordPermissionsBuilder.Interface.new()
 	local numberBitfield = tonumber(bitfield)
 
 	assert(numberBitfield, `Invalid BitField '{bitfield}'`)
 
-	for _, value in DiscordPermissions.Interface.Permissions :: { } do
+	for _, value in DiscordPermissionsBuilder.Interface.Permissions :: { } do
 		if bit32.band(numberBitfield, value :: number) == value then
 			permissions:addPermission(value :: number)
 		end
@@ -240,8 +240,8 @@ function DiscordPermissions.Interface.from(bitfield: string)
 	return permissions
 end
 
-export type DiscordPermissions = typeof(DiscordPermissions.Prototype) & {
+export type DiscordPermissionsBuilder = typeof(DiscordPermissionsBuilder.Prototype) & {
 	permissions: { number }
 }
 
-return DiscordPermissions.Interface
+return DiscordPermissionsBuilder.Interface
