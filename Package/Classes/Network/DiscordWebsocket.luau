@@ -7,8 +7,8 @@ local Future = require("../../Vendor/Future")
 local Signal = require("../../Vendor/Signal")
 local Console = require("../../Vendor/Console")
 
-local EventIn = require("../Middleware/EventIn")
-local EventOut = require("../Middleware/EventOut")
+local EventIn = require("Middleware/EventIn")
+local EventOut = require("Middleware/EventOut")
 
 local WebsocketBuffer = require("WebsocketBuffer")
 

@@ -31,10 +31,7 @@ DiscordVoiceConnection.Prototype = {}
 
 DiscordVoiceConnection.Prototype.type = "DiscordVoiceConnection"
 
-DiscordVoiceConnection.Internal.publicAddress = nil
-DiscordVoiceConnection.Internal.publicPort = nil
-
-DiscordVoiceConnection.Internal.activeConnections = 0
+DiscordVoiceConnection.Prototype.activeConnections = 0
 
 function DiscordVoiceConnection.Prototype.observeWebsocketErrors(self: DiscordVoiceConnection)
 	self.voiceWebsocket.onSocketDead:connect(function(closeCode)
@@ -85,12 +82,12 @@ function DiscordVoiceConnection.Prototype.observeWebsocketOperations(self: Disco
 
 			self.reporter:debug(`HeartbeatACK - Ping: {self.heartbeatPing}`)
 		elseif operationCode == VoiceWebsocketOperationCodes.Ready then
-			DiscordVoiceConnection.Internal.activeConnections += 1
+			DiscordVoiceConnection.Prototype.activeConnections += 1
 
 			local thread = coroutine.running()
 
 			self.voiceUDP = (DiscordUDP.new(
-				`0.0.0.0:{BASE_VOICE_CONNECTION_PORT + DiscordVoiceConnection.Internal.activeConnections}`
+				`0.0.0.0:{BASE_VOICE_CONNECTION_PORT + DiscordVoiceConnection.Prototype.activeConnections}`
 			) :: unknown) :: DiscordUDP.DiscordUDP
 			
 			self.voiceUDP.onMessageRecv:once(function(packetData: string)
@@ -112,7 +109,7 @@ function DiscordVoiceConnection.Prototype.observeWebsocketOperations(self: Disco
 					protocol = "udp",
 					data = {
 						address = publicIp,
-						port = BASE_VOICE_CONNECTION_PORT + DiscordVoiceConnection.Internal.activeConnections,
+						port = BASE_VOICE_CONNECTION_PORT + DiscordVoiceConnection.Prototype.activeConnections,
 						mode = "xsalsa20_poly1305"
 					}
 				}
@@ -273,7 +270,7 @@ function DiscordVoiceConnection.Prototype.disconnectAsync(self: DiscordVoiceConn
 
 		self.voiceWebsocket:disconnectAsync(tostring(1000)):await()
 
-		DiscordVoiceConnection.Internal.activeConnections -= 1
+		DiscordVoiceConnection.Prototype.activeConnections -= 1
 	end)
 end
 

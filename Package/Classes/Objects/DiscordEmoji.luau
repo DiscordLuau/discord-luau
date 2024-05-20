@@ -3,7 +3,7 @@ local Construct = require("../../Utils/Construct")
 local CacheType = require("../../Enums/CacheType")
 
 --[=[
-	@class Internal.DiscordEmoji
+	@class Objects.DiscordEmoji
 
 	(sorry I will add docs for this lol, just haven't got around to it yet!)
 ]=]

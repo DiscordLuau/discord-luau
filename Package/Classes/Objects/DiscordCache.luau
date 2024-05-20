@@ -1,7 +1,7 @@
 local Construct = require("../../Utils/Construct")
 
 --[=[
-	@class Internal.DiscordCache
+	@class Objects.DiscordCache
 
 	(sorry I will add docs for this lol, just haven't got around to it yet!)
 ]=]

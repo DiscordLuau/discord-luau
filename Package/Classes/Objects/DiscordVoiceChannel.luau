@@ -1,7 +1,7 @@
 local Construct = require("../../Utils/Construct")
 
 local CacheType = require("../../Enums/CacheType")
-local DiscordEndpoints = require("../../Enums/DiscordEndpoints")
+local DiscordEndpoints = require("../../Data/DiscordEndpoints")
 
 local Future = require("../../Vendor/Future")
 
@@ -9,7 +9,7 @@ local DiscordWebsocket = require("../Network/DiscordWebsocket")
 local DiscordVoiceConnection = require("../Network/DiscordVoiceConnection")
 
 --[=[
-	@class Internal.DiscordVoiceChannel
+	@class Objects.DiscordVoiceChannel
 
 	(sorry I will add docs for this lol, just haven't got around to it yet!)
 ]=]

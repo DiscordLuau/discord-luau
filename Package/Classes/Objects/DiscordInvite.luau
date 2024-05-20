@@ -1,13 +1,13 @@
 local Construct = require("../../Utils/Construct")
 
-local DiscordEndpoints = require("../../Enums/DiscordEndpoints")
+local DiscordEndpoints = require("../../Data/DiscordEndpoints")
 
 local CacheType = require("../../Enums/CacheType")
 
 local Future = require("../../Vendor/Future")
 
 --[=[
-	@class Internal.DiscordInvite
+	@class Objects.DiscordInvite
 
 	(sorry I will add docs for this lol, just haven't got around to it yet!)
 ]=]

@@ -1,17 +1,17 @@
 local Inherit = require("../../Utils/Inherit")
 
-local DiscordEndpoints = require("../../Enums/DiscordEndpoints")
+local DiscordEndpoints = require("../../Data/DiscordEndpoints")
 
 local Future = require("../../Vendor/Future")
 
-local DiscordMessage = require("../Internal/DiscordMessage")
+local DiscordMessage = require("../Objects/DiscordMessage")
 
 local DiscordTextChannel = require("DiscordTextChannel")
 local DiscordVoiceChannel = require("DiscordVoiceChannel")
 local DiscordInvite = require("DiscordInvite")
 
 --[=[
-	@class Internal.DiscordChannel
+	@class Objects.DiscordChannel
 
 	(sorry I will add docs for this lol, just haven't got around to it yet!)
 ]=]

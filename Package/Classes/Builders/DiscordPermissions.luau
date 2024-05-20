@@ -1,5 +1,5 @@
-local Construct = require("../Utils/Construct")
-local Enumerate = require("../Utils/Enumerate")
+local Construct = require("../../Utils/Construct")
+local Enumerate = require("../../Utils/Enumerate")
 
 --[=[
 	@class DiscordPermissions
@@ -204,8 +204,8 @@ end
 function DiscordPermissions.Interface.all()
 	local permissions = DiscordPermissions.Interface.new()
 
-	for _, value in DiscordPermissions.Interface.Permissions do
-		permissions:addPermission(value)
+	for _, value in DiscordPermissions.Interface.Permissions :: { } do
+		permissions:addPermission(value :: number)
 	end
 
 	return permissions
@@ -231,9 +231,9 @@ function DiscordPermissions.Interface.from(bitfield: string)
 
 	assert(numberBitfield, `Invalid BitField '{bitfield}'`)
 
-	for _, value in DiscordPermissions.Interface.Permissions do
-		if bit32.band(numberBitfield, value) == value then
-			permissions:addPermission(value)
+	for _, value in DiscordPermissions.Interface.Permissions :: { } do
+		if bit32.band(numberBitfield, value :: number) == value then
+			permissions:addPermission(value :: number)
 		end
 	end
 

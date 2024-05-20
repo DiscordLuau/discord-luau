@@ -1,5 +1,5 @@
-local Construct = require("../Utils/Construct")
-local ComponentTypes = require("../Types/DiscordComponent")
+local Construct = require("../../Utils/Construct")
+local ComponentTypes = require("../../Types/DiscordComponent")
 
 --[=[
 	@class DiscordModal

@@ -1,9 +1,10 @@
 local Construct = require("../../Utils/Construct")
 
 local CacheType = require("../../Enums/CacheType")
-local DiscordEndpoints = require("../../Enums/DiscordEndpoints")
+local DiscordEndpoints = require("../../Data/DiscordEndpoints")
 
-local ApplicationCommand = require("../ApplicationCommand")
+local ApplicationCommand = require("../Builders/ApplicationCommand")
+local DiscordAutomoderationRuleBuilder = require("../Builders/DiscordAutomoderationRule")
 
 local DiscordEmoji = require("DiscordEmoji")
 local DiscordGuildRole = require("DiscordGuildRole")
@@ -17,7 +18,7 @@ local DiscordAutomoderationRule = require("DiscordAutomoderationRule")
 local Future = require("../../Vendor/Future")
 
 --[=[
-	@class Internal.DiscordGuild
+	@class Objects.DiscordGuild
 
 	(sorry I will add docs for this lol, just haven't got around to it yet!)
 ]=]
@@ -250,13 +251,14 @@ function DiscordGuild.Prototype.getAutomoderationRuleAsync(self: DiscordGuild, r
 	end)
 end
 
-function DiscordGuild.Prototype.createAutomoderationRuleAsync(self: DiscordGuild)
+function DiscordGuild.Prototype.createAutomoderationRuleAsync(self: DiscordGuild, getAutomoderationRuleBuilder: DiscordAutomoderationRuleBuilder.DiscordAutomoderationRule)
 	return Future.try(function()
-		local discordMembers = self.discordClient.discordGateway:getAsync(
-			string.format(DiscordEndpoints.BotSearchGuildMembers, self.id, query, limit or "100")
+		local discordAutomoderationRule = self.discordClient.discordGateway:postAsync(
+			string.format(DiscordEndpoints.BotCreateAutomoderationRule, self.id),
+			getAutomoderationRuleBuilder:toJSONObject()
 		):await()
 
-		return discordMembers
+		return DiscordAutomoderationRule.new(self.discordClient, discordAutomoderationRule)
 	end)
 end
 

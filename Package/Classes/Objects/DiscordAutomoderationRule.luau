@@ -1,9 +1,12 @@
 local Construct = require("../../Utils/Construct")
 
 local CacheType = require("../../Enums/CacheType")
+local DiscordEndpoints = require("../../Data/DiscordEndpoints")
+
+local DiscordAutomoderationRuleBuilder = require("../Builders/DiscordAutomoderationRule")
 
 --[=[
-	@class Internal.DiscordAutomoderationRule
+	@class Objects.DiscordAutomoderationRule
 
 	(sorry I will add docs for this lol, just haven't got around to it yet!)
 ]=]
@@ -14,12 +17,17 @@ DiscordAutomoderationRule.Interface = {}
 
 DiscordAutomoderationRule.Prototype.type = "DiscordAutomoderationRule"
 
-function DiscordAutomoderationRule.Prototype.modifyAsync()
-
+function DiscordAutomoderationRule.Prototype.modifyAsync(self: DiscordAutomoderationRule, moderationRoleBuilder: DiscordAutomoderationRuleBuilder.DiscordAutomoderationRule)
+	return self.discordClient.discordGateway:patchAsync(
+		string.format(DiscordEndpoints.BotModifyAutomoderationRule, self.guildId, self.id),
+		moderationRoleBuilder:toJSONObject()
+	)
 end
 
-function DiscordAutomoderationRule.Prototype.deleteAsync()
-
+function DiscordAutomoderationRule.Prototype.deleteAsync(self: DiscordAutomoderationRule)
+	return self.discordClient.discordGateway:postAsync(
+		string.format(DiscordEndpoints.BotDeleteAutomoderationRule, self.guildId, self.id)
+	)
 end
 
 function DiscordAutomoderationRule.Interface.new(discordClient: any, automoderationData: {
@@ -41,6 +49,8 @@ function DiscordAutomoderationRule.Interface.new(discordClient: any, automoderat
 end
 
 export type DiscordAutomoderationRule = typeof(DiscordAutomoderationRule.Prototype) & {
+	discordClient: any,
+
 	id: string,
 	guildId: string,
 	name: string,

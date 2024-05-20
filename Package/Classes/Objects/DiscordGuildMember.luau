@@ -2,7 +2,7 @@ local Datetime = require("../../Std/Datetime")
 
 local Construct = require("../../Utils/Construct")
 
-local DiscordEndpoints = require("../../Enums/DiscordEndpoints")
+local DiscordEndpoints = require("../../Data/DiscordEndpoints")
 
 local CacheType = require("../../Enums/CacheType")
 
@@ -11,7 +11,7 @@ local Future = require("../../Vendor/Future")
 local DiscordUser = require("DiscordUser")
 
 --[=[
-	@class Internal.DiscordGuildMember
+	@class Objects.DiscordGuildMember
 
 	(sorry I will add docs for this lol, just haven't got around to it yet!)
 ]=]

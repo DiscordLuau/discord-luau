@@ -16,7 +16,7 @@ local DiscordInteraction = require("DiscordInteraction")
 local Signal = require("../../Vendor/Signal")
 
 --[=[
-	@class Internal.EventManager
+	@class Objects.EventManager
 
 	(sorry I will add docs for this lol, just haven't got around to it yet!)
 ]=]

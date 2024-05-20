@@ -3,7 +3,7 @@ local Construct = require("../../Utils/Construct")
 local CacheType = require("../../Enums/CacheType")
 
 --[=[
-	@class Internal.DiscordUser
+	@class Objects.DiscordUser
 
 	(sorry I will add docs for this lol, just haven't got around to it yet!)
 ]=]

@@ -3,17 +3,17 @@ local DiscordComponentTypes = require("../../Types/DiscordComponent")
 local Construct = require("../../Utils/Construct")
 
 local CacheType = require("../../Enums/CacheType")
-local DiscordEndpoints = require("../../Enums/DiscordEndpoints")
+local DiscordEndpoints = require("../../Data/DiscordEndpoints")
 
-local DiscordEmbed = require("../DiscordEmbed")
-local DiscordGuildMember = require("../Internal/DiscordGuildMember")
+local DiscordEmbed = require("../Builders/DiscordEmbed")
+local DiscordGuildMember = require("../Objects/DiscordGuildMember")
 
 local Future = require("../../Vendor/Future")
 
 local Net = require("../../Std/Net")
 
 --[=[
-	@class Internal.DiscordMessage
+	@class Objects.DiscordMessage
 
 	(sorry I will add docs for this lol, just haven't got around to it yet!)
 ]=]

@@ -1,11 +1,11 @@
-local DiscordEndpoints = require("../../Enums/DiscordEndpoints")
+local DiscordEndpoints = require("../../Data/DiscordEndpoints")
 
 local Future = require("../../Vendor/Future")
 
 local Construct = require("../../Utils/Construct")
 
-local DiscordModal = require("../DiscordModal")
-local DiscordPermissions = require("../DiscordPermissions")
+local DiscordModal = require("../Builders/DiscordModal")
+local DiscordPermissions = require("../Builders/DiscordPermissions")
 
 local DiscordGuildMember = require("DiscordGuildMember")
 
@@ -16,7 +16,7 @@ local DiscordGuild = require("DiscordGuild")
 local DiscordMessage = require("DiscordMessage")
 
 --[=[
-	@class Internal.DiscordInteraction
+	@class Objects.DiscordInteraction
 
 	(sorry I will add docs for this lol, just haven't got around to it yet!)
 ]=]

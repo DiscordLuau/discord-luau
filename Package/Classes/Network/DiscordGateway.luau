@@ -6,8 +6,8 @@ local Construct = require("../../Utils/Construct")
 local HTTPRatelimit = require("HTTPRatelimit")
 local HTTPScheduler = require("HTTPScheduler")
 
-local EventIn = require("../Middleware/EventIn")
-local EventOut = require("../Middleware/EventOut")
+local EventIn = require("Middleware/EventIn")
+local EventOut = require("Middleware/EventOut")
 
 local Serde = require("../../Std/Serde")
 local Net = require("../../Std/Net")

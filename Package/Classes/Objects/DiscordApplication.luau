@@ -1,17 +1,15 @@
 local Construct = require("../../Utils/Construct")
 local IsUnique = require("../../Utils/Dictionary/IsUnique")
 
-local EventIn = require("../Middleware/EventIn")
-
 local Future = require("../../Vendor/Future")
 
-local ApplicationCommand = require("../ApplicationCommand")
+local ApplicationCommand = require("../Builders/ApplicationCommand")
 
-local DiscordEndpoints = require("../../Enums/DiscordEndpoints")
+local DiscordEndpoints = require("../../Data/DiscordEndpoints")
 local CacheType = require("../../Enums/CacheType")
 
 --[=[
-	@class Internal.DiscordApplication
+	@class Objects.DiscordApplication
 
 	(sorry I will add docs for this lol, just haven't got around to it yet!)
 ]=]
@@ -120,11 +118,11 @@ function DiscordApplication.Prototype.setSlashCommandsAsync(self: DiscordApplica
 			end
 
 			local existingCommandJsonClone = table.clone(existingCommandJson)
-			local existingCommandClone = self.eventInMiddleware:processJSON(command:toJSONObject() :: any)
+			local existingCommandClone = command:toJSONObject()
 
 			-- fixme: contexts seem to be reported incorrectly?
-			existingCommandClone.contexts = nil
-			existingCommandJsonClone.contexts = nil
+			existingCommandClone.contexts = { }
+			existingCommandJsonClone.contexts = { }
 
 			if IsUnique(existingCommandClone, existingCommandJsonClone) then
 				self:editSlashCommandAsync(commandId, command):await()
@@ -146,8 +144,6 @@ function DiscordApplication.Interface.new(discordClient: any, applicationData: {
 			id = applicationData.id,
 			flags = applicationData.flags,
 
-			eventInMiddleware = EventIn.new(),
-	
 			discordClient = discordClient
 		}, DiscordApplication.Prototype)
 	end)
@@ -156,8 +152,6 @@ end
 export type DiscordApplication = typeof(DiscordApplication.Prototype) & {
 	id: string,
 	flags: number,
-
-	eventInMiddleware: EventIn.EventIn,
 
 	discordClient: any,
 }

@@ -1,6 +1,6 @@
 local DiscordIntents = require("DiscordIntents")
 
-local Construct = require("../Utils/Construct")
+local Construct = require("../../Utils/Construct")
 
 --[=[
 	@class DiscordSettings

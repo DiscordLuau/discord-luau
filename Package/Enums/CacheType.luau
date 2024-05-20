@@ -1,3 +1,16 @@
+export type CacheType = "Application"
+	| "DiscordEmoji"
+	| "DiscordGuilded"
+	| "DiscordGuildRole"
+	| "DiscordUser"
+	| "DiscordChannel"
+	| "DiscordTextChannel"
+	| "DiscordVoiceChannel"
+	| "DiscordMessage"
+	| "DiscordMember"
+	| "DiscordInvite"
+	| "AutoModeration"
+
 return {
 	Application = "Application",
 	DiscordEmoji = "DiscordEmoji",
