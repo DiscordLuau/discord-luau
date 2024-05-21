@@ -1,4 +1,4 @@
-local DiscordInteraction = require("../Classes/Internal/DiscordInteraction")
+local DiscordInteraction = require("../Classes/Objects/DiscordInteraction")
 
 export type DiscordInteraction = DiscordInteraction.DiscordInteraction
 

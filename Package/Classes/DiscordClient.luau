@@ -1,27 +1,27 @@
-local DiscordSettings = require("DiscordSettings")
+local DiscordSettingsBuilder = require("Builders/DiscordSettingsBuilder")
 
 local Construct = require("../Utils/Construct")
 
 local DiscordGateway = require("Network/DiscordGateway")
 local DiscordShard = require("Network/DiscordShard")
 
-local DiscordEndpoints = require("../Enums/DiscordEndpoints")
+local DiscordEndpoints = require("../Data/DiscordEndpoints")
 local WebsocketEvents = require("../Enums/WebsocketEvents")
 local DiscordEvents = require("../Enums/DiscordEvents")
 local WebsocketOperationCodes = require("../Enums/WebsocketOperationCodes")
 local WebsocketOperationKeys = require("../Enums/WebsocketOperationKeys")
 
-local EndpointCache = require("Internal/EndpointCache")
-local DiscordCache = require("Internal/DiscordCache")
-local DiscordUser = require("Internal/DiscordUser")
-local DiscordGuild = require("Internal/DiscordGuild")
-local DiscordChannel = require("Internal/DiscordChannel")
-local DiscordTextChannel = require("Internal/DiscordTextChannel")
-local DiscordVoiceChannel = require("Internal/DiscordVoiceChannel")
-local DiscordMessage = require("Internal/DiscordMessage")
-local DiscordApplication = require("Internal/DiscordApplication")
-local DiscordInteraction = require("Internal/DiscordInteraction")
-local EventManager = require("Internal/EventManager")
+local EndpointCache = require("Objects/EndpointCache")
+local DiscordCache = require("Objects/DiscordCache")
+local DiscordUser = require("Objects/DiscordUser")
+local DiscordGuild = require("Objects/DiscordGuild")
+local DiscordChannel = require("Objects/DiscordChannel")
+local DiscordTextChannel = require("Objects/DiscordTextChannel")
+local DiscordVoiceChannel = require("Objects/DiscordVoiceChannel")
+local DiscordMessage = require("Objects/DiscordMessage")
+local DiscordApplication = require("Objects/DiscordApplication")
+local DiscordInteraction = require("Objects/DiscordInteraction")
+local EventManager = require("Objects/EventManager")
 
 local Console = require("../Vendor/Console")
 local Future = require("../Vendor/Future")
@@ -39,8 +39,8 @@ local CONCURRENT_IDENTIFY_YIELD = 5
 	```lua
 		local DiscordLuau = require("../Submodules/DiscordLuau")
 
-		local DiscordSettings = DiscordLuau.DiscordSettings.new("BOT TOKEN")
-		local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettings)
+		local DiscordSettingsBuilder = DiscordLuau.DiscordSettingsBuilder.new("BOT TOKEN")
+		local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettingsBuilder)
 
 		...
 	```
@@ -61,7 +61,7 @@ DiscordClient.Prototype.type = "DiscordClient"
 	Connect the current DiscordClient to the Discord API
 
 	```lua
-		local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettings)
+		local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettingsBuilder)
 
 		DiscordClient:connectAsync():after(function()
 			print("Connected to the Discord API!")
@@ -252,17 +252,17 @@ end
 	Constructor function for the Discord Client, this is where you'll be able to instantiate a Discord Client object.
 
 	```lua
-		local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettings)
+		local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettingsBuilder)
 
 		DiscordClient:connectAsync():after(function()
 			print("Connected to the Discord API!")
 		end)
 	```
 ]=]
-function DiscordClient.Interface.new(discordSettings: DiscordSettings.DiscordSettings): DiscordClient
+function DiscordClient.Interface.new(discordSettings: DiscordSettingsBuilder.DiscordSettingsBuilder): DiscordClient
 	local self = Construct({
 		--[=[
-			@prop discordSettings DiscordSettings
+			@prop discordSettings DiscordSettingsBuilder
 			@within DiscordClient
 		]=]
 		discordSettings = discordSettings,
@@ -330,7 +330,7 @@ Console.setGlobalLogLevel(Console.LogLevel.warn)
 
 export type DiscordClient = typeof(DiscordClient.Prototype) & {
 	discordGateway: DiscordGateway.DiscordGateway,
-	discordSettings: DiscordSettings.DiscordSettings,
+	discordSettings: DiscordSettingsBuilder.DiscordSettingsBuilder,
 	discordCache: DiscordCache.DiscordCache,
 
 	eventManager: EventManager.EventManager,

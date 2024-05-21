@@ -19,7 +19,7 @@ function Enumeration.Prototype:ToString()
 	return `{Enumeration.Type}<"{table.concat(self, ", ")}">`
 end
 
-function Enumeration.Interface.new(items)
+function Enumeration.Interface.new<S>(items: S): S & typeof(Enumeration.Prototype)
 	return setmetatable(items :: any, {
 		__index = Enumeration.Prototype,
 		__type = Enumeration.Type,
