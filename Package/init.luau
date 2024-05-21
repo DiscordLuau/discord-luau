@@ -16,6 +16,7 @@ local DiscordModalBuilder = require("Classes/Builders/DiscordModalBuilder")
 local DiscordPermissionsBuilder = require("Classes/Builders/DiscordPermissionsBuilder")
 local DiscordPresenceBuilder = require("Classes/Builders/DiscordPresenceBuilder")
 local DiscordSettingsBuilder = require("Classes/Builders/DiscordSettingsBuilder")
+local DiscordMessageBuilder = require("Classes/Builders/DiscordMessageBuilder")
 
 -- Objects
 local DiscordApplication = require("Classes/Objects/DiscordApplication")
@@ -33,13 +34,41 @@ local DiscordTextChannel = require("Classes/Objects/DiscordTextChannel")
 local DiscordVoiceChannel = require("Classes/Objects/DiscordVoiceChannel")
 local DiscordUser = require("Classes/Objects/DiscordUser")
 
+-- Components
+local ActionRowBuilder = require("Classes/Interface/ActionRowBuilder")
+local ButtonBuilder = require("Classes/Interface/ButtonBuilder")
+local SelectionBuilder = require("Classes/Interface/SelectionBuilder")
+local TextInputBuilder = require("Classes/Interface/TextInputBuilder")
+
 -- Client
 local DiscordClient = require("Classes/DiscordClient")
 
 local DiscordLuau = {}
 
 --#region
+--#MARK: Discord-Luau Components
+
+DiscordLuau.Components = {}
+
+export type ActionRowBuilder = ActionRowBuilder.ActionRowBuilder
+DiscordLuau.Components.ActionRowBuilder = ActionRowBuilder
+
+export type ButtonBuilder = ButtonBuilder.ButtonBuilder
+DiscordLuau.Components.ButtonBuilder = ButtonBuilder
+
+export type SelectionBuilder = SelectionBuilder.SelectionBuilder
+DiscordLuau.Components.SelectionBuilder = SelectionBuilder
+
+export type TextInputBuilder = TextInputBuilder.TextInputBuilder
+DiscordLuau.Components.TextInputBuilder = TextInputBuilder
+
+--#endregion
+
+--#region
 --#MARK: Discord-Luau Builders
+
+export type DiscordMessageBuilder = DiscordMessageBuilder.DiscordMessageBuilder
+DiscordLuau.DiscordMessageBuilder = DiscordMessageBuilder
 
 export type ApplicationCommandBuilder = ApplicationCommandBuilder.ApplicationCommandBuilder
 DiscordLuau.ApplicationCommandBuilder = ApplicationCommandBuilder

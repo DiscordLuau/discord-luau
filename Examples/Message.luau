@@ -1,7 +1,7 @@
 local DiscordLuau = require("..")
 local Env = require("../.env")
 
-local DiscordSettings = DiscordLuau.DiscordSettings.new(Env.DISCORD_BOT_TOKEN)
+local DiscordSettings = DiscordLuau.DiscordSettingsBuilder.new(Env.DISCORD_BOT_TOKEN)
 local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettings)
 
 DiscordClient.eventManager.onMessage:connect(function(message)
@@ -12,9 +12,10 @@ DiscordClient.eventManager.onMessage:connect(function(message)
 			return
 		end
 
-		message:replyAsync({
-			content = "Hello, from Discord-Luau!"
-		})
+		message:replyAsync(
+		DiscordLuau.DiscordMessageBuilder.new()
+				:setContent(`Hello, from Discord-Luau!`)
+		)
 	end
 end)
 

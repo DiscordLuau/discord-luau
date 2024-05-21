@@ -5,6 +5,7 @@ local DiscordEndpoints = require("../../Data/DiscordEndpoints")
 local Future = require("../../Vendor/Future")
 
 local DiscordMessage = require("../Objects/DiscordMessage")
+local DiscordMessageBuilder = require("../Builders/DiscordMessageBuilder")
 
 local DiscordTextChannel = require("DiscordTextChannel")
 local DiscordVoiceChannel = require("DiscordVoiceChannel")
@@ -68,11 +69,11 @@ function DiscordChannel.Prototype.bulkDeleteMessagesAsync(self: DiscordChannel, 
 	end)
 end
 
-function DiscordChannel.Prototype.sendMessageAsync(self: DiscordChannel, messageData: DiscordMessage.DiscordMessageSchema)
+function DiscordChannel.Prototype.sendMessageAsync(self: DiscordChannel, messageBuilder: DiscordMessageBuilder.DiscordMessageBuilder)
 	return Future.try(function()
 		return self.discordClient.discordGateway:postAsync(
 			string.format(DiscordEndpoints.BotCreateMessage, self.id),
-			DiscordMessage.intoJson(messageData)
+			messageBuilder:toJSONObject()
 		):await()
 	end)
 end

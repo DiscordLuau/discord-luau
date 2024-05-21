@@ -3,24 +3,24 @@ local Task = require("@lune/task")
 local DiscordLuau = require("..")
 local Env = require("../.env")
 
-local DiscordSettings = DiscordLuau.DiscordSettings.new(Env.DISCORD_BOT_TOKEN)
+local DiscordSettings = DiscordLuau.DiscordSettingsBuilder.new(Env.DISCORD_BOT_TOKEN)
 local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettings)
 
 DiscordClient.eventManager.onInteraction:connect(function(interaction)
 	if interaction.data.name == "example-command" then
-		local discordModal = DiscordLuau.DiscordModal.new("response-modal")
+		local discordModal = DiscordLuau.DiscordModalBuilder.new("response-modal")
 
 		discordModal:setTitle("Modal Test")
 
 		discordModal:addComponent(
-			DiscordLuau.Components.ActionRowComponent.new()
+			DiscordLuau.Components.ActionRowBuilder.new()
 				:addComponent(
-					DiscordLuau.Components.TextInputComponent.new("text-input-0")
+					DiscordLuau.Components.TextInputBuilder.new("text-input-0")
 						:setLabel("Label #0")
 						:setMaxLength(1000)
 						:setMinLength(10)
 						:setRequired(true)
-						:setStyle(DiscordLuau.Components.TextInputComponent.Style.Paragraph)
+						:setStyle(DiscordLuau.Components.TextInputBuilder.Style.Paragraph)
 				)
 		)
 
@@ -29,36 +29,37 @@ DiscordClient.eventManager.onInteraction:connect(function(interaction)
 		interaction:deferAsync():await()
 
 		Task.delay(1, function()
-			interaction:sendMessageAsync({
-				content = "Feedback noted, thanks!",
-				components = {
-					DiscordLuau.Components.ActionRowComponent.new()
+			interaction:sendMessageAsync(
+				DiscordLuau.DiscordMessageBuilder.new()
+				:setContent("Feedback noted, thanks!")
+				:addComponent(
+					DiscordLuau.Components.ActionRowBuilder.new()
 						:addComponent(
-							DiscordLuau.Components.ButtonComponent.new("button-0")
+							DiscordLuau.Components.ButtonBuilder.new("button-0")
 								:setDisabled(true)
-								:setStyle(DiscordLuau.Components.ButtonComponent.Style.Blurple)
+								:setStyle(DiscordLuau.Components.ButtonBuilder.Style.Blurple)
 								:setLabel("Burple")
 						)
 						:addComponent(
-							DiscordLuau.Components.ButtonComponent.new("button-1")
+							DiscordLuau.Components.ButtonBuilder.new("button-1")
 								:setDisabled(true)
-								:setStyle(DiscordLuau.Components.ButtonComponent.Style.Green)
+								:setStyle(DiscordLuau.Components.ButtonBuilder.Style.Green)
 								:setLabel("Green")
 						)
 						:addComponent(
-							DiscordLuau.Components.ButtonComponent.new("button-2")
+							DiscordLuau.Components.ButtonBuilder.new("button-2")
 								:setDisabled(true)
-								:setStyle(DiscordLuau.Components.ButtonComponent.Style.Grey)
+								:setStyle(DiscordLuau.Components.ButtonBuilder.Style.Grey)
 								:setLabel("Grey")
 						)
 						:addComponent(
-							DiscordLuau.Components.ButtonComponent.new("button-3")
+							DiscordLuau.Components.ButtonBuilder.new("button-3")
 								:setDisabled(true)
-								:setStyle(DiscordLuau.Components.ButtonComponent.Style.Red)
+								:setStyle(DiscordLuau.Components.ButtonBuilder.Style.Red)
 								:setLabel("Red")
 						)
-				}
-			})
+				)
+			)
 		end)
 	end
 end)
@@ -66,11 +67,11 @@ end)
 DiscordClient.eventManager.onReady:connect(function()
 	print(`🎉🎉 {DiscordClient.discordUser.username} is online! 🎉🎉`)
 
-	local permissions = DiscordLuau.DiscordPermissions.new()
+	local permissions = DiscordLuau.DiscordPermissionsBuilder.new()
 
-	permissions:addPermission(DiscordLuau.DiscordPermissions.Permissions.SendMessages)
+	permissions:addPermission(DiscordLuau.DiscordPermissionsBuilder.Permissions.SendMessages)
 
-	local slashCommand = DiscordLuau.ApplicationCommand.new()
+	local slashCommand = DiscordLuau.ApplicationCommandBuilder.new()
 		:setName("example-command")
 		:setDescription("Example Description")
 		:setGuildPermissions(permissions)

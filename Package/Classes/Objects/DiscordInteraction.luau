@@ -6,6 +6,7 @@ local Construct = require("../../Utils/Construct")
 
 local DiscordModalBuilder = require("../Builders/DiscordModalBuilder")
 local DiscordPermissionsBuilder = require("../Builders/DiscordPermissionsBuilder")
+local DiscordMessageBuilder = require("../Builders/DiscordMessageBuilder")
 
 local DiscordGuildMember = require("DiscordGuildMember")
 
@@ -27,13 +28,13 @@ DiscordInteraction.Prototype = {}
 
 DiscordInteraction.Prototype.type = "DiscordInteraction"
 
-function DiscordInteraction.Prototype.editMessageAsync(self: DiscordInteraction, messageData: DiscordMessage.DiscordMessageSchema)
+function DiscordInteraction.Prototype.editMessageAsync(self: DiscordInteraction, messageBuilder: DiscordMessageBuilder.DiscordMessageBuilder)
 	return Future.new(function()
 		return self.discordClient.discordGateway:patchAsync(string.format(
 			DiscordEndpoints.EditOriginalInteractionResponse,
 			self.discordClient.discordApplication.id,
 			self.token
-		), DiscordMessage.intoJson(messageData)):await()
+		), messageBuilder:toJSONObject()):await()
 	end)
 end
 
@@ -50,9 +51,9 @@ function DiscordInteraction.Prototype.sendModalAsync(self: DiscordInteraction, m
 	end)
 end
 
-function DiscordInteraction.Prototype.sendMessageAsync(self: DiscordInteraction, messageData: DiscordMessage.DiscordMessageSchema)
+function DiscordInteraction.Prototype.sendMessageAsync(self: DiscordInteraction, messageBuilder: DiscordMessageBuilder.DiscordMessageBuilder)
 	if self.defered then
-		return self:editMessageAsync(messageData)
+		return self:editMessageAsync(messageBuilder)
 	else
 		return Future.new(function()
 			return self.discordClient.discordGateway:postAsync(string.format(
@@ -61,7 +62,7 @@ function DiscordInteraction.Prototype.sendMessageAsync(self: DiscordInteraction,
 				self.token
 			), {
 				type = 4,
-				data = DiscordMessage.intoJson(messageData)
+				data = messageBuilder:toJSONObject()
 			}):await()
 		end)
 	end

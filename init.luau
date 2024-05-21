@@ -1,5 +1,11 @@
 local DiscordLuau = require("Package")
 
+export type ActionRowBuilder = DiscordLuau.ActionRowBuilder
+export type ButtonBuilder = DiscordLuau.ButtonBuilder
+export type SelectionBuilder = DiscordLuau.SelectionBuilder
+export type TextInputBuilder = DiscordLuau.TextInputBuilder
+
+export type DiscordMessageBuilder = DiscordLuau.DiscordMessageBuilder
 export type ApplicationCommandBuilder = DiscordLuau.ApplicationCommandBuilder
 export type ApplicationCommandOptionBuilder = DiscordLuau.ApplicationCommandOptionBuilder
 export type DiscordActivityBuilder = DiscordLuau.DiscordActivityBuilder

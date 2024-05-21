@@ -1,7 +1,7 @@
 local DiscordLuau = require("..")
 local Env = require("../.env")
 
-local DiscordSettings = DiscordLuau.DiscordSettings.new(Env.DISCORD_BOT_TOKEN)
+local DiscordSettings = DiscordLuau.DiscordSettingsBuilder.new(Env.DISCORD_BOT_TOKEN)
 local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettings)
 
 DiscordClient:setVerbose(true)
@@ -9,23 +9,23 @@ DiscordClient:setVerbose(true)
 DiscordClient.eventManager.onReady:connect(function()
 	print(`🎉🎉 {DiscordClient.discordUser.username} is online! 🎉🎉`)
 
-	local permissions = DiscordLuau.DiscordPermissions.new()
+	local permissions = DiscordLuau.DiscordPermissionsBuilder.new()
 
-	permissions:addPermission(DiscordLuau.DiscordPermissions.Permissions.UseApplicationCommands)
+	permissions:addPermission(DiscordLuau.DiscordPermissionsBuilder.Permissions.UseApplicationCommands)
 
-	local slashCommand0 = DiscordLuau.ApplicationCommand.new()
+	local slashCommand0 = DiscordLuau.ApplicationCommandBuilder.new()
 		:setName("example-0")
 		:setDescription("...")
 		:setGuildPermissions(permissions)
-		:addContext(DiscordLuau.ApplicationCommand.Context.Guild)
-		:setType(DiscordLuau.ApplicationCommand.Type.ChatInput)
+		:addContext(DiscordLuau.ApplicationCommandBuilder.Context.Guild)
+		:setType(DiscordLuau.ApplicationCommandBuilder.Type.ChatInput)
 
-	local slashCommand1 = DiscordLuau.ApplicationCommand.new()
+	local slashCommand1 = DiscordLuau.ApplicationCommandBuilder.new()
 		:setName("example-1")
 		:setDescription("abc!")
 		:setGuildPermissions(permissions)
-		:addContext(DiscordLuau.ApplicationCommand.Context.Guild)
-		:setType(DiscordLuau.ApplicationCommand.Type.ChatInput)
+		:addContext(DiscordLuau.ApplicationCommandBuilder.Context.Guild)
+		:setType(DiscordLuau.ApplicationCommandBuilder.Type.ChatInput)
 
 	DiscordClient.discordApplication:setSlashCommandsAsync({
 		slashCommand0, slashCommand1

@@ -6,6 +6,7 @@ local CacheType = require("../../Enums/CacheType")
 local DiscordEndpoints = require("../../Data/DiscordEndpoints")
 
 local DiscordEmbedBuilder = require("../Builders/DiscordEmbedBuilder")
+local DiscordMessageBuilder = require("../Builders/DiscordMessageBuilder")
 local DiscordGuildMember = require("../Objects/DiscordGuildMember")
 
 local Future = require("../../Vendor/Future")
@@ -24,11 +25,11 @@ DiscordMessage.Interface = {}
 
 DiscordMessage.Prototype.type = "DiscordMessage"
 
-function DiscordMessage.Prototype.replyAsync(self: DiscordMessage, messageData: DiscordMessageSchema)
+function DiscordMessage.Prototype.replyAsync(self: DiscordMessage, messageBuilder: DiscordMessageBuilder.DiscordMessageBuilder)
 	return Future.try(function()
 		return self.discordClient.discordGateway:postAsync(
 			string.format(DiscordEndpoints.BotCreateMessage, self.channelId),
-			DiscordMessage.Interface.intoJson(messageData)
+			messageBuilder:toJSONObject()
 		):await()
 	end)
 end
@@ -51,11 +52,11 @@ function DiscordMessage.Prototype.unpinAsync(self: DiscordMessage)
 	end)
 end
 
-function DiscordMessage.Prototype.editAsync(self: DiscordMessage, messageData: DiscordMessageSchema)
+function DiscordMessage.Prototype.editAsync(self: DiscordMessage, messageBuilder: DiscordMessageBuilder.DiscordMessageBuilder)
 	return Future.try(function()
 		return self.discordClient.discordGateway:patchAsync(
 			string.format(DiscordEndpoints.BotEditMessage, self.channelId, self.id),
-			DiscordMessage.Interface.intoJson(messageData)
+			messageBuilder:toJSONObject()
 		):await()
 	end)
 end
@@ -154,35 +155,6 @@ function DiscordMessage.Interface.new(discordClient: any, messageData: {
 	return self
 end
 
-function DiscordMessage.Interface.intoJson(messageSchema: DiscordMessageSchema)
-	local components = {}
-	local embeds = {}
-
-	if messageSchema.components then
-		for _, component in messageSchema.components do
-			table.insert(components, (component :: any):toJSONObject())
-		end
-	end
-
-	if messageSchema.embeds then
-		for _, embed in messageSchema.embeds do
-			table.insert(embeds, embed:toJSONObject())
-		end
-	end
-
-	return {
-		content = messageSchema.content or nil,
-		nonce = messageSchema.nonce or nil,
-		tts = messageSchema.tts or false,
-		sticker_ids = messageSchema.stickerIds,
-		flags = messageSchema.flags or nil, --fixme: should use a bitfield.
-		enforce_nonce = messageSchema.enforceNonce or false,
-
-		embeds = embeds,
-		components = components,
-	}
-end
-
 export type DiscordMessage = typeof(DiscordMessage.Prototype) & {
 	discordClient: any,
 
@@ -218,22 +190,6 @@ export type DiscordMessage = typeof(DiscordMessage.Prototype) & {
 		mute: boolean,
 		joinedAt: string
 	},
-}
-
-export type DiscordMessageSchema = {
-	content: string?,
-	nonce: (string | number)?,
-	tts: boolean?,
-	embeds: { DiscordEmbedBuilder.DiscordEmbedBuilder }?,
-	-- allowedMentions: { unknown },
-	-- messageReference: {  },
-	components: { DiscordComponentTypes.DiscordComponent }?,
-	-- files: { unknown },
-	-- payloadJson: { unknown }
-	-- attachments: { unknown }
-	stickerIds: { string }?,
-	flags: number?,
-	enforceNonce: boolean?
 }
 
 return DiscordMessage.Interface

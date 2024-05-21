@@ -2,18 +2,18 @@ local Enumerate = require("../../Utils/Enumerate")
 local Construct = require("../../Utils/Construct")
 
 --[=[
-	@class Interface.SelectionComponent
+	@class Interface.SelectionBuilder
 
 	(sorry I will add docs for this lol, just haven't got around to it yet!)
 ]=]
-local SelectionComponent = {}
+local SelectionBuilder = {}
 
-SelectionComponent.Interface = {}
-SelectionComponent.Prototype = {}
+SelectionBuilder.Interface = {}
+SelectionBuilder.Prototype = {}
 
-SelectionComponent.Prototype.type = "SelectionComponent"
+SelectionBuilder.Prototype.type = "SelectionBuilder"
 
-SelectionComponent.Interface.Type = Enumerate.new({
+SelectionBuilder.Interface.Type = Enumerate.new({
 	TextSelection = 3,
 	UserSelection = 5,
 	RoleSelection = 6,
@@ -21,7 +21,7 @@ SelectionComponent.Interface.Type = Enumerate.new({
 	ChannelSelection = 8
 })
 
-SelectionComponent.Interface.ChannelType = Enumerate.new({
+SelectionBuilder.Interface.ChannelType = Enumerate.new({
 	GuildText = 0,
 	DirectMessage = 1,
 	GuildVoice = 2,
@@ -36,51 +36,51 @@ SelectionComponent.Interface.ChannelType = Enumerate.new({
 	GuildForum = 15,
 })
 
-function SelectionComponent.Prototype.setType(self: SelectionComponent, selectionType: number): SelectionComponent
+function SelectionBuilder.Prototype.setType(self: SelectionBuilder, selectionType: number): SelectionBuilder
 	self.selectionType = selectionType
 
 	return self
 end
 
-function SelectionComponent.Prototype.setChannelTypes(self: SelectionComponent, ...): SelectionComponent
+function SelectionBuilder.Prototype.setChannelTypes(self: SelectionBuilder, ...): SelectionBuilder
 	self.selectionChannelTypes = { ... }
 
 	return self
 end
 
-function SelectionComponent.Prototype.setPlaceholder(self: SelectionComponent, placeholderText: string): SelectionComponent
+function SelectionBuilder.Prototype.setPlaceholder(self: SelectionBuilder, placeholderText: string): SelectionBuilder
 	self.selectionPlaceholder = placeholderText
 
 	return self
 end
 
-function SelectionComponent.Prototype.setDisabled(self: SelectionComponent, isDisabled: boolean): SelectionComponent
+function SelectionBuilder.Prototype.setDisabled(self: SelectionBuilder, isDisabled: boolean): SelectionBuilder
 	self.selectionDisabled = isDisabled
 
 	return self
 end
 
-function SelectionComponent.Prototype.setMinValues(self: SelectionComponent, minValue: number): SelectionComponent
+function SelectionBuilder.Prototype.setMinValues(self: SelectionBuilder, minValue: number): SelectionBuilder
 	self.selectionMinValue = minValue
 
 	return self
 end
 
-function SelectionComponent.Prototype.setMaxValues(self: SelectionComponent, maxValue: number): SelectionComponent
+function SelectionBuilder.Prototype.setMaxValues(self: SelectionBuilder, maxValue: number): SelectionBuilder
 	self.selectionMaxValue = maxValue
 
 	return self
 end
 
-function SelectionComponent.Prototype.addChoice(
-	self: SelectionComponent,
+function SelectionBuilder.Prototype.addChoice(
+	self: SelectionBuilder,
 	choiceName: string,
 	choiceValue: string,
 	choiceDescription: string,
 	isDefault: boolean,
 	emojiId: string?,
 	emojiName: string?
-): SelectionComponent
+): SelectionBuilder
 	self.choices[choiceName] = {
 		value = choiceValue,
 		description = choiceDescription,
@@ -97,13 +97,13 @@ function SelectionComponent.Prototype.addChoice(
 	return self
 end
 
-function SelectionComponent.Prototype.destroyChoice(self: SelectionComponent, choiceName: string): SelectionComponent
+function SelectionBuilder.Prototype.destroyChoice(self: SelectionBuilder, choiceName: string): SelectionBuilder
 	self.choices[choiceName] = nil
 
 	return self
 end
 
-function SelectionComponent.Prototype.toJSONObject(self: SelectionComponent)
+function SelectionBuilder.Prototype.toJSONObject(self: SelectionBuilder)
 	local selectionOptions = {}
 
 	for optionName, optionData in self.choices do
@@ -136,14 +136,14 @@ function SelectionComponent.Prototype.toJSONObject(self: SelectionComponent)
 	}
 end
 
-function SelectionComponent.Interface.new(selectionId: string): SelectionComponent
+function SelectionBuilder.Interface.new(selectionId: string): SelectionBuilder
 	return Construct({
 		selectionId = selectionId,
 		choices = {}
-	}, SelectionComponent.Prototype) :: any
+	}, SelectionBuilder.Prototype) :: any
 end
 
-export type SelectionComponent = typeof(SelectionComponent.Prototype) & {
+export type SelectionBuilder = typeof(SelectionBuilder.Prototype) & {
 	selectionType: number?,
 	selectionId: string?,
 	selectionChannelTypes: { number }?,
@@ -165,4 +165,4 @@ export type SelectionComponent = typeof(SelectionComponent.Prototype) & {
 	}
 }
 
-return SelectionComponent.Interface
+return SelectionBuilder.Interface
