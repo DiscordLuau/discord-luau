@@ -1,17 +1,7 @@
-export type CacheType = "Application"
-	| "DiscordEmoji"
-	| "DiscordGuilded"
-	| "DiscordGuildRole"
-	| "DiscordUser"
-	| "DiscordChannel"
-	| "DiscordTextChannel"
-	| "DiscordVoiceChannel"
-	| "DiscordMessage"
-	| "DiscordMember"
-	| "DiscordInvite"
-	| "AutoModeration"
+-- Internal cache keys, cache registers key in the following format `{CacheType}-{Id}`, though this is not strict,
+-- 		so some cache's may differ from this format.
 
-return {
+local CacheType = {
 	Application = "Application",
 	DiscordEmoji = "DiscordEmoji",
 	DiscordGuild = "DiscordGuild",
@@ -25,3 +15,18 @@ return {
 	DiscordInvite = "DiscordInvite",
 	AutoModeration = "AutoModeration",
 }
+
+export type CacheType = "Application"
+	| "DiscordEmoji"
+	| "DiscordGuilded"
+	| "DiscordGuildRole"
+	| "DiscordUser"
+	| "DiscordChannel"
+	| "DiscordTextChannel"
+	| "DiscordVoiceChannel"
+	| "DiscordMessage"
+	| "DiscordMember"
+	| "DiscordInvite"
+	| "AutoModeration"
+
+return CacheType

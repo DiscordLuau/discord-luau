@@ -14,27 +14,56 @@ local DiscordInvite = require("DiscordInvite")
 --[=[
 	@class Objects.DiscordChannel
 
-	(sorry I will add docs for this lol, just haven't got around to it yet!)
+	The `DiscordChannel` class represents a generic Discord channel and provides various methods to interact with and manage the channel.
 ]=]
 local DiscordChannel = {}
 
 DiscordChannel.Prototype = {}
 DiscordChannel.Interface = {}
 
+--[=[
+	@prop type string
+	@within Objects.DiscordChannel
+	@readonly
+
+	The type of the Discord channel. Default is "DiscordChannel".
+]=]
 DiscordChannel.Prototype.type = "DiscordChannel"
 
+--[=[
+	Triggers the typing indicator in the channel.
+
+	@method triggerTypingIndicator
+	@within Objects.DiscordChannel
+	@return Future
+]=]
 function DiscordChannel.Prototype.triggerTypingIndicator(self: DiscordChannel)
 	return Future.try(function()
 		return self.discordClient.discordGateway:postAsync(string.format(DiscordEndpoints.BotTriggerTypingChannel, self.id), { }):await()
 	end)
 end
 
+--[=[
+	Deletes the channel asynchronously.
+
+	@method deleteAsync
+	@within Objects.DiscordChannel
+	@return Future
+]=]
 function DiscordChannel.Prototype.deleteAsync(self: DiscordChannel, messageIds: { string })
 	return Future.try(function()
 		return self.discordClient.discordGateway:deleteAsync(string.format(DiscordEndpoints.BotDeleteChannel, self.id)):await()
 	end)
 end
 
+--[=[
+	Gets messages from the channel asynchronously.
+
+	@method getMessagesAsync
+	@param limit number? -- The maximum number of messages to retrieve.
+	@within Objects.DiscordChannel
+	@return Future
+]=]
 function DiscordChannel.Prototype.getMessagesAsync(self: DiscordChannel, limit: number?)
 	return Future.try(function()
 		local url = string.format(DiscordEndpoints.BotGetChannelMessages, self.id)
@@ -53,6 +82,14 @@ function DiscordChannel.Prototype.getMessagesAsync(self: DiscordChannel, limit: 
 	end)
 end
 
+--[=[
+	Gets a specific message from the channel asynchronously.
+
+	@method getMessageAsync
+	@param messageId string -- The ID of the message to retrieve.
+	@within Objects.DiscordChannel
+	@return Future
+]=]
 function DiscordChannel.Prototype.getMessageAsync(self: DiscordChannel, messageId: string)
 	return Future.try(function()
 		local messageObject = self.discordClient.discordGateway:getAsync(string.format(DiscordEndpoints.BotGetChannelMessage, self.id, messageId)):await()
@@ -61,6 +98,14 @@ function DiscordChannel.Prototype.getMessageAsync(self: DiscordChannel, messageI
 	end)
 end
 
+--[=[
+	Deletes multiple messages from the channel asynchronously.
+
+	@method bulkDeleteMessagesAsync
+	@param messageIds {string} -- A list of message IDs to delete.
+	@within Objects.DiscordChannel
+	@return Future
+]=]
 function DiscordChannel.Prototype.bulkDeleteMessagesAsync(self: DiscordChannel, messageIds: { string })
 	return Future.try(function()
 		return self.discordClient.discordGateway:postAsync(string.format(DiscordEndpoints.BotBulkDeleteMessages, self.id), {
@@ -69,6 +114,14 @@ function DiscordChannel.Prototype.bulkDeleteMessagesAsync(self: DiscordChannel, 
 	end)
 end
 
+--[=[
+	Sends a message to the channel asynchronously.
+
+	@method sendMessageAsync
+	@param messageBuilder DiscordMessageBuilder -- The message builder object.
+	@within Objects.DiscordChannel
+	@return Future
+]=]
 function DiscordChannel.Prototype.sendMessageAsync(self: DiscordChannel, messageBuilder: DiscordMessageBuilder.DiscordMessageBuilder)
 	return Future.try(function()
 		return self.discordClient.discordGateway:postAsync(
@@ -78,6 +131,13 @@ function DiscordChannel.Prototype.sendMessageAsync(self: DiscordChannel, message
 	end)
 end
 
+--[=[
+	Gets the invites for the channel asynchronously.
+
+	@method getInvitesAsync
+	@within Objects.DiscordChannel
+	@return Future
+]=]
 function DiscordChannel.Prototype.getInvitesAsync(self: DiscordChannel)
 	return Future.try(function()
 		local invites = self.discordClient.discordGateway:getAsync(
@@ -92,6 +152,16 @@ function DiscordChannel.Prototype.getInvitesAsync(self: DiscordChannel)
 	end)
 end
 
+--[=[
+	Creates an invite for the channel asynchronously.
+
+	@method createInviteAsync
+	@param maxAge number? -- The maximum age of the invite in seconds.
+	@param maxUses number? -- The maximum number of uses for the invite.
+	@param temporary boolean? -- Whether the invite grants temporary membership.
+	@within Objects.DiscordChannel
+	@return Future
+]=]
 function DiscordChannel.Prototype.createInviteAsync(self: DiscordChannel, maxAge: number?, maxUses: number?, temporary: boolean?)
 	return Future.try(function()
 		local inviteData = self.discordClient.discordGateway:postAsync(string.format(DiscordEndpoints.BotGetInvites, self.id), {
@@ -104,6 +174,16 @@ function DiscordChannel.Prototype.createInviteAsync(self: DiscordChannel, maxAge
 	end)
 end
 
+--[=[
+	Sets the position of the channel asynchronously.
+
+	@method setPositionAsync
+	@param position number -- The new position of the channel.
+	@param parentId string? -- The ID of the new parent category.
+	@param syncPermissions boolean? -- Whether to sync permissions with the new parent.
+	@within Objects.DiscordChannel
+	@return Future
+]=]
 function DiscordChannel.Prototype.setPositionAsync(self: DiscordChannel, position: number, parentId: string?, syncPermissions: boolean?)
 	return Future.try(function()
 		return self.discordClient.discordGateway:patchAsync(string.format(DiscordEndpoints.BotModifyGuildChannelPosition, self.id), {
@@ -115,6 +195,15 @@ function DiscordChannel.Prototype.setPositionAsync(self: DiscordChannel, positio
 	end)
 end
 
+--[=[
+	Creates a new DiscordChannel instance.
+	
+	@function new
+	@param discordClient any -- The Discord client instance.
+	@param rawChannelData any -- The raw data for the channel.
+	@within Objects.DiscordChannel
+	@return DiscordChannel
+]=]
 function DiscordChannel.Interface.new(discordClient: any, rawChannelData: any): DiscordChannel
 	-- https://discord.com/developers/docs/resources/channel#channel-object-channel-types
 	-- todo: support other channel types lol

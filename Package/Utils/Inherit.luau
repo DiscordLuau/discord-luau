@@ -1,9 +1,7 @@
 --!nocheck
 
 --[[
-	Construct utility method for centralising all hacky metatable stuff.
-
-	Every 'Class' discord-luau uses should rely on this function to generate/instantiate that class object.
+	Inherit the prototype of another class, into an already constructed discord-luau class.
 ]]
 
 local function failCall(object: any, callType: string)

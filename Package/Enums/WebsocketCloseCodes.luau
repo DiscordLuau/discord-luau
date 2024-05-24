@@ -1,4 +1,6 @@
-return {
+-- https://discord.com/developers/docs/topics/opcodes-and-status-codes#gateway-gateway-close-event-codes
+
+local WebsocketCloseCodes = {
 	UnknownError = 4000,
 	UnknownOperation = 4001,
 	DecodeError = 4002,
@@ -16,3 +18,7 @@ return {
 
 	VoiceServerCrashed = 4015,
 }
+
+export type WebsocketCloseCodes = number
+
+return WebsocketCloseCodes

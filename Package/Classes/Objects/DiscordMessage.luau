@@ -16,7 +16,7 @@ local Net = require("../../Std/Net")
 --[=[
 	@class Objects.DiscordMessage
 
-	(sorry I will add docs for this lol, just haven't got around to it yet!)
+	DiscordMessage represents a message in a Discord channel, providing methods to reply, delete, pin, unpin, edit, and manage reactions.
 ]=]
 local DiscordMessage = {}
 
@@ -25,6 +25,14 @@ DiscordMessage.Interface = {}
 
 DiscordMessage.Prototype.type = "DiscordMessage"
 
+--[=[
+	Replies to the message asynchronously.
+	
+	@method replyAsync
+	@param messageBuilder DiscordMessageBuilder -- The message builder containing the reply content.
+	@return Future<unknown> -- A future that resolves when the reply is sent.
+	@within Objects.DiscordMessage
+]=]
 function DiscordMessage.Prototype.replyAsync(self: DiscordMessage, messageBuilder: DiscordMessageBuilder.DiscordMessageBuilder)
 	return Future.try(function()
 		return self.discordClient.discordGateway:postAsync(
@@ -34,24 +42,53 @@ function DiscordMessage.Prototype.replyAsync(self: DiscordMessage, messageBuilde
 	end)
 end
 
+--[=[
+	Deletes the message asynchronously.
+	
+	@method deleteAsync
+	@return Future<unknown> -- A future that resolves when the message is deleted.
+	@within Objects.DiscordMessage
+]=]
 function DiscordMessage.Prototype.deleteAsync(self: DiscordMessage)
 	return Future.try(function()
 		return self.discordClient.discordGateway:deleteAsync(string.format(DiscordEndpoints.BotDeleteMessage, self.channelId, self.id)):await()
 	end)
 end
 
+--[=[
+	Pins the message asynchronously.
+	
+	@method pinAsync
+	@return Future<unknown> -- A future that resolves when the message is pinned.
+	@within Objects.DiscordMessage
+]=]
 function DiscordMessage.Prototype.pinAsync(self: DiscordMessage)
 	return Future.try(function()
 		return self.discordClient.discordGateway:putAsync(string.format(DiscordEndpoints.BotPinMessage, self.channelId, self.id)):await()
 	end)
 end
 
+--[=[
+	Unpins the message asynchronously.
+	
+	@method unpinAsync
+	@return Future<unknown> -- A future that resolves when the message is unpinned.
+	@within Objects.DiscordMessage
+]=]
 function DiscordMessage.Prototype.unpinAsync(self: DiscordMessage)
 	return Future.try(function()
 		return self.discordClient.discordGateway:deleteAsync(string.format(DiscordEndpoints.BotUnpinMessage, self.channelId, self.id)):await()
 	end)
 end
 
+--[=[
+	Edits the message asynchronously.
+	
+	@method editAsync
+	@param messageBuilder DiscordMessageBuilder -- The message builder containing the new content.
+	@within Objects.DiscordMessage
+	@return Future<unknown> -- A future that resolves when the message is edited.
+]=]
 function DiscordMessage.Prototype.editAsync(self: DiscordMessage, messageBuilder: DiscordMessageBuilder.DiscordMessageBuilder)
 	return Future.try(function()
 		return self.discordClient.discordGateway:patchAsync(
@@ -61,6 +98,14 @@ function DiscordMessage.Prototype.editAsync(self: DiscordMessage, messageBuilder
 	end)
 end
 
+--[=[
+	Adds a reaction to the message asynchronously.
+	
+	@method addReactionAsync
+	@param reaction string -- The reaction to be added.
+	@within Objects.DiscordMessage
+	@return Future<unknown> -- A future that resolves when the reaction is added.
+]=]
 function DiscordMessage.Prototype.addReactionAsync(self: DiscordMessage, reaction: string)
 	return Future.try(function()
 		local isBinary = string.find(reaction, ":") == nil
@@ -71,6 +116,14 @@ function DiscordMessage.Prototype.addReactionAsync(self: DiscordMessage, reactio
 	end)
 end
 
+--[=[
+	Removes a reaction from the message asynchronously.
+	
+	@method removeReactionAsync
+	@param reaction string -- The reaction to be removed.
+	@within Objects.DiscordMessage
+	@return Future<unknown> -- A future that resolves when the reaction is removed.
+]=]
 function DiscordMessage.Prototype.removeReactionAsync(self: DiscordMessage, reaction: string)
 	return Future.try(function()
 		local isBinary = string.find(reaction, ":") == nil
@@ -81,6 +134,16 @@ function DiscordMessage.Prototype.removeReactionAsync(self: DiscordMessage, reac
 	end)
 end
 
+--[=[
+	
+	Removes a reaction from a specific user on the message asynchronously.
+	
+	@method removeUserReactionAsync
+	@param userId string -- The ID of the user whose reaction is to be removed.
+	@param reaction string -- The reaction to be removed.
+	@within Objects.DiscordMessage
+	@return Future<unknown> -- A future that resolves when the user's reaction is removed.
+]=]
 function DiscordMessage.Prototype.removeUserReactionAsync(self: DiscordMessage, userId: string, reaction: string)
 	return Future.try(function()
 		local isBinary = string.find(reaction, ":") == nil
@@ -91,6 +154,14 @@ function DiscordMessage.Prototype.removeUserReactionAsync(self: DiscordMessage, 
 	end)
 end
 
+--[=[
+	Gets the reactions on the message asynchronously.
+	
+	@method getReactionsAsync
+	@param reaction string -- The reaction to retrieve.
+	@within Objects.DiscordMessage
+	@return Future<unknown> -- A future that resolves to the reactions.
+]=]
 function DiscordMessage.Prototype.getReactionsAsync(self: DiscordMessage, reaction: string)
 	return Future.try(function()
 		local isBinary = string.find(reaction, ":") == nil
@@ -101,6 +172,13 @@ function DiscordMessage.Prototype.getReactionsAsync(self: DiscordMessage, reacti
 	end)
 end
 
+--[=[
+	Removes all reactions from the message asynchronously.
+	
+	@method removeAllReactionsAsync
+	@return Future<unknown> -- A future that resolves when all reactions are removed.
+	@within Objects.DiscordMessage
+]=]
 function DiscordMessage.Prototype.removeAllReactionsAsync(self: DiscordMessage)
 	return Future.try(function()
 		return self.discordClient.discordGateway:deleteAsync(
@@ -109,6 +187,14 @@ function DiscordMessage.Prototype.removeAllReactionsAsync(self: DiscordMessage)
 	end)
 end
 
+--[=[
+	Removes all reactions for a specific emoji from the message asynchronously.
+	
+	@method removeAllReactionsForEmojiAsync
+	@param reaction string -- The emoji whose reactions are to be removed.
+	@within Objects.DiscordMessage
+	@return Future<unknown> -- A future that resolves when the reactions for the emoji are removed.
+]=]
 function DiscordMessage.Prototype.removeAllReactionsForEmojiAsync(self: DiscordMessage, reaction: string)
 	return Future.try(function()
 		local isBinary = string.find(reaction, ":") == nil
@@ -119,6 +205,15 @@ function DiscordMessage.Prototype.removeAllReactionsForEmojiAsync(self: DiscordM
 	end)
 end
 
+--[=[
+	Creates a new instance of DiscordMessage.
+	
+	@function new
+	@param discordClient any -- The Discord client instance.
+	@param messageData table -- The data for the message to be created.
+	@within Objects.DiscordMessage
+	@return DiscordMessage -- A new instance of DiscordMessage.
+]=]
 function DiscordMessage.Interface.new(discordClient: any, messageData: {
 	id: string,
 

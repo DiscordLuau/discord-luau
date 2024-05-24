@@ -5,15 +5,31 @@ local CacheType = require("../../Enums/CacheType")
 --[=[
 	@class Objects.DiscordEmoji
 
-	(sorry I will add docs for this lol, just haven't got around to it yet!)
+	The `DiscordEmoji` class represents a Discord emoji and provides a structure for emoji data.
 ]=]
 local DiscordEmoji = {}
 
 DiscordEmoji.Prototype = {}
 DiscordEmoji.Interface = {}
 
+--[=[
+	@prop type string
+	@within Objects.DiscordEmoji
+	@readonly
+
+	The type of the DiscordEmoji. Default is "DiscordEmoji".
+]=]
 DiscordEmoji.Prototype.type = "DiscordEmoji"
 
+--[=[
+	Creates a new DiscordEmoji instance.
+
+	@function new
+	@param discordClient any -- The Discord client instance.
+	@param emojiData table -- The raw data for the emoji.
+	@return DiscordEmoji -- The newly created DiscordEmoji instance.
+	@within Objects.DiscordEmoji
+]=]
 function DiscordEmoji.Interface.new(discordClient: any, emojiData: {
 	id: string,
 	name: string,

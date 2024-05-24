@@ -11,7 +11,7 @@ local DiscordVoiceConnection = require("../Network/DiscordVoiceConnection")
 --[=[
 	@class Objects.DiscordVoiceChannel
 
-	(sorry I will add docs for this lol, just haven't got around to it yet!)
+	DiscordVoiceChannel represents a voice channel in a Discord server, providing methods to connect, disconnect, and modify the channel.
 ]=]
 local DiscordVoiceChannel = {}
 
@@ -20,6 +20,13 @@ DiscordVoiceChannel.Interface = {}
 
 DiscordVoiceChannel.Prototype.type = "DiscordVoiceChannel"
 
+--[=[
+	Connects to the voice channel asynchronously.
+	
+	@method connectAsync
+	@within Objects.DiscordVoiceChannel
+	@return Future<boolean> -- A future that resolves to a boolean indicating success.
+]=]
 function DiscordVoiceChannel.Prototype.connectAsync(self: DiscordVoiceChannel): Future.Future<boolean>
 	return Future.try(function(): boolean
 		self.voiceConnection = DiscordVoiceConnection.new(self.discordClient, `voice-{self.id}`)
@@ -31,12 +38,27 @@ function DiscordVoiceChannel.Prototype.connectAsync(self: DiscordVoiceChannel): 
 	end)
 end
 
+--[=[
+	Disconnects from the voice channel asynchronously.
+	
+	@method disconnectAsync
+	@within Objects.DiscordVoiceChannel
+	@return Future<unknown> -- A future that resolves when the disconnection is complete.
+]=]
 function DiscordVoiceChannel.Prototype.disconnectAsync(self: DiscordVoiceChannel): Future.Future<unknown>
 	return Future.try(function()
 		return self.voiceConnection:disconnectAsync():await()
 	end)
 end
 
+--[=[
+	Modifies the voice channel settings asynchronously.
+	
+	@method modifyAsync
+	@param channelSchema DiscordVoiceChannelSchema -- The schema containing the modifications to be applied.
+	@within Objects.DiscordVoiceChannel
+	@return Future<unknown> -- A future that resolves when the modifications are complete.
+]=]
 function DiscordVoiceChannel.Prototype.modifyAsync(self: DiscordVoiceChannel, channelSchema: DiscordVoiceChannelSchema)
 	return Future.try(function()
 		return self.discordClient.discordGateway:patchAsync(string.format(DiscordEndpoints.BotModifyChannel, self.id), {
@@ -53,6 +75,15 @@ function DiscordVoiceChannel.Prototype.modifyAsync(self: DiscordVoiceChannel, ch
 	end)
 end
 
+--[=[
+	Creates a new instance of DiscordVoiceChannel.
+	
+	@function new
+	@param discordClient any -- The Discord client instance.
+	@param channelData table -- The data for the channel to be created.
+	@within Objects.DiscordVoiceChannel
+	@return DiscordVoiceChannel -- A new instance of DiscordVoiceChannel.
+]=]
 function DiscordVoiceChannel.Interface.new(discordClient: any, channelData: {
 	id: string,
 	recipients: { unknown },

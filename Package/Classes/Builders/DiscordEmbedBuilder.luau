@@ -6,7 +6,16 @@ local datetime = require("@lune/datetime")
 --[=[
 	@class DiscordEmbedBuilder
 
-	(sorry I will add docs for this lol, just haven't got around to it yet!)
+	DiscordEmbedBuilder is used to construct an embed object for a Discord message.
+
+	Usage:
+	```lua
+	local embed = DiscordEmbedBuilder.new()
+		:setTitle("Embed Title")
+		:setDescription("This is an embed description.")
+		:setColor(0x00FF00)
+		:addField({name = "Field 1", value = "Value 1", inline = true})
+	```
 ]=]
 local DiscordEmbedBuilder = {}
 
@@ -16,8 +25,17 @@ DiscordEmbedBuilder.Prototype = {}
 DiscordEmbedBuilder.Prototype.type = "DiscordEmbedBuilder"
 
 --[=[
-	@prop Type { ... }
-	@within DiscordEmbedBuilder 
+	@prop Type table
+	@within DiscordEmbedBuilder
+
+	An enumeration of embed types.
+
+	- Rich: "rich"
+	- Image: "image"
+	- Video: "video"
+	- Gif: "gifv"
+	- Article: "article"
+	- Link: "link"
 ]=]
 DiscordEmbedBuilder.Interface.Type = Enumerate.new({
 	Rich = "rich",
@@ -29,18 +47,12 @@ DiscordEmbedBuilder.Interface.Type = Enumerate.new({
 })
 
 --[=[
+	Sets the title of the embed.
+	
 	@method setTitle
+	@param title string -- The title of the embed.
 	@within DiscordEmbedBuilder
-
-	@param title string
-
-	@return DiscordEmbedBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return DiscordEmbedBuilder -- Returns the DiscordEmbedBuilder instance for method chaining.
 ]=]
 function DiscordEmbedBuilder.Prototype.setTitle(self: DiscordEmbedBuilder, title: string)
 	self.title = title
@@ -49,18 +61,12 @@ function DiscordEmbedBuilder.Prototype.setTitle(self: DiscordEmbedBuilder, title
 end
 
 --[=[
+	Sets the type of the embed.
+	
 	@method setType
+	@param type string -- The type of the embed.
 	@within DiscordEmbedBuilder
-
-	@param type string
-
-	@return DiscordEmbedBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return DiscordEmbedBuilder -- Returns the DiscordEmbedBuilder instance for method chaining.
 ]=]
 function DiscordEmbedBuilder.Prototype.setType(self: DiscordEmbedBuilder, type: string)
 	self.type = type
@@ -69,18 +75,12 @@ function DiscordEmbedBuilder.Prototype.setType(self: DiscordEmbedBuilder, type: 
 end
 
 --[=[
+	Sets the description of the embed.
+	
 	@method setDescription
+	@param description string -- The description of the embed.
 	@within DiscordEmbedBuilder
-
-	@param description string
-
-	@return DiscordEmbedBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return DiscordEmbedBuilder -- Returns the DiscordEmbedBuilder instance for method chaining.
 ]=]
 function DiscordEmbedBuilder.Prototype.setDescription(self: DiscordEmbedBuilder, description: string)
 	self.description = description
@@ -89,18 +89,12 @@ function DiscordEmbedBuilder.Prototype.setDescription(self: DiscordEmbedBuilder,
 end
 
 --[=[
+	Sets the URL of the embed.
+	
 	@method setUrl
+	@param url string -- The URL of the embed.
 	@within DiscordEmbedBuilder
-
-	@param url string
-
-	@return DiscordEmbedBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return DiscordEmbedBuilder -- Returns the DiscordEmbedBuilder instance for method chaining.
 ]=]
 function DiscordEmbedBuilder.Prototype.setUrl(self: DiscordEmbedBuilder, url: string)
 	self.url = url
@@ -109,18 +103,12 @@ function DiscordEmbedBuilder.Prototype.setUrl(self: DiscordEmbedBuilder, url: st
 end
 
 --[=[
+	Sets the timestamp of the embed.
+	
 	@method setTimestamp
+	@param epoch number -- The timestamp of the embed in epoch time.
 	@within DiscordEmbedBuilder
-
-	@param epoch number
-
-	@return DiscordEmbedBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return DiscordEmbedBuilder -- Returns the DiscordEmbedBuilder instance for method chaining.
 ]=]
 function DiscordEmbedBuilder.Prototype.setTimestamp(self: DiscordEmbedBuilder, epoch: number)
 	self.timestamp = datetime.fromUniversalTime(epoch :: any):toIsoDate()
@@ -129,18 +117,12 @@ function DiscordEmbedBuilder.Prototype.setTimestamp(self: DiscordEmbedBuilder, e
 end
 
 --[=[
+	Sets the color of the embed.
+	
 	@method setColor
+	@param colorHex number -- The color of the embed in hexadecimal.
 	@within DiscordEmbedBuilder
-
-	@param colorHex number
-
-	@return DiscordEmbedBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return DiscordEmbedBuilder -- Returns the DiscordEmbedBuilder instance for method chaining.
 ]=]
 function DiscordEmbedBuilder.Prototype.setColor(self: DiscordEmbedBuilder, colorHex: number)
 	self.color = colorHex
@@ -149,18 +131,12 @@ function DiscordEmbedBuilder.Prototype.setColor(self: DiscordEmbedBuilder, color
 end
 
 --[=[
+	Sets the footer of the embed.
+	
 	@method setFooter
+	@param footerSettings { text: string, icon: string } -- The settings for the footer.
 	@within DiscordEmbedBuilder
-
-	@param footerSettings { text: string, icon: string }
-
-	@return DiscordEmbedBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return DiscordEmbedBuilder -- Returns the DiscordEmbedBuilder instance for method chaining.
 ]=]
 function DiscordEmbedBuilder.Prototype.setFooter(self: DiscordEmbedBuilder, footerSettings: {
 	text: string,
@@ -172,18 +148,12 @@ function DiscordEmbedBuilder.Prototype.setFooter(self: DiscordEmbedBuilder, foot
 end
 
 --[=[
-	@method setFooter
+	Sets the image of the embed.
+	
+	@method setImage
+	@param imageSettings { imageUrl: string, height: number, width: number } -- The settings for the image.
 	@within DiscordEmbedBuilder
-
-	@param imageSettings { imageUrl: string, height: number, width: number }
-
-	@return DiscordEmbedBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return DiscordEmbedBuilder -- Returns the DiscordEmbedBuilder instance for method chaining.
 ]=]
 function DiscordEmbedBuilder.Prototype.setImage(self: DiscordEmbedBuilder, imageSettings: {
 	imageUrl: string,
@@ -196,18 +166,12 @@ function DiscordEmbedBuilder.Prototype.setImage(self: DiscordEmbedBuilder, image
 end
 
 --[=[
+	Sets the thumbnail of the embed.
+	
 	@method setThumbnail
+	@param thumbnailSettings { thumbnailUrl: string, height: number, width: number } -- The settings for the thumbnail.
 	@within DiscordEmbedBuilder
-
-	@param thumbnailSettings { thumbnailUrl: string, height: number, width: number }
-
-	@return DiscordEmbedBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return DiscordEmbedBuilder -- Returns the DiscordEmbedBuilder instance for method chaining.
 ]=]
 function DiscordEmbedBuilder.Prototype.setThumbnail(self: DiscordEmbedBuilder, thumbnailSettings: {
 	thumbnailUrl: string,
@@ -220,18 +184,12 @@ function DiscordEmbedBuilder.Prototype.setThumbnail(self: DiscordEmbedBuilder, t
 end
 
 --[=[
+	Sets the video of the embed.
+	
 	@method setVideo
+	@param videoSettings { videoUrl: string, height: number, width: number } -- The settings for the video.
 	@within DiscordEmbedBuilder
-
-	@param videoSettings { videoUrl: string, height: number, width: number }
-
-	@return DiscordEmbedBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return DiscordEmbedBuilder -- Returns the DiscordEmbedBuilder instance for method chaining.
 ]=]
 function DiscordEmbedBuilder.Prototype.setVideo(self: DiscordEmbedBuilder, videoSettings: {
 	videoUrl: string,
@@ -244,18 +202,12 @@ function DiscordEmbedBuilder.Prototype.setVideo(self: DiscordEmbedBuilder, video
 end
 
 --[=[
+	Sets the provider of the embed.
+	
 	@method setProvider
+	@param providerSettings { name: string, url: string } -- The settings for the provider.
 	@within DiscordEmbedBuilder
-
-	@param providerSettings { name: string, url: string }
-
-	@return DiscordEmbedBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return DiscordEmbedBuilder -- Returns the DiscordEmbedBuilder instance for method chaining.
 ]=]
 function DiscordEmbedBuilder.Prototype.setProvider(self: DiscordEmbedBuilder, providerSettings: {
 	name: string,
@@ -267,18 +219,12 @@ function DiscordEmbedBuilder.Prototype.setProvider(self: DiscordEmbedBuilder, pr
 end
 
 --[=[
+	Sets the author of the embed.
+	
 	@method setAuthor
+	@param authorSettings { name: string, url: string, iconUrl: string } -- The settings for the author.
 	@within DiscordEmbedBuilder
-
-	@param authorSettings { name: string, url: string, iconUrl: string }
-
-	@return DiscordEmbedBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return DiscordEmbedBuilder -- Returns the DiscordEmbedBuilder instance for method chaining.
 ]=]
 function DiscordEmbedBuilder.Prototype.setAuthor(self: DiscordEmbedBuilder, authorSettings: {
 	iconUrl: string,
@@ -291,18 +237,12 @@ function DiscordEmbedBuilder.Prototype.setAuthor(self: DiscordEmbedBuilder, auth
 end
 
 --[=[
+	Adds a field to the embed.
+	
 	@method addField
+	@param fieldSettings { name: string, value: string, inline: boolean? } -- The settings for the field.
 	@within DiscordEmbedBuilder
-
-	@param fieldSettings { name: string, value: string, footer: string, author: string }
-
-	@return DiscordEmbedBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return DiscordEmbedBuilder -- Returns the DiscordEmbedBuilder instance for method chaining.
 ]=]
 function DiscordEmbedBuilder.Prototype.addField(self: DiscordEmbedBuilder, fieldSettings: {
 	name: string,
@@ -315,16 +255,11 @@ function DiscordEmbedBuilder.Prototype.addField(self: DiscordEmbedBuilder, field
 end
 
 --[=[
+	Converts the embed to a JSON object that can be sent to the Discord API.
+	
 	@method toJSONObject
 	@within DiscordEmbedBuilder
-
-	@return { ... }
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return table -- The JSON representation of the embed.
 ]=]
 function DiscordEmbedBuilder.Prototype.toJSONObject(self: DiscordEmbedBuilder)
 	local fields = {}
@@ -379,16 +314,11 @@ function DiscordEmbedBuilder.Prototype.toJSONObject(self: DiscordEmbedBuilder)
 end
 
 --[=[
+	Creates a new instance of DiscordEmbedBuilder.
+	
 	@function new
 	@within DiscordEmbedBuilder
-
-	@return DiscordEmbedBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return DiscordEmbedBuilder -- A new instance of DiscordEmbedBuilder.
 ]=]
 function DiscordEmbedBuilder.Interface.new()
 	return Construct({

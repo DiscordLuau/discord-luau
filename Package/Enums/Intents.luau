@@ -1,4 +1,6 @@
-return {
+-- https://discord.com/developers/docs/topics/opcodes-and-status-codes#gateway-gateway-opcodes
+
+local Intents = {
 	GuildMembers = "GuildMembers",
 	GuildModeration = "GuildModeration",
 	GuildEmojisAndStickers = "GuildEmojisAndStickers",
@@ -20,3 +22,24 @@ return {
 	GuildModerationConfiguration = "GuildModerationConfiguration",
 	GuildModerationExecution = "GuildModerationExecution",
 }
+
+export type Intents = "GuildMembers"
+	| "GuildModeration"
+	| "GuildEmojisAndStickers"
+	| "GuildIntegrations"
+	| "GuildWebhooks"
+	| "GuildInvites"
+	| "GuildVoiceState"
+	| "GuildPresences"
+	| "GuildMessage"
+	| "GuildMessageReactions"
+	| "GuildMessageTyping"
+	| "DirectMessage"
+	| "DirectMessageReactions"
+	| "DirectMessageTyping"
+	| "GuildMessageContent"
+	| "GuildScheduledEvents"
+	| "GuildModerationConfiguration"
+	| "GuildModerationExecution"
+
+return Intents

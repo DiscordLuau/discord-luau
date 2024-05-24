@@ -22,7 +22,11 @@ local ZLIB_SUFFIX_END = "\84"
 --[=[
 	@class Network.DiscordWebsocket
 
-	(sorry I will add docs for this lol, just haven't got around to it yet!)
+	The `DiscordWebsocket` class manages the websocket connection to Discord. It handles sending and receiving messages, managing the connection state, and processing incoming and outgoing events.
+
+	:::caution
+	This class is internal and should not be used directly by developers. Instead, use the provided public interfaces and methods to interact with the Discord websocket.
+	:::
 ]=]
 local DiscordWebsocket = {}
 
@@ -31,12 +35,22 @@ DiscordWebsocket.Prototype = {}
 
 DiscordWebsocket.Prototype.type = "DiscordWebsocket"
 
+--[=[
+	Sends a data packet asynchronously through the websocket.
+	
+	@private
+	@method sendAsync
+	@param self DiscordWebsocket
+	@param dataPacket table -- The data packet to send.
+	@within Network.DiscordWebsocket
+	@return Future
+]=]
 function DiscordWebsocket.Prototype.sendAsync(self: DiscordWebsocket, dataPacket: { [any]: any })
 	local traceback = debug.traceback()
 
 	return Future.try(function()
 		if not self.socketInstance then
-			error(`No WebSocket avaliable!`)
+			error(`No WebSocket available!`)
 		end
 
 		local messageSendOperationSuccessful, result = pcall(function()
@@ -69,6 +83,16 @@ function DiscordWebsocket.Prototype.sendAsync(self: DiscordWebsocket, dataPacket
 	end)
 end
 
+--[=[
+	Connects to a websocket URL asynchronously.
+	
+	@private
+	@method connectAsync
+	@param self DiscordWebsocket
+	@param websocketUrl string -- The URL to connect to.
+	@within Network.DiscordWebsocket
+	@return Future
+]=]
 function DiscordWebsocket.Prototype.connectAsync(self: DiscordWebsocket, websocketUrl: string)
 	return Future.try(function()
 		self.socketUrl = websocketUrl
@@ -105,6 +129,16 @@ function DiscordWebsocket.Prototype.connectAsync(self: DiscordWebsocket, websock
 	end)
 end
 
+--[=[
+	Disconnects from the websocket asynchronously.
+	
+	@private
+	@method disconnectAsync
+	@param self DiscordWebsocket
+	@param closingCode string -- The closing code for the disconnection.
+	@within Network.DiscordWebsocket
+	@return Future
+]=]
 function DiscordWebsocket.Prototype.disconnectAsync(self: DiscordWebsocket, closingCode: string)
 	return Future.try(function()
 		if not self.socketInstance then
@@ -124,6 +158,14 @@ function DiscordWebsocket.Prototype.disconnectAsync(self: DiscordWebsocket, clos
 	end)
 end
 
+--[=[
+	Creates a new instance of `DiscordWebsocket`.
+	
+	@private
+	@method new
+	@return DiscordWebsocket
+	@within Network.DiscordWebsocket
+]=]
 function DiscordWebsocket.Interface.new()
 	local self = Construct({
 		websocketWebsocketBuffer = WebsocketBuffer.new(),

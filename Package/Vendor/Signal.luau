@@ -1,7 +1,10 @@
 --[=[
 	@class Vendor.Signal
 
-	(sorry I will add docs for this lol, just haven't got around to it yet!)
+	The `Vendor.Signal` module is a third-party library used within Discord-Luau for creating and managing events and connections. This module may contain modifications to better integrate with the Discord-Luau framework.
+
+	Original module can be found at: https://create.roblox.com/docs/reference/engine/datatypes/RBXScriptSignal
+
 ]=]
 local Signal = require("Embedded/Sleitnick/Signal")
 

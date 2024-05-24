@@ -9,7 +9,11 @@ local DEFAULT_QUEUE_FREQUENCY = 0
 --[=[
 	@class Network.HTTPScheduler
 
-	(sorry I will add docs for this lol, just haven't got around to it yet!)
+	The `HTTPScheduler` class manages the scheduling of HTTP tasks. It allows for the addition, removal, and execution of tasks at a specified frequency.
+
+	:::caution
+	This class is internal and should not be used directly by developers. Instead, use the provided public interfaces and methods to manage HTTP scheduling.
+	:::
 ]=]
 local HTTPScheduler = {}
 
@@ -18,6 +22,14 @@ HTTPScheduler.Interface = {}
 
 HTTPScheduler.Prototype.type = "HTTPScheduler"
 
+--[=[
+	@within Network.HTTPScheduler
+	@method spawnWorker
+	@private
+	Spawns a new worker task that cycles through scheduled tasks at the specified frequency.
+
+	@param self HTTPScheduler
+]=]
 function HTTPScheduler.Prototype.spawnWorker(self: HTTPScheduler)
 	table.insert(
 		self.workers,
@@ -31,6 +43,14 @@ function HTTPScheduler.Prototype.spawnWorker(self: HTTPScheduler)
 	)
 end
 
+--[=[
+	@within Network.HTTPScheduler
+	@method stopWorker
+	@private
+	Stops and removes a worker task.
+
+	@param self HTTPScheduler
+]=]
 function HTTPScheduler.Prototype.stopWorker(self: HTTPScheduler)
 	local thread = table.remove(self.workers, 1)
 
@@ -41,10 +61,27 @@ function HTTPScheduler.Prototype.stopWorker(self: HTTPScheduler)
 	Task.cancel(thread)
 end
 
+--[=[
+	@within Network.HTTPScheduler
+	@method setFrequency
+	@private
+	Sets the frequency at which tasks are cycled.
+
+	@param self HTTPScheduler
+	@param frequency number -- The frequency in seconds.
+]=]
 function HTTPScheduler.Prototype.setFrequency(self: HTTPScheduler, frequency: number)
 	self.frequency = frequency
 end
 
+--[=[
+	@within Network.HTTPScheduler
+	@method cycle
+	@private
+	Processes the next task in the stack.
+
+	@param self HTTPScheduler
+]=]
 function HTTPScheduler.Prototype.cycle(self: HTTPScheduler)
 	local item = table.remove(self.stack, 1)
 
@@ -57,20 +94,47 @@ function HTTPScheduler.Prototype.cycle(self: HTTPScheduler)
 	local values = { pcall(item) }
 
 	if not values[1] then
-		self.reporter:warn(`HTTP Shceduled call failed: '{values[2]}'`)
+		self.reporter:warn(`HTTP Scheduled call failed: '{values[2]}'`)
 	end
 
 	table.remove(self.processing, 1)
 end
 
+--[=[
+	@within Network.HTTPScheduler
+	@method isActive
+	@private
+	Checks if there are any tasks currently being processed.
+
+	@param self HTTPScheduler
+	@return boolean -- Returns `true` if there are tasks being processed, `false` otherwise.
+]=]
 function HTTPScheduler.Prototype.isActive(self: HTTPScheduler)
 	return #self.processing > 0
 end
 
+--[=[
+	@within Network.HTTPScheduler
+	@method setLimit
+	@private
+	Sets the limit for the number of tasks that can be scheduled.
+
+	@param self HTTPScheduler
+	@param limit number -- The maximum number of tasks.
+]=]
 function HTTPScheduler.Prototype.setLimit(self: HTTPScheduler, limit: number)
 	self.limit = limit
 end
 
+--[=[
+	@within Network.HTTPScheduler
+	@method removeTask
+	@private
+	Removes a task from the scheduler.
+
+	@param self HTTPScheduler
+	@param object function -- The task function to remove.
+]=]
 function HTTPScheduler.Prototype.removeTask<T>(self: HTTPScheduler, object: (...T) -> ...T)
 	local taskIndex = table.find(self.stack, object)
 
@@ -79,6 +143,16 @@ function HTTPScheduler.Prototype.removeTask<T>(self: HTTPScheduler, object: (...
 	end
 end
 
+--[=[
+	Adds a task to the scheduler.
+	
+	@private
+	@method addTask
+	@param self HTTPScheduler
+	@param object function -- The task function to add.
+	@within Network.HTTPScheduler
+	@return any -- Returns the result of the task function.
+]=]
 function HTTPScheduler.Prototype.addTask<T>(self: HTTPScheduler, object: (...T) -> ...T)
 	local thread = coroutine.running()
 
@@ -89,6 +163,15 @@ function HTTPScheduler.Prototype.addTask<T>(self: HTTPScheduler, object: (...T) 
 	return coroutine.yield()
 end
 
+--[=[
+	Creates a new instance of `HTTPScheduler`.
+	
+	@private
+	@method new
+	@param threadCount number? -- The number of worker threads to spawn.
+	@within Network.HTTPScheduler
+	@return HTTPScheduler
+]=]
 function HTTPScheduler.Interface.new(threadCount: number?): HTTPScheduler
 	local self = Construct({
 		stack = {},

@@ -1,6 +1,6 @@
 -- https://discord.com/developers/docs/topics/opcodes-and-status-codes#gateway-gateway-opcodes
 
-return {
+local WebsocketOperationCodes = {
 	Dispatch = 0,
 	Heartbeat = 1,
 	Identify = 2,
@@ -13,3 +13,7 @@ return {
 	Hello = 10,
 	HeartbeatACK = 11,
 }
+
+export type WebsocketOperationCodes = number
+
+return WebsocketOperationCodes

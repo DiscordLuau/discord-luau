@@ -9,7 +9,7 @@ local Future = require("../../Vendor/Future")
 --[=[
 	@class Objects.DiscordInvite
 
-	(sorry I will add docs for this lol, just haven't got around to it yet!)
+	DiscordInvite represents an invite link to a Discord server, providing methods to delete the invite.
 ]=]
 local DiscordInvite = {}
 
@@ -18,12 +18,28 @@ DiscordInvite.Interface = {}
 
 DiscordInvite.Prototype.type = "DiscordInvite"
 
+--[=[
+	Deletes the invite asynchronously.
+	
+	@method deleteAsync
+	@return Future<unknown> -- A future that resolves when the invite is deleted.
+	@within Objects.DiscordInvite
+]=]
 function DiscordInvite.Prototype.deleteAsync(self: DiscordInvite)
 	return Future.try(function()
 		return self.discordClient.discordGateway:deleteAsync(string.format(DiscordEndpoints.BotDeleteInvite, self.code), { }):await()
 	end)
 end
 
+--[=[
+	Creates a new instance of DiscordInvite.
+	
+	@function new
+	@param discordClient any -- The Discord client instance.
+	@param inviteData table -- The data for the invite to be created.
+	@return DiscordInvite -- A new instance of DiscordInvite.
+	@within Objects.DiscordInvite
+]=]
 function DiscordInvite.Interface.new(discordClient: any, inviteData: {
 	code: string,
 })

@@ -11,7 +11,11 @@ local CacheType = require("../../Enums/CacheType")
 --[=[
 	@class Objects.DiscordApplication
 
-	(sorry I will add docs for this lol, just haven't got around to it yet!)
+	The `DiscordApplication` class provides methods to interact with Discord application commands such as creating, deleting, editing, fetching, and setting global application commands.
+
+	@field id string The unique identifier of the Discord application.
+	@field flags number The flags associated with the Discord application.
+	@field discordClient any The Discord client instance associated with the application.
 ]=]
 local DiscordApplication = {}
 
@@ -20,6 +24,14 @@ DiscordApplication.Interface = {}
 
 DiscordApplication.Prototype.type = "DiscordApplication"
 
+--[=[
+	@method createSlashCommandAsync
+	@param command ApplicationCommandBuilder.ApplicationCommandBuilder The command to create.
+	@within Objects.DiscordApplication
+	@return Future<CommandResponse>
+
+	Creates a new slash command for the Discord application.
+]=]
 function DiscordApplication.Prototype.createSlashCommandAsync(self: DiscordApplication, command: ApplicationCommandBuilder.ApplicationCommandBuilder)
 	return Future.try(function()
 		return self.discordClient.discordGateway:postAsync(
@@ -29,6 +41,14 @@ function DiscordApplication.Prototype.createSlashCommandAsync(self: DiscordAppli
 	end)
 end
 
+--[=[
+	@method deleteSlashCommandAsync
+	@param commandId string The ID of the command to delete.
+	@within Objects.DiscordApplication
+	@return Future<CommandResponse>
+
+	Deletes an existing slash command from the Discord application.
+]=]
 function DiscordApplication.Prototype.deleteSlashCommandAsync(self: DiscordApplication, commandId: string)
 	return Future.try(function()
 		return self.discordClient.discordGateway:deleteAsync(
@@ -37,6 +57,15 @@ function DiscordApplication.Prototype.deleteSlashCommandAsync(self: DiscordAppli
 	end)
 end
 
+--[=[
+	@method editSlashCommandAsync
+	@param commandId string The ID of the command to edit.
+	@param command ApplicationCommandBuilder.ApplicationCommandBuilder The updated command data.
+	@within Objects.DiscordApplication
+	@return Future<CommandResponse>
+
+	Edits an existing slash command for the Discord application.
+]=]
 function DiscordApplication.Prototype.editSlashCommandAsync(self: DiscordApplication, commandId: string, command: ApplicationCommandBuilder.ApplicationCommandBuilder)
 	return Future.try(function()
 		return self.discordClient.discordGateway:patchAsync(
@@ -46,6 +75,13 @@ function DiscordApplication.Prototype.editSlashCommandAsync(self: DiscordApplica
 	end)
 end
 
+--[=[
+	@method fetchSlashCommandsAsync
+	@within Objects.DiscordApplication
+	@return Future<{ApplicationCommand}>
+
+	Fetches all existing slash commands for the Discord application.
+]=]
 function DiscordApplication.Prototype.fetchSlashCommandsAsync(self: DiscordApplication)
 	return Future.try(function()
 		return self.discordClient.discordGateway:getAsync(
@@ -54,6 +90,14 @@ function DiscordApplication.Prototype.fetchSlashCommandsAsync(self: DiscordAppli
 	end)
 end
 
+--[=[
+	@method setSlashCommandsAsync
+	@param commands {ApplicationCommandBuilder.ApplicationCommandBuilder} The list of commands to set.
+	@within Objects.DiscordApplication
+	@return Future<nil>
+
+	Sets the slash commands for the Discord application, updating existing ones and creating or deleting as necessary.
+]=]
 function DiscordApplication.Prototype.setSlashCommandsAsync(self: DiscordApplication, commands: { ApplicationCommandBuilder.ApplicationCommandBuilder })
 	return Future.try(function()
 		local allCommands = self:fetchSlashCommandsAsync():await()
@@ -135,6 +179,15 @@ function DiscordApplication.Prototype.setSlashCommandsAsync(self: DiscordApplica
 	end)
 end
 
+--[=[
+	@function new
+	@param discordClient any The Discord client instance.
+	@param applicationData {id: string, flags: number} The application data.
+	@within Objects.DiscordApplication
+	@return DiscordApplication
+
+	Creates a new instance of the DiscordApplication.
+]=]
 function DiscordApplication.Interface.new(discordClient: any, applicationData: {
 	id: string,
 	flags: number

@@ -1,24 +1,6 @@
-export type DiscordEvent = "Ready"
-	| "Message"
-	| "MessageChanged"
-	| "MessageDeleted"
-	| "MessageDeleteBulk"
-	| "ChannelCreate"
-	| "ChannelUpdate"
-	| "ChannelDelete"
-	| "UserUpdate"
-	| "ChannelPinsUpdate"
-	| "GuildCreate"
-	| "GuildUpdate"
-	| "GuildDelete"
-	| "GuildBanAdded"
-	| "GuildBanRemoved"
-	| "GuildMemberJoined"
-	| "GuildMemberRemove"
-	| "GuildMemberUpdate"
-	| "Interaction"
+-- Events that the library will fire from the DiscordClient instance.
 
-return {
+local DiscordEvents = {
 	Ready = "Ready",
 
 	Message = "Message",
@@ -47,3 +29,25 @@ return {
 
 	Interaction = "Interaction"
 }
+
+export type DiscordEvents = "Ready"
+	| "Message"
+	| "MessageChanged"
+	| "MessageDeleted"
+	| "MessageDeleteBulk"
+	| "ChannelCreate"
+	| "ChannelUpdate"
+	| "ChannelDelete"
+	| "UserUpdate"
+	| "ChannelPinsUpdate"
+	| "GuildCreate"
+	| "GuildUpdate"
+	| "GuildDelete"
+	| "GuildBanAdded"
+	| "GuildBanRemoved"
+	| "GuildMemberJoined"
+	| "GuildMemberRemove"
+	| "GuildMemberUpdate"
+	| "Interaction"
+
+return DiscordEvents

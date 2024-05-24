@@ -4,7 +4,18 @@ local Construct = require("../../Utils/Construct")
 --[=[
 	@class ApplicationCommandOptionBuilder
 
-	(sorry I will add docs for this lol, just haven't got around to it yet!)
+	ApplicationCommandOptionBuilder is used to construct options for a Discord application command, including type, name, description, and choices.
+
+	Usage:
+	```lua
+	local option = ApplicationCommandOptionBuilder.new()
+		:setType(ApplicationCommandOptionBuilder.Type.String)
+		:setName("example_option")
+		:setDescription("This is an example option.")
+		:setRequired(true)
+		:addChoice("Choice 1", "value1")
+		:addChoice("Choice 2", "value2")
+	```
 ]=]
 local ApplicationCommandOptionBuilder = {}
 
@@ -14,8 +25,22 @@ ApplicationCommandOptionBuilder.Prototype = {}
 ApplicationCommandOptionBuilder.Prototype.type = "ApplicationCommandOptionBuilder"
 
 --[=[
-	@prop Type { ... }
+	@prop Type table
 	@within ApplicationCommandOptionBuilder
+
+	An enumeration of option types.
+
+	- SubCommand: 1
+	- SubCommandGroup: 2
+	- String: 3
+	- Integer: 4
+	- Boolean: 5
+	- User: 6
+	- Channel: 7
+	- Role: 8
+	- Mentionable: 9
+	- Number: 10
+	- Attachment: 11
 ]=]
 ApplicationCommandOptionBuilder.Interface.Type = Enumerate.new({
 	SubCommand = 1,
@@ -32,8 +57,23 @@ ApplicationCommandOptionBuilder.Interface.Type = Enumerate.new({
 })
 
 --[=[
-	@prop ChannelType { ... }
+	@prop ChannelType table
 	@within ApplicationCommandOptionBuilder
+
+	An enumeration of channel types.
+
+	- GuildText: 0
+	- DirectMessage: 1
+	- GuildVoice: 2
+	- GroupDirectMessage: 3
+	- GuildCategory: 4
+	- GuildAnnouncement: 5
+	- AnnouncementThread: 10
+	- PublicThread: 11
+	- PrivateThread: 12
+	- GuildStageVoice: 13
+	- GuildDirectory: 14
+	- GuildForum: 15
 ]=]
 ApplicationCommandOptionBuilder.Interface.ChannelType = Enumerate.new({
 	GuildText = 0,
@@ -51,21 +91,15 @@ ApplicationCommandOptionBuilder.Interface.ChannelType = Enumerate.new({
 })
 
 --[=[
+	Sets the type of the option.
+	
 	@method setType
+	@param optionType number -- The type of the option.
 	@within ApplicationCommandOptionBuilder
-
-	@param optionType string
-
-	@return ApplicationCommandOptionBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return ApplicationCommandOptionBuilder -- Returns the ApplicationCommandOptionBuilder instance for method chaining.
 ]=]
 function ApplicationCommandOptionBuilder.Prototype.setType(self: ApplicationCommandOptionBuilder, optionType: number)
-	assert(ApplicationCommandOptionBuilder.Interface.Type:Is(optionType), `Expected 'optionType' to of enum 'optionType'`)
+	assert(ApplicationCommandOptionBuilder.Interface.Type:Is(optionType), `Expected 'optionType' to be of enum 'optionType'`)
 
 	self.optionType = optionType
 
@@ -73,18 +107,12 @@ function ApplicationCommandOptionBuilder.Prototype.setType(self: ApplicationComm
 end
 
 --[=[
+	Sets the name of the option.
+	
 	@method setName
+	@param optionName string -- The name of the option.
 	@within ApplicationCommandOptionBuilder
-
-	@param optionName string
-
-	@return ApplicationCommandOptionBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return ApplicationCommandOptionBuilder -- Returns the ApplicationCommandOptionBuilder instance for method chaining.
 ]=]
 function ApplicationCommandOptionBuilder.Prototype.setName(self: ApplicationCommandOptionBuilder, optionName: string)
 	self.optionName = optionName
@@ -93,18 +121,12 @@ function ApplicationCommandOptionBuilder.Prototype.setName(self: ApplicationComm
 end
 
 --[=[
+	Sets the localization code for the option.
+	
 	@method setLocalization
+	@param localizationCode string -- The localization code.
 	@within ApplicationCommandOptionBuilder
-
-	@param localizationCode string
-
-	@return ApplicationCommandOptionBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return ApplicationCommandOptionBuilder -- Returns the ApplicationCommandOptionBuilder instance for method chaining.
 ]=]
 function ApplicationCommandOptionBuilder.Prototype.setLocalization(self: ApplicationCommandOptionBuilder, localizationCode: string)
 	self.optionLocalization = localizationCode
@@ -113,18 +135,12 @@ function ApplicationCommandOptionBuilder.Prototype.setLocalization(self: Applica
 end
 
 --[=[
+	Sets the description of the option.
+	
 	@method setDescription
+	@param optionDescription string -- The description of the option.
 	@within ApplicationCommandOptionBuilder
-
-	@param optionDescription string
-
-	@return ApplicationCommandOptionBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return ApplicationCommandOptionBuilder -- Returns the ApplicationCommandOptionBuilder instance for method chaining.
 ]=]
 function ApplicationCommandOptionBuilder.Prototype.setDescription(self: ApplicationCommandOptionBuilder, optionDescription: string)
 	self.optionDescription = optionDescription
@@ -133,18 +149,12 @@ function ApplicationCommandOptionBuilder.Prototype.setDescription(self: Applicat
 end
 
 --[=[
+	Sets whether the option is required.
+	
 	@method setRequired
+	@param isRequired boolean -- Whether the option is required.
 	@within ApplicationCommandOptionBuilder
-
-	@param isRequired boolean
-
-	@return ApplicationCommandOptionBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return ApplicationCommandOptionBuilder -- Returns the ApplicationCommandOptionBuilder instance for method chaining.
 ]=]
 function ApplicationCommandOptionBuilder.Prototype.setRequired(self: ApplicationCommandOptionBuilder, isRequired: boolean)
 	self.optionRequired = isRequired
@@ -153,22 +163,16 @@ function ApplicationCommandOptionBuilder.Prototype.setRequired(self: Application
 end
 
 --[=[
+	Sets the channel types for the option.
+	
 	@method setChannelTypes
+	@param channelTypes ... -- The channel types.
 	@within ApplicationCommandOptionBuilder
-
-	@param channelTypes ...
-
-	@return ApplicationCommandOptionBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return ApplicationCommandOptionBuilder -- Returns the ApplicationCommandOptionBuilder instance for method chaining.
 ]=]
 function ApplicationCommandOptionBuilder.Prototype.setChannelTypes(self: ApplicationCommandOptionBuilder, ...)
 	for _, channelType in { ... } do
-		assert(ApplicationCommandOptionBuilder.Interface.ChannelType:Is(channelType), `Expected 'channelType' to of enum 'ChannelType'`)
+		assert(ApplicationCommandOptionBuilder.Interface.ChannelType:Is(channelType), `Expected 'channelType' to be of enum 'ChannelType'`)
 	end
 
 	self.optionChannelTypes = { ... }
@@ -177,18 +181,12 @@ function ApplicationCommandOptionBuilder.Prototype.setChannelTypes(self: Applica
 end
 
 --[=[
+	Sets the minimum value for the option.
+	
 	@method setMinValue
+	@param minValue number -- The minimum value.
 	@within ApplicationCommandOptionBuilder
-
-	@param minValue number
-
-	@return ApplicationCommandOptionBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return ApplicationCommandOptionBuilder -- Returns the ApplicationCommandOptionBuilder instance for method chaining.
 ]=]
 function ApplicationCommandOptionBuilder.Prototype.setMinValue(self: ApplicationCommandOptionBuilder, minValue: number)
 	self.optionMinValue = minValue
@@ -197,18 +195,12 @@ function ApplicationCommandOptionBuilder.Prototype.setMinValue(self: Application
 end
 
 --[=[
+	Sets the maximum value for the option.
+	
 	@method setMaxValue
+	@param maxValue number -- The maximum value.
 	@within ApplicationCommandOptionBuilder
-
-	@param maxValue number
-
-	@return ApplicationCommandOptionBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return ApplicationCommandOptionBuilder -- Returns the ApplicationCommandOptionBuilder instance for method chaining.
 ]=]
 function ApplicationCommandOptionBuilder.Prototype.setMaxValue(self: ApplicationCommandOptionBuilder, maxValue: number)
 	self.optionMaxValue = maxValue
@@ -217,18 +209,12 @@ function ApplicationCommandOptionBuilder.Prototype.setMaxValue(self: Application
 end
 
 --[=[
+	Sets the minimum length for the option.
+	
 	@method setMinLength
+	@param minLength number -- The minimum length.
 	@within ApplicationCommandOptionBuilder
-
-	@param minLength number
-
-	@return ApplicationCommandOptionBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return ApplicationCommandOptionBuilder -- Returns the ApplicationCommandOptionBuilder instance for method chaining.
 ]=]
 function ApplicationCommandOptionBuilder.Prototype.setMinLength(self: ApplicationCommandOptionBuilder, minLength: number)
 	self.optionMinLength = minLength
@@ -237,18 +223,12 @@ function ApplicationCommandOptionBuilder.Prototype.setMinLength(self: Applicatio
 end
 
 --[=[
+	Sets the maximum length for the option.
+	
 	@method setMaxLength
+	@param maxLength number -- The maximum length.
 	@within ApplicationCommandOptionBuilder
-
-	@param maxLength number
-
-	@return ApplicationCommandOptionBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return ApplicationCommandOptionBuilder -- Returns the ApplicationCommandOptionBuilder instance for method chaining.
 ]=]
 function ApplicationCommandOptionBuilder.Prototype.setMaxLength(self: ApplicationCommandOptionBuilder, maxLength: number)
 	self.optionMaxLength = maxLength
@@ -257,18 +237,12 @@ function ApplicationCommandOptionBuilder.Prototype.setMaxLength(self: Applicatio
 end
 
 --[=[
+	Sets whether autocomplete is enabled for the option.
+	
 	@method setAutocompleteEnabled
+	@param autocomplete boolean -- Whether autocomplete is enabled.
 	@within ApplicationCommandOptionBuilder
-
-	@param autocomplete boolean
-
-	@return ApplicationCommandOptionBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return ApplicationCommandOptionBuilder -- Returns the ApplicationCommandOptionBuilder instance for method chaining.
 ]=]
 function ApplicationCommandOptionBuilder.Prototype.setAutocompleteEnabled(self: ApplicationCommandOptionBuilder, autocomplete: boolean)
 	self.optionAutocomplete = autocomplete
@@ -277,18 +251,12 @@ function ApplicationCommandOptionBuilder.Prototype.setAutocompleteEnabled(self: 
 end
 
 --[=[
+	Adds a sub-option to the option.
+	
 	@method addOption
+	@param commandOption ApplicationCommandOptionBuilder -- The sub-option to add.
 	@within ApplicationCommandOptionBuilder
-
-	@param commandOption ApplicationCommandOptionBuilder
-
-	@return ApplicationCommandOptionBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return ApplicationCommandOptionBuilder -- Returns the ApplicationCommandOptionBuilder instance for method chaining.
 ]=]
 function ApplicationCommandOptionBuilder.Prototype.addOption(self: ApplicationCommandOptionBuilder, commandOption: ApplicationCommandOptionBuilder)
 	table.insert(self.options, commandOption)
@@ -297,19 +265,13 @@ function ApplicationCommandOptionBuilder.Prototype.addOption(self: ApplicationCo
 end
 
 --[=[
+	Adds a choice to the option.
+	
 	@method addChoice
+	@param choiceName string -- The name of the choice.
+	@param choiceValue any -- The value of the choice.
 	@within ApplicationCommandOptionBuilder
-
-	@param choiceName string
-	@param choiceValue any
-
-	@return ApplicationCommandOptionBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return ApplicationCommandOptionBuilder -- Returns the ApplicationCommandOptionBuilder instance for method chaining.
 ]=]
 function ApplicationCommandOptionBuilder.Prototype.addChoice(self: ApplicationCommandOptionBuilder, choiceName: string, choiceValue: any)
 	self.choices[choiceName] = choiceValue
@@ -318,16 +280,11 @@ function ApplicationCommandOptionBuilder.Prototype.addChoice(self: ApplicationCo
 end
 
 --[=[
+	Converts the option to a JSON object that can be sent to the Discord API.
+	
 	@method toJSONObject
 	@within ApplicationCommandOptionBuilder
-
-	@return { ... }
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return table -- The JSON representation of the option.
 ]=]
 function ApplicationCommandOptionBuilder.Prototype.toJSONObject(self: ApplicationCommandOptionBuilder)
 	local options = {}
@@ -371,16 +328,11 @@ function ApplicationCommandOptionBuilder.Prototype.toJSONObject(self: Applicatio
 end
 
 --[=[
+	Creates a new instance of ApplicationCommandOptionBuilder.
+	
 	@function new
 	@within ApplicationCommandOptionBuilder
-
-	@return ApplicationCommandOptionBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return ApplicationCommandOptionBuilder -- A new instance of ApplicationCommandOptionBuilder.
 ]=]
 function ApplicationCommandOptionBuilder.Interface.new(): ApplicationCommandOptionBuilder
 	return Construct({

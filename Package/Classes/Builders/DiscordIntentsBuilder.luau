@@ -6,23 +6,22 @@ local FetchKeys = require("../../Utils/Dictionary/FetchKeys")
 --[=[
 	@class DiscordIntentsBuilder
 
-	https://discord.com/developers/docs/topics/gateway#gateway-intents
+	DiscordIntentsBuilder is used to construct intents for a Discord bot, specifying which events the bot will receive.
 
-	(sorry I will add docs for this lol, just haven't got around to it yet!)
-
+	Usage:
 	```lua
-		local DiscordLuau = require("../Submodules/DiscordLuau")
+	local DiscordLuau = require("../Submodules/DiscordLuau")
 
-		local DiscordIntentsBuilder = DiscordLuau.DiscordIntentsBuilder.fromAll()
-		local DiscordSettings = DiscordLuau.DiscordSettings.new("BOT TOKEN", DiscordIntentsBuilder)
+	local DiscordIntentsBuilder = DiscordLuau.DiscordIntentsBuilder.fromAll()
+	local DiscordSettings = DiscordLuau.DiscordSettings.new("BOT TOKEN", DiscordIntentsBuilder)
 
-		...
+	...
 	```
 ]=]
 local DiscordIntentsBuilder = {}
 
 DiscordIntentsBuilder.Interface = {}
-DiscordIntentsBuilder.Prototype = { }
+DiscordIntentsBuilder.Prototype = {}
 
 DiscordIntentsBuilder.Prototype.type = "DiscordIntentsBuilder"
 
@@ -38,11 +37,9 @@ DiscordIntentsBuilder.DispositionMap = {
 	[Intents.GuildMessage] = 9,
 	[Intents.GuildMessageReactions] = 10,
 	[Intents.GuildMessageTyping] = 11,
-
 	[Intents.DirectMessage] = 12,
 	[Intents.DirectMessageReactions] = 13,
 	[Intents.DirectMessageTyping] = 14,
-
 	[Intents.GuildMessageContent] = 15,
 	[Intents.GuildScheduledEvents] = 16,
 	[Intents.GuildModerationConfiguration] = 20,
@@ -50,18 +47,13 @@ DiscordIntentsBuilder.DispositionMap = {
 }
 
 --[=[
+	
+	Creates a new instance of DiscordIntentsBuilder with the specified intents.
+	
 	@function new
+	@param intentList { string } -- A list of intents to include.
 	@within DiscordIntentsBuilder
-
-	@param intentList { string }
-
-	@return DiscordIntentsBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return DiscordIntentsBuilder -- A new instance of DiscordIntentsBuilder.
 ]=]
 function DiscordIntentsBuilder.Interface.new(intentList: { string })
 	local intentsValue = 0
@@ -80,16 +72,11 @@ function DiscordIntentsBuilder.Interface.new(intentList: { string })
 end
 
 --[=[
+	Creates a new instance of DiscordIntentsBuilder with the default intents.
+	
 	@function fromDefault
 	@within DiscordIntentsBuilder
-
-	@return DiscordIntentsBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return DiscordIntentsBuilder -- A new instance of DiscordIntentsBuilder.
 ]=]
 function DiscordIntentsBuilder.Interface.fromDefault()
 	local defaultIntents = table.clone(Intents) :: { [string]: any }
@@ -102,16 +89,11 @@ function DiscordIntentsBuilder.Interface.fromDefault()
 end
 
 --[=[
+	Creates a new instance of DiscordIntentsBuilder with all available intents.
+	
 	@function fromAll
 	@within DiscordIntentsBuilder
-
-	@return DiscordIntentsBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return DiscordIntentsBuilder -- A new instance of DiscordIntentsBuilder.
 ]=]
 function DiscordIntentsBuilder.Interface.fromAll()
 	local allIntents = table.clone(Intents)

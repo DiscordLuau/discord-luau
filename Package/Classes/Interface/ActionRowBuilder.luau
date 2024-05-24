@@ -7,7 +7,7 @@ local TextInputBuilder = require("TextInputBuilder")
 --[=[
 	@class Interface.ActionRowBuilder
 
-	(sorry I will add docs for this lol, just haven't got around to it yet!)
+	ActionRowBuilder is used to construct an action row, which can contain up to five components like buttons, selections, or text inputs.
 ]=]
 local ActionRowBuilder = {}
 
@@ -16,6 +16,15 @@ ActionRowBuilder.Prototype = {}
 
 ActionRowBuilder.Prototype.type = "ActionRowBuilder"
 
+--[=[
+	Adds a component to the action row. The action row can contain up to five components.
+	
+	@private
+	@method addComponent
+	@param componentObject ActionRowBuilder | ButtonBuilder | SelectionBuilder | TextInputBuilder -- The component to be added.
+	@within Interface.ActionRowBuilder
+	@return ActionRowBuilder -- Returns the ActionRowBuilder instance for method chaining.
+]=]
 function ActionRowBuilder.Prototype.addComponent(
 	self: ActionRowBuilder,
 	componentObject: ActionRowBuilder
@@ -30,6 +39,14 @@ function ActionRowBuilder.Prototype.addComponent(
 	return self
 end
 
+--[=[
+	Converts the action row to a JSON object that can be sent to the Discord API.
+	
+	@private
+	@method toJSONObject
+	@within Interface.ActionRowBuilder
+	@return table -- The JSON representation of the action row.
+]=]
 function ActionRowBuilder.Prototype.toJSONObject(self: ActionRowBuilder)
 	local components = {}
 
@@ -43,6 +60,14 @@ function ActionRowBuilder.Prototype.toJSONObject(self: ActionRowBuilder)
 	}
 end
 
+--[=[
+	Creates a new instance of ActionRowBuilder.
+	
+	@private
+	@function new
+	@within Interface.ActionRowBuilder
+	@return ActionRowBuilder -- A new instance of ActionRowBuilder.
+]=]
 function ActionRowBuilder.Interface.new(): ActionRowBuilder
 	return Construct({
 		components = { }

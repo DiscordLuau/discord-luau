@@ -18,7 +18,9 @@ local Signal = require("../../Vendor/Signal")
 --[=[
 	@class Objects.EventManager
 
-	(sorry I will add docs for this lol, just haven't got around to it yet!)
+	EventManager is responsible for handling Discord events and emitting signals 
+	for various Discord activities such as message events, channel events, user updates, 
+	guild events, and interactions.
 ]=]
 local EventManager = {}
 
@@ -27,38 +29,208 @@ EventManager.Interface = {}
 
 EventManager.Prototype.type = "EventManager"
 
+--[=[
+	
+	Creates a new instance of EventManager and connects it to the provided Discord client.
+	
+	@function new
+	@param discordClient any -- The Discord client instance to connect with the EventManager.
+	@within Objects.EventManager
+	@return EventManager -- A new instance of EventManager.
+]=]
 function EventManager.Interface.new(discordClient): EventManager
 	local self = Construct({
+		--[=[
+			@prop onReady Signal
+			@within Objects.EventManager
+			@tag Event
+
+			Fires when the Discord client is ready.
+		]=]
 		onReady = Signal.new(),
 
+		--[=[
+			@prop onMessage Signal
+			@within Objects.EventManager
+			@tag Event
+
+			Fires when a new message is received.
+			@param message DiscordMessage -- The message received.
+		]=]
 		onMessage = Signal.new(),
+		
+		--[=[
+			@prop onMessageChanged Signal
+			@within Objects.EventManager
+			@tag Event
+
+			Fires when a message is edited.
+			@param message DiscordMessage -- The message that was edited.
+		]=]
 		onMessageChanged = Signal.new(),
+		
+		--[=[
+			@prop onMessageDeleted Signal
+			@within Objects.EventManager
+			@tag Event
+
+			Fires when a message is deleted.
+			@param message DiscordMessage -- The message that was deleted.
+		]=]
 		onMessageDeleted = Signal.new(),
+		
+		--[=[
+			@prop onMessageBulkDeleted Signal
+			@within Objects.EventManager
+			@tag Event
+
+			Fires when multiple messages are deleted.
+			@param data table -- The data containing channelId, guildId, and ids of deleted messages.
+		]=]
 		onMessageBulkDeleted = Signal.new(),
 
+		--[=[
+			@prop onChannelCreate Signal
+			@within Objects.EventManager
+			@tag Event
+
+			Fires when a new channel is created.
+			@param channel DiscordChannel -- The channel created.
+		]=]
 		onChannelCreate = Signal.new(),
+		
+		--[=[
+			@prop onChannelUpdate Signal
+			@within Objects.EventManager
+			@tag Event
+
+			Fires when a channel is updated.
+			@param channel DiscordChannel -- The channel that was updated.
+		]=]
 		onChannelUpdate = Signal.new(),
+		
+		--[=[
+			@prop onChannelDelete Signal
+			@within Objects.EventManager
+			@tag Event
+
+			Fires when a channel is deleted.
+			@param channel DiscordChannel -- The channel that was deleted.
+		]=]
 		onChannelDelete = Signal.new(),
 
+		--[=[
+			@prop onUserUpdated Signal
+			@within Objects.EventManager
+			@tag Event
+
+			Fires when a user is updated.
+			@param user DiscordUser -- The user that was updated.
+		]=]
 		onUserUpdated = Signal.new(),
 
+		--[=[
+			@prop onChannelPinsUpdate Signal
+			@within Objects.EventManager
+			@tag Event
+
+			Fires when a channel's pins are updated.
+			@param data table -- The data containing guildId, channelId, and lastPinTimestamp.
+		]=]
 		onChannelPinsUpdate = Signal.new(),
 
+		--[=[
+			@prop onGuildCreate Signal
+			@within Objects.EventManager
+			@tag Event
+
+			Fires when a new guild is created.
+			@param guild DiscordGuild -- The guild created.
+		]=]
 		onGuildCreate = Signal.new(),
+		
+		--[=[
+			@prop onGuildUpdate Signal
+			@within Objects.EventManager
+			@tag Event
+
+			Fires when a guild is updated.
+			@param guild DiscordGuild -- The guild that was updated.
+		]=]
 		onGuildUpdate = Signal.new(),
+		
+		--[=[
+			@prop onGuildDelete Signal
+			@within Objects.EventManager
+			@tag Event
+
+			Fires when a guild is deleted.
+			@param guild DiscordGuild -- The guild that was deleted.
+		]=]
 		onGuildDelete = Signal.new(),
 
+		--[=[
+			@prop onGuildMemberBanned Signal
+			@within Objects.EventManager
+			@tag Event
+
+			Fires when a guild member is banned.
+			@param data table -- The data containing guildId and user.
+		]=]
 		onGuildMemberBanned = Signal.new(),
+		
+		--[=[
+			@prop onGuildMemberUnbanned Signal
+			@within Objects.EventManager
+			@tag Event
+
+			Fires when a guild member is unbanned.
+			@param data table -- The data containing guildId and user.
+		]=]
 		onGuildMemberUnbanned = Signal.new(),
 
+		--[=[
+			@prop onGuildMemberJoined Signal
+			@within Objects.EventManager
+			@tag Event
+
+			Fires when a new member joins a guild.
+			@param member DiscordGuildMember -- The member that joined.
+		]=]
 		onGuildMemberJoined = Signal.new(),
+		
+		--[=[
+			@prop onGuildMemberLeft Signal
+			@within Objects.EventManager
+			@tag Event
+
+			Fires when a member leaves a guild.
+			@param data table -- The data containing guildId and user.
+		]=]
 		onGuildMemberLeft = Signal.new(),
+		
+		--[=[
+			@prop onGuildMemberUpdated Signal
+			@within Objects.EventManager
+			@tag Event
+
+			Fires when a guild member is updated.
+			@param data table -- The data containing guildId, roles, user, nick, avatar, joinedAt, premiumSince, deaf, mute, pending, and communicationDisabledUntil.
+		]=]
 		onGuildMemberUpdated = Signal.new(),
 
+		--[=[
+			@prop onInteraction Signal
+			@within Objects.EventManager
+			@tag Event
+
+			Fires when an interaction occurs.
+			@param interaction DiscordInteraction -- The interaction that occurred.
+		]=]
 		onInteraction = Signal.new(),
 	}, EventManager.Prototype)
 
-	discordClient.onEvent:connect(function(eventName: DiscordEvents.DiscordEvent, ...)
+	discordClient.onEvent:connect(function(eventName: DiscordEvents.DiscordEvents, ...)
 		if eventName == DiscordEvents.Ready then
 			self.onReady:fire(...)
 		elseif eventName == DiscordEvents.Message then
