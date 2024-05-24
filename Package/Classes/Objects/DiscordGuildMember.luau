@@ -38,7 +38,7 @@ DiscordGuildMember.Prototype.type = "DiscordGuildMember"
 	@within Objects.DiscordGuildMember
 ]=]
 function DiscordGuildMember.Prototype.kickAsync(self: DiscordGuildMember, deleteMessagesSeconds: number?)
-	return self.discordClient.discordGateway:putAsync(string.format(DiscordEndpoints.BotBanGuildMember, self.guildId, self.user.id), {
+	return self.discordClient.discordGateway:putAsync(string.format(DiscordEndpoints.BotRemoveGuildMember, self.guildId, self.user.id), {
 		delete_message_seconds = deleteMessagesSeconds or 0
 	}):await()
 end
@@ -51,7 +51,7 @@ end
 	@within Objects.DiscordGuildMember
 ]=]
 function DiscordGuildMember.Prototype.banAsync(self: DiscordGuildMember)
-	return self.discordClient.discordGateway:deleteAsync(string.format(DiscordEndpoints.BotRemoveGuildMember, self.guildId, self.user.id)):await()
+	return self.discordClient.discordGateway:deleteAsync(string.format(DiscordEndpoints.BotBanGuildMember, self.guildId, self.user.id)):await()
 end
 
 --[=[
