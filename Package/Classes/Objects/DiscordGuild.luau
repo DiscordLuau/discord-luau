@@ -111,9 +111,15 @@ end
 ]=]
 function DiscordGuild.Prototype.fetchGuildChannels(self: DiscordGuild)
 	return Future.try(function()
-		return self.discordClient.discordGateway:getAsync(
-			string.format(DiscordEndpoints.GetGuildApplicationCommands, self.discordClient.discordApplication.id, self.id)
+		local guildChannels = self.discordClient.discordGateway:getAsync(
+			string.format(DiscordEndpoints.BotGetGuildChannels, self.discordClient.discordApplication.id, self.id)
 		):await()
+
+		for key, channelData in guildChannels do
+			guildChannels[key] = DiscordChannel.new(self.discordClient, channelData)
+		end
+
+		return guildChannels
 	end)
 end
 
