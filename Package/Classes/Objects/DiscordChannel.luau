@@ -9,6 +9,7 @@ local DiscordMessageBuilder = require("../Builders/DiscordMessageBuilder")
 
 local DiscordTextChannel = require("DiscordTextChannel")
 local DiscordVoiceChannel = require("DiscordVoiceChannel")
+local DiscordThreadChannel = require("DiscordThreadChannel")
 local DiscordInvite = require("DiscordInvite")
 
 --[=[
@@ -214,6 +215,8 @@ function DiscordChannel.Interface.new(discordClient: any, rawChannelData: any): 
 		baseChannelObject = DiscordTextChannel.new(discordClient, rawChannelData) :: any
 	elseif rawChannelData.type == 2 then
 		baseChannelObject = DiscordVoiceChannel.new(discordClient, rawChannelData) :: any
+	elseif rawChannelData.type == 11 or rawChannelData.type == 12 then
+		baseChannelObject = DiscordThreadChannel.new(discordClient, rawChannelData) :: any
 	else
 		baseChannelObject = rawChannelData
 	end

@@ -34,6 +34,12 @@ return {
 	BotGetPinnedMessages = "channels/%s/pins",
 	BotEditChannelPermissions = "channels/%s",
 
+	BotGetThreadMembers = "channels/%s/thread-members",
+	BotJoinThreadChannel = "channels/%s/thread-members/@me",
+	BotAddMemberToThreadChannel = "channels/%s/thread-members/%s",
+	BotLeaveThreadChannel = "channels/%s/thread-members/@me",
+	BotRemoveMemberFromThreadChannel = "channels/%s/thread-members/%s",
+
 	BotBulkDeleteMessages = "channels/%s/messages/bulk-delete",
 
 	CreateGlobalApplicationCommand = "applications/%s/commands",
