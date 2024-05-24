@@ -20,7 +20,11 @@ local LIBRARY_IDENTIFIER = "DiscordLuau"
 --[=[
 	@class Network.DiscordShard
 
-	(sorry I will add docs for this lol, just haven't got around to it yet!)
+	DiscordShard is an internal class responsible for managing the connection and communication with a specific shard of the Discord WebSocket. This class handles events, errors, and operations specific to a shard.
+
+	:::caution
+	This class is internal and should not be used directly by developers.
+	:::
 ]=]
 local DiscordShard = {}
 
@@ -29,6 +33,13 @@ DiscordShard.Prototype = {}
 
 DiscordShard.Prototype.type = "DiscordShard"
 
+--[=[
+	Observes and handles WebSocket errors.
+	
+	@private
+	@method observeWebsocketErrors
+	@within Network.DiscordShard
+]=]
 function DiscordShard.Prototype.observeWebsocketErrors(self: DiscordShard)
 	table.insert(self.activeConnections, self.discordWebsocket.onSocketDead:connect(function(closeCode)
 		if closeCode == WebsocketCloseCodes.UnknownError then
@@ -61,6 +72,13 @@ function DiscordShard.Prototype.observeWebsocketErrors(self: DiscordShard)
 	end))
 end
 
+--[=[
+	Observes and handles WebSocket events.
+	
+	@private
+	@method observeWebsocketEvents
+	@within Network.DiscordShard
+]=]
 function DiscordShard.Prototype.observeWebsocketEvents(self: DiscordShard)
 	table.insert(self.activeConnections, self.onEvent:connect(function(eventName, data)
 		if eventName == WebsocketEvents.Ready then
@@ -74,6 +92,13 @@ function DiscordShard.Prototype.observeWebsocketEvents(self: DiscordShard)
 	end))
 end
 
+--[=[
+	Observes and handles WebSocket operations.
+	
+	@private
+	@method observeWebsocketOperations
+	@within Network.DiscordShard
+]=]
 function DiscordShard.Prototype.observeWebsocketOperations(self: DiscordShard)
 	table.insert(self.activeConnections, self.discordWebsocket.onOperationRecv:connect(function(operationCode, operationData, eventName, sequence)
 		if operationCode == WebsocketOperationCodes.Dispatch then
@@ -133,6 +158,13 @@ function DiscordShard.Prototype.observeWebsocketOperations(self: DiscordShard)
 	end))
 end
 
+--[=[
+	Initiates the WebSocket connection.
+	
+	@private
+	@method initiateWebsocket
+	@within Network.DiscordShard
+]=]
 function DiscordShard.Prototype.initiateWebsocket(self: DiscordShard)
 	self.discordWebsocket = DiscordWebsocket.new()
 
@@ -145,6 +177,15 @@ function DiscordShard.Prototype.initiateWebsocket(self: DiscordShard)
 	self:observeWebsocketOperations()
 end
 
+--[=[
+	Sends a heartbeat to the Discord WebSocket.
+	
+	@private
+	@method heartbeatAsync
+	@within Network.DiscordShard
+	@param ignoreHeartbeatAck boolean? -- Whether to ignore the heartbeat acknowledgment (optional).
+	@return Future -- A Future that resolves when the heartbeat is sent.
+]=]
 function DiscordShard.Prototype.heartbeatAsync(self: DiscordShard, ignoreHeartbeatAck: boolean?)
 	return Future.try(function()
 		if not ignoreHeartbeatAck then
@@ -166,6 +207,14 @@ function DiscordShard.Prototype.heartbeatAsync(self: DiscordShard, ignoreHeartbe
 	end)
 end
 
+--[=[
+	Schedules the next heartbeat.
+	
+	@private
+	@method heartbeatIn
+	@within Network.DiscordShard
+	@param milliseconds number -- The interval in milliseconds before the next heartbeat.
+]=]
 function DiscordShard.Prototype.heartbeatIn(self: DiscordShard, milliseconds: number)
 	if self.heartbeatTask then
 		Task.cancel(self.heartbeatTask)
@@ -179,6 +228,14 @@ function DiscordShard.Prototype.heartbeatIn(self: DiscordShard, milliseconds: nu
 	end)
 end
 
+--[=[
+	Identifies the Discord client with the Discord WebSocket.
+	
+	@private
+	@method identifyAsync
+	@within Network.DiscordShard
+	@return Future -- A Future that resolves when the client is identified.
+]=]
 function DiscordShard.Prototype.identifyAsync(self: DiscordShard)
 	return Future.try(function()
 		self.discordWebsocket:sendAsync({
@@ -202,12 +259,29 @@ function DiscordShard.Prototype.identifyAsync(self: DiscordShard)
 	end)
 end
 
+--[=[
+	Connects the DiscordShard to the Discord WebSocket.
+	
+	@private
+	@method connectAsync
+	@param websocketUrl string -- The WebSocket URL.
+	@within Network.DiscordShard
+	@return Future -- A Future that resolves when the shard is connected.
+]=]
 function DiscordShard.Prototype.connectAsync(self: DiscordShard, websocketUrl: string)
 	self.websocketUrl = websocketUrl
 
 	return self.discordWebsocket:connectAsync(websocketUrl)
 end
 
+--[=[
+	Resumes a previous session with the Discord WebSocket.
+	
+	@private
+	@method resumeAsync
+	@within Network.DiscordShard
+	@return Future -- A Future that resolves when the session is resumed.
+]=]
 function DiscordShard.Prototype.resumeAsync(self: DiscordShard)
 	return Future.try(function()
 		local gatewayUrl = self.resumeGatewayUrl
@@ -227,6 +301,14 @@ function DiscordShard.Prototype.resumeAsync(self: DiscordShard)
 	end)
 end
 
+--[=[
+	Attempts to reconnect the DiscordShard to the Discord WebSocket.
+	
+	@private
+	@method reconnectAsync
+	@within Network.DiscordShard
+	@return Future -- A Future that resolves when the shard is reconnected.
+]=]
 function DiscordShard.Prototype.reconnectAsync(self: DiscordShard)
 	if self.heartbeatTask then
 		Task.cancel(self.heartbeatTask)
@@ -241,6 +323,16 @@ function DiscordShard.Prototype.reconnectAsync(self: DiscordShard)
 	end)
 end
 
+--[=[
+	Creates a new instance of DiscordShard.
+	
+	@private
+	@function new
+	@param discordClient any -- The Discord client object.
+	@param shardId number -- The ID of the shard.
+	@within Network.DiscordShard
+	@return DiscordShard -- A new instance of DiscordShard.
+]=]
 function DiscordShard.Interface.new(discordClient: any, shardId: number): DiscordShard
 	local self = Construct({
 		discordClient = discordClient,

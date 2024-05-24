@@ -1,3 +1,9 @@
+--[[
+	Maps a key to a API path, allowing us to map out the Discord REST API
+
+	These API Paths adhere sto the luau string formatting, where '%s' is replaced with a different value.
+]]
+
 return {
 	BotGateway = "gateway/bot",
 

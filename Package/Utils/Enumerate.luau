@@ -1,3 +1,7 @@
+--[[
+	Create a list of enumerated values.
+]]
+
 local Enumeration = {}
 
 Enumeration.Type = "Enumeration"

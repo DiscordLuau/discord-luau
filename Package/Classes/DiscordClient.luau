@@ -34,15 +34,15 @@ local CONCURRENT_IDENTIFY_YIELD = 5
 --[=[
 	@class DiscordClient
 
-	The base class that implements the various properties, methods and events that developers can use to interact with the Discord API.
+	The base class that implements the various properties, methods, and events that developers can use to interact with the Discord API.
 
 	```lua
-		local DiscordLuau = require("../Submodules/DiscordLuau")
+	local DiscordLuau = require("../Submodules/DiscordLuau")
 
-		local DiscordSettingsBuilder = DiscordLuau.DiscordSettingsBuilder.new("BOT TOKEN")
-		local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettingsBuilder)
+	local DiscordSettingsBuilder = DiscordLuau.DiscordSettingsBuilder.new("BOT TOKEN")
+	local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettingsBuilder)
 
-		...
+	...
 	```
 ]=]
 local DiscordClient = {}
@@ -58,14 +58,14 @@ DiscordClient.Prototype.type = "DiscordClient"
 
 	@return Future
 
-	Connect the current DiscordClient to the Discord API
+	Connects the current DiscordClient to the Discord API.
 
 	```lua
-		local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettingsBuilder)
+	local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettingsBuilder)
 
-		DiscordClient:connectAsync():after(function()
-			print("Connected to the Discord API!")
-		end)
+	DiscordClient:connectAsync():after(function()
+		print("Connected to the Discord API!")
+	end)
 	```
 ]=]
 function DiscordClient.Prototype.connectAsync(self: DiscordClient)
@@ -187,10 +187,12 @@ function DiscordClient.Prototype.connectAsync(self: DiscordClient)
 end
 
 --[=[
+	Fetches a guild by its ID.
+	
 	@method fetchGuildAsync
+	@param guildId string -- The ID of the guild to fetch.
 	@within DiscordClient
-
-	@return Future
+	@return Future<DiscordGuild> -- A future resolving to the fetched DiscordGuild.
 ]=]
 function DiscordClient.Prototype.fetchGuildAsync(self: DiscordClient, guildId: string): Future.Future<DiscordGuild.DiscordGuild>
 	return Future.try(function()
@@ -201,10 +203,13 @@ function DiscordClient.Prototype.fetchGuildAsync(self: DiscordClient, guildId: s
 end
 
 --[=[
+	
+	Fetches a channel by its ID.
+	
 	@method fetchChannelAsync
+	@param channelId string -- The ID of the channel to fetch.
 	@within DiscordClient
-
-	@return Future
+	@return Future<DiscordChannel> -- A future resolving to the fetched DiscordChannel.
 ]=]
 function DiscordClient.Prototype.fetchChannelAsync(self: DiscordClient, channelId: string): Future.Future<DiscordChannel.DiscordChannel>
 	return Future.try(function()
@@ -215,10 +220,12 @@ function DiscordClient.Prototype.fetchChannelAsync(self: DiscordClient, channelI
 end
 
 --[=[
+	Updates the client's presence.
+	
 	@method updatePresenceAsync
+	@param discordPresence table -- The presence data to update.
 	@within DiscordClient
-
-	@return Future
+	@return Future<boolean> -- A future resolving to a boolean indicating success.
 ]=]
 function DiscordClient.Prototype.updatePresenceAsync(self: DiscordClient, discordPresence): Future.Future<boolean>
 	return Future.try(function()
@@ -236,27 +243,30 @@ function DiscordClient.Prototype.updatePresenceAsync(self: DiscordClient, discor
 end
 
 --[=[
+	Sets the verbosity level for logging.
+	
 	@method setVerbose
 	@within DiscordClient
+	@param verbose boolean -- Whether to enable verbose logging.
 ]=]
 function DiscordClient.Prototype.setVerbose(self: DiscordClient, verbose: boolean)
 	Console.setGlobalLogLevel(verbose and Console.LogLevel.debug or Console.LogLevel.warn)
 end
 
 --[=[
+	Constructor function for the Discord Client, used to instantiate a Discord Client object.
+		
 	@function new
+	@param discordSettings DiscordSettingsBuilder -- The settings builder for the client.
 	@within DiscordClient
-
-	@return DiscordClient
-
-	Constructor function for the Discord Client, this is where you'll be able to instantiate a Discord Client object.
+	@return DiscordClient -- A new instance of DiscordClient.
 
 	```lua
-		local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettingsBuilder)
+	local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettingsBuilder)
 
-		DiscordClient:connectAsync():after(function()
-			print("Connected to the Discord API!")
-		end)
+	DiscordClient:connectAsync():after(function()
+		print("Connected to the Discord API!")
+	end)
 	```
 ]=]
 function DiscordClient.Interface.new(discordSettings: DiscordSettingsBuilder.DiscordSettingsBuilder): DiscordClient

@@ -21,7 +21,11 @@ local BASE_VOICE_CONNECTION_PORT = 1050
 --[=[
 	@class Network.DiscordVoiceConnection
 
-	(sorry I will add docs for this lol, just haven't got around to it yet!)
+	The `DiscordVoiceConnection` class handles the voice connection functionalities for Discord-Luau. This class is responsible for managing the lifecycle of a voice connection, handling websocket operations, and ensuring proper communication with Discord's voice servers.
+
+	:::caution
+	This class is internal and should not be used directly by developers. Instead, use the provided public interfaces and methods to interact with voice connections.
+	:::
 ]=]
 local DiscordVoiceConnection = {}
 
@@ -33,6 +37,14 @@ DiscordVoiceConnection.Prototype.type = "DiscordVoiceConnection"
 
 DiscordVoiceConnection.Prototype.activeConnections = 0
 
+--[=[
+	Observes and handles errors from the voice websocket.
+	
+	@private
+	@method observeWebsocketErrors
+	@param self DiscordVoiceConnection
+	@within Network.DiscordVoiceConnection
+]=]
 function DiscordVoiceConnection.Prototype.observeWebsocketErrors(self: DiscordVoiceConnection)
 	self.voiceWebsocket.onSocketDead:connect(function(closeCode)
 		if closeCode == VoiceWebsocketCloseCodes.UnknownError then
@@ -63,6 +75,14 @@ function DiscordVoiceConnection.Prototype.observeWebsocketErrors(self: DiscordVo
 	end)
 end
 
+--[=[
+	Observes and handles operations received from the voice websocket.
+	
+	@private
+	@method observeWebsocketOperations
+	@param self DiscordVoiceConnection
+	@within Network.DiscordVoiceConnection
+]=]
 function DiscordVoiceConnection.Prototype.observeWebsocketOperations(self: DiscordVoiceConnection)
 	self.voiceWebsocket.onOperationRecv:connect(function(operationCode, operationData)
 		if operationCode == VoiceWebsocketOperationCodes.Hello then
@@ -77,7 +97,7 @@ function DiscordVoiceConnection.Prototype.observeWebsocketOperations(self: Disco
 			self.heartbeatPing = os.clock() - self.heartbeatClockTime :: number
 
 			if operationData ~= self.heartbeatNonce then
-				self.reporter:warn(`HeartbeatACK - nonce recieved was incorrect`)
+				self.reporter:warn(`HeartbeatACK - nonce received was incorrect`)
 			end
 
 			self.reporter:debug(`HeartbeatACK - Ping: {self.heartbeatPing}`)
@@ -125,6 +145,16 @@ function DiscordVoiceConnection.Prototype.observeWebsocketOperations(self: Disco
 	end)
 end
 
+--[=[
+	Sends a heartbeat to the voice websocket and manages the heartbeat acknowledgements.
+	
+	@private
+	@method heartbeatAsync
+	@param self DiscordVoiceConnection
+	@param ignoreHeartbeatAck boolean? -- Whether to ignore heartbeat acknowledgements.
+	@within Network.DiscordVoiceConnection
+	@return Future
+]=]
 function DiscordVoiceConnection.Prototype.heartbeatAsync(self: DiscordVoiceConnection, ignoreHeartbeatAck: boolean?)
 	return Future.try(function()
 		if not ignoreHeartbeatAck then
@@ -147,6 +177,15 @@ function DiscordVoiceConnection.Prototype.heartbeatAsync(self: DiscordVoiceConne
 	end)
 end
 
+--[=[
+	Schedules the next heartbeat to be sent after a specified interval.
+	
+	@private
+	@method heartbeatIn
+	@param self DiscordVoiceConnection
+	@param milliseconds number -- The interval in milliseconds before the next heartbeat is sent.
+	@within Network.DiscordVoiceConnection
+]=]
 function DiscordVoiceConnection.Prototype.heartbeatIn(self: DiscordVoiceConnection, milliseconds: number)
 	if self.heartbeatTask then
 		Task.cancel(self.heartbeatTask)
@@ -160,12 +199,32 @@ function DiscordVoiceConnection.Prototype.heartbeatIn(self: DiscordVoiceConnecti
 	end)
 end
 
+--[=[
+	Sends an identify operation to the voice websocket.
+	
+	@private
+	@method identifyAsync
+	@param self DiscordVoiceConnection
+	@within Network.DiscordVoiceConnection
+	@return Future
+]=]
 function DiscordVoiceConnection.Prototype.identifyAsync(self: DiscordVoiceConnection)
 	return Future.try(function()
-		
+		-- Implementation for identifying with the voice websocket
 	end)
 end
 
+--[=[
+	Connects to a voice channel asynchronously.
+	
+	@private
+	@method connectAsync
+	@param self DiscordVoiceConnection
+	@param guildId string -- The ID of the guild.
+	@param channelId string -- The ID of the channel.
+	@within Network.DiscordVoiceConnection
+	@return Future
+]=]
 function DiscordVoiceConnection.Prototype.connectAsync(self: DiscordVoiceConnection, guildId: string, channelId: string)
 	return Future.try(function()
 		local guildObject = self.discordClient:fetchGuildAsync(guildId):await()
@@ -220,6 +279,15 @@ function DiscordVoiceConnection.Prototype.connectAsync(self: DiscordVoiceConnect
 	end)
 end
 
+--[=[
+	Resumes a voice connection asynchronously.
+	
+	@private
+	@method resumeAsync
+	@param self DiscordVoiceConnection
+	@within Network.DiscordVoiceConnection
+	@return Future
+]=]
 function DiscordVoiceConnection.Prototype.resumeAsync(self: DiscordVoiceConnection)
 	return Future.try(function()
 		self.voiceWebsocket:connectAsync(`wss://{self.voiceServerUpdate.endpoint}/?v=4`):await()
@@ -236,6 +304,15 @@ function DiscordVoiceConnection.Prototype.resumeAsync(self: DiscordVoiceConnecti
 	end)
 end
 
+--[=[
+	Reconnects to the voice websocket asynchronously.
+	
+	@private
+	@method reconnectAsync
+	@param self DiscordVoiceConnection
+	@within Network.DiscordVoiceConnection
+	@return Future
+]=]
 function DiscordVoiceConnection.Prototype.reconnectAsync(self: DiscordVoiceConnection)
 	if self.heartbeatTask then
 		Task.cancel(self.heartbeatTask)
@@ -250,6 +327,15 @@ function DiscordVoiceConnection.Prototype.reconnectAsync(self: DiscordVoiceConne
 	end)
 end
 
+--[=[
+	Disconnects from the voice websocket asynchronously.
+	
+	@private
+	@method disconnectAsync
+	@param self DiscordVoiceConnection
+	@within Network.DiscordVoiceConnection
+	@return Future
+]=]
 function DiscordVoiceConnection.Prototype.disconnectAsync(self: DiscordVoiceConnection)
 	return Future.try(function()
 		if self.heartbeatTask then
@@ -274,6 +360,16 @@ function DiscordVoiceConnection.Prototype.disconnectAsync(self: DiscordVoiceConn
 	end)
 end
 
+--[=[
+	Creates a new instance of `DiscordVoiceConnection`.
+	
+	@private
+	@method new
+	@param discordClient any -- The Discord client.
+	@param id string -- The ID for this connection.
+	@within Network.DiscordVoiceConnection
+	@return DiscordVoiceConnection
+]=]
 function DiscordVoiceConnection.Interface.new(discordClient: any, id: string): DiscordVoiceConnection
 	local self = Construct({
 		voiceWebsocket = DiscordWebsocket.new(),

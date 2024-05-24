@@ -1,6 +1,6 @@
--- https://discord.com/developers/docs/topics/opcodes-and-status-codes#gateway-gateway-opcodes
+-- https://discord.com/developers/docs/topics/opcodes-and-status-codes#voice-voice-opcodes
 
-return {
+local VoiceWebsocketOperationCodes = {
 	Identify = 0,
 	SelectProtocol = 1,
 	Ready = 2,
@@ -13,3 +13,7 @@ return {
 	Resumed = 9,
 	ClientDisconnect = 13
 }
+
+export type VoiceWebsocketOperationCodes = number
+
+return VoiceWebsocketOperationCodes

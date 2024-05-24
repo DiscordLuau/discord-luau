@@ -1,4 +1,6 @@
-return {
+-- https://discord.com/developers/docs/topics/opcodes-and-status-codes#voice-voice-close-event-codes
+
+local VoiceWebsocketCloseCodes = {
 	UnknownError = 4000,
 	UnknownOperation = 4001,
 	DecodeError = 4002,
@@ -13,3 +15,7 @@ return {
 	VoiceServerCrashed = 4015,
 	UnknownEncryptionMode = 4016,
 }
+
+export type VoiceWebsocketCloseCodes = number
+
+return VoiceWebsocketCloseCodes

@@ -5,18 +5,19 @@ local DiscordIntentsBuilder = require("DiscordIntentsBuilder")
 --[=[
 	@class DiscordSettingsBuilder
 
-	A simple class to retain some generic data before a Discord Client can be started, for inst;
+	A simple class to retain some generic data before a Discord Client can be started, for instance:
 
-	- The discord bot Token/Authentication
-	- The discord bot Intents
+	- The Discord bot token/authentication
+	- The Discord bot intents
 
+	Usage:
 	```lua
-		local DiscordLuau = require("../Submodules/DiscordLuau")
+	local DiscordLuau = require("../Submodules/DiscordLuau")
 
-		local DiscordIntentsBuilder = DiscordLuau.DiscordIntentsBuilder.fromAll()
-		local DiscordSettingsBuilder = DiscordLuau.DiscordSettingsBuilder.new("BOT TOKEN", DiscordIntentsBuilder)
+	local DiscordIntentsBuilder = DiscordLuau.DiscordIntentsBuilder.fromAll()
+	local DiscordSettingsBuilder = DiscordLuau.DiscordSettingsBuilder.new("BOT TOKEN", DiscordIntentsBuilder)
 
-		...
+	...
 	```
 ]=]
 local DiscordSettingsBuilder = {}
@@ -27,18 +28,12 @@ DiscordSettingsBuilder.Prototype = {}
 DiscordSettingsBuilder.Prototype.type = "DiscordSettingsBuilder"
 
 --[=[
+	Sets the Discord bot token.
+	
 	@method setDiscordToken
+	@param discordToken string -- The token for the Discord bot.
 	@within DiscordSettingsBuilder
-
-	@param discordToken string
-
-	@return DiscordSettingsBuilder
-
-	(yet-to-do!)
-
-	```lua
-		
-	```
+	@return DiscordSettingsBuilder -- Returns the DiscordSettingsBuilder instance for method chaining.
 ]=]
 function DiscordSettingsBuilder.Prototype.setDiscordToken(self: DiscordSettingsBuilder, discordToken: string)
 	self.discordToken = discordToken
@@ -47,18 +42,12 @@ function DiscordSettingsBuilder.Prototype.setDiscordToken(self: DiscordSettingsB
 end
 
 --[=[
+	Sets the Discord bot intents.
+	
 	@method setIntents
+	@param discordIntents DiscordIntentsBuilder -- The intents for the Discord bot.
 	@within DiscordSettingsBuilder
-
-	@param discordIntents !DiscordIntentsBuilder
-
-	@return DiscordSettingsBuilder
-
-	(yet-to-do!)
-
-	```lua
-		
-	```
+	@return DiscordSettingsBuilder -- Returns the DiscordSettingsBuilder instance for method chaining.
 ]=]
 function DiscordSettingsBuilder.Prototype.setIntents(self: DiscordSettingsBuilder, discordIntents: DiscordIntentsBuilder.DiscordIntentsBuilder)
 	self.discordIntents = discordIntents
@@ -67,19 +56,13 @@ function DiscordSettingsBuilder.Prototype.setIntents(self: DiscordSettingsBuilde
 end
 
 --[=[
-	@function new
-	@within DiscordSettingsBuilder
-
-	@param discordToken string
-	@param discordIntents !DiscordIntentsBuilder
+	Constructs a new instance of DiscordSettingsBuilder.
 	
-	@return DiscordSettingsBuilder
-
-	(yet-to-do!)
-
-	```lua
-		
-	```
+	@function new
+	@param discordToken string -- The token for the Discord bot.
+	@param discordIntents DiscordIntentsBuilder? -- (Optional) The intents for the Discord bot. Defaults to `fromDefault` if not provided.
+	@within DiscordSettingsBuilder
+	@return DiscordSettingsBuilder -- A new instance of DiscordSettingsBuilder.
 ]=]
 function DiscordSettingsBuilder.Interface.new(discordToken: string, discordIntents: DiscordIntentsBuilder.DiscordIntentsBuilder?)
 	return Construct({

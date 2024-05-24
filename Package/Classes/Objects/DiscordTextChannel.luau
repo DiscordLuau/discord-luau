@@ -10,7 +10,7 @@ local DiscordMessage = require("../Objects/DiscordMessage")
 --[=[
 	@class Objects.DiscordTextChannel
 
-	(sorry I will add docs for this lol, just haven't got around to it yet!)
+	DiscordTextChannel represents a text channel in a Discord server, providing methods to modify the channel and interact with pinned messages.
 ]=]
 local DiscordTextChannel = {}
 
@@ -19,6 +19,14 @@ DiscordTextChannel.Interface = {}
 
 DiscordTextChannel.Prototype.type = "DiscordTextChannel"
 
+--[=[
+	Modifies the text channel settings asynchronously.
+	
+	@method modifyAsync
+	@param channelSchema DiscordTextChannelSchema -- The schema containing the modifications to be applied.
+	@within Objects.DiscordTextChannel
+	@return Future<unknown> -- A future that resolves when the modifications are complete.
+]=]
 function DiscordTextChannel.Prototype.modifyAsync(self: DiscordTextChannel, channelSchema: DiscordTextChannelSchema)
 	return Future.try(function()
 		return self.discordClient.discordGateway:patchAsync(string.format(DiscordEndpoints.BotModifyChannel, self.id), {
@@ -34,6 +42,13 @@ function DiscordTextChannel.Prototype.modifyAsync(self: DiscordTextChannel, chan
 	end)
 end
 
+--[=[
+	Retrieves the pinned messages in the text channel asynchronously.
+	
+	@method getPinnedMessagesAsync
+	@within Objects.DiscordTextChannel
+	@return Future<{[number]: DiscordMessage}> -- A future that resolves to an array of pinned messages.
+]=]
 function DiscordTextChannel.Prototype.getPinnedMessagesAsync(self: DiscordTextChannel)
 	return Future.try(function()
 		local messages = self.discordClient.discordGateway:getAsync(string.format(DiscordEndpoints.BotGetPinnedMessages, self.id), { }):await()
@@ -46,6 +61,15 @@ function DiscordTextChannel.Prototype.getPinnedMessagesAsync(self: DiscordTextCh
 	end)
 end
 
+--[=[
+	Creates a new instance of DiscordTextChannel.
+	
+	@function new
+	@param discordClient any -- The Discord client instance.
+	@param channelData table -- The data for the channel to be created.
+	@within Objects.DiscordTextChannel
+	@return DiscordTextChannel -- A new instance of DiscordTextChannel.
+]=]
 function DiscordTextChannel.Interface.new(discordClient: any, channelData: {
 	id: string,
 	recipients: { unknown },
@@ -81,7 +105,7 @@ export type DiscordTextChannel = typeof(DiscordTextChannel.Prototype) & {
 	guildId: string
 }
 
-export type DiscordTextChannelSchema = typeof(DiscordTextChannel.Prototype) & {
+export type DiscordTextChannelSchema = {
 	name: string,
 	position: number,
 	topic: string,

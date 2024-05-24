@@ -2,24 +2,41 @@ local Enumerate = require("../../Utils/Enumerate")
 local Construct = require("../../Utils/Construct")
 
 local ApplicationCommandOptionBuilder = require("ApplicationCommandOptionBuilder")
-
 local DiscordPermissionsBuilder = require("DiscordPermissionsBuilder")
 
 --[=[
 	@class ApplicationCommandBuilder
 
-	(sorry I will add docs for this lol, just haven't got around to it yet!)
+	ApplicationCommandBuilder is used to construct a command for a Discord application, including type, name, description, and options.
+
+	Usage:
+	```lua
+	local command = ApplicationCommandBuilder.new()
+		:setType(ApplicationCommandBuilder.Type.ChatInput)
+		:setName("example_command")
+		:setDescription("This is an example command.")
+		:setNSFW(false)
+		:setDMPermission(true)
+		:setDefaultPermissionEnabled(true)
+		:addOption(ApplicationCommandOptionBuilder.new():setType(ApplicationCommandOptionBuilder.Type.String):setName("option1"):setDescription("An option"))
+	```
 ]=]
 local ApplicationCommandBuilder = {}
 
 ApplicationCommandBuilder.Interface = {}
-ApplicationCommandBuilder.Prototype = { }
+ApplicationCommandBuilder.Prototype = {}
 
 ApplicationCommandBuilder.Prototype.type = "ApplicationCommandBuilder"
 
 --[=[
-	@prop Type { ... }
+	@prop Type table
 	@within ApplicationCommandBuilder
+
+	An enumeration of command types.
+
+	- ChatInput: 1
+	- UserInput: 2
+	- MessageInput: 3
 ]=]
 ApplicationCommandBuilder.Interface.Type = Enumerate.new({
 	ChatInput = 1,
@@ -28,8 +45,14 @@ ApplicationCommandBuilder.Interface.Type = Enumerate.new({
 })
 
 --[=[
-	@prop Context { ... }
+	@prop Context table
 	@within ApplicationCommandBuilder
+
+	An enumeration of command contexts.
+
+	- Guild: 0
+	- BotDM: 1
+	- PrivateChannel: 2
 ]=]
 ApplicationCommandBuilder.Interface.Context = Enumerate.new({
 	Guild = 0,
@@ -38,21 +61,15 @@ ApplicationCommandBuilder.Interface.Context = Enumerate.new({
 })
 
 --[=[
+	Sets the type of the command.
+	
 	@method setType
+	@param commandType number -- The type of the command.
 	@within ApplicationCommandBuilder
-
-	@param commandType string
-
-	@return ApplicationCommandBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return ApplicationCommandBuilder -- Returns the ApplicationCommandBuilder instance for method chaining.
 ]=]
 function ApplicationCommandBuilder.Prototype.setType(self: ApplicationCommandBuilder, commandType: number)
-	assert(ApplicationCommandBuilder.Interface.Type:Is(commandType), `Expected 'commandType' to of enum 'commandType'`)
+	assert(ApplicationCommandBuilder.Interface.Type:Is(commandType), `Expected 'commandType' to be of enum 'commandType'`)
 
 	self.commandType = commandType
 
@@ -60,18 +77,12 @@ function ApplicationCommandBuilder.Prototype.setType(self: ApplicationCommandBui
 end
 
 --[=[
+	Sets the localization code for the command.
+	
 	@method setLocalization
+	@param localizationCode string -- The localization code.
 	@within ApplicationCommandBuilder
-
-	@param localizationCode string
-
-	@return ApplicationCommandBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return ApplicationCommandBuilder -- Returns the ApplicationCommandBuilder instance for method chaining.
 ]=]
 function ApplicationCommandBuilder.Prototype.setLocalization(self: ApplicationCommandBuilder, localizationCode: string)
 	self.commandLocalization = localizationCode
@@ -80,18 +91,12 @@ function ApplicationCommandBuilder.Prototype.setLocalization(self: ApplicationCo
 end
 
 --[=[
+	Sets the description of the command.
+	
 	@method setDescription
+	@param description string -- The description of the command.
 	@within ApplicationCommandBuilder
-
-	@param description string
-
-	@return ApplicationCommandBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return ApplicationCommandBuilder -- Returns the ApplicationCommandBuilder instance for method chaining.
 ]=]
 function ApplicationCommandBuilder.Prototype.setDescription(self: ApplicationCommandBuilder, description: string)
 	self.commandDescription = description
@@ -100,18 +105,12 @@ function ApplicationCommandBuilder.Prototype.setDescription(self: ApplicationCom
 end
 
 --[=[
+	Sets the name of the command.
+	
 	@method setName
+	@param name string -- The name of the command.
 	@within ApplicationCommandBuilder
-
-	@param name string
-
-	@return ApplicationCommandBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return ApplicationCommandBuilder -- Returns the ApplicationCommandBuilder instance for method chaining.
 ]=]
 function ApplicationCommandBuilder.Prototype.setName(self: ApplicationCommandBuilder, name: string)
 	self.commandName = name
@@ -120,18 +119,13 @@ function ApplicationCommandBuilder.Prototype.setName(self: ApplicationCommandBui
 end
 
 --[=[
+	
+	Sets whether the command is NSFW.
+	
 	@method setNSFW
+	@param isNSFW boolean -- Whether the command is NSFW.
 	@within ApplicationCommandBuilder
-
-	@param isNSFW boolean
-
-	@return ApplicationCommandBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return ApplicationCommandBuilder -- Returns the ApplicationCommandBuilder instance for method chaining.
 ]=]
 function ApplicationCommandBuilder.Prototype.setNSFW(self: ApplicationCommandBuilder, isNSFW: boolean)
 	self.commandNSFW = isNSFW
@@ -140,19 +134,14 @@ function ApplicationCommandBuilder.Prototype.setNSFW(self: ApplicationCommandBui
 end
 
 --[=[
+	
+	Sets whether the command can be used in DMs.
+	
 	@method setDMPermission
+	@param canDM boolean -- Whether the command can be used in DMs.
 	@within ApplicationCommandBuilder
-
-	@param canDM boolean
-
-	@return ApplicationCommandBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
-]=]
+	@return ApplicationCommandBuilder -- Returns the ApplicationCommandBuilder instance for method chaining.
+	]=]
 function ApplicationCommandBuilder.Prototype.setDMPermission(self: ApplicationCommandBuilder, canDM: boolean)
 	self.commandDM = canDM
 
@@ -160,18 +149,13 @@ function ApplicationCommandBuilder.Prototype.setDMPermission(self: ApplicationCo
 end
 
 --[=[
+	
+	Sets the required permissions for the command in a guild.
+	
 	@method setGuildPermissions
+	@param permissionObject DiscordPermissionsBuilder -- The permissions required for the command.
 	@within ApplicationCommandBuilder
-
-	@param permissionObject !DiscordPermissionsBuilder
-
-	@return ApplicationCommandBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return ApplicationCommandBuilder -- Returns the ApplicationCommandBuilder instance for method chaining.
 ]=]
 function ApplicationCommandBuilder.Prototype.setGuildPermissions(self: ApplicationCommandBuilder, permissionObject: DiscordPermissionsBuilder.DiscordPermissionsBuilder)
 	self.commandPermissions = permissionObject
@@ -180,18 +164,12 @@ function ApplicationCommandBuilder.Prototype.setGuildPermissions(self: Applicati
 end
 
 --[=[
+	Adds an option to the command.
+	
 	@method addOption
+	@param commandObject ApplicationCommandOptionBuilder -- The option to add.
 	@within ApplicationCommandBuilder
-
-	@param commandObject !ApplicationCommandOptionBuilder
-
-	@return ApplicationCommandBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return ApplicationCommandBuilder -- Returns the ApplicationCommandBuilder instance for method chaining.
 ]=]
 function ApplicationCommandBuilder.Prototype.addOption(self: ApplicationCommandBuilder, commandObject: ApplicationCommandOptionBuilder.ApplicationCommandOptionBuilder)
 	table.insert(self.options, commandObject)
@@ -200,18 +178,12 @@ function ApplicationCommandBuilder.Prototype.addOption(self: ApplicationCommandB
 end
 
 --[=[
-	@method addOption
+	Sets whether the command has default permission enabled.
+	
+	@method setDefaultPermissionEnabled
+	@param enabled boolean -- Whether default permission is enabled.
 	@within ApplicationCommandBuilder
-
-	@param commandObject !ApplicationCommandOptionBuilder
-
-	@return ApplicationCommandBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return ApplicationCommandBuilder -- Returns the ApplicationCommandBuilder instance for method chaining.
 ]=]
 function ApplicationCommandBuilder.Prototype.setDefaultPermissionEnabled(self: ApplicationCommandBuilder, enabled: boolean)
 	self.defaultPermissionEnabled = enabled
@@ -220,18 +192,12 @@ function ApplicationCommandBuilder.Prototype.setDefaultPermissionEnabled(self: A
 end
 
 --[=[
+	Adds a context to the command.
+	
 	@method addContext
+	@param context number -- The context to add.
 	@within ApplicationCommandBuilder
-
-	@param commandObject !ApplicationCommandOptionBuilder
-
-	@return ApplicationCommandBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return ApplicationCommandBuilder -- Returns the ApplicationCommandBuilder instance for method chaining.
 ]=]
 function ApplicationCommandBuilder.Prototype.addContext(self: ApplicationCommandBuilder, context: number)
 	table.insert(self.contexts, context)
@@ -240,16 +206,11 @@ function ApplicationCommandBuilder.Prototype.addContext(self: ApplicationCommand
 end
 
 --[=[
+	Converts the command to a JSON object that can be sent to the Discord API.
+	
 	@method toJSONObject
 	@within ApplicationCommandBuilder
-
-	@return { ... }
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return table -- The JSON representation of the command.
 ]=]
 function ApplicationCommandBuilder.Prototype.toJSONObject(self: ApplicationCommandBuilder)
 	local permissions = "0"
@@ -289,16 +250,11 @@ function ApplicationCommandBuilder.Prototype.toJSONObject(self: ApplicationComma
 end
 
 --[=[
+	Creates a new instance of ApplicationCommandBuilder.
+	
 	@function new
 	@within ApplicationCommandBuilder
-
-	@return ApplicationCommandBuilder
-
-	(yet-to-do!)
-
-	```lua
-
-	```
+	@return ApplicationCommandBuilder -- A new instance of ApplicationCommandBuilder.
 ]=]
 function ApplicationCommandBuilder.Interface.new(): ApplicationCommandBuilder
 	return Construct({

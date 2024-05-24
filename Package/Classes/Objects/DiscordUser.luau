@@ -5,7 +5,7 @@ local CacheType = require("../../Enums/CacheType")
 --[=[
 	@class Objects.DiscordUser
 
-	(sorry I will add docs for this lol, just haven't got around to it yet!)
+	DiscordUser represents a user on Discord, encapsulating user data such as username, avatar, and various flags.
 ]=]
 local DiscordUser = {}
 
@@ -14,6 +14,15 @@ DiscordUser.Interface = {}
 
 DiscordUser.Prototype.type = "DiscordUser"
 
+--[=[
+	Creates a new instance of DiscordUser.
+	
+	@function new
+	@param discordClient any -- The Discord client instance.
+	@param partialUserData table -- Partial data for the user to be created.
+	@within Objects.DiscordUser
+	@return DiscordUser -- A new instance of DiscordUser.
+]=]
 function DiscordUser.Interface.new(discordClient: any, partialUserData: {
 	username: string?,
 	flags: number?,

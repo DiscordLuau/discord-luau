@@ -20,15 +20,30 @@ local Future = require("../../Vendor/Future")
 --[=[
 	@class Objects.DiscordGuild
 
-	(sorry I will add docs for this lol, just haven't got around to it yet!)
+	The `DiscordGuild` class represents a Discord guild (server) and provides methods to interact with and manage the guild.
 ]=]
 local DiscordGuild = {}
 
 DiscordGuild.Prototype = {}
 DiscordGuild.Interface = {}
 
+--[=[
+	@prop type string
+	@within Objects.DiscordGuild
+	@readonly
+
+	The type of the DiscordGuild. Default is "DiscordGuild".
+]=]
 DiscordGuild.Prototype.type = "DiscordGuild"
 
+--[=[
+	Creates a new slash command in the guild asynchronously.
+
+	@method createSlashCommandAsync
+	@param command ApplicationCommandBuilder -- The command builder object.
+	@return Future
+	@within Objects.DiscordGuild
+]=]
 function DiscordGuild.Prototype.createSlashCommandAsync(self: DiscordGuild, command: ApplicationCommandBuilder.ApplicationCommandBuilder)
 	return Future.try(function()
 		return self.discordClient.discordGateway:postAsync(
@@ -38,6 +53,14 @@ function DiscordGuild.Prototype.createSlashCommandAsync(self: DiscordGuild, comm
 	end)
 end
 
+--[=[
+	Deletes a slash command in the guild asynchronously.
+
+	@method deleteSlashCommandAsync
+	@param commandId string -- The ID of the command to delete.
+	@return Future
+	@within Objects.DiscordGuild
+]=]
 function DiscordGuild.Prototype.deleteSlashCommandAsync(self: DiscordGuild, commandId: string)
 	return Future.try(function()
 		return self.discordClient.discordGateway:deleteAsync(
@@ -46,6 +69,15 @@ function DiscordGuild.Prototype.deleteSlashCommandAsync(self: DiscordGuild, comm
 	end)
 end
 
+--[=[
+	Edits a slash command in the guild asynchronously.
+
+	@method editSlashCommandAsync
+	@param commandId string -- The ID of the command to edit.
+	@param command ApplicationCommandBuilder -- The command builder object with updated information.
+	@return Future
+	@within Objects.DiscordGuild
+]=]
 function DiscordGuild.Prototype.editSlashCommandAsync(self: DiscordGuild, commandId: string, command: ApplicationCommandBuilder.ApplicationCommandBuilder)
 	return Future.try(function()
 		return self.discordClient.discordGateway:patchAsync(
@@ -55,6 +87,13 @@ function DiscordGuild.Prototype.editSlashCommandAsync(self: DiscordGuild, comman
 	end)
 end
 
+--[=[
+	Fetches all slash commands in the guild asynchronously.
+
+	@method fetchSlashCommandsAsync
+	@return Future
+	@within Objects.DiscordGuild
+]=]
 function DiscordGuild.Prototype.fetchSlashCommandsAsync(self: DiscordGuild)
 	return Future.try(function()
 		return self.discordClient.discordGateway:getAsync(
@@ -63,6 +102,13 @@ function DiscordGuild.Prototype.fetchSlashCommandsAsync(self: DiscordGuild)
 	end)
 end
 
+--[=[
+	Fetches all channels in the guild asynchronously.
+
+	@method fetchGuildChannels
+	@return Future
+	@within Objects.DiscordGuild
+]=]
 function DiscordGuild.Prototype.fetchGuildChannels(self: DiscordGuild)
 	return Future.try(function()
 		return self.discordClient.discordGateway:getAsync(
@@ -71,6 +117,14 @@ function DiscordGuild.Prototype.fetchGuildChannels(self: DiscordGuild)
 	end)
 end
 
+--[=[
+	Sets multiple slash commands in the guild asynchronously.
+
+	@method setSlashCommandsAsync
+	@param commands {ApplicationCommandBuilder} -- An array of command builder objects.
+	@return Future
+	@within Objects.DiscordGuild
+]=]
 function DiscordGuild.Prototype.setSlashCommandsAsync(self: DiscordGuild, commands: { ApplicationCommandBuilder.ApplicationCommandBuilder })
 	return Future.try(function()
 		local allCommands = self:fetchSlashCommandsAsync():await()
@@ -133,6 +187,14 @@ function DiscordGuild.Prototype.setSlashCommandsAsync(self: DiscordGuild, comman
 	end)
 end
 
+--[=[
+	Gets the audit logs of the guild asynchronously.
+
+	@method getGuildAuditLogs
+	@param commands { ApplicationCommandBuilder } -- An array of command builder objects.
+	@return Future
+	@within Objects.DiscordGuild
+]=]
 function DiscordGuild.Prototype.getGuildAuditLogs(self: DiscordGuild, commands: { ApplicationCommandBuilder.ApplicationCommandBuilder })
 	return Future.try(function()
 		local guildAuditLogs = self.discordClient.discordGateway:getAsync(
@@ -151,6 +213,14 @@ function DiscordGuild.Prototype.getGuildAuditLogs(self: DiscordGuild, commands: 
 	end)
 end
 
+--[=[
+	Modifies the guild settings asynchronously.
+
+	@method modifyAsync
+	@param guildSchema DiscordGuildSchema -- The schema containing the new settings for the guild.
+	@return Future
+	@within Objects.DiscordGuild
+]=]
 function DiscordGuild.Prototype.modifyAsync(self: DiscordGuild, guildSchema: DiscordGuildSchema)
 	return Future.try(function()
 		return self.discordClient.discordGateway:patchAsync(string.format(DiscordEndpoints.BotModifyGuild, self.id), {
@@ -170,17 +240,31 @@ function DiscordGuild.Prototype.modifyAsync(self: DiscordGuild, guildSchema: Dis
 			features = guildSchema.features,
 			description = guildSchema.description,
 			premium_progress_bar_enabled = guildSchema.premiumProgressBarEnabled,
-			safety_alerts_channel_id = guildSchema.safetyAlertsChanneId
+			safety_alerts_channel_id = guildSchema.safetyAlertsChannelId
 		}):await()
 	end)
 end
 
+--[=[
+	Deletes the guild asynchronously.
+
+	@method deleteAsync
+	@return Future
+	@within Objects.DiscordGuild
+]=]
 function DiscordGuild.Prototype.deleteAsync(self: DiscordGuild)
 	return Future.try(function()
 		return self.discordClient.discordGateway:deleteAsync(string.format(DiscordEndpoints.BotDeleteGuild, self.id)):await()
 	end)
 end
 
+--[=[
+	Gets all channels in the guild asynchronously.
+
+	@method getChannelsAsync
+	@return Future
+	@within Objects.DiscordGuild
+]=]
 function DiscordGuild.Prototype.getChannelsAsync(self: DiscordGuild)
 	return Future.try(function()
 		local rawChannelDatas = self.discordClient.discordGateway:getAsync(string.format(DiscordEndpoints.BotGetGuildChannels, self.id)):await()
@@ -193,6 +277,14 @@ function DiscordGuild.Prototype.getChannelsAsync(self: DiscordGuild)
 	end)
 end
 
+--[=[
+	Gets a specific member of the guild asynchronously.
+
+	@method getMemberAsync
+	@param userId string -- The ID of the user to retrieve.
+	@return Future
+	@within Objects.DiscordGuild
+]=]
 function DiscordGuild.Prototype.getMemberAsync(self: DiscordGuild, userId: string)
 	return Future.try(function()
 		local discordMember = self.discordClient.discordGateway:getAsync(string.format(DiscordEndpoints.BotGetGuildMember, self.id, userId)):await()
@@ -201,6 +293,15 @@ function DiscordGuild.Prototype.getMemberAsync(self: DiscordGuild, userId: strin
 	end)
 end
 
+--[=[
+	Fetches members of the guild asynchronously.
+
+	@method fetchGuildMembersAsync
+	@param limit number -- The maximum number of members to retrieve.
+	@param lastUserId number? -- The ID of the last user retrieved (for pagination).
+	@return Future
+	@within Objects.DiscordGuild
+]=]
 function DiscordGuild.Prototype.fetchGuildMembersAsync(self: DiscordGuild, limit: number, lastUserId: number?)
 	return Future.try(function()
 		local discordMembers = self.discordClient.discordGateway:getAsync(string.format(DiscordEndpoints.BotGetGuildMembers, self.id, limit or 100, lastUserId or "0")):await()
@@ -213,6 +314,15 @@ function DiscordGuild.Prototype.fetchGuildMembersAsync(self: DiscordGuild, limit
 	end)
 end
 
+--[=[
+	Searches for members in the guild asynchronously.
+
+	@method searchGuildMembersAsync
+	@param query string -- The search query.
+	@param limit number? -- The maximum number of members to retrieve.
+	@return Future
+	@within Objects.DiscordGuild
+]=]
 function DiscordGuild.Prototype.searchGuildMembersAsync(self: DiscordGuild, query: string, limit: number?)
 	return Future.try(function()
 		local discordMembers = self.discordClient.discordGateway:getAsync(
@@ -227,6 +337,13 @@ function DiscordGuild.Prototype.searchGuildMembersAsync(self: DiscordGuild, quer
 	end)
 end
 
+--[=[
+	Lists all automoderation rules in the guild asynchronously.
+
+	@method listAutomoderationRulesAsync
+	@return Future
+	@within Objects.DiscordGuild
+]=]
 function DiscordGuild.Prototype.listAutomoderationRulesAsync(self: DiscordGuild)
 	return Future.try(function()
 		local discordAutomoderationRules = self.discordClient.discordGateway:getAsync(
@@ -241,6 +358,14 @@ function DiscordGuild.Prototype.listAutomoderationRulesAsync(self: DiscordGuild)
 	end)
 end
 
+--[=[
+	Gets a specific automoderation rule in the guild asynchronously.
+
+	@method getAutomoderationRuleAsync
+	@param ruleId string -- The ID of the rule to retrieve.
+	@return Future
+	@within Objects.DiscordGuild
+]=]
 function DiscordGuild.Prototype.getAutomoderationRuleAsync(self: DiscordGuild, ruleId: string)
 	return Future.try(function()
 		local discordAutomoderationRule = self.discordClient.discordGateway:getAsync(
@@ -251,6 +376,14 @@ function DiscordGuild.Prototype.getAutomoderationRuleAsync(self: DiscordGuild, r
 	end)
 end
 
+--[=[
+	Creates an automoderation rule in the guild asynchronously.
+
+	@method createAutomoderationRuleAsync
+	@param getAutomoderationRuleBuilder DiscordAutomoderationRuleBuilder -- The rule builder object.
+	@return Future
+	@within Objects.DiscordGuild
+]=]
 function DiscordGuild.Prototype.createAutomoderationRuleAsync(self: DiscordGuild, getAutomoderationRuleBuilder: DiscordAutomoderationRuleBuilder.DiscordAutomoderationRuleBuilder)
 	return Future.try(function()
 		local discordAutomoderationRule = self.discordClient.discordGateway:postAsync(
@@ -262,6 +395,15 @@ function DiscordGuild.Prototype.createAutomoderationRuleAsync(self: DiscordGuild
 	end)
 end
 
+--[=[
+	Creates a new DiscordGuild instance.
+
+	@function new
+	@param discordClient any -- The Discord client instance.
+	@param guildData table -- The raw data for the guild.
+	@return DiscordGuild -- The newly created DiscordGuild instance.
+	@within Objects.DiscordGuild
+]=]
 function DiscordGuild.Interface.new(discordClient: any, guildData: {
 	id: string,
 	roles: { any },
@@ -313,11 +455,7 @@ export type DiscordGuildSchema = {
 	explicitContentFilter: number,
 	afkChannelId: string,
 	afkTimeout: number,
-	-- icon,
 	ownerId: string,
-	-- splash,
-	-- discoverySplash,
-	-- banner,
 	systemChannelId: string,
 	systemChannelFlags: number,
 	rulesChannelId: string,
@@ -326,7 +464,7 @@ export type DiscordGuildSchema = {
 	features: { string },
 	description: string,
 	premiumProgressBarEnabled: boolean,
-	safetyAlertsChanneId: string
+	safetyAlertsChannelId: string
 }
 
 return DiscordGuild.Interface

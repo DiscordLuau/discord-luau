@@ -3,7 +3,11 @@ local Construct = require("../../../Utils/Construct")
 --[=[
 	@class Middleware.EventIn
 
-	(sorry I will add docs for this lol, just haven't got around to it yet!)
+	The `EventIn` class processes incoming events, converting JSON keys to camelCase format for consistency within the application.
+
+	:::caution
+	This class is internal and should not be used directly by developers. Instead, use the provided public interfaces and methods to handle incoming events.
+	:::
 ]=]
 local EventIn = {}
 
@@ -12,6 +16,16 @@ EventIn.Interface = {}
 
 EventIn.Prototype.type = "EventIn"
 
+--[=[
+	Converts JSON keys from snake_case to camelCase.
+	
+	@private
+	@method toCamelCase
+	@param self EventIn
+	@param json table -- The JSON object to convert.
+	@within Middleware.EventIn
+	@return table -- The converted JSON object.
+]=]
 function EventIn.Prototype.toCamelCase(self: EventIn, json: { [string]: any })
 	local source = {}
 
@@ -30,6 +44,16 @@ function EventIn.Prototype.toCamelCase(self: EventIn, json: { [string]: any })
 	return source
 end
 
+--[=[
+	Processes incoming JSON data, converting keys to camelCase if the data is a table.
+	
+	@private
+	@method processJSON
+	@param self EventIn
+	@param data any -- The data to process.
+	@within Middleware.EventIn
+	@return any -- The processed data.
+]=]
 function EventIn.Prototype.processJSON(self: EventIn, data: any)
 	if typeof(data) == "table" then
 		return self:toCamelCase(data)
@@ -38,6 +62,14 @@ function EventIn.Prototype.processJSON(self: EventIn, data: any)
 	return data
 end
 
+--[=[
+	Creates a new instance of `EventIn`.
+	
+	@private
+	@method new
+	@within Middleware.EventIn
+	@return EventIn
+]=]
 function EventIn.Interface.new()
 	return Construct({ }, EventIn.Prototype)
 end

@@ -19,15 +19,30 @@ local DiscordMessage = require("DiscordMessage")
 --[=[
 	@class Objects.DiscordInteraction
 
-	(sorry I will add docs for this lol, just haven't got around to it yet!)
+	The `DiscordInteraction` class represents an interaction with the Discord API, such as a message interaction, a command, or a modal submission.
 ]=]
 local DiscordInteraction = {}
 
 DiscordInteraction.Interface = {}
 DiscordInteraction.Prototype = {}
 
+--[=[
+	@prop type string
+	@within Objects.DiscordInteraction
+	@readonly
+
+	The type of the DiscordInteraction. Default is "DiscordInteraction".
+]=]
 DiscordInteraction.Prototype.type = "DiscordInteraction"
 
+--[=[
+	Edits the original interaction response message asynchronously.
+
+	@method editMessageAsync
+	@param messageBuilder DiscordMessageBuilder -- The message builder object.
+	@return Future
+	@within Objects.DiscordInteraction
+]=]
 function DiscordInteraction.Prototype.editMessageAsync(self: DiscordInteraction, messageBuilder: DiscordMessageBuilder.DiscordMessageBuilder)
 	return Future.new(function()
 		return self.discordClient.discordGateway:patchAsync(string.format(
@@ -38,6 +53,14 @@ function DiscordInteraction.Prototype.editMessageAsync(self: DiscordInteraction,
 	end)
 end
 
+--[=[
+	Sends a modal in response to the interaction asynchronously.
+
+	@method sendModalAsync
+	@param modalObject DiscordModalBuilder -- The modal builder object.
+	@return Future
+	@within Objects.DiscordInteraction
+]=]
 function DiscordInteraction.Prototype.sendModalAsync(self: DiscordInteraction, modalObject: DiscordModalBuilder.DiscordModalBuilder)
 	return Future.new(function()
 		return self.discordClient.discordGateway:postAsync(string.format(
@@ -51,6 +74,14 @@ function DiscordInteraction.Prototype.sendModalAsync(self: DiscordInteraction, m
 	end)
 end
 
+--[=[
+	Sends a message in response to the interaction asynchronously.
+
+	@method sendMessageAsync
+	@param messageBuilder DiscordMessageBuilder -- The message builder object.
+	@return Future
+	@within Objects.DiscordInteraction
+]=]
 function DiscordInteraction.Prototype.sendMessageAsync(self: DiscordInteraction, messageBuilder: DiscordMessageBuilder.DiscordMessageBuilder)
 	if self.defered then
 		return self:editMessageAsync(messageBuilder)
@@ -68,6 +99,13 @@ function DiscordInteraction.Prototype.sendMessageAsync(self: DiscordInteraction,
 	end
 end
 
+--[=[
+	Defers the interaction response asynchronously.
+
+	@method deferAsync
+	@return Future
+	@within Objects.DiscordInteraction
+]=]
 function DiscordInteraction.Prototype.deferAsync(self: DiscordInteraction)
 	return Future.try(function()
 		self.defered = true
@@ -83,6 +121,15 @@ function DiscordInteraction.Prototype.deferAsync(self: DiscordInteraction)
 	end)
 end
 
+--[=[
+	Creates a new DiscordInteraction instance.
+
+	@function new
+	@param discordClient any -- The Discord client instance.
+	@param jsonData table -- The raw data for the interaction.
+	@return DiscordInteraction -- The newly created DiscordInteraction instance.
+	@within Objects.DiscordInteraction
+]=]
 function DiscordInteraction.Interface.new(discordClient: any, jsonData: { [any]: any })
 	local interactionStruct = {
 		discordClient = discordClient,

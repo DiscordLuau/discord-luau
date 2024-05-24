@@ -10,7 +10,11 @@ local Task = require("../../Std/Task")
 --[=[
 	@class Network.DiscordUDP
 
-	(sorry I will add docs for this lol, just haven't got around to it yet!)
+	DiscordUDP is an internal class responsible for managing UDP communication with the Discord API. This class handles sending and receiving UDP packets.
+
+	:::caution
+	This class is internal and should not be used directly by developers.
+	:::
 ]=]
 local DiscordUDP = {}
 
@@ -19,16 +23,34 @@ DiscordUDP.Prototype = {}
 
 DiscordUDP.Prototype.type = "DiscordUDP"
 
+--[=[	
+	Sends a UDP packet asynchronously.
+	
+	@private
+	@method sendAsync
+	@param dataPacket string -- The data packet to send.
+	@within Network.DiscordUDP
+	@return Future -- A Future that resolves when the packet is sent.
+]=]
 function DiscordUDP.Prototype.sendAsync(self: DiscordUDP, dataPacket: string)
 	return Future.try(function()
 		if not self.socketInstance then
-			error(`Socket Instance isn't avaliable!`)
+			error(`Socket Instance isn't available!`)
 		end
 
 		self.socketInstance.send(dataPacket)
 	end)
 end
 
+--[=[
+	Connects to a UDP socket asynchronously.
+	
+	@private
+	@method connectAsync
+	@param discordUdp string -- The UDP address to connect to.
+	@within Network.DiscordUDP
+	@return Future -- A Future that resolves when the connection is established.
+]=]
 function DiscordUDP.Prototype.connectAsync(
 	self: DiscordUDP,
 	discordUdp: string
@@ -48,7 +70,7 @@ function DiscordUDP.Prototype.connectAsync(
 				end
 
 				if socket.closeCode then
-					-- this isn't a thing, but in the real impl - it would be.
+					-- This isn't a thing, but in the real impl - it would be.
 					self.socketActive = false
 
 					self.onSocketDead:fire(socket.closeCode)
@@ -62,6 +84,15 @@ function DiscordUDP.Prototype.connectAsync(
 	end)
 end
 
+--[=[
+	Disconnects from the UDP socket asynchronously.
+	
+	@private
+	@method disconnectAsync
+	@param closingCode string -- The closing code for the disconnection.
+	@within Network.DiscordUDP
+	@return Future -- A Future that resolves when the socket is disconnected.
+]=]
 function DiscordUDP.Prototype.disconnectAsync(self: DiscordUDP, closingCode: string)
 	return Future.try(function()
 		if not self.socketInstance then
@@ -72,6 +103,14 @@ function DiscordUDP.Prototype.disconnectAsync(self: DiscordUDP, closingCode: str
 	end)
 end
 
+--[=[
+	Creates a new instance of DiscordUDP.
+	
+	@function new
+	@param publicUdp string -- The public UDP address.
+	@within Network.DiscordUDP
+	@return DiscordUDP -- A new instance of DiscordUDP.
+]=]
 function DiscordUDP.Interface.new(publicUdp: string)
 	local self = Construct({
 		publicUdp = publicUdp,

@@ -5,15 +5,31 @@ local CacheType = require("../../Enums/CacheType")
 --[=[
 	@class Objects.DiscordGuildRole
 
-	(sorry I will add docs for this lol, just haven't got around to it yet!)
+	The `DiscordGuildRole` class represents a role in a Discord guild (server) and provides a structure for role data.
 ]=]
 local DiscordGuildRole = {}
 
 DiscordGuildRole.Prototype = {}
 DiscordGuildRole.Interface = {}
 
+--[=[
+	@prop type string
+	@within Objects.DiscordGuildRole
+	@readonly
+
+	The type of the DiscordGuildRole. Default is "DiscordGuildRole".
+]=]
 DiscordGuildRole.Prototype.type = "DiscordGuildRole"
 
+--[=[
+	Creates a new DiscordGuildRole instance.
+
+	@function new
+	@param discordClient any -- The Discord client instance.
+	@param roleData table -- The raw data for the role.
+	@return DiscordGuildRole -- The newly created DiscordGuildRole instance.
+	@within Objects.DiscordGuildRole
+]=]
 function DiscordGuildRole.Interface.new(discordClient: any, roleData: {
 	id: string,
 	name: string,

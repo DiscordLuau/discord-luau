@@ -1,20 +1,31 @@
-
 local Enumerate = require("../../Utils/Enumerate")
 local Construct = require("../../Utils/Construct")
 
 --[=[
-	@class Interface.ButtonComponent
+	@class Interface.ButtonBuilder
 
-	(sorry I will add docs for this lol, just haven't got around to it yet!)
+	ButtonBuilder is used to construct a button component for a Discord message.
 ]=]
-local ButtonComponent = {}
+local ButtonBuilder = {}
 
-ButtonComponent.Interface = {}
-ButtonComponent.Prototype = {}
+ButtonBuilder.Interface = {}
+ButtonBuilder.Prototype = {}
 
-ButtonComponent.Prototype.type = "ButtonComponent"
+ButtonBuilder.Prototype.type = "ButtonBuilder"
 
-ButtonComponent.Interface.Style = Enumerate.new({
+--[=[
+	@prop Style table
+	@within Interface.ButtonBuilder
+
+	An enumeration of button styles.
+
+	- Blurple: 1
+	- Grey: 2
+	- Green: 3
+	- Red: 4
+	- Link: 5
+]=]
+ButtonBuilder.Interface.Style = Enumerate.new({
 	Blurple = 1,
 	Grey = 2,
 	Green = 3,
@@ -22,19 +33,47 @@ ButtonComponent.Interface.Style = Enumerate.new({
 	Link = 5,
 })
 
-function ButtonComponent.Prototype.setStyle(self: ButtonComponent, buttonStyle: number)
+--[=[
+	Sets the style of the button.
+	
+	@private
+	@method setStyle
+	@param buttonStyle number -- The style of the button.
+	@within Interface.ButtonBuilder
+	@return ButtonBuilder -- Returns the ButtonBuilder instance for method chaining.
+]=]
+function ButtonBuilder.Prototype.setStyle(self: ButtonBuilder, buttonStyle: number)
 	self.buttonStyle = buttonStyle
 
 	return self
 end
 
-function ButtonComponent.Prototype.setLabel(self: ButtonComponent, buttonLabel: string)
+--[=[
+	Sets the label of the button.
+	
+	@private
+	@method setLabel
+	@param buttonLabel string -- The label of the button.
+	@within Interface.ButtonBuilder
+	@return ButtonBuilder -- Returns the ButtonBuilder instance for method chaining.
+]=]
+function ButtonBuilder.Prototype.setLabel(self: ButtonBuilder, buttonLabel: string)
 	self.buttonLabel = buttonLabel
 
 	return self
 end
 
-function ButtonComponent.Prototype.setEmoji(self: ButtonComponent, emojiId: string, emojiName: string)
+--[=[
+	Sets the emoji for the button.
+	
+	@private
+	@method setEmoji
+	@param emojiId string -- The ID of the emoji.
+	@param emojiName string -- The name of the emoji.
+	@within Interface.ButtonBuilder
+	@return ButtonBuilder -- Returns the ButtonBuilder instance for method chaining.
+]=]
+function ButtonBuilder.Prototype.setEmoji(self: ButtonBuilder, emojiId: string, emojiName: string)
 	self.buttonEmoji = {
 		id = emojiId,
 		name = emojiName
@@ -43,25 +82,51 @@ function ButtonComponent.Prototype.setEmoji(self: ButtonComponent, emojiId: stri
 	return self
 end
 
-function ButtonComponent.Prototype.setLinkUrl(self: ButtonComponent, url: string)
+--[=[
+	Sets the URL for the button. This should only be used if the button style is set to `Link`.
+	
+	@private
+	@method setLinkUrl
+	@param url string -- The URL to set.
+	@within Interface.ButtonBuilder
+	@return ButtonBuilder -- Returns the ButtonBuilder instance for method chaining.
+]=]
+function ButtonBuilder.Prototype.setLinkUrl(self: ButtonBuilder, url: string)
 	self.buttonUrl = url
 
 	return self
 end
 
-function ButtonComponent.Prototype.setDisabled(self: ButtonComponent, isDisabled: boolean)
+--[=[
+	Sets whether the button is disabled.
+	
+	@private
+	@method setDisabled
+	@param isDisabled boolean -- Whether the button is disabled.
+	@within Interface.ButtonBuilder
+	@return ButtonBuilder -- Returns the ButtonBuilder instance for method chaining.
+]=]
+function ButtonBuilder.Prototype.setDisabled(self: ButtonBuilder, isDisabled: boolean)
 	self.buttonDisabled = isDisabled
 
 	return self
 end
 
-function ButtonComponent.Prototype.toJSONObject(self: ButtonComponent)
+--[=[
+	Converts the button to a JSON object that can be sent to the Discord API.
+	
+	@private
+	@method toJSONObject
+	@within Interface.ButtonBuilder
+	@return table -- The JSON representation of the button.
+]=]
+function ButtonBuilder.Prototype.toJSONObject(self: ButtonBuilder)
 	return {
 		["type"] = 2,
 		style = self.buttonStyle,
 		label = self.buttonLabel,
-		custom_id = (self.buttonStyle ~= ButtonComponent.Interface.Style.Link and self.buttonId) or nil,
-		url = (self.buttonStyle == ButtonComponent.Interface.Style.Link and self.buttonUrl) or nil,
+		custom_id = (self.buttonStyle ~= ButtonBuilder.Interface.Style.Link and self.buttonId) or nil,
+		url = (self.buttonStyle == ButtonBuilder.Interface.Style.Link and self.buttonUrl) or nil,
 		disabled = self.buttonDisabled,
 		emoji = (self.buttonEmoji and {
 			id = self.buttonEmoji.id,
@@ -70,13 +135,23 @@ function ButtonComponent.Prototype.toJSONObject(self: ButtonComponent)
 	}
 end
 
-function ButtonComponent.Interface.new(buttonId: string): ButtonComponent
+--[=[
+	
+	Creates a new instance of ButtonBuilder.
+	
+	@private
+	@function new
+	@param buttonId string -- The ID of the button.
+	@within Interface.ButtonBuilder
+	@return ButtonBuilder -- A new instance of ButtonBuilder.
+]=]
+function ButtonBuilder.Interface.new(buttonId: string): ButtonBuilder
 	return Construct({
 		buttonId = buttonId
-	}, ButtonComponent.Prototype) :: any
+	}, ButtonBuilder.Prototype) :: any
 end
 
-export type ButtonComponent = typeof(ButtonComponent.Prototype) & {
+export type ButtonBuilder = typeof(ButtonBuilder.Prototype) & {
 	buttonStyle: number?,
 	buttonLabel: string?,
 	buttonId: string?,
@@ -88,4 +163,4 @@ export type ButtonComponent = typeof(ButtonComponent.Prototype) & {
 	}?
 }
 
-return ButtonComponent.Interface
+return ButtonBuilder.Interface

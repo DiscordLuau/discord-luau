@@ -21,7 +21,11 @@ local BASE_DISCORD_APP_API_PREFIX = "api"
 --[=[
 	@class Network.DiscordGateway
 
-	(sorry I will add docs for this lol, just haven't got around to it yet!)
+	DiscordGateway is an internal class responsible for managing communication with the Discord API. This class handles rate limiting, scheduling HTTP requests, and processing events.
+
+	:::caution
+	This class is internal and should not be used directly by developers.
+	:::
 ]=]
 local DiscordGateway = {}
 
@@ -30,6 +34,17 @@ DiscordGateway.Prototype = {}
 
 DiscordGateway.Prototype.type = "DiscordGateway"
 
+--[=[
+	Parses error messages from the Discord API response.
+	
+	@private
+	@method parseErrors
+	@param errorTable table -- The table containing error messages.
+	@param source string? -- The source of the error (optional).
+	@param depth number? -- The depth of the error message (optional).
+	@within Network.DiscordGateway
+	@return string -- The parsed error message.
+]=]
 function DiscordGateway.Prototype.parseErrors(self: DiscordGateway, errorTable: { [any]: any }, source: string?, depth: number?)
 	local _source = source or ""
 	local _depth = depth or 0
@@ -47,6 +62,16 @@ function DiscordGateway.Prototype.parseErrors(self: DiscordGateway, errorTable: 
 	return _source
 end
 
+--[=[
+	Parses errors from a Discord API response.
+	
+	@private
+	@method parseDiscordAPIErrors
+	@param api string -- The API endpoint that was called.
+	@param networkResponse Net.FetchResponse -- The response from the network request.
+	@within Network.DiscordGateway
+	@return string -- The parsed error message.
+]=]
 function DiscordGateway.Prototype.parseDiscordAPIErrors(self: DiscordGateway, api: string, networkResponse: Net.FetchResponse)
 	local success, messageDecoded = pcall(function()
 		return Serde.decode("json", networkResponse.body)
@@ -65,6 +90,17 @@ function DiscordGateway.Prototype.parseDiscordAPIErrors(self: DiscordGateway, ap
 	return `Discord HTTP Error - {networkResponse.statusCode} ({networkResponse.statusMessage}): \n{networkResponse.body}`
 end
 
+--[=[
+	Sends an asynchronous request to the Discord API.
+	
+	@private
+	@method requestAsync
+	@param api string -- The API endpoint.
+	@param method string -- The HTTP method (e.g., "GET", "POST").
+	@param data table? -- The data to send with the request (optional).
+	@within Network.DiscordGateway
+	@return Future -- A Future that resolves with the response.
+]=]
 function DiscordGateway.Prototype.requestAsync(self: DiscordGateway, api: string, method: ("DELETE" | "GET" | "HEAD" | "OPTIONS" | "PATCH" | "POST" | "PUT"), data: { [any]: any }?)
 	return Future.try(function()
 		return self.discordScheduler:addTask(function()
@@ -119,6 +155,15 @@ function DiscordGateway.Prototype.requestAsync(self: DiscordGateway, api: string
 	end)
 end
 
+--[=[
+	Sends an asynchronous GET request to the Discord API.
+	
+	@private
+	@method getAsync
+	@param api string -- The API endpoint.
+	@within Network.DiscordGateway
+	@return Future -- A Future that resolves with the response.
+]=]
 function DiscordGateway.Prototype.getAsync(self: DiscordGateway, api: string)
 	return Future.try(function()
 		local cache = self:getEndpointCache(api)
@@ -138,34 +183,111 @@ function DiscordGateway.Prototype.getAsync(self: DiscordGateway, api: string)
 	end)
 end
 
+--[=[
+	Sends an asynchronous POST request to the Discord API.
+	
+	@private
+	@method postAsync
+	@param api string -- The API endpoint.
+	@param data table -- The data to send with the request.
+	@within Network.DiscordGateway
+	@return Future -- A Future that resolves with the response.
+]=]
 function DiscordGateway.Prototype.postAsync(self: DiscordGateway, api: string, data: { [any]: any })
 	return self:requestAsync(api, "POST", data)
 end
 
+--[=[
+	
+	Sends an asynchronous PUT request to the Discord API.
+	
+	@private
+	@method putAsync
+	@param api string -- The API endpoint.
+	@param data table -- The data to send with the request.
+	@within Network.DiscordGateway
+	@return Future -- A Future that resolves with the response.
+]=]
 function DiscordGateway.Prototype.putAsync(self: DiscordGateway, api: string, data: { [any]: any })
 	return self:requestAsync(api, "PUT", data)
 end
 
+--[=[
+	Sends an asynchronous DELETE request to the Discord API.
+	
+	@private
+	@method deleteAsync
+	@param api string -- The API endpoint.
+	@param data table? -- The data to send with the request (optional).
+	@within Network.DiscordGateway
+	@return Future -- A Future that resolves with the response.
+]=]
 function DiscordGateway.Prototype.deleteAsync(self: DiscordGateway, api: string, data: { [any]: any })
 	return self:requestAsync(api, "DELETE", data)
 end
 
+--[=[
+	Sends an asynchronous PATCH request to the Discord API.
+	
+	@private
+	@method patchAsync
+	@param api string -- The API endpoint.
+	@param data table -- The data to send with the request.
+	@within Network.DiscordGateway
+	@return Future -- A Future that resolves with the response.
+]=]
 function DiscordGateway.Prototype.patchAsync(self: DiscordGateway, api: string, data: { [any]: any })
 	return self:requestAsync(api, "PATCH", data)
 end
 
+--[=[
+	
+	Sets the cache for a specific API endpoint.
+	
+	@private
+	@method setEndpointCache
+	@param endpoint string -- The API endpoint.
+	@param cache table -- The cache object.
+	@within Network.DiscordGateway
+]=]
 function DiscordGateway.Prototype.setEndpointCache(self: DiscordGateway, endpoint: string, cache: { [any]: any })
 	self.endpointCaches[endpoint] = cache
 end
 
+--[=[
+	Gets the cache for a specific API endpoint.
+	
+	@private
+	@method getEndpointCache
+	@param endpoint string -- The API endpoint.
+	@within Network.DiscordGateway
+	@return table -- The cache object.
+]=]
 function DiscordGateway.Prototype.getEndpointCache(self: DiscordGateway, endpoint: string)
 	return self.endpointCaches[endpoint]
 end
 
+--[=[
+	Gets the current Discord API version.
+	
+	@private
+	@method getApiVersion
+	@within Network.DiscordGateway
+	@return number -- The API version.
+]=]
 function DiscordGateway.Prototype.getApiVersion(self: DiscordGateway)
 	return DISCORD_API_VERSION
 end
 
+--[=[
+	Creates a new instance of DiscordGateway.
+	
+	@private
+	@function new
+	@param discordClient any -- The Discord client object.
+	@within Network.DiscordGateway
+	@return DiscordGateway -- A new instance of DiscordGateway.
+]=]
 function DiscordGateway.Interface.new(discordClient: any)
 	return Construct({
 		discordClient = discordClient,
