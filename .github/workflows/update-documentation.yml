@@ -19,5 +19,5 @@ jobs:
         with:
           token: ${{ secrets.PAT }}
           repository: DiscordLuau/Discord-Luau-Site
-          event-type: update-documentation
+          event-type: update-ref
           client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
