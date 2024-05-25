@@ -1,4 +1,4 @@
-name: Pull Request Selene Linter
+name: Stylua Formatter
 
 on:
   push:

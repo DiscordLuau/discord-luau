@@ -1,4 +1,4 @@
-name: Selene Linter
+name: Moonwave Documentation
 
 on:
   push:
@@ -20,4 +20,4 @@ jobs:
     - name: Generate Standard Library
       run: selene generate-roblox-std
     - name: Run Selene
-      run: selene Package
+      run: moonwave extract Package

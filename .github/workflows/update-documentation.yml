@@ -1,4 +1,4 @@
-name: Signal Documentation Change
+name: Update Documentation
 
 on:
   workflow_dispatch:
