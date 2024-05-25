@@ -13,15 +13,15 @@ DiscordClient.eventManager.onInteraction:connect(function(interaction)
 		discordModal:setTitle("Modal Test")
 
 		discordModal:addComponent(
-			DiscordLuau.Components.ActionRowBuilder.new()
-				:addComponent(
-					DiscordLuau.Components.TextInputBuilder.new("text-input-0")
-						:setLabel("Label #0")
-						:setMaxLength(1000)
-						:setMinLength(10)
-						:setRequired(true)
-						:setStyle(DiscordLuau.Components.TextInputBuilder.Style.Paragraph)
-				)
+			DiscordLuau.ActionRowBuilder.new():addComponent(
+				DiscordLuau.TextInputBuilder
+					.new("text-input-0")
+					:setLabel("Label #0")
+					:setMaxLength(1000)
+					:setMinLength(10)
+					:setRequired(true)
+					:setStyle(DiscordLuau.TextInputBuilder.Style.Paragraph)
+			)
 		)
 
 		interaction:sendModalAsync(discordModal)
@@ -30,32 +30,35 @@ DiscordClient.eventManager.onInteraction:connect(function(interaction)
 
 		Task.delay(1, function()
 			interaction:sendMessageAsync(
-				DiscordLuau.MessageBuilder.new()
-				:setContent("Feedback noted, thanks!")
-				:addComponent(
-					DiscordLuau.Components.ActionRowBuilder.new()
+				DiscordLuau.MessageBuilder.new():setContent("Feedback noted, thanks!"):addComponent(
+					DiscordLuau.ActionRowBuilder
+						.new()
 						:addComponent(
-							DiscordLuau.Components.ButtonBuilder.new("button-0")
+							DiscordLuau.ButtonBuilder
+								.new("button-0")
 								:setDisabled(true)
-								:setStyle(DiscordLuau.Components.ButtonBuilder.Style.Blurple)
+								:setStyle(DiscordLuau.ButtonBuilder.Style.Blurple)
 								:setLabel("Burple")
 						)
 						:addComponent(
-							DiscordLuau.Components.ButtonBuilder.new("button-1")
+							DiscordLuau.ButtonBuilder
+								.new("button-1")
 								:setDisabled(true)
-								:setStyle(DiscordLuau.Components.ButtonBuilder.Style.Green)
+								:setStyle(DiscordLuau.ButtonBuilder.Style.Green)
 								:setLabel("Green")
 						)
 						:addComponent(
-							DiscordLuau.Components.ButtonBuilder.new("button-2")
+							DiscordLuau.ButtonBuilder
+								.new("button-2")
 								:setDisabled(true)
-								:setStyle(DiscordLuau.Components.ButtonBuilder.Style.Grey)
+								:setStyle(DiscordLuau.ButtonBuilder.Style.Grey)
 								:setLabel("Grey")
 						)
 						:addComponent(
-							DiscordLuau.Components.ButtonBuilder.new("button-3")
+							DiscordLuau.ButtonBuilder
+								.new("button-3")
 								:setDisabled(true)
-								:setStyle(DiscordLuau.Components.ButtonBuilder.Style.Red)
+								:setStyle(DiscordLuau.ButtonBuilder.Style.Red)
 								:setLabel("Red")
 						)
 				)
@@ -71,20 +74,23 @@ DiscordClient.eventManager.onReady:connect(function()
 
 	permissions:addPermission(DiscordLuau.PermissionsBuilder.Permissions.SendMessages)
 
-	local slashCommand = DiscordLuau.CommandBuilder.new()
+	local slashCommand = DiscordLuau.CommandBuilder
+		.new()
 		:setName("example-command")
 		:setDescription("Example Description")
 		:setGuildPermissions(permissions)
 
-	DiscordClient.discordApplication:setSlashCommandsAsync({
-		slashCommand
-	}):after(function(data)
-		print("updated, fetching current commands..")
+	DiscordClient.discordApplication
+		:setSlashCommandsAsync({
+			slashCommand,
+		})
+		:after(function(data)
+			print("updated, fetching current commands..")
 
-		DiscordClient.discordApplication:fetchSlashCommandsAsync():after(function(...)
-			print(...)
+			DiscordClient.discordApplication:fetchSlashCommandsAsync():after(function(...)
+				print(...)
+			end)
 		end)
-	end)
 end)
 
 DiscordClient:connectAsync()
