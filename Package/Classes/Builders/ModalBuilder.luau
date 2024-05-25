@@ -1,5 +1,9 @@
 local Construct = require("../../Utils/Construct")
-local ComponentTypes = require("../../Types/DiscordComponent")
+
+local ActionRowBuilder = require("Interface/ActionRowBuilder")
+local ButtonBuilder = require("Interface/ButtonBuilder")
+local SelectionBuilder = require("Interface/SelectionBuilder")
+local TextInputBuilder = require("Interface/TextInputBuilder")
 
 --[=[
 	@class Builders.ModalBuilder
@@ -38,11 +42,11 @@ end
 	Adds a component to the modal. The modal can contain up to five components.
 	
 	@method addComponent
-	@param componentObject ComponentTypes.DiscordComponent -- The component to be added.
+	@param componentObject DiscordComponentTypes.DiscordComponent -- The component to be added.
 	@within Builders.ModalBuilder
 	@return Builders.ModalBuilder -- Returns the ModalBuilder instance for method chaining.
 ]=]
-function ModalBuilder.Prototype.addComponent(self: ModalBuilder, componentObject: ComponentTypes.DiscordComponent): ModalBuilder
+function ModalBuilder.Prototype.addComponent(self: ModalBuilder, componentObject: InterfaceBuidler): ModalBuilder
 	assert(#self.components + 1 <= 5, "Action Row objects can only contain up to five components!")
 
 	table.insert(self.components, componentObject)
@@ -86,8 +90,13 @@ function ModalBuilder.Interface.new(modalId: string): ModalBuilder
 	}, ModalBuilder.Prototype) :: any
 end
 
+type InterfaceBuidler = ActionRowBuilder.ActionRowBuilder
+	| ButtonBuilder.ButtonBuilder
+	| SelectionBuilder.SelectionBuilder
+	| TextInputBuilder.TextInputBuilder
+
 export type ModalBuilder = typeof(ModalBuilder.Prototype) & {
-	components: { ComponentTypes.DiscordComponent },
+	components: { InterfaceBuidler },
 	modalId: string?,
 	modalTitle: string?
 }

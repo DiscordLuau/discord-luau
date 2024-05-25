@@ -1,5 +1,3 @@
-local DiscordComponentTypes = require("../../Types/DiscordComponent")
-
 local Construct = require("../../Utils/Construct")
 
 local CacheType = require("../../Enums/CacheType")
@@ -12,6 +10,11 @@ local DiscordGuildMember = require("../Objects/DiscordGuildMember")
 local Future = require("../../Vendor/Future")
 
 local Net = require("../../Std/Net")
+
+local ActionRowBuilder = require("../Builders/Interface/ActionRowBuilder")
+local ButtonBuilder = require("../Builders/Interface/ButtonBuilder")
+local SelectionBuilder = require("../Builders/Interface/SelectionBuilder")
+local TextInputBuilder = require("../Builders/Interface/TextInputBuilder")
 
 --[=[
 	@class Objects.DiscordMessage
@@ -250,11 +253,16 @@ function DiscordMessage.Interface.new(discordClient: any, messageData: {
 	return self
 end
 
+type InterfaceBuidler = ActionRowBuilder.ActionRowBuilder
+	| ButtonBuilder.ButtonBuilder
+	| SelectionBuilder.SelectionBuilder
+	| TextInputBuilder.TextInputBuilder
+
 export type DiscordMessage = typeof(DiscordMessage.Prototype) & {
 	discordClient: any,
 
 	mentionRoles: { string },
-	components: { DiscordComponentTypes.DiscordComponent },
+	components: { InterfaceBuidler },
 	-- attachments: { unknown },
 	-- embeds: { unknown },
 	tts: boolean,

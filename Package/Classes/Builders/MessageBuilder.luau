@@ -2,7 +2,11 @@ local Enumerate = require("../../Utils/Enumerate")
 local Construct = require("../../Utils/Construct")
 
 local EmbedBuilder = require("EmbedBuilder")
-local DiscordComponentTypes = require("../../Types/DiscordComponent")
+
+local ActionRowBuilder = require("../Builders/Interface/ActionRowBuilder")
+local ButtonBuilder = require("../Builders/Interface/ButtonBuilder")
+local SelectionBuilder = require("../Builders/Interface/SelectionBuilder")
+local TextInputBuilder = require("../Builders/Interface/TextInputBuilder")
 
 --[=[
 	@class Builders.MessageBuilder
@@ -87,11 +91,11 @@ end
 	Adds a component to the message.
 	
 	@method addComponent
-	@param discordComponent DiscordComponentTypes.DiscordComponent -- The component to add.
+	@param discordComponent InterfaceBuilder -- The component to add.
 	@within Builders.MessageBuilder
 	@return Builders.MessageBuilder -- Returns the MessageBuilder instance for method chaining.
 ]=]
-function MessageBuilder.Prototype.addComponent(self: MessageBuilder, discordComponent: DiscordComponentTypes.DiscordComponent)
+function MessageBuilder.Prototype.addComponent(self: MessageBuilder, discordComponent: InterfaceBuidler)
 	table.insert(self.components, discordComponent)
 
 	return self
@@ -172,6 +176,11 @@ function MessageBuilder.Interface.new(): MessageBuilder
 	}, MessageBuilder.Prototype) :: any
 end
 
+type InterfaceBuidler = ActionRowBuilder.ActionRowBuilder
+	| ButtonBuilder.ButtonBuilder
+	| SelectionBuilder.SelectionBuilder
+	| TextInputBuilder.TextInputBuilder
+
 export type MessageBuilder = typeof(MessageBuilder.Prototype) & {
 	content: string,
 
@@ -181,7 +190,7 @@ export type MessageBuilder = typeof(MessageBuilder.Prototype) & {
 	ttsEnabled: boolean,
 
 	embeds: { EmbedBuilder.EmbedBuilder },
-	components: { DiscordComponentTypes.DiscordComponent },
+	components: { InterfaceBuidler },
 
 	stickers: { string },
 
