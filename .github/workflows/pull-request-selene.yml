@@ -1,0 +1,23 @@
+name: Pull Request Selene Linter
+
+on:
+  push:
+    branches: [ "*" ]
+  pull_request:
+    branches: [ "*" ]
+
+  workflow_dispatch:
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: ok-nick/setup-aftman@v0.4.2
+      with:
+        version: "^1.0.0"
+        token: ${{ secrets.GIT_TOKEN }}
+    - name: Generate Standard Library
+      run: selene generate-roblox-std
+    - name: Run Selene
+      run: selene Package
