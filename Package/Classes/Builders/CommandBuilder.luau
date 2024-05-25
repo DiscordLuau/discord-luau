@@ -5,7 +5,7 @@ local CommandOptionBuilder = require("CommandOptionBuilder")
 local PermissionsBuilder = require("PermissionsBuilder")
 
 --[=[
-	@class CommandBuilder
+	@class Builders.CommandBuilder
 
 	CommandBuilder is used to construct a command for a Discord application, including type, name, description, and options.
 
