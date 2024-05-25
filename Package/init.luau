@@ -35,10 +35,10 @@ local DiscordVoiceChannel = require("Classes/Objects/DiscordVoiceChannel")
 local DiscordUser = require("Classes/Objects/DiscordUser")
 
 -- Components
-local ActionRowBuilder = require("Classes/Interface/ActionRowBuilder")
-local ButtonBuilder = require("Classes/Interface/ButtonBuilder")
-local SelectionBuilder = require("Classes/Interface/SelectionBuilder")
-local TextInputBuilder = require("Classes/Interface/TextInputBuilder")
+local ActionRowBuilder = require("Classes/Builders/Interface/ActionRowBuilder")
+local ButtonBuilder = require("Classes/Builders/Interface/ButtonBuilder")
+local SelectionBuilder = require("Classes/Builders/Interface/SelectionBuilder")
+local TextInputBuilder = require("Classes/Builders/Interface/TextInputBuilder")
 
 -- Client
 local DiscordClient = require("Classes/DiscordClient")
@@ -51,16 +51,32 @@ local DiscordLuau = {}
 DiscordLuau.Components = {}
 
 export type ActionRowBuilder = ActionRowBuilder.ActionRowBuilder
-DiscordLuau.Components.ActionRowBuilder = ActionRowBuilder
+DiscordLuau.ActionRowBuilder = ActionRowBuilder
+--[=[
+	@prop ActionRowBuilder Builders.Interface.ActionRowBuilder
+	@within DiscordLuau
+]=]
 
 export type ButtonBuilder = ButtonBuilder.ButtonBuilder
-DiscordLuau.Components.ButtonBuilder = ButtonBuilder
+DiscordLuau.ButtonBuilder = ButtonBuilder
+--[=[
+	@prop ButtonBuilder Builders.Interface.ButtonBuilder
+	@within DiscordLuau
+]=]
 
 export type SelectionBuilder = SelectionBuilder.SelectionBuilder
-DiscordLuau.Components.SelectionBuilder = SelectionBuilder
+DiscordLuau.SelectionBuilder = SelectionBuilder
+--[=[
+	@prop SelectionBuilder Builders.Interface.SelectionBuilder
+	@within DiscordLuau
+]=]
 
 export type TextInputBuilder = TextInputBuilder.TextInputBuilder
-DiscordLuau.Components.TextInputBuilder = TextInputBuilder
+DiscordLuau.TextInputBuilder = TextInputBuilder
+--[=[
+	@prop TextInputBuilder Builders.Interface.TextInputBuilder
+	@within DiscordLuau
+]=]
 
 --#endregion
 
@@ -69,43 +85,93 @@ DiscordLuau.Components.TextInputBuilder = TextInputBuilder
 
 export type MessageBuilder = MessageBuilder.MessageBuilder
 DiscordLuau.MessageBuilder = MessageBuilder
+--[=[
+	@prop MessageBuilder Builders.MessageBuilder
+	@within DiscordLuau
+]=]
 
 export type CommandBuilder = CommandBuilder.CommandBuilder
 DiscordLuau.CommandBuilder = CommandBuilder
+--[=[
+	@prop CommandBuilder Builders.CommandBuilder
+	@within DiscordLuau
+]=]
 
 export type CommandOptionBuilder = CommandOptionBuilder.CommandOptionBuilder
 DiscordLuau.CommandOptionBuilder = CommandOptionBuilder
+--[=[
+	@prop CommandOptionBuilder Builders.CommandOptionBuilder
+	@within DiscordLuau
+]=]
 
 export type ActivityBuilder = ActivityBuilder.ActivityBuilder
 DiscordLuau.ActivityBuilder = ActivityBuilder
+--[=[
+	@prop ActivityBuilder Builders.ActivityBuilder
+	@within DiscordLuau
+]=]
 
 export type AutomoderationRuleBuilder = AutomoderationRuleBuilder.AutomoderationRuleBuilder
 DiscordLuau.AutomoderationRuleBuilder = AutomoderationRuleBuilder
+--[=[
+	@prop AutomoderationRuleBuilder Builders.AutomoderationRuleBuilder
+	@within DiscordLuau
+]=]
 
 export type EmbedBuilder = EmbedBuilder.EmbedBuilder
 DiscordLuau.EmbedBuilder = EmbedBuilder
+--[=[
+	@prop EmbedBuilder Builders.EmbedBuilder
+	@within DiscordLuau
+]=]
 
 export type IntentsBuilder = IntentsBuilder.IntentsBuilder
 DiscordLuau.IntentsBuilder = IntentsBuilder
+--[=[
+	@prop IntentsBuilder Builders.IntentsBuilder
+	@within DiscordLuau
+]=]
 
 export type ModalBuilder = ModalBuilder.ModalBuilder
 DiscordLuau.ModalBuilder = ModalBuilder
+--[=[
+	@prop ModalBuilder Builders.ModalBuilder
+	@within DiscordLuau
+]=]
 
 export type PermissionsBuilder = PermissionsBuilder.PermissionsBuilder
 DiscordLuau.PermissionsBuilder = PermissionsBuilder
+--[=[
+	@prop PermissionsBuilder Builders.PermissionsBuilder
+	@within DiscordLuau
+]=]
 
 export type PresenceBuilder = PresenceBuilder.PresenceBuilder
 DiscordLuau.PresenceBuilder = PresenceBuilder
+--[=[
+	@prop PresenceBuilder Builders.PresenceBuilder
+	@within DiscordLuau
+]=]
 
 export type SettingsBuilder = SettingsBuilder.SettingsBuilder
 DiscordLuau.SettingsBuilder = SettingsBuilder
+--[=[
+	@prop SettingsBuilder Builders.SettingsBuilder
+	@within DiscordLuau
+]=]
 
 --#endregion
 
 --#region
 --#MARK: Discord-Luau Client
+
 export type DiscordClient = DiscordClient.DiscordClient
 DiscordLuau.DiscordClient = DiscordClient
+--[=[
+	@prop DiscordClient DiscordClient
+	@within DiscordLuau
+]=]
+
 --#endregion
 
 --#region
