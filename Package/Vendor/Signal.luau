@@ -6,7 +6,7 @@
 	Original module can be found at: https://create.roblox.com/docs/reference/engine/datatypes/RBXScriptSignal
 
 ]=]
-local Signal = require("Embedded/Sleitnick/Signal")
+local Signal = require("Embedded/Devforum/Signal")
 
 export type Signal<T...> = Signal.Signal<T...>
 export type Connection = Signal.Connection

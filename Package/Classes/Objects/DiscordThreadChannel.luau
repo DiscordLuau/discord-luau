@@ -114,7 +114,20 @@ end
 	@return Future<unknown> -- A future that resolves when the modifications are complete.
 ]=]
 function DiscordThreadChannel.Prototype.modifyAsync(self: DiscordThreadChannel, channelSchema)
-	return Future.try(function() end)
+	return Future.try(function()
+		return self.discordClient.discordGateway
+			:patchAsync(string.format(DiscordEndpoints.BotModifyChannel, self.id), {
+				name = channelSchema.name,
+				position = channelSchema.position,
+				topic = channelSchema.topic,
+				nsfw = channelSchema.nsfw,
+				rate_limit_per_user = channelSchema.rateLimitPerUser,
+				parent_id = channelSchema.parentId,
+				default_auto_archive_duration = channelSchema.defaultAutoArchiveDurection,
+				default_thread_rate_limit_per_user = channelSchema.defaultThreadRateLimitPerUser,
+			})
+			:await()
+	end)
 end
 
 --[=[

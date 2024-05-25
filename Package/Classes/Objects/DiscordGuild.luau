@@ -229,11 +229,10 @@ end
 	Gets the audit logs of the guild asynchronously.
 
 	@method getGuildAuditLogs
-	@param commands { CommandBuilder } -- An array of command builder objects.
 	@return Future
 	@within Objects.DiscordGuild
 ]=]
-function DiscordGuild.Prototype.getGuildAuditLogs(self: DiscordGuild, commands: { CommandBuilder.CommandBuilder })
+function DiscordGuild.Prototype.getGuildAuditLogs(self: DiscordGuild)
 	return Future.try(function()
 		local guildAuditLogs = self.discordClient.discordGateway
 			:getAsync(string.format(DiscordEndpoints.GetGuildAuditLogs, self.id))
@@ -419,7 +418,7 @@ end
 function DiscordGuild.Prototype.getAutomoderationRuleAsync(self: DiscordGuild, ruleId: string)
 	return Future.try(function()
 		local discordAutomoderationRule = self.discordClient.discordGateway
-			:getAsync(string.format(DiscordEndpoints.BotGetAutomoderationRule, self.id))
+			:getAsync(string.format(DiscordEndpoints.BotGetAutomoderationRule, self.id, ruleId))
 			:await()
 
 		return DiscordAutomoderationRule.new(self.discordClient, discordAutomoderationRule)

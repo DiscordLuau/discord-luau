@@ -14,8 +14,6 @@ local DiscordTextChannel = require("DiscordTextChannel")
 local DiscordUser = require("DiscordUser")
 local DiscordGuild = require("DiscordGuild")
 
-local DiscordMessage = require("DiscordMessage")
-
 --[=[
 	@class Objects.DiscordInteraction
 

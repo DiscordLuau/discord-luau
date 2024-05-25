@@ -1,8 +1,6 @@
 local Construct = require("../../Utils/Construct")
 local Enumerate = require("../../Utils/Enumerate")
 
-local CacheType = require("../../Enums/CacheType")
-
 --[=[
 	@class Builders.AutomoderationRuleBuilder
 

@@ -3,7 +3,6 @@ local Construct = require("../../Utils/Construct")
 local CacheType = require("../../Enums/CacheType")
 local DiscordEndpoints = require("../../Data/DiscordEndpoints")
 
-local EmbedBuilder = require("../Builders/EmbedBuilder")
 local MessageBuilder = require("../Builders/MessageBuilder")
 local DiscordGuildMember = require("../Objects/DiscordGuildMember")
 

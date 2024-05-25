@@ -16,8 +16,6 @@ local DiscordCache = require("Objects/DiscordCache")
 local DiscordUser = require("Objects/DiscordUser")
 local DiscordGuild = require("Objects/DiscordGuild")
 local DiscordChannel = require("Objects/DiscordChannel")
-local DiscordTextChannel = require("Objects/DiscordTextChannel")
-local DiscordVoiceChannel = require("Objects/DiscordVoiceChannel")
 local DiscordMessage = require("Objects/DiscordMessage")
 local DiscordApplication = require("Objects/DiscordApplication")
 local DiscordInteraction = require("Objects/DiscordInteraction")
@@ -70,12 +68,12 @@ function DiscordClient.Prototype.connectAsync(self: DiscordClient)
 	return Future.try(function()
 		self.discordGateway:setEndpointCache(DiscordEndpoints.BotGateway, EndpointCache.new(10))
 
-		local data = self.discordGateway:getAsync(DiscordEndpoints.BotGateway):await()
+		local gatewayData = self.discordGateway:getAsync(DiscordEndpoints.BotGateway):await()
 		local websocketVersion = self.discordGateway:getApiVersion()
 
-		self.websocketUrl = `{data.url}/?v={websocketVersion}` :: string
-		self.maxConcurrency = data.sessionStartLimit.maxConcurrency :: number
-		self.shardCount = data.shards :: number
+		self.websocketUrl = `{gatewayData.url}/?v={websocketVersion}` :: string
+		self.maxConcurrency = gatewayData.sessionStartLimit.maxConcurrency :: number
+		self.shardCount = gatewayData.shards :: number
 
 		for shardId = 1, self.shardCount do
 			self.discordShards[shardId] = DiscordShard.new(self, shardId - 1)
@@ -254,7 +252,7 @@ end
 	@within DiscordClient
 	@param verbose boolean -- Whether to enable verbose logging.
 ]=]
-function DiscordClient.Prototype.setVerbose(self: DiscordClient, verbose: boolean)
+function DiscordClient.Prototype.setVerbose(_: DiscordClient, verbose: boolean)
 	Console.setGlobalLogLevel(verbose and Console.LogLevel.debug or Console.LogLevel.warn)
 end
 

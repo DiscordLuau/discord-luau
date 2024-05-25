@@ -292,7 +292,7 @@ end
 	@within Network.DiscordGateway
 	@return number -- The API version.
 ]=]
-function DiscordGateway.Prototype.getApiVersion(self: DiscordGateway)
+function DiscordGateway.Prototype.getApiVersion(_: DiscordGateway)
 	return DISCORD_API_VERSION
 end
 

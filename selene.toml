@@ -4,3 +4,4 @@ exclude = ["luneTypes.d.luau"]
 
 [lints]
 high_cyclomatic_complexity = "warn"
+if_same_then_else = "allow"

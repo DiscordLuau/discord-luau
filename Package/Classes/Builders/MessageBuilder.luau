@@ -1,4 +1,3 @@
-local Enumerate = require("../../Utils/Enumerate")
 local Construct = require("../../Utils/Construct")
 
 local EmbedBuilder = require("EmbedBuilder")

@@ -1,7 +1,11 @@
+--# selene: allow(undefined_variable)
+
 local DEFAULT_LOGGING_SCHEMA = "[%s][%s] :: %s"
 local MAXIMUM_CACHED_LOGS = 500
 local ARBITRARY_LARGE_NUMBER = 9999999
 local PRETTY_TABLE_TAB = string.rep("\t", 1)
+
+local task = require("../../../Std/Task")
 
 --[=[
 	@class Console

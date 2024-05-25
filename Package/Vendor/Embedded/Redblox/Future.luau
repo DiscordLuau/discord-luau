@@ -1,4 +1,5 @@
 --!nocheck
+--# selene: allow(shadowing)
 
 local Spawn = require("Spawn")
 

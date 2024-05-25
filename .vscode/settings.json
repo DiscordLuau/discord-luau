@@ -7,5 +7,12 @@
   "luau-lsp.inlayHints.typeHintMaxLength": 50,
   "luau-lsp.require.directoryAliases": {
     "@lune/": "~/.lune/.typedefs/0.8.2/"
-  }
+  },
+
+  "[lua]": {
+		"editor.formatOnSave": true
+	},
+	"[luau]": {
+		"editor.formatOnSave": true
+	},
 }

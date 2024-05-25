@@ -53,7 +53,7 @@ end
 	@within Objects.DiscordChannel
 	@return Future
 ]=]
-function DiscordChannel.Prototype.deleteAsync(self: DiscordChannel, messageIds: { string })
+function DiscordChannel.Prototype.deleteAsync(self: DiscordChannel)
 	return Future.try(function()
 		return self.discordClient.discordGateway
 			:deleteAsync(string.format(DiscordEndpoints.BotDeleteChannel, self.id))

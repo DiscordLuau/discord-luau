@@ -26,7 +26,7 @@ EventOut.Prototype.type = "EventOut"
 	@within Network.Middleware.EventOut
 	@return any -- The processed data.
 ]=]
-function EventOut.Prototype.processJSON(self: EventOut, data: any)
+function EventOut.Prototype.processJSON(_: EventOut, data: any)
 	return data
 end
 

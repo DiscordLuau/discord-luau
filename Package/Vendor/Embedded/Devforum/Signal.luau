@@ -1,4 +1,7 @@
 --!strict
+--# selene: allow(shadowing)
+
+local task = require("../../../Std/Task")
 
 local Signal = {}
 Signal.__index = Signal

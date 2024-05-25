@@ -96,7 +96,7 @@ function DiscordUDP.Prototype.disconnectAsync(self: DiscordUDP, closingCode: str
 			return
 		end
 
-		(Net :: any).udpSocketClose(self.socketInstance)
+		(Net :: any).udpSocketClose(self.socketInstance, closingCode)
 	end)
 end
 

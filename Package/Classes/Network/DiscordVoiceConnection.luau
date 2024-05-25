@@ -212,21 +212,6 @@ function DiscordVoiceConnection.Prototype.heartbeatIn(self: DiscordVoiceConnecti
 end
 
 --[=[
-	Sends an identify operation to the voice websocket.
-	
-	@private
-	@method identifyAsync
-	@param self DiscordVoiceConnection
-	@within Network.DiscordVoiceConnection
-	@return Future
-]=]
-function DiscordVoiceConnection.Prototype.identifyAsync(self: DiscordVoiceConnection)
-	return Future.try(function()
-		-- Implementation for identifying with the voice websocket
-	end)
-end
-
---[=[
 	Connects to a voice channel asynchronously.
 	
 	@private

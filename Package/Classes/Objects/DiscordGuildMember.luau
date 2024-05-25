@@ -6,8 +6,6 @@ local DiscordEndpoints = require("../../Data/DiscordEndpoints")
 
 local CacheType = require("../../Enums/CacheType")
 
-local Future = require("../../Vendor/Future")
-
 local DiscordUser = require("DiscordUser")
 
 --[=[
