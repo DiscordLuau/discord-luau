@@ -9,18 +9,56 @@ local DiscordAutomoderationRuleBuilder = require("../Builders/DiscordAutomoderat
 	@class Objects.DiscordAutomoderationRule
 
 	The `DiscordAutomoderationRule` class provides methods to interact with Discord auto-moderation rules, including modifying and deleting rules.
+]=]
 
-	@field id string The unique identifier of the auto-moderation rule.
-	@field guildId string The ID of the guild where the rule is applied.
-	@field name string The name of the auto-moderation rule.
-	@field creatorId string The ID of the creator of the rule.
-	@field eventType number The type of event that triggers the rule.
-	@field triggerType number The type of trigger for the rule.
-	@field enabled boolean? Whether the rule is enabled.
-	@field exemptRoles {string} Roles exempt from the rule.
-	@field exemptChannels {string} Channels exempt from the rule.
-	@field triggerMetadata table Metadata for the trigger, including keyword filters, regex patterns, presets, allow list, mention limits, and raid protection.
-	@field actions table Actions to be taken when the rule is triggered, including type and metadata such as channel ID, duration, and custom message.
+--[=[
+	@prop id string
+	@within Objects.DiscordAutomoderationRule
+]=]
+
+--[=[
+	@prop guildId sring
+	@within Objects.DiscordAutomoderationRule
+]=]
+
+--[=[
+	@prop name string
+	@within Objects.DiscordAutomoderationRule
+]=]
+
+--[=[
+	@prop eventType number
+	@within Objects.DiscordAutomoderationRule
+]=]
+
+--[=[
+	@prop triggerType number
+	@within Objects.DiscordAutomoderationRule
+]=]
+
+--[=[
+	@prop enabled boolean
+	@within Objects.DiscordAutomoderationRule
+]=]
+
+--[=[
+	@prop exemptRoles { string }
+	@within Objects.DiscordAutomoderationRule
+]=]
+
+--[=[
+	@prop exemptChannels { string }
+	@within Objects.DiscordAutomoderationRule
+]=]
+
+--[=[
+	@prop triggerMetadata TriggerMetadata
+	@within Objects.DiscordAutomoderationRule
+]=]
+
+--[=[
+	@prop actions Actions
+	@within Objects.DiscordAutomoderationRule
 ]=]
 
 local DiscordAutomoderationRule = {}
