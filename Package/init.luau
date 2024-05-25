@@ -174,6 +174,11 @@ DiscordLuau.DiscordClient = DiscordClient
 
 --#endregion
 
+-- e
+do
+	e(123)
+end
+
 --#region
 --#MARK: Discord-Luau Type Exports
 export type DiscordApplication = DiscordApplication.DiscordApplication
