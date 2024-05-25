@@ -2,7 +2,7 @@ local Enumerate = require("../../Utils/Enumerate")
 local Construct = require("../../Utils/Construct")
 
 --[=[
-	@class DiscordActivityBuilder
+	@class Builders.DiscordActivityBuilder
 
 	DiscordActivityBuilder is used to construct an activity object for a Discord bot, including name, type, and streaming URL.
 
@@ -23,7 +23,7 @@ DiscordActivityBuilder.Prototype.type = "DiscordActivityBuilder"
 
 --[=[
 	@prop Type table
-	@within DiscordActivityBuilder
+	@within Builders.DiscordActivityBuilder
 
 	An enumeration of activity types.
 
@@ -46,8 +46,8 @@ DiscordActivityBuilder.Interface.Type = Enumerate.new({
 	
 	@method setActivityName
 	@param activityName string -- The name of the activity.
-	@within DiscordActivityBuilder
-	@return DiscordActivityBuilder -- Returns the DiscordActivityBuilder instance for method chaining.
+	@within Builders.DiscordActivityBuilder
+	@return Builders.DiscordActivityBuilder -- Returns the DiscordActivityBuilder instance for method chaining.
 ]=]
 function DiscordActivityBuilder.Prototype.setActivityName(self: DiscordActivityBuilder, activityName: string)
 	self.name = activityName
@@ -60,8 +60,8 @@ end
 	
 	@method setActivityType
 	@param activityType number -- The type of the activity.
-	@within DiscordActivityBuilder
-	@return DiscordActivityBuilder -- Returns the DiscordActivityBuilder instance for method chaining.
+	@within Builders.DiscordActivityBuilder
+	@return Builders.DiscordActivityBuilder -- Returns the DiscordActivityBuilder instance for method chaining.
 ]=]
 function DiscordActivityBuilder.Prototype.setActivityType(self: DiscordActivityBuilder, activityType: number)
 	assert(DiscordActivityBuilder.Interface.Type:Is(activityType), `Expected 'activityType' to be of class 'activityType'`)
@@ -76,8 +76,8 @@ end
 	
 	@method setStreamingURL
 	@param streamURL string -- The streaming URL.
-	@within DiscordActivityBuilder
-	@return DiscordActivityBuilder -- Returns the DiscordActivityBuilder instance for method chaining.
+	@within Builders.DiscordActivityBuilder
+	@return Builders.DiscordActivityBuilder -- Returns the DiscordActivityBuilder instance for method chaining.
 ]=]
 function DiscordActivityBuilder.Prototype.setStreamingURL(self: DiscordActivityBuilder, streamURL: string)
 	if not string.find(streamURL, "youtube.com") and not string.find(streamURL, "twitch.tv") then
@@ -93,7 +93,7 @@ end
 	Converts the activity to a JSON object that can be sent to the Discord API.
 	
 	@method toJSONObject
-	@within DiscordActivityBuilder
+	@within Builders.DiscordActivityBuilder
 	@return table -- The JSON representation of the activity.
 ]=]
 function DiscordActivityBuilder.Prototype.toJSONObject(self: DiscordActivityBuilder)
@@ -108,8 +108,8 @@ end
 	Creates a new instance of DiscordActivityBuilder.
 	
 	@function new
-	@within DiscordActivityBuilder
-	@return DiscordActivityBuilder -- A new instance of DiscordActivityBuilder.
+	@within Builders.DiscordActivityBuilder
+	@return Builders.DiscordActivityBuilder -- A new instance of DiscordActivityBuilder.
 ]=]
 function DiscordActivityBuilder.Interface.new()
 	return Construct({

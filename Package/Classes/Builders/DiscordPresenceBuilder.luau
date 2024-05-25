@@ -4,7 +4,7 @@ local Enumerate = require("../../Utils/Enumerate")
 local DiscordActivityBuilder = require("DiscordActivityBuilder")
 
 --[=[
-	@class DiscordPresenceBuilder
+	@class Builders.DiscordPresenceBuilder
 
 	DiscordPresenceBuilder is used to construct a presence object for a Discord bot, including activities, status, and AFK state.
 
@@ -28,7 +28,7 @@ DiscordPresenceBuilder.Prototype.type = "DiscordPresenceBuilder"
 
 --[=[
 	@prop Status table
-	@within DiscordPresenceBuilder
+	@within Builders.DiscordPresenceBuilder
 
 	An enumeration of presence statuses.
 
@@ -51,8 +51,8 @@ DiscordPresenceBuilder.Interface.Status = Enumerate.new({
 	
 	@method addActivity
 	@param activity DiscordActivityBuilder -- The activity to add.
-	@within DiscordPresenceBuilder
-	@return DiscordPresenceBuilder -- Returns the DiscordPresenceBuilder instance for method chaining.
+	@within Builders.DiscordPresenceBuilder
+	@return Builders.DiscordPresenceBuilder -- Returns the DiscordPresenceBuilder instance for method chaining.
 ]=]
 function DiscordPresenceBuilder.Prototype.addActivity(self: DiscordPresenceBuilder, activity: DiscordActivityBuilder.DiscordActivityBuilder)
 	table.insert(self.activities, activity)
@@ -65,8 +65,8 @@ end
 	
 	@method setStatus
 	@param status string -- The status to set.
-	@within DiscordPresenceBuilder
-	@return DiscordPresenceBuilder -- Returns the DiscordPresenceBuilder instance for method chaining.
+	@within Builders.DiscordPresenceBuilder
+	@return Builders.DiscordPresenceBuilder -- Returns the DiscordPresenceBuilder instance for method chaining.
 ]=]
 function DiscordPresenceBuilder.Prototype.setStatus(self: DiscordPresenceBuilder, status: string)
 	self.status = status
@@ -79,8 +79,8 @@ end
 	
 	@method setAfk
 	@param isAfk boolean -- Whether the presence is AFK.
-	@within DiscordPresenceBuilder
-	@return DiscordPresenceBuilder -- Returns the DiscordPresenceBuilder instance for method chaining.
+	@within Builders.DiscordPresenceBuilder
+	@return Builders.DiscordPresenceBuilder -- Returns the DiscordPresenceBuilder instance for method chaining.
 ]=]
 function DiscordPresenceBuilder.Prototype.setAfk(self: DiscordPresenceBuilder, isAfk: boolean)
 	self.idle = isAfk
@@ -93,8 +93,8 @@ end
 
 	@method setSince
 	@param delta number -- The time since the presence was last updated, in milliseconds.
-	@within DiscordPresenceBuilder
-	@return DiscordPresenceBuilder -- Returns the DiscordPresenceBuilder instance for method chaining.
+	@within Builders.DiscordPresenceBuilder
+	@return Builders.DiscordPresenceBuilder -- Returns the DiscordPresenceBuilder instance for method chaining.
 ]=]
 function DiscordPresenceBuilder.Prototype.setSince(self: DiscordPresenceBuilder, delta: number)
 	self.since = delta
@@ -106,7 +106,7 @@ end
 	Converts the presence to a JSON object that can be sent to the Discord API.
 	
 	@method toJSONObject
-	@within DiscordPresenceBuilder
+	@within Builders.DiscordPresenceBuilder
 	@return table -- The JSON representation of the presence.
 ]=]
 function DiscordPresenceBuilder.Prototype.toJSONObject(self: DiscordPresenceBuilder)
@@ -129,8 +129,8 @@ end
 	Creates a new instance of DiscordPresenceBuilder.
 	
 	@function new
-	@within DiscordPresenceBuilder
-	@return DiscordPresenceBuilder -- A new instance of DiscordPresenceBuilder.
+	@within Builders.DiscordPresenceBuilder
+	@return Builders.DiscordPresenceBuilder -- A new instance of DiscordPresenceBuilder.
 ]=]
 function DiscordPresenceBuilder.Interface.new(): DiscordPresenceBuilder
 	return Construct({

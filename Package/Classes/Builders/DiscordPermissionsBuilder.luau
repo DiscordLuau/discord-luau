@@ -2,7 +2,7 @@ local Construct = require("../../Utils/Construct")
 local Enumerate = require("../../Utils/Enumerate")
 
 --[=[
-	@class DiscordPermissionsBuilder
+	@class Builders.DiscordPermissionsBuilder
 
 	DiscordPermissionsBuilder is used to construct and manage permissions for a Discord bot.
 
@@ -24,7 +24,7 @@ DiscordPermissionsBuilder.Prototype.type = "DiscordPermissionsBuilder"
 
 --[=[
 	@prop Permissions table
-	@within DiscordPermissionsBuilder
+	@within Builders.DiscordPermissionsBuilder
 
 	An enumeration of permissions.
 
@@ -127,8 +127,8 @@ DiscordPermissionsBuilder.Interface.Permissions = Enumerate.new({
 	
 	@method addPermission
 	@param permission number -- The permission to add.
-	@within DiscordPermissionsBuilder
-	@return DiscordPermissionsBuilder -- Returns the DiscordPermissionsBuilder instance for method chaining.
+	@within Builders.DiscordPermissionsBuilder
+	@return Builders.DiscordPermissionsBuilder -- Returns the DiscordPermissionsBuilder instance for method chaining.
 ]=]
 function DiscordPermissionsBuilder.Prototype.addPermission(self: DiscordPermissionsBuilder, permission: number)
 	if table.find(self.permissions, permission) then
@@ -145,8 +145,8 @@ end
 	
 	@method deletePermission
 	@param permission number -- The permission to remove.
-	@within DiscordPermissionsBuilder
-	@return DiscordPermissionsBuilder -- Returns the DiscordPermissionsBuilder instance for method chaining.
+	@within Builders.DiscordPermissionsBuilder
+	@return Builders.DiscordPermissionsBuilder -- Returns the DiscordPermissionsBuilder instance for method chaining.
 ]=]
 function DiscordPermissionsBuilder.Prototype.deletePermission(self: DiscordPermissionsBuilder, permission: number)
 	local index = table.find(self.permissions, permission)
@@ -165,7 +165,7 @@ end
 	
 	@method hasPermission
 	@param permission number -- The permission to check.
-	@within DiscordPermissionsBuilder
+	@within Builders.DiscordPermissionsBuilder
 	@return boolean -- Returns true if the permission is in the builder, false otherwise.
 ]=]
 function DiscordPermissionsBuilder.Prototype.hasPermission(self: DiscordPermissionsBuilder, permission: number)
@@ -176,7 +176,7 @@ end
 	Gets the bitfield value of the permissions.
 	
 	@method getValue
-	@within DiscordPermissionsBuilder
+	@within Builders.DiscordPermissionsBuilder
 	@return string -- The bitfield value as a string.
 ]=]
 function DiscordPermissionsBuilder.Prototype.getValue(self: DiscordPermissionsBuilder)
@@ -193,8 +193,8 @@ end
 	Creates a new instance of DiscordPermissionsBuilder.
 	
 	@function new
-	@within DiscordPermissionsBuilder
-	@return DiscordPermissionsBuilder -- A new instance of DiscordPermissionsBuilder.
+	@within Builders.DiscordPermissionsBuilder
+	@return Builders.DiscordPermissionsBuilder -- A new instance of DiscordPermissionsBuilder.
 ]=]
 function DiscordPermissionsBuilder.Interface.new()
 	return Construct({
@@ -206,8 +206,8 @@ end
 	Creates a new instance of DiscordPermissionsBuilder with no permissions.
 	
 	@function none
-	@within DiscordPermissionsBuilder
-	@return DiscordPermissionsBuilder -- A new instance of DiscordPermissionsBuilder.
+	@within Builders.DiscordPermissionsBuilder
+	@return Builders.DiscordPermissionsBuilder -- A new instance of DiscordPermissionsBuilder.
 ]=]
 function DiscordPermissionsBuilder.Interface.none()
 	return DiscordPermissionsBuilder.Interface.new()
@@ -217,8 +217,8 @@ end
 	Creates a new instance of DiscordPermissionsBuilder with all permissions.
 	
 	@function all
-	@within DiscordPermissionsBuilder
-	@return DiscordPermissionsBuilder -- A new instance of DiscordPermissionsBuilder.
+	@within Builders.DiscordPermissionsBuilder
+	@return Builders.DiscordPermissionsBuilder -- A new instance of DiscordPermissionsBuilder.
 ]=]
 function DiscordPermissionsBuilder.Interface.all()
 	local permissions = DiscordPermissionsBuilder.Interface.new()
@@ -235,8 +235,8 @@ end
 	
 	@function from
 	@param bitfield string -- The bitfield representing the permissions.
-	@within DiscordPermissionsBuilder
-	@return DiscordPermissionsBuilder -- A new instance of DiscordPermissionsBuilder.
+	@within Builders.DiscordPermissionsBuilder
+	@return Builders.DiscordPermissionsBuilder -- A new instance of DiscordPermissionsBuilder.
 ]=]
 function DiscordPermissionsBuilder.Interface.from(bitfield: string)
 	local permissions = DiscordPermissionsBuilder.Interface.new()

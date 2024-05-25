@@ -5,7 +5,7 @@ local DiscordEmbedBuilder = require("DiscordEmbedBuilder")
 local DiscordComponentTypes = require("../../Types/DiscordComponent")
 
 --[=[
-	@class DiscordMessageBuilder
+	@class Builders.DiscordMessageBuilder
 
 	DiscordMessageBuilder is used to construct a message that can be sent to a Discord channel, including content, embeds, components, and stickers.
 
@@ -31,8 +31,8 @@ DiscordMessageBuilder.Prototype.type = "DiscordMessageBuilder"
 	
 	@method setContent
 	@param content string -- The content of the message.
-	@within DiscordMessageBuilder
-	@return DiscordMessageBuilder -- Returns the DiscordMessageBuilder instance for method chaining.
+	@within Builders.DiscordMessageBuilder
+	@return Builders.DiscordMessageBuilder -- Returns the DiscordMessageBuilder instance for method chaining.
 ]=]
 function DiscordMessageBuilder.Prototype.setContent(self: DiscordMessageBuilder, content: string)
 	self.content = content
@@ -45,8 +45,8 @@ end
 	
 	@method setNonce
 	@param nonce string -- The nonce of the message.
-	@within DiscordMessageBuilder
-	@return DiscordMessageBuilder -- Returns the DiscordMessageBuilder instance for method chaining.
+	@within Builders.DiscordMessageBuilder
+	@return Builders.DiscordMessageBuilder -- Returns the DiscordMessageBuilder instance for method chaining.
 ]=]
 function DiscordMessageBuilder.Prototype.setNonce(self: DiscordMessageBuilder, nonce: string)
 	self.nonce = nonce
@@ -60,8 +60,8 @@ end
 	
 	@method setTTSEnabled
 	@param ttsEnabled boolean -- Whether TTS is enabled.
-	@within DiscordMessageBuilder
-	@return DiscordMessageBuilder -- Returns the DiscordMessageBuilder instance for method chaining.
+	@within Builders.DiscordMessageBuilder
+	@return Builders.DiscordMessageBuilder -- Returns the DiscordMessageBuilder instance for method chaining.
 ]=]
 function DiscordMessageBuilder.Prototype.setTTSEnabled(self: DiscordMessageBuilder, ttsEnabled: boolean)
 	self.ttsEnabled = ttsEnabled
@@ -74,8 +74,8 @@ end
 	
 	@method addEmbed
 	@param embedBuilder DiscordEmbedBuilder -- The embed to add.
-	@within DiscordMessageBuilder
-	@return DiscordMessageBuilder -- Returns the DiscordMessageBuilder instance for method chaining.
+	@within Builders.DiscordMessageBuilder
+	@return Builders.DiscordMessageBuilder -- Returns the DiscordMessageBuilder instance for method chaining.
 ]=]
 function DiscordMessageBuilder.Prototype.addEmbed(self: DiscordMessageBuilder, embedBuilder: DiscordEmbedBuilder.DiscordEmbedBuilder)
 	table.insert(self.embeds, embedBuilder)
@@ -88,8 +88,8 @@ end
 	
 	@method addComponent
 	@param discordComponent DiscordComponentTypes.DiscordComponent -- The component to add.
-	@within DiscordMessageBuilder
-	@return DiscordMessageBuilder -- Returns the DiscordMessageBuilder instance for method chaining.
+	@within Builders.DiscordMessageBuilder
+	@return Builders.DiscordMessageBuilder -- Returns the DiscordMessageBuilder instance for method chaining.
 ]=]
 function DiscordMessageBuilder.Prototype.addComponent(self: DiscordMessageBuilder, discordComponent: DiscordComponentTypes.DiscordComponent)
 	table.insert(self.components, discordComponent)
@@ -102,8 +102,8 @@ end
 	
 	@method addStickerId
 	@param stickerId string -- The sticker ID to add.
-	@within DiscordMessageBuilder
-	@return DiscordMessageBuilder -- Returns the DiscordMessageBuilder instance for method chaining.
+	@within Builders.DiscordMessageBuilder
+	@return Builders.DiscordMessageBuilder -- Returns the DiscordMessageBuilder instance for method chaining.
 ]=]
 function DiscordMessageBuilder.Prototype.addStickerId(self: DiscordMessageBuilder, stickerId: string)
 	table.insert(self.stickers, stickerId)
@@ -116,8 +116,8 @@ end
 	
 	@method setFlags
 	@param flags number -- The flags for the message.
-	@within DiscordMessageBuilder
-	@return DiscordMessageBuilder -- Returns the DiscordMessageBuilder instance for method chaining.
+	@within Builders.DiscordMessageBuilder
+	@return Builders.DiscordMessageBuilder -- Returns the DiscordMessageBuilder instance for method chaining.
 ]=]
 function DiscordMessageBuilder.Prototype.setFlags(self: DiscordMessageBuilder, flags: number)
 	self.flags = flags
@@ -129,7 +129,7 @@ end
 	Converts the message to a JSON object that can be sent to the Discord API.
 	
 	@method toJSONObject
-	@within DiscordMessageBuilder
+	@within Builders.DiscordMessageBuilder
 	@return table -- The JSON representation of the message.
 ]=]
 function DiscordMessageBuilder.Prototype.toJSONObject(self: DiscordMessageBuilder)
@@ -161,8 +161,8 @@ end
 	Creates a new instance of DiscordMessageBuilder.
 	
 	@function new
-	@within DiscordMessageBuilder
-	@return DiscordMessageBuilder -- A new instance of DiscordMessageBuilder.
+	@within Builders.DiscordMessageBuilder
+	@return Builders.DiscordMessageBuilder -- A new instance of DiscordMessageBuilder.
 ]=]
 function DiscordMessageBuilder.Interface.new(): DiscordMessageBuilder
 	return Construct({

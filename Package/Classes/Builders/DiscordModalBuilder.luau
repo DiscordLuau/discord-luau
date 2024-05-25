@@ -2,7 +2,7 @@ local Construct = require("../../Utils/Construct")
 local ComponentTypes = require("../../Types/DiscordComponent")
 
 --[=[
-	@class DiscordModalBuilder
+	@class Builders.DiscordModalBuilder
 
 	DiscordModalBuilder is used to construct a modal dialog for a Discord interaction, including title and components.
 
@@ -25,8 +25,8 @@ DiscordModalBuilder.Prototype.type = "DiscordModalBuilder"
 	
 	@method setTitle
 	@param title string -- The title of the modal.
-	@within DiscordModalBuilder
-	@return DiscordModalBuilder -- Returns the DiscordModalBuilder instance for method chaining.
+	@within Builders.DiscordModalBuilder
+	@return Builders.DiscordModalBuilder -- Returns the DiscordModalBuilder instance for method chaining.
 ]=]
 function DiscordModalBuilder.Prototype.setTitle(self: DiscordModalBuilder, title: string): DiscordModalBuilder
 	self.modalTitle = title
@@ -39,8 +39,8 @@ end
 	
 	@method addComponent
 	@param componentObject ComponentTypes.DiscordComponent -- The component to be added.
-	@within DiscordModalBuilder
-	@return DiscordModalBuilder -- Returns the DiscordModalBuilder instance for method chaining.
+	@within Builders.DiscordModalBuilder
+	@return Builders.DiscordModalBuilder -- Returns the DiscordModalBuilder instance for method chaining.
 ]=]
 function DiscordModalBuilder.Prototype.addComponent(self: DiscordModalBuilder, componentObject: ComponentTypes.DiscordComponent): DiscordModalBuilder
 	assert(#self.components + 1 <= 5, "Action Row objects can only contain up to five components!")
@@ -54,7 +54,7 @@ end
 	Converts the modal to a JSON object that can be sent to the Discord API.
 	
 	@method toJSONObject
-	@within DiscordModalBuilder
+	@within Builders.DiscordModalBuilder
 	@return table -- The JSON representation of the modal.
 ]=]
 function DiscordModalBuilder.Prototype.toJSONObject(self: DiscordModalBuilder)
@@ -75,9 +75,9 @@ end
 	Creates a new instance of DiscordModalBuilder.
 	
 	@function new
-	@within DiscordModalBuilder
+	@within Builders.DiscordModalBuilder
 	@param modalId string -- The ID of the modal.
-	@return DiscordModalBuilder -- A new instance of DiscordModalBuilder.
+	@return Builders.DiscordModalBuilder -- A new instance of DiscordModalBuilder.
 ]=]
 function DiscordModalBuilder.Interface.new(modalId: string): DiscordModalBuilder
 	return Construct({

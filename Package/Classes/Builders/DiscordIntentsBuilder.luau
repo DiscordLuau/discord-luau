@@ -4,7 +4,7 @@ local Construct = require("../../Utils/Construct")
 local FetchKeys = require("../../Utils/Dictionary/FetchKeys")
 
 --[=[
-	@class DiscordIntentsBuilder
+	@class Builders.DiscordIntentsBuilder
 
 	DiscordIntentsBuilder is used to construct intents for a Discord bot, specifying which events the bot will receive.
 
@@ -50,8 +50,8 @@ DiscordIntentsBuilder.DispositionMap = {
 	
 	@function new
 	@param intentList { string } -- A list of intents to include.
-	@within DiscordIntentsBuilder
-	@return DiscordIntentsBuilder -- A new instance of DiscordIntentsBuilder.
+	@within Builders.DiscordIntentsBuilder
+	@return Builders.DiscordIntentsBuilder -- A new instance of DiscordIntentsBuilder.
 ]=]
 function DiscordIntentsBuilder.Interface.new(intentList: { string })
 	local intentsValue = 0
@@ -73,8 +73,8 @@ end
 	Creates a new instance of DiscordIntentsBuilder with the default intents.
 	
 	@function fromDefault
-	@within DiscordIntentsBuilder
-	@return DiscordIntentsBuilder -- A new instance of DiscordIntentsBuilder.
+	@within Builders.DiscordIntentsBuilder
+	@return Builders.DiscordIntentsBuilder -- A new instance of DiscordIntentsBuilder.
 ]=]
 function DiscordIntentsBuilder.Interface.fromDefault()
 	local defaultIntents = table.clone(Intents) :: { [string]: any }
@@ -90,8 +90,8 @@ end
 	Creates a new instance of DiscordIntentsBuilder with all available intents.
 	
 	@function fromAll
-	@within DiscordIntentsBuilder
-	@return DiscordIntentsBuilder -- A new instance of DiscordIntentsBuilder.
+	@within Builders.DiscordIntentsBuilder
+	@return Builders.DiscordIntentsBuilder -- A new instance of DiscordIntentsBuilder.
 ]=]
 function DiscordIntentsBuilder.Interface.fromAll()
 	local allIntents = table.clone(Intents)

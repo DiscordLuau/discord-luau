@@ -30,7 +30,7 @@ ApplicationCommandBuilder.Prototype.type = "ApplicationCommandBuilder"
 
 --[=[
 	@prop Type table
-	@within ApplicationCommandBuilder
+	@within Builders.ApplicationCommandBuilder
 
 	An enumeration of command types.
 
@@ -46,7 +46,7 @@ ApplicationCommandBuilder.Interface.Type = Enumerate.new({
 
 --[=[
 	@prop Context table
-	@within ApplicationCommandBuilder
+	@within Builders.ApplicationCommandBuilder
 
 	An enumeration of command contexts.
 
@@ -65,8 +65,8 @@ ApplicationCommandBuilder.Interface.Context = Enumerate.new({
 	
 	@method setType
 	@param commandType number -- The type of the command.
-	@within ApplicationCommandBuilder
-	@return ApplicationCommandBuilder -- Returns the ApplicationCommandBuilder instance for method chaining.
+	@within Builders.ApplicationCommandBuilder
+	@return Builders.ApplicationCommandBuilder -- Returns the ApplicationCommandBuilder instance for method chaining.
 ]=]
 function ApplicationCommandBuilder.Prototype.setType(self: ApplicationCommandBuilder, commandType: number)
 	assert(ApplicationCommandBuilder.Interface.Type:Is(commandType), `Expected 'commandType' to be of enum 'commandType'`)
@@ -81,8 +81,8 @@ end
 	
 	@method setLocalization
 	@param localizationCode string -- The localization code.
-	@within ApplicationCommandBuilder
-	@return ApplicationCommandBuilder -- Returns the ApplicationCommandBuilder instance for method chaining.
+	@within Builders.ApplicationCommandBuilder
+	@return Builders.ApplicationCommandBuilder -- Returns the ApplicationCommandBuilder instance for method chaining.
 ]=]
 function ApplicationCommandBuilder.Prototype.setLocalization(self: ApplicationCommandBuilder, localizationCode: string)
 	self.commandLocalization = localizationCode
@@ -95,8 +95,8 @@ end
 	
 	@method setDescription
 	@param description string -- The description of the command.
-	@within ApplicationCommandBuilder
-	@return ApplicationCommandBuilder -- Returns the ApplicationCommandBuilder instance for method chaining.
+	@within Builders.ApplicationCommandBuilder
+	@return Builders.ApplicationCommandBuilder -- Returns the ApplicationCommandBuilder instance for method chaining.
 ]=]
 function ApplicationCommandBuilder.Prototype.setDescription(self: ApplicationCommandBuilder, description: string)
 	self.commandDescription = description
@@ -109,8 +109,8 @@ end
 	
 	@method setName
 	@param name string -- The name of the command.
-	@within ApplicationCommandBuilder
-	@return ApplicationCommandBuilder -- Returns the ApplicationCommandBuilder instance for method chaining.
+	@within Builders.ApplicationCommandBuilder
+	@return Builders.ApplicationCommandBuilder -- Returns the ApplicationCommandBuilder instance for method chaining.
 ]=]
 function ApplicationCommandBuilder.Prototype.setName(self: ApplicationCommandBuilder, name: string)
 	self.commandName = name
@@ -124,8 +124,8 @@ end
 	
 	@method setNSFW
 	@param isNSFW boolean -- Whether the command is NSFW.
-	@within ApplicationCommandBuilder
-	@return ApplicationCommandBuilder -- Returns the ApplicationCommandBuilder instance for method chaining.
+	@within Builders.ApplicationCommandBuilder
+	@return Builders.ApplicationCommandBuilder -- Returns the ApplicationCommandBuilder instance for method chaining.
 ]=]
 function ApplicationCommandBuilder.Prototype.setNSFW(self: ApplicationCommandBuilder, isNSFW: boolean)
 	self.commandNSFW = isNSFW
@@ -139,8 +139,8 @@ end
 	
 	@method setDMPermission
 	@param canDM boolean -- Whether the command can be used in DMs.
-	@within ApplicationCommandBuilder
-	@return ApplicationCommandBuilder -- Returns the ApplicationCommandBuilder instance for method chaining.
+	@within Builders.ApplicationCommandBuilder
+	@return Builders.ApplicationCommandBuilder -- Returns the ApplicationCommandBuilder instance for method chaining.
 	]=]
 function ApplicationCommandBuilder.Prototype.setDMPermission(self: ApplicationCommandBuilder, canDM: boolean)
 	self.commandDM = canDM
@@ -154,8 +154,8 @@ end
 	
 	@method setGuildPermissions
 	@param permissionObject DiscordPermissionsBuilder -- The permissions required for the command.
-	@within ApplicationCommandBuilder
-	@return ApplicationCommandBuilder -- Returns the ApplicationCommandBuilder instance for method chaining.
+	@within Builders.ApplicationCommandBuilder
+	@return Builders.ApplicationCommandBuilder -- Returns the ApplicationCommandBuilder instance for method chaining.
 ]=]
 function ApplicationCommandBuilder.Prototype.setGuildPermissions(self: ApplicationCommandBuilder, permissionObject: DiscordPermissionsBuilder.DiscordPermissionsBuilder)
 	self.commandPermissions = permissionObject
@@ -168,8 +168,8 @@ end
 	
 	@method addOption
 	@param commandObject ApplicationCommandOptionBuilder -- The option to add.
-	@within ApplicationCommandBuilder
-	@return ApplicationCommandBuilder -- Returns the ApplicationCommandBuilder instance for method chaining.
+	@within Builders.ApplicationCommandBuilder
+	@return Builders.ApplicationCommandBuilder -- Returns the ApplicationCommandBuilder instance for method chaining.
 ]=]
 function ApplicationCommandBuilder.Prototype.addOption(self: ApplicationCommandBuilder, commandObject: ApplicationCommandOptionBuilder.ApplicationCommandOptionBuilder)
 	table.insert(self.options, commandObject)
@@ -182,8 +182,8 @@ end
 	
 	@method setDefaultPermissionEnabled
 	@param enabled boolean -- Whether default permission is enabled.
-	@within ApplicationCommandBuilder
-	@return ApplicationCommandBuilder -- Returns the ApplicationCommandBuilder instance for method chaining.
+	@within Builders.ApplicationCommandBuilder
+	@return Builders.ApplicationCommandBuilder -- Returns the ApplicationCommandBuilder instance for method chaining.
 ]=]
 function ApplicationCommandBuilder.Prototype.setDefaultPermissionEnabled(self: ApplicationCommandBuilder, enabled: boolean)
 	self.defaultPermissionEnabled = enabled
@@ -196,8 +196,8 @@ end
 	
 	@method addContext
 	@param context number -- The context to add.
-	@within ApplicationCommandBuilder
-	@return ApplicationCommandBuilder -- Returns the ApplicationCommandBuilder instance for method chaining.
+	@within Builders.ApplicationCommandBuilder
+	@return Builders.ApplicationCommandBuilder -- Returns the ApplicationCommandBuilder instance for method chaining.
 ]=]
 function ApplicationCommandBuilder.Prototype.addContext(self: ApplicationCommandBuilder, context: number)
 	table.insert(self.contexts, context)
@@ -209,7 +209,7 @@ end
 	Converts the command to a JSON object that can be sent to the Discord API.
 	
 	@method toJSONObject
-	@within ApplicationCommandBuilder
+	@within Builders.ApplicationCommandBuilder
 	@return table -- The JSON representation of the command.
 ]=]
 function ApplicationCommandBuilder.Prototype.toJSONObject(self: ApplicationCommandBuilder)
@@ -253,8 +253,8 @@ end
 	Creates a new instance of ApplicationCommandBuilder.
 	
 	@function new
-	@within ApplicationCommandBuilder
-	@return ApplicationCommandBuilder -- A new instance of ApplicationCommandBuilder.
+	@within Builders.ApplicationCommandBuilder
+	@return Builders.ApplicationCommandBuilder -- A new instance of ApplicationCommandBuilder.
 ]=]
 function ApplicationCommandBuilder.Interface.new(): ApplicationCommandBuilder
 	return Construct({

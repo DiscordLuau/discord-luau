@@ -1,7 +1,7 @@
 local Construct = require("../../../Utils/Construct")
 
 --[=[
-	@class Middleware.EventIn
+	@class Network.Middleware.EventIn
 
 	The `EventIn` class processes incoming events, converting JSON keys to camelCase format for consistency within the application.
 
@@ -23,7 +23,7 @@ EventIn.Prototype.type = "EventIn"
 	@method toCamelCase
 	@param self EventIn
 	@param json table -- The JSON object to convert.
-	@within Middleware.EventIn
+	@within Network.Middleware.EventIn
 	@return table -- The converted JSON object.
 ]=]
 function EventIn.Prototype.toCamelCase(self: EventIn, json: { [string]: any })
@@ -51,7 +51,7 @@ end
 	@method processJSON
 	@param self EventIn
 	@param data any -- The data to process.
-	@within Middleware.EventIn
+	@within Network.Middleware.EventIn
 	@return any -- The processed data.
 ]=]
 function EventIn.Prototype.processJSON(self: EventIn, data: any)
@@ -67,7 +67,7 @@ end
 	
 	@private
 	@method new
-	@within Middleware.EventIn
+	@within Network.Middleware.EventIn
 	@return EventIn
 ]=]
 function EventIn.Interface.new()

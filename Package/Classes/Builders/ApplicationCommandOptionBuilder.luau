@@ -2,7 +2,7 @@ local Enumerate = require("../../Utils/Enumerate")
 local Construct = require("../../Utils/Construct")
 
 --[=[
-	@class ApplicationCommandOptionBuilder
+	@class Builders.ApplicationCommandOptionBuilder
 
 	ApplicationCommandOptionBuilder is used to construct options for a Discord application command, including type, name, description, and choices.
 
@@ -26,7 +26,7 @@ ApplicationCommandOptionBuilder.Prototype.type = "ApplicationCommandOptionBuilde
 
 --[=[
 	@prop Type table
-	@within ApplicationCommandOptionBuilder
+	@within Builders.ApplicationCommandOptionBuilder
 
 	An enumeration of option types.
 
@@ -58,7 +58,7 @@ ApplicationCommandOptionBuilder.Interface.Type = Enumerate.new({
 
 --[=[
 	@prop ChannelType table
-	@within ApplicationCommandOptionBuilder
+	@within Builders.ApplicationCommandOptionBuilder
 
 	An enumeration of channel types.
 
@@ -95,8 +95,8 @@ ApplicationCommandOptionBuilder.Interface.ChannelType = Enumerate.new({
 	
 	@method setType
 	@param optionType number -- The type of the option.
-	@within ApplicationCommandOptionBuilder
-	@return ApplicationCommandOptionBuilder -- Returns the ApplicationCommandOptionBuilder instance for method chaining.
+	@within Builders.ApplicationCommandOptionBuilder
+	@return Builders.ApplicationCommandOptionBuilder -- Returns the ApplicationCommandOptionBuilder instance for method chaining.
 ]=]
 function ApplicationCommandOptionBuilder.Prototype.setType(self: ApplicationCommandOptionBuilder, optionType: number)
 	assert(ApplicationCommandOptionBuilder.Interface.Type:Is(optionType), `Expected 'optionType' to be of enum 'optionType'`)
@@ -111,8 +111,8 @@ end
 	
 	@method setName
 	@param optionName string -- The name of the option.
-	@within ApplicationCommandOptionBuilder
-	@return ApplicationCommandOptionBuilder -- Returns the ApplicationCommandOptionBuilder instance for method chaining.
+	@within Builders.ApplicationCommandOptionBuilder
+	@return Builders.ApplicationCommandOptionBuilder -- Returns the ApplicationCommandOptionBuilder instance for method chaining.
 ]=]
 function ApplicationCommandOptionBuilder.Prototype.setName(self: ApplicationCommandOptionBuilder, optionName: string)
 	self.optionName = optionName
@@ -125,8 +125,8 @@ end
 	
 	@method setLocalization
 	@param localizationCode string -- The localization code.
-	@within ApplicationCommandOptionBuilder
-	@return ApplicationCommandOptionBuilder -- Returns the ApplicationCommandOptionBuilder instance for method chaining.
+	@within Builders.ApplicationCommandOptionBuilder
+	@return Builders.ApplicationCommandOptionBuilder -- Returns the ApplicationCommandOptionBuilder instance for method chaining.
 ]=]
 function ApplicationCommandOptionBuilder.Prototype.setLocalization(self: ApplicationCommandOptionBuilder, localizationCode: string)
 	self.optionLocalization = localizationCode
@@ -139,8 +139,8 @@ end
 	
 	@method setDescription
 	@param optionDescription string -- The description of the option.
-	@within ApplicationCommandOptionBuilder
-	@return ApplicationCommandOptionBuilder -- Returns the ApplicationCommandOptionBuilder instance for method chaining.
+	@within Builders.ApplicationCommandOptionBuilder
+	@return Builders.ApplicationCommandOptionBuilder -- Returns the ApplicationCommandOptionBuilder instance for method chaining.
 ]=]
 function ApplicationCommandOptionBuilder.Prototype.setDescription(self: ApplicationCommandOptionBuilder, optionDescription: string)
 	self.optionDescription = optionDescription
@@ -153,8 +153,8 @@ end
 	
 	@method setRequired
 	@param isRequired boolean -- Whether the option is required.
-	@within ApplicationCommandOptionBuilder
-	@return ApplicationCommandOptionBuilder -- Returns the ApplicationCommandOptionBuilder instance for method chaining.
+	@within Builders.ApplicationCommandOptionBuilder
+	@return Builders.ApplicationCommandOptionBuilder -- Returns the ApplicationCommandOptionBuilder instance for method chaining.
 ]=]
 function ApplicationCommandOptionBuilder.Prototype.setRequired(self: ApplicationCommandOptionBuilder, isRequired: boolean)
 	self.optionRequired = isRequired
@@ -167,8 +167,8 @@ end
 	
 	@method setChannelTypes
 	@param channelTypes ... -- The channel types.
-	@within ApplicationCommandOptionBuilder
-	@return ApplicationCommandOptionBuilder -- Returns the ApplicationCommandOptionBuilder instance for method chaining.
+	@within Builders.ApplicationCommandOptionBuilder
+	@return Builders.ApplicationCommandOptionBuilder -- Returns the ApplicationCommandOptionBuilder instance for method chaining.
 ]=]
 function ApplicationCommandOptionBuilder.Prototype.setChannelTypes(self: ApplicationCommandOptionBuilder, ...)
 	for _, channelType in { ... } do
@@ -185,8 +185,8 @@ end
 	
 	@method setMinValue
 	@param minValue number -- The minimum value.
-	@within ApplicationCommandOptionBuilder
-	@return ApplicationCommandOptionBuilder -- Returns the ApplicationCommandOptionBuilder instance for method chaining.
+	@within Builders.ApplicationCommandOptionBuilder
+	@return Builders.ApplicationCommandOptionBuilder -- Returns the ApplicationCommandOptionBuilder instance for method chaining.
 ]=]
 function ApplicationCommandOptionBuilder.Prototype.setMinValue(self: ApplicationCommandOptionBuilder, minValue: number)
 	self.optionMinValue = minValue
@@ -199,8 +199,8 @@ end
 	
 	@method setMaxValue
 	@param maxValue number -- The maximum value.
-	@within ApplicationCommandOptionBuilder
-	@return ApplicationCommandOptionBuilder -- Returns the ApplicationCommandOptionBuilder instance for method chaining.
+	@within Builders.ApplicationCommandOptionBuilder
+	@return Builders.ApplicationCommandOptionBuilder -- Returns the ApplicationCommandOptionBuilder instance for method chaining.
 ]=]
 function ApplicationCommandOptionBuilder.Prototype.setMaxValue(self: ApplicationCommandOptionBuilder, maxValue: number)
 	self.optionMaxValue = maxValue
@@ -213,8 +213,8 @@ end
 	
 	@method setMinLength
 	@param minLength number -- The minimum length.
-	@within ApplicationCommandOptionBuilder
-	@return ApplicationCommandOptionBuilder -- Returns the ApplicationCommandOptionBuilder instance for method chaining.
+	@within Builders.ApplicationCommandOptionBuilder
+	@return Builders.ApplicationCommandOptionBuilder -- Returns the ApplicationCommandOptionBuilder instance for method chaining.
 ]=]
 function ApplicationCommandOptionBuilder.Prototype.setMinLength(self: ApplicationCommandOptionBuilder, minLength: number)
 	self.optionMinLength = minLength
@@ -227,8 +227,8 @@ end
 	
 	@method setMaxLength
 	@param maxLength number -- The maximum length.
-	@within ApplicationCommandOptionBuilder
-	@return ApplicationCommandOptionBuilder -- Returns the ApplicationCommandOptionBuilder instance for method chaining.
+	@within Builders.ApplicationCommandOptionBuilder
+	@return Builders.ApplicationCommandOptionBuilder -- Returns the ApplicationCommandOptionBuilder instance for method chaining.
 ]=]
 function ApplicationCommandOptionBuilder.Prototype.setMaxLength(self: ApplicationCommandOptionBuilder, maxLength: number)
 	self.optionMaxLength = maxLength
@@ -241,8 +241,8 @@ end
 	
 	@method setAutocompleteEnabled
 	@param autocomplete boolean -- Whether autocomplete is enabled.
-	@within ApplicationCommandOptionBuilder
-	@return ApplicationCommandOptionBuilder -- Returns the ApplicationCommandOptionBuilder instance for method chaining.
+	@within Builders.ApplicationCommandOptionBuilder
+	@return Builders.ApplicationCommandOptionBuilder -- Returns the ApplicationCommandOptionBuilder instance for method chaining.
 ]=]
 function ApplicationCommandOptionBuilder.Prototype.setAutocompleteEnabled(self: ApplicationCommandOptionBuilder, autocomplete: boolean)
 	self.optionAutocomplete = autocomplete
@@ -255,8 +255,8 @@ end
 	
 	@method addOption
 	@param commandOption ApplicationCommandOptionBuilder -- The sub-option to add.
-	@within ApplicationCommandOptionBuilder
-	@return ApplicationCommandOptionBuilder -- Returns the ApplicationCommandOptionBuilder instance for method chaining.
+	@within Builders.ApplicationCommandOptionBuilder
+	@return Builders.ApplicationCommandOptionBuilder -- Returns the ApplicationCommandOptionBuilder instance for method chaining.
 ]=]
 function ApplicationCommandOptionBuilder.Prototype.addOption(self: ApplicationCommandOptionBuilder, commandOption: ApplicationCommandOptionBuilder)
 	table.insert(self.options, commandOption)
@@ -270,8 +270,8 @@ end
 	@method addChoice
 	@param choiceName string -- The name of the choice.
 	@param choiceValue any -- The value of the choice.
-	@within ApplicationCommandOptionBuilder
-	@return ApplicationCommandOptionBuilder -- Returns the ApplicationCommandOptionBuilder instance for method chaining.
+	@within Builders.ApplicationCommandOptionBuilder
+	@return Builders.ApplicationCommandOptionBuilder -- Returns the ApplicationCommandOptionBuilder instance for method chaining.
 ]=]
 function ApplicationCommandOptionBuilder.Prototype.addChoice(self: ApplicationCommandOptionBuilder, choiceName: string, choiceValue: any)
 	self.choices[choiceName] = choiceValue
@@ -283,7 +283,7 @@ end
 	Converts the option to a JSON object that can be sent to the Discord API.
 	
 	@method toJSONObject
-	@within ApplicationCommandOptionBuilder
+	@within Builders.ApplicationCommandOptionBuilder
 	@return table -- The JSON representation of the option.
 ]=]
 function ApplicationCommandOptionBuilder.Prototype.toJSONObject(self: ApplicationCommandOptionBuilder)
@@ -331,8 +331,8 @@ end
 	Creates a new instance of ApplicationCommandOptionBuilder.
 	
 	@function new
-	@within ApplicationCommandOptionBuilder
-	@return ApplicationCommandOptionBuilder -- A new instance of ApplicationCommandOptionBuilder.
+	@within Builders.ApplicationCommandOptionBuilder
+	@return Builders.ApplicationCommandOptionBuilder -- A new instance of ApplicationCommandOptionBuilder.
 ]=]
 function ApplicationCommandOptionBuilder.Interface.new(): ApplicationCommandOptionBuilder
 	return Construct({

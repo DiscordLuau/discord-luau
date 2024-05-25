@@ -1,7 +1,7 @@
 local Construct = require("../../../Utils/Construct")
 
 --[=[
-	@class Middleware.EventOut
+	@class Network.Middleware.EventOut
 
 	The `EventOut` class processes outgoing events. Currently, it acts as a placeholder for any future processing that may be required for outgoing JSON data.
 
@@ -23,7 +23,7 @@ EventOut.Prototype.type = "EventOut"
 	@method processJSON
 	@param self EventOut
 	@param data any -- The data to process.
-	@within Middleware.EventOut
+	@within Network.Middleware.EventOut
 	@return any -- The processed data.
 ]=]
 function EventOut.Prototype.processJSON(self: EventOut, data: any)
@@ -35,7 +35,7 @@ end
 	
 	@private
 	@method new
-	@within Middleware.EventOut
+	@within Network.Middleware.EventOut
 	@return EventOut
 ]=]
 function EventOut.Interface.new()

@@ -3,7 +3,7 @@ local Construct = require("../../Utils/Construct")
 local DiscordIntentsBuilder = require("DiscordIntentsBuilder")
 
 --[=[
-	@class DiscordSettingsBuilder
+	@class Builders.DiscordSettingsBuilder
 
 	A simple class to retain some generic data before a Discord Client can be started, for instance:
 
@@ -30,8 +30,8 @@ DiscordSettingsBuilder.Prototype.type = "DiscordSettingsBuilder"
 	
 	@method setDiscordToken
 	@param discordToken string -- The token for the Discord bot.
-	@within DiscordSettingsBuilder
-	@return DiscordSettingsBuilder -- Returns the DiscordSettingsBuilder instance for method chaining.
+	@within Builders.DiscordSettingsBuilder
+	@return Builders.DiscordSettingsBuilder -- Returns the DiscordSettingsBuilder instance for method chaining.
 ]=]
 function DiscordSettingsBuilder.Prototype.setDiscordToken(self: DiscordSettingsBuilder, discordToken: string)
 	self.discordToken = discordToken
@@ -44,8 +44,8 @@ end
 	
 	@method setIntents
 	@param discordIntents DiscordIntentsBuilder -- The intents for the Discord bot.
-	@within DiscordSettingsBuilder
-	@return DiscordSettingsBuilder -- Returns the DiscordSettingsBuilder instance for method chaining.
+	@within Builders.DiscordSettingsBuilder
+	@return Builders.DiscordSettingsBuilder -- Returns the DiscordSettingsBuilder instance for method chaining.
 ]=]
 function DiscordSettingsBuilder.Prototype.setIntents(self: DiscordSettingsBuilder, discordIntents: DiscordIntentsBuilder.DiscordIntentsBuilder)
 	self.discordIntents = discordIntents
@@ -59,8 +59,8 @@ end
 	@function new
 	@param discordToken string -- The token for the Discord bot.
 	@param discordIntents DiscordIntentsBuilder? -- (Optional) The intents for the Discord bot. Defaults to `fromDefault` if not provided.
-	@within DiscordSettingsBuilder
-	@return DiscordSettingsBuilder -- A new instance of DiscordSettingsBuilder.
+	@within Builders.DiscordSettingsBuilder
+	@return Builders.DiscordSettingsBuilder -- A new instance of DiscordSettingsBuilder.
 ]=]
 function DiscordSettingsBuilder.Interface.new(discordToken: string, discordIntents: DiscordIntentsBuilder.DiscordIntentsBuilder?)
 	return Construct({
