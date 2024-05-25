@@ -38,7 +38,7 @@ end
 	
 	@method addMemberToThreadAsync
 	@param userId string
-	@within Objects.addMemberToThreadAsync
+	@within Objects.DiscordThreadChannel
 	@return Future<unknown> -- A future the bot has joined the thread channel
 ]=]
 function DiscordThreadChannel.Prototype.addMemberToThreadAsync(self: DiscordThreadChannel, userId: string)

@@ -16,8 +16,6 @@ local DiscordIntentsBuilder = require("DiscordIntentsBuilder")
 
 	local DiscordIntentsBuilder = DiscordLuau.DiscordIntentsBuilder.fromAll()
 	local DiscordSettingsBuilder = DiscordLuau.DiscordSettingsBuilder.new("BOT TOKEN", DiscordIntentsBuilder)
-
-	...
 	```
 ]=]
 local DiscordSettingsBuilder = {}

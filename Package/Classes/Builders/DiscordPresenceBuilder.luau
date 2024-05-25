@@ -88,7 +88,7 @@ function DiscordPresenceBuilder.Prototype.setAfk(self: DiscordPresenceBuilder, i
 	return self
 end
 
---[=[`
+--[=[
 	Sets the time since the presence was last updated.
 
 	@method setSince

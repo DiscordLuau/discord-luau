@@ -41,8 +41,6 @@ local CONCURRENT_IDENTIFY_YIELD = 5
 
 	local DiscordSettingsBuilder = DiscordLuau.DiscordSettingsBuilder.new("BOT TOKEN")
 	local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettingsBuilder)
-
-	...
 	```
 ]=]
 local DiscordClient = {}

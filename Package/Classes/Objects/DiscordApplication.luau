@@ -14,11 +14,18 @@ local EventIn = require("../Network/Middleware/EventIn")
 	@class Objects.DiscordApplication
 
 	The `DiscordApplication` class provides methods to interact with Discord application commands such as creating, deleting, editing, fetching, and setting global application commands.
-
-	@field id string The unique identifier of the Discord application.
-	@field flags number The flags associated with the Discord application.
-	@field discordClient any The Discord client instance associated with the application.
 ]=]
+
+--[=[
+	@prop id string The unique identifier of the Discord application.
+	@within Objects.DiscordApplication
+]=]
+
+--[=[
+	@prop flags number The flags associated with the Discord application.
+	@within Objects.DiscordApplication
+]=]
+
 local DiscordApplication = {}
 
 DiscordApplication.Prototype = {}

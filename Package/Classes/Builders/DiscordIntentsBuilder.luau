@@ -14,8 +14,6 @@ local FetchKeys = require("../../Utils/Dictionary/FetchKeys")
 
 	local DiscordIntentsBuilder = DiscordLuau.DiscordIntentsBuilder.fromAll()
 	local DiscordSettings = DiscordLuau.DiscordSettings.new("BOT TOKEN", DiscordIntentsBuilder)
-
-	...
 	```
 ]=]
 local DiscordIntentsBuilder = {}
