@@ -43,13 +43,21 @@ DiscordInteraction.Prototype.type = "DiscordInteraction"
 	@return Future
 	@within Objects.DiscordInteraction
 ]=]
-function DiscordInteraction.Prototype.editMessageAsync(self: DiscordInteraction, messageBuilder: MessageBuilder.MessageBuilder)
+function DiscordInteraction.Prototype.editMessageAsync(
+	self: DiscordInteraction,
+	messageBuilder: MessageBuilder.MessageBuilder
+)
 	return Future.new(function()
-		return self.discordClient.discordGateway:patchAsync(string.format(
-			DiscordEndpoints.EditOriginalInteractionResponse,
-			self.discordClient.discordApplication.id,
-			self.token
-		), messageBuilder:toJSONObject()):await()
+		return self.discordClient.discordGateway
+			:patchAsync(
+				string.format(
+					DiscordEndpoints.EditOriginalInteractionResponse,
+					self.discordClient.discordApplication.id,
+					self.token
+				),
+				messageBuilder:toJSONObject()
+			)
+			:await()
 	end)
 end
 
@@ -63,14 +71,12 @@ end
 ]=]
 function DiscordInteraction.Prototype.sendModalAsync(self: DiscordInteraction, modalObject: ModalBuilder.ModalBuilder)
 	return Future.new(function()
-		return self.discordClient.discordGateway:postAsync(string.format(
-			DiscordEndpoints.CreateInteractionResponse,
-			self.id,
-			self.token
-		), {
-			type = 9,
-			data = modalObject:toJSONObject()
-		}):await()
+		return self.discordClient.discordGateway
+			:postAsync(string.format(DiscordEndpoints.CreateInteractionResponse, self.id, self.token), {
+				type = 9,
+				data = modalObject:toJSONObject(),
+			})
+			:await()
 	end)
 end
 
@@ -82,19 +88,20 @@ end
 	@return Future
 	@within Objects.DiscordInteraction
 ]=]
-function DiscordInteraction.Prototype.sendMessageAsync(self: DiscordInteraction, messageBuilder: MessageBuilder.MessageBuilder)
+function DiscordInteraction.Prototype.sendMessageAsync(
+	self: DiscordInteraction,
+	messageBuilder: MessageBuilder.MessageBuilder
+)
 	if self.defered then
 		return self:editMessageAsync(messageBuilder)
 	else
 		return Future.new(function()
-			return self.discordClient.discordGateway:postAsync(string.format(
-				DiscordEndpoints.CreateInteractionResponse,
-				self.id,
-				self.token
-			), {
-				type = 4,
-				data = messageBuilder:toJSONObject()
-			}):await()
+			return self.discordClient.discordGateway
+				:postAsync(string.format(DiscordEndpoints.CreateInteractionResponse, self.id, self.token), {
+					type = 4,
+					data = messageBuilder:toJSONObject(),
+				})
+				:await()
 		end)
 	end
 end
@@ -110,14 +117,12 @@ function DiscordInteraction.Prototype.deferAsync(self: DiscordInteraction)
 	return Future.try(function()
 		self.defered = true
 
-		self.discordClient.discordGateway:postAsync(string.format(
-			DiscordEndpoints.CreateInteractionResponse,
-			self.id,
-			self.token
-		), {
-			type = 5,
-			data = { }
-		}):await()
+		self.discordClient.discordGateway
+			:postAsync(string.format(DiscordEndpoints.CreateInteractionResponse, self.id, self.token), {
+				type = 5,
+				data = {},
+			})
+			:await()
 	end)
 end
 
@@ -134,7 +139,7 @@ function DiscordInteraction.Interface.new(discordClient: any, jsonData: { [any]:
 	local interactionStruct = {
 		discordClient = discordClient,
 
-		defered = false
+		defered = false,
 	}
 
 	jsonData.channel = DiscordTextChannel.new(discordClient, jsonData.channel)

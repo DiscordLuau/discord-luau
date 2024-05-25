@@ -33,7 +33,8 @@ local WebsocketEvents = {
 	VoiceStateUpdate = "VOICE_STATE_UPDATE",
 }
 
-export type WebsocketEvents = "READY"
+export type WebsocketEvents =
+	"READY"
 	| "MESSAGE_CREATE"
 	| "MESSAGE_UPDATE"
 	| "MESSAGE_DELETE"

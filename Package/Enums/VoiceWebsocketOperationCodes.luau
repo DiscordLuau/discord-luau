@@ -11,7 +11,7 @@ local VoiceWebsocketOperationCodes = {
 	Resume = 7,
 	Hello = 8,
 	Resumed = 9,
-	ClientDisconnect = 13
+	ClientDisconnect = 13,
 }
 
 export type VoiceWebsocketOperationCodes = number

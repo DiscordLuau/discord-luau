@@ -31,10 +31,7 @@ function DiscordVoiceChannel.Prototype.connectAsync(self: DiscordVoiceChannel): 
 	return Future.try(function(): boolean
 		self.voiceConnection = DiscordVoiceConnection.new(self.discordClient, `voice-{self.id}`)
 
-		return self.voiceConnection:connectAsync(
-			self.guildId,
-			self.id
-		):await()
+		return self.voiceConnection:connectAsync(self.guildId, self.id):await()
 	end)
 end
 
@@ -61,17 +58,19 @@ end
 ]=]
 function DiscordVoiceChannel.Prototype.modifyAsync(self: DiscordVoiceChannel, channelSchema: DiscordVoiceChannelSchema)
 	return Future.try(function()
-		return self.discordClient.discordGateway:patchAsync(string.format(DiscordEndpoints.BotModifyChannel, self.id), {
-			video_quality_mode = channelSchema.videoQualityMode,
-			rtc_region = channelSchema.rtcRegion,
-			parent_id = channelSchema.parentId,
-			user_limit = channelSchema.userLimit,
-			bitrate = channelSchema.bitrate,
-			rate_limit_per_user = channelSchema.rateLimitPerUser,
-			nsfw = channelSchema.nsfw,
-			position = channelSchema.position,
-			name = channelSchema.name
-		}):await()
+		return self.discordClient.discordGateway
+			:patchAsync(string.format(DiscordEndpoints.BotModifyChannel, self.id), {
+				video_quality_mode = channelSchema.videoQualityMode,
+				rtc_region = channelSchema.rtcRegion,
+				parent_id = channelSchema.parentId,
+				user_limit = channelSchema.userLimit,
+				bitrate = channelSchema.bitrate,
+				rate_limit_per_user = channelSchema.rateLimitPerUser,
+				nsfw = channelSchema.nsfw,
+				position = channelSchema.position,
+				name = channelSchema.name,
+			})
+			:await()
 	end)
 end
 
@@ -84,15 +83,18 @@ end
 	@within Objects.DiscordVoiceChannel
 	@return DiscordVoiceChannel -- A new instance of DiscordVoiceChannel.
 ]=]
-function DiscordVoiceChannel.Interface.new(discordClient: any, channelData: {
-	id: string,
-	recipients: { unknown },
-}): DiscordVoiceChannel
+function DiscordVoiceChannel.Interface.new(
+	discordClient: any,
+	channelData: {
+		id: string,
+		recipients: { unknown },
+	}
+): DiscordVoiceChannel
 	local self = discordClient.discordCache:getDataOr(CacheType.DiscordVoiceChannel, channelData.id, function()
 		return Construct({
 			id = channelData.id,
-	
-			discordClient = discordClient
+
+			discordClient = discordClient,
 		}, DiscordVoiceChannel.Prototype)
 	end)
 
@@ -123,7 +125,7 @@ export type DiscordVoiceChannel = typeof(DiscordVoiceChannel.Prototype) & {
 	guildId: string,
 
 	voiceWebsocket: DiscordWebsocket.DiscordWebsocket,
-	voiceConnection: DiscordVoiceConnection.DiscordVoiceConnection
+	voiceConnection: DiscordVoiceConnection.DiscordVoiceConnection,
 }
 
 export type DiscordVoiceChannelSchema = {
@@ -135,7 +137,7 @@ export type DiscordVoiceChannelSchema = {
 	rateLimitPerUser: number,
 	nsfw: boolean,
 	position: number,
-	name: string
+	name: string,
 }
 
 return DiscordVoiceChannel.Interface

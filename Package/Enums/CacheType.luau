@@ -14,10 +14,11 @@ local CacheType = {
 	DiscordMember = "DiscordMember",
 	DiscordInvite = "DiscordInvite",
 	AutoModeration = "AutoModeration",
-	DiscordThreadChannel = "DiscordThreadChannel"
+	DiscordThreadChannel = "DiscordThreadChannel",
 }
 
-export type CacheType = "Application"
+export type CacheType =
+	"Application"
 	| "DiscordEmoji"
 	| "DiscordGuilded"
 	| "DiscordGuildRole"

@@ -29,7 +29,9 @@ DiscordThreadChannel.Prototype.type = "DiscordThreadChannel"
 ]=]
 function DiscordThreadChannel.Prototype.joinThreadAsync(self: DiscordThreadChannel)
 	return Future.try(function()
-		return self.discordClient.discordGateway:putAsync(string.format(DiscordEndpoints.BotJoinThreadChannel, self.id), { }):await()
+		return self.discordClient.discordGateway
+			:putAsync(string.format(DiscordEndpoints.BotJoinThreadChannel, self.id), {})
+			:await()
 	end)
 end
 
@@ -43,7 +45,9 @@ end
 ]=]
 function DiscordThreadChannel.Prototype.addMemberToThreadAsync(self: DiscordThreadChannel, userId: string)
 	return Future.try(function()
-		return self.discordClient.discordGateway:putAsync(string.format(DiscordEndpoints.BotAddMemberToThreadChannel, self.id, userId), { }):await()
+		return self.discordClient.discordGateway
+			:putAsync(string.format(DiscordEndpoints.BotAddMemberToThreadChannel, self.id, userId), {})
+			:await()
 	end)
 end
 
@@ -56,7 +60,9 @@ end
 ]=]
 function DiscordThreadChannel.Prototype.leaveThreadAsync(self: DiscordThreadChannel)
 	return Future.try(function()
-		return self.discordClient.discordGateway:deleteAsync(string.format(DiscordEndpoints.BotLeaveThreadChannel, self.id), { }):await()
+		return self.discordClient.discordGateway
+			:deleteAsync(string.format(DiscordEndpoints.BotLeaveThreadChannel, self.id), {})
+			:await()
 	end)
 end
 
@@ -70,7 +76,9 @@ end
 ]=]
 function DiscordThreadChannel.Prototype.removeMemberFromThreadAsync(self: DiscordThreadChannel, userId: string)
 	return Future.try(function()
-		return self.discordClient.discordGateway:putAsync(string.format(DiscordEndpoints.BotRemoveMemberFromThreadChannel, self.id, userId), { }):await()
+		return self.discordClient.discordGateway
+			:putAsync(string.format(DiscordEndpoints.BotRemoveMemberFromThreadChannel, self.id, userId), {})
+			:await()
 	end)
 end
 
@@ -84,10 +92,13 @@ end
 ]=]
 function DiscordThreadChannel.Prototype.getThreadMembersAsync(self: DiscordThreadChannel)
 	return Future.try(function()
-		local memberObjects = self.discordClient.discordGateway:getAsync(string.format(DiscordEndpoints.BotGetThreadMembers, self.id), { }):await()
+		local memberObjects = self.discordClient.discordGateway
+			:getAsync(string.format(DiscordEndpoints.BotGetThreadMembers, self.id), {})
+			:await()
 
 		for key, memberObject in memberObjects do
-			memberObjects[key] = DiscordGuildMember.new(self.discordClient, memberObject.user.id, self.guildId, memberObject)
+			memberObjects[key] =
+				DiscordGuildMember.new(self.discordClient, memberObject.user.id, self.guildId, memberObject)
 		end
 
 		return memberObjects
@@ -103,9 +114,7 @@ end
 	@return Future<unknown> -- A future that resolves when the modifications are complete.
 ]=]
 function DiscordThreadChannel.Prototype.modifyAsync(self: DiscordThreadChannel, channelSchema)
-	return Future.try(function()
-		
-	end)
+	return Future.try(function() end)
 end
 
 --[=[
@@ -117,7 +126,9 @@ end
 ]=]
 function DiscordThreadChannel.Prototype.getPinnedMessagesAsync(self: DiscordThreadChannel)
 	return Future.try(function()
-		local messages = self.discordClient.discordGateway:getAsync(string.format(DiscordEndpoints.BotGetPinnedMessages, self.id), { }):await()
+		local messages = self.discordClient.discordGateway
+			:getAsync(string.format(DiscordEndpoints.BotGetPinnedMessages, self.id), {})
+			:await()
 
 		for index, messageData in messages do
 			messages[index] = DiscordMessage.new(self.discordClient, messageData)
@@ -136,15 +147,18 @@ end
 	@within Objects.DiscordThreadChannel
 	@return DiscordThreadChannel -- A new instance of DiscordThreadChannel.
 ]=]
-function DiscordThreadChannel.Interface.new(discordClient: any, channelData: {
-	id: string,
-	recipients: { unknown },
-}): DiscordThreadChannel
+function DiscordThreadChannel.Interface.new(
+	discordClient: any,
+	channelData: {
+		id: string,
+		recipients: { unknown },
+	}
+): DiscordThreadChannel
 	local self = discordClient.discordCache:getDataOr(CacheType.DiscordThreadChannel, channelData.id, function()
 		return Construct({
 			id = channelData.id,
-	
-			discordClient = discordClient
+
+			discordClient = discordClient,
 		}, DiscordThreadChannel.Prototype)
 	end)
 
@@ -168,7 +182,7 @@ export type DiscordThreadChannel = typeof(DiscordThreadChannel.Prototype) & {
 	position: number,
 	rateLimitPerUser: number,
 	lastMessageId: string,
-	guildId: string
+	guildId: string,
 }
 
 return DiscordThreadChannel.Interface

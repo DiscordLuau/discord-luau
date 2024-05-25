@@ -30,19 +30,22 @@ DiscordGuildRole.Prototype.type = "DiscordGuildRole"
 	@return DiscordGuildRole -- The newly created DiscordGuildRole instance.
 	@within Objects.DiscordGuildRole
 ]=]
-function DiscordGuildRole.Interface.new(discordClient: any, roleData: {
-	id: string,
-	name: string,
-	permissions: string,
-	position: number,
-	color: number,
-	hoist: boolean,
-	managed: boolean,
-	mentionable: boolean
-})
+function DiscordGuildRole.Interface.new(
+	discordClient: any,
+	roleData: {
+		id: string,
+		name: string,
+		permissions: string,
+		position: number,
+		color: number,
+		hoist: boolean,
+		managed: boolean,
+		mentionable: boolean,
+	}
+)
 	return discordClient.discordCache:getDataOr(CacheType.DiscordGuildRole, roleData.id, function()
 		local roleStruct = {
-			discordClient = discordClient
+			discordClient = discordClient,
 		}
 
 		for index, value in roleData do
@@ -61,7 +64,7 @@ export type DiscordGuildRole = typeof(DiscordGuildRole.Prototype) & {
 	color: number,
 	hoist: boolean,
 	managed: boolean,
-	mentionable: boolean
+	mentionable: boolean,
 }
 
 return DiscordGuildRole.Interface

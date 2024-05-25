@@ -46,10 +46,16 @@ DiscordGuild.Prototype.type = "DiscordGuild"
 ]=]
 function DiscordGuild.Prototype.createSlashCommandAsync(self: DiscordGuild, command: CommandBuilder.CommandBuilder)
 	return Future.try(function()
-		return self.discordClient.discordGateway:postAsync(
-			string.format(DiscordEndpoints.CreateGuildApplicationCommand, self.discordClient.discordApplication.id, self.id),
-			command:toJSONObject()
-		):await()
+		return self.discordClient.discordGateway
+			:postAsync(
+				string.format(
+					DiscordEndpoints.CreateGuildApplicationCommand,
+					self.discordClient.discordApplication.id,
+					self.id
+				),
+				command:toJSONObject()
+			)
+			:await()
 	end)
 end
 
@@ -63,9 +69,16 @@ end
 ]=]
 function DiscordGuild.Prototype.deleteSlashCommandAsync(self: DiscordGuild, commandId: string)
 	return Future.try(function()
-		return self.discordClient.discordGateway:deleteAsync(
-			string.format(DiscordEndpoints.DeleteGuildApplicationCommand, self.discordClient.discordApplication.id, self.id, commandId)
-		):await()
+		return self.discordClient.discordGateway
+			:deleteAsync(
+				string.format(
+					DiscordEndpoints.DeleteGuildApplicationCommand,
+					self.discordClient.discordApplication.id,
+					self.id,
+					commandId
+				)
+			)
+			:await()
 	end)
 end
 
@@ -78,12 +91,23 @@ end
 	@return Future
 	@within Objects.DiscordGuild
 ]=]
-function DiscordGuild.Prototype.editSlashCommandAsync(self: DiscordGuild, commandId: string, command: CommandBuilder.CommandBuilder)
+function DiscordGuild.Prototype.editSlashCommandAsync(
+	self: DiscordGuild,
+	commandId: string,
+	command: CommandBuilder.CommandBuilder
+)
 	return Future.try(function()
-		return self.discordClient.discordGateway:patchAsync(
-			string.format(DiscordEndpoints.EditGuildApplicationCommand, self.discordClient.discordApplication.id, self.id, commandId),
-			command:toJSONObject()
-		):await()
+		return self.discordClient.discordGateway
+			:patchAsync(
+				string.format(
+					DiscordEndpoints.EditGuildApplicationCommand,
+					self.discordClient.discordApplication.id,
+					self.id,
+					commandId
+				),
+				command:toJSONObject()
+			)
+			:await()
 	end)
 end
 
@@ -96,9 +120,15 @@ end
 ]=]
 function DiscordGuild.Prototype.fetchSlashCommandsAsync(self: DiscordGuild)
 	return Future.try(function()
-		return self.discordClient.discordGateway:getAsync(
-			string.format(DiscordEndpoints.GetGuildApplicationCommands, self.discordClient.discordApplication.id, self.id)
-		):await()
+		return self.discordClient.discordGateway
+			:getAsync(
+				string.format(
+					DiscordEndpoints.GetGuildApplicationCommands,
+					self.discordClient.discordApplication.id,
+					self.id
+				)
+			)
+			:await()
 	end)
 end
 
@@ -111,9 +141,11 @@ end
 ]=]
 function DiscordGuild.Prototype.fetchGuildChannels(self: DiscordGuild)
 	return Future.try(function()
-		local guildChannels = self.discordClient.discordGateway:getAsync(
-			string.format(DiscordEndpoints.BotGetGuildChannels, self.discordClient.discordApplication.id, self.id)
-		):await()
+		local guildChannels = self.discordClient.discordGateway
+			:getAsync(
+				string.format(DiscordEndpoints.BotGetGuildChannels, self.discordClient.discordApplication.id, self.id)
+			)
+			:await()
 
 		for key, channelData in guildChannels do
 			guildChannels[key] = DiscordChannel.new(self.discordClient, channelData)
@@ -150,7 +182,7 @@ function DiscordGuild.Prototype.setSlashCommandsAsync(self: DiscordGuild, comman
 
 				commandReference = commandObject1
 				commandFoundInCommandsArray = true
-				
+
 				break
 			end
 
@@ -203,9 +235,9 @@ end
 ]=]
 function DiscordGuild.Prototype.getGuildAuditLogs(self: DiscordGuild, commands: { CommandBuilder.CommandBuilder })
 	return Future.try(function()
-		local guildAuditLogs = self.discordClient.discordGateway:getAsync(
-			string.format(DiscordEndpoints.GetGuildAuditLogs, self.id)
-		):await()
+		local guildAuditLogs = self.discordClient.discordGateway
+			:getAsync(string.format(DiscordEndpoints.GetGuildAuditLogs, self.id))
+			:await()
 
 		for index, channelObject in guildAuditLogs.threads do
 			guildAuditLogs.threads[index] = DiscordChannel.new(self.discordClient, channelObject)
@@ -229,25 +261,27 @@ end
 ]=]
 function DiscordGuild.Prototype.modifyAsync(self: DiscordGuild, guildSchema: DiscordGuildSchema)
 	return Future.try(function()
-		return self.discordClient.discordGateway:patchAsync(string.format(DiscordEndpoints.BotModifyGuild, self.id), {
-			name = guildSchema.name,
-			region = guildSchema.region,
-			verification_level = guildSchema.verificationLevel,
-			default_message_notifications = guildSchema.defaultMessageNotifications,
-			explicit_content_filter = guildSchema.explicitContentFilter,
-			afk_channel_id = guildSchema.afkChannelId,
-			afk_timeout = guildSchema.afkTimeout,
-			owner_id = guildSchema.ownerId,
-			system_channel_id = guildSchema.systemChannelId,
-			system_channel_flags = guildSchema.systemChannelFlags,
-			rules_channel_id = guildSchema.rulesChannelId,
-			public_update_channel_id = guildSchema.publicUpdateChannelId,
-			preferred_locale = guildSchema.preferredLocale,
-			features = guildSchema.features,
-			description = guildSchema.description,
-			premium_progress_bar_enabled = guildSchema.premiumProgressBarEnabled,
-			safety_alerts_channel_id = guildSchema.safetyAlertsChannelId
-		}):await()
+		return self.discordClient.discordGateway
+			:patchAsync(string.format(DiscordEndpoints.BotModifyGuild, self.id), {
+				name = guildSchema.name,
+				region = guildSchema.region,
+				verification_level = guildSchema.verificationLevel,
+				default_message_notifications = guildSchema.defaultMessageNotifications,
+				explicit_content_filter = guildSchema.explicitContentFilter,
+				afk_channel_id = guildSchema.afkChannelId,
+				afk_timeout = guildSchema.afkTimeout,
+				owner_id = guildSchema.ownerId,
+				system_channel_id = guildSchema.systemChannelId,
+				system_channel_flags = guildSchema.systemChannelFlags,
+				rules_channel_id = guildSchema.rulesChannelId,
+				public_update_channel_id = guildSchema.publicUpdateChannelId,
+				preferred_locale = guildSchema.preferredLocale,
+				features = guildSchema.features,
+				description = guildSchema.description,
+				premium_progress_bar_enabled = guildSchema.premiumProgressBarEnabled,
+				safety_alerts_channel_id = guildSchema.safetyAlertsChannelId,
+			})
+			:await()
 	end)
 end
 
@@ -260,7 +294,9 @@ end
 ]=]
 function DiscordGuild.Prototype.deleteAsync(self: DiscordGuild)
 	return Future.try(function()
-		return self.discordClient.discordGateway:deleteAsync(string.format(DiscordEndpoints.BotDeleteGuild, self.id)):await()
+		return self.discordClient.discordGateway
+			:deleteAsync(string.format(DiscordEndpoints.BotDeleteGuild, self.id))
+			:await()
 	end)
 end
 
@@ -273,7 +309,9 @@ end
 ]=]
 function DiscordGuild.Prototype.getChannelsAsync(self: DiscordGuild)
 	return Future.try(function()
-		local rawChannelDatas = self.discordClient.discordGateway:getAsync(string.format(DiscordEndpoints.BotGetGuildChannels, self.id)):await()
+		local rawChannelDatas = self.discordClient.discordGateway
+			:getAsync(string.format(DiscordEndpoints.BotGetGuildChannels, self.id))
+			:await()
 
 		for index, value in rawChannelDatas do
 			rawChannelDatas[index] = DiscordChannel.new(self.discordClient, value)
@@ -293,7 +331,9 @@ end
 ]=]
 function DiscordGuild.Prototype.getMemberAsync(self: DiscordGuild, userId: string)
 	return Future.try(function()
-		local discordMember = self.discordClient.discordGateway:getAsync(string.format(DiscordEndpoints.BotGetGuildMember, self.id, userId)):await()
+		local discordMember = self.discordClient.discordGateway
+			:getAsync(string.format(DiscordEndpoints.BotGetGuildMember, self.id, userId))
+			:await()
 
 		return DiscordGuildMember.new(self.discordClient, userId, self.id, discordMember)
 	end)
@@ -310,10 +350,13 @@ end
 ]=]
 function DiscordGuild.Prototype.fetchGuildMembersAsync(self: DiscordGuild, limit: number, lastUserId: number?)
 	return Future.try(function()
-		local discordMembers = self.discordClient.discordGateway:getAsync(string.format(DiscordEndpoints.BotGetGuildMembers, self.id, limit or 100, lastUserId or "0")):await()
+		local discordMembers = self.discordClient.discordGateway
+			:getAsync(string.format(DiscordEndpoints.BotGetGuildMembers, self.id, limit or 100, lastUserId or "0"))
+			:await()
 
 		for index, memberObject in discordMembers do
-			discordMembers[index] = DiscordGuildMember.new(self.discordClient, memberObject.user.id, self.id, memberObject)
+			discordMembers[index] =
+				DiscordGuildMember.new(self.discordClient, memberObject.user.id, self.id, memberObject)
 		end
 
 		return discordMembers
@@ -331,12 +374,13 @@ end
 ]=]
 function DiscordGuild.Prototype.searchGuildMembersAsync(self: DiscordGuild, query: string, limit: number?)
 	return Future.try(function()
-		local discordMembers = self.discordClient.discordGateway:getAsync(
-			string.format(DiscordEndpoints.BotSearchGuildMembers, self.id, query, limit or "100")
-		):await()
+		local discordMembers = self.discordClient.discordGateway
+			:getAsync(string.format(DiscordEndpoints.BotSearchGuildMembers, self.id, query, limit or "100"))
+			:await()
 
 		for index, memberObject in discordMembers do
-			discordMembers[index] = DiscordGuildMember.new(self.discordClient, memberObject.user.id, self.id, memberObject)
+			discordMembers[index] =
+				DiscordGuildMember.new(self.discordClient, memberObject.user.id, self.id, memberObject)
 		end
 
 		return discordMembers
@@ -352,9 +396,9 @@ end
 ]=]
 function DiscordGuild.Prototype.listAutomoderationRulesAsync(self: DiscordGuild)
 	return Future.try(function()
-		local discordAutomoderationRules = self.discordClient.discordGateway:getAsync(
-			string.format(DiscordEndpoints.BotListAutomoderationRules, self.id)
-		):await()
+		local discordAutomoderationRules = self.discordClient.discordGateway
+			:getAsync(string.format(DiscordEndpoints.BotListAutomoderationRules, self.id))
+			:await()
 
 		for index, value in discordAutomoderationRules do
 			discordAutomoderationRules[index] = DiscordAutomoderationRule.new(self.discordClient, value)
@@ -374,9 +418,9 @@ end
 ]=]
 function DiscordGuild.Prototype.getAutomoderationRuleAsync(self: DiscordGuild, ruleId: string)
 	return Future.try(function()
-		local discordAutomoderationRule = self.discordClient.discordGateway:getAsync(
-			string.format(DiscordEndpoints.BotGetAutomoderationRule, self.id)
-		):await()
+		local discordAutomoderationRule = self.discordClient.discordGateway
+			:getAsync(string.format(DiscordEndpoints.BotGetAutomoderationRule, self.id))
+			:await()
 
 		return DiscordAutomoderationRule.new(self.discordClient, discordAutomoderationRule)
 	end)
@@ -390,12 +434,17 @@ end
 	@return Future
 	@within Objects.DiscordGuild
 ]=]
-function DiscordGuild.Prototype.createAutomoderationRuleAsync(self: DiscordGuild, getAutomoderationRuleBuilder: AutomoderationRuleBuilder.AutomoderationRuleBuilder)
+function DiscordGuild.Prototype.createAutomoderationRuleAsync(
+	self: DiscordGuild,
+	getAutomoderationRuleBuilder: AutomoderationRuleBuilder.AutomoderationRuleBuilder
+)
 	return Future.try(function()
-		local discordAutomoderationRule = self.discordClient.discordGateway:postAsync(
-			string.format(DiscordEndpoints.BotCreateAutomoderationRule, self.id),
-			getAutomoderationRuleBuilder:toJSONObject()
-		):await()
+		local discordAutomoderationRule = self.discordClient.discordGateway
+			:postAsync(
+				string.format(DiscordEndpoints.BotCreateAutomoderationRule, self.id),
+				getAutomoderationRuleBuilder:toJSONObject()
+			)
+			:await()
 
 		return DiscordAutomoderationRule.new(self.discordClient, discordAutomoderationRule)
 	end)
@@ -410,15 +459,18 @@ end
 	@return DiscordGuild -- The newly created DiscordGuild instance.
 	@within Objects.DiscordGuild
 ]=]
-function DiscordGuild.Interface.new(discordClient: any, guildData: {
-	id: string,
-	roles: { any },
-	emojis: { any },
-})
+function DiscordGuild.Interface.new(
+	discordClient: any,
+	guildData: {
+		id: string,
+		roles: { any },
+		emojis: { any },
+	}
+)
 	local self = discordClient.discordCache:getDataOr(CacheType.DiscordGuild, guildData.id, function()
 		local guildStruct = {
 			discordClient = discordClient,
-			shardId = ((tonumber(guildData.id) :: number / 2^22) % discordClient.shardCount) + 1
+			shardId = ((tonumber(guildData.id) :: number / 2 ^ 22) % discordClient.shardCount) + 1,
 		}
 
 		return Construct(guildStruct, DiscordGuild.Prototype)
@@ -470,7 +522,7 @@ export type DiscordGuildSchema = {
 	features: { string },
 	description: string,
 	premiumProgressBarEnabled: boolean,
-	safetyAlertsChannelId: string
+	safetyAlertsChannelId: string,
 }
 
 return DiscordGuild.Interface

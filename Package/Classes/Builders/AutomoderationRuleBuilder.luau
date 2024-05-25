@@ -35,7 +35,7 @@ AutomoderationRuleBuilder.Prototype.type = "AutomoderationRuleBuilder"
 	- MessageSend: 1
 ]=]
 AutomoderationRuleBuilder.Interface.EventType = Enumerate.new({
-	MessageSend = 1
+	MessageSend = 1,
 })
 
 --[=[
@@ -53,7 +53,7 @@ AutomoderationRuleBuilder.Interface.TriggerType = Enumerate.new({
 	Keyword = 1,
 	Spam = 3,
 	KeywordPreset = 4,
-	MentionSpam = 5
+	MentionSpam = 5,
 })
 
 --[=[
@@ -138,14 +138,17 @@ end
 	@within Builders.AutomoderationRuleBuilder
 	@return Builders.AutomoderationRuleBuilder -- Returns the AutomoderationRuleBuilder instance for method chaining.
 ]=]
-function AutomoderationRuleBuilder.Prototype.setTriggerMetadata(self: AutomoderationRuleBuilder, triggerMetadata: {
-	keywordFilter: { string }?,
-	regexPattern: { string }?,
-	presets: { number }?,
-	allowList: { string }?,
-	mentionTotalLimit: number?,
-	mentionRaidProtectionEnabled: boolean?
-})
+function AutomoderationRuleBuilder.Prototype.setTriggerMetadata(
+	self: AutomoderationRuleBuilder,
+	triggerMetadata: {
+		keywordFilter: { string }?,
+		regexPattern: { string }?,
+		presets: { number }?,
+		allowList: { string }?,
+		mentionTotalLimit: number?,
+		mentionRaidProtectionEnabled: boolean?,
+	}
+)
 	self.triggerMetadata = {
 		keywordFilter = triggerMetadata.keywordFilter or {},
 		regexPattern = triggerMetadata.regexPattern or {},
@@ -167,18 +170,22 @@ end
 	@within Builders.AutomoderationRuleBuilder
 	@return Builders.AutomoderationRuleBuilder -- Returns the AutomoderationRuleBuilder instance for method chaining.
 ]=]
-function AutomoderationRuleBuilder.Prototype.addAction(self: AutomoderationRuleBuilder, actionType: number, actionMetadata: {
-	channelId: string?,
-	durationSeconds: number?,
-	customMessage: string?
-})
+function AutomoderationRuleBuilder.Prototype.addAction(
+	self: AutomoderationRuleBuilder,
+	actionType: number,
+	actionMetadata: {
+		channelId: string?,
+		durationSeconds: number?,
+		customMessage: string?,
+	}
+)
 	table.insert(self.actions, {
 		type = actionType,
 		metadata = {
 			channelId = actionMetadata.channelId,
 			durationSeconds = actionMetadata.durationSeconds,
-			customMessage = actionMetadata.customMessage
-		}
+			customMessage = actionMetadata.customMessage,
+		},
 	})
 
 	return self
@@ -243,7 +250,7 @@ function AutomoderationRuleBuilder.Prototype.toJSONObject(self: AutomoderationRu
 				channel_id = actionObject.metadata.channelId,
 				duration_seconds = actionObject.metadata.durationSeconds,
 				custom_message = actionObject.metadata.customMessage,
-			}
+			},
 		})
 	end
 
@@ -255,7 +262,7 @@ function AutomoderationRuleBuilder.Prototype.toJSONObject(self: AutomoderationRu
 		actions = actions,
 		enabled = self.ruleEnabled,
 		exempt_roles = self.exemptRoles,
-		exempt_channels = self.exemptChannels
+		exempt_channels = self.exemptChannels,
 	}
 end
 
@@ -270,7 +277,7 @@ function AutomoderationRuleBuilder.Interface.new(): AutomoderationRuleBuilder
 	return Construct({
 		actions = {},
 		exemptRoles = {},
-		exemptChannels = {}
+		exemptChannels = {},
 	}, AutomoderationRuleBuilder.Prototype) :: any
 end
 
@@ -278,14 +285,14 @@ export type AutomoderationRuleBuilder = typeof(AutomoderationRuleBuilder.Prototy
 	exemptChannels: { string },
 	exemptRoles: { string },
 	actions: {
-		{ 
+		{
 			type: number,
 			metadata: {
 				channelId: string?,
 				durationSeconds: number?,
-				customMessage: string?
-			}
-		}	
+				customMessage: string?,
+			},
+		}
 	},
 
 	triggerMetadata: {
@@ -294,13 +301,13 @@ export type AutomoderationRuleBuilder = typeof(AutomoderationRuleBuilder.Prototy
 		presets: { number },
 		allowList: { string },
 		mentionTotalLimit: number,
-		mentionRaidProtectionEnabled: boolean
+		mentionRaidProtectionEnabled: boolean,
 	},
 
 	ruleEnabled: boolean,
 	ruleTriggerType: number,
 	ruleName: string,
-	roleEventType: number
+	roleEventType: number,
 }
 
 return AutomoderationRuleBuilder.Interface

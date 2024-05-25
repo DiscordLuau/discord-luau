@@ -6,8 +6,8 @@ local Enumeration = {}
 
 Enumeration.Type = "Enumeration"
 
-Enumeration.Interface = { }
-Enumeration.Prototype = { }
+Enumeration.Interface = {}
+Enumeration.Prototype = {}
 
 function Enumeration.Prototype:Is(item)
 	for _, value in self do

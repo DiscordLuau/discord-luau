@@ -30,18 +30,21 @@ DiscordEmoji.Prototype.type = "DiscordEmoji"
 	@return DiscordEmoji -- The newly created DiscordEmoji instance.
 	@within Objects.DiscordEmoji
 ]=]
-function DiscordEmoji.Interface.new(discordClient: any, emojiData: {
-	id: string,
-	name: string,
-	roles: { string },
-	requireColons: boolean,
-	managed: boolean,
-	animated: boolean,
-	avaliable: boolean
-})
+function DiscordEmoji.Interface.new(
+	discordClient: any,
+	emojiData: {
+		id: string,
+		name: string,
+		roles: { string },
+		requireColons: boolean,
+		managed: boolean,
+		animated: boolean,
+		avaliable: boolean,
+	}
+)
 	return discordClient.discordCache:getDataOr(CacheType.DiscordEmoji, emojiData.id, function()
 		local emojiStruct = {
-			discordClient = discordClient
+			discordClient = discordClient,
 		}
 
 		for index, value in emojiData do
@@ -59,7 +62,7 @@ export type DiscordEmoji = typeof(DiscordEmoji.Prototype) & {
 	requireColons: boolean,
 	managed: boolean,
 	animated: boolean,
-	avaliable: boolean
+	avaliable: boolean,
 }
 
 return DiscordEmoji.Interface

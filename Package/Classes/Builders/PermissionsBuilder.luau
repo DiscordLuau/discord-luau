@@ -119,7 +119,7 @@ PermissionsBuilder.Interface.Permissions = Enumerate.new({
 	ViewCreatorMonetizationAnalytics = 41,
 	UseSoundboard = 42,
 	UseExternalSounds = 45,
-	SendVoiceMessages = 46
+	SendVoiceMessages = 46,
 })
 
 --[=[
@@ -198,7 +198,7 @@ end
 ]=]
 function PermissionsBuilder.Interface.new()
 	return Construct({
-		permissions = {}
+		permissions = {},
 	}, PermissionsBuilder.Prototype)
 end
 
@@ -223,7 +223,7 @@ end
 function PermissionsBuilder.Interface.all()
 	local permissions = PermissionsBuilder.Interface.new()
 
-	for _, value in PermissionsBuilder.Interface.Permissions :: { } do
+	for _, value in PermissionsBuilder.Interface.Permissions :: {} do
 		permissions:addPermission(value :: number)
 	end
 
@@ -244,7 +244,7 @@ function PermissionsBuilder.Interface.from(bitfield: string)
 
 	assert(numberBitfield, `Invalid BitField '{bitfield}'`)
 
-	for _, value in PermissionsBuilder.Interface.Permissions :: { } do
+	for _, value in PermissionsBuilder.Interface.Permissions :: {} do
 		if bit32.band(numberBitfield, value :: number) == value then
 			permissions:addPermission(value :: number)
 		end
@@ -254,7 +254,7 @@ function PermissionsBuilder.Interface.from(bitfield: string)
 end
 
 export type PermissionsBuilder = typeof(PermissionsBuilder.Prototype) & {
-	permissions: { number }
+	permissions: { number },
 }
 
 return PermissionsBuilder.Interface

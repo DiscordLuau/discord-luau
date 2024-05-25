@@ -53,7 +53,7 @@ CommandOptionBuilder.Interface.Type = Enumerate.new({
 	Role = 8,
 	Mentionable = 9,
 	Number = 10,
-	Attachment = 11
+	Attachment = 11,
 })
 
 --[=[
@@ -172,7 +172,10 @@ end
 ]=]
 function CommandOptionBuilder.Prototype.setChannelTypes(self: CommandOptionBuilder, ...)
 	for _, channelType in { ... } do
-		assert(CommandOptionBuilder.Interface.ChannelType:Is(channelType), `Expected 'channelType' to be of enum 'ChannelType'`)
+		assert(
+			CommandOptionBuilder.Interface.ChannelType:Is(channelType),
+			`Expected 'channelType' to be of enum 'ChannelType'`
+		)
 	end
 
 	self.optionChannelTypes = { ... }
@@ -298,7 +301,7 @@ function CommandOptionBuilder.Prototype.toJSONObject(self: CommandOptionBuilder)
 		table.insert(choices, {
 			name = choiceName,
 			value = choiceValue,
-			name_localizations = self.optionLocalization
+			name_localizations = self.optionLocalization,
 		})
 	end
 
@@ -323,7 +326,7 @@ function CommandOptionBuilder.Prototype.toJSONObject(self: CommandOptionBuilder)
 		min_length = self.optionMinLength,
 		max_length = self.optionMaxLength,
 
-		autocomplete = self.optionAutocomplete
+		autocomplete = self.optionAutocomplete,
 	}
 end
 
@@ -337,7 +340,7 @@ end
 function CommandOptionBuilder.Interface.new(): CommandOptionBuilder
 	return Construct({
 		choices = {},
-		options = {}
+		options = {},
 	}, CommandOptionBuilder.Prototype) :: any
 end
 
@@ -361,7 +364,7 @@ export type CommandOptionBuilder = typeof(CommandOptionBuilder.Prototype) & {
 	optionChannelTypes: { number },
 
 	choices: { [string]: string },
-	options: { CommandOptionBuilder }
+	options: { CommandOptionBuilder },
 }
 
 return CommandOptionBuilder.Interface

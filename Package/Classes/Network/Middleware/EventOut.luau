@@ -39,7 +39,7 @@ end
 	@return EventOut
 ]=]
 function EventOut.Interface.new()
-	return Construct({ }, EventOut.Prototype)
+	return Construct({}, EventOut.Prototype)
 end
 
 export type EventOut = typeof(EventOut.Prototype)

@@ -76,7 +76,7 @@ end
 function ButtonBuilder.Prototype.setEmoji(self: ButtonBuilder, emojiId: string, emojiName: string)
 	self.buttonEmoji = {
 		id = emojiId,
-		name = emojiName
+		name = emojiName,
 	}
 
 	return self
@@ -130,7 +130,7 @@ function ButtonBuilder.Prototype.toJSONObject(self: ButtonBuilder)
 		disabled = self.buttonDisabled,
 		emoji = (self.buttonEmoji and {
 			id = self.buttonEmoji.id,
-			name = self.buttonEmoji.name 
+			name = self.buttonEmoji.name,
 		}) or nil,
 	}
 end
@@ -147,7 +147,7 @@ end
 ]=]
 function ButtonBuilder.Interface.new(buttonId: string): ButtonBuilder
 	return Construct({
-		buttonId = buttonId
+		buttonId = buttonId,
 	}, ButtonBuilder.Prototype) :: any
 end
 
@@ -160,7 +160,7 @@ export type ButtonBuilder = typeof(ButtonBuilder.Prototype) & {
 	buttonEmoji: {
 		id: string,
 		name: string,
-	}?
+	}?,
 }
 
 return ButtonBuilder.Interface

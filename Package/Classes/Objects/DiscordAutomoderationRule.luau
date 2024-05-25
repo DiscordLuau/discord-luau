@@ -76,7 +76,10 @@ DiscordAutomoderationRule.Prototype.type = "DiscordAutomoderationRule"
 
 	Modifies an existing auto-moderation rule.
 ]=]
-function DiscordAutomoderationRule.Prototype.modifyAsync(self: DiscordAutomoderationRule, moderationRoleBuilder: AutomoderationRuleBuilder.AutomoderationRuleBuilder)
+function DiscordAutomoderationRule.Prototype.modifyAsync(
+	self: DiscordAutomoderationRule,
+	moderationRoleBuilder: AutomoderationRuleBuilder.AutomoderationRuleBuilder
+)
 	return self.discordClient.discordGateway:patchAsync(
 		string.format(DiscordEndpoints.BotModifyAutomoderationRule, self.guildId, self.id),
 		moderationRoleBuilder:toJSONObject()
@@ -105,14 +108,17 @@ end
 
 	Creates a new instance of the DiscordAutomoderationRule.
 ]=]
-function DiscordAutomoderationRule.Interface.new(discordClient: any, automoderationData: {
-	id: string,
-}): DiscordAutomoderationRule
+function DiscordAutomoderationRule.Interface.new(
+	discordClient: any,
+	automoderationData: {
+		id: string,
+	}
+): DiscordAutomoderationRule
 	local self = discordClient.discordCache:getDataOr(CacheType.AutoModeration, automoderationData.id, function()
 		return Construct({
 			id = automoderationData.id,
-	
-			discordClient = discordClient
+
+			discordClient = discordClient,
 		}, DiscordAutomoderationRule.Prototype)
 	end)
 
@@ -141,16 +147,16 @@ export type DiscordAutomoderationRule = typeof(DiscordAutomoderationRule.Prototy
 		presets: { number },
 		allowList: { string },
 		mentionTotalLimit: number,
-		mentionRaidProtectionEnabled: boolean
+		mentionRaidProtectionEnabled: boolean,
 	},
 	actions: {
 		type: number,
 		metadata: {
 			channelId: string,
 			durationSeconds: number,
-			customMessage: string?
-		}?
-	}
+			customMessage: string?,
+		}?,
+	},
 }
 
 return DiscordAutomoderationRule.Interface

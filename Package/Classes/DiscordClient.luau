@@ -140,7 +140,7 @@ function DiscordClient.Prototype.connectAsync(self: DiscordClient)
 					self.onEvent:fire(DiscordEvents.ChannelDelete, discordChannel)
 				elseif eventName == WebsocketEvents.UserUpdated then
 					self.discordUser = DiscordUser.new(self, data.user)
-					
+
 					self.onEvent:fire(DiscordEvents.UserUpdated, self.discordUser)
 				elseif eventName == WebsocketEvents.ChannelPinsUpdate then
 					self.onEvent:fire(DiscordEvents.ChannelPinsUpdate, data)
@@ -192,7 +192,10 @@ end
 	@within DiscordClient
 	@return Future<DiscordGuild> -- A future resolving to the fetched DiscordGuild.
 ]=]
-function DiscordClient.Prototype.fetchGuildAsync(self: DiscordClient, guildId: string): Future.Future<DiscordGuild.DiscordGuild>
+function DiscordClient.Prototype.fetchGuildAsync(
+	self: DiscordClient,
+	guildId: string
+): Future.Future<DiscordGuild.DiscordGuild>
 	return Future.try(function()
 		local rawGuildData = self.discordGateway:getAsync(string.format(DiscordEndpoints.BotGetGuild, guildId)):await()
 
@@ -209,9 +212,13 @@ end
 	@within DiscordClient
 	@return Future<DiscordChannel> -- A future resolving to the fetched DiscordChannel.
 ]=]
-function DiscordClient.Prototype.fetchChannelAsync(self: DiscordClient, channelId: string): Future.Future<DiscordChannel.DiscordChannel>
+function DiscordClient.Prototype.fetchChannelAsync(
+	self: DiscordClient,
+	channelId: string
+): Future.Future<DiscordChannel.DiscordChannel>
 	return Future.try(function()
-		local rawChannelData = self.discordGateway:getAsync(string.format(DiscordEndpoints.BotGetChannel, channelId)):await()
+		local rawChannelData =
+			self.discordGateway:getAsync(string.format(DiscordEndpoints.BotGetChannel, channelId)):await()
 
 		return DiscordChannel.new(self, rawChannelData) :: DiscordChannel.DiscordChannel
 	end)
@@ -228,12 +235,12 @@ end
 function DiscordClient.Prototype.updatePresenceAsync(self: DiscordClient, discordPresence): Future.Future<boolean>
 	return Future.try(function()
 		for shardId = 1, self.shardCount do
-			(self.discordShards :: { DiscordShard.DiscordShard })[shardId].discordWebsocket:sendAsync(
-				{
+			(self.discordShards :: { DiscordShard.DiscordShard })[shardId].discordWebsocket
+				:sendAsync({
 					[WebsocketOperationKeys.OperationCode] = WebsocketOperationCodes.PresenseUpdate,
 					[WebsocketOperationKeys.Data] = discordPresence:toJSONObject(),
-				}
-			):await()
+				})
+				:await()
 		end
 
 		return true
@@ -316,7 +323,6 @@ function DiscordClient.Interface.new(discordSettings: SettingsBuilder.SettingsBu
 			@within DiscordClient
 		]=]
 		onEvent = Signal.new(),
-
 	}, DiscordClient.Prototype) :: any
 
 	--[=[

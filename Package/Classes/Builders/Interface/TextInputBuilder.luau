@@ -24,7 +24,7 @@ TextInputBuilder.Prototype.type = "TextInputBuilder"
 ]=]
 TextInputBuilder.Interface.Style = Enumerate.new({
 	Short = 1,
-	Paragraph = 2
+	Paragraph = 2,
 })
 
 --[=[
@@ -147,7 +147,7 @@ function TextInputBuilder.Prototype.toJSONObject(self: TextInputBuilder)
 		required = self.textInputRequired,
 
 		value = self.textInputDefaultValue,
-		placeholder = self.textInputPlaceholderValue
+		placeholder = self.textInputPlaceholderValue,
 	}
 end
 
@@ -162,7 +162,7 @@ end
 ]=]
 function TextInputBuilder.Interface.new(textInputId: string): TextInputBuilder
 	return Construct({
-		textInputId = textInputId
+		textInputId = textInputId,
 	}, TextInputBuilder.Prototype) :: any
 end
 
@@ -174,7 +174,7 @@ export type TextInputBuilder = typeof(TextInputBuilder.Prototype) & {
 	textInputMaxLength: number?,
 	textInputRequired: boolean?,
 	textInputDefaultValue: any?,
-	textInputPlaceholderValue: any?
+	textInputPlaceholderValue: any?,
 }
 
 return TextInputBuilder.Interface

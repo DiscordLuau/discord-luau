@@ -30,12 +30,8 @@ DiscordComponent.Prototype.type = "DiscordComponent"
 	@return DiscordComponent -- The newly created DiscordComponent instance.
 	@within Objects.DiscordComponent
 ]=]
-function DiscordComponent.Interface.new(discordClient: any, emojiData: {
-	
-})
-	
-end
+function DiscordComponent.Interface.new(discordClient: any, emojiData: {}) end
 
-export type DiscordComponent = typeof(DiscordComponent.Prototype) & { }
+export type DiscordComponent = typeof(DiscordComponent.Prototype) & {}
 
 return DiscordComponent.Interface

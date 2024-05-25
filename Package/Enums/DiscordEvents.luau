@@ -27,10 +27,11 @@ local DiscordEvents = {
 	GuildMemberLeft = "GuildMemberRemove",
 	GuildMemberUpdated = "GuildMemberUpdate",
 
-	Interaction = "Interaction"
+	Interaction = "Interaction",
 }
 
-export type DiscordEvents = "Ready"
+export type DiscordEvents =
+	"Ready"
 	| "Message"
 	| "MessageChanged"
 	| "MessageDeleted"

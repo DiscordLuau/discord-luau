@@ -45,7 +45,12 @@ DiscordGateway.Prototype.type = "DiscordGateway"
 	@within Network.DiscordGateway
 	@return string -- The parsed error message.
 ]=]
-function DiscordGateway.Prototype.parseErrors(self: DiscordGateway, errorTable: { [any]: any }, source: string?, depth: number?)
+function DiscordGateway.Prototype.parseErrors(
+	self: DiscordGateway,
+	errorTable: { [any]: any },
+	source: string?,
+	depth: number?
+)
 	local _source = source or ""
 	local _depth = depth or 0
 
@@ -72,7 +77,11 @@ end
 	@within Network.DiscordGateway
 	@return string -- The parsed error message.
 ]=]
-function DiscordGateway.Prototype.parseDiscordAPIErrors(self: DiscordGateway, api: string, networkResponse: Net.FetchResponse)
+function DiscordGateway.Prototype.parseDiscordAPIErrors(
+	self: DiscordGateway,
+	api: string,
+	networkResponse: Net.FetchResponse
+)
 	local success, messageDecoded = pcall(function()
 		return Serde.decode("json", networkResponse.body)
 	end)
@@ -101,7 +110,12 @@ end
 	@within Network.DiscordGateway
 	@return Future -- A Future that resolves with the response.
 ]=]
-function DiscordGateway.Prototype.requestAsync(self: DiscordGateway, api: string, method: ("DELETE" | "GET" | "HEAD" | "OPTIONS" | "PATCH" | "POST" | "PUT"), data: { [any]: any }?)
+function DiscordGateway.Prototype.requestAsync(
+	self: DiscordGateway,
+	api: string,
+	method: "DELETE" | "GET" | "HEAD" | "OPTIONS" | "PATCH" | "POST" | "PUT",
+	data: { [any]: any }?
+)
 	return Future.try(function()
 		return self.discordScheduler:addTask(function()
 			local ratelimitApi = string.gsub(api, "%d+", "-")
@@ -117,12 +131,14 @@ function DiscordGateway.Prototype.requestAsync(self: DiscordGateway, api: string
 				method = method,
 				headers = {
 					["authorization"] = `Bot {self.discordClient.discordSettings.discordToken}`,
-					["content-type"] = "application/json"
+					["content-type"] = "application/json",
 				},
-				body = data and Serde.encode("json", self.gatewayEventOut:processJSON(data))
+				body = data and Serde.encode("json", self.gatewayEventOut:processJSON(data)),
 			})
 
-			self.reporter:debug(`{method} Async to '{api}': {networkResponse.statusCode} - {networkResponse.statusMessage}`)
+			self.reporter:debug(
+				`{method} Async to '{api}': {networkResponse.statusCode} - {networkResponse.statusMessage}`
+			)
 
 			local ratelimitLimit = tonumber(networkResponse.headers["x-ratelimit-limit"])
 			local ratelimitRemaining = tonumber(networkResponse.headers["x-ratelimit-remaining"])
@@ -130,16 +146,17 @@ function DiscordGateway.Prototype.requestAsync(self: DiscordGateway, api: string
 
 			if ratelimitLimit and ratelimitRemaining and ratelimitResetAfter then
 				if not self.endpointRateLimits[ratelimitApi] then
-					self.endpointRateLimits[ratelimitApi] = (HTTPRatelimit.new(
-						ratelimitLimit,
-						ratelimitRemaining
-					) :: unknown) :: HTTPRatelimit.HTTPRatelimit
+					self.endpointRateLimits[ratelimitApi] = (
+						HTTPRatelimit.new(ratelimitLimit, ratelimitRemaining) :: unknown
+					) :: HTTPRatelimit.HTTPRatelimit
 				end
 
 				self.endpointRateLimits[ratelimitApi]:setRemaining(ratelimitRemaining)
 				self.endpointRateLimits[ratelimitApi]:resetAfter(ratelimitResetAfter + 1)
 
-				self.reporter:debug(`{method} Rate Limit '{ratelimitLimit - ratelimitRemaining}/{ratelimitLimit}, resetting in {ratelimitResetAfter}'`)
+				self.reporter:debug(
+					`{method} Rate Limit '{ratelimitLimit - ratelimitRemaining}/{ratelimitLimit}, resetting in {ratelimitResetAfter}'`
+				)
 			end
 
 			if not networkResponse.ok then
@@ -299,7 +316,7 @@ function DiscordGateway.Interface.new(discordClient: any)
 		reporter = Console.new("🌉 DiscordGateway"),
 
 		endpointRateLimits = {} :: { [string]: HTTPRatelimit.HTTPRatelimit },
-		endpointCaches = {} :: { [string]: { [any]: any } }
+		endpointCaches = {} :: { [string]: { [any]: any } },
 	}, DiscordGateway.Prototype)
 end
 

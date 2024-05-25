@@ -100,7 +100,7 @@ function ActivityBuilder.Prototype.toJSONObject(self: ActivityBuilder)
 	return {
 		name = self.name or "",
 		type = self.activityType or 0,
-		url = self.streamingURL
+		url = self.streamingURL,
 	}
 end
 
@@ -115,14 +115,14 @@ function ActivityBuilder.Interface.new()
 	return Construct({
 		name = "Discord-Luau",
 		activityType = 0,
-		streamingURL = nil
+		streamingURL = nil,
 	}, ActivityBuilder.Prototype)
 end
 
 export type ActivityBuilder = typeof(ActivityBuilder.Prototype) & {
 	streamingURL: string?,
 	activityType: number,
-	name: string
+	name: string,
 }
 
 return ActivityBuilder.Interface

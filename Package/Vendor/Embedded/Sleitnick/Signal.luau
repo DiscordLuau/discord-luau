@@ -9,14 +9,13 @@ Connection.__index = Connection
 function Connection.new(Signal, Callback)
 	return setmetatable({
 		Signal = Signal,
-		Callback = Callback
+		Callback = Callback,
 	}, Connection)
 end
 
 function Connection.disconnect(self)
 	self.Signal[self] = nil
 end
-
 
 function Signal.new()
 	return setmetatable({} :: any, Signal)
@@ -29,7 +28,8 @@ function Signal.connect(self, Callback)
 end
 
 function Signal.once(self, Callback)
-	local CN; CN = Connection.new(self, function(...)
+	local CN
+	CN = Connection.new(self, function(...)
 		CN:disconnect()
 		Callback(...)
 	end)
@@ -39,7 +39,8 @@ end
 
 function Signal.wait(self)
 	local waitingCoroutine = coroutine.running()
-	local cn; cn = self:connect(function(...)
+	local cn
+	cn = self:connect(function(...)
 		cn:disconnect()
 		task.spawn(waitingCoroutine, ...)
 	end)
@@ -58,9 +59,8 @@ function Signal.fire(self, ...)
 	end
 end
 
-
 export type Connection = {
-	disconnect: (self: Connection) -> ()
+	disconnect: (self: Connection) -> (),
 }
 
 export type Signal<T...> = {
@@ -68,7 +68,7 @@ export type Signal<T...> = {
 	connect: (self: Signal<T...>, fn: (T...) -> ()) -> Connection,
 	once: (self: Signal<T...>, fn: (T...) -> ()) -> Connection,
 	wait: (self: Signal<T...>) -> T...,
-	disconnectAll: (self: Signal<T...>) -> ()
+	disconnectAll: (self: Signal<T...>) -> (),
 }
 
-return Signal :: {new: () -> Signal<...any>}
+return Signal :: { new: () -> Signal<...any> }

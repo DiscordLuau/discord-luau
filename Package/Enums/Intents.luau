@@ -23,7 +23,8 @@ local Intents = {
 	GuildModerationExecution = "GuildModerationExecution",
 }
 
-export type Intents = "GuildMembers"
+export type Intents =
+	"GuildMembers"
 	| "GuildModeration"
 	| "GuildEmojisAndStickers"
 	| "GuildIntegrations"

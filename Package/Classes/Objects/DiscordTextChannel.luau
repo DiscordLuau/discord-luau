@@ -29,16 +29,18 @@ DiscordTextChannel.Prototype.type = "DiscordTextChannel"
 ]=]
 function DiscordTextChannel.Prototype.modifyAsync(self: DiscordTextChannel, channelSchema: DiscordTextChannelSchema)
 	return Future.try(function()
-		return self.discordClient.discordGateway:patchAsync(string.format(DiscordEndpoints.BotModifyChannel, self.id), {
-			name = channelSchema.name,
-			position = channelSchema.position,
-			topic = channelSchema.topic,
-			nsfw = channelSchema.nsfw,
-			rate_limit_per_user = channelSchema.rateLimitPerUser,
-			parent_id = channelSchema.parentId,
-			default_auto_archive_duration = channelSchema.defaultAutoArchiveDurection,
-			default_thread_rate_limit_per_user = channelSchema.defaultThreadRateLimitPerUser
-		}):await()
+		return self.discordClient.discordGateway
+			:patchAsync(string.format(DiscordEndpoints.BotModifyChannel, self.id), {
+				name = channelSchema.name,
+				position = channelSchema.position,
+				topic = channelSchema.topic,
+				nsfw = channelSchema.nsfw,
+				rate_limit_per_user = channelSchema.rateLimitPerUser,
+				parent_id = channelSchema.parentId,
+				default_auto_archive_duration = channelSchema.defaultAutoArchiveDurection,
+				default_thread_rate_limit_per_user = channelSchema.defaultThreadRateLimitPerUser,
+			})
+			:await()
 	end)
 end
 
@@ -51,7 +53,9 @@ end
 ]=]
 function DiscordTextChannel.Prototype.getPinnedMessagesAsync(self: DiscordTextChannel)
 	return Future.try(function()
-		local messages = self.discordClient.discordGateway:getAsync(string.format(DiscordEndpoints.BotGetPinnedMessages, self.id), { }):await()
+		local messages = self.discordClient.discordGateway
+			:getAsync(string.format(DiscordEndpoints.BotGetPinnedMessages, self.id), {})
+			:await()
 
 		for index, messageData in messages do
 			messages[index] = DiscordMessage.new(self.discordClient, messageData)
@@ -70,15 +74,18 @@ end
 	@within Objects.DiscordTextChannel
 	@return DiscordTextChannel -- A new instance of DiscordTextChannel.
 ]=]
-function DiscordTextChannel.Interface.new(discordClient: any, channelData: {
-	id: string,
-	recipients: { unknown },
-}): DiscordTextChannel
+function DiscordTextChannel.Interface.new(
+	discordClient: any,
+	channelData: {
+		id: string,
+		recipients: { unknown },
+	}
+): DiscordTextChannel
 	local self = discordClient.discordCache:getDataOr(CacheType.DiscordTextChannel, channelData.id, function()
 		return Construct({
 			id = channelData.id,
-	
-			discordClient = discordClient
+
+			discordClient = discordClient,
 		}, DiscordTextChannel.Prototype)
 	end)
 
@@ -102,7 +109,7 @@ export type DiscordTextChannel = typeof(DiscordTextChannel.Prototype) & {
 	position: number,
 	rateLimitPerUser: number,
 	lastMessageId: string,
-	guildId: string
+	guildId: string,
 }
 
 export type DiscordTextChannelSchema = {
@@ -113,7 +120,7 @@ export type DiscordTextChannelSchema = {
 	rateLimitPerUser: number,
 	parentId: string,
 	defaultAutoArchiveDurection: number,
-	defaultThreadRateLimitPerUser: number
+	defaultThreadRateLimitPerUser: number,
 }
 
 return DiscordTextChannel.Interface

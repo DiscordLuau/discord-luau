@@ -41,12 +41,14 @@ DiscordApplication.Prototype.type = "DiscordApplication"
 
 	Creates a new slash command for the Discord application.
 ]=]
-function DiscordApplication.Prototype.createSlashCommandAsync(self: DiscordApplication, command: CommandBuilder.CommandBuilder)
+function DiscordApplication.Prototype.createSlashCommandAsync(
+	self: DiscordApplication,
+	command: CommandBuilder.CommandBuilder
+)
 	return Future.try(function()
-		return self.discordClient.discordGateway:postAsync(
-			string.format(DiscordEndpoints.CreateGlobalApplicationCommand, self.id),
-			command:toJSONObject()
-		):await()
+		return self.discordClient.discordGateway
+			:postAsync(string.format(DiscordEndpoints.CreateGlobalApplicationCommand, self.id), command:toJSONObject())
+			:await()
 	end)
 end
 
@@ -60,9 +62,9 @@ end
 ]=]
 function DiscordApplication.Prototype.deleteSlashCommandAsync(self: DiscordApplication, commandId: string)
 	return Future.try(function()
-		return self.discordClient.discordGateway:deleteAsync(
-			string.format(DiscordEndpoints.DeleteGlobalApplicationCommand, self.id, commandId)
-		):await()
+		return self.discordClient.discordGateway
+			:deleteAsync(string.format(DiscordEndpoints.DeleteGlobalApplicationCommand, self.id, commandId))
+			:await()
 	end)
 end
 
@@ -75,12 +77,18 @@ end
 
 	Edits an existing slash command for the Discord application.
 ]=]
-function DiscordApplication.Prototype.editSlashCommandAsync(self: DiscordApplication, commandId: string, command: CommandBuilder.CommandBuilder)
+function DiscordApplication.Prototype.editSlashCommandAsync(
+	self: DiscordApplication,
+	commandId: string,
+	command: CommandBuilder.CommandBuilder
+)
 	return Future.try(function()
-		return self.discordClient.discordGateway:patchAsync(
-			string.format(DiscordEndpoints.EditGlobalApplicationCommand, self.id, commandId),
-			command:toJSONObject()
-		):await()
+		return self.discordClient.discordGateway
+			:patchAsync(
+				string.format(DiscordEndpoints.EditGlobalApplicationCommand, self.id, commandId),
+				command:toJSONObject()
+			)
+			:await()
 	end)
 end
 
@@ -93,9 +101,9 @@ end
 ]=]
 function DiscordApplication.Prototype.fetchSlashCommandsAsync(self: DiscordApplication)
 	return Future.try(function()
-		return self.discordClient.discordGateway:getAsync(
-			string.format(DiscordEndpoints.GetGlobalApplicationCommands, self.id)
-		):await()
+		return self.discordClient.discordGateway
+			:getAsync(string.format(DiscordEndpoints.GetGlobalApplicationCommands, self.id))
+			:await()
 	end)
 end
 
@@ -107,7 +115,10 @@ end
 
 	Sets the slash commands for the Discord application, updating existing ones and creating or deleting as necessary.
 ]=]
-function DiscordApplication.Prototype.setSlashCommandsAsync(self: DiscordApplication, commands: { CommandBuilder.CommandBuilder })
+function DiscordApplication.Prototype.setSlashCommandsAsync(
+	self: DiscordApplication,
+	commands: { CommandBuilder.CommandBuilder }
+)
 	return Future.try(function()
 		local allCommands = self:fetchSlashCommandsAsync():await()
 
@@ -126,7 +137,7 @@ function DiscordApplication.Prototype.setSlashCommandsAsync(self: DiscordApplica
 
 				commandReference = commandObject1
 				commandFoundInCommandsArray = true
-				
+
 				break
 			end
 
@@ -174,8 +185,8 @@ function DiscordApplication.Prototype.setSlashCommandsAsync(self: DiscordApplica
 			local existingCommandClone = self.eventIn:processJSON(command:toJSONObject())
 
 			-- fixme: contexts seem to be reported incorrectly?
-			existingCommandClone.contexts = { }
-			existingCommandJsonClone.contexts = { }
+			existingCommandClone.contexts = {}
+			existingCommandJsonClone.contexts = {}
 
 			if IsUnique(existingCommandClone, existingCommandJsonClone) then
 				self:editSlashCommandAsync(commandId, command):await()
@@ -197,10 +208,13 @@ end
 
 	Creates a new instance of the DiscordApplication.
 ]=]
-function DiscordApplication.Interface.new(discordClient: any, applicationData: {
-	id: string,
-	flags: number
-})
+function DiscordApplication.Interface.new(
+	discordClient: any,
+	applicationData: {
+		id: string,
+		flags: number,
+	}
+)
 	return discordClient.discordCache:getDataOr(CacheType.Application, applicationData.id, function()
 		return Construct({
 			id = applicationData.id,
@@ -208,7 +222,7 @@ function DiscordApplication.Interface.new(discordClient: any, applicationData: {
 
 			eventIn = EventIn.new(),
 
-			discordClient = discordClient
+			discordClient = discordClient,
 		}, DiscordApplication.Prototype)
 	end)
 end

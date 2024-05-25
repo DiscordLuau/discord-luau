@@ -58,7 +58,7 @@ function EventManager.Interface.new(discordClient): EventManager
 			@param message DiscordMessage -- The message received.
 		]=]
 		onMessage = Signal.new(),
-		
+
 		--[=[
 			@prop onMessageChanged Signal
 			@within Objects.EventManager
@@ -68,7 +68,7 @@ function EventManager.Interface.new(discordClient): EventManager
 			@param message DiscordMessage -- The message that was edited.
 		]=]
 		onMessageChanged = Signal.new(),
-		
+
 		--[=[
 			@prop onMessageDeleted Signal
 			@within Objects.EventManager
@@ -78,7 +78,7 @@ function EventManager.Interface.new(discordClient): EventManager
 			@param message DiscordMessage -- The message that was deleted.
 		]=]
 		onMessageDeleted = Signal.new(),
-		
+
 		--[=[
 			@prop onMessageBulkDeleted Signal
 			@within Objects.EventManager
@@ -98,7 +98,7 @@ function EventManager.Interface.new(discordClient): EventManager
 			@param channel DiscordChannel -- The channel created.
 		]=]
 		onChannelCreate = Signal.new(),
-		
+
 		--[=[
 			@prop onChannelUpdate Signal
 			@within Objects.EventManager
@@ -108,7 +108,7 @@ function EventManager.Interface.new(discordClient): EventManager
 			@param channel DiscordChannel -- The channel that was updated.
 		]=]
 		onChannelUpdate = Signal.new(),
-		
+
 		--[=[
 			@prop onChannelDelete Signal
 			@within Objects.EventManager
@@ -148,7 +148,7 @@ function EventManager.Interface.new(discordClient): EventManager
 			@param guild DiscordGuild -- The guild created.
 		]=]
 		onGuildCreate = Signal.new(),
-		
+
 		--[=[
 			@prop onGuildUpdate Signal
 			@within Objects.EventManager
@@ -158,7 +158,7 @@ function EventManager.Interface.new(discordClient): EventManager
 			@param guild DiscordGuild -- The guild that was updated.
 		]=]
 		onGuildUpdate = Signal.new(),
-		
+
 		--[=[
 			@prop onGuildDelete Signal
 			@within Objects.EventManager
@@ -178,7 +178,7 @@ function EventManager.Interface.new(discordClient): EventManager
 			@param data table -- The data containing guildId and user.
 		]=]
 		onGuildMemberBanned = Signal.new(),
-		
+
 		--[=[
 			@prop onGuildMemberUnbanned Signal
 			@within Objects.EventManager
@@ -198,7 +198,7 @@ function EventManager.Interface.new(discordClient): EventManager
 			@param member DiscordGuildMember -- The member that joined.
 		]=]
 		onGuildMemberJoined = Signal.new(),
-		
+
 		--[=[
 			@prop onGuildMemberLeft Signal
 			@within Objects.EventManager
@@ -208,7 +208,7 @@ function EventManager.Interface.new(discordClient): EventManager
 			@param data table -- The data containing guildId and user.
 		]=]
 		onGuildMemberLeft = Signal.new(),
-		
+
 		--[=[
 			@prop onGuildMemberUpdated Signal
 			@within Objects.EventManager
@@ -311,7 +311,7 @@ export type EventManager = typeof(EventManager.Prototype) & {
 		deaf: boolean?,
 		mute: boolean?,
 		pending: boolean?,
-		communicationDisabledUntil: string?
+		communicationDisabledUntil: string?,
 	}>,
 
 	onInteraction: Signal.Signal<DiscordInteraction.DiscordInteraction>,

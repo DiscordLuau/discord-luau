@@ -3,6 +3,6 @@
 		theoretically, we could - we'd just need to emulate the lune runtime.
 ]]
 
-return setmetatable({ }, {
-	__index = require("@lune/datetime")
+return setmetatable({}, {
+	__index = require("@lune/datetime"),
 })

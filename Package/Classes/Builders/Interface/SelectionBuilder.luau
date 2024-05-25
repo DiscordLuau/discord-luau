@@ -30,7 +30,7 @@ SelectionBuilder.Interface.Type = Enumerate.new({
 	UserSelection = 5,
 	RoleSelection = 6,
 	MentionableSelection = 7,
-	ChannelSelection = 8
+	ChannelSelection = 8,
 })
 
 --[=[
@@ -176,13 +176,13 @@ function SelectionBuilder.Prototype.addChoice(
 	self.choices[choiceName] = {
 		value = choiceValue,
 		description = choiceDescription,
-		default = isDefault
+		default = isDefault,
 	}
 
 	if emojiId and emojiName then
 		self.choices[choiceName].emoji = {
 			id = emojiId,
-			name = emojiName
+			name = emojiName,
 		}
 	end
 
@@ -223,12 +223,12 @@ function SelectionBuilder.Prototype.toJSONObject(self: SelectionBuilder)
 			description = optionData.description,
 			emoji = (optionData.emoji and {
 				id = optionData.emoji.id,
-				name = optionData.emoji.name
+				name = optionData.emoji.name,
 			}) or nil,
-			default = optionData.default
+			default = optionData.default,
 		})
 	end
-	
+
 	return {
 		type = self.selectionType,
 		custom_id = self.selectionId,
@@ -241,7 +241,7 @@ function SelectionBuilder.Prototype.toJSONObject(self: SelectionBuilder)
 
 		disabled = self.selectionDisabled,
 
-		options = selectionOptions
+		options = selectionOptions,
 	}
 end
 
@@ -257,7 +257,7 @@ end
 function SelectionBuilder.Interface.new(selectionId: string): SelectionBuilder
 	return Construct({
 		selectionId = selectionId,
-		choices = {}
+		choices = {},
 	}, SelectionBuilder.Prototype) :: any
 end
 
@@ -278,9 +278,9 @@ export type SelectionBuilder = typeof(SelectionBuilder.Prototype) & {
 			emoji: {
 				id: string,
 				name: string,
-			}?
-		}
-	}
+			}?,
+		},
+	},
 }
 
 return SelectionBuilder.Interface

@@ -40,7 +40,9 @@ DiscordChannel.Prototype.type = "DiscordChannel"
 ]=]
 function DiscordChannel.Prototype.triggerTypingIndicator(self: DiscordChannel)
 	return Future.try(function()
-		return self.discordClient.discordGateway:postAsync(string.format(DiscordEndpoints.BotTriggerTypingChannel, self.id), { }):await()
+		return self.discordClient.discordGateway
+			:postAsync(string.format(DiscordEndpoints.BotTriggerTypingChannel, self.id), {})
+			:await()
 	end)
 end
 
@@ -53,7 +55,9 @@ end
 ]=]
 function DiscordChannel.Prototype.deleteAsync(self: DiscordChannel, messageIds: { string })
 	return Future.try(function()
-		return self.discordClient.discordGateway:deleteAsync(string.format(DiscordEndpoints.BotDeleteChannel, self.id)):await()
+		return self.discordClient.discordGateway
+			:deleteAsync(string.format(DiscordEndpoints.BotDeleteChannel, self.id))
+			:await()
 	end)
 end
 
@@ -93,8 +97,10 @@ end
 ]=]
 function DiscordChannel.Prototype.getMessageAsync(self: DiscordChannel, messageId: string)
 	return Future.try(function()
-		local messageObject = self.discordClient.discordGateway:getAsync(string.format(DiscordEndpoints.BotGetChannelMessage, self.id, messageId)):await()
-		
+		local messageObject = self.discordClient.discordGateway
+			:getAsync(string.format(DiscordEndpoints.BotGetChannelMessage, self.id, messageId))
+			:await()
+
 		return DiscordMessage.new(self.discordClient, messageObject)
 	end)
 end
@@ -109,9 +115,11 @@ end
 ]=]
 function DiscordChannel.Prototype.bulkDeleteMessagesAsync(self: DiscordChannel, messageIds: { string })
 	return Future.try(function()
-		return self.discordClient.discordGateway:postAsync(string.format(DiscordEndpoints.BotBulkDeleteMessages, self.id), {
-			messages = messageIds
-		}):await()
+		return self.discordClient.discordGateway
+			:postAsync(string.format(DiscordEndpoints.BotBulkDeleteMessages, self.id), {
+				messages = messageIds,
+			})
+			:await()
 	end)
 end
 
@@ -125,10 +133,9 @@ end
 ]=]
 function DiscordChannel.Prototype.sendMessageAsync(self: DiscordChannel, messageBuilder: MessageBuilder.MessageBuilder)
 	return Future.try(function()
-		return self.discordClient.discordGateway:postAsync(
-			string.format(DiscordEndpoints.BotCreateMessage, self.id),
-			messageBuilder:toJSONObject()
-		):await()
+		return self.discordClient.discordGateway
+			:postAsync(string.format(DiscordEndpoints.BotCreateMessage, self.id), messageBuilder:toJSONObject())
+			:await()
 	end)
 end
 
@@ -141,9 +148,8 @@ end
 ]=]
 function DiscordChannel.Prototype.getInvitesAsync(self: DiscordChannel)
 	return Future.try(function()
-		local invites = self.discordClient.discordGateway:getAsync(
-			string.format(DiscordEndpoints.BotGetInvites, self.id)
-		):await()
+		local invites =
+			self.discordClient.discordGateway:getAsync(string.format(DiscordEndpoints.BotGetInvites, self.id)):await()
 
 		for index, inviteData in invites do
 			invites[index] = DiscordInvite.new(self.discordClient, inviteData)
@@ -163,13 +169,20 @@ end
 	@within Objects.DiscordChannel
 	@return Future
 ]=]
-function DiscordChannel.Prototype.createInviteAsync(self: DiscordChannel, maxAge: number?, maxUses: number?, temporary: boolean?)
+function DiscordChannel.Prototype.createInviteAsync(
+	self: DiscordChannel,
+	maxAge: number?,
+	maxUses: number?,
+	temporary: boolean?
+)
 	return Future.try(function()
-		local inviteData = self.discordClient.discordGateway:postAsync(string.format(DiscordEndpoints.BotGetInvites, self.id), {
-			max_age = maxAge,
-			max_uses = maxUses,
-			temporary = temporary
-		}):await()
+		local inviteData = self.discordClient.discordGateway
+			:postAsync(string.format(DiscordEndpoints.BotGetInvites, self.id), {
+				max_age = maxAge,
+				max_uses = maxUses,
+				temporary = temporary,
+			})
+			:await()
 
 		return DiscordInvite.new(self.discordClient, inviteData)
 	end)
@@ -185,14 +198,21 @@ end
 	@within Objects.DiscordChannel
 	@return Future
 ]=]
-function DiscordChannel.Prototype.setPositionAsync(self: DiscordChannel, position: number, parentId: string?, syncPermissions: boolean?)
+function DiscordChannel.Prototype.setPositionAsync(
+	self: DiscordChannel,
+	position: number,
+	parentId: string?,
+	syncPermissions: boolean?
+)
 	return Future.try(function()
-		return self.discordClient.discordGateway:patchAsync(string.format(DiscordEndpoints.BotModifyGuildChannelPosition, self.id), {
-			id = self.id,
-			position = position,
-			parent_id = parentId,
-			lock_permissions = syncPermissions
-		}):await()
+		return self.discordClient.discordGateway
+			:patchAsync(string.format(DiscordEndpoints.BotModifyGuildChannelPosition, self.id), {
+				id = self.id,
+				position = position,
+				parent_id = parentId,
+				lock_permissions = syncPermissions,
+			})
+			:await()
 	end)
 end
 
@@ -224,6 +244,8 @@ function DiscordChannel.Interface.new(discordClient: any, rawChannelData: any): 
 	return Inherit(DiscordChannel.Prototype, baseChannelObject)
 end
 
-export type DiscordChannel = (DiscordTextChannel.DiscordTextChannel | DiscordVoiceChannel.DiscordVoiceChannel) & typeof(DiscordChannel.Prototype)
+export type DiscordChannel =
+	(DiscordTextChannel.DiscordTextChannel | DiscordVoiceChannel.DiscordVoiceChannel)
+	& typeof(DiscordChannel.Prototype)
 
 return DiscordChannel.Interface

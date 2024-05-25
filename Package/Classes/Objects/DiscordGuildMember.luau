@@ -38,9 +38,11 @@ DiscordGuildMember.Prototype.type = "DiscordGuildMember"
 	@within Objects.DiscordGuildMember
 ]=]
 function DiscordGuildMember.Prototype.kickAsync(self: DiscordGuildMember, deleteMessagesSeconds: number?)
-	return self.discordClient.discordGateway:putAsync(string.format(DiscordEndpoints.BotRemoveGuildMember, self.guildId, self.user.id), {
-		delete_message_seconds = deleteMessagesSeconds or 0
-	}):await()
+	return self.discordClient.discordGateway
+		:putAsync(string.format(DiscordEndpoints.BotRemoveGuildMember, self.guildId, self.user.id), {
+			delete_message_seconds = deleteMessagesSeconds or 0,
+		})
+		:await()
 end
 
 --[=[
@@ -51,7 +53,9 @@ end
 	@within Objects.DiscordGuildMember
 ]=]
 function DiscordGuildMember.Prototype.banAsync(self: DiscordGuildMember)
-	return self.discordClient.discordGateway:deleteAsync(string.format(DiscordEndpoints.BotBanGuildMember, self.guildId, self.user.id)):await()
+	return self.discordClient.discordGateway
+		:deleteAsync(string.format(DiscordEndpoints.BotBanGuildMember, self.guildId, self.user.id))
+		:await()
 end
 
 --[=[
@@ -62,7 +66,9 @@ end
 	@within Objects.DiscordGuildMember
 ]=]
 function DiscordGuildMember.Prototype.unbanAsync(self: DiscordGuildMember)
-	return self.discordClient.discordGateway:deleteAsync(string.format(DiscordEndpoints.BotRemoveGuildMemberBan, self.guildId, self.user.id)):await()
+	return self.discordClient.discordGateway
+		:deleteAsync(string.format(DiscordEndpoints.BotRemoveGuildMemberBan, self.guildId, self.user.id))
+		:await()
 end
 
 --[=[
@@ -74,7 +80,9 @@ end
 	@within Objects.DiscordGuildMember
 ]=]
 function DiscordGuildMember.Prototype.addRoleAsync(self: DiscordGuildMember, roleId: string)
-	return self.discordClient.discordGateway:putAsync(string.format(DiscordEndpoints.BotAddGuildMemberRole, self.guildId, self.user.id, roleId)):await()
+	return self.discordClient.discordGateway
+		:putAsync(string.format(DiscordEndpoints.BotAddGuildMemberRole, self.guildId, self.user.id, roleId))
+		:await()
 end
 
 --[=[
@@ -86,7 +94,9 @@ end
 	@within Objects.DiscordGuildMember
 ]=]
 function DiscordGuildMember.Prototype.removeRoleAsync(self: DiscordGuildMember, roleId: string)
-	return self.discordClient.discordGateway:deleteAsync(string.format(DiscordEndpoints.BotRemoveGuildMemberRole, self.guildId, self.user.id, roleId)):await()
+	return self.discordClient.discordGateway
+		:deleteAsync(string.format(DiscordEndpoints.BotRemoveGuildMemberRole, self.guildId, self.user.id, roleId))
+		:await()
 end
 
 --[=[
@@ -177,32 +187,36 @@ end
 	@return Future
 	@within Objects.DiscordGuildMember
 ]=]
-function DiscordGuildMember.Prototype.modifyAsync(self: DiscordGuildMember, modificationsTable: {
-	nickname: string?,
-	roles: { string }?,
-	mute: boolean?,
-	deaf: boolean?,
-	channelId: string?,
-	timeoutUntil: number?,
-	flags: number?
-})
+function DiscordGuildMember.Prototype.modifyAsync(
+	self: DiscordGuildMember,
+	modificationsTable: {
+		nickname: string?,
+		roles: { string }?,
+		mute: boolean?,
+		deaf: boolean?,
+		channelId: string?,
+		timeoutUntil: number?,
+		flags: number?,
+	}
+)
 	local communication_disabled_until
 
 	if modificationsTable.timeoutUntil then
-		communication_disabled_until = Datetime.fromUnixTimestamp(
-			os.time() + modificationsTable.timeoutUntil
-		):toIsoDate()
+		communication_disabled_until = Datetime.fromUnixTimestamp(os.time() + modificationsTable.timeoutUntil)
+			:toIsoDate()
 	end
 
-	return self.discordClient.discordGateway:patchAsync(string.format(DiscordEndpoints.BotModifyGuildMember, self.guildId, self.user.id), {
-		nick = modificationsTable.nickname,
-		roles = modificationsTable.roles,
-		mute = modificationsTable.mute,
-		deaf = modificationsTable.deaf,
-		channel_id = modificationsTable.channelId,
-		communication_disabled_until = communication_disabled_until,
-		flags = modificationsTable.flags
-	}):await()
+	return self.discordClient.discordGateway
+		:patchAsync(string.format(DiscordEndpoints.BotModifyGuildMember, self.guildId, self.user.id), {
+			nick = modificationsTable.nickname,
+			roles = modificationsTable.roles,
+			mute = modificationsTable.mute,
+			deaf = modificationsTable.deaf,
+			channel_id = modificationsTable.channelId,
+			communication_disabled_until = communication_disabled_until,
+			flags = modificationsTable.flags,
+		})
+		:await()
 end
 
 --[=[
@@ -216,10 +230,15 @@ end
 	@return DiscordGuildMember -- The newly created DiscordGuildMember instance.
 	@within Objects.DiscordGuildMember
 ]=]
-function DiscordGuildMember.Interface.new(discordClient: any, userId: string, guildId: string, memberData: { [any]: any })
+function DiscordGuildMember.Interface.new(
+	discordClient: any,
+	userId: string,
+	guildId: string,
+	memberData: { [any]: any }
+)
 	local self = discordClient.discordCache:getDataOr(CacheType.DiscordMember, `{guildId}-{userId}`, function()
 		return Construct({
-			discordClient = discordClient
+			discordClient = discordClient,
 		}, DiscordGuildMember.Prototype)
 	end)
 

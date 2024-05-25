@@ -85,7 +85,7 @@ end
 function HTTPRatelimit.Interface.new(remaining: number?, limit: number?)
 	return Construct({
 		remaining = remaining or 0,
-		limit = limit or 0
+		limit = limit or 0,
 	}, HTTPRatelimit.Prototype)
 end
 
@@ -93,7 +93,7 @@ export type HTTPRatelimit = typeof(HTTPRatelimit.Prototype) & {
 	remaining: number,
 	limit: number,
 
-	resetAfterThread: thread?
+	resetAfterThread: thread?,
 }
 
 return HTTPRatelimit.Interface

@@ -27,7 +27,9 @@ DiscordInvite.Prototype.type = "DiscordInvite"
 ]=]
 function DiscordInvite.Prototype.deleteAsync(self: DiscordInvite)
 	return Future.try(function()
-		return self.discordClient.discordGateway:deleteAsync(string.format(DiscordEndpoints.BotDeleteInvite, self.code), { }):await()
+		return self.discordClient.discordGateway
+			:deleteAsync(string.format(DiscordEndpoints.BotDeleteInvite, self.code), {})
+			:await()
 	end)
 end
 
@@ -40,12 +42,15 @@ end
 	@return DiscordInvite -- A new instance of DiscordInvite.
 	@within Objects.DiscordInvite
 ]=]
-function DiscordInvite.Interface.new(discordClient: any, inviteData: {
-	code: string,
-})
+function DiscordInvite.Interface.new(
+	discordClient: any,
+	inviteData: {
+		code: string,
+	}
+)
 	local self = discordClient.discordCache:getDataOr(CacheType.DiscordInvite, inviteData.code, function()
 		return Construct({
-			discordClient = discordClient
+			discordClient = discordClient,
 		}, DiscordInvite.Prototype)
 	end)
 

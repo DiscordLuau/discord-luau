@@ -23,21 +23,24 @@ DiscordUser.Prototype.type = "DiscordUser"
 	@within Objects.DiscordUser
 	@return DiscordUser -- A new instance of DiscordUser.
 ]=]
-function DiscordUser.Interface.new(discordClient: any, partialUserData: {
-	username: string?,
-	flags: number?,
-	mfaEnabled: boolean?,
-	avatar: string?,
-	id: string,
-	bot: boolean?,
-	verified: boolean?,
-	discriminator: string?
-})	
+function DiscordUser.Interface.new(
+	discordClient: any,
+	partialUserData: {
+		username: string?,
+		flags: number?,
+		mfaEnabled: boolean?,
+		avatar: string?,
+		id: string,
+		bot: boolean?,
+		verified: boolean?,
+		discriminator: string?,
+	}
+)
 	local self = discordClient.discordCache:getDataOr(CacheType.DiscordUser, partialUserData.id, function()
 		return Construct({
 			id = partialUserData.id,
-	
-			discordClient = discordClient
+
+			discordClient = discordClient,
 		}, DiscordUser.Prototype)
 	end)
 
@@ -58,7 +61,7 @@ export type DiscordUser = typeof(DiscordUser.Prototype) & {
 	id: string,
 	bot: boolean?,
 	verified: boolean?,
-	discriminator: string?
+	discriminator: string?,
 }
 
 return DiscordUser.Interface

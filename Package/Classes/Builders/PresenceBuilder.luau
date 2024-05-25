@@ -134,7 +134,7 @@ end
 ]=]
 function PresenceBuilder.Interface.new(): PresenceBuilder
 	return Construct({
-		activities = {}
+		activities = {},
 	}, PresenceBuilder.Prototype)
 end
 
@@ -142,7 +142,7 @@ export type PresenceBuilder = typeof(PresenceBuilder.Prototype) & {
 	activities: { ActivityBuilder.ActivityBuilder },
 	since: number?,
 	idle: boolean?,
-	status: string?
+	status: string?,
 }
 
 return PresenceBuilder.Interface

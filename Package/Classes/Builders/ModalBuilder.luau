@@ -71,7 +71,7 @@ function ModalBuilder.Prototype.toJSONObject(self: ModalBuilder)
 	return {
 		title = self.modalTitle,
 		custom_id = self.modalId,
-		components = components
+		components = components,
 	}
 end
 
@@ -86,11 +86,12 @@ end
 function ModalBuilder.Interface.new(modalId: string): ModalBuilder
 	return Construct({
 		components = {},
-		modalId = modalId
+		modalId = modalId,
 	}, ModalBuilder.Prototype) :: any
 end
 
-type InterfaceBuidler = ActionRowBuilder.ActionRowBuilder
+type InterfaceBuidler =
+	ActionRowBuilder.ActionRowBuilder
 	| ButtonBuilder.ButtonBuilder
 	| SelectionBuilder.SelectionBuilder
 	| TextInputBuilder.TextInputBuilder
@@ -98,7 +99,7 @@ type InterfaceBuidler = ActionRowBuilder.ActionRowBuilder
 export type ModalBuilder = typeof(ModalBuilder.Prototype) & {
 	components: { InterfaceBuidler },
 	modalId: string?,
-	modalTitle: string?
+	modalTitle: string?,
 }
 
 return ModalBuilder.Interface

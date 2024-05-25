@@ -69,7 +69,7 @@ end
 ]=]
 function EndpointCache.Interface.new(expiryTime: number?)
 	return Construct({
-		expiry = expiryTime or 5
+		expiry = expiryTime or 5,
 	}, EndpointCache.Prototype)
 end
 
@@ -77,7 +77,7 @@ export type EndpointCache = typeof(EndpointCache.Prototype) & {
 	expiry: number,
 
 	data: any?,
-	expiryThread: thread?
+	expiryThread: thread?,
 }
 
 return EndpointCache.Interface

@@ -27,10 +27,7 @@ ActionRowBuilder.Prototype.type = "ActionRowBuilder"
 ]=]
 function ActionRowBuilder.Prototype.addComponent(
 	self: ActionRowBuilder,
-	componentObject: ActionRowBuilder
-		| ButtonBuilder.ButtonBuilder
-		| SelectionBuilder.SelectionBuilder
-		| TextInputBuilder.TextInputBuilder
+	componentObject: ActionRowBuilder | ButtonBuilder.ButtonBuilder | SelectionBuilder.SelectionBuilder | TextInputBuilder.TextInputBuilder
 ): ActionRowBuilder
 	assert(#self.components + 1 <= 5, "Action Row objects can only contain up to five components!")
 
@@ -56,7 +53,7 @@ function ActionRowBuilder.Prototype.toJSONObject(self: ActionRowBuilder)
 
 	return {
 		type = 1,
-		components = components
+		components = components,
 	}
 end
 
@@ -70,7 +67,7 @@ end
 ]=]
 function ActionRowBuilder.Interface.new(): ActionRowBuilder
 	return Construct({
-		components = { }
+		components = {},
 	}, ActionRowBuilder.Prototype)
 end
 
@@ -80,7 +77,7 @@ export type ActionRowBuilder = typeof(ActionRowBuilder.Prototype) & {
 		| ButtonBuilder.ButtonBuilder
 		| SelectionBuilder.SelectionBuilder
 		| TextInputBuilder.TextInputBuilder
-	}
+	},
 }
 
 return ActionRowBuilder.Interface

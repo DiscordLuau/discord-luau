@@ -56,12 +56,12 @@ end
 ]=]
 function WebsocketBuffer.Interface.new()
 	return Construct({
-		data = ""
+		data = "",
 	}, WebsocketBuffer.Prototype)
 end
 
 export type WebsocketBuffer = typeof(WebsocketBuffer.Prototype) & {
-	data: string
+	data: string,
 }
 
 return WebsocketBuffer.Interface

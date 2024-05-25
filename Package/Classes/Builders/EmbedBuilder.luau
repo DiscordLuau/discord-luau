@@ -43,7 +43,7 @@ EmbedBuilder.Interface.Type = Enumerate.new({
 	Video = "video",
 	Gif = "gifv",
 	Article = "article",
-	Link = "link"
+	Link = "link",
 })
 
 --[=[
@@ -138,10 +138,13 @@ end
 	@within Builders.EmbedBuilder
 	@return Builders.EmbedBuilder -- Returns the EmbedBuilder instance for method chaining.
 ]=]
-function EmbedBuilder.Prototype.setFooter(self: EmbedBuilder, footerSettings: {
-	text: string,
-	icon: string
-})
+function EmbedBuilder.Prototype.setFooter(
+	self: EmbedBuilder,
+	footerSettings: {
+		text: string,
+		icon: string,
+	}
+)
 	self.footer = footerSettings
 
 	return self
@@ -155,11 +158,14 @@ end
 	@within Builders.EmbedBuilder
 	@return Builders.EmbedBuilder -- Returns the EmbedBuilder instance for method chaining.
 ]=]
-function EmbedBuilder.Prototype.setImage(self: EmbedBuilder, imageSettings: {
-	imageUrl: string,
-	height: number,
-	width: number
-})
+function EmbedBuilder.Prototype.setImage(
+	self: EmbedBuilder,
+	imageSettings: {
+		imageUrl: string,
+		height: number,
+		width: number,
+	}
+)
 	self.image = imageSettings
 
 	return self
@@ -173,11 +179,14 @@ end
 	@within Builders.EmbedBuilder
 	@return Builders.EmbedBuilder -- Returns the EmbedBuilder instance for method chaining.
 ]=]
-function EmbedBuilder.Prototype.setThumbnail(self: EmbedBuilder, thumbnailSettings: {
-	thumbnailUrl: string,
-	height: number,
-	width: number
-})
+function EmbedBuilder.Prototype.setThumbnail(
+	self: EmbedBuilder,
+	thumbnailSettings: {
+		thumbnailUrl: string,
+		height: number,
+		width: number,
+	}
+)
 	self.thumbnail = thumbnailSettings
 
 	return self
@@ -191,11 +200,14 @@ end
 	@within Builders.EmbedBuilder
 	@return Builders.EmbedBuilder -- Returns the EmbedBuilder instance for method chaining.
 ]=]
-function EmbedBuilder.Prototype.setVideo(self: EmbedBuilder, videoSettings: {
-	videoUrl: string,
-	height: number,
-	width: number
-})
+function EmbedBuilder.Prototype.setVideo(
+	self: EmbedBuilder,
+	videoSettings: {
+		videoUrl: string,
+		height: number,
+		width: number,
+	}
+)
 	self.video = videoSettings
 
 	return self
@@ -209,10 +221,13 @@ end
 	@within Builders.EmbedBuilder
 	@return Builders.EmbedBuilder -- Returns the EmbedBuilder instance for method chaining.
 ]=]
-function EmbedBuilder.Prototype.setProvider(self: EmbedBuilder, providerSettings: {
-	name: string,
-	url: string
-})
+function EmbedBuilder.Prototype.setProvider(
+	self: EmbedBuilder,
+	providerSettings: {
+		name: string,
+		url: string,
+	}
+)
 	self.provider = providerSettings
 
 	return self
@@ -226,11 +241,14 @@ end
 	@within Builders.EmbedBuilder
 	@return Builders.EmbedBuilder -- Returns the EmbedBuilder instance for method chaining.
 ]=]
-function EmbedBuilder.Prototype.setAuthor(self: EmbedBuilder, authorSettings: {
-	iconUrl: string,
-	name: string,
-	url: string,
-})
+function EmbedBuilder.Prototype.setAuthor(
+	self: EmbedBuilder,
+	authorSettings: {
+		iconUrl: string,
+		name: string,
+		url: string,
+	}
+)
 	self.author = authorSettings
 
 	return self
@@ -244,11 +262,14 @@ end
 	@within Builders.EmbedBuilder
 	@return Builders.EmbedBuilder -- Returns the EmbedBuilder instance for method chaining.
 ]=]
-function EmbedBuilder.Prototype.addField(self: EmbedBuilder, fieldSettings: {
-	name: string,
-	value: string,
-	inline: boolean?
-})
+function EmbedBuilder.Prototype.addField(
+	self: EmbedBuilder,
+	fieldSettings: {
+		name: string,
+		value: string,
+		inline: boolean?,
+	}
+)
 	table.insert(self.fields, fieldSettings)
 
 	return self
@@ -268,7 +289,7 @@ function EmbedBuilder.Prototype.toJSONObject(self: EmbedBuilder)
 		table.insert(fields, {
 			name = fieldObject.name,
 			value = fieldObject.value,
-			inline = fieldObject.inline
+			inline = fieldObject.inline,
 		})
 	end
 
@@ -284,12 +305,12 @@ function EmbedBuilder.Prototype.toJSONObject(self: EmbedBuilder)
 
 		footer = self.footer and {
 			text = self.footer.text,
-			icon_url = self.footer.icon
+			icon_url = self.footer.icon,
 		} or nil,
 		image = self.image and {
 			url = self.image.imageUrl,
 			height = self.image.height,
-			width = self.image.width
+			width = self.image.width,
 		} or nil,
 		thumbnail = self.thumbnail and {
 			url = self.thumbnail.thumbnailUrl,
@@ -308,8 +329,8 @@ function EmbedBuilder.Prototype.toJSONObject(self: EmbedBuilder)
 		author = self.author and {
 			name = self.author.name,
 			url = self.author.url,
-			icon_url = self.author.iconUrl
-		} or nil
+			icon_url = self.author.iconUrl,
+		} or nil,
 	}
 end
 
@@ -322,7 +343,7 @@ end
 ]=]
 function EmbedBuilder.Interface.new()
 	return Construct({
-		fields = {}
+		fields = {},
 	}, EmbedBuilder.Prototype)
 end
 
@@ -331,7 +352,7 @@ export type EmbedBuilder = typeof(EmbedBuilder.Prototype) & {
 		{
 			name: string,
 			value: string,
-			inline: boolean?
+			inline: boolean?,
 		}
 	},
 	title: string?,
@@ -342,32 +363,32 @@ export type EmbedBuilder = typeof(EmbedBuilder.Prototype) & {
 	color: number?,
 	footer: {
 		text: string,
-		icon: string
+		icon: string,
 	}?,
 	image: {
 		imageUrl: string,
 		height: number,
-		width: number
+		width: number,
 	}?,
 	thumbnail: {
 		thumbnailUrl: string,
 		height: number,
-		width: number
+		width: number,
 	}?,
 	video: {
 		videoUrl: string,
 		height: number,
-		width: number
+		width: number,
 	}?,
 	provider: {
 		name: string,
-		url: string
+		url: string,
 	}?,
 	author: {
 		iconUrl: string,
 		name: string,
 		url: string,
-	}?
+	}?,
 }
 
 return EmbedBuilder.Interface

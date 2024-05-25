@@ -51,10 +51,7 @@ end
 	@within Network.DiscordUDP
 	@return Future -- A Future that resolves when the connection is established.
 ]=]
-function DiscordUDP.Prototype.connectAsync(
-	self: DiscordUDP,
-	discordUdp: string
-)
+function DiscordUDP.Prototype.connectAsync(self: DiscordUDP, discordUdp: string)
 	return Future.try(function()
 		local socket = self.socketInstance :: any
 
@@ -128,7 +125,9 @@ function DiscordUDP.Interface.new(publicUdp: string)
 	}, DiscordUDP.Prototype)
 
 	self.socketActiveChanged:connect(function(state)
-		self.reporter:debug(`Discord UDP Socket {(state and "Connected") or "Disconnected"} [{self.socketUrl or "unknown"}]`)
+		self.reporter:debug(
+			`Discord UDP Socket {(state and "Connected") or "Disconnected"} [{self.socketUrl or "unknown"}]`
+		)
 	end)
 
 	return self
@@ -149,7 +148,7 @@ export type DiscordUDP = typeof(DiscordUDP.Prototype) & {
 	socketActive: boolean,
 	socketActiveChanged: Signal.Signal<boolean>,
 
-	socketThread: thread?
+	socketThread: thread?,
 }
 
 return DiscordUDP.Interface

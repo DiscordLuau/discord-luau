@@ -157,7 +157,10 @@ end
 	@within Builders.CommandBuilder
 	@return Builders.CommandBuilder -- Returns the CommandBuilder instance for method chaining.
 ]=]
-function CommandBuilder.Prototype.setGuildPermissions(self: CommandBuilder, permissionObject: PermissionsBuilder.PermissionsBuilder)
+function CommandBuilder.Prototype.setGuildPermissions(
+	self: CommandBuilder,
+	permissionObject: PermissionsBuilder.PermissionsBuilder
+)
 	self.commandPermissions = permissionObject
 
 	return self
@@ -171,7 +174,10 @@ end
 	@within Builders.CommandBuilder
 	@return Builders.CommandBuilder -- Returns the CommandBuilder instance for method chaining.
 ]=]
-function CommandBuilder.Prototype.addOption(self: CommandBuilder, commandObject: CommandOptionBuilder.CommandOptionBuilder)
+function CommandBuilder.Prototype.addOption(
+	self: CommandBuilder,
+	commandObject: CommandOptionBuilder.CommandOptionBuilder
+)
 	table.insert(self.options, commandObject)
 
 	return self
@@ -260,7 +266,7 @@ function CommandBuilder.Interface.new(): CommandBuilder
 	return Construct({
 		choices = {},
 		options = {},
-		contexts = {}
+		contexts = {},
 	}, CommandBuilder.Prototype) :: any
 end
 
@@ -277,7 +283,7 @@ export type CommandBuilder = typeof(CommandBuilder.Prototype) & {
 
 	contexts: { number },
 	commandPermissions: PermissionsBuilder.PermissionsBuilder,
-	options: { CommandOptionBuilder.CommandOptionBuilder }
+	options: { CommandOptionBuilder.CommandOptionBuilder },
 }
 
 return CommandBuilder.Interface

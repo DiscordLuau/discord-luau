@@ -54,7 +54,9 @@ function DiscordVoiceConnection.Prototype.observeWebsocketErrors(self: DiscordVo
 		elseif closeCode == VoiceWebsocketCloseCodes.DecodeError then
 			self:reconnectAsync()
 		elseif closeCode == VoiceWebsocketCloseCodes.NotAuthenticated then
-			self.reporter:error(`Something has gone terribly wrong with Discord-Luau.. please create an issue! [{closeCode}]`)
+			self.reporter:error(
+				`Something has gone terribly wrong with Discord-Luau.. please create an issue! [{closeCode}]`
+			)
 		elseif closeCode == VoiceWebsocketCloseCodes.AuthenticationFailed then
 			self.reporter:warn(`Failed to authenticate with the Discord Voice Gateway, is your token correct?`)
 		elseif closeCode == VoiceWebsocketCloseCodes.AlreadyAuthenticated then
@@ -64,13 +66,17 @@ function DiscordVoiceConnection.Prototype.observeWebsocketErrors(self: DiscordVo
 		elseif closeCode == VoiceWebsocketCloseCodes.ServerNotFound then
 			self.reporter:error(`Voice Websocket unable to find server; '{self.guildId}'`)
 		elseif closeCode == VoiceWebsocketCloseCodes.UnknownProtocol then
-			self.reporter:error(`Something has gone terribly wrong with Discord-Luau.. please create an issue! [{closeCode}]`)
+			self.reporter:error(
+				`Something has gone terribly wrong with Discord-Luau.. please create an issue! [{closeCode}]`
+			)
 		elseif closeCode == VoiceWebsocketCloseCodes.Disconnected then
 			self.reporter:debug(`Disconnected from Voice websocket`)
 		elseif closeCode == VoiceWebsocketCloseCodes.VoiceServerCrashed then
 			self:reconnectAsync()
 		elseif closeCode == VoiceWebsocketCloseCodes.UnknownEncryptionMode then
-			self.reporter:error(`Something has gone terribly wrong with Discord-Luau.. please create an issue! [{closeCode}]`)
+			self.reporter:error(
+				`Something has gone terribly wrong with Discord-Luau.. please create an issue! [{closeCode}]`
+			)
 		end
 	end)
 end
@@ -106,16 +112,18 @@ function DiscordVoiceConnection.Prototype.observeWebsocketOperations(self: Disco
 
 			local thread = coroutine.running()
 
-			self.voiceUDP = (DiscordUDP.new(
-				`0.0.0.0:{BASE_VOICE_CONNECTION_PORT + DiscordVoiceConnection.Prototype.activeConnections}`
-			) :: unknown) :: DiscordUDP.DiscordUDP
-			
+			self.voiceUDP = (
+				DiscordUDP.new(
+					`0.0.0.0:{BASE_VOICE_CONNECTION_PORT + DiscordVoiceConnection.Prototype.activeConnections}`
+				) :: unknown
+			) :: DiscordUDP.DiscordUDP
+
 			self.voiceUDP.onMessageRecv:once(function(packetData: string)
 				local responseData = { string.unpack(">I2I2I4c64I2", packetData) }
 
 				coroutine.resume(thread, responseData[4])
 			end)
-			
+
 			self.voiceUDP:connectAsync(`{operationData.ip}:{operationData.port}`):await()
 			self.voiceUDP:sendAsync(
 				string.pack(`>I2I2I4c64I2`, 1, 70, operationData.ssrc, operationData.ip, operationData.port)
@@ -123,17 +131,19 @@ function DiscordVoiceConnection.Prototype.observeWebsocketOperations(self: Disco
 
 			local publicIp = coroutine.yield()
 
-			self.voiceWebsocket:sendAsync({
-				[WebsocketOperationKeys.OperationCode] = VoiceWebsocketOperationCodes.SelectProtocol,
-				[WebsocketOperationKeys.Data] = {
-					protocol = "udp",
-					data = {
-						address = publicIp,
-						port = BASE_VOICE_CONNECTION_PORT + DiscordVoiceConnection.Prototype.activeConnections,
-						mode = "xsalsa20_poly1305"
-					}
-				}
-			}):await()
+			self.voiceWebsocket
+				:sendAsync({
+					[WebsocketOperationKeys.OperationCode] = VoiceWebsocketOperationCodes.SelectProtocol,
+					[WebsocketOperationKeys.Data] = {
+						protocol = "udp",
+						data = {
+							address = publicIp,
+							port = BASE_VOICE_CONNECTION_PORT + DiscordVoiceConnection.Prototype.activeConnections,
+							mode = "xsalsa20_poly1305",
+						},
+					},
+				})
+				:await()
 		elseif operationCode == VoiceWebsocketOperationCodes.SessionDescription then
 			self.encryptionKey = buffer.create(64)
 			self.mediaSessionId = operationData.mediaSessionId
@@ -170,10 +180,12 @@ function DiscordVoiceConnection.Prototype.heartbeatAsync(self: DiscordVoiceConne
 		self.heartbeatClockTime = os.clock()
 		self.heartbeatNonce = math.random(1_000_000_000)
 
-		self.voiceWebsocket:sendAsync({
-			[WebsocketOperationKeys.OperationCode] = VoiceWebsocketOperationCodes.Heartbeat,
-			[WebsocketOperationKeys.Data] = self.heartbeatNonce,
-		}):await()
+		self.voiceWebsocket
+			:sendAsync({
+				[WebsocketOperationKeys.OperationCode] = VoiceWebsocketOperationCodes.Heartbeat,
+				[WebsocketOperationKeys.Data] = self.heartbeatNonce,
+			})
+			:await()
 	end)
 end
 
@@ -228,23 +240,26 @@ end
 function DiscordVoiceConnection.Prototype.connectAsync(self: DiscordVoiceConnection, guildId: string, channelId: string)
 	return Future.try(function()
 		local guildObject = self.discordClient:fetchGuildAsync(guildId):await()
-		local websocket: DiscordWebsocket.DiscordWebsocket = self.discordClient.discordShards[guildObject.shardId].discordWebsocket
+		local websocket: DiscordWebsocket.DiscordWebsocket =
+			self.discordClient.discordShards[guildObject.shardId].discordWebsocket
 		local connection
 
-		connection = self.discordClient.discordShards[guildObject.shardId].onEvent:connect(function(eventName, data: {[any]: any})
-			if eventName == WebsocketEvents.VoiceServerUpdate then
-				if data.guildId == guildId then
-					self.voiceServerUpdate = data
-				end
-			elseif eventName == WebsocketEvents.VoiceStateUpdate then
-				if data.userId == self.discordClient.discordUser.id then
-					self.voiceStateUpdate = data
+		connection = self.discordClient.discordShards[guildObject.shardId].onEvent:connect(
+			function(eventName, data: { [any]: any })
+				if eventName == WebsocketEvents.VoiceServerUpdate then
+					if data.guildId == guildId then
+						self.voiceServerUpdate = data
+					end
+				elseif eventName == WebsocketEvents.VoiceStateUpdate then
+					if data.userId == self.discordClient.discordUser.id then
+						self.voiceStateUpdate = data
+					end
 				end
 			end
-		end)
+		)
 
-		websocket:sendAsync(
-			{
+		websocket
+			:sendAsync({
 				[WebsocketOperationKeys.OperationCode] = WebsocketOperationCodes.VoiceStateUpdate,
 				[WebsocketOperationKeys.Data] = {
 					guild_id = guildId,
@@ -252,8 +267,8 @@ function DiscordVoiceConnection.Prototype.connectAsync(self: DiscordVoiceConnect
 					self_mute = false,
 					self_deaf = false,
 				},
-			}
-		):await()
+			})
+			:await()
 
 		repeat
 			Task.wait(0.5)
@@ -265,15 +280,17 @@ function DiscordVoiceConnection.Prototype.connectAsync(self: DiscordVoiceConnect
 		self.channelId = channelId
 
 		self.voiceWebsocket:connectAsync(`wss://{self.voiceServerUpdate.endpoint}/?v=4`):await()
-		self.voiceWebsocket:sendAsync({
-			[WebsocketOperationKeys.OperationCode] = VoiceWebsocketOperationCodes.Identify,
-			[WebsocketOperationKeys.Data] = {
-				server_id = guildId,
-				user_id = self.discordClient.discordUser.id,
-				session_id = self.voiceStateUpdate.sessionId,
-				token = self.voiceServerUpdate.token
-			}
-		}):await()
+		self.voiceWebsocket
+			:sendAsync({
+				[WebsocketOperationKeys.OperationCode] = VoiceWebsocketOperationCodes.Identify,
+				[WebsocketOperationKeys.Data] = {
+					server_id = guildId,
+					user_id = self.discordClient.discordUser.id,
+					session_id = self.voiceStateUpdate.sessionId,
+					token = self.voiceServerUpdate.token,
+				},
+			})
+			:await()
 
 		return true
 	end)
@@ -291,14 +308,16 @@ end
 function DiscordVoiceConnection.Prototype.resumeAsync(self: DiscordVoiceConnection)
 	return Future.try(function()
 		self.voiceWebsocket:connectAsync(`wss://{self.voiceServerUpdate.endpoint}/?v=4`):await()
-		self.voiceWebsocket:sendAsync({
-			[WebsocketOperationKeys.OperationCode] = VoiceWebsocketOperationCodes.Resume,
-			[WebsocketOperationKeys.Data] = {
-				server_id = self.guildId,
-				session_id = self.voiceStateUpdate.sessionId,
-				token = self.voiceServerUpdate.token
-			}
-		}):await()
+		self.voiceWebsocket
+			:sendAsync({
+				[WebsocketOperationKeys.OperationCode] = VoiceWebsocketOperationCodes.Resume,
+				[WebsocketOperationKeys.Data] = {
+					server_id = self.guildId,
+					session_id = self.voiceStateUpdate.sessionId,
+					token = self.voiceServerUpdate.token,
+				},
+			})
+			:await()
 
 		return true
 	end)
@@ -322,7 +341,7 @@ function DiscordVoiceConnection.Prototype.reconnectAsync(self: DiscordVoiceConne
 		self.voiceWebsocket:disconnectAsync(tostring(1005)):await()
 
 		Task.wait(math.random())
-	
+
 		self:resumeAsync():await()
 	end)
 end
@@ -343,16 +362,17 @@ function DiscordVoiceConnection.Prototype.disconnectAsync(self: DiscordVoiceConn
 		end
 
 		local guildObject = self.discordClient:fetchGuildAsync(self.guildId):await()
-		local websocket: DiscordWebsocket.DiscordWebsocket = self.discordClient.discordShards[guildObject.shardId].discordWebsocket
+		local websocket: DiscordWebsocket.DiscordWebsocket =
+			self.discordClient.discordShards[guildObject.shardId].discordWebsocket
 
-		websocket:sendAsync(
-			{
+		websocket
+			:sendAsync({
 				[WebsocketOperationKeys.OperationCode] = WebsocketOperationCodes.VoiceStateUpdate,
 				[WebsocketOperationKeys.Data] = {
-					guild_id = self.guildId
+					guild_id = self.guildId,
 				},
-			}
-		):await()
+			})
+			:await()
 
 		self.voiceWebsocket:disconnectAsync(tostring(1000)):await()
 
@@ -381,7 +401,7 @@ function DiscordVoiceConnection.Interface.new(discordClient: any, id: string): D
 		resumeSessionId = nil,
 		heartbeatInterval = nil,
 
-		onEvent = Signal.new()
+		onEvent = Signal.new(),
 	}, DiscordVoiceConnection.Prototype) :: any
 
 	self:observeWebsocketOperations()

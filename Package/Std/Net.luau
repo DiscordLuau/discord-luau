@@ -19,7 +19,9 @@ if not (net :: any).udpSocket then
 		local self = {}
 
 		self.send = function() end
-		self.next = function() coroutine.yield() end
+		self.next = function()
+			coroutine.yield()
+		end
 		self.connect = function() end
 
 		return self
@@ -33,7 +35,7 @@ export type FetchResponse = net.FetchResponse
 
 return setmetatable({
 	udpSocket = udpSocket,
-	udpSocketClose = udpSocketClose
+	udpSocketClose = udpSocketClose,
 }, {
-	__index = net
+	__index = net,
 })

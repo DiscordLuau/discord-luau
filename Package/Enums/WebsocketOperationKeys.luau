@@ -7,9 +7,6 @@ local WebsocketOperationKeys = {
 	EventName = "t",
 }
 
-export type WebsocketOperationKeys = "op"
-	| "d"
-	| "s"
-	| "t"
+export type WebsocketOperationKeys = "op" | "d" | "s" | "t"
 
 return WebsocketOperationKeys

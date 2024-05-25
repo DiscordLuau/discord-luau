@@ -172,11 +172,12 @@ function MessageBuilder.Interface.new(): MessageBuilder
 	return Construct({
 		embeds = {},
 		components = {},
-		stickers = {}
+		stickers = {},
 	}, MessageBuilder.Prototype) :: any
 end
 
-type InterfaceBuidler = ActionRowBuilder.ActionRowBuilder
+type InterfaceBuidler =
+	ActionRowBuilder.ActionRowBuilder
 	| ButtonBuilder.ButtonBuilder
 	| SelectionBuilder.SelectionBuilder
 	| TextInputBuilder.TextInputBuilder
@@ -194,7 +195,7 @@ export type MessageBuilder = typeof(MessageBuilder.Prototype) & {
 
 	stickers: { string },
 
-	flags: number
+	flags: number,
 }
 
 return MessageBuilder.Interface
