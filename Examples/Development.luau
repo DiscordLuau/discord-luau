@@ -7,10 +7,7 @@ local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettings)
 DiscordClient:setVerbose(true)
 
 DiscordClient.eventManager.onMessage:connect(function(message)
-	message:replyAsync(
-		DiscordLuau.MessageBuilder.new()
-			:setContent(`Hello, {message.author.username}`)
-	)
+	message:replyAsync(DiscordLuau.MessageBuilder.new():setContent(`Hello, {message.author.username}`))
 end)
 
 DiscordClient.eventManager.onReady:connect(function()

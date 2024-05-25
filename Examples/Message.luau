@@ -12,10 +12,7 @@ DiscordClient.eventManager.onMessage:connect(function(message)
 			return
 		end
 
-		message:replyAsync(
-		DiscordLuau.MessageBuilder.new()
-				:setContent(`Hello, from Discord-Luau!`)
-		)
+		message:replyAsync(DiscordLuau.MessageBuilder.new():setContent(`Hello, from Discord-Luau!`))
 	end
 end)
 

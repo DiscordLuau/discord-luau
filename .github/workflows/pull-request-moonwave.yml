@@ -16,5 +16,5 @@ jobs:
     - uses: ok-nick/setup-aftman@v0.4.2
     - name: Generate Standard Library
       run: selene generate-roblox-std
-    - name: Run Selene
+    - name: Run Moonwave Extract
       run: moonwave extract Package

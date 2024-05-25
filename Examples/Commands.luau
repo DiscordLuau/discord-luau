@@ -13,28 +13,33 @@ DiscordClient.eventManager.onReady:connect(function()
 
 	permissions:addPermission(DiscordLuau.PermissionsBuilder.Permissions.UseApplicationCommands)
 
-	local slashCommand0 = DiscordLuau.CommandBuilder.new()
+	local slashCommand0 = DiscordLuau.CommandBuilder
+		.new()
 		:setName("example-0")
 		:setDescription("...")
 		:setGuildPermissions(permissions)
 		:addContext(DiscordLuau.CommandBuilder.Context.Guild)
 		:setType(DiscordLuau.CommandBuilder.Type.ChatInput)
 
-	local slashCommand1 = DiscordLuau.CommandBuilder.new()
+	local slashCommand1 = DiscordLuau.CommandBuilder
+		.new()
 		:setName("example-1")
 		:setDescription("abc!")
 		:setGuildPermissions(permissions)
 		:addContext(DiscordLuau.CommandBuilder.Context.Guild)
 		:setType(DiscordLuau.CommandBuilder.Type.ChatInput)
 
-	DiscordClient.discordApplication:setSlashCommandsAsync({
-		slashCommand0, slashCommand1
-	}):after(function(data)
-		print("updated, fetching current commands..")
-		DiscordClient.discordApplication:fetchSlashCommandsAsync():after(function(...)
-			print(...)
+	DiscordClient.discordApplication
+		:setSlashCommandsAsync({
+			slashCommand0,
+			slashCommand1,
+		})
+		:after(function(data)
+			print("updated, fetching current commands..")
+			DiscordClient.discordApplication:fetchSlashCommandsAsync():after(function(...)
+				print(...)
+			end)
 		end)
-	end)
 end)
 
 DiscordClient:connectAsync()
