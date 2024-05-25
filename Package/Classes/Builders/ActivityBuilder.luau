@@ -4,7 +4,7 @@ local Construct = require("../../Utils/Construct")
 --[=[
 	@class Builders.ActivityBuilder
 
-	ActivityBuilder is used to construct an activity object for a Discord bot, including name, type, and streaming URL.
+	ActivityBuilder is used to construct an activity object for a Discord bot - including name, type, and streaming URL.
 
 	Usage:
 	```lua
