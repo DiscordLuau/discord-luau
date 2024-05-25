@@ -5,17 +5,17 @@ export type ButtonBuilder = DiscordLuau.ButtonBuilder
 export type SelectionBuilder = DiscordLuau.SelectionBuilder
 export type TextInputBuilder = DiscordLuau.TextInputBuilder
 
-export type DiscordMessageBuilder = DiscordLuau.DiscordMessageBuilder
-export type ApplicationCommandBuilder = DiscordLuau.ApplicationCommandBuilder
-export type ApplicationCommandOptionBuilder = DiscordLuau.ApplicationCommandOptionBuilder
-export type DiscordActivityBuilder = DiscordLuau.DiscordActivityBuilder
-export type DiscordAutomoderationRuleBuilder = DiscordLuau.DiscordAutomoderationRuleBuilder
-export type DiscordEmbedBuilder = DiscordLuau.DiscordEmbedBuilder
-export type DiscordIntentsBuilder = DiscordLuau.DiscordIntentsBuilder
-export type DiscordModalBuilder = DiscordLuau.DiscordModalBuilder
-export type DiscordPermissionsBuilder = DiscordLuau.DiscordPermissionsBuilder
-export type DiscordPresenceBuilder = DiscordLuau.DiscordPresenceBuilder
-export type DiscordSettingsBuilder = DiscordLuau.DiscordSettingsBuilder
+export type MessageBuilder = DiscordLuau.MessageBuilder
+export type CommandBuilder = DiscordLuau.CommandBuilder
+export type CommandOptionBuilder = DiscordLuau.CommandOptionBuilder
+export type ActivityBuilder = DiscordLuau.ActivityBuilder
+export type AutomoderationRuleBuilder = DiscordLuau.AutomoderationRuleBuilder
+export type EmbedBuilder = DiscordLuau.EmbedBuilder
+export type IntentsBuilder = DiscordLuau.IntentsBuilder
+export type ModalBuilder = DiscordLuau.ModalBuilder
+export type PermissionsBuilder = DiscordLuau.PermissionsBuilder
+export type PresenceBuilder = DiscordLuau.PresenceBuilder
+export type SettingsBuilder = DiscordLuau.SettingsBuilder
 
 export type DiscordClient = DiscordLuau.DiscordClient
 

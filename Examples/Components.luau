@@ -1,7 +1,7 @@
 local DiscordLuau = require("..")
 local Env = require("../.env")
 
-local DiscordSettings = DiscordLuau.DiscordSettingsBuilder.new(Env.DISCORD_BOT_TOKEN)
+local DiscordSettings = DiscordLuau.SettingsBuilder.new(Env.DISCORD_BOT_TOKEN)
 local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettings)
 
 DiscordClient.eventManager.onReady:connect(function()
@@ -10,7 +10,7 @@ DiscordClient.eventManager.onReady:connect(function()
 	local discordChannel = DiscordClient:fetchChannelAsync("1048686561685946489"):await()
 
 	discordChannel:sendMessageAsync(
-		DiscordLuau.DiscordMessageBuilder.new()
+		DiscordLuau.MessageBuilder.new()
 			:setContent("Hello, I have jus woken up!")
 			:addComponent(
 				DiscordLuau.Components.ActionRowBuilder.new()

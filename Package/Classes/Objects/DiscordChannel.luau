@@ -5,7 +5,7 @@ local DiscordEndpoints = require("../../Data/DiscordEndpoints")
 local Future = require("../../Vendor/Future")
 
 local DiscordMessage = require("../Objects/DiscordMessage")
-local DiscordMessageBuilder = require("../Builders/DiscordMessageBuilder")
+local MessageBuilder = require("../Builders/MessageBuilder")
 
 local DiscordTextChannel = require("DiscordTextChannel")
 local DiscordVoiceChannel = require("DiscordVoiceChannel")
@@ -119,11 +119,11 @@ end
 	Sends a message to the channel asynchronously.
 
 	@method sendMessageAsync
-	@param messageBuilder DiscordMessageBuilder -- The message builder object.
+	@param messageBuilder MessageBuilder -- The message builder object.
 	@within Objects.DiscordChannel
 	@return Future
 ]=]
-function DiscordChannel.Prototype.sendMessageAsync(self: DiscordChannel, messageBuilder: DiscordMessageBuilder.DiscordMessageBuilder)
+function DiscordChannel.Prototype.sendMessageAsync(self: DiscordChannel, messageBuilder: MessageBuilder.MessageBuilder)
 	return Future.try(function()
 		return self.discordClient.discordGateway:postAsync(
 			string.format(DiscordEndpoints.BotCreateMessage, self.id),

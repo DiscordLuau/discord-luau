@@ -1,4 +1,4 @@
-local DiscordSettingsBuilder = require("Builders/DiscordSettingsBuilder")
+local SettingsBuilder = require("Builders/SettingsBuilder")
 
 local Construct = require("../Utils/Construct")
 
@@ -39,8 +39,8 @@ local CONCURRENT_IDENTIFY_YIELD = 5
 	```lua
 	local DiscordLuau = require("../Submodules/DiscordLuau")
 
-	local DiscordSettingsBuilder = DiscordLuau.DiscordSettingsBuilder.new("BOT TOKEN")
-	local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettingsBuilder)
+	local SettingsBuilder = DiscordLuau.SettingsBuilder.new("BOT TOKEN")
+	local DiscordClient = DiscordLuau.DiscordClient.new(SettingsBuilder)
 	```
 ]=]
 local DiscordClient = {}
@@ -59,7 +59,7 @@ DiscordClient.Prototype.type = "DiscordClient"
 	Connects the current DiscordClient to the Discord API.
 
 	```lua
-	local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettingsBuilder)
+	local DiscordClient = DiscordLuau.DiscordClient.new(SettingsBuilder)
 
 	DiscordClient:connectAsync():after(function()
 		print("Connected to the Discord API!")
@@ -255,22 +255,22 @@ end
 	Constructor function for the Discord Client, used to instantiate a Discord Client object.
 		
 	@function new
-	@param discordSettings DiscordSettingsBuilder -- The settings builder for the client.
+	@param discordSettings SettingsBuilder -- The settings builder for the client.
 	@within DiscordClient
 	@return DiscordClient -- A new instance of DiscordClient.
 
 	```lua
-	local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettingsBuilder)
+	local DiscordClient = DiscordLuau.DiscordClient.new(SettingsBuilder)
 
 	DiscordClient:connectAsync():after(function()
 		print("Connected to the Discord API!")
 	end)
 	```
 ]=]
-function DiscordClient.Interface.new(discordSettings: DiscordSettingsBuilder.DiscordSettingsBuilder): DiscordClient
+function DiscordClient.Interface.new(discordSettings: SettingsBuilder.SettingsBuilder): DiscordClient
 	local self = Construct({
 		--[=[
-			@prop discordSettings DiscordSettingsBuilder
+			@prop discordSettings SettingsBuilder
 			@within DiscordClient
 		]=]
 		discordSettings = discordSettings,
@@ -338,7 +338,7 @@ Console.setGlobalLogLevel(Console.LogLevel.warn)
 
 export type DiscordClient = typeof(DiscordClient.Prototype) & {
 	discordGateway: DiscordGateway.DiscordGateway,
-	discordSettings: DiscordSettingsBuilder.DiscordSettingsBuilder,
+	discordSettings: SettingsBuilder.SettingsBuilder,
 	discordCache: DiscordCache.DiscordCache,
 
 	eventManager: EventManager.EventManager,

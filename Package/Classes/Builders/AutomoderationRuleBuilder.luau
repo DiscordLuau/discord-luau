@@ -4,43 +4,43 @@ local Enumerate = require("../../Utils/Enumerate")
 local CacheType = require("../../Enums/CacheType")
 
 --[=[
-	@class Builders.DiscordAutomoderationRuleBuilder
+	@class Builders.AutomoderationRuleBuilder
 
-	DiscordAutomoderationRuleBuilder is used to construct an auto-moderation rule for a Discord guild, including trigger types, actions, and exempt roles or channels.
+	AutomoderationRuleBuilder is used to construct an auto-moderation rule for a Discord guild, including trigger types, actions, and exempt roles or channels.
 
 	Usage:
 	```lua
-	local rule = DiscordAutomoderationRuleBuilder.new()
+	local rule = AutomoderationRuleBuilder.new()
 		:setName("No Profanity")
-		:setEventType(DiscordAutomoderationRuleBuilder.EventType.MessageSend)
-		:setTriggerType(DiscordAutomoderationRuleBuilder.TriggerType.Keyword)
+		:setEventType(AutomoderationRuleBuilder.EventType.MessageSend)
+		:setTriggerType(AutomoderationRuleBuilder.TriggerType.Keyword)
 		:setTriggerMetadata({ keywordFilter = {"badword1", "badword2"} })
-		:addAction(DiscordAutomoderationRuleBuilder.ActionType.BlockMessage, { customMessage = "Profanity is not allowed!" })
+		:addAction(AutomoderationRuleBuilder.ActionType.BlockMessage, { customMessage = "Profanity is not allowed!" })
 		:setEnabled(true)
 	```
 ]=]
-local DiscordAutomoderationRuleBuilder = {}
+local AutomoderationRuleBuilder = {}
 
-DiscordAutomoderationRuleBuilder.Prototype = {}
-DiscordAutomoderationRuleBuilder.Interface = {}
+AutomoderationRuleBuilder.Prototype = {}
+AutomoderationRuleBuilder.Interface = {}
 
-DiscordAutomoderationRuleBuilder.Prototype.type = "DiscordAutomoderationRuleBuilder"
+AutomoderationRuleBuilder.Prototype.type = "AutomoderationRuleBuilder"
 
 --[=[
 	@prop EventType table
-	@within Builders.DiscordAutomoderationRuleBuilder
+	@within Builders.AutomoderationRuleBuilder
 
 	An enumeration of event types.
 
 	- MessageSend: 1
 ]=]
-DiscordAutomoderationRuleBuilder.Interface.EventType = Enumerate.new({
+AutomoderationRuleBuilder.Interface.EventType = Enumerate.new({
 	MessageSend = 1
 })
 
 --[=[
 	@prop TriggerType table
-	@within Builders.DiscordAutomoderationRuleBuilder
+	@within Builders.AutomoderationRuleBuilder
 
 	An enumeration of trigger types.
 
@@ -49,7 +49,7 @@ DiscordAutomoderationRuleBuilder.Interface.EventType = Enumerate.new({
 	- KeywordPreset: 4
 	- MentionSpam: 5
 ]=]
-DiscordAutomoderationRuleBuilder.Interface.TriggerType = Enumerate.new({
+AutomoderationRuleBuilder.Interface.TriggerType = Enumerate.new({
 	Keyword = 1,
 	Spam = 3,
 	KeywordPreset = 4,
@@ -58,7 +58,7 @@ DiscordAutomoderationRuleBuilder.Interface.TriggerType = Enumerate.new({
 
 --[=[
 	@prop KeywordPresets table
-	@within Builders.DiscordAutomoderationRuleBuilder
+	@within Builders.AutomoderationRuleBuilder
 
 	An enumeration of keyword presets.
 
@@ -66,7 +66,7 @@ DiscordAutomoderationRuleBuilder.Interface.TriggerType = Enumerate.new({
 	- SexualContent: 2
 	- Slurs: 3
 ]=]
-DiscordAutomoderationRuleBuilder.Interface.KeywordPresets = Enumerate.new({
+AutomoderationRuleBuilder.Interface.KeywordPresets = Enumerate.new({
 	Profanity = 1,
 	SexualContent = 2,
 	Slurs = 3,
@@ -74,7 +74,7 @@ DiscordAutomoderationRuleBuilder.Interface.KeywordPresets = Enumerate.new({
 
 --[=[
 	@prop ActionType table
-	@within Builders.DiscordAutomoderationRuleBuilder
+	@within Builders.AutomoderationRuleBuilder
 
 	An enumeration of action types.
 
@@ -82,7 +82,7 @@ DiscordAutomoderationRuleBuilder.Interface.KeywordPresets = Enumerate.new({
 	- SendAlertMessage: 2
 	- Timeout: 3
 ]=]
-DiscordAutomoderationRuleBuilder.Interface.ActionType = Enumerate.new({
+AutomoderationRuleBuilder.Interface.ActionType = Enumerate.new({
 	BlockMessage = 1,
 	SendAlertMessage = 2,
 	Timeout = 3,
@@ -93,10 +93,10 @@ DiscordAutomoderationRuleBuilder.Interface.ActionType = Enumerate.new({
 	
 	@method setName
 	@param name string -- The name of the rule.
-	@within Builders.DiscordAutomoderationRuleBuilder
-	@return Builders.DiscordAutomoderationRuleBuilder -- Returns the DiscordAutomoderationRuleBuilder instance for method chaining.
+	@within Builders.AutomoderationRuleBuilder
+	@return Builders.AutomoderationRuleBuilder -- Returns the AutomoderationRuleBuilder instance for method chaining.
 ]=]
-function DiscordAutomoderationRuleBuilder.Prototype.setName(self: DiscordAutomoderationRuleBuilder, name: string)
+function AutomoderationRuleBuilder.Prototype.setName(self: AutomoderationRuleBuilder, name: string)
 	self.ruleName = name
 
 	return self
@@ -107,10 +107,10 @@ end
 	
 	@method setEventType
 	@param eventType number -- The event type of the rule.
-	@within Builders.DiscordAutomoderationRuleBuilder
-	@return Builders.DiscordAutomoderationRuleBuilder -- Returns the DiscordAutomoderationRuleBuilder instance for method chaining.
+	@within Builders.AutomoderationRuleBuilder
+	@return Builders.AutomoderationRuleBuilder -- Returns the AutomoderationRuleBuilder instance for method chaining.
 ]=]
-function DiscordAutomoderationRuleBuilder.Prototype.setEventType(self: DiscordAutomoderationRuleBuilder, eventType: number)
+function AutomoderationRuleBuilder.Prototype.setEventType(self: AutomoderationRuleBuilder, eventType: number)
 	self.roleEventType = eventType
 
 	return self
@@ -121,10 +121,10 @@ end
 	
 	@method setTriggerType
 	@param triggerType number -- The trigger type of the rule.
-	@within Builders.DiscordAutomoderationRuleBuilder
-	@return Builders.DiscordAutomoderationRuleBuilder -- Returns the DiscordAutomoderationRuleBuilder instance for method chaining.
+	@within Builders.AutomoderationRuleBuilder
+	@return Builders.AutomoderationRuleBuilder -- Returns the AutomoderationRuleBuilder instance for method chaining.
 ]=]
-function DiscordAutomoderationRuleBuilder.Prototype.setTriggerType(self: DiscordAutomoderationRuleBuilder, triggerType: number)
+function AutomoderationRuleBuilder.Prototype.setTriggerType(self: AutomoderationRuleBuilder, triggerType: number)
 	self.ruleTriggerType = triggerType
 
 	return self
@@ -135,10 +135,10 @@ end
 	
 	@method setTriggerMetadata
 	@param triggerMetadata table -- The metadata for the trigger.
-	@within Builders.DiscordAutomoderationRuleBuilder
-	@return Builders.DiscordAutomoderationRuleBuilder -- Returns the DiscordAutomoderationRuleBuilder instance for method chaining.
+	@within Builders.AutomoderationRuleBuilder
+	@return Builders.AutomoderationRuleBuilder -- Returns the AutomoderationRuleBuilder instance for method chaining.
 ]=]
-function DiscordAutomoderationRuleBuilder.Prototype.setTriggerMetadata(self: DiscordAutomoderationRuleBuilder, triggerMetadata: {
+function AutomoderationRuleBuilder.Prototype.setTriggerMetadata(self: AutomoderationRuleBuilder, triggerMetadata: {
 	keywordFilter: { string }?,
 	regexPattern: { string }?,
 	presets: { number }?,
@@ -164,10 +164,10 @@ end
 	@method addAction
 	@param actionType number -- The type of action.
 	@param actionMetadata table -- The metadata for the action.
-	@within Builders.DiscordAutomoderationRuleBuilder
-	@return Builders.DiscordAutomoderationRuleBuilder -- Returns the DiscordAutomoderationRuleBuilder instance for method chaining.
+	@within Builders.AutomoderationRuleBuilder
+	@return Builders.AutomoderationRuleBuilder -- Returns the AutomoderationRuleBuilder instance for method chaining.
 ]=]
-function DiscordAutomoderationRuleBuilder.Prototype.addAction(self: DiscordAutomoderationRuleBuilder, actionType: number, actionMetadata: {
+function AutomoderationRuleBuilder.Prototype.addAction(self: AutomoderationRuleBuilder, actionType: number, actionMetadata: {
 	channelId: string?,
 	durationSeconds: number?,
 	customMessage: string?
@@ -189,10 +189,10 @@ end
 	
 	@method setEnabled
 	@param enabled boolean -- Whether the rule is enabled.
-	@within Builders.DiscordAutomoderationRuleBuilder
-	@return Builders.DiscordAutomoderationRuleBuilder -- Returns the DiscordAutomoderationRuleBuilder instance for method chaining.
+	@within Builders.AutomoderationRuleBuilder
+	@return Builders.AutomoderationRuleBuilder -- Returns the AutomoderationRuleBuilder instance for method chaining.
 ]=]
-function DiscordAutomoderationRuleBuilder.Prototype.setEnabled(self: DiscordAutomoderationRuleBuilder, enabled: boolean)
+function AutomoderationRuleBuilder.Prototype.setEnabled(self: AutomoderationRuleBuilder, enabled: boolean)
 	self.ruleEnabled = enabled
 
 	return self
@@ -203,10 +203,10 @@ end
 	
 	@method addExemptRole
 	@param roleId string -- The ID of the role to exempt.
-	@within Builders.DiscordAutomoderationRuleBuilder
-	@return Builders.DiscordAutomoderationRuleBuilder -- Returns the DiscordAutomoderationRuleBuilder instance for method chaining.
+	@within Builders.AutomoderationRuleBuilder
+	@return Builders.AutomoderationRuleBuilder -- Returns the AutomoderationRuleBuilder instance for method chaining.
 ]=]
-function DiscordAutomoderationRuleBuilder.Prototype.addExemptRole(self: DiscordAutomoderationRuleBuilder, roleId: string)
+function AutomoderationRuleBuilder.Prototype.addExemptRole(self: AutomoderationRuleBuilder, roleId: string)
 	table.insert(self.exemptRoles, roleId)
 
 	return self
@@ -217,10 +217,10 @@ end
 	
 	@method addExemptChannel
 	@param channelId string -- The ID of the channel to exempt.
-	@within Builders.DiscordAutomoderationRuleBuilder
-	@return Builders.DiscordAutomoderationRuleBuilder -- Returns the DiscordAutomoderationRuleBuilder instance for method chaining.
+	@within Builders.AutomoderationRuleBuilder
+	@return Builders.AutomoderationRuleBuilder -- Returns the AutomoderationRuleBuilder instance for method chaining.
 ]=]
-function DiscordAutomoderationRuleBuilder.Prototype.addExemptChannel(self: DiscordAutomoderationRuleBuilder, channelId: string)
+function AutomoderationRuleBuilder.Prototype.addExemptChannel(self: AutomoderationRuleBuilder, channelId: string)
 	table.insert(self.exemptChannels, channelId)
 
 	return self
@@ -230,10 +230,10 @@ end
 	Converts the rule to a JSON object that can be sent to the Discord API.
 	
 	@method toJSONObject
-	@within Builders.DiscordAutomoderationRuleBuilder
+	@within Builders.AutomoderationRuleBuilder
 	@return table -- The JSON representation of the rule.
 ]=]
-function DiscordAutomoderationRuleBuilder.Prototype.toJSONObject(self: DiscordAutomoderationRuleBuilder)
+function AutomoderationRuleBuilder.Prototype.toJSONObject(self: AutomoderationRuleBuilder)
 	local actions = {}
 
 	for _, actionObject in self.actions do
@@ -260,21 +260,21 @@ function DiscordAutomoderationRuleBuilder.Prototype.toJSONObject(self: DiscordAu
 end
 
 --[=[
-	Creates a new instance of DiscordAutomoderationRuleBuilder.
+	Creates a new instance of AutomoderationRuleBuilder.
 	
 	@function new
-	@within Builders.DiscordAutomoderationRuleBuilder
-	@return Builders.DiscordAutomoderationRuleBuilder -- A new instance of DiscordAutomoderationRuleBuilder.
+	@within Builders.AutomoderationRuleBuilder
+	@return Builders.AutomoderationRuleBuilder -- A new instance of AutomoderationRuleBuilder.
 ]=]
-function DiscordAutomoderationRuleBuilder.Interface.new(): DiscordAutomoderationRuleBuilder
+function AutomoderationRuleBuilder.Interface.new(): AutomoderationRuleBuilder
 	return Construct({
 		actions = {},
 		exemptRoles = {},
 		exemptChannels = {}
-	}, DiscordAutomoderationRuleBuilder.Prototype) :: any
+	}, AutomoderationRuleBuilder.Prototype) :: any
 end
 
-export type DiscordAutomoderationRuleBuilder = typeof(DiscordAutomoderationRuleBuilder.Prototype) & {
+export type AutomoderationRuleBuilder = typeof(AutomoderationRuleBuilder.Prototype) & {
 	exemptChannels: { string },
 	exemptRoles: { string },
 	actions: {
@@ -303,4 +303,4 @@ export type DiscordAutomoderationRuleBuilder = typeof(DiscordAutomoderationRuleB
 	roleEventType: number
 }
 
-return DiscordAutomoderationRuleBuilder.Interface
+return AutomoderationRuleBuilder.Interface

@@ -1,11 +1,11 @@
-local Construct = require("../../Utils/Construct")
+local Construct = require("../../../Utils/Construct")
 
 local ButtonBuilder = require("ButtonBuilder")
 local SelectionBuilder = require("SelectionBuilder")
 local TextInputBuilder = require("TextInputBuilder")
 
 --[=[
-	@class Interface.ActionRowBuilder
+	@class Builders.Interface.ActionRowBuilder
 
 	ActionRowBuilder is used to construct an action row, which can contain up to five components like buttons, selections, or text inputs.
 ]=]
@@ -22,8 +22,8 @@ ActionRowBuilder.Prototype.type = "ActionRowBuilder"
 	@private
 	@method addComponent
 	@param componentObject ActionRowBuilder | ButtonBuilder | SelectionBuilder | TextInputBuilder -- The component to be added.
-	@within Interface.ActionRowBuilder
-	@return ActionRowBuilder -- Returns the ActionRowBuilder instance for method chaining.
+	@within Builders.Interface.ActionRowBuilder
+	@return Builders.Interface.ActionRowBuilder -- Returns the ActionRowBuilder instance for method chaining.
 ]=]
 function ActionRowBuilder.Prototype.addComponent(
 	self: ActionRowBuilder,
@@ -44,7 +44,7 @@ end
 	
 	@private
 	@method toJSONObject
-	@within Interface.ActionRowBuilder
+	@within Builders.Interface.ActionRowBuilder
 	@return table -- The JSON representation of the action row.
 ]=]
 function ActionRowBuilder.Prototype.toJSONObject(self: ActionRowBuilder)
@@ -65,8 +65,8 @@ end
 	
 	@private
 	@function new
-	@within Interface.ActionRowBuilder
-	@return ActionRowBuilder -- A new instance of ActionRowBuilder.
+	@within Builders.Interface.ActionRowBuilder
+	@return Builders.Interface.ActionRowBuilder -- A new instance of ActionRowBuilder.
 ]=]
 function ActionRowBuilder.Interface.new(): ActionRowBuilder
 	return Construct({

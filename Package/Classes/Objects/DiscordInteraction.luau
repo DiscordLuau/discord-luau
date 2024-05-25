@@ -4,9 +4,9 @@ local Future = require("../../Vendor/Future")
 
 local Construct = require("../../Utils/Construct")
 
-local DiscordModalBuilder = require("../Builders/DiscordModalBuilder")
-local DiscordPermissionsBuilder = require("../Builders/DiscordPermissionsBuilder")
-local DiscordMessageBuilder = require("../Builders/DiscordMessageBuilder")
+local ModalBuilder = require("../Builders/ModalBuilder")
+local PermissionsBuilder = require("../Builders/PermissionsBuilder")
+local MessageBuilder = require("../Builders/MessageBuilder")
 
 local DiscordGuildMember = require("DiscordGuildMember")
 
@@ -39,11 +39,11 @@ DiscordInteraction.Prototype.type = "DiscordInteraction"
 	Edits the original interaction response message asynchronously.
 
 	@method editMessageAsync
-	@param messageBuilder DiscordMessageBuilder -- The message builder object.
+	@param messageBuilder MessageBuilder -- The message builder object.
 	@return Future
 	@within Objects.DiscordInteraction
 ]=]
-function DiscordInteraction.Prototype.editMessageAsync(self: DiscordInteraction, messageBuilder: DiscordMessageBuilder.DiscordMessageBuilder)
+function DiscordInteraction.Prototype.editMessageAsync(self: DiscordInteraction, messageBuilder: MessageBuilder.MessageBuilder)
 	return Future.new(function()
 		return self.discordClient.discordGateway:patchAsync(string.format(
 			DiscordEndpoints.EditOriginalInteractionResponse,
@@ -57,11 +57,11 @@ end
 	Sends a modal in response to the interaction asynchronously.
 
 	@method sendModalAsync
-	@param modalObject DiscordModalBuilder -- The modal builder object.
+	@param modalObject ModalBuilder -- The modal builder object.
 	@return Future
 	@within Objects.DiscordInteraction
 ]=]
-function DiscordInteraction.Prototype.sendModalAsync(self: DiscordInteraction, modalObject: DiscordModalBuilder.DiscordModalBuilder)
+function DiscordInteraction.Prototype.sendModalAsync(self: DiscordInteraction, modalObject: ModalBuilder.ModalBuilder)
 	return Future.new(function()
 		return self.discordClient.discordGateway:postAsync(string.format(
 			DiscordEndpoints.CreateInteractionResponse,
@@ -78,11 +78,11 @@ end
 	Sends a message in response to the interaction asynchronously.
 
 	@method sendMessageAsync
-	@param messageBuilder DiscordMessageBuilder -- The message builder object.
+	@param messageBuilder MessageBuilder -- The message builder object.
 	@return Future
 	@within Objects.DiscordInteraction
 ]=]
-function DiscordInteraction.Prototype.sendMessageAsync(self: DiscordInteraction, messageBuilder: DiscordMessageBuilder.DiscordMessageBuilder)
+function DiscordInteraction.Prototype.sendMessageAsync(self: DiscordInteraction, messageBuilder: MessageBuilder.MessageBuilder)
 	if self.defered then
 		return self:editMessageAsync(messageBuilder)
 	else
@@ -141,7 +141,7 @@ function DiscordInteraction.Interface.new(discordClient: any, jsonData: { [any]:
 	jsonData.guild = DiscordGuild.new(discordClient, jsonData.guild)
 	jsonData.user = DiscordUser.new(discordClient, jsonData.member.user)
 	jsonData.member = DiscordGuildMember.new(discordClient, jsonData.member.user.id, jsonData.guild.id, jsonData.member)
-	jsonData.appPermissions = DiscordPermissionsBuilder.from(jsonData.appPermissions)
+	jsonData.appPermissions = PermissionsBuilder.from(jsonData.appPermissions)
 
 	jsonData.member.user = nil
 
@@ -170,7 +170,7 @@ export type DiscordInteraction = typeof(DiscordInteraction.Prototype) & {
 	channelId: string,
 	guilldId: string,
 	version: number,
-	appPermissions: DiscordPermissionsBuilder.DiscordPermissionsBuilder,
+	appPermissions: PermissionsBuilder.PermissionsBuilder,
 	guildLocale: string,
 	locale: string,
 	entitlements: { unknown },

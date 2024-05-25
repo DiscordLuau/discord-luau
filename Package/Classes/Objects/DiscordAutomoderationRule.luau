@@ -3,7 +3,7 @@ local Construct = require("../../Utils/Construct")
 local CacheType = require("../../Enums/CacheType")
 local DiscordEndpoints = require("../../Data/DiscordEndpoints")
 
-local DiscordAutomoderationRuleBuilder = require("../Builders/DiscordAutomoderationRuleBuilder")
+local AutomoderationRuleBuilder = require("../Builders/AutomoderationRuleBuilder")
 
 --[=[
 	@class Objects.DiscordAutomoderationRule
@@ -76,7 +76,7 @@ DiscordAutomoderationRule.Prototype.type = "DiscordAutomoderationRule"
 
 	Modifies an existing auto-moderation rule.
 ]=]
-function DiscordAutomoderationRule.Prototype.modifyAsync(self: DiscordAutomoderationRule, moderationRoleBuilder: DiscordAutomoderationRuleBuilder.DiscordAutomoderationRuleBuilder)
+function DiscordAutomoderationRule.Prototype.modifyAsync(self: DiscordAutomoderationRule, moderationRoleBuilder: AutomoderationRuleBuilder.AutomoderationRuleBuilder)
 	return self.discordClient.discordGateway:patchAsync(
 		string.format(DiscordEndpoints.BotModifyAutomoderationRule, self.guildId, self.id),
 		moderationRoleBuilder:toJSONObject()

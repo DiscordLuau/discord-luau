@@ -1,8 +1,8 @@
-local Enumerate = require("../../Utils/Enumerate")
-local Construct = require("../../Utils/Construct")
+local Enumerate = require("../../../Utils/Enumerate")
+local Construct = require("../../../Utils/Construct")
 
 --[=[
-	@class Interface.TextInputBuilder
+	@class Builders.Interface.TextInputBuilder
 
 	TextInputBuilder is used to construct a text input component for a Discord message.
 ]=]
@@ -15,7 +15,7 @@ TextInputBuilder.Prototype.type = "TextInputBuilder"
 
 --[=[
 	@prop Style table
-	@within Interface.TextInputBuilder
+	@within Builders.Interface.TextInputBuilder
 
 	An enumeration of text input styles.
 
@@ -33,8 +33,8 @@ TextInputBuilder.Interface.Style = Enumerate.new({
 	
 	@method setStyle
 	@param inputStyle number -- The style of the text input.
-	@within Interface.TextInputBuilder
-	@return TextInputBuilder -- Returns the TextInputBuilder instance for method chaining.
+	@within Builders.Interface.TextInputBuilder
+	@return Builders.Interface.TextInputBuilder -- Returns the TextInputBuilder instance for method chaining.
 ]=]
 function TextInputBuilder.Prototype.setStyle(self: TextInputBuilder, inputStyle: number): TextInputBuilder
 	self.textInputStyle = inputStyle
@@ -47,8 +47,8 @@ end
 	
 	@method setLabel
 	@param label string -- The label of the text input.
-	@within Interface.TextInputBuilder
-	@return TextInputBuilder -- Returns the TextInputBuilder instance for method chaining.
+	@within Builders.Interface.TextInputBuilder
+	@return Builders.Interface.TextInputBuilder -- Returns the TextInputBuilder instance for method chaining.
 ]=]
 function TextInputBuilder.Prototype.setLabel(self: TextInputBuilder, label: string): TextInputBuilder
 	self.textInputLabel = label
@@ -61,8 +61,8 @@ end
 	
 	@method setMinLength
 	@param length number -- The minimum length of the text input.
-	@within Interface.TextInputBuilder
-	@return TextInputBuilder -- Returns the TextInputBuilder instance for method chaining.
+	@within Builders.Interface.TextInputBuilder
+	@return Builders.Interface.TextInputBuilder -- Returns the TextInputBuilder instance for method chaining.
 ]=]
 function TextInputBuilder.Prototype.setMinLength(self: TextInputBuilder, length: number): TextInputBuilder
 	self.textInputMinLength = length
@@ -75,8 +75,8 @@ end
 	
 	@method setMaxLength
 	@param length number -- The maximum length of the text input.
-	@within Interface.TextInputBuilder
-	@return TextInputBuilder -- Returns the TextInputBuilder instance for method chaining.
+	@within Builders.Interface.TextInputBuilder
+	@return Builders.Interface.TextInputBuilder -- Returns the TextInputBuilder instance for method chaining.
 ]=]
 function TextInputBuilder.Prototype.setMaxLength(self: TextInputBuilder, length: number): TextInputBuilder
 	self.textInputMaxLength = length
@@ -89,8 +89,8 @@ end
 	
 	@method setRequired
 	@param isRequired boolean -- Whether the text input is required.
-	@within Interface.TextInputBuilder
-	@return TextInputBuilder -- Returns the TextInputBuilder instance for method chaining.
+	@within Builders.Interface.TextInputBuilder
+	@return Builders.Interface.TextInputBuilder -- Returns the TextInputBuilder instance for method chaining.
 ]=]
 function TextInputBuilder.Prototype.setRequired(self: TextInputBuilder, isRequired: boolean): TextInputBuilder
 	self.textInputRequired = isRequired
@@ -103,8 +103,8 @@ end
 	
 	@method setDefaultValue
 	@param value string -- The default value of the text input.
-	@within Interface.TextInputBuilder
-	@return TextInputBuilder -- Returns the TextInputBuilder instance for method chaining.
+	@within Builders.Interface.TextInputBuilder
+	@return Builders.Interface.TextInputBuilder -- Returns the TextInputBuilder instance for method chaining.
 ]=]
 function TextInputBuilder.Prototype.setDefaultValue(self: TextInputBuilder, value: string): TextInputBuilder
 	self.textInputDefaultValue = value
@@ -117,8 +117,8 @@ end
 	
 	@method setPlaceholder
 	@param value string -- The placeholder value of the text input.
-	@within Interface.TextInputBuilder
-	@return TextInputBuilder -- Returns the TextInputBuilder instance for method chaining.
+	@within Builders.Interface.TextInputBuilder
+	@return Builders.Interface.TextInputBuilder -- Returns the TextInputBuilder instance for method chaining.
 ]=]
 function TextInputBuilder.Prototype.setPlaceholder(self: TextInputBuilder, value: string): TextInputBuilder
 	self.textInputPlaceholderValue = value
@@ -130,7 +130,7 @@ end
 	Converts the text input to a JSON object that can be sent to the Discord API.
 	
 	@method toJSONObject
-	@within Interface.TextInputBuilder
+	@within Builders.Interface.TextInputBuilder
 	@return table -- The JSON representation of the text input.
 ]=]
 function TextInputBuilder.Prototype.toJSONObject(self: TextInputBuilder)
@@ -157,8 +157,8 @@ end
 	
 	@function new
 	@param textInputId string -- The ID of the text input.
-	@within Interface.TextInputBuilder
-	@return TextInputBuilder -- A new instance of TextInputBuilder.
+	@within Builders.Interface.TextInputBuilder
+	@return Builders.Interface.TextInputBuilder -- A new instance of TextInputBuilder.
 ]=]
 function TextInputBuilder.Interface.new(textInputId: string): TextInputBuilder
 	return Construct({

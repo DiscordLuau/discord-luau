@@ -3,12 +3,12 @@ local Task = require("@lune/task")
 local DiscordLuau = require("..")
 local Env = require("../.env")
 
-local DiscordSettings = DiscordLuau.DiscordSettingsBuilder.new(Env.DISCORD_BOT_TOKEN)
+local DiscordSettings = DiscordLuau.SettingsBuilder.new(Env.DISCORD_BOT_TOKEN)
 local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettings)
 
 DiscordClient.eventManager.onInteraction:connect(function(interaction)
 	if interaction.data.name == "example-command" then
-		local discordModal = DiscordLuau.DiscordModalBuilder.new("response-modal")
+		local discordModal = DiscordLuau.ModalBuilder.new("response-modal")
 
 		discordModal:setTitle("Modal Test")
 
@@ -30,7 +30,7 @@ DiscordClient.eventManager.onInteraction:connect(function(interaction)
 
 		Task.delay(1, function()
 			interaction:sendMessageAsync(
-				DiscordLuau.DiscordMessageBuilder.new()
+				DiscordLuau.MessageBuilder.new()
 				:setContent("Feedback noted, thanks!")
 				:addComponent(
 					DiscordLuau.Components.ActionRowBuilder.new()
@@ -67,11 +67,11 @@ end)
 DiscordClient.eventManager.onReady:connect(function()
 	print(`🎉🎉 {DiscordClient.discordUser.username} is online! 🎉🎉`)
 
-	local permissions = DiscordLuau.DiscordPermissionsBuilder.new()
+	local permissions = DiscordLuau.PermissionsBuilder.new()
 
-	permissions:addPermission(DiscordLuau.DiscordPermissionsBuilder.Permissions.SendMessages)
+	permissions:addPermission(DiscordLuau.PermissionsBuilder.Permissions.SendMessages)
 
-	local slashCommand = DiscordLuau.ApplicationCommandBuilder.new()
+	local slashCommand = DiscordLuau.CommandBuilder.new()
 		:setName("example-command")
 		:setDescription("Example Description")
 		:setGuildPermissions(permissions)

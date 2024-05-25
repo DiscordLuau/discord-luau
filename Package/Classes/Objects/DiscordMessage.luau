@@ -5,8 +5,8 @@ local Construct = require("../../Utils/Construct")
 local CacheType = require("../../Enums/CacheType")
 local DiscordEndpoints = require("../../Data/DiscordEndpoints")
 
-local DiscordEmbedBuilder = require("../Builders/DiscordEmbedBuilder")
-local DiscordMessageBuilder = require("../Builders/DiscordMessageBuilder")
+local EmbedBuilder = require("../Builders/EmbedBuilder")
+local MessageBuilder = require("../Builders/MessageBuilder")
 local DiscordGuildMember = require("../Objects/DiscordGuildMember")
 
 local Future = require("../../Vendor/Future")
@@ -29,11 +29,11 @@ DiscordMessage.Prototype.type = "DiscordMessage"
 	Replies to the message asynchronously.
 	
 	@method replyAsync
-	@param messageBuilder DiscordMessageBuilder -- The message builder containing the reply content.
+	@param messageBuilder MessageBuilder -- The message builder containing the reply content.
 	@return Future<unknown> -- A future that resolves when the reply is sent.
 	@within Objects.DiscordMessage
 ]=]
-function DiscordMessage.Prototype.replyAsync(self: DiscordMessage, messageBuilder: DiscordMessageBuilder.DiscordMessageBuilder)
+function DiscordMessage.Prototype.replyAsync(self: DiscordMessage, messageBuilder: MessageBuilder.MessageBuilder)
 	return Future.try(function()
 		return self.discordClient.discordGateway:postAsync(
 			string.format(DiscordEndpoints.BotCreateMessage, self.channelId),
@@ -85,11 +85,11 @@ end
 	Edits the message asynchronously.
 	
 	@method editAsync
-	@param messageBuilder DiscordMessageBuilder -- The message builder containing the new content.
+	@param messageBuilder MessageBuilder -- The message builder containing the new content.
 	@within Objects.DiscordMessage
 	@return Future<unknown> -- A future that resolves when the message is edited.
 ]=]
-function DiscordMessage.Prototype.editAsync(self: DiscordMessage, messageBuilder: DiscordMessageBuilder.DiscordMessageBuilder)
+function DiscordMessage.Prototype.editAsync(self: DiscordMessage, messageBuilder: MessageBuilder.MessageBuilder)
 	return Future.try(function()
 		return self.discordClient.discordGateway:patchAsync(
 			string.format(DiscordEndpoints.BotEditMessage, self.channelId, self.id),

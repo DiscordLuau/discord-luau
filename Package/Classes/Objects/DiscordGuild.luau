@@ -3,8 +3,8 @@ local Construct = require("../../Utils/Construct")
 local CacheType = require("../../Enums/CacheType")
 local DiscordEndpoints = require("../../Data/DiscordEndpoints")
 
-local ApplicationCommandBuilder = require("../Builders/ApplicationCommandBuilder")
-local DiscordAutomoderationRuleBuilder = require("../Builders/DiscordAutomoderationRuleBuilder")
+local CommandBuilder = require("../Builders/CommandBuilder")
+local AutomoderationRuleBuilder = require("../Builders/AutomoderationRuleBuilder")
 
 local DiscordEmoji = require("DiscordEmoji")
 local DiscordGuildRole = require("DiscordGuildRole")
@@ -40,11 +40,11 @@ DiscordGuild.Prototype.type = "DiscordGuild"
 	Creates a new slash command in the guild asynchronously.
 
 	@method createSlashCommandAsync
-	@param command ApplicationCommandBuilder -- The command builder object.
+	@param command CommandBuilder -- The command builder object.
 	@return Future
 	@within Objects.DiscordGuild
 ]=]
-function DiscordGuild.Prototype.createSlashCommandAsync(self: DiscordGuild, command: ApplicationCommandBuilder.ApplicationCommandBuilder)
+function DiscordGuild.Prototype.createSlashCommandAsync(self: DiscordGuild, command: CommandBuilder.CommandBuilder)
 	return Future.try(function()
 		return self.discordClient.discordGateway:postAsync(
 			string.format(DiscordEndpoints.CreateGuildApplicationCommand, self.discordClient.discordApplication.id, self.id),
@@ -74,11 +74,11 @@ end
 
 	@method editSlashCommandAsync
 	@param commandId string -- The ID of the command to edit.
-	@param command ApplicationCommandBuilder -- The command builder object with updated information.
+	@param command CommandBuilder -- The command builder object with updated information.
 	@return Future
 	@within Objects.DiscordGuild
 ]=]
-function DiscordGuild.Prototype.editSlashCommandAsync(self: DiscordGuild, commandId: string, command: ApplicationCommandBuilder.ApplicationCommandBuilder)
+function DiscordGuild.Prototype.editSlashCommandAsync(self: DiscordGuild, commandId: string, command: CommandBuilder.CommandBuilder)
 	return Future.try(function()
 		return self.discordClient.discordGateway:patchAsync(
 			string.format(DiscordEndpoints.EditGuildApplicationCommand, self.discordClient.discordApplication.id, self.id, commandId),
@@ -127,11 +127,11 @@ end
 	Sets multiple slash commands in the guild asynchronously.
 
 	@method setSlashCommandsAsync
-	@param commands {ApplicationCommandBuilder} -- An array of command builder objects.
+	@param commands {CommandBuilder} -- An array of command builder objects.
 	@return Future
 	@within Objects.DiscordGuild
 ]=]
-function DiscordGuild.Prototype.setSlashCommandsAsync(self: DiscordGuild, commands: { ApplicationCommandBuilder.ApplicationCommandBuilder })
+function DiscordGuild.Prototype.setSlashCommandsAsync(self: DiscordGuild, commands: { CommandBuilder.CommandBuilder })
 	return Future.try(function()
 		local allCommands = self:fetchSlashCommandsAsync():await()
 
@@ -183,11 +183,11 @@ function DiscordGuild.Prototype.setSlashCommandsAsync(self: DiscordGuild, comman
 			self:deleteSlashCommandAsync(commandStruct.id):await()
 		end
 
-		for commandId: string, command: ApplicationCommandBuilder.ApplicationCommandBuilder in commandsToUpdate do
+		for commandId: string, command: CommandBuilder.CommandBuilder in commandsToUpdate do
 			self:editSlashCommandAsync(commandId, command):await()
 		end
 
-		for _, command: ApplicationCommandBuilder.ApplicationCommandBuilder in commandsToCreate do
+		for _, command: CommandBuilder.CommandBuilder in commandsToCreate do
 			self:createSlashCommandAsync(command):await()
 		end
 	end)
@@ -197,11 +197,11 @@ end
 	Gets the audit logs of the guild asynchronously.
 
 	@method getGuildAuditLogs
-	@param commands { ApplicationCommandBuilder } -- An array of command builder objects.
+	@param commands { CommandBuilder } -- An array of command builder objects.
 	@return Future
 	@within Objects.DiscordGuild
 ]=]
-function DiscordGuild.Prototype.getGuildAuditLogs(self: DiscordGuild, commands: { ApplicationCommandBuilder.ApplicationCommandBuilder })
+function DiscordGuild.Prototype.getGuildAuditLogs(self: DiscordGuild, commands: { CommandBuilder.CommandBuilder })
 	return Future.try(function()
 		local guildAuditLogs = self.discordClient.discordGateway:getAsync(
 			string.format(DiscordEndpoints.GetGuildAuditLogs, self.id)
@@ -386,11 +386,11 @@ end
 	Creates an automoderation rule in the guild asynchronously.
 
 	@method createAutomoderationRuleAsync
-	@param getAutomoderationRuleBuilder DiscordAutomoderationRuleBuilder -- The rule builder object.
+	@param getAutomoderationRuleBuilder AutomoderationRuleBuilder -- The rule builder object.
 	@return Future
 	@within Objects.DiscordGuild
 ]=]
-function DiscordGuild.Prototype.createAutomoderationRuleAsync(self: DiscordGuild, getAutomoderationRuleBuilder: DiscordAutomoderationRuleBuilder.DiscordAutomoderationRuleBuilder)
+function DiscordGuild.Prototype.createAutomoderationRuleAsync(self: DiscordGuild, getAutomoderationRuleBuilder: AutomoderationRuleBuilder.AutomoderationRuleBuilder)
 	return Future.try(function()
 		local discordAutomoderationRule = self.discordClient.discordGateway:postAsync(
 			string.format(DiscordEndpoints.BotCreateAutomoderationRule, self.id),

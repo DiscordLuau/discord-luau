@@ -2,29 +2,29 @@ local Construct = require("../../Utils/Construct")
 local Enumerate = require("../../Utils/Enumerate")
 
 --[=[
-	@class Builders.DiscordPermissionsBuilder
+	@class Builders.PermissionsBuilder
 
-	DiscordPermissionsBuilder is used to construct and manage permissions for a Discord bot.
+	PermissionsBuilder is used to construct and manage permissions for a Discord bot.
 
 	Usage:
 	```lua
-	local permissions = DiscordPermissionsBuilder.new()
-		:addPermission(DiscordPermissionsBuilder.Permissions.Administrator)
-		:addPermission(DiscordPermissionsBuilder.Permissions.ManageChannels)
+	local permissions = PermissionsBuilder.new()
+		:addPermission(PermissionsBuilder.Permissions.Administrator)
+		:addPermission(PermissionsBuilder.Permissions.ManageChannels)
 
 	print(permissions:getValue())
 	```
 ]=]
-local DiscordPermissionsBuilder = {}
+local PermissionsBuilder = {}
 
-DiscordPermissionsBuilder.Interface = {}
-DiscordPermissionsBuilder.Prototype = {}
+PermissionsBuilder.Interface = {}
+PermissionsBuilder.Prototype = {}
 
-DiscordPermissionsBuilder.Prototype.type = "DiscordPermissionsBuilder"
+PermissionsBuilder.Prototype.type = "PermissionsBuilder"
 
 --[=[
 	@prop Permissions table
-	@within Builders.DiscordPermissionsBuilder
+	@within Builders.PermissionsBuilder
 
 	An enumeration of permissions.
 
@@ -74,7 +74,7 @@ DiscordPermissionsBuilder.Prototype.type = "DiscordPermissionsBuilder"
 	- UseExternalSounds: 45
 	- SendVoiceMessages: 46
 ]=]
-DiscordPermissionsBuilder.Interface.Permissions = Enumerate.new({
+PermissionsBuilder.Interface.Permissions = Enumerate.new({
 	CreateInstantInvite = 0,
 	KickMembers = 1,
 	BanMembers = 2,
@@ -127,10 +127,10 @@ DiscordPermissionsBuilder.Interface.Permissions = Enumerate.new({
 	
 	@method addPermission
 	@param permission number -- The permission to add.
-	@within Builders.DiscordPermissionsBuilder
-	@return Builders.DiscordPermissionsBuilder -- Returns the DiscordPermissionsBuilder instance for method chaining.
+	@within Builders.PermissionsBuilder
+	@return Builders.PermissionsBuilder -- Returns the PermissionsBuilder instance for method chaining.
 ]=]
-function DiscordPermissionsBuilder.Prototype.addPermission(self: DiscordPermissionsBuilder, permission: number)
+function PermissionsBuilder.Prototype.addPermission(self: PermissionsBuilder, permission: number)
 	if table.find(self.permissions, permission) then
 		return
 	end
@@ -145,10 +145,10 @@ end
 	
 	@method deletePermission
 	@param permission number -- The permission to remove.
-	@within Builders.DiscordPermissionsBuilder
-	@return Builders.DiscordPermissionsBuilder -- Returns the DiscordPermissionsBuilder instance for method chaining.
+	@within Builders.PermissionsBuilder
+	@return Builders.PermissionsBuilder -- Returns the PermissionsBuilder instance for method chaining.
 ]=]
-function DiscordPermissionsBuilder.Prototype.deletePermission(self: DiscordPermissionsBuilder, permission: number)
+function PermissionsBuilder.Prototype.deletePermission(self: PermissionsBuilder, permission: number)
 	local index = table.find(self.permissions, permission)
 
 	if not index then
@@ -165,10 +165,10 @@ end
 	
 	@method hasPermission
 	@param permission number -- The permission to check.
-	@within Builders.DiscordPermissionsBuilder
+	@within Builders.PermissionsBuilder
 	@return boolean -- Returns true if the permission is in the builder, false otherwise.
 ]=]
-function DiscordPermissionsBuilder.Prototype.hasPermission(self: DiscordPermissionsBuilder, permission: number)
+function PermissionsBuilder.Prototype.hasPermission(self: PermissionsBuilder, permission: number)
 	return table.find(self.permissions, permission) ~= nil
 end
 
@@ -176,10 +176,10 @@ end
 	Gets the bitfield value of the permissions.
 	
 	@method getValue
-	@within Builders.DiscordPermissionsBuilder
+	@within Builders.PermissionsBuilder
 	@return string -- The bitfield value as a string.
 ]=]
-function DiscordPermissionsBuilder.Prototype.getValue(self: DiscordPermissionsBuilder)
+function PermissionsBuilder.Prototype.getValue(self: PermissionsBuilder)
 	local permissionsInt = 0
 
 	for _, intentValue in self.permissions do
@@ -190,40 +190,40 @@ function DiscordPermissionsBuilder.Prototype.getValue(self: DiscordPermissionsBu
 end
 
 --[=[
-	Creates a new instance of DiscordPermissionsBuilder.
+	Creates a new instance of PermissionsBuilder.
 	
 	@function new
-	@within Builders.DiscordPermissionsBuilder
-	@return Builders.DiscordPermissionsBuilder -- A new instance of DiscordPermissionsBuilder.
+	@within Builders.PermissionsBuilder
+	@return Builders.PermissionsBuilder -- A new instance of PermissionsBuilder.
 ]=]
-function DiscordPermissionsBuilder.Interface.new()
+function PermissionsBuilder.Interface.new()
 	return Construct({
 		permissions = {}
-	}, DiscordPermissionsBuilder.Prototype)
+	}, PermissionsBuilder.Prototype)
 end
 
 --[=[
-	Creates a new instance of DiscordPermissionsBuilder with no permissions.
+	Creates a new instance of PermissionsBuilder with no permissions.
 	
 	@function none
-	@within Builders.DiscordPermissionsBuilder
-	@return Builders.DiscordPermissionsBuilder -- A new instance of DiscordPermissionsBuilder.
+	@within Builders.PermissionsBuilder
+	@return Builders.PermissionsBuilder -- A new instance of PermissionsBuilder.
 ]=]
-function DiscordPermissionsBuilder.Interface.none()
-	return DiscordPermissionsBuilder.Interface.new()
+function PermissionsBuilder.Interface.none()
+	return PermissionsBuilder.Interface.new()
 end
 
 --[=[
-	Creates a new instance of DiscordPermissionsBuilder with all permissions.
+	Creates a new instance of PermissionsBuilder with all permissions.
 	
 	@function all
-	@within Builders.DiscordPermissionsBuilder
-	@return Builders.DiscordPermissionsBuilder -- A new instance of DiscordPermissionsBuilder.
+	@within Builders.PermissionsBuilder
+	@return Builders.PermissionsBuilder -- A new instance of PermissionsBuilder.
 ]=]
-function DiscordPermissionsBuilder.Interface.all()
-	local permissions = DiscordPermissionsBuilder.Interface.new()
+function PermissionsBuilder.Interface.all()
+	local permissions = PermissionsBuilder.Interface.new()
 
-	for _, value in DiscordPermissionsBuilder.Interface.Permissions :: { } do
+	for _, value in PermissionsBuilder.Interface.Permissions :: { } do
 		permissions:addPermission(value :: number)
 	end
 
@@ -231,20 +231,20 @@ function DiscordPermissionsBuilder.Interface.all()
 end
 
 --[=[
-	Creates a new instance of DiscordPermissionsBuilder from a bitfield.
+	Creates a new instance of PermissionsBuilder from a bitfield.
 	
 	@function from
 	@param bitfield string -- The bitfield representing the permissions.
-	@within Builders.DiscordPermissionsBuilder
-	@return Builders.DiscordPermissionsBuilder -- A new instance of DiscordPermissionsBuilder.
+	@within Builders.PermissionsBuilder
+	@return Builders.PermissionsBuilder -- A new instance of PermissionsBuilder.
 ]=]
-function DiscordPermissionsBuilder.Interface.from(bitfield: string)
-	local permissions = DiscordPermissionsBuilder.Interface.new()
+function PermissionsBuilder.Interface.from(bitfield: string)
+	local permissions = PermissionsBuilder.Interface.new()
 	local numberBitfield = tonumber(bitfield)
 
 	assert(numberBitfield, `Invalid BitField '{bitfield}'`)
 
-	for _, value in DiscordPermissionsBuilder.Interface.Permissions :: { } do
+	for _, value in PermissionsBuilder.Interface.Permissions :: { } do
 		if bit32.band(numberBitfield, value :: number) == value then
 			permissions:addPermission(value :: number)
 		end
@@ -253,8 +253,8 @@ function DiscordPermissionsBuilder.Interface.from(bitfield: string)
 	return permissions
 end
 
-export type DiscordPermissionsBuilder = typeof(DiscordPermissionsBuilder.Prototype) & {
+export type PermissionsBuilder = typeof(PermissionsBuilder.Prototype) & {
 	permissions: { number }
 }
 
-return DiscordPermissionsBuilder.Interface
+return PermissionsBuilder.Interface

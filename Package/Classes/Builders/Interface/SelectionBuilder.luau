@@ -1,8 +1,8 @@
-local Enumerate = require("../../Utils/Enumerate")
-local Construct = require("../../Utils/Construct")
+local Enumerate = require("../../../Utils/Enumerate")
+local Construct = require("../../../Utils/Construct")
 
 --[=[
-	@class Interface.SelectionBuilder
+	@class Builders.Interface.SelectionBuilder
 
 	SelectionBuilder is used to construct a selection (dropdown) component for a Discord message.
 ]=]
@@ -15,7 +15,7 @@ SelectionBuilder.Prototype.type = "SelectionBuilder"
 
 --[=[
 	@prop Type table
-	@within Interface.SelectionBuilder
+	@within Builders.Interface.SelectionBuilder
 
 	An enumeration of selection types.
 
@@ -35,7 +35,7 @@ SelectionBuilder.Interface.Type = Enumerate.new({
 
 --[=[
 	@prop ChannelType table
-	@within Interface.SelectionBuilder
+	@within Builders.Interface.SelectionBuilder
 
 	An enumeration of channel types.
 
@@ -72,8 +72,8 @@ SelectionBuilder.Interface.ChannelType = Enumerate.new({
 	
 	@method setType
 	@param selectionType number -- The type of the selection.
-	@within Interface.SelectionBuilder
-	@return SelectionBuilder -- Returns the SelectionBuilder instance for method chaining.
+	@within Builders.Interface.SelectionBuilder
+	@return Builders.Interface.SelectionBuilder -- Returns the SelectionBuilder instance for method chaining.
 ]=]
 function SelectionBuilder.Prototype.setType(self: SelectionBuilder, selectionType: number): SelectionBuilder
 	self.selectionType = selectionType
@@ -86,8 +86,8 @@ end
 	
 	@method setChannelTypes
 	@param ... number -- The channel types to set.
-	@within Interface.SelectionBuilder
-	@return SelectionBuilder -- Returns the SelectionBuilder instance for method chaining.
+	@within Builders.Interface.SelectionBuilder
+	@return Builders.Interface.SelectionBuilder -- Returns the SelectionBuilder instance for method chaining.
 ]=]
 function SelectionBuilder.Prototype.setChannelTypes(self: SelectionBuilder, ...): SelectionBuilder
 	self.selectionChannelTypes = { ... }
@@ -100,8 +100,8 @@ end
 	
 	@method setPlaceholder
 	@param placeholderText string -- The placeholder text.
-	@within Interface.SelectionBuilder
-	@return SelectionBuilder -- Returns the SelectionBuilder instance for method chaining.
+	@within Builders.Interface.SelectionBuilder
+	@return Builders.Interface.SelectionBuilder -- Returns the SelectionBuilder instance for method chaining.
 ]=]
 function SelectionBuilder.Prototype.setPlaceholder(self: SelectionBuilder, placeholderText: string): SelectionBuilder
 	self.selectionPlaceholder = placeholderText
@@ -114,8 +114,8 @@ end
 	
 	@method setDisabled
 	@param isDisabled boolean -- Whether the selection is disabled.
-	@within Interface.SelectionBuilder
-	@return SelectionBuilder -- Returns the SelectionBuilder instance for method chaining.
+	@within Builders.Interface.SelectionBuilder
+	@return Builders.Interface.SelectionBuilder -- Returns the SelectionBuilder instance for method chaining.
 ]=]
 function SelectionBuilder.Prototype.setDisabled(self: SelectionBuilder, isDisabled: boolean): SelectionBuilder
 	self.selectionDisabled = isDisabled
@@ -128,8 +128,8 @@ end
 	
 	@method setMinValues
 	@param minValue number -- The minimum number of values.
-	@within Interface.SelectionBuilder
-	@return SelectionBuilder -- Returns the SelectionBuilder instance for method chaining.
+	@within Builders.Interface.SelectionBuilder
+	@return Builders.Interface.SelectionBuilder -- Returns the SelectionBuilder instance for method chaining.
 ]=]
 function SelectionBuilder.Prototype.setMinValues(self: SelectionBuilder, minValue: number): SelectionBuilder
 	self.selectionMinValue = minValue
@@ -142,8 +142,8 @@ end
 	
 	@method setMaxValues
 	@param maxValue number -- The maximum number of values.
-	@within Interface.SelectionBuilder
-	@return SelectionBuilder -- Returns the SelectionBuilder instance for method chaining.
+	@within Builders.Interface.SelectionBuilder
+	@return Builders.Interface.SelectionBuilder -- Returns the SelectionBuilder instance for method chaining.
 ]=]
 function SelectionBuilder.Prototype.setMaxValues(self: SelectionBuilder, maxValue: number): SelectionBuilder
 	self.selectionMaxValue = maxValue
@@ -161,8 +161,8 @@ end
 	@param isDefault boolean -- Whether the choice is the default selection.
 	@param emojiId string? -- The ID of the emoji.
 	@param emojiName string? -- The name of the emoji.
-	@within Interface.SelectionBuilder
-	@return SelectionBuilder -- Returns the SelectionBuilder instance for method chaining.
+	@within Builders.Interface.SelectionBuilder
+	@return Builders.Interface.SelectionBuilder -- Returns the SelectionBuilder instance for method chaining.
 ]=]
 function SelectionBuilder.Prototype.addChoice(
 	self: SelectionBuilder,
@@ -191,12 +191,12 @@ end
 
 --[=[
 	@method destroyChoice
-	@within Interface.SelectionBuilder
+	@within Builders.Interface.SelectionBuilder
 
 	Removes a choice from the selection.
 
 	@param choiceName string -- The name of the choice to remove.
-	@return SelectionBuilder -- Returns the SelectionBuilder instance for method chaining.
+	@return Builders.Interface.SelectionBuilder -- Returns the SelectionBuilder instance for method chaining.
 ]=]
 function SelectionBuilder.Prototype.destroyChoice(self: SelectionBuilder, choiceName: string): SelectionBuilder
 	self.choices[choiceName] = nil
@@ -206,7 +206,7 @@ end
 
 --[=[
 	@method toJSONObject
-	@within Interface.SelectionBuilder
+	@within Builders.Interface.SelectionBuilder
 
 	Converts the selection to a JSON object that can be sent to the Discord API.
 
@@ -247,12 +247,12 @@ end
 
 --[=[
 	@function new
-	@within Interface.SelectionBuilder
+	@within Builders.Interface.SelectionBuilder
 
 	Creates a new instance of SelectionBuilder.
 
 	@param selectionId string -- The ID of the selection.
-	@return SelectionBuilder -- A new instance of SelectionBuilder.
+	@return Builders.Interface.SelectionBuilder -- A new instance of SelectionBuilder.
 ]=]
 function SelectionBuilder.Interface.new(selectionId: string): SelectionBuilder
 	return Construct({
