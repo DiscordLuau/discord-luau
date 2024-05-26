@@ -150,9 +150,9 @@ function MessageBuilder.Prototype.setFlags(self: MessageBuilder, flags: number)
 end
 
 --[=[
-	Sets the flags for the message.
+	Add a file to the Message object
 	
-	@method setFlags
+	@method addFile
 	@param fileContent string
 	@param fileName string
 	@within Builders.MessageBuilder
@@ -163,6 +163,8 @@ function MessageBuilder.Prototype.addFile(self: MessageBuilder, fileContent: str
 		content = fileContent,
 		name = fileName,
 	})
+
+	--todo: support descriptions?
 
 	return self
 end
