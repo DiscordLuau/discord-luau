@@ -87,6 +87,10 @@ end
 --[=[
 	Sends a message in response to the interaction asynchronously.
 
+	:::caution
+	MessageBuilder cannot support Attachments UNLESS deffered, so if you're wanting to send attachments, please call `deferAsync` first!
+	:::
+
 	@method sendMessageAsync
 	@param messageBuilder MessageBuilder -- The message builder object.
 	@return Future

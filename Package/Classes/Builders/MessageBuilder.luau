@@ -260,7 +260,7 @@ end
 	@within Builders.MessageBuilder
 	@return Network.Resolvable
 ]=]
-function MessageBuilder.Prototype.toPayloadObject(self: MessageBuilder): { [string]: any } | string
+function MessageBuilder.Prototype.toPayloadObject(self: MessageBuilder): Resolvable.Resolvable
 	if #self.attachments == 0 then
 		return Resolvable.new(ResolvableType.JSON, self:toJsonObject())
 	else
