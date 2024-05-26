@@ -5,6 +5,9 @@ local ButtonBuilder = require("Interface/ButtonBuilder")
 local SelectionBuilder = require("Interface/SelectionBuilder")
 local TextInputBuilder = require("Interface/TextInputBuilder")
 
+local ResolvableType = require("../../Enums/ResolveableType")
+local Resolvable = require("../Network/Resolvable")
+
 --[=[
 	@class Builders.ModalBuilder
 
@@ -57,22 +60,22 @@ end
 --[=[
 	Converts the modal to a JSON object that can be sent to the Discord API.
 	
-	@method toJSONObject
+	@method toPayloadObject
 	@within Builders.ModalBuilder
-	@return table -- The JSON representation of the modal.
+	@return Network.Resolvable
 ]=]
-function ModalBuilder.Prototype.toJSONObject(self: ModalBuilder)
+function ModalBuilder.Prototype.toPayloadObject(self: ModalBuilder)
 	local components = {}
 
 	for index, componentObject in self.components :: { any } do
-		components[index] = componentObject:toJSONObject()
+		components[index] = componentObject:toPayloadObject():resolve()
 	end
 
-	return {
+	return Resolvable.new(ResolvableType.JSON, {
 		title = self.modalTitle,
 		custom_id = self.modalId,
 		components = components,
-	}
+	})
 end
 
 --[=[

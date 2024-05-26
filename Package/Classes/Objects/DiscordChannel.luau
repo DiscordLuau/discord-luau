@@ -12,6 +12,9 @@ local DiscordVoiceChannel = require("DiscordVoiceChannel")
 local DiscordThreadChannel = require("DiscordThreadChannel")
 local DiscordInvite = require("DiscordInvite")
 
+local Resolvable = require("../Network/Resolvable")
+local ResolvableType = require("../../Enums/ResolveableType")
+
 --[=[
 	@class Objects.DiscordChannel
 
@@ -41,7 +44,7 @@ DiscordChannel.Prototype.type = "DiscordChannel"
 function DiscordChannel.Prototype.triggerTypingIndicator(self: DiscordChannel)
 	return Future.try(function()
 		return self.discordClient.discordGateway
-			:postAsync(string.format(DiscordEndpoints.BotTriggerTypingChannel, self.id), {})
+			:postAsync(string.format(DiscordEndpoints.BotTriggerTypingChannel, self.id))
 			:await()
 	end)
 end
@@ -116,9 +119,12 @@ end
 function DiscordChannel.Prototype.bulkDeleteMessagesAsync(self: DiscordChannel, messageIds: { string })
 	return Future.try(function()
 		return self.discordClient.discordGateway
-			:postAsync(string.format(DiscordEndpoints.BotBulkDeleteMessages, self.id), {
-				messages = messageIds,
-			})
+			:postAsync(
+				string.format(DiscordEndpoints.BotBulkDeleteMessages, self.id),
+				Resolvable.new(ResolvableType.JSON, {
+					messages = messageIds,
+				})
+			)
 			:await()
 	end)
 end
@@ -134,7 +140,7 @@ end
 function DiscordChannel.Prototype.sendMessageAsync(self: DiscordChannel, messageBuilder: MessageBuilder.MessageBuilder)
 	return Future.try(function()
 		return self.discordClient.discordGateway
-			:postAsync(string.format(DiscordEndpoints.BotCreateMessage, self.id), messageBuilder:toJSONObject())
+			:postAsync(string.format(DiscordEndpoints.BotCreateMessage, self.id), messageBuilder:toPayloadObject())
 			:await()
 	end)
 end
@@ -206,12 +212,15 @@ function DiscordChannel.Prototype.setPositionAsync(
 )
 	return Future.try(function()
 		return self.discordClient.discordGateway
-			:patchAsync(string.format(DiscordEndpoints.BotModifyGuildChannelPosition, self.id), {
-				id = self.id,
-				position = position,
-				parent_id = parentId,
-				lock_permissions = syncPermissions,
-			})
+			:patchAsync(
+				string.format(DiscordEndpoints.BotModifyGuildChannelPosition, self.id),
+				Resolvable.new(ResolvableType.JSON, {
+					id = self.id,
+					position = position,
+					parent_id = parentId,
+					lock_permissions = syncPermissions,
+				})
+			)
 			:await()
 	end)
 end

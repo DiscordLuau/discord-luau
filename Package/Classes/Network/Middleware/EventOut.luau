@@ -34,7 +34,7 @@ end
 	Creates a new instance of `EventOut`.
 	
 	@private
-	@method new
+	@function new
 	@within Network.Middleware.EventOut
 	@return EventOut
 ]=]

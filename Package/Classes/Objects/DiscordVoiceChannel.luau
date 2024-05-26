@@ -8,6 +8,9 @@ local Future = require("../../Vendor/Future")
 local DiscordWebsocket = require("../Network/DiscordWebsocket")
 local DiscordVoiceConnection = require("../Network/DiscordVoiceConnection")
 
+local Resolvable = require("../Network/Resolvable")
+local ResolvableType = require("../../Enums/ResolveableType")
+
 --[=[
 	@class Objects.DiscordVoiceChannel
 
@@ -59,17 +62,20 @@ end
 function DiscordVoiceChannel.Prototype.modifyAsync(self: DiscordVoiceChannel, channelSchema: DiscordVoiceChannelSchema)
 	return Future.try(function()
 		return self.discordClient.discordGateway
-			:patchAsync(string.format(DiscordEndpoints.BotModifyChannel, self.id), {
-				video_quality_mode = channelSchema.videoQualityMode,
-				rtc_region = channelSchema.rtcRegion,
-				parent_id = channelSchema.parentId,
-				user_limit = channelSchema.userLimit,
-				bitrate = channelSchema.bitrate,
-				rate_limit_per_user = channelSchema.rateLimitPerUser,
-				nsfw = channelSchema.nsfw,
-				position = channelSchema.position,
-				name = channelSchema.name,
-			})
+			:patchAsync(
+				string.format(DiscordEndpoints.BotModifyChannel, self.id),
+				Resolvable.new(ResolvableType.JSON, {
+					video_quality_mode = channelSchema.videoQualityMode,
+					rtc_region = channelSchema.rtcRegion,
+					parent_id = channelSchema.parentId,
+					user_limit = channelSchema.userLimit,
+					bitrate = channelSchema.bitrate,
+					rate_limit_per_user = channelSchema.rateLimitPerUser,
+					nsfw = channelSchema.nsfw,
+					position = channelSchema.position,
+					name = channelSchema.name,
+				})
+			)
 			:await()
 	end)
 end

@@ -1,6 +1,9 @@
 local Enumerate = require("../../../Utils/Enumerate")
 local Construct = require("../../../Utils/Construct")
 
+local ResolvableType = require("../../../Enums/ResolveableType")
+local Resolvable = require("../../Network/Resolvable")
+
 --[=[
 	@class Builders.Interface.TextInputBuilder
 
@@ -129,12 +132,12 @@ end
 --[=[
 	Converts the text input to a JSON object that can be sent to the Discord API.
 	
-	@method toJSONObject
+	@method toPayloadObject
 	@within Builders.Interface.TextInputBuilder
-	@return table -- The JSON representation of the text input.
+	@return Network.Resolvable
 ]=]
-function TextInputBuilder.Prototype.toJSONObject(self: TextInputBuilder)
-	return {
+function TextInputBuilder.Prototype.toPayloadObject(self: TextInputBuilder)
+	return Resolvable.new(ResolvableType.JSON, {
 		type = 4,
 		custom_id = self.textInputId,
 
@@ -148,7 +151,7 @@ function TextInputBuilder.Prototype.toJSONObject(self: TextInputBuilder)
 
 		value = self.textInputDefaultValue,
 		placeholder = self.textInputPlaceholderValue,
-	}
+	})
 end
 
 --[=[

@@ -1,6 +1,9 @@
 local Enumerate = require("../../Utils/Enumerate")
 local Construct = require("../../Utils/Construct")
 
+local ResolvableType = require("../../Enums/ResolveableType")
+local Resolvable = require("../Network/Resolvable")
+
 --[=[
 	@class Builders.CommandOptionBuilder
 
@@ -285,16 +288,16 @@ end
 --[=[
 	Converts the option to a JSON object that can be sent to the Discord API.
 	
-	@method toJSONObject
+	@method toPayloadObject
 	@within Builders.CommandOptionBuilder
-	@return table -- The JSON representation of the option.
+	@return Network.Resolvable
 ]=]
-function CommandOptionBuilder.Prototype.toJSONObject(self: CommandOptionBuilder)
+function CommandOptionBuilder.Prototype.toPayloadObject(self: CommandOptionBuilder)
 	local options = {}
 	local choices = {}
 
 	for _, commandOption in self.options do
-		table.insert(options, commandOption:toJSONObject())
+		table.insert(options, commandOption:toPayloadObject():resolve())
 	end
 
 	for choiceName, choiceValue in self.choices do
@@ -305,7 +308,7 @@ function CommandOptionBuilder.Prototype.toJSONObject(self: CommandOptionBuilder)
 		})
 	end
 
-	return {
+	return Resolvable.new(ResolvableType.JSON, {
 		type = self.optionType,
 		name = self.optionName,
 		description = self.optionDescription,
@@ -327,7 +330,7 @@ function CommandOptionBuilder.Prototype.toJSONObject(self: CommandOptionBuilder)
 		max_length = self.optionMaxLength,
 
 		autocomplete = self.optionAutocomplete,
-	}
+	})
 end
 
 --[=[

@@ -82,7 +82,7 @@ function DiscordAutomoderationRule.Prototype.modifyAsync(
 )
 	return self.discordClient.discordGateway:patchAsync(
 		string.format(DiscordEndpoints.BotModifyAutomoderationRule, self.guildId, self.id),
-		moderationRoleBuilder:toJSONObject()
+		moderationRoleBuilder:toPayloadObject()
 	)
 end
 
@@ -94,7 +94,7 @@ end
 	Deletes an existing auto-moderation rule.
 ]=]
 function DiscordAutomoderationRule.Prototype.deleteAsync(self: DiscordAutomoderationRule)
-	return self.discordClient.discordGateway:postAsync(
+	return self.discordClient.discordGateway:deletAsync(
 		string.format(DiscordEndpoints.BotDeleteAutomoderationRule, self.guildId, self.id)
 	)
 end

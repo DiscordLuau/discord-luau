@@ -38,7 +38,10 @@ DiscordMessage.Prototype.type = "DiscordMessage"
 function DiscordMessage.Prototype.replyAsync(self: DiscordMessage, messageBuilder: MessageBuilder.MessageBuilder)
 	return Future.try(function()
 		return self.discordClient.discordGateway
-			:postAsync(string.format(DiscordEndpoints.BotCreateMessage, self.channelId), messageBuilder:toJSONObject())
+			:postAsync(
+				string.format(DiscordEndpoints.BotCreateMessage, self.channelId),
+				messageBuilder:toPayloadObject():resolve()
+			)
 			:await()
 	end)
 end
@@ -101,7 +104,7 @@ function DiscordMessage.Prototype.editAsync(self: DiscordMessage, messageBuilder
 		return self.discordClient.discordGateway
 			:patchAsync(
 				string.format(DiscordEndpoints.BotEditMessage, self.channelId, self.id),
-				messageBuilder:toJSONObject()
+				messageBuilder:toPayloadObject()
 			)
 			:await()
 	end)
@@ -126,8 +129,7 @@ function DiscordMessage.Prototype.addReactionAsync(self: DiscordMessage, reactio
 					self.channelId,
 					self.id,
 					Net.urlEncode(reaction, isBinary)
-				),
-				{}
+				)
 			)
 			:await()
 	end)
@@ -152,8 +154,7 @@ function DiscordMessage.Prototype.removeReactionAsync(self: DiscordMessage, reac
 					self.channelId,
 					self.id,
 					Net.urlEncode(reaction, isBinary)
-				),
-				{}
+				)
 			)
 			:await()
 	end)
@@ -181,8 +182,7 @@ function DiscordMessage.Prototype.removeUserReactionAsync(self: DiscordMessage, 
 					self.id,
 					Net.urlEncode(reaction, isBinary),
 					userId
-				),
-				{}
+				)
 			)
 			:await()
 	end)
@@ -207,8 +207,7 @@ function DiscordMessage.Prototype.getReactionsAsync(self: DiscordMessage, reacti
 					self.channelId,
 					self.id,
 					Net.urlEncode(reaction, isBinary)
-				),
-				{}
+				)
 			)
 			:await()
 	end)
@@ -224,7 +223,7 @@ end
 function DiscordMessage.Prototype.removeAllReactionsAsync(self: DiscordMessage)
 	return Future.try(function()
 		return self.discordClient.discordGateway
-			:deleteAsync(string.format(DiscordEndpoints.BotDeleteAllReactions, self.channelId, self.id), {})
+			:deleteAsync(string.format(DiscordEndpoints.BotDeleteAllReactions, self.channelId, self.id))
 			:await()
 	end)
 end
@@ -248,8 +247,7 @@ function DiscordMessage.Prototype.removeAllReactionsForEmojiAsync(self: DiscordM
 					self.channelId,
 					self.id,
 					Net.urlEncode(reaction, isBinary)
-				),
-				{}
+				)
 			)
 			:await()
 	end)

@@ -3,6 +3,9 @@ local Enumerate = require("../../Utils/Enumerate")
 
 local ActivityBuilder = require("ActivityBuilder")
 
+local ResolvableType = require("../../Enums/ResolveableType")
+local Resolvable = require("../Network/Resolvable")
+
 --[=[
 	@class Builders.PresenceBuilder
 
@@ -105,24 +108,24 @@ end
 --[=[
 	Converts the presence to a JSON object that can be sent to the Discord API.
 	
-	@method toJSONObject
+	@method toPayloadObject
 	@within Builders.PresenceBuilder
-	@return table -- The JSON representation of the presence.
+	@return Network.Resolvable
 ]=]
-function PresenceBuilder.Prototype.toJSONObject(self: PresenceBuilder)
+function PresenceBuilder.Prototype.toPayloadObject(self: PresenceBuilder)
 	local activities = {}
 
 	for index, activity in self.activities :: { ActivityBuilder.ActivityBuilder } do
-		activities[index] = activity:toJSONObject()
+		activities[index] = activity:toPayloadObject():resolve()
 	end
 
-	return {
+	return Resolvable.new(ResolvableType.JSON, {
 		since = self.since or 0,
 
 		activities = activities,
 		afk = self.idle or false,
 		status = self.status or "online",
-	}
+	})
 end
 
 --[=[

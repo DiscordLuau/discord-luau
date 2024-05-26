@@ -1,6 +1,9 @@
 local Construct = require("../../Utils/Construct")
 local Enumerate = require("../../Utils/Enumerate")
 
+local ResolvableType = require("../../Enums/ResolveableType")
+local Resolvable = require("../Network/Resolvable")
+
 --[=[
 	@class Builders.AutomoderationRuleBuilder
 
@@ -234,11 +237,11 @@ end
 --[=[
 	Converts the rule to a JSON object that can be sent to the Discord API.
 	
-	@method toJSONObject
+	@method toPayloadObject
 	@within Builders.AutomoderationRuleBuilder
-	@return table -- The JSON representation of the rule.
+	@return Network.Resolvable
 ]=]
-function AutomoderationRuleBuilder.Prototype.toJSONObject(self: AutomoderationRuleBuilder)
+function AutomoderationRuleBuilder.Prototype.toPayloadObject(self: AutomoderationRuleBuilder)
 	local actions = {}
 
 	for _, actionObject in self.actions do
@@ -252,16 +255,18 @@ function AutomoderationRuleBuilder.Prototype.toJSONObject(self: AutomoderationRu
 		})
 	end
 
-	return {
-		name = self.ruleName,
-		event_type = self.roleEventType,
-		trigger_type = self.ruleTriggerType,
-		trigger_metadata = self.triggerMetadata,
-		actions = actions,
-		enabled = self.ruleEnabled,
-		exempt_roles = self.exemptRoles,
-		exempt_channels = self.exemptChannels,
-	}
+	return Resolvable.new(ResolvableType.JSON, {
+		{
+			name = self.ruleName,
+			event_type = self.roleEventType,
+			trigger_type = self.ruleTriggerType,
+			trigger_metadata = self.triggerMetadata,
+			actions = actions,
+			enabled = self.ruleEnabled,
+			exempt_roles = self.exemptRoles,
+			exempt_channels = self.exemptChannels,
+		},
+	})
 end
 
 --[=[

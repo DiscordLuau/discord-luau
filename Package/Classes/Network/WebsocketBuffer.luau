@@ -50,7 +50,7 @@ end
 	Creates a new instance of `WebsocketBuffer`.
 	
 	@private
-	@method new
+	@function new
 	@within Network.WebsocketBuffer
 	@return WebsocketBuffer
 ]=]

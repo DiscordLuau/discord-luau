@@ -4,6 +4,9 @@ local ButtonBuilder = require("ButtonBuilder")
 local SelectionBuilder = require("SelectionBuilder")
 local TextInputBuilder = require("TextInputBuilder")
 
+local ResolvableType = require("../../../Enums/ResolveableType")
+local Resolvable = require("../../Network/Resolvable")
+
 --[=[
 	@class Builders.Interface.ActionRowBuilder
 
@@ -40,21 +43,21 @@ end
 	Converts the action row to a JSON object that can be sent to the Discord API.
 	
 	@private
-	@method toJSONObject
+	@method toPayloadObject
 	@within Builders.Interface.ActionRowBuilder
-	@return table -- The JSON representation of the action row.
+	@return Network.Resolvable
 ]=]
-function ActionRowBuilder.Prototype.toJSONObject(self: ActionRowBuilder)
+function ActionRowBuilder.Prototype.toPayloadObject(self: ActionRowBuilder)
 	local components = {}
 
 	for index, componentObject in self.components :: { any } do
-		components[index] = componentObject:toJSONObject()
+		components[index] = componentObject:toPayloadObject():resolve()
 	end
 
-	return {
+	return Resolvable.new(ResolvableType.JSON, {
 		type = 1,
 		components = components,
-	}
+	})
 end
 
 --[=[

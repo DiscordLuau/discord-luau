@@ -66,7 +66,7 @@ end
 	Creates a new instance of `EventIn`.
 	
 	@private
-	@method new
+	@function new
 	@within Network.Middleware.EventIn
 	@return EventIn
 ]=]

@@ -1,6 +1,9 @@
 local Enumerate = require("../../../Utils/Enumerate")
 local Construct = require("../../../Utils/Construct")
 
+local ResolvableType = require("../../../Enums/ResolveableType")
+local Resolvable = require("../../Network/Resolvable")
+
 --[=[
 	@class Builders.Interface.ButtonBuilder
 
@@ -116,13 +119,13 @@ end
 	Converts the button to a JSON object that can be sent to the Discord API.
 	
 	@private
-	@method toJSONObject
+	@method toPayloadObject
 	@within Builders.Interface.ButtonBuilder
-	@return table -- The JSON representation of the button.
+	@return Network.Resolvable
 ]=]
-function ButtonBuilder.Prototype.toJSONObject(self: ButtonBuilder)
-	return {
-		["type"] = 2,
+function ButtonBuilder.Prototype.toPayloadObject(self: ButtonBuilder)
+	return Resolvable.new(ResolvableType.JSON, {
+		type = 2,
 		style = self.buttonStyle,
 		label = self.buttonLabel,
 		custom_id = (self.buttonStyle ~= ButtonBuilder.Interface.Style.Link and self.buttonId) or nil,
@@ -132,7 +135,7 @@ function ButtonBuilder.Prototype.toJSONObject(self: ButtonBuilder)
 			id = self.buttonEmoji.id,
 			name = self.buttonEmoji.name,
 		}) or nil,
-	}
+	})
 end
 
 --[=[

@@ -11,6 +11,8 @@ local DiscordEvents = require("../Enums/DiscordEvents")
 local WebsocketOperationCodes = require("../Enums/WebsocketOperationCodes")
 local WebsocketOperationKeys = require("../Enums/WebsocketOperationKeys")
 
+local PresenceBuilder = require("Builders/PresenceBuilder")
+
 local EndpointCache = require("Objects/EndpointCache")
 local DiscordCache = require("Objects/DiscordCache")
 local DiscordUser = require("Objects/DiscordUser")
@@ -230,13 +232,16 @@ end
 	@within DiscordClient
 	@return Future<boolean> -- A future resolving to a boolean indicating success.
 ]=]
-function DiscordClient.Prototype.updatePresenceAsync(self: DiscordClient, discordPresence): Future.Future<boolean>
+function DiscordClient.Prototype.updatePresenceAsync(
+	self: DiscordClient,
+	discordPresence: PresenceBuilder.PresenceBuilder
+): Future.Future<boolean>
 	return Future.try(function()
 		for shardId = 1, self.shardCount do
 			(self.discordShards :: { DiscordShard.DiscordShard })[shardId].discordWebsocket
 				:sendAsync({
 					[WebsocketOperationKeys.OperationCode] = WebsocketOperationCodes.PresenseUpdate,
-					[WebsocketOperationKeys.Data] = discordPresence:toJSONObject(),
+					[WebsocketOperationKeys.Data] = discordPresence:toPayloadObject():resolve(),
 				})
 				:await()
 		end

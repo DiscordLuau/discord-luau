@@ -162,7 +162,7 @@ end
 	Creates a new instance of `DiscordWebsocket`.
 	
 	@private
-	@method new
+	@function new
 	@return DiscordWebsocket
 	@within Network.DiscordWebsocket
 ]=]

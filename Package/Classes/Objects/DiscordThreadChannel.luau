@@ -8,6 +8,9 @@ local Future = require("../../Vendor/Future")
 local DiscordMessage = require("../Objects/DiscordMessage")
 local DiscordGuildMember = require("../Objects/DiscordGuildMember")
 
+local Resolvable = require("../Network/Resolvable")
+local ResolvableType = require("../../Enums/ResolveableType")
+
 --[=[
 	@class Objects.DiscordThreadChannel
 
@@ -30,7 +33,7 @@ DiscordThreadChannel.Prototype.type = "DiscordThreadChannel"
 function DiscordThreadChannel.Prototype.joinThreadAsync(self: DiscordThreadChannel)
 	return Future.try(function()
 		return self.discordClient.discordGateway
-			:putAsync(string.format(DiscordEndpoints.BotJoinThreadChannel, self.id), {})
+			:putAsync(string.format(DiscordEndpoints.BotJoinThreadChannel, self.id))
 			:await()
 	end)
 end
@@ -46,7 +49,7 @@ end
 function DiscordThreadChannel.Prototype.addMemberToThreadAsync(self: DiscordThreadChannel, userId: string)
 	return Future.try(function()
 		return self.discordClient.discordGateway
-			:putAsync(string.format(DiscordEndpoints.BotAddMemberToThreadChannel, self.id, userId), {})
+			:putAsync(string.format(DiscordEndpoints.BotAddMemberToThreadChannel, self.id, userId))
 			:await()
 	end)
 end
@@ -61,7 +64,7 @@ end
 function DiscordThreadChannel.Prototype.leaveThreadAsync(self: DiscordThreadChannel)
 	return Future.try(function()
 		return self.discordClient.discordGateway
-			:deleteAsync(string.format(DiscordEndpoints.BotLeaveThreadChannel, self.id), {})
+			:deleteAsync(string.format(DiscordEndpoints.BotLeaveThreadChannel, self.id))
 			:await()
 	end)
 end
@@ -77,7 +80,7 @@ end
 function DiscordThreadChannel.Prototype.removeMemberFromThreadAsync(self: DiscordThreadChannel, userId: string)
 	return Future.try(function()
 		return self.discordClient.discordGateway
-			:putAsync(string.format(DiscordEndpoints.BotRemoveMemberFromThreadChannel, self.id, userId), {})
+			:putAsync(string.format(DiscordEndpoints.BotRemoveMemberFromThreadChannel, self.id, userId))
 			:await()
 	end)
 end
@@ -93,7 +96,7 @@ end
 function DiscordThreadChannel.Prototype.getThreadMembersAsync(self: DiscordThreadChannel)
 	return Future.try(function()
 		local memberObjects = self.discordClient.discordGateway
-			:getAsync(string.format(DiscordEndpoints.BotGetThreadMembers, self.id), {})
+			:getAsync(string.format(DiscordEndpoints.BotGetThreadMembers, self.id))
 			:await()
 
 		for key, memberObject in memberObjects do
@@ -116,16 +119,19 @@ end
 function DiscordThreadChannel.Prototype.modifyAsync(self: DiscordThreadChannel, channelSchema)
 	return Future.try(function()
 		return self.discordClient.discordGateway
-			:patchAsync(string.format(DiscordEndpoints.BotModifyChannel, self.id), {
-				name = channelSchema.name,
-				position = channelSchema.position,
-				topic = channelSchema.topic,
-				nsfw = channelSchema.nsfw,
-				rate_limit_per_user = channelSchema.rateLimitPerUser,
-				parent_id = channelSchema.parentId,
-				default_auto_archive_duration = channelSchema.defaultAutoArchiveDurection,
-				default_thread_rate_limit_per_user = channelSchema.defaultThreadRateLimitPerUser,
-			})
+			:patchAsync(
+				string.format(DiscordEndpoints.BotModifyChannel, self.id),
+				Resolvable.new(ResolvableType.JSON, {
+					name = channelSchema.name,
+					position = channelSchema.position,
+					topic = channelSchema.topic,
+					nsfw = channelSchema.nsfw,
+					rate_limit_per_user = channelSchema.rateLimitPerUser,
+					parent_id = channelSchema.parentId,
+					default_auto_archive_duration = channelSchema.defaultAutoArchiveDurection,
+					default_thread_rate_limit_per_user = channelSchema.defaultThreadRateLimitPerUser,
+				})
+			)
 			:await()
 	end)
 end
@@ -140,7 +146,7 @@ end
 function DiscordThreadChannel.Prototype.getPinnedMessagesAsync(self: DiscordThreadChannel)
 	return Future.try(function()
 		local messages = self.discordClient.discordGateway
-			:getAsync(string.format(DiscordEndpoints.BotGetPinnedMessages, self.id), {})
+			:getAsync(string.format(DiscordEndpoints.BotGetPinnedMessages, self.id))
 			:await()
 
 		for index, messageData in messages do

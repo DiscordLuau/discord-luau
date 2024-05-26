@@ -28,7 +28,7 @@ DiscordInvite.Prototype.type = "DiscordInvite"
 function DiscordInvite.Prototype.deleteAsync(self: DiscordInvite)
 	return Future.try(function()
 		return self.discordClient.discordGateway
-			:deleteAsync(string.format(DiscordEndpoints.BotDeleteInvite, self.code), {})
+			:deleteAsync(string.format(DiscordEndpoints.BotDeleteInvite, self.code))
 			:await()
 	end)
 end

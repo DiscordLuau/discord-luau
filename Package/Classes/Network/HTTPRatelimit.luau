@@ -76,7 +76,7 @@ end
 	Creates a new instance of `HTTPRatelimit`.
 	
 	@private
-	@method new
+	@function new
 	@param remaining number? -- The initial number of remaining requests.
 	@param limit number? -- The initial limit of requests.
 	@within Network.HTTPRatelimit

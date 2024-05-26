@@ -369,7 +369,7 @@ end
 	Creates a new instance of `DiscordVoiceConnection`.
 	
 	@private
-	@method new
+	@function new
 	@param discordClient any -- The Discord client.
 	@param id string -- The ID for this connection.
 	@within Network.DiscordVoiceConnection

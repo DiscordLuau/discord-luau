@@ -7,6 +7,9 @@ local Future = require("../../Vendor/Future")
 
 local DiscordMessage = require("../Objects/DiscordMessage")
 
+local Resolvable = require("../Network/Resolvable")
+local ResolvableType = require("../../Enums/ResolveableType")
+
 --[=[
 	@class Objects.DiscordTextChannel
 
@@ -30,16 +33,19 @@ DiscordTextChannel.Prototype.type = "DiscordTextChannel"
 function DiscordTextChannel.Prototype.modifyAsync(self: DiscordTextChannel, channelSchema: DiscordTextChannelSchema)
 	return Future.try(function()
 		return self.discordClient.discordGateway
-			:patchAsync(string.format(DiscordEndpoints.BotModifyChannel, self.id), {
-				name = channelSchema.name,
-				position = channelSchema.position,
-				topic = channelSchema.topic,
-				nsfw = channelSchema.nsfw,
-				rate_limit_per_user = channelSchema.rateLimitPerUser,
-				parent_id = channelSchema.parentId,
-				default_auto_archive_duration = channelSchema.defaultAutoArchiveDurection,
-				default_thread_rate_limit_per_user = channelSchema.defaultThreadRateLimitPerUser,
-			})
+			:patchAsync(
+				string.format(DiscordEndpoints.BotModifyChannel, self.id),
+				Resolvable.new(ResolvableType.JSON, {
+					name = channelSchema.name,
+					position = channelSchema.position,
+					topic = channelSchema.topic,
+					nsfw = channelSchema.nsfw,
+					rate_limit_per_user = channelSchema.rateLimitPerUser,
+					parent_id = channelSchema.parentId,
+					default_auto_archive_duration = channelSchema.defaultAutoArchiveDurection,
+					default_thread_rate_limit_per_user = channelSchema.defaultThreadRateLimitPerUser,
+				})
+			)
 			:await()
 	end)
 end
@@ -54,7 +60,7 @@ end
 function DiscordTextChannel.Prototype.getPinnedMessagesAsync(self: DiscordTextChannel)
 	return Future.try(function()
 		local messages = self.discordClient.discordGateway
-			:getAsync(string.format(DiscordEndpoints.BotGetPinnedMessages, self.id), {})
+			:getAsync(string.format(DiscordEndpoints.BotGetPinnedMessages, self.id))
 			:await()
 
 		for index, messageData in messages do

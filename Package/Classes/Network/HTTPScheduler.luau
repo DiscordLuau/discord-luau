@@ -167,7 +167,7 @@ end
 	Creates a new instance of `HTTPScheduler`.
 	
 	@private
-	@method new
+	@function new
 	@param threadCount number? -- The number of worker threads to spawn.
 	@within Network.HTTPScheduler
 	@return HTTPScheduler

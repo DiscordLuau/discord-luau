@@ -14,6 +14,9 @@ local DiscordTextChannel = require("DiscordTextChannel")
 local DiscordUser = require("DiscordUser")
 local DiscordGuild = require("DiscordGuild")
 
+local Resolvable = require("../Network/Resolvable")
+local ResolvableType = require("../../Enums/ResolveableType")
+
 --[=[
 	@class Objects.DiscordInteraction
 
@@ -53,7 +56,7 @@ function DiscordInteraction.Prototype.editMessageAsync(
 					self.discordClient.discordApplication.id,
 					self.token
 				),
-				messageBuilder:toJSONObject()
+				messageBuilder:toPayloadObject()
 			)
 			:await()
 	end)
@@ -70,10 +73,13 @@ end
 function DiscordInteraction.Prototype.sendModalAsync(self: DiscordInteraction, modalObject: ModalBuilder.ModalBuilder)
 	return Future.new(function()
 		return self.discordClient.discordGateway
-			:postAsync(string.format(DiscordEndpoints.CreateInteractionResponse, self.id, self.token), {
-				type = 9,
-				data = modalObject:toJSONObject(),
-			})
+			:postAsync(
+				string.format(DiscordEndpoints.CreateInteractionResponse, self.id, self.token),
+				Resolvable.new(ResolvableType.JSON, {
+					type = 9,
+					data = modalObject:toPayloadObject():resolve(),
+				})
+			)
 			:await()
 	end)
 end
@@ -94,11 +100,18 @@ function DiscordInteraction.Prototype.sendMessageAsync(
 		return self:editMessageAsync(messageBuilder)
 	else
 		return Future.new(function()
+			local payloadObject = messageBuilder:toPayloadObject()
+
+			assert(payloadObject.type == ResolvableType.JSON, `DiscordInteraction doesn't support formdata!`)
+
 			return self.discordClient.discordGateway
-				:postAsync(string.format(DiscordEndpoints.CreateInteractionResponse, self.id, self.token), {
-					type = 4,
-					data = messageBuilder:toJSONObject(),
-				})
+				:postAsync(
+					string.format(DiscordEndpoints.CreateInteractionResponse, self.id, self.token),
+					Resolvable.new(ResolvableType.JSON, {
+						type = 4,
+						data = payloadObject:resolve(),
+					})
+				)
 				:await()
 		end)
 	end
@@ -116,10 +129,13 @@ function DiscordInteraction.Prototype.deferAsync(self: DiscordInteraction)
 		self.defered = true
 
 		self.discordClient.discordGateway
-			:postAsync(string.format(DiscordEndpoints.CreateInteractionResponse, self.id, self.token), {
-				type = 5,
-				data = {},
-			})
+			:postAsync(
+				string.format(DiscordEndpoints.CreateInteractionResponse, self.id, self.token),
+				Resolvable.new(ResolvableType.JSON, {
+					type = 5,
+					data = {},
+				})
+			)
 			:await()
 	end)
 end

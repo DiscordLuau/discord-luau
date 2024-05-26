@@ -4,6 +4,9 @@ local Construct = require("../../Utils/Construct")
 local CommandOptionBuilder = require("CommandOptionBuilder")
 local PermissionsBuilder = require("PermissionsBuilder")
 
+local ResolvableType = require("../../Enums/ResolveableType")
+local Resolvable = require("../Network/Resolvable")
+
 --[=[
 	@class Builders.CommandBuilder
 
@@ -214,17 +217,17 @@ end
 --[=[
 	Converts the command to a JSON object that can be sent to the Discord API.
 	
-	@method toJSONObject
+	@method toPayloadObject
 	@within Builders.CommandBuilder
-	@return table -- The JSON representation of the command.
+	@return Network.Resolvable
 ]=]
-function CommandBuilder.Prototype.toJSONObject(self: CommandBuilder)
+function CommandBuilder.Prototype.toPayloadObject(self: CommandBuilder)
 	local permissions = "0"
 	local contexts = {}
 	local options = {}
 
 	for _, commandOption in self.options do
-		table.insert(options, commandOption:toJSONObject())
+		table.insert(options, commandOption:toPayloadObject():resolve())
 	end
 
 	if self.commandPermissions then
@@ -235,7 +238,7 @@ function CommandBuilder.Prototype.toJSONObject(self: CommandBuilder)
 		contexts[tostring(index)] = context
 	end
 
-	return {
+	return Resolvable.new(ResolvableType.JSON, {
 		type = self.commandType,
 		name = self.commandName,
 		description = self.commandDescription,
@@ -252,7 +255,7 @@ function CommandBuilder.Prototype.toJSONObject(self: CommandBuilder)
 		description_localizations = self.commandLocalization,
 
 		options = (#options > 0 and options) or nil,
-	}
+	})
 end
 
 --[=[

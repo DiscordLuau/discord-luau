@@ -1,6 +1,9 @@
 local Enumerate = require("../../../Utils/Enumerate")
 local Construct = require("../../../Utils/Construct")
 
+local ResolvableType = require("../../../Enums/ResolveableType")
+local Resolvable = require("../../Network/Resolvable")
+
 --[=[
 	@class Builders.Interface.SelectionBuilder
 
@@ -190,12 +193,11 @@ function SelectionBuilder.Prototype.addChoice(
 end
 
 --[=[
-	@method destroyChoice
-	@within Builders.Interface.SelectionBuilder
-
 	Removes a choice from the selection.
-
+	
+	@method destroyChoice
 	@param choiceName string -- The name of the choice to remove.
+	@within Builders.Interface.SelectionBuilder
 	@return Builders.Interface.SelectionBuilder -- Returns the SelectionBuilder instance for method chaining.
 ]=]
 function SelectionBuilder.Prototype.destroyChoice(self: SelectionBuilder, choiceName: string): SelectionBuilder
@@ -205,14 +207,13 @@ function SelectionBuilder.Prototype.destroyChoice(self: SelectionBuilder, choice
 end
 
 --[=[
-	@method toJSONObject
-	@within Builders.Interface.SelectionBuilder
-
 	Converts the selection to a JSON object that can be sent to the Discord API.
-
-	@return table -- The JSON representation of the selection.
+	
+	@method toPayloadObject
+	@within Builders.Interface.SelectionBuilder
+	@return Network.Resolvable
 ]=]
-function SelectionBuilder.Prototype.toJSONObject(self: SelectionBuilder)
+function SelectionBuilder.Prototype.toPayloadObject(self: SelectionBuilder)
 	local selectionOptions = {}
 
 	for optionName, optionData in self.choices do
@@ -229,7 +230,7 @@ function SelectionBuilder.Prototype.toJSONObject(self: SelectionBuilder)
 		})
 	end
 
-	return {
+	return Resolvable.new(ResolvableType.JSON, {
 		type = self.selectionType,
 		custom_id = self.selectionId,
 
@@ -242,16 +243,16 @@ function SelectionBuilder.Prototype.toJSONObject(self: SelectionBuilder)
 		disabled = self.selectionDisabled,
 
 		options = selectionOptions,
-	}
+	})
 end
 
 --[=[
-	@function new
-	@within Builders.Interface.SelectionBuilder
-
+	
 	Creates a new instance of SelectionBuilder.
-
+	
+	@function new
 	@param selectionId string -- The ID of the selection.
+	@within Builders.Interface.SelectionBuilder
 	@return Builders.Interface.SelectionBuilder -- A new instance of SelectionBuilder.
 ]=]
 function SelectionBuilder.Interface.new(selectionId: string): SelectionBuilder

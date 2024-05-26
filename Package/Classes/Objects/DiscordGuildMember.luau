@@ -8,6 +8,9 @@ local CacheType = require("../../Enums/CacheType")
 
 local DiscordUser = require("DiscordUser")
 
+local Resolvable = require("../Network/Resolvable")
+local ResolvableType = require("../../Enums/ResolveableType")
+
 --[=[
 	@class Objects.DiscordGuildMember
 
@@ -37,9 +40,12 @@ DiscordGuildMember.Prototype.type = "DiscordGuildMember"
 ]=]
 function DiscordGuildMember.Prototype.kickAsync(self: DiscordGuildMember, deleteMessagesSeconds: number?)
 	return self.discordClient.discordGateway
-		:putAsync(string.format(DiscordEndpoints.BotRemoveGuildMember, self.guildId, self.user.id), {
-			delete_message_seconds = deleteMessagesSeconds or 0,
-		})
+		:putAsync(
+			string.format(DiscordEndpoints.BotRemoveGuildMember, self.guildId, self.user.id),
+			Resolvable.new(ResolvableType.JSON, {
+				delete_message_seconds = deleteMessagesSeconds or 0,
+			})
+		)
 		:await()
 end
 
@@ -205,15 +211,18 @@ function DiscordGuildMember.Prototype.modifyAsync(
 	end
 
 	return self.discordClient.discordGateway
-		:patchAsync(string.format(DiscordEndpoints.BotModifyGuildMember, self.guildId, self.user.id), {
-			nick = modificationsTable.nickname,
-			roles = modificationsTable.roles,
-			mute = modificationsTable.mute,
-			deaf = modificationsTable.deaf,
-			channel_id = modificationsTable.channelId,
-			communication_disabled_until = communication_disabled_until,
-			flags = modificationsTable.flags,
-		})
+		:patchAsync(
+			string.format(DiscordEndpoints.BotModifyGuildMember, self.guildId, self.user.id),
+			Resolvable.new(ResolvableType.JSON, {
+				nick = modificationsTable.nickname,
+				roles = modificationsTable.roles,
+				mute = modificationsTable.mute,
+				deaf = modificationsTable.deaf,
+				channel_id = modificationsTable.channelId,
+				communication_disabled_until = communication_disabled_until,
+				flags = modificationsTable.flags,
+			})
+		)
 		:await()
 end
 

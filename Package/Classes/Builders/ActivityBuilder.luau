@@ -1,6 +1,9 @@
 local Enumerate = require("../../Utils/Enumerate")
 local Construct = require("../../Utils/Construct")
 
+local ResolvableType = require("../../Enums/ResolveableType")
+local Resolvable = require("../Network/Resolvable")
+
 --[=[
 	@class Builders.ActivityBuilder
 
@@ -92,16 +95,16 @@ end
 --[=[
 	Converts the activity to a JSON object that can be sent to the Discord API.
 	
-	@method toJSONObject
+	@method toPayloadObject
 	@within Builders.ActivityBuilder
-	@return table -- The JSON representation of the activity.
+	@return Network.Resolvable
 ]=]
-function ActivityBuilder.Prototype.toJSONObject(self: ActivityBuilder)
-	return {
+function ActivityBuilder.Prototype.toPayloadObject(self: ActivityBuilder)
+	return Resolvable.new(ResolvableType.JSON, {
 		name = self.name or "",
 		type = self.activityType or 0,
 		url = self.streamingURL,
-	}
+	})
 end
 
 --[=[

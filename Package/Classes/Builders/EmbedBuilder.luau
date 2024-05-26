@@ -1,7 +1,10 @@
 local Construct = require("../../Utils/Construct")
 local Enumerate = require("../../Utils/Enumerate")
 
-local datetime = require("@lune/datetime")
+local ResolvableType = require("../../Enums/ResolveableType")
+local Resolvable = require("../Network/Resolvable")
+
+local Datetime = require("../../Std/Datetime")
 
 --[=[
 	@class Builders.EmbedBuilder
@@ -111,7 +114,7 @@ end
 	@return Builders.EmbedBuilder -- Returns the EmbedBuilder instance for method chaining.
 ]=]
 function EmbedBuilder.Prototype.setTimestamp(self: EmbedBuilder, epoch: number)
-	self.timestamp = datetime.fromUniversalTime(epoch :: any):toIsoDate()
+	self.timestamp = Datetime.fromUniversalTime(epoch :: any):toIsoDate()
 
 	return self
 end
@@ -278,11 +281,11 @@ end
 --[=[
 	Converts the embed to a JSON object that can be sent to the Discord API.
 	
-	@method toJSONObject
+	@method toPayloadObject
 	@within Builders.EmbedBuilder
-	@return table -- The JSON representation of the embed.
+	@return Network.Resolvable
 ]=]
-function EmbedBuilder.Prototype.toJSONObject(self: EmbedBuilder)
+function EmbedBuilder.Prototype.toPayloadObject(self: EmbedBuilder)
 	local fields = {}
 
 	for _, fieldObject in self.fields do
@@ -293,7 +296,7 @@ function EmbedBuilder.Prototype.toJSONObject(self: EmbedBuilder)
 		})
 	end
 
-	return {
+	return Resolvable.new(ResolvableType.JSON, {
 		fields = #fields ~= 0 and fields or nil,
 
 		title = self.title,
@@ -331,7 +334,7 @@ function EmbedBuilder.Prototype.toJSONObject(self: EmbedBuilder)
 			url = self.author.url,
 			icon_url = self.author.iconUrl,
 		} or nil,
-	}
+	})
 end
 
 --[=[

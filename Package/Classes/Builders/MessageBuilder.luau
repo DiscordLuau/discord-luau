@@ -7,6 +7,27 @@ local ButtonBuilder = require("../Builders/Interface/ButtonBuilder")
 local SelectionBuilder = require("../Builders/Interface/SelectionBuilder")
 local TextInputBuilder = require("../Builders/Interface/TextInputBuilder")
 
+local ResolvableType = require("../../Enums/ResolveableType")
+local Resolvable = require("../Network/Resolvable")
+
+local Serde = require("../../Std/Serde")
+
+local FILE_FORMATS = {
+	jpg = "image/jpg",
+	jpeg = "image/jpeg",
+	png = "image/png",
+	webp = "image/webp",
+	gif = "image/gif",
+
+	csv = "text/csv",
+	txt = "text/plain",
+	css = "text/css",
+	js = "text/javascript",
+	html = "text/html",
+
+	mp4 = "video/mp4",
+}
+
 --[=[
 	@class Builders.MessageBuilder
 
@@ -129,35 +150,126 @@ function MessageBuilder.Prototype.setFlags(self: MessageBuilder, flags: number)
 end
 
 --[=[
+	Sets the flags for the message.
+	
+	@method setFlags
+	@param fileContent string
+	@param fileName string
+	@within Builders.MessageBuilder
+	@return Builders.MessageBuilder -- Returns the MessageBuilder instance for method chaining.
+]=]
+function MessageBuilder.Prototype.addFile(self: MessageBuilder, fileContent: string, fileName: string)
+	table.insert(self.attachments, {
+		content = fileContent,
+		name = fileName,
+	})
+
+	return self
+end
+
+--[=[
 	Converts the message to a JSON object that can be sent to the Discord API.
 	
-	@method toJSONObject
+	@method toJsonObject
 	@within Builders.MessageBuilder
 	@return table -- The JSON representation of the message.
 ]=]
-function MessageBuilder.Prototype.toJSONObject(self: MessageBuilder)
+function MessageBuilder.Prototype.toJsonObject(self: MessageBuilder)
 	local components = {}
 	local embeds = {}
+	local attachments = {}
 
 	for _, component in self.components do
-		table.insert(components, (component :: any):toJSONObject())
+		table.insert(components, (component :: any):toPayloadObject():resolve())
 	end
 
 	for _, embed in self.embeds do
-		table.insert(embeds, embed:toJSONObject())
+		table.insert(embeds, embed:toPayloadObject():resolve())
+	end
+
+	for index, file in self.attachments do
+		table.insert(attachments, {
+			id = index - 1,
+			description = "",
+			filename = file.name,
+		})
 	end
 
 	return {
-		content = self.content or nil,
+		content = self.content or "",
 		nonce = self.nonce or nil,
 		tts = self.ttsEnabled or false,
-		sticker_ids = self.stickers,
 		flags = self.flags or nil, --fixme: should use a bitfield.
 		enforce_nonce = self.nonceEnforced or false,
 
-		embeds = embeds,
-		components = components,
+		attachments = #attachments > 0 and attachments or nil,
+
+		embeds = #embeds > 0 and embeds or nil,
+		components = #components > 0 and components or nil,
+
+		sticker_ids = #self.stickers > 0 and self.stickers or nil,
 	}
+end
+
+--[=[
+	Converts the message to a Formdata object that can be sent to the Discord API.
+	
+	@method toFormdataObject
+	@within Builders.MessageBuilder
+	@return string -- The Formdata representation of the message.
+]=]
+function MessageBuilder.Prototype.toFormdataObject(self: MessageBuilder)
+	local multiformUuid = `DiscordLuau.{math.random()}`
+	local multiformContentBoundary = `{multiformUuid}`
+	local multiformContent = ""
+
+	local jsonContent = self:toJsonObject()
+
+	multiformContent ..= `--{multiformContentBoundary}\r\n`
+	multiformContent ..= `Content-Disposition: form-data; name="payload_json"\r\n`
+	multiformContent ..= `Content-Type: application/json\r\n`
+
+	multiformContent ..= `\r\n`
+	multiformContent ..= `{Serde.encode("json", jsonContent, true)}\r\n`
+
+	for index, fileObject in self.attachments do
+		local fileName = fileObject.name
+		local name = string.match(fileObject.name, "(%S+)%..+")
+		local fileType = string.match(fileObject.name, ".+%.(%S+)")
+		local fileFormat = FILE_FORMATS[fileType] or "text/plain"
+
+		multiformContent ..= `--{multiformContentBoundary}\r\n`
+		multiformContent ..= `Content-Disposition: form-data; name="files[{index - 1}]"; filename="{fileName}"\r\n`
+		multiformContent ..= `Content-Type: {fileFormat}\r\n`
+
+		multiformContent ..= `\r\n`
+		multiformContent ..= `{fileObject.content}\r\n`
+	end
+
+	multiformContent ..= `--{multiformContentBoundary}--\r\n`
+
+	return multiformContent, multiformContentBoundary
+end
+
+--[=[
+	Converts the message to a JSON object that can be sent to the Discord API.
+	
+	@method toPayloadObject
+	@within Builders.MessageBuilder
+	@return Network.Resolvable
+]=]
+function MessageBuilder.Prototype.toPayloadObject(self: MessageBuilder): { [string]: any } | string
+	if #self.attachments == 0 then
+		return Resolvable.new(ResolvableType.JSON, self:toJsonObject())
+	else
+		local data, multiformContentBoundary = self:toFormdataObject()
+
+		return Resolvable.new(ResolvableType.FORMDATA, data, {
+			headers = {
+				["content-type"] = `multipart/form-data; boundary={multiformContentBoundary}`,
+			},
+		})
+	end
 end
 
 --[=[
@@ -171,6 +283,7 @@ function MessageBuilder.Interface.new(): MessageBuilder
 	return Construct({
 		embeds = {},
 		components = {},
+		attachments = {},
 		stickers = {},
 	}, MessageBuilder.Prototype) :: any
 end
@@ -191,6 +304,7 @@ export type MessageBuilder = typeof(MessageBuilder.Prototype) & {
 
 	embeds: { EmbedBuilder.EmbedBuilder },
 	components: { InterfaceBuidler },
+	attachments: { { content: string, name: string } },
 
 	stickers: { string },
 

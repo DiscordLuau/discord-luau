@@ -7,7 +7,10 @@ local HTTPRatelimit = require("HTTPRatelimit")
 local HTTPScheduler = require("HTTPScheduler")
 
 local EventIn = require("Middleware/EventIn")
-local EventOut = require("Middleware/EventOut")
+
+local Resolvable = require("Resolvable")
+
+local ResolveableType = require("../../Enums/ResolveableType")
 
 local Serde = require("../../Std/Serde")
 local Net = require("../../Std/Net")
@@ -113,8 +116,9 @@ end
 function DiscordGateway.Prototype.requestAsync(
 	self: DiscordGateway,
 	api: string,
-	method: "DELETE" | "GET" | "HEAD" | "OPTIONS" | "PATCH" | "POST" | "PUT",
-	data: { [any]: any }?
+	method: "DELETE" | "GET" | "PATCH" | "POST" | "PUT",
+	data: Resolvable.Resolvable?,
+	headers: { [string]: string }?
 )
 	return Future.try(function()
 		return self.discordScheduler:addTask(function()
@@ -126,14 +130,35 @@ function DiscordGateway.Prototype.requestAsync(
 				end
 			end
 
+			local bodyObject
+			local headerObject = {
+				["authorization"] = `Bot {self.discordClient.discordSettings.discordToken}`,
+				["content-type"] = "application/json",
+			}
+
+			if headers then
+				for key, value in headers do
+					headerObject[key] = value
+				end
+			end
+
+			if data then
+				if data.type == ResolveableType.JSON then
+					bodyObject = Serde.encode("json", data:resolve())
+				else
+					bodyObject = data:resolve()
+				end
+
+				for key, value in data:headers() do
+					headerObject[key] = value
+				end
+			end
+
 			local networkResponse = Net.request({
 				url = `{BASE_DISCORD_APP_URL}/{BASE_DISCORD_APP_API_PREFIX}/v{DISCORD_API_VERSION}/{api}`,
 				method = method,
-				headers = {
-					["authorization"] = `Bot {self.discordClient.discordSettings.discordToken}`,
-					["content-type"] = "application/json",
-				},
-				body = data and Serde.encode("json", self.gatewayEventOut:processJSON(data)),
+				headers = headerObject,
+				body = bodyObject,
 			})
 
 			self.reporter:debug(
@@ -181,7 +206,7 @@ end
 	@within Network.DiscordGateway
 	@return Future -- A Future that resolves with the response.
 ]=]
-function DiscordGateway.Prototype.getAsync(self: DiscordGateway, api: string)
+function DiscordGateway.Prototype.getAsync(self: DiscordGateway, api: string, headers: { [string]: string })
 	return Future.try(function()
 		local cache = self:getEndpointCache(api)
 		local cacheValue = cache and cache:get()
@@ -210,7 +235,12 @@ end
 	@within Network.DiscordGateway
 	@return Future -- A Future that resolves with the response.
 ]=]
-function DiscordGateway.Prototype.postAsync(self: DiscordGateway, api: string, data: { [any]: any })
+function DiscordGateway.Prototype.postAsync(
+	self: DiscordGateway,
+	api: string,
+	data: any?,
+	headers: { [string]: string }?
+)
 	return self:requestAsync(api, "POST", data)
 end
 
@@ -225,7 +255,12 @@ end
 	@within Network.DiscordGateway
 	@return Future -- A Future that resolves with the response.
 ]=]
-function DiscordGateway.Prototype.putAsync(self: DiscordGateway, api: string, data: { [any]: any })
+function DiscordGateway.Prototype.putAsync(
+	self: DiscordGateway,
+	api: string,
+	data: any?,
+	headers: { [string]: string }?
+)
 	return self:requestAsync(api, "PUT", data)
 end
 
@@ -239,7 +274,12 @@ end
 	@within Network.DiscordGateway
 	@return Future -- A Future that resolves with the response.
 ]=]
-function DiscordGateway.Prototype.deleteAsync(self: DiscordGateway, api: string, data: { [any]: any })
+function DiscordGateway.Prototype.deleteAsync(
+	self: DiscordGateway,
+	api: string,
+	data: any?,
+	headers: { [string]: string }?
+)
 	return self:requestAsync(api, "DELETE", data)
 end
 
@@ -253,7 +293,12 @@ end
 	@within Network.DiscordGateway
 	@return Future -- A Future that resolves with the response.
 ]=]
-function DiscordGateway.Prototype.patchAsync(self: DiscordGateway, api: string, data: { [any]: any })
+function DiscordGateway.Prototype.patchAsync(
+	self: DiscordGateway,
+	api: string,
+	data: any?,
+	headers: { [string]: string }?
+)
 	return self:requestAsync(api, "PATCH", data)
 end
 
@@ -311,7 +356,6 @@ function DiscordGateway.Interface.new(discordClient: any)
 		discordScheduler = HTTPScheduler.new(1),
 
 		gatewayEventIn = EventIn.new(),
-		gatewayEventOut = EventOut.new(),
 
 		reporter = Console.new("🌉 DiscordGateway"),
 

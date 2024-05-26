@@ -17,6 +17,9 @@ local DiscordAutomoderationRule = require("DiscordAutomoderationRule")
 
 local Future = require("../../Vendor/Future")
 
+local Resolvable = require("../Network/Resolvable")
+local ResolvableType = require("../../Enums/ResolveableType")
+
 --[=[
 	@class Objects.DiscordGuild
 
@@ -53,7 +56,7 @@ function DiscordGuild.Prototype.createSlashCommandAsync(self: DiscordGuild, comm
 					self.discordClient.discordApplication.id,
 					self.id
 				),
-				command:toJSONObject()
+				command:toPayloadObject()
 			)
 			:await()
 	end)
@@ -105,7 +108,7 @@ function DiscordGuild.Prototype.editSlashCommandAsync(
 					self.id,
 					commandId
 				),
-				command:toJSONObject()
+				command:toPayloadObject()
 			)
 			:await()
 	end)
@@ -261,25 +264,28 @@ end
 function DiscordGuild.Prototype.modifyAsync(self: DiscordGuild, guildSchema: DiscordGuildSchema)
 	return Future.try(function()
 		return self.discordClient.discordGateway
-			:patchAsync(string.format(DiscordEndpoints.BotModifyGuild, self.id), {
-				name = guildSchema.name,
-				region = guildSchema.region,
-				verification_level = guildSchema.verificationLevel,
-				default_message_notifications = guildSchema.defaultMessageNotifications,
-				explicit_content_filter = guildSchema.explicitContentFilter,
-				afk_channel_id = guildSchema.afkChannelId,
-				afk_timeout = guildSchema.afkTimeout,
-				owner_id = guildSchema.ownerId,
-				system_channel_id = guildSchema.systemChannelId,
-				system_channel_flags = guildSchema.systemChannelFlags,
-				rules_channel_id = guildSchema.rulesChannelId,
-				public_update_channel_id = guildSchema.publicUpdateChannelId,
-				preferred_locale = guildSchema.preferredLocale,
-				features = guildSchema.features,
-				description = guildSchema.description,
-				premium_progress_bar_enabled = guildSchema.premiumProgressBarEnabled,
-				safety_alerts_channel_id = guildSchema.safetyAlertsChannelId,
-			})
+			:patchAsync(
+				string.format(DiscordEndpoints.BotModifyGuild, self.id),
+				Resolvable.new(ResolvableType.JSON, { -- todo: throw GuildSchema into a guild builder
+					name = guildSchema.name,
+					region = guildSchema.region,
+					verification_level = guildSchema.verificationLevel,
+					default_message_notifications = guildSchema.defaultMessageNotifications,
+					explicit_content_filter = guildSchema.explicitContentFilter,
+					afk_channel_id = guildSchema.afkChannelId,
+					afk_timeout = guildSchema.afkTimeout,
+					owner_id = guildSchema.ownerId,
+					system_channel_id = guildSchema.systemChannelId,
+					system_channel_flags = guildSchema.systemChannelFlags,
+					rules_channel_id = guildSchema.rulesChannelId,
+					public_update_channel_id = guildSchema.publicUpdateChannelId,
+					preferred_locale = guildSchema.preferredLocale,
+					features = guildSchema.features,
+					description = guildSchema.description,
+					premium_progress_bar_enabled = guildSchema.premiumProgressBarEnabled,
+					safety_alerts_channel_id = guildSchema.safetyAlertsChannelId,
+				})
+			)
 			:await()
 	end)
 end
@@ -441,7 +447,7 @@ function DiscordGuild.Prototype.createAutomoderationRuleAsync(
 		local discordAutomoderationRule = self.discordClient.discordGateway
 			:postAsync(
 				string.format(DiscordEndpoints.BotCreateAutomoderationRule, self.id),
-				getAutomoderationRuleBuilder:toJSONObject()
+				getAutomoderationRuleBuilder:toPayloadObject()
 			)
 			:await()
 

@@ -12,9 +12,7 @@ DiscordClient.eventManager.onReady:connect(function()
 	local textChannel = DiscordClient:fetchChannelAsync("1048686561685946489"):await()
 	local responseMessage = DiscordLuau.MessageBuilder.new()
 
-	local fs = require("@lune/fs")
-
-	responseMessage:addFile(fs.readFile("Examples/e.png"), "e.png")
+	responseMessage:addFile("Hello, World!", "e.txt")
 
 	textChannel:sendMessageAsync(responseMessage)
 end)

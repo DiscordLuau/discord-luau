@@ -8,8 +8,6 @@ local CommandBuilder = require("../Builders/CommandBuilder")
 local DiscordEndpoints = require("../../Data/DiscordEndpoints")
 local CacheType = require("../../Enums/CacheType")
 
-local EventIn = require("../Network/Middleware/EventIn")
-
 --[=[
 	@class Objects.DiscordApplication
 
@@ -47,7 +45,10 @@ function DiscordApplication.Prototype.createSlashCommandAsync(
 )
 	return Future.try(function()
 		return self.discordClient.discordGateway
-			:postAsync(string.format(DiscordEndpoints.CreateGlobalApplicationCommand, self.id), command:toJSONObject())
+			:postAsync(
+				string.format(DiscordEndpoints.CreateGlobalApplicationCommand, self.id),
+				command:toPayloadObject()
+			)
 			:await()
 	end)
 end
@@ -86,7 +87,7 @@ function DiscordApplication.Prototype.editSlashCommandAsync(
 		return self.discordClient.discordGateway
 			:patchAsync(
 				string.format(DiscordEndpoints.EditGlobalApplicationCommand, self.id, commandId),
-				command:toJSONObject()
+				command:toPayloadObject()
 			)
 			:await()
 	end)
@@ -182,7 +183,7 @@ function DiscordApplication.Prototype.setSlashCommandsAsync(
 			end
 
 			local existingCommandJsonClone = table.clone(existingCommandJson)
-			local existingCommandClone = self.eventIn:processJSON(command:toJSONObject())
+			local existingCommandClone = command:toPayloadObject():resolve()
 
 			-- fixme: contexts seem to be reported incorrectly?
 			existingCommandClone.contexts = {}
@@ -220,8 +221,6 @@ function DiscordApplication.Interface.new(
 			id = applicationData.id,
 			flags = applicationData.flags,
 
-			eventIn = EventIn.new(),
-
 			discordClient = discordClient,
 		}, DiscordApplication.Prototype)
 	end)
@@ -230,8 +229,6 @@ end
 export type DiscordApplication = typeof(DiscordApplication.Prototype) & {
 	id: string,
 	flags: number,
-
-	eventIn: EventIn.EventIn,
 
 	discordClient: any,
 }
