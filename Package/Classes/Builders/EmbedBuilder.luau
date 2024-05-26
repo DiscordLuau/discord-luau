@@ -116,6 +116,8 @@ function EmbedBuilder.Prototype.setTimestamp(self: EmbedBuilder, epoch: number)
 	return self
 end
 
+type HexLike = string | number
+type RGB = { number } | { r: number, g: number, b: number }
 --[=[
 	Sets the color of the embed.
 	
@@ -124,7 +126,46 @@ end
 	@within Builders.EmbedBuilder
 	@return Builders.EmbedBuilder -- Returns the EmbedBuilder instance for method chaining.
 ]=]
-function EmbedBuilder.Prototype.setColor(self: EmbedBuilder, colorHex: number)
+function EmbedBuilder.Prototype.setColor(self: EmbedBuilder, color: HexLike | RGB)
+	local colorHex: number
+
+	if typeof(color) == "number" then
+		colorHex = color
+	end
+
+	if typeof(color) == "string" then
+		local HEX_PAT = "#(.%x*)"
+		colorHex = tonumber(string.match(color, HEX_PAT), 16) or error("Invalid hex string provided")
+	end
+
+	if typeof(color) == "table" then
+		-- FIXME: Maybe don't use any here
+		local anyColor = color :: any
+		local rgbColor = {
+			r = anyColor.r or anyColor[1],
+			g = anyColor.g or anyColor[2],
+			b = anyColor.b or anyColor[3],
+		}
+
+		if rgbColor.r and rgbColor.g and rgbColor.b then
+			local function toHex(num: number): string
+				local hex = string.format("%x", num)
+				if #hex == 1 then
+					hex = "0" .. hex
+				end
+
+				return hex
+			end
+
+			return EmbedBuilder.Prototype.setColor(
+				self,
+				"#" .. toHex(rgbColor.r) .. toHex(rgbColor.g) .. toHex(rgbColor.b)
+			)
+		else
+			error("Not all required RGB color components provided")
+		end
+	end
+
 	self.color = colorHex
 
 	return self
