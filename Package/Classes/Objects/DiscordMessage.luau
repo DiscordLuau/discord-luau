@@ -40,7 +40,7 @@ function DiscordMessage.Prototype.replyAsync(self: DiscordMessage, messageBuilde
 		return self.discordClient.discordGateway
 			:postAsync(
 				string.format(DiscordEndpoints.BotCreateMessage, self.channelId),
-				messageBuilder:toPayloadObject():resolve()
+				messageBuilder:toPayloadObject()
 			)
 			:await()
 	end)

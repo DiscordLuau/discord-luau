@@ -203,6 +203,7 @@ end
 	@private
 	@method getAsync
 	@param api string -- The API endpoint.
+	@param headers { [string]: string }
 	@within Network.DiscordGateway
 	@return Future -- A Future that resolves with the response.
 ]=]
@@ -215,7 +216,7 @@ function DiscordGateway.Prototype.getAsync(self: DiscordGateway, api: string, he
 			return cacheValue
 		end
 
-		local response = self:requestAsync(api, "GET"):await()
+		local response = self:requestAsync(api, "GET", nil, headers):await()
 
 		if cache then
 			cache:set(response)
@@ -232,6 +233,7 @@ end
 	@method postAsync
 	@param api string -- The API endpoint.
 	@param data table -- The data to send with the request.
+	@param headers { [string]: string }
 	@within Network.DiscordGateway
 	@return Future -- A Future that resolves with the response.
 ]=]
@@ -241,7 +243,7 @@ function DiscordGateway.Prototype.postAsync(
 	data: any?,
 	headers: { [string]: string }?
 )
-	return self:requestAsync(api, "POST", data)
+	return self:requestAsync(api, "POST", data, headers)
 end
 
 --[=[
@@ -252,6 +254,7 @@ end
 	@method putAsync
 	@param api string -- The API endpoint.
 	@param data table -- The data to send with the request.
+	@param headers { [string]: string }
 	@within Network.DiscordGateway
 	@return Future -- A Future that resolves with the response.
 ]=]
@@ -261,7 +264,7 @@ function DiscordGateway.Prototype.putAsync(
 	data: any?,
 	headers: { [string]: string }?
 )
-	return self:requestAsync(api, "PUT", data)
+	return self:requestAsync(api, "PUT", data, headers)
 end
 
 --[=[
@@ -271,6 +274,7 @@ end
 	@method deleteAsync
 	@param api string -- The API endpoint.
 	@param data table? -- The data to send with the request (optional).
+	@param headers { [string]: string }
 	@within Network.DiscordGateway
 	@return Future -- A Future that resolves with the response.
 ]=]
@@ -280,7 +284,7 @@ function DiscordGateway.Prototype.deleteAsync(
 	data: any?,
 	headers: { [string]: string }?
 )
-	return self:requestAsync(api, "DELETE", data)
+	return self:requestAsync(api, "DELETE", data, headers)
 end
 
 --[=[
@@ -290,6 +294,7 @@ end
 	@method patchAsync
 	@param api string -- The API endpoint.
 	@param data table -- The data to send with the request.
+	@param headers { [string]: string }
 	@within Network.DiscordGateway
 	@return Future -- A Future that resolves with the response.
 ]=]
@@ -299,7 +304,7 @@ function DiscordGateway.Prototype.patchAsync(
 	data: any?,
 	headers: { [string]: string }?
 )
-	return self:requestAsync(api, "PATCH", data)
+	return self:requestAsync(api, "PATCH", data, headers)
 end
 
 --[=[

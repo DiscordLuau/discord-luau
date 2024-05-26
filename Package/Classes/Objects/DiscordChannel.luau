@@ -183,11 +183,14 @@ function DiscordChannel.Prototype.createInviteAsync(
 )
 	return Future.try(function()
 		local inviteData = self.discordClient.discordGateway
-			:postAsync(string.format(DiscordEndpoints.BotGetInvites, self.id), {
-				max_age = maxAge,
-				max_uses = maxUses,
-				temporary = temporary,
-			})
+			:postAsync(
+				string.format(DiscordEndpoints.BotGetInvites, self.id),
+				Resolvable.new(ResolvableType.JSON, {
+					max_age = maxAge,
+					max_uses = maxUses,
+					temporary = temporary,
+				})
+			)
 			:await()
 
 		return DiscordInvite.new(self.discordClient, inviteData)
