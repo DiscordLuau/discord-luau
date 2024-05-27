@@ -83,7 +83,7 @@ function DiscordClient.Prototype.connectAsync(self: DiscordClient)
 
 		for bucketIndex = 1, self.shardCount, self.maxConcurrency do
 			for shardId = bucketIndex, (bucketIndex - 1) + self.maxConcurrency do
-				self.discordShards[shardId]:connectAsync(self.websocketUrl)
+				self.discordShards[shardId]:connectAsync(self.websocketUrl):await()
 			end
 
 			if self.shardCount > self.maxConcurrency then
