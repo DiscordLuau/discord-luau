@@ -279,6 +279,8 @@ function DiscordShard.Prototype.identifyAsync(self: DiscordShard)
 				},
 			})
 			:await()
+	
+		self.onIdentified:fire()
 	end)
 end
 
@@ -294,7 +296,11 @@ end
 function DiscordShard.Prototype.connectAsync(self: DiscordShard, websocketUrl: string)
 	self.websocketUrl = websocketUrl
 
-	return self.discordWebsocket:connectAsync(websocketUrl)
+	return Future.try(function()
+		self.discordWebsocket:connectAsync(websocketUrl):await()
+
+		self.onIdentified:wait()
+	end)
 end
 
 --[=[
@@ -374,6 +380,7 @@ function DiscordShard.Interface.new(discordClient: any, shardId: number): Discor
 		heartbeatInterval = nil,
 
 		onEvent = Signal.new(),
+		onIdentified = Signal.new(),
 
 		shardId = shardId,
 	}, DiscordShard.Prototype) :: any
@@ -408,6 +415,7 @@ export type DiscordShard = typeof(DiscordShard.Prototype) & {
 	activeConnections: { Signal.Connection },
 
 	onEvent: Signal.Signal<string, { [any]: any }>,
+	onIdentified: Signal.Signal<>,
 
 	shardId: number,
 }
