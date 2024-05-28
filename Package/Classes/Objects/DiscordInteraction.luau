@@ -106,15 +106,15 @@ function DiscordInteraction.Prototype.sendMessageAsync(
 		return Future.new(function()
 			local payloadObject = messageBuilder:toPayloadObject()
 
-			assert(payloadObject.type == ResolvableType.JSON, `DiscordInteraction doesn't support formdata!`)
-
 			return self.discordClient.discordGateway
 				:postAsync(
 					string.format(DiscordEndpoints.CreateInteractionResponse, self.id, self.token),
-					Resolvable.new(ResolvableType.JSON, {
-						type = 4,
-						data = payloadObject:resolve(),
-					})
+					payloadObject:update(function(data)
+						return {
+							type = 4,
+							data = data,
+						}
+					end)
 				)
 				:await()
 		end)

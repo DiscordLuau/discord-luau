@@ -6,26 +6,18 @@ local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettings)
 
 DiscordClient:setVerbose(true)
 
--- DiscordClient.eventManager.onMessage:connect(function(e)
--- 	e:replyAsync(DiscordLuau.MessageBuilder.new():setContent("e"))
--- end)
+DiscordClient.eventManager.onInteraction:connect(function(e)
+	local responseMessage = DiscordLuau.MessageBuilder
+		.new()
+		:addFile(
+			DiscordLuau.AttachmentBuilder
+				.new()
+				:setName("Example.txt")
+				:setData("Hello, World, STYLUA STOP CHANGING MY BUILDER FORMAT!")
+		)
+		:setContent("e")
 
-DiscordClient.eventManager.onReady:connect(function()
-	print(`🎉🎉 {DiscordClient.discordUser.username} is online! 🎉🎉`)
+	e:sendMessageAsync(responseMessage)
 end)
 
-DiscordClient:connectAsync():after(function()
-	local discordPresence = DiscordLuau.PresenceBuilder.new()
-	local discordActivity = DiscordLuau.ActivityBuilder.new()
-
-	discordActivity:setActivityName("AsyncMatrix program at 3AM")
-	discordActivity:setActivityType(DiscordLuau.ActivityBuilder.Type.Watching)
-
-	discordPresence:setStatus(DiscordLuau.PresenceBuilder.Status.Idle)
-	discordPresence:addActivity(discordActivity)
-	discordPresence:setSince(0)
-
-	DiscordClient:updatePresenceAsync(discordPresence):after(function()
-		print(`e`)
-	end)
-end)
+DiscordClient:connectAsync()

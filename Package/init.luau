@@ -17,7 +17,7 @@ local PermissionsBuilder = require("Classes/Builders/PermissionsBuilder")
 local PresenceBuilder = require("Classes/Builders/PresenceBuilder")
 local SettingsBuilder = require("Classes/Builders/SettingsBuilder")
 local MessageBuilder = require("Classes/Builders/MessageBuilder")
-
+local AttachmentBuilder = require("Classes/Builders/AttachmentBuilder")
 -- Objects
 local DiscordApplication = require("Classes/Objects/DiscordApplication")
 local DiscordAutomoderationRule = require("Classes/Objects/DiscordAutomoderationRule")
@@ -87,6 +87,13 @@ export type MessageBuilder = MessageBuilder.MessageBuilder
 DiscordLuau.MessageBuilder = MessageBuilder
 --[=[
 	@prop MessageBuilder Builders.MessageBuilder
+	@within DiscordLuau
+]=]
+
+export type AttachmentBuilder = AttachmentBuilder.AttachmentBuilder
+DiscordLuau.AttachmentBuilder = AttachmentBuilder
+--[=[
+	@prop AttachmentBuilder Builders.AttachmentBuilder
 	@within DiscordLuau
 ]=]
 

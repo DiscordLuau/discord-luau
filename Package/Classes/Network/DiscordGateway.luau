@@ -21,6 +21,22 @@ local DISCORD_API_VERSION = 9
 local BASE_DISCORD_APP_URL = "https://discord.com"
 local BASE_DISCORD_APP_API_PREFIX = "api"
 
+local FILE_FORMATS = {
+	jpg = "image/jpg",
+	jpeg = "image/jpeg",
+	png = "image/png",
+	webp = "image/webp",
+	gif = "image/gif",
+
+	csv = "text/csv",
+	txt = "text/plain",
+	css = "text/css",
+	js = "text/javascript",
+	html = "text/html",
+
+	mp4 = "video/mp4",
+}
+
 --[=[
 	@class Network.DiscordGateway
 
@@ -145,11 +161,42 @@ function DiscordGateway.Prototype.requestAsync(
 			if data then
 				if data.type == ResolveableType.JSON then
 					bodyObject = Serde.encode("json", data:resolve())
-				else
-					bodyObject = data:resolve()
+				elseif data.type == ResolveableType.FORMDATA then
+					local jsonContent = Serde.encode("json", data:resolve())
+
+					local multiformUuid = `DiscordLuau.{math.random()}`
+					local multiformContentBoundary = `{multiformUuid}`
+					local multiformContent = ""
+
+					multiformContent ..= `--{multiformContentBoundary}\r\n`
+					multiformContent ..= `Content-Disposition: form-data; name="payload_json"\r\n`
+					multiformContent ..= `Content-Type: application/json\r\n`
+
+					multiformContent ..= `\r\n`
+					multiformContent ..= `{jsonContent}\r\n`
+
+					for index, fileObject in data.metadata.attachments do
+						local fileName = fileObject.fileName
+						local name = string.match(fileObject.fileName, "(%S+)%..+")
+						local fileType = string.match(fileObject.fileName, ".+%.(%S+)")
+						local fileFormat = FILE_FORMATS[fileType] or "text/plain"
+
+						multiformContent ..= `--{multiformContentBoundary}\r\n`
+						multiformContent ..= `Content-Disposition: form-data; name="files[{index - 1}]"; filename="{fileName}"\r\n`
+						multiformContent ..= `Content-Type: {fileFormat}\r\n`
+
+						multiformContent ..= `\r\n`
+						multiformContent ..= `{fileObject.fileData}\r\n`
+					end
+
+					multiformContent ..= `--{multiformContentBoundary}--\r\n`
+
+					bodyObject = multiformContent
+
+					headerObject["content-type"] = `multipart/form-data; boundary={multiformContentBoundary}`
 				end
 
-				for key, value in data:headers() do
+				for key, value in data.metadata.headers do
 					headerObject[key] = value
 				end
 			end

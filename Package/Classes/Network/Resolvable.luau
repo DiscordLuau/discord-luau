@@ -53,6 +53,20 @@ function Resolvable.Prototype.resolve(self: Resolvable)
 end
 
 --[=[
+	Allows mutation of the data held in the resolvable
+
+	@private
+	@method update
+	@within Network.Resolvable
+	@return any
+]=]
+function Resolvable.Prototype.update(self: Resolvable, callback: (data: any) -> any)
+	self.data = callback(self.data)
+
+	return self
+end
+
+--[=[
 	Creates a new instance of `Resolvable`.
 	
 	@private
@@ -61,7 +75,14 @@ end
 	@within Network.Resolvable
 	@return Resolvable
 ]=]
-function Resolvable.Interface.new(type: string, data: any, metadata: any?): Resolvable
+function Resolvable.Interface.new(
+	type: string,
+	data: any,
+	metadata: {
+		headers: { [string]: string },
+		attachments: { any },
+	}?
+): Resolvable
 	local self = (
 		Construct({
 			data = data,
@@ -69,7 +90,10 @@ function Resolvable.Interface.new(type: string, data: any, metadata: any?): Reso
 
 			eventOutMiddleware = EventOut.new(),
 
-			metadata = metadata,
+			metadata = metadata or {
+				headers = {},
+				attachments = {},
+			},
 		}, Resolvable.Prototype) :: unknown
 	) :: Resolvable
 
@@ -84,7 +108,8 @@ export type Resolvable = typeof(Resolvable.Prototype) & {
 
 	metadata: {
 		headers: { [string]: string },
-	}?,
+		attachments: { any },
+	},
 }
 
 return Resolvable.Interface
