@@ -183,7 +183,7 @@ function DiscordApplication.Prototype.setSlashCommandsAsync(
 			end
 
 			local existingCommandJsonClone = table.clone(existingCommandJson)
-			local existingCommandClone = command:toPayloadObject():resolve()
+			local existingCommandClone = command:toPayloadObject():resolve(true)
 
 			-- fixme: contexts seem to be reported incorrectly?
 			existingCommandClone.contexts = {}

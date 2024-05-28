@@ -6,18 +6,30 @@ local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettings)
 
 DiscordClient:setVerbose(true)
 
-DiscordClient.eventManager.onInteraction:connect(function(e)
-	local responseMessage = DiscordLuau.MessageBuilder
-		.new()
-		:addFile(
-			DiscordLuau.AttachmentBuilder
-				.new()
-				:setName("Example.txt")
-				:setData("Hello, World, STYLUA STOP CHANGING MY BUILDER FORMAT!")
-		)
-		:setContent("e")
+DiscordClient.eventManager.onReady:connect(function()
+	print(`🎉🎉 {DiscordClient.discordUser.username} is online! 🎉🎉`)
 
-	e:sendMessageAsync(responseMessage)
+	local permissions = DiscordLuau.PermissionsBuilder.new()
+
+	permissions:addPermission(DiscordLuau.PermissionsBuilder.Permissions.SendMessages)
+
+	local slashCommand = DiscordLuau.CommandBuilder
+		.new()
+		:setName("example-command")
+		:setDescription("Example Description")
+		:setGuildPermissions(permissions)
+
+	DiscordClient.discordApplication
+		:setSlashCommandsAsync({
+			slashCommand,
+		})
+		:after(function(data)
+			print("updated, fetching current commands..")
+
+			DiscordClient.discordApplication:fetchSlashCommandsAsync():after(function(...)
+				print(...)
+			end)
+		end)
 end)
 
 DiscordClient:connectAsync()

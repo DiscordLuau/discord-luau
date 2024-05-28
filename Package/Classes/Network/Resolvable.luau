@@ -7,6 +7,7 @@ local Console = require("../../Vendor/Console")
 local ResolvableType = require("../../Enums/ResolveableType")
 
 local EventOut = require("Middleware/EventOut")
+local EventIn = require("Middleware/EventIn")
 
 --[=[
 	@class Network.Resolvable
@@ -44,9 +45,10 @@ end
 	@within Network.Resolvable
 	@return any
 ]=]
-function Resolvable.Prototype.resolve(self: Resolvable)
+function Resolvable.Prototype.resolve(self: Resolvable, toCamelCase: boolean?)
 	if self.type == ResolvableType.JSON then
-		return self.eventOutMiddleware:processJSON(self.data)
+		return toCamelCase and self.eventInMiddleware:processJSON(self.data)
+			or self.eventOutMiddleware:processJSON(self.data)
 	end
 
 	return self.data
@@ -89,6 +91,7 @@ function Resolvable.Interface.new(
 			type = type,
 
 			eventOutMiddleware = EventOut.new(),
+			eventInMiddleware = EventIn.new(),
 
 			metadata = metadata or {
 				headers = {},
@@ -105,6 +108,7 @@ export type Resolvable = typeof(Resolvable.Prototype) & {
 	type: ResolvableType.ResolveableType,
 
 	eventOutMiddleware: EventOut.EventOut,
+	eventInMiddleware: EventIn.EventIn,
 
 	metadata: {
 		headers: { [string]: string },
