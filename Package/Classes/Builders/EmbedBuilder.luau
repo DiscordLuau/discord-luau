@@ -125,7 +125,7 @@ type RGB = { number } | { r: number, g: number, b: number }
 	Sets the color of the embed.
 	
 	@method setColor
-	@param colorHex number -- The color of the embed in hexadecimal.
+	@param colorHex HexLike | RGB -- The color of the embed in as a hex or a RGB.
 	@within Builders.EmbedBuilder
 	@return Builders.EmbedBuilder -- Returns the EmbedBuilder instance for method chaining.
 ]=]
