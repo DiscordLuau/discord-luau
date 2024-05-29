@@ -5,7 +5,9 @@ local DiscordEndpoints = require("../../Data/DiscordEndpoints")
 local Future = require("../../Vendor/Future")
 
 local DiscordMessage = require("../Objects/DiscordMessage")
+
 local MessageBuilder = require("../Builders/MessageBuilder")
+local PermissionsBuilder = require("../Builders/PermissionsBuilder")
 
 local DiscordTextChannel = require("DiscordTextChannel")
 local DiscordVoiceChannel = require("DiscordVoiceChannel")
@@ -35,6 +37,42 @@ DiscordChannel.Interface = {}
 DiscordChannel.Prototype.type = "DiscordChannel"
 
 --[=[
+	Creates a thread in the current channel
+
+	@method createThreadAsync
+	@param name string
+	@param autoArchiveDuration number
+	@param isInvitable boolean?
+	@param privateThread boolean?
+	@param rateLimitPerUser number?
+	@within Objects.DiscordChannel
+	@return Future
+]=]
+function DiscordChannel.Prototype.createThreadAsync(
+	self: DiscordChannel,
+	name: string,
+	autoArchiveDuration: number,
+	isInvitable: boolean?,
+	privateThread: boolean?,
+	rateLimitPerUser: number?
+)
+	return Future.try(function()
+		return self.discordClient.discordGateway
+			:postAsync(
+				string.format(DiscordEndpoints.BotCreateThread, self.id),
+				Resolvable.new(ResolvableType.JSON, {
+					name = name,
+					auto_archive_duration = autoArchiveDuration,
+					invitable = isInvitable ~= nil and isInvitable or true,
+					type = privateThread and 12 or 11,
+					rate_limit_per_user = rateLimitPerUser,
+				})
+			)
+			:await()
+	end)
+end
+
+--[=[
 	Triggers the typing indicator in the channel.
 
 	@method triggerTypingIndicator
@@ -45,6 +83,82 @@ function DiscordChannel.Prototype.triggerTypingIndicator(self: DiscordChannel)
 	return Future.try(function()
 		return self.discordClient.discordGateway
 			:postAsync(string.format(DiscordEndpoints.BotTriggerTypingChannel, self.id))
+			:await()
+	end)
+end
+
+--[=[
+	set overwrites for a specific role permissions for this channel in a discord guild.
+
+	@method overwriteRolePermissionsAsync
+	@param roleId string
+	@param allowedPermissions PermissionsBuilder.PermissionsBuilder
+	@param disallowedPermissions PermissionsBuilder.PermissionsBuilder
+	@within Objects.DiscordChannel
+	@return Future
+]=]
+function DiscordChannel.Prototype.overwriteRolePermissionsAsync(
+	self: DiscordChannel,
+	roleId: string,
+	allowedPermissions: PermissionsBuilder.PermissionsBuilder,
+	disallowedPermissions: PermissionsBuilder.PermissionsBuilder
+)
+	return Future.try(function()
+		return self.discordClient.discordGateway
+			:putAsync(
+				string.format(DiscordEndpoints.BotEditChannelPermissions, self.id, roleId),
+				Resolvable.new(ResolvableType.JSON, {
+					allow = allowedPermissions:getValue(),
+					deny = allowedPermissions:getValue(),
+					type = 0,
+				})
+			)
+			:await()
+	end)
+end
+
+--[=[
+	set overwrites for a specific members permissions for this channel in a discord guild.
+
+	@method overwriteMemberPermissionssync
+	@param memberId string
+	@param allowedPermissions PermissionsBuilder.PermissionsBuilder
+	@param disallowedPermissions PermissionsBuilder.PermissionsBuilder
+	@within Objects.DiscordChannel
+	@return Future
+]=]
+function DiscordChannel.Prototype.overwriteMemberPermissionssync(
+	self: DiscordChannel,
+	memberId: string,
+	allowedPermissions: PermissionsBuilder.PermissionsBuilder,
+	disallowedPermissions: PermissionsBuilder.PermissionsBuilder
+)
+	return Future.try(function()
+		return self.discordClient.discordGateway
+			:putAsync(
+				string.format(DiscordEndpoints.BotEditChannelPermissions, self.id, memberId),
+				Resolvable.new(ResolvableType.JSON, {
+					allow = allowedPermissions:getValue(),
+					deny = allowedPermissions:getValue(),
+					type = 1,
+				})
+			)
+			:await()
+	end)
+end
+
+--[=[
+	deletes overwritten permissions for the given id, the given id must be either a role id or a user id
+
+	@method overwriteMemberPermissionssync
+	@param roleIdOrUserId string
+	@within Objects.DiscordChannel
+	@return Future
+]=]
+function DiscordChannel.Prototype.deletePermissionOverwriteAsync(self: DiscordChannel, roleIdOrUserId: string)
+	return Future.try(function()
+		return self.discordClient.discordGateway
+			:deleteAsync(string.format(DiscordEndpoints.BotDeleteChannelPermission, self.id, roleIdOrUserId))
 			:await()
 	end)
 end

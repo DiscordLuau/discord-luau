@@ -15,6 +15,9 @@ return {
 	BotGetChannelMessage = "channels/%s/messages/%s",
 	BotDeleteMessage = "channels/%s/messages/%s",
 	BotEditMessage = "channels/%s/messages/%s",
+	BotCrosspostMessage = "channels/%s/messages/%s/crosspost",
+	BotCreateThreadFromMessage = "channels/%s/messages/%s/threads",
+	BotCreateThread = "channels/%s/threads",
 
 	BotGetInvites = "channels/%s/invites",
 	BotDeleteInvite = "invites/%s",
@@ -31,8 +34,10 @@ return {
 	BotPinMessage = "channels/%s/pins/%s",
 	BotUnpinMessage = "channels/%s/pins/%s",
 	BotTriggerTypingChannel = "channels/%s/typing",
+	BotEditChannelPermissions = "channels/%s/permissions/%s",
+	BotDeleteChannelPermission = "channels/%s/permissions/%s",
 	BotGetPinnedMessages = "channels/%s/pins",
-	BotEditChannelPermissions = "channels/%s",
+	BotFollowAnnouncementChannel = "channels/%s/followers",
 
 	BotGetThreadMembers = "channels/%s/thread-members",
 	BotJoinThreadChannel = "channels/%s/thread-members/@me",

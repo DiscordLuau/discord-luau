@@ -10,6 +10,7 @@ local CacheType = {
 	DiscordChannel = "DiscordChannel",
 	DiscordTextChannel = "DiscordTextChannel",
 	DiscordVoiceChannel = "DiscordVoiceChannel",
+	DiscordAnnouncementChannel = "DiscordAnnouncementChannel",
 	DiscordMessage = "DiscordMessage",
 	DiscordMember = "DiscordMember",
 	DiscordInvite = "DiscordInvite",
@@ -25,6 +26,7 @@ export type CacheType =
 	| "DiscordUser"
 	| "DiscordChannel"
 	| "DiscordTextChannel"
+	| "DiscordAnnouncementChannel"
 	| "DiscordVoiceChannel"
 	| "DiscordMessage"
 	| "DiscordMember"

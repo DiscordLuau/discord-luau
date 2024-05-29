@@ -15,6 +15,9 @@ local ButtonBuilder = require("../Builders/Interface/ButtonBuilder")
 local SelectionBuilder = require("../Builders/Interface/SelectionBuilder")
 local TextInputBuilder = require("../Builders/Interface/TextInputBuilder")
 
+local Resolvable = require("../Network/Resolvable")
+local ResolvableType = require("../../Enums/ResolveableType")
+
 --[=[
 	@class Objects.DiscordMessage
 
@@ -26,6 +29,23 @@ DiscordMessage.Prototype = {}
 DiscordMessage.Interface = {}
 
 DiscordMessage.Prototype.type = "DiscordMessage"
+
+--[=[
+	Crossposts the message in an Announcement Channel to all following channels.
+	
+	@method crosspostAsync
+	@return Future<Objects.DiscordMessage>
+	@within Objects.DiscordMessage
+]=]
+function DiscordMessage.Prototype.crosspostAsync(self: DiscordMessage)
+	return Future.try(function()
+		local messageObject = self.discordClient.discordGateway
+			:postAsync(string.format(DiscordEndpoints.BotCrosspostMessage, self.channelId, self.id))
+			:await()
+
+		return DiscordMessage.Interface.new(self.discordClient, messageObject)
+	end)
+end
 
 --[=[
 	Replies to the message asynchronously.
@@ -43,6 +63,41 @@ function DiscordMessage.Prototype.replyAsync(self: DiscordMessage, messageBuilde
 				messageBuilder:toPayloadObject()
 			)
 			:await()
+	end)
+end
+
+--[=[
+	Start a thread from the current message object. 
+	
+	@method startThreadAsync
+	@param name string
+	@param autoArchiveDuration: number
+	@param rateLimitPerUser: number?
+	@return Future<string>
+	@within Objects.DiscordMessage
+]=]
+function DiscordMessage.Prototype.startThreadAsync(
+	self: DiscordMessage,
+	name: string,
+	autoArchiveDuration: number,
+	rateLimitPerUser: number?
+)
+	return Future.try(function()
+		local threadChannel = self.discordClient.discordGateway
+			:postAsync(
+				string.format(DiscordEndpoints.BotCreateThreadFromMessage, self.channelId, self.id),
+				Resolvable.new(ResolvableType.JSON, {
+					name = name,
+					auto_archive_duration = autoArchiveDuration,
+					rate_limit_per_user = rateLimitPerUser,
+				})
+			)
+			:await()
+
+		-- fixme: man this sucks, discordChannel requires DiscordMessage - so we can't create the object for you
+		-- you'll need to call :getChannelAsync through the client.. sorry.
+
+		return threadChannel.id
 	end)
 end
 
