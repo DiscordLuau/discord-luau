@@ -1,8 +1,4 @@
-local Task = require("../../Std/Task")
-
 local Construct = require("../../Utils/Construct")
-
-local Console = require("../../Vendor/Console")
 
 local ResolvableType = require("../../Enums/ResolveableType")
 

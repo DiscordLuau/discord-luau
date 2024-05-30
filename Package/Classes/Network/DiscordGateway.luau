@@ -177,7 +177,6 @@ function DiscordGateway.Prototype.requestAsync(
 
 					for index, fileObject in data.metadata.attachments do
 						local fileName = fileObject.fileName
-						local name = string.match(fileObject.fileName, "(%S+)%..+")
 						local fileType = string.match(fileObject.fileName, ".+%.(%S+)")
 						local fileFormat = FILE_FORMATS[fileType] or "text/plain"
 

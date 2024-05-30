@@ -8,7 +8,6 @@ local Future = require("../../Vendor/Future")
 local MessageBuilder = require("../Builders/MessageBuilder")
 
 local DiscordMessage = require("../Objects/DiscordMessage")
-local DiscordGuildMember = require("../Objects/DiscordGuildMember")
 
 local Resolvable = require("../Network/Resolvable")
 local ResolvableType = require("../../Enums/ResolveableType")

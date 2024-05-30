@@ -11,8 +11,6 @@ local TextInputBuilder = require("../Builders/Interface/TextInputBuilder")
 local ResolvableType = require("../../Enums/ResolveableType")
 local Resolvable = require("../Network/Resolvable")
 
-local Serde = require("../../Std/Serde")
-
 --[=[
 	@class Builders.MessageBuilder
 

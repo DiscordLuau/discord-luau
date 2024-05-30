@@ -75,7 +75,7 @@ function DiscordChannel.Prototype.overwriteRolePermissionsAsync(
 				string.format(DiscordEndpoints.BotEditChannelPermissions, self.id, roleId),
 				Resolvable.new(ResolvableType.JSON, {
 					allow = allowedPermissions:getValue(),
-					deny = allowedPermissions:getValue(),
+					deny = disallowedPermissions:getValue(),
 					type = 0,
 				})
 			)
@@ -105,7 +105,7 @@ function DiscordChannel.Prototype.overwriteMemberPermissionssync(
 				string.format(DiscordEndpoints.BotEditChannelPermissions, self.id, memberId),
 				Resolvable.new(ResolvableType.JSON, {
 					allow = allowedPermissions:getValue(),
-					deny = allowedPermissions:getValue(),
+					deny = disallowedPermissions:getValue(),
 					type = 1,
 				})
 			)
