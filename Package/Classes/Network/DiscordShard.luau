@@ -279,7 +279,7 @@ function DiscordShard.Prototype.identifyAsync(self: DiscordShard)
 				},
 			})
 			:await()
-	
+
 		self.onIdentified:fire()
 	end)
 end
@@ -415,7 +415,7 @@ export type DiscordShard = typeof(DiscordShard.Prototype) & {
 	activeConnections: { Signal.Connection },
 
 	onEvent: Signal.Signal<string, { [any]: any }>,
-	onIdentified: Signal.Signal<>,
+	onIdentified: Signal.Signal<nil>,
 
 	shardId: number,
 }
