@@ -5,68 +5,73 @@ local DiscordEndpoints = require("../../Data/DiscordEndpoints")
 
 local Future = require("../../Vendor/Future")
 
+local MessageBuilder = require("../Builders/MessageBuilder")
+
 local DiscordMessage = require("../Objects/DiscordMessage")
+local DiscordGuildMember = require("../Objects/DiscordGuildMember")
 
 local Resolvable = require("../Network/Resolvable")
 local ResolvableType = require("../../Enums/ResolveableType")
 
 --[=[
-	@class Objects.DiscordTextChannel
+	@class Objects.DiscordMediaChannel
 
-	DiscordTextChannel represents a text channel in a Discord server, providing methods to modify the channel and interact with pinned messages.
+	DiscordMediaChannel represents a thread channel in a Discord server, providing methods to modify the channel and interact with pinned messages.
 ]=]
-local DiscordTextChannel = {}
+local DiscordMediaChannel = {}
 
-DiscordTextChannel.Prototype = {}
-DiscordTextChannel.Interface = {}
+DiscordMediaChannel.Prototype = {}
+DiscordMediaChannel.Interface = {}
 
-DiscordTextChannel.Prototype.type = "DiscordTextChannel"
+DiscordMediaChannel.Prototype.type = "DiscordMediaChannel"
 
 --[=[
-	Creates a thread in the current channel
-
+	Create a new thread inside of a Media channel.
+	
 	@method createThreadAsync
 	@param name string
-	@param autoArchiveDuration number
-	@param isInvitable boolean?
-	@param privateThread boolean?
+	@param message MessageBuilder
+	@param appliedTags { string }?
+	@param autoArchiveDuration number?
 	@param rateLimitPerUser number?
-	@within Objects.DiscordTextChannel
-	@return Future
+	@within Objects.DiscordMediaChannel
+	@return Future<unknown>
 ]=]
-function DiscordTextChannel.Prototype.createThreadAsync(
-	self: DiscordTextChannel,
+function DiscordMediaChannel.Prototype.createThreadAsync(
+	self: DiscordMediaChannel,
 	name: string,
-	autoArchiveDuration: number,
-	isInvitable: boolean?,
-	privateThread: boolean?,
+	message: MessageBuilder.MessageBuilder,
+	appliedTags: { string }?,
+	autoArchiveDuration: number?,
 	rateLimitPerUser: number?
 )
 	return Future.try(function()
 		return self.discordClient.discordGateway
 			:postAsync(
-				string.format(DiscordEndpoints.BotCreateThread, self.id),
-				Resolvable.new(ResolvableType.JSON, {
-					name = name,
-					auto_archive_duration = autoArchiveDuration,
-					invitable = isInvitable ~= nil and isInvitable or true,
-					type = privateThread and 12 or 11,
-					rate_limit_per_user = rateLimitPerUser,
-				})
+				string.format(DiscordEndpoints.BotCreateForumOrMediaThread, self.id),
+				message:toPayloadObject():update(function(data)
+					return {
+						name = name,
+						message = data,
+						rate_limit_per_user = rateLimitPerUser,
+						auto_archive_duration = autoArchiveDuration,
+						applied_tags = appliedTags,
+					}
+				end)
 			)
 			:await()
 	end)
 end
 
 --[=[
-	Modifies the text channel settings asynchronously.
+	Modifies the thread channel settings asynchronously.
 	
 	@method modifyAsync
 	@param channelSchema DiscordTextChannelSchema -- The schema containing the modifications to be applied.
-	@within Objects.DiscordTextChannel
+	@within Objects.DiscordMediaChannel
 	@return Future<unknown> -- A future that resolves when the modifications are complete.
 ]=]
-function DiscordTextChannel.Prototype.modifyAsync(self: DiscordTextChannel, channelSchema: DiscordTextChannelSchema)
+function DiscordMediaChannel.Prototype.modifyAsync(self: DiscordMediaChannel, channelSchema)
 	return Future.try(function()
 		return self.discordClient.discordGateway
 			:patchAsync(
@@ -87,13 +92,13 @@ function DiscordTextChannel.Prototype.modifyAsync(self: DiscordTextChannel, chan
 end
 
 --[=[
-	Retrieves the pinned messages in the text channel asynchronously.
+	Retrieves the pinned messages in the thread channel asynchronously.
 	
 	@method getPinnedMessagesAsync
-	@within Objects.DiscordTextChannel
+	@within Objects.DiscordMediaChannel
 	@return Future<{[number]: DiscordMessage}> -- A future that resolves to an array of pinned messages.
 ]=]
-function DiscordTextChannel.Prototype.getPinnedMessagesAsync(self: DiscordTextChannel)
+function DiscordMediaChannel.Prototype.getPinnedMessagesAsync(self: DiscordMediaChannel)
 	return Future.try(function()
 		local messages = self.discordClient.discordGateway
 			:getAsync(string.format(DiscordEndpoints.BotGetPinnedMessages, self.id))
@@ -108,27 +113,27 @@ function DiscordTextChannel.Prototype.getPinnedMessagesAsync(self: DiscordTextCh
 end
 
 --[=[
-	Creates a new instance of DiscordTextChannel.
+	Creates a new instance of DiscordMediaChannel.
 	
 	@function new
 	@param discordClient any -- The Discord client instance.
 	@param channelData table -- The data for the channel to be created.
-	@within Objects.DiscordTextChannel
-	@return DiscordTextChannel -- A new instance of DiscordTextChannel.
+	@within Objects.DiscordMediaChannel
+	@return DiscordMediaChannel -- A new instance of DiscordMediaChannel.
 ]=]
-function DiscordTextChannel.Interface.new(
+function DiscordMediaChannel.Interface.new(
 	discordClient: any,
 	channelData: {
 		id: string,
 		recipients: { unknown },
 	}
-): DiscordTextChannel
-	local self = discordClient.discordCache:getDataOr(CacheType.DiscordTextChannel, channelData.id, function()
+): DiscordMediaChannel
+	local self = discordClient.discordCache:getDataOr(CacheType.DiscordMediaChannel, channelData.id, function()
 		return Construct({
 			id = channelData.id,
 
 			discordClient = discordClient,
-		}, DiscordTextChannel.Prototype)
+		}, DiscordMediaChannel.Prototype)
 	end)
 
 	if channelData then
@@ -140,7 +145,7 @@ function DiscordTextChannel.Interface.new(
 	return self
 end
 
-export type DiscordTextChannel = typeof(DiscordTextChannel.Prototype) & {
+export type DiscordMediaChannel = typeof(DiscordMediaChannel.Prototype) & {
 	discordClient: any,
 
 	type: number,
@@ -154,15 +159,4 @@ export type DiscordTextChannel = typeof(DiscordTextChannel.Prototype) & {
 	guildId: string,
 }
 
-export type DiscordTextChannelSchema = {
-	name: string,
-	position: number,
-	topic: string,
-	nsfw: boolean,
-	rateLimitPerUser: number,
-	parentId: string,
-	defaultAutoArchiveDurection: number,
-	defaultThreadRateLimitPerUser: number,
-}
-
-return DiscordTextChannel.Interface
+return DiscordMediaChannel.Interface

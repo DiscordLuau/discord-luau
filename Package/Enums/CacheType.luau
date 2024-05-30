@@ -16,6 +16,8 @@ local CacheType = {
 	DiscordInvite = "DiscordInvite",
 	AutoModeration = "AutoModeration",
 	DiscordThreadChannel = "DiscordThreadChannel",
+	DiscordForumChannel = "DiscordForumChannel",
+	DiscordMediaChannel = "DiscordMediaChannel",
 }
 
 export type CacheType =
@@ -33,5 +35,7 @@ export type CacheType =
 	| "DiscordInvite"
 	| "AutoModeration"
 	| "DiscordThreadChannel"
+	| "DiscordForumChannel"
+	| "DiscordMediaChannel"
 
 return CacheType

@@ -12,6 +12,8 @@ local PermissionsBuilder = require("../Builders/PermissionsBuilder")
 local DiscordTextChannel = require("DiscordTextChannel")
 local DiscordVoiceChannel = require("DiscordVoiceChannel")
 local DiscordThreadChannel = require("DiscordThreadChannel")
+local DiscordForumChannel = require("DiscordForumChannel")
+local DiscordMediaChannel = require("DiscordMediaChannel")
 local DiscordInvite = require("DiscordInvite")
 
 local Resolvable = require("../Network/Resolvable")
@@ -35,42 +37,6 @@ DiscordChannel.Interface = {}
 	The type of the Discord channel. Default is "DiscordChannel".
 ]=]
 DiscordChannel.Prototype.type = "DiscordChannel"
-
---[=[
-	Creates a thread in the current channel
-
-	@method createThreadAsync
-	@param name string
-	@param autoArchiveDuration number
-	@param isInvitable boolean?
-	@param privateThread boolean?
-	@param rateLimitPerUser number?
-	@within Objects.DiscordChannel
-	@return Future
-]=]
-function DiscordChannel.Prototype.createThreadAsync(
-	self: DiscordChannel,
-	name: string,
-	autoArchiveDuration: number,
-	isInvitable: boolean?,
-	privateThread: boolean?,
-	rateLimitPerUser: number?
-)
-	return Future.try(function()
-		return self.discordClient.discordGateway
-			:postAsync(
-				string.format(DiscordEndpoints.BotCreateThread, self.id),
-				Resolvable.new(ResolvableType.JSON, {
-					name = name,
-					auto_archive_duration = autoArchiveDuration,
-					invitable = isInvitable ~= nil and isInvitable or true,
-					type = privateThread and 12 or 11,
-					rate_limit_per_user = rateLimitPerUser,
-				})
-			)
-			:await()
-	end)
-end
 
 --[=[
 	Triggers the typing indicator in the channel.
@@ -361,8 +327,12 @@ function DiscordChannel.Interface.new(discordClient: any, rawChannelData: any): 
 		baseChannelObject = DiscordTextChannel.new(discordClient, rawChannelData) :: any
 	elseif rawChannelData.type == 2 then
 		baseChannelObject = DiscordVoiceChannel.new(discordClient, rawChannelData) :: any
-	elseif rawChannelData.type == 11 or rawChannelData.type == 12 then
+	elseif rawChannelData.type == 10 or rawChannelData.type == 11 or rawChannelData.type == 12 then
 		baseChannelObject = DiscordThreadChannel.new(discordClient, rawChannelData) :: any
+	elseif rawChannelData.type == 15 then
+		baseChannelObject = DiscordForumChannel.new(discordClient, rawChannelData) :: any
+	elseif rawChannelData.type == 16 then
+		baseChannelObject = DiscordMediaChannel.new(discordClient, rawChannelData) :: any
 	else
 		baseChannelObject = rawChannelData
 	end

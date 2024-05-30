@@ -18,6 +18,7 @@ return {
 	BotCrosspostMessage = "channels/%s/messages/%s/crosspost",
 	BotCreateThreadFromMessage = "channels/%s/messages/%s/threads",
 	BotCreateThread = "channels/%s/threads",
+	BotCreateForumOrMediaThread = "channels/%s/threads",
 
 	BotGetInvites = "channels/%s/invites",
 	BotDeleteInvite = "invites/%s",
