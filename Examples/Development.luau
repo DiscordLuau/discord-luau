@@ -15,9 +15,11 @@ DiscordClient.eventManager.onReady:connect(function()
 
 	local slashCommand = DiscordLuau.CommandBuilder
 		.new()
-		:setName("example-command")
+		:setName("work-please")
 		:setDescription("Example Description")
 		:setGuildPermissions(permissions)
+		:addContext(DiscordLuau.CommandBuilder.Context.Guild)
+		:addIntegration(DiscordLuau.CommandBuilder.IntegrationType.GuildCommand)
 
 	DiscordClient.discordApplication
 		:setSlashCommandsAsync({

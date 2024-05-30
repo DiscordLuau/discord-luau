@@ -19,7 +19,7 @@ DiscordClient.eventManager.onReady:connect(function()
 		:setDescription("...")
 		:setGuildPermissions(permissions)
 		:addContext(DiscordLuau.CommandBuilder.Context.Guild)
-		:setType(DiscordLuau.CommandBuilder.Type.ChatInput)
+		:addIntegration(DiscordLuau.CommandBuilder.IntegrationType.GuildCommand)
 
 	local slashCommand1 = DiscordLuau.CommandBuilder
 		.new()
@@ -27,7 +27,7 @@ DiscordClient.eventManager.onReady:connect(function()
 		:setDescription("abc!")
 		:setGuildPermissions(permissions)
 		:addContext(DiscordLuau.CommandBuilder.Context.Guild)
-		:setType(DiscordLuau.CommandBuilder.Type.ChatInput)
+		:addIntegration(DiscordLuau.CommandBuilder.IntegrationType.GuildCommand)
 
 	DiscordClient.discordApplication
 		:setSlashCommandsAsync({

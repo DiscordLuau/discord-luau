@@ -168,63 +168,18 @@ end
 ]=]
 function DiscordGuild.Prototype.setSlashCommandsAsync(self: DiscordGuild, commands: { CommandBuilder.CommandBuilder })
 	return Future.try(function()
-		local allCommands = self:fetchSlashCommandsAsync():await()
+		local commandObjects = {}
 
-		local commandsToUpdate = {}
-		local commandsToCreate = {}
-		local commandsToDestroy = {}
-
-		for _, commandObject0 in allCommands do
-			local commandFoundInCommandsArray
-			local commandReference
-
-			for _, commandObject1 in commands do
-				if commandObject0.name ~= commandObject1.commandName then
-					continue
-				end
-
-				commandReference = commandObject1
-				commandFoundInCommandsArray = true
-
-				break
-			end
-
-			if commandFoundInCommandsArray then
-				commandsToUpdate[commandObject0.id] = commandReference
-			else
-				table.insert(commandsToDestroy, commandObject0)
-			end
+		for index, commandBuilder in commands do
+			commandObjects[index] = commandBuilder:toPayloadObject():resolve()
 		end
 
-		for _, commandObject0 in commands do
-			local commandFoundInUpdateCommandsArray
-
-			for _, commandObject1 in commandsToUpdate do
-				if commandObject0.commandName ~= commandObject1.commandName then
-					continue
-				end
-
-				commandFoundInUpdateCommandsArray = true
-
-				break
-			end
-
-			if not commandFoundInUpdateCommandsArray then
-				table.insert(commandsToCreate, commandObject0)
-			end
-		end
-
-		for _, commandStruct in commandsToDestroy do
-			self:deleteSlashCommandAsync(commandStruct.id):await()
-		end
-
-		for commandId: string, command: CommandBuilder.CommandBuilder in commandsToUpdate do
-			self:editSlashCommandAsync(commandId, command):await()
-		end
-
-		for _, command: CommandBuilder.CommandBuilder in commandsToCreate do
-			self:createSlashCommandAsync(command):await()
-		end
+		return self.discordClient.discordGateway
+			:putAsync(
+				string.format(DiscordEndpoints.OverwriteGuildApplicationCommands, self.id),
+				Resolvable.new(ResolvableType.JSON, commandObjects)
+			)
+			:await()
 	end)
 end
 

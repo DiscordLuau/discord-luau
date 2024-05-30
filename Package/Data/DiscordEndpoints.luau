@@ -50,6 +50,7 @@ return {
 
 	CreateGlobalApplicationCommand = "applications/%s/commands",
 	EditGlobalApplicationCommand = "applications/%s/commands/%s",
+	OverwriteGlobalApplicationCommand = "applications/%s/commands",
 	GetGlobalApplicationCommands = "applications/%s/commands",
 	GetGlobalApplicationCommand = "applications/%s/commands/%s",
 	DeleteGlobalApplicationCommand = "applications/%s/commands/%s",
@@ -78,6 +79,7 @@ return {
 	CreateGuildApplicationCommand = "applications/%s/guilds/%s/commands",
 	EditGuildApplicationCommand = "applications/%s/guilds/%s/commands/%s",
 	GetGuildApplicationCommands = "applications/%s/guilds/%s/commands",
+	OverwriteGuildApplicationCommands = "applications/%s/guilds/%s/commands",
 	GetGuildApplicationCommand = "applications/%s/guilds/%s/commands/%s",
 	DeleteGuildApplicationCommand = "applications/%s/guilds/%s/commands/%s",
 

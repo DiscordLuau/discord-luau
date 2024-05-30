@@ -38,13 +38,13 @@ CommandBuilder.Prototype.type = "CommandBuilder"
 	An enumeration of command types.
 
 	- ChatInput: 1
-	- UserInput: 2
-	- MessageInput: 3
+	- UserContextAction: 2
+	- MessageContextAction: 3
 ]=]
 CommandBuilder.Interface.Type = Enumerate.new({
 	ChatInput = 1,
-	UserInput = 2,
-	MessageInput = 3,
+	UserContextAction = 2,
+	MessageContextAction = 3,
 })
 
 --[=[
@@ -61,6 +61,20 @@ CommandBuilder.Interface.Context = Enumerate.new({
 	Guild = 0,
 	BotDM = 1,
 	PrivateChannel = 2,
+})
+
+--[=[
+	@prop IntegrationType table
+	@within Builders.CommandBuilder
+
+	An enumeration of command integration contexts.
+
+	- GuildCommand: 0
+	- UserCommand: 1
+]=]
+CommandBuilder.Interface.IntegrationType = Enumerate.new({
+	GuildCommand = 0,
+	UserCommand = 1,
 })
 
 --[=[
@@ -137,22 +151,6 @@ function CommandBuilder.Prototype.setNSFW(self: CommandBuilder, isNSFW: boolean)
 end
 
 --[=[
-	
-	Sets whether the command can be used in DMs.
-	
-	@method setDMPermission
-	@param canDM boolean -- Whether the command can be used in DMs.
-	@within Builders.CommandBuilder
-	@return Builders.CommandBuilder -- Returns the CommandBuilder instance for method chaining.
-	]=]
-function CommandBuilder.Prototype.setDMPermission(self: CommandBuilder, canDM: boolean)
-	self.commandDM = canDM
-
-	return self
-end
-
---[=[
-	
 	Sets the required permissions for the command in a guild.
 	
 	@method setGuildPermissions
@@ -187,20 +185,6 @@ function CommandBuilder.Prototype.addOption(
 end
 
 --[=[
-	Sets whether the command has default permission enabled.
-	
-	@method setDefaultPermissionEnabled
-	@param enabled boolean -- Whether default permission is enabled.
-	@within Builders.CommandBuilder
-	@return Builders.CommandBuilder -- Returns the CommandBuilder instance for method chaining.
-]=]
-function CommandBuilder.Prototype.setDefaultPermissionEnabled(self: CommandBuilder, enabled: boolean)
-	self.defaultPermissionEnabled = enabled
-
-	return self
-end
-
---[=[
 	Adds a context to the command.
 	
 	@method addContext
@@ -215,6 +199,20 @@ function CommandBuilder.Prototype.addContext(self: CommandBuilder, context: numb
 end
 
 --[=[
+	Adds an intergration to the command.
+	
+	@method addIntegration
+	@param integration IntegrationType 
+	@within Builders.CommandBuilder
+	@return Builders.CommandBuilder -- Returns the CommandBuilder instance for method chaining.
+]=]
+function CommandBuilder.Prototype.addIntegration(self: CommandBuilder, integration: number)
+	table.insert(self.integrations, integration)
+
+	return self
+end
+
+--[=[
 	Converts the command to a JSON object that can be sent to the Discord API.
 	
 	@method toPayloadObject
@@ -223,19 +221,14 @@ end
 ]=]
 function CommandBuilder.Prototype.toPayloadObject(self: CommandBuilder)
 	local permissions = "0"
-	local contexts = {}
 	local options = {}
 
 	for _, commandOption in self.options do
-		table.insert(options, commandOption:toPayloadObject():resolve())
+		table.insert(options, (commandOption:toPayloadObject() :: any):resolve())
 	end
 
 	if self.commandPermissions then
 		permissions = self.commandPermissions:getValue()
-	end
-
-	for index, context in self.contexts do
-		contexts[tostring(index)] = context
 	end
 
 	return Resolvable.new(ResolvableType.JSON, {
@@ -249,7 +242,8 @@ function CommandBuilder.Prototype.toPayloadObject(self: CommandBuilder)
 		default_member_permissions = permissions,
 		dm_permission = self.commandDM,
 
-		contexts = contexts,
+		integration_types = self.integrations,
+		contexts = self.contexts,
 
 		name_localizations = self.commandLocalization,
 		description_localizations = self.commandLocalization,
@@ -270,6 +264,7 @@ function CommandBuilder.Interface.new(): CommandBuilder
 		choices = {},
 		options = {},
 		contexts = {},
+		integrations = {},
 	}, CommandBuilder.Prototype) :: any
 end
 
@@ -285,6 +280,7 @@ export type CommandBuilder = typeof(CommandBuilder.Prototype) & {
 	defaultPermissionEnabled: boolean?,
 
 	contexts: { number },
+	integrations: { number },
 	commandPermissions: PermissionsBuilder.PermissionsBuilder,
 	options: { CommandOptionBuilder.CommandOptionBuilder },
 }

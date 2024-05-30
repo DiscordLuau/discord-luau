@@ -5,6 +5,9 @@ local Future = require("../../Vendor/Future")
 
 local CommandBuilder = require("../Builders/CommandBuilder")
 
+local Resolvable = require("../Network/Resolvable")
+local ResolvableType = require("../../Enums/ResolveableType")
+
 local DiscordEndpoints = require("../../Data/DiscordEndpoints")
 local CacheType = require("../../Enums/CacheType")
 
@@ -121,82 +124,18 @@ function DiscordApplication.Prototype.setSlashCommandsAsync(
 	commands: { CommandBuilder.CommandBuilder }
 )
 	return Future.try(function()
-		local allCommands = self:fetchSlashCommandsAsync():await()
+		local commandObjects = {}
 
-		local commandsToUpdate = {}
-		local commandsToCreate = {}
-		local commandsToDestroy = {}
-
-		for _, commandObject0 in allCommands do
-			local commandFoundInCommandsArray
-			local commandReference
-
-			for _, commandObject1 in commands do
-				if commandObject0.name ~= commandObject1.commandName then
-					continue
-				end
-
-				commandReference = commandObject1
-				commandFoundInCommandsArray = true
-
-				break
-			end
-
-			if commandFoundInCommandsArray then
-				commandsToUpdate[commandObject0.id] = commandReference
-			else
-				table.insert(commandsToDestroy, commandObject0)
-			end
+		for index, commandBuilder in commands do
+			commandObjects[index] = commandBuilder:toPayloadObject():resolve()
 		end
 
-		for _, commandObject0 in commands do
-			local commandFoundInUpdateCommandsArray
-
-			for _, commandObject1 in commandsToUpdate do
-				if commandObject0.commandName ~= commandObject1.commandName then
-					continue
-				end
-
-				commandFoundInUpdateCommandsArray = true
-
-				break
-			end
-
-			if not commandFoundInUpdateCommandsArray then
-				table.insert(commandsToCreate, commandObject0)
-			end
-		end
-
-		for _, commandStruct in commandsToDestroy do
-			self:deleteSlashCommandAsync(commandStruct.id):await()
-		end
-
-		for commandId: string, command: CommandBuilder.CommandBuilder in commandsToUpdate do
-			local existingCommandJson
-
-			for _, commandObject in allCommands do
-				if commandObject.id == commandId then
-					existingCommandJson = commandObject
-
-					break
-				end
-			end
-
-			local existingCommandJsonClone = table.clone(existingCommandJson)
-			local existingCommandClone = command:toPayloadObject():resolve(true)
-
-			-- fixme: contexts seem to be reported incorrectly?
-			existingCommandClone.contexts = {}
-			existingCommandJsonClone.contexts = {}
-
-			if IsUnique(existingCommandClone, existingCommandJsonClone) then
-				self:editSlashCommandAsync(commandId, command):await()
-			end
-		end
-
-		for _, command: CommandBuilder.CommandBuilder in commandsToCreate do
-			self:createSlashCommandAsync(command):await()
-		end
+		return self.discordClient.discordGateway
+			:putAsync(
+				string.format(DiscordEndpoints.OverwriteGlobalApplicationCommand, self.id),
+				Resolvable.new(ResolvableType.JSON, commandObjects)
+			)
+			:await()
 	end)
 end
 
