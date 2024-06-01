@@ -160,13 +160,28 @@ function DiscordInteraction.Interface.new(discordClient: any, jsonData: { [any]:
 		defered = false,
 	}
 
-	jsonData.channel = DiscordTextChannel.new(discordClient, jsonData.channel)
-	jsonData.guild = DiscordGuild.new(discordClient, jsonData.guild)
-	jsonData.user = DiscordUser.new(discordClient, jsonData.member.user)
-	jsonData.member = DiscordGuildMember.new(discordClient, jsonData.member.user.id, jsonData.guild.id, jsonData.member)
-	jsonData.appPermissions = PermissionsBuilder.from(jsonData.appPermissions)
+	if jsonData.channel then
+		jsonData.channel = DiscordTextChannel.new(discordClient, jsonData.channel)
+	end
 
-	jsonData.member.user = nil
+	if jsonData.guild then
+		jsonData.guild = DiscordGuild.new(discordClient, jsonData.guild)
+	end
+
+	if jsonData.user then
+		jsonData.user = DiscordUser.new(discordClient, jsonData.user)
+	end
+
+	if jsonData.member then
+		jsonData.member =
+			DiscordGuildMember.new(discordClient, jsonData.member.user.id, jsonData.guild.id, jsonData.member)
+
+		jsonData.member.user = nil
+	end
+
+	if jsonData.appPermissions then
+		jsonData.appPermissions = PermissionsBuilder.from(jsonData.appPermissions)
+	end
 
 	for index, value in jsonData do
 		interactionStruct[index] = value

@@ -79,6 +79,8 @@ DiscordClient.eventManager.onReady:connect(function()
 		:setName("example-command")
 		:setDescription("Example Description")
 		:setGuildPermissions(permissions)
+		:addContext(DiscordLuau.CommandBuilder.Context.Guild)
+		:addIntegration(DiscordLuau.CommandBuilder.IntegrationType.GuildCommand)
 
 	DiscordClient.discordApplication
 		:setSlashCommandsAsync({

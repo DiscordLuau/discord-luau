@@ -19,7 +19,10 @@ DiscordClient.eventManager.onReady:connect(function()
 		:setDescription("Example Description")
 		:setGuildPermissions(permissions)
 		:addContext(DiscordLuau.CommandBuilder.Context.Guild)
+		:addContext(DiscordLuau.CommandBuilder.Context.PrivateChannel)
+		:addContext(DiscordLuau.CommandBuilder.Context.BotDM)
 		:addIntegration(DiscordLuau.CommandBuilder.IntegrationType.GuildCommand)
+		:addIntegration(DiscordLuau.CommandBuilder.IntegrationType.UserCommand)
 
 	DiscordClient.discordApplication
 		:setSlashCommandsAsync({
