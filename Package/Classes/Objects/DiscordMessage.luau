@@ -344,8 +344,10 @@ function DiscordMessage.Interface.new(
 			discordClient = discordClient,
 		}
 
-		messageData.member =
-			DiscordGuildMember.new(discordClient, messageData.author.id, messageData.guildId, messageData.member)
+		if messageData.member then
+			messageData.member =
+				DiscordGuildMember.new(discordClient, messageData.author.id, messageData.guildId, messageData.member)
+		end
 
 		return Construct(messageStruct, DiscordMessage.Prototype)
 	end)
