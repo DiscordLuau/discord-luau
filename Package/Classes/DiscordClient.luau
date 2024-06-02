@@ -127,15 +127,15 @@ function DiscordClient.Prototype.connectAsync(self: DiscordClient)
 				elseif eventName == WebsocketEvents.MessageBulkDeleted then
 					self.onEvent:fire(DiscordEvents.MessageBulkDeleted, data)
 				elseif eventName == WebsocketEvents.ChannelCreate then
-					local discordChannel = DiscordChannel.new(self, data)
+					local discordChannel = DiscordChannel.from(self, data)
 
 					self.onEvent:fire(DiscordEvents.ChannelCreate, discordChannel)
 				elseif eventName == WebsocketEvents.ChannelUpdate then
-					local discordChannel = DiscordChannel.new(self, data)
+					local discordChannel = DiscordChannel.from(self, data)
 
 					self.onEvent:fire(DiscordEvents.ChannelUpdate, discordChannel)
 				elseif eventName == WebsocketEvents.ChannelDeleted then
-					local discordChannel = DiscordChannel.new(self)
+					local discordChannel = DiscordChannel.from(self)
 
 					self.onEvent:fire(DiscordEvents.ChannelDelete, discordChannel)
 				elseif eventName == WebsocketEvents.UserUpdated then
@@ -220,7 +220,7 @@ function DiscordClient.Prototype.fetchChannelAsync(
 		local rawChannelData =
 			self.discordGateway:getAsync(string.format(DiscordEndpoints.BotGetChannel, channelId)):await()
 
-		return DiscordChannel.new(self, rawChannelData) :: DiscordChannel.DiscordChannel
+		return DiscordChannel.from(self, rawChannelData) :: DiscordChannel.DiscordChannel
 	end)
 end
 

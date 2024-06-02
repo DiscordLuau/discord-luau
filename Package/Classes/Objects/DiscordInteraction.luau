@@ -10,7 +10,7 @@ local MessageBuilder = require("../Builders/MessageBuilder")
 
 local DiscordGuildMember = require("DiscordGuildMember")
 
-local DiscordTextChannel = require("DiscordTextChannel")
+local DiscordChannel = require("DiscordChannel")
 local DiscordUser = require("DiscordUser")
 local DiscordGuild = require("DiscordGuild")
 
@@ -161,7 +161,7 @@ function DiscordInteraction.Interface.new(discordClient: any, jsonData: { [any]:
 	}
 
 	if jsonData.channel then
-		jsonData.channel = DiscordTextChannel.new(discordClient, jsonData.channel)
+		jsonData.channel = DiscordChannel.from(discordClient, jsonData.channel)
 	end
 
 	if jsonData.guild then
@@ -193,7 +193,7 @@ end
 export type DiscordInteraction = typeof(DiscordInteraction.Prototype) & {
 	discordClient: any,
 
-	channel: DiscordTextChannel.DiscordTextChannel,
+	channel: DiscordChannel.DiscordChannel,
 	guild: DiscordGuild.DiscordGuild,
 	user: DiscordUser.DiscordUser,
 

@@ -1,0 +1,36 @@
+local Construct = require("../../Utils/Construct")
+local Extend = require("../../Utils/Extend")
+
+local CacheType = require("../../Enums/CacheType")
+
+local BaseGuildThread = require("BaseGuildThread")
+
+--[=[
+	@class Objects.GuildPublicThreadChannel
+]=]
+local GuildPublicThreadChannel = {}
+
+GuildPublicThreadChannel.Prototype = {}
+GuildPublicThreadChannel.Interface = {}
+
+GuildPublicThreadChannel.Prototype.type = "GuildPublicThreadChannel"
+
+function GuildPublicThreadChannel.Interface.new(
+	discordClient,
+	channelData: {
+		id: string,
+		guildId: string,
+	}
+)
+	local channelObject = Construct({
+		discordClient = discordClient,
+	}, GuildPublicThreadChannel.Prototype)
+
+	return Extend(channelObject, BaseGuildThread.new(discordClient, channelData))
+end
+
+export type GuildPublicThreadChannel = BaseGuildThread.BaseGuildThread & typeof(GuildPublicThreadChannel.Prototype) & {
+	discordClient: any,
+}
+
+return GuildPublicThreadChannel.Interface

@@ -253,7 +253,7 @@ end
 	@within Network.DiscordGateway
 	@return Future -- A Future that resolves with the response.
 ]=]
-function DiscordGateway.Prototype.getAsync(self: DiscordGateway, api: string, headers: { [string]: string })
+function DiscordGateway.Prototype.getAsync(self: DiscordGateway, api: string, headers: { [string]: string }?)
 	return Future.try(function()
 		local cache = self:getEndpointCache(api)
 		local cacheValue = cache and cache:get()

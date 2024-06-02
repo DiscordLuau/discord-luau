@@ -386,9 +386,9 @@ end
 	@return Builders.EmbedBuilder -- A new instance of EmbedBuilder.
 ]=]
 function EmbedBuilder.Interface.new()
-	return Construct({
+	return (Construct({
 		fields = {},
-	}, EmbedBuilder.Prototype)
+	}, EmbedBuilder.Prototype) :: unknown) :: EmbedBuilder
 end
 
 export type EmbedBuilder = typeof(EmbedBuilder.Prototype) & {
