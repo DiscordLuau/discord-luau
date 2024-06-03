@@ -26,7 +26,7 @@ function GuildTextChannel.Interface.new(
 		discordClient = discordClient,
 	}, GuildTextChannel.Prototype)
 
-	return Extend(channelObject, BaseGuildTextChannel.new(discordClient, channelData))
+	return (Extend(channelObject, BaseGuildTextChannel.new(discordClient, channelData)) :: unknown) :: GuildTextChannel
 end
 
 export type GuildTextChannel = BaseGuildTextChannel.BaseGuildTextChannel & typeof(GuildTextChannel.Prototype) & {

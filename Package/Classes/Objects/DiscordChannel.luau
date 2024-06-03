@@ -39,42 +39,38 @@ function DiscordChannel.Interface.from(
 		id: string,
 		type: number,
 
-		[string]: any,
+		[any]: any,
 	}
-)
-	local baseChannelObject: DiscordChannel
-
+): DiscordChannel
 	if rawChannelData.type == ChannelType.GuildTextChannel then
-		baseChannelObject = GuildTextChannel.new(discordClient, rawChannelData)
+		return GuildTextChannel.new(discordClient, rawChannelData)
 	elseif rawChannelData.type == ChannelType.UserDMChannel then
-		baseChannelObject = UserDMChannel.new(discordClient, rawChannelData)
+		return UserDMChannel.new(discordClient, rawChannelData)
 	elseif rawChannelData.type == ChannelType.GuildVoiceChannel then
-		baseChannelObject = GuildVoiceChannel.new(discordClient, rawChannelData)
+		return GuildVoiceChannel.new(discordClient, rawChannelData)
 	elseif rawChannelData.type == ChannelType.UserGroupChannel then
-		baseChannelObject = UserGroupChannel.new(discordClient, rawChannelData)
+		return UserGroupChannel.new(discordClient, rawChannelData)
 	elseif rawChannelData.type == ChannelType.GuildCategory then
-		baseChannelObject = GuildCategoryChannel.new(discordClient, rawChannelData)
+		return GuildCategoryChannel.new(discordClient, rawChannelData)
 	elseif rawChannelData.type == ChannelType.GuildAnnouncement then
-		baseChannelObject = GuildAnnouncementChannel.new(discordClient, rawChannelData)
+		return GuildAnnouncementChannel.new(discordClient, rawChannelData)
 	elseif rawChannelData.type == ChannelType.GuildAnnouncementThread then
-		baseChannelObject = GuildAnnouncementThreadChannel.new(discordClient, rawChannelData)
+		return GuildAnnouncementThreadChannel.new(discordClient, rawChannelData)
 	elseif rawChannelData.type == ChannelType.GuildPublicThread then
-		baseChannelObject = GuildPublicThreadChannel.new(discordClient, rawChannelData)
+		return GuildPublicThreadChannel.new(discordClient, rawChannelData)
 	elseif rawChannelData.type == ChannelType.GuildPrivateThread then
-		baseChannelObject = GuildPrivateThreadChannel.new(discordClient, rawChannelData)
+		return GuildPrivateThreadChannel.new(discordClient, rawChannelData)
 	elseif rawChannelData.type == ChannelType.GuildStageVoiceChannel then
-		baseChannelObject = GuildStageVoiceChannel.new(discordClient, rawChannelData)
+		return GuildStageVoiceChannel.new(discordClient, rawChannelData)
 	elseif rawChannelData.type == ChannelType.GuildDirectory then
-		baseChannelObject = GuildDirectoryChannel.new(discordClient, rawChannelData)
+		return GuildDirectoryChannel.new(discordClient, rawChannelData)
 	elseif rawChannelData.type == ChannelType.GuildForumChannel then
-		baseChannelObject = GuildForumChannel.new(discordClient, rawChannelData)
+		return GuildForumChannel.new(discordClient, rawChannelData)
 	elseif rawChannelData.type == ChannelType.GuildMediaChannel then
-		baseChannelObject = GuildMediaChannel.new(discordClient, rawChannelData)
+		return GuildMediaChannel.new(discordClient, rawChannelData)
 	else
 		error(`Unknown discord channel type '{rawChannelData.type}'`)
 	end
-
-	return baseChannelObject
 end
 
 export type DiscordChannel =

@@ -30,8 +30,17 @@ local DiscordGuildRole = require("Classes/Objects/DiscordGuildRole")
 local DiscordInteraction = require("Classes/Objects/DiscordInteraction")
 local DiscordInvite = require("Classes/Objects/DiscordInvite")
 local DiscordMessage = require("Classes/Objects/DiscordMessage")
-local DiscordTextChannel = require("Classes/Objects/DiscordTextChannel")
-local DiscordVoiceChannel = require("Classes/Objects/DiscordVoiceChannel")
+local GuildAnnouncementChannel = require("Classes/Objects/GuildAnnouncementChannel")
+local GuildAnnouncementThreadChannel = require("Classes/Objects/GuildAnnouncementThreadChannel")
+local GuildCategoryChannel = require("Classes/Objects/GuildCategoryChannel")
+local GuildDirectoryChannel = require("Classes/Objects/GuildDirectoryChannel")
+local GuildForumChannel = require("Classes/Objects/GuildForumChannel")
+local GuildMediaChannel = require("Classes/Objects/GuildMediaChannel")
+local GuildPrivateThreadChannel = require("Classes/Objects/GuildPrivateThreadChannel")
+local GuildPublicThreadChannel = require("Classes/Objects/GuildPublicThreadChannel")
+local GuildStageVoiceChannel = require("Classes/Objects/GuildStageVoiceChannel")
+local UserDMChannel = require("Classes/Objects/UserDMChannel")
+local UserGroupChannel = require("Classes/Objects/UserGroupChannel")
 local DiscordUser = require("Classes/Objects/DiscordUser")
 
 -- Components
@@ -194,9 +203,18 @@ export type DiscordGuildRole = DiscordGuildRole.DiscordGuildRole
 export type DiscordInteraction = DiscordInteraction.DiscordInteraction
 export type DiscordInvite = DiscordInvite.DiscordInvite
 export type DiscordMessage = DiscordMessage.DiscordMessage
-export type DiscordTextChannel = DiscordTextChannel.DiscordTextChannel
-export type DiscordVoiceChannel = DiscordVoiceChannel.DiscordVoiceChannel
 export type DiscordUser = DiscordUser.DiscordUser
+export type GuildAnnouncementChannel = GuildAnnouncementChannel.GuildAnnouncementChannel
+export type GuildAnnouncementThreadChannel = GuildAnnouncementThreadChannel.GuildAnnouncementThreadChannel
+export type GuildCategoryChannel = GuildCategoryChannel.GuildCategoryChannel
+export type GuildDirectoryChannel = GuildDirectoryChannel.GuildDirectoryChannel
+export type GuildForumChannel = GuildForumChannel.GuildForumChannel
+export type GuildMediaChannel = GuildMediaChannel.GuildMediaChannel
+export type GuildPrivateThreadChannel = GuildPrivateThreadChannel.GuildPrivateThreadChannel
+export type GuildPublicThreadChannel = GuildPublicThreadChannel.GuildPublicThreadChannel
+export type GuildStageVoiceChannel = GuildStageVoiceChannel.GuildStageVoiceChannel
+export type UserDMChannel = UserDMChannel.UserDMChannel
+export type UserGroupChannel = UserGroupChannel.UserGroupChannel
 --#endregion
 
 return DiscordLuau

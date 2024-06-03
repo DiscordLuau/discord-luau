@@ -35,17 +35,26 @@ function BaseDiscordChannel.Interface.new(
 	discordClient,
 	channelData: {
 		id: string,
+
+		[any]: any,
 	}
-)
-	return Construct({
+): BaseDiscordChannel
+	local self = Construct({
 		discordClient = discordClient,
-	}, BaseDiscordChannel.Prototype)
+	}, BaseDiscordChannel.Prototype) :: any
+
+	for key, value in channelData do
+		self[key] = value
+	end
+
+	return self
 end
 
 export type BaseDiscordChannel = typeof(BaseDiscordChannel.Prototype) & {
 	discordClient: any,
 
 	id: string,
+	type: number,
 }
 
 return BaseDiscordChannel.Interface

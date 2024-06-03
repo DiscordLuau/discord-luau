@@ -47,7 +47,7 @@ function UserGroupChannel.Interface.new(
 		discordClient = discordClient,
 	}, UserGroupChannel.Prototype)
 
-	return Extend(channelObject, BaseUserChannel.new(discordClient, channelData))
+	return (Extend(channelObject, BaseUserChannel.new(discordClient, channelData)) :: unknown) :: UserGroupChannel
 end
 
 export type UserGroupChannel = BaseUserChannel.BaseUserChannel & typeof(UserGroupChannel.Prototype) & {

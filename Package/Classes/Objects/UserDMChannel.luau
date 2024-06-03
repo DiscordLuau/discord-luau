@@ -25,7 +25,7 @@ function UserDMChannel.Interface.new(
 		discordClient = discordClient,
 	}, UserDMChannel.Prototype)
 
-	return Extend(channelObject, BaseUserChannel.new(discordClient, channelData))
+	return (Extend(channelObject, BaseUserChannel.new(discordClient, channelData)) :: unknown) :: UserDMChannel
 end
 
 export type UserDMChannel = BaseUserChannel.BaseUserChannel & typeof(UserDMChannel.Prototype) & {

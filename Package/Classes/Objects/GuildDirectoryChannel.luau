@@ -30,7 +30,7 @@ function GuildDirectoryChannel.Interface.new(
 		return Construct(channelStruct, GuildDirectoryChannel.Prototype)
 	end)
 
-	return Extend(self, BaseGuildTextChannel.new(discordClient, channelData))
+	return (Extend(self, BaseGuildTextChannel.new(discordClient, channelData)) :: unknown) :: GuildDirectoryChannel
 end
 
 export type GuildDirectoryChannel = BaseGuildTextChannel.BaseGuildTextChannel & typeof(GuildDirectoryChannel.Prototype) & {

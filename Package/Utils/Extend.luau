@@ -66,13 +66,13 @@ return function<S, M>(class0: S, class1: M): S & M & { super: M }
 		end,
 
 		__mode = "",
-		__type = class.type or "GenericClass",
+		__type = `{class0.type} ({class1.type})`,
 
 		-- __eq = ...
 		-- __gc = ...
 
 		__tostring = function()
-			return `DiscordLuau<'{class.type or "GenericClass"}'>`
+			return `DiscordLuau<'{`{class0.type} ({class1.type})` or "GenericClass"}'>`
 		end,
 	})
 

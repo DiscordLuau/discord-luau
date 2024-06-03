@@ -26,7 +26,7 @@ function GuildCategoryChannel.Interface.new(
 		discordClient = discordClient,
 	}, GuildCategoryChannel.Prototype)
 
-	return Extend(channelObject, BaseDiscordChannel.new(discordClient, channelData))
+	return (Extend(channelObject, BaseDiscordChannel.new(discordClient, channelData)) :: unknown) :: GuildCategoryChannel
 end
 
 export type GuildCategoryChannel = BaseDiscordChannel.BaseDiscordChannel & typeof(GuildCategoryChannel.Prototype) & {

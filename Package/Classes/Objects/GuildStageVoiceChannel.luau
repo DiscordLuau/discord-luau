@@ -26,7 +26,9 @@ function GuildStageVoiceChannel.Interface.new(
 		discordClient = discordClient,
 	}, GuildStageVoiceChannel.Prototype)
 
-	return Extend(channelObject, BaseGuildVoiceChannel.new(discordClient, channelData))
+	return (
+		Extend(channelObject, BaseGuildVoiceChannel.new(discordClient, channelData)) :: unknown
+	) :: GuildStageVoiceChannel
 end
 
 export type GuildStageVoiceChannel =

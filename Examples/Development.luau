@@ -4,37 +4,16 @@ local Env = require("../.env")
 local DiscordSettings = DiscordLuau.SettingsBuilder.new(Env.DISCORD_BOT_TOKEN)
 local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettings)
 
-DiscordClient:setVerbose(true)
+-- DiscordClient:setVerbose(true)
 
 DiscordClient.eventManager.onReady:connect(function()
 	print(`🎉🎉 {DiscordClient.discordUser.username} is online! 🎉🎉`)
 
-	local permissions = DiscordLuau.PermissionsBuilder.new()
-
-	permissions:addPermission(DiscordLuau.PermissionsBuilder.Permissions.SendMessages)
-
-	local slashCommand = DiscordLuau.CommandBuilder
-		.new()
-		:setName("work-please")
-		:setDescription("Example Description")
-		:setGuildPermissions(permissions)
-		:addContext(DiscordLuau.CommandBuilder.Context.Guild)
-		:addContext(DiscordLuau.CommandBuilder.Context.PrivateChannel)
-		:addContext(DiscordLuau.CommandBuilder.Context.BotDM)
-		:addIntegration(DiscordLuau.CommandBuilder.IntegrationType.GuildCommand)
-		:addIntegration(DiscordLuau.CommandBuilder.IntegrationType.UserCommand)
-
-	DiscordClient.discordApplication
-		:setSlashCommandsAsync({
-			slashCommand,
-		})
-		:after(function(data)
-			print("updated, fetching current commands..")
-
-			DiscordClient.discordApplication:fetchSlashCommandsAsync():after(function(...)
-				print(...)
-			end)
-		end)
+	print(DiscordClient:fetchChannelAsync("1048686561685946489"):await())
+	print(DiscordClient:fetchChannelAsync("1239935584907169812"):await())
+	print(DiscordClient:fetchChannelAsync("1239935584907169813"):await())
+	print(DiscordClient:fetchChannelAsync("1246395956296155197"):await())
+	print(DiscordClient:fetchChannelAsync("1134076704495775844"):await())
 end)
 
 DiscordClient:connectAsync()

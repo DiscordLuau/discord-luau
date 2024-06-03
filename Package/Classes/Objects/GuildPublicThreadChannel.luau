@@ -26,7 +26,9 @@ function GuildPublicThreadChannel.Interface.new(
 		discordClient = discordClient,
 	}, GuildPublicThreadChannel.Prototype)
 
-	return Extend(channelObject, BaseGuildThread.new(discordClient, channelData))
+	return (
+		Extend(channelObject, BaseGuildThread.new(discordClient, channelData)) :: unknown
+	) :: GuildPublicThreadChannel
 end
 
 export type GuildPublicThreadChannel = BaseGuildThread.BaseGuildThread & typeof(GuildPublicThreadChannel.Prototype) & {

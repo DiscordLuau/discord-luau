@@ -30,8 +30,17 @@ export type DiscordGuildRole = DiscordLuau.DiscordGuildRole
 export type DiscordInteraction = DiscordLuau.DiscordInteraction
 export type DiscordInvite = DiscordLuau.DiscordInvite
 export type DiscordMessage = DiscordLuau.DiscordMessage
-export type DiscordTextChannel = DiscordLuau.DiscordTextChannel
-export type DiscordVoiceChannel = DiscordLuau.DiscordVoiceChannel
+export type GuildAnnouncementChannel = DiscordLuau.GuildAnnouncementChannel
+export type GuildAnnouncementThreadChannel = DiscordLuau.GuildAnnouncementThreadChannel
+export type GuildCategoryChannel = DiscordLuau.GuildCategoryChannel
+export type GuildDirectoryChannel = DiscordLuau.GuildDirectoryChannel
+export type GuildForumChannel = DiscordLuau.GuildForumChannel
+export type GuildMediaChannel = DiscordLuau.GuildMediaChannel
+export type GuildPrivateThreadChannel = DiscordLuau.GuildPrivateThreadChannel
+export type GuildPublicThreadChannel = DiscordLuau.GuildPublicThreadChannel
+export type GuildStageVoiceChannel = DiscordLuau.GuildStageVoiceChannel
+export type UserDMChannel = DiscordLuau.UserDMChannel
+export type UserGroupChannel = DiscordLuau.UserGroupChannel
 export type DiscordUser = DiscordLuau.DiscordUser
 
 return DiscordLuau

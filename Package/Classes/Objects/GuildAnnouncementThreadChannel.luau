@@ -30,7 +30,7 @@ function GuildAnnouncementThreadChannel.Interface.new(
 		return Construct(channelStruct, GuildAnnouncementThreadChannel.Prototype)
 	end)
 
-	return Extend(self, BaseGuildThread.new(discordClient, channelData))
+	return (Extend(self, BaseGuildThread.new(discordClient, channelData)) :: unknown) :: GuildAnnouncementThreadChannel
 end
 
 export type GuildAnnouncementThreadChannel =
