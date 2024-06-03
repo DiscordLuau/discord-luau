@@ -135,7 +135,7 @@ function DiscordClient.Prototype.connectAsync(self: DiscordClient)
 
 					self.onEvent:fire(DiscordEvents.ChannelUpdate, discordChannel)
 				elseif eventName == WebsocketEvents.ChannelDeleted then
-					local discordChannel = DiscordChannel.from(self)
+					local discordChannel = DiscordChannel.from(self, data)
 
 					self.onEvent:fire(DiscordEvents.ChannelDelete, discordChannel)
 				elseif eventName == WebsocketEvents.UserUpdated then
