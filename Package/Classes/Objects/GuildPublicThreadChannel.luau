@@ -26,13 +26,15 @@ function GuildPublicThreadChannel.Interface.new(
 		guildId: string,
 	}
 )
-	local channelObject = Construct({
-		discordClient = discordClient,
-	}, GuildPublicThreadChannel.Prototype)
+	local self = discordClient.discordCache:getDataOr(CacheType.DiscordChannel, channelData.id, function()
+		local channelStruct = {
+			discordClient = discordClient,
+		}
 
-	return (
-		Extend(channelObject, BaseGuildThread.new(discordClient, channelData)) :: unknown
-	) :: GuildPublicThreadChannel
+		return Construct(channelStruct, GuildPublicThreadChannel.Prototype)
+	end)
+
+	return (Extend(self, BaseGuildThread.new(discordClient, channelData)) :: unknown) :: GuildPublicThreadChannel
 end
 
 export type GuildPublicThreadChannel = BaseGuildThread.BaseGuildThread & typeof(GuildPublicThreadChannel.Prototype) & {

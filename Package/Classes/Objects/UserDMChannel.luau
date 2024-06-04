@@ -25,11 +25,15 @@ function UserDMChannel.Interface.new(
 		id: string,
 	}
 )
-	local channelObject = Construct({
-		discordClient = discordClient,
-	}, UserDMChannel.Prototype)
+	local self = discordClient.discordCache:getDataOr(CacheType.DiscordChannel, channelData.id, function()
+		local channelStruct = {
+			discordClient = discordClient,
+		}
 
-	return (Extend(channelObject, BaseUserChannel.new(discordClient, channelData)) :: unknown) :: UserDMChannel
+		return Construct(channelStruct, UserDMChannel.Prototype)
+	end)
+
+	return (Extend(self, BaseUserChannel.new(discordClient, channelData)) :: unknown) :: UserDMChannel
 end
 
 export type UserDMChannel = BaseUserChannel.BaseUserChannel & typeof(UserDMChannel.Prototype) & {

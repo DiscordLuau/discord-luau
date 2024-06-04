@@ -26,11 +26,15 @@ function GuildVoiceChannel.Interface.new(
 		guildId: string,
 	}
 )
-	local channelObject = Construct({
-		discordClient = discordClient,
-	}, GuildVoiceChannel.Prototype)
+	local self = discordClient.discordCache:getDataOr(CacheType.DiscordChannel, channelData.id, function()
+		local channelStruct = {
+			discordClient = discordClient,
+		}
 
-	return (Extend(channelObject, BaseGuildVoiceChannel.new(discordClient, channelData)) :: unknown) :: GuildVoiceChannel
+		return Construct(channelStruct, GuildVoiceChannel.Prototype)
+	end)
+
+	return (Extend(self, BaseGuildVoiceChannel.new(discordClient, channelData)) :: unknown) :: GuildVoiceChannel
 end
 
 export type GuildVoiceChannel = BaseGuildVoiceChannel.BaseGuildVoiceChannel & typeof(GuildVoiceChannel.Prototype) & {

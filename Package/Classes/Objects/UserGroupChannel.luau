@@ -47,15 +47,23 @@ function UserGroupChannel.Interface.new(
 		id: string,
 	}
 )
-	local channelObject = Construct({
-		discordClient = discordClient,
-	}, UserGroupChannel.Prototype)
+	local self = discordClient.discordCache:getDataOr(CacheType.DiscordChannel, channelData.id, function()
+		local channelStruct = {
+			discordClient = discordClient,
+		}
 
-	return (Extend(channelObject, BaseUserChannel.new(discordClient, channelData)) :: unknown) :: UserGroupChannel
+		return Construct(channelStruct, UserGroupChannel.Prototype)
+	end)
+
+	return (Extend(self, BaseUserChannel.new(discordClient, channelData)) :: unknown) :: UserGroupChannel
 end
 
 export type UserGroupChannel = BaseUserChannel.BaseUserChannel & typeof(UserGroupChannel.Prototype) & {
 	discordClient: any,
+
+	icon: string,
+	ownerId: string,
+	applicationId: string,
 }
 
 return UserGroupChannel.Interface

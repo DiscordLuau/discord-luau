@@ -332,11 +332,23 @@ function BaseDiscordGuildChannel.Interface.new(
 		discordClient = discordClient,
 	}, BaseDiscordGuildChannel.Prototype)
 
+	for index, value in channelData do
+		(channelObject :: {})[index] = value
+	end
+
 	return Extend(channelObject, BaseDiscordChannel.new(discordClient, channelData))
 end
 
 export type BaseDiscordGuildChannel = BaseDiscordChannel.BaseDiscordChannel & typeof(BaseDiscordGuildChannel.Prototype) & {
 	guildId: string,
+
+	topic: string,
+	nsfw: boolean,
+
+	rateLimitPerUser: number,
+	parentId: string,
+
+	flags: number,
 }
 
 return BaseDiscordGuildChannel.Interface

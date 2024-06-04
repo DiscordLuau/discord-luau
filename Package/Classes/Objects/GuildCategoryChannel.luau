@@ -26,9 +26,13 @@ function GuildCategoryChannel.Interface.new(
 		guildId: string,
 	}
 )
-	local channelObject = Construct({
-		discordClient = discordClient,
-	}, GuildCategoryChannel.Prototype)
+	local channelObject = discordClient.discordCache:getDataOr(CacheType.DiscordChannel, channelData.id, function()
+		local channelStruct = {
+			discordClient = discordClient,
+		}
+
+		return Construct(channelStruct, GuildCategoryChannel.Prototype)
+	end)
 
 	return (Extend(channelObject, BaseDiscordChannel.new(discordClient, channelData)) :: unknown) :: GuildCategoryChannel
 end

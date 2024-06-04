@@ -13,6 +13,7 @@ local Resolvable = require("../Network/Resolvable")
 local ResolvableType = require("../../Enums/ResolveableType")
 
 local BaseGuildTextChannel = require("BaseGuildTextChannel")
+local DiscordEmoji = require("DiscordEmoji")
 
 --[=[
 	@class Objects.BaseGuildThread
@@ -138,17 +139,55 @@ function BaseGuildThread.Interface.new(
 	channelData: {
 		id: string,
 		guildId: string,
+
+		[string]: any,
 	}
 )
 	local channelObject = Construct({
 		discordClient = discordClient,
 	}, BaseGuildThread.Prototype)
 
+	if channelData.defaultReactionEmoji then
+		channelData.defaultReactionEmoji = DiscordEmoji.new(discordClient, channelData.defaultReactionEmoji)
+	end
+
+	for index, value in channelData do
+		(channelObject :: {})[index] = value
+	end
+
 	return Extend(channelObject, BaseGuildTextChannel.new(discordClient, channelData))
 end
 
 export type BaseGuildThread = BaseGuildTextChannel.BaseGuildTextChannel & typeof(BaseGuildThread.Prototype) & {
 	discordClient: any,
+
+	ownerId: string,
+
+	messageCount: number,
+	memberCount: number,
+	totalMessageSent: number?,
+
+	threadMetadata: {
+		archived: boolean,
+		autoArchiveDuration: number,
+		archiveTimestamp: string,
+		locked: boolean,
+		invitable: boolean?,
+		createTimestamp: string?,
+	},
+
+	availableTags: {
+		{
+			id: string,
+			name: string,
+			moderated: boolean,
+			emojiId: string?,
+			emojiName: string?,
+		}
+	},
+
+	appliedTags: { string },
+	defaultReactionEmoji: DiscordEmoji.DiscordEmoji,
 }
 
 return BaseGuildThread.Interface

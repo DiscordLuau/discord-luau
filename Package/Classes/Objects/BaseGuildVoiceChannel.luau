@@ -80,6 +80,12 @@ export type BaseGuildVoiceChannel =
 		guildId: string,
 
 		voiceConnection: DiscordVoiceConnection.DiscordVoiceConnection?,
+
+		bitrate: number,
+		userLimit: number,
+
+		rtc_region: string,
+		videoQualityMode: number,
 	}
 
 return BaseGuildVoiceChannel.Interface

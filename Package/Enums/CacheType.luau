@@ -8,16 +8,7 @@ local CacheType = {
 	DiscordGuildRole = "DiscordGuildRole",
 	DiscordUser = "DiscordUser",
 	DiscordChannel = "DiscordChannel",
-	DiscordTextChannel = "DiscordTextChannel",
-	DiscordVoiceChannel = "DiscordVoiceChannel",
-	DiscordAnnouncementChannel = "DiscordAnnouncementChannel",
 	DiscordMessage = "DiscordMessage",
-	DiscordMember = "DiscordMember",
-	DiscordInvite = "DiscordInvite",
-	AutoModeration = "AutoModeration",
-	DiscordThreadChannel = "DiscordThreadChannel",
-	DiscordForumChannel = "DiscordForumChannel",
-	DiscordMediaChannel = "DiscordMediaChannel",
 }
 
 export type CacheType =
@@ -27,15 +18,6 @@ export type CacheType =
 	| "DiscordGuildRole"
 	| "DiscordUser"
 	| "DiscordChannel"
-	| "DiscordTextChannel"
-	| "DiscordAnnouncementChannel"
-	| "DiscordVoiceChannel"
 	| "DiscordMessage"
-	| "DiscordMember"
-	| "DiscordInvite"
-	| "AutoModeration"
-	| "DiscordThreadChannel"
-	| "DiscordForumChannel"
-	| "DiscordMediaChannel"
 
 return CacheType

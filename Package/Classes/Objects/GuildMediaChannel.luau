@@ -24,17 +24,27 @@ function GuildMediaChannel.Interface.new(
 	channelData: {
 		id: string,
 		guildId: string,
+
+		[string]: any,
 	}
 )
-	local channelObject = Construct({
-		discordClient = discordClient,
-	}, GuildMediaChannel.Prototype)
+	local self = discordClient.discordCache:getDataOr(CacheType.DiscordChannel, channelData.id, function()
+		local channelStruct = {
+			discordClient = discordClient,
+		}
 
-	return (Extend(channelObject, BaseDiscordChannel.new(discordClient, channelData)) :: unknown) :: GuildMediaChannel
+		return Construct(channelStruct, GuildMediaChannel.Prototype)
+	end)
+
+	self.defaultForumLayout = channelData.defaultForumLayout
+
+	return (Extend(self, BaseDiscordChannel.new(discordClient, channelData)) :: unknown) :: GuildMediaChannel
 end
 
 export type GuildMediaChannel = BaseDiscordChannel.BaseDiscordChannel & typeof(GuildMediaChannel.Prototype) & {
 	discordClient: any,
+
+	defaultForumLayout: number,
 }
 
 return GuildMediaChannel.Interface

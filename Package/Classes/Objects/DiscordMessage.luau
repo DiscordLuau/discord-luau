@@ -344,8 +344,18 @@ function DiscordMessage.Interface.new(
 			discordClient = discordClient,
 		}
 
-		messageData.member =
-			DiscordGuildMember.new(discordClient, messageData.author.id, messageData.guildId, messageData.member)
+		if messageData.member then
+			messageData.member =
+				DiscordGuildMember.new(discordClient, messageData.author.id, messageData.guildId, messageData.member)
+		end
+
+		if messageData.guildId then
+			local discordChannel = discordClient.discordCache:getData(CacheType.DiscordChannel, messageData.guildId)
+
+			if discordChannel then
+				discordChannel.lastMessageId = messageData.id
+			end
+		end
 
 		return Construct(messageStruct, DiscordMessage.Prototype)
 	end)

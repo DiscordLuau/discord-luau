@@ -161,12 +161,19 @@ function BaseGuildTextChannel.Interface.new(
 		discordClient = discordClient,
 	}, BaseGuildTextChannel.Prototype)
 
+	for index, value in channelData do
+		(channelObject :: {})[index] = value
+	end
+
 	return Extend(channelObject, BaseDiscordGuildChannel.new(discordClient, channelData))
 end
 
 export type BaseGuildTextChannel =
 	BaseDiscordGuildChannel.BaseDiscordGuildChannel
 	& typeof(BaseGuildTextChannel.Prototype)
-	& {}
+	& {
+		lastPinTimestamp: string,
+		lastMessageId: string?,
+	}
 
 return BaseGuildTextChannel.Interface

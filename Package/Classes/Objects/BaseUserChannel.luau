@@ -9,6 +9,7 @@ local Future = require("../../Vendor/Future")
 local BaseDiscordGuildChannel = require("BaseDiscordGuildChannel")
 local BaseDiscordChannel = require("BaseDiscordChannel")
 local DiscordMessage = require("DiscordMessage")
+local DiscordUser = require("DiscordUser")
 
 local MessageBuilder = require("../Builders/MessageBuilder")
 
@@ -155,11 +156,23 @@ function BaseUserChannel.Interface.new(
 	discordClient,
 	channelData: {
 		id: string,
+
+		[string]: any,
 	}
 )
 	local channelObject = Construct({
 		discordClient = discordClient,
 	}, BaseUserChannel.Prototype)
+
+	if channelData.recipients then
+		for key, value in channelData.recipients do
+			channelData.recipients[key] = DiscordUser.new(discordClient, value)
+		end
+	end
+
+	for index, value in channelData do
+		(channelObject :: {})[index] = value
+	end
 
 	return Extend(channelObject, BaseDiscordChannel.new(discordClient, channelData))
 end
@@ -167,6 +180,8 @@ end
 export type BaseUserChannel = BaseDiscordChannel.BaseDiscordChannel & typeof(BaseUserChannel.Prototype) & {
 	discordClient: any,
 	id: string,
+
+	recipients: { DiscordUser.DiscordUser },
 }
 
 return BaseUserChannel.Interface

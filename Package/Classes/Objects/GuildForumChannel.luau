@@ -24,17 +24,27 @@ function GuildForumChannel.Interface.new(
 	channelData: {
 		id: string,
 		guildId: string,
+
+		[string]: any,
 	}
 )
-	local channelObject = Construct({
-		discordClient = discordClient,
-	}, GuildForumChannel.Prototype)
+	local self = discordClient.discordCache:getDataOr(CacheType.DiscordChannel, channelData.id, function()
+		local channelStruct = {
+			discordClient = discordClient,
+		}
 
-	return (Extend(channelObject, BaseDiscordChannel.new(discordClient, channelData)) :: unknown) :: GuildForumChannel
+		return Construct(channelStruct, GuildForumChannel.Prototype)
+	end)
+
+	self.defaultSortOrder = channelData.defaultSortOrder
+
+	return (Extend(self, BaseDiscordChannel.new(discordClient, channelData)) :: unknown) :: GuildForumChannel
 end
 
 export type GuildForumChannel = BaseDiscordChannel.BaseDiscordChannel & typeof(GuildForumChannel.Prototype) & {
 	discordClient: any,
+
+	defaultSortOrder: number,
 }
 
 return GuildForumChannel.Interface
