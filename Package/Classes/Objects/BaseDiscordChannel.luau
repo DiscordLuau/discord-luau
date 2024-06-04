@@ -8,6 +8,8 @@ local Future = require("../../Vendor/Future")
 
 --[=[
 	@class Objects.BaseDiscordChannel
+
+	Represents a base discord channel, every discord channel object will extend from this as a base.
 ]=]
 local BaseDiscordChannel = {}
 

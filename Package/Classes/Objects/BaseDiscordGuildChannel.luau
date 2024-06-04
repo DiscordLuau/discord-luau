@@ -20,6 +20,8 @@ local Datetime = require("../../Std/Datetime")
 
 --[=[
 	@class Objects.BaseDiscordGuildChannel
+
+	Represents a base object for any/all guild channels.
 ]=]
 local BaseDiscordGuildChannel = {}
 

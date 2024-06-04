@@ -7,6 +7,8 @@ local BaseGuildVoiceChannel = require("BaseGuildVoiceChannel")
 
 --[=[
 	@class Objects.GuildVoiceChannel
+
+	Represents the implementation of a Discord Voice channel.
 ]=]
 local GuildVoiceChannel = {}
 

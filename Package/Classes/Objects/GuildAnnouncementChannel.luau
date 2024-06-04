@@ -7,6 +7,8 @@ local BaseGuildTextChannel = require("BaseGuildTextChannel")
 
 --[=[
 	@class Objects.GuildAnnouncementChannel
+
+	Represents the implementation of a Discord Announcement channel.
 ]=]
 local GuildAnnouncementChannel = {}
 

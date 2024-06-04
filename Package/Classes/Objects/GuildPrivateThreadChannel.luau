@@ -7,6 +7,8 @@ local BaseGuildThread = require("BaseGuildThread")
 
 --[=[
 	@class Objects.GuildPrivateThreadChannel
+
+	Represents the implementation of a Discord Private Thread channel.
 ]=]
 local GuildPrivateThreadChannel = {}
 

@@ -13,6 +13,8 @@ local ChannelBuilder = require("../Builders/ChannelBuilder")
 
 --[=[
 	@class Objects.UserGroupChannel
+
+	Represents the implementation of a Discord Group Channel
 ]=]
 local UserGroupChannel = {}
 

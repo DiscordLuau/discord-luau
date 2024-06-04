@@ -7,6 +7,8 @@ local BaseGuildTextChannel = require("BaseGuildTextChannel")
 
 --[=[
 	@class Objects.GuildDirectoryChannel
+
+	Represents the implementation of a Discord Directory channel.
 ]=]
 local GuildDirectoryChannel = {}
 

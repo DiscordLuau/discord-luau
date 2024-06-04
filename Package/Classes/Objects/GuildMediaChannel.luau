@@ -7,6 +7,8 @@ local BaseDiscordChannel = require("BaseDiscordChannel")
 
 --[=[
 	@class Objects.GuildMediaChannel
+
+	Represents the implementation of a Discord Media channel.
 ]=]
 local GuildMediaChannel = {}
 

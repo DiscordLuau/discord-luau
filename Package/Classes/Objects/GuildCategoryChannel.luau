@@ -7,6 +7,8 @@ local BaseDiscordChannel = require("BaseDiscordChannel")
 
 --[=[
 	@class Objects.GuildCategoryChannel
+
+	Represents the implementation of a Discord Category channel.
 ]=]
 local GuildCategoryChannel = {}
 
