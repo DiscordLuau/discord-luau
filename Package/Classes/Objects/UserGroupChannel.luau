@@ -15,6 +15,8 @@ local ChannelBuilder = require("../Builders/ChannelBuilder")
 	@class Objects.UserGroupChannel
 
 	Represents the implementation of a Discord Group Channel
+
+	=@inherit Objects.BaseUserChannel
 ]=]
 local UserGroupChannel = {}
 

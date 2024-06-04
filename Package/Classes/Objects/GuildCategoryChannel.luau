@@ -9,6 +9,8 @@ local BaseDiscordChannel = require("BaseDiscordChannel")
 	@class Objects.GuildCategoryChannel
 
 	Represents the implementation of a Discord Category channel.
+
+	=@inherit Objects.BaseDiscordChannel
 ]=]
 local GuildCategoryChannel = {}
 

@@ -9,6 +9,8 @@ local BaseGuildTextChannel = require("BaseGuildTextChannel")
 	@class Objects.GuildTextChannel
 
 	Represents the implementation of a Discord Text channel.
+
+	=@inherit Objects.BaseGuildTextChannel
 ]=]
 local GuildTextChannel = {}
 

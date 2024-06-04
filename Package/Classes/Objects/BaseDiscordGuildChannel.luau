@@ -22,6 +22,8 @@ local Datetime = require("../../Std/Datetime")
 	@class Objects.BaseDiscordGuildChannel
 
 	Represents a base object for any/all guild channels.
+
+	=@inherit Objects.BaseDiscordChannel
 ]=]
 local BaseDiscordGuildChannel = {}
 
@@ -216,7 +218,7 @@ end
 
 	@method getPublicArchivedThreadsAsync
 	@param epoch number?
-	@pram limit number?
+	@param limit number?
 	@return Future<{ number }>
 	@within Objects.BaseDiscordGuildChannel
 ]=]
@@ -252,7 +254,7 @@ end
 
 	@method getPrivateArchivedThreadsAsync
 	@param epoch number?
-	@pram limit number?
+	@param limit number?
 	@return Future<{ number }>
 	@within Objects.BaseDiscordGuildChannel
 ]=]
@@ -288,7 +290,7 @@ end
 
 	@method getJoinedPrivateArchivedThreads
 	@param epoch number?
-	@pram limit number?
+	@param limit number?
 	@return Future<{ number }>
 	@within Objects.BaseDiscordGuildChannel
 ]=]

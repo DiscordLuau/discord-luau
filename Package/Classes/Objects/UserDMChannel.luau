@@ -9,6 +9,8 @@ local BaseUserChannel = require("BaseUserChannel")
 	@class Objects.UserDMChannel
 
 	Represents the implementation of a Discord Direct Message Channel
+
+	=@inherit Objects.BaseUserChannel
 ]=]
 local UserDMChannel = {}
 

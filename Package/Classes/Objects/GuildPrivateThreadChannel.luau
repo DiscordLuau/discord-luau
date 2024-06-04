@@ -9,6 +9,8 @@ local BaseGuildThread = require("BaseGuildThread")
 	@class Objects.GuildPrivateThreadChannel
 
 	Represents the implementation of a Discord Private Thread channel.
+
+	=@inherit Objects.BaseGuildThread
 ]=]
 local GuildPrivateThreadChannel = {}
 

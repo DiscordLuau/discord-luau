@@ -9,6 +9,8 @@ local BaseGuildThread = require("BaseGuildThread")
 	@class Objects.GuildAnnouncementThreadChannel
 
 	Represents the implementation of a Discord Announcement thread channel.
+
+	=@inherit Objects.BaseGuildThread
 ]=]
 local GuildAnnouncementThreadChannel = {}
 

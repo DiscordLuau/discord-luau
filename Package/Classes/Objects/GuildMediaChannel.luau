@@ -9,6 +9,8 @@ local BaseDiscordChannel = require("BaseDiscordChannel")
 	@class Objects.GuildMediaChannel
 
 	Represents the implementation of a Discord Media channel.
+
+	=@inherit Objects.BaseDiscordChannel
 ]=]
 local GuildMediaChannel = {}
 

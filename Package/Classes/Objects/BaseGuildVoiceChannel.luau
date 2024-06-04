@@ -14,6 +14,8 @@ local DiscordVoiceConnection = require("../Network/DiscordVoiceConnection")
 	@class Objects.BaseGuildVoiceChannel
 
 	A base discord voice channel, every Guild Voice channel extends from.
+
+	=@inherit Objects.BaseDiscordGuildChannel
 ]=]
 local BaseGuildVoiceChannel = {}
 

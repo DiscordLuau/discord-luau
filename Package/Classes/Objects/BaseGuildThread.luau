@@ -18,6 +18,8 @@ local BaseGuildTextChannel = require("BaseGuildTextChannel")
 	@class Objects.BaseGuildThread
 
 	A base discord Thread channel, all discord threads extend from.
+
+	=@inherit Objects.BaseGuildTextChannel
 ]=]
 local BaseGuildThread = {}
 

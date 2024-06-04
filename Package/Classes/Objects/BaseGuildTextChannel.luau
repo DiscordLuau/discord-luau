@@ -20,6 +20,8 @@ local ResolvableType = require("../../Enums/ResolveableType")
 	@class Objects.BaseGuildTextChannel
 
 	A base guild text channel, where any/all text channels extend from.
+
+	=@inherit Objects.BaseDiscordGuildChannel
 ]=]
 local BaseGuildTextChannel = {}
 
