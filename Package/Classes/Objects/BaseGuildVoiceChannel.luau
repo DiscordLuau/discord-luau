@@ -69,6 +69,10 @@ function BaseGuildVoiceChannel.Interface.new(
 		discordClient = discordClient,
 	}, BaseGuildVoiceChannel.Prototype)
 
+	for index, value in channelData do
+		(channelObject :: {})[index] = value
+	end
+
 	return Extend(channelObject, BaseDiscordGuildChannel.new(discordClient, channelData))
 end
 

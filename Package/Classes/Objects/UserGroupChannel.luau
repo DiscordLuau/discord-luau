@@ -64,6 +64,8 @@ export type UserGroupChannel = BaseUserChannel.BaseUserChannel & typeof(UserGrou
 	icon: string,
 	ownerId: string,
 	applicationId: string,
+
+	managed: boolean,
 }
 
 return UserGroupChannel.Interface
