@@ -241,13 +241,15 @@ end
 	@within Builders.MessageBuilder
 	@return Builders.MessageBuilder -- A new instance of MessageBuilder.
 ]=]
-function MessageBuilder.Interface.new(): MessageBuilder
-	return Construct({
-		embeds = {},
-		components = {},
-		attachments = {},
-		stickers = {},
-	}, MessageBuilder.Prototype) :: any
+function MessageBuilder.Interface.new()
+	return (
+		Construct({
+			embeds = {},
+			components = {},
+			attachments = {},
+			stickers = {},
+		}, MessageBuilder.Prototype) :: unknown
+	) :: MessageBuilder
 end
 
 type InterfaceBuidler =

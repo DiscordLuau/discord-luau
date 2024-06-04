@@ -90,8 +90,8 @@ end
 	@within Builders.AttachmentBuilder
 	@return Builders.AttachmentBuilder -- A new instance of AttachmentBuilder.
 ]=]
-function AttachmentBuilder.Interface.new(): AttachmentBuilder
-	return Construct({}, AttachmentBuilder.Prototype)
+function AttachmentBuilder.Interface.new()
+	return (Construct({}, AttachmentBuilder.Prototype) :: unknown) :: AttachmentBuilder
 end
 
 export type AttachmentBuilder = typeof(AttachmentBuilder.Prototype) & {

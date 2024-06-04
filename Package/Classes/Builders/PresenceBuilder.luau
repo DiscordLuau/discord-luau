@@ -135,10 +135,10 @@ end
 	@within Builders.PresenceBuilder
 	@return Builders.PresenceBuilder -- A new instance of PresenceBuilder.
 ]=]
-function PresenceBuilder.Interface.new(): PresenceBuilder
-	return Construct({
+function PresenceBuilder.Interface.new()
+	return (Construct({
 		activities = {},
-	}, PresenceBuilder.Prototype)
+	}, PresenceBuilder.Prototype) :: unknown) :: PresenceBuilder
 end
 
 export type PresenceBuilder = typeof(PresenceBuilder.Prototype) & {

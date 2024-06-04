@@ -41,10 +41,14 @@ return {
 	BotFollowAnnouncementChannel = "channels/%s/followers",
 
 	BotGetThreadMembers = "channels/%s/thread-members",
+	BotGetThreadMember = "channels/%s/thread-members/%s",
 	BotJoinThreadChannel = "channels/%s/thread-members/@me",
 	BotAddMemberToThreadChannel = "channels/%s/thread-members/%s",
 	BotLeaveThreadChannel = "channels/%s/thread-members/@me",
 	BotRemoveMemberFromThreadChannel = "channels/%s/thread-members/%s",
+	BotListPublicArchivedThreads = "/channels/%s/threads/archived/public?before=%s&limit=%s",
+	BotListPrivateArchivedThreads = "/channels/%s/threads/archived/private?before=%s&limit=%s",
+	BotListJoinedPrivateArchivedThreads = "/channels/%s/users/@me/threads/archived/private?before=%s&limit=%s",
 
 	BotBulkDeleteMessages = "channels/%s/messages/bulk-delete",
 

@@ -86,11 +86,11 @@ end
 	@param modalId string -- The ID of the modal.
 	@return Builders.ModalBuilder -- A new instance of ModalBuilder.
 ]=]
-function ModalBuilder.Interface.new(modalId: string): ModalBuilder
-	return Construct({
+function ModalBuilder.Interface.new(modalId: string)
+	return (Construct({
 		components = {},
 		modalId = modalId,
-	}, ModalBuilder.Prototype) :: any
+	}, ModalBuilder.Prototype) :: unknown) :: ModalBuilder
 end
 
 type InterfaceBuidler =

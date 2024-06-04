@@ -1,23 +1,18 @@
-local Inherit = require("../../Utils/Inherit")
+local ChannelType = require("../../Enums/ChannelType")
 
-local DiscordEndpoints = require("../../Data/DiscordEndpoints")
-
-local Future = require("../../Vendor/Future")
-
-local DiscordMessage = require("../Objects/DiscordMessage")
-
-local MessageBuilder = require("../Builders/MessageBuilder")
-local PermissionsBuilder = require("../Builders/PermissionsBuilder")
-
-local DiscordTextChannel = require("DiscordTextChannel")
-local DiscordVoiceChannel = require("DiscordVoiceChannel")
-local DiscordThreadChannel = require("DiscordThreadChannel")
-local DiscordForumChannel = require("DiscordForumChannel")
-local DiscordMediaChannel = require("DiscordMediaChannel")
-local DiscordInvite = require("DiscordInvite")
-
-local Resolvable = require("../Network/Resolvable")
-local ResolvableType = require("../../Enums/ResolveableType")
+local GuildVoiceChannel = require("GuildVoiceChannel")
+local GuildTextChannel = require("GuildTextChannel")
+local UserDMChannel = require("UserDMChannel")
+local UserGroupChannel = require("UserGroupChannel")
+local GuildCategoryChannel = require("GuildCategoryChannel")
+local GuildAnnouncementChannel = require("GuildAnnouncementChannel")
+local GuildAnnouncementThreadChannel = require("GuildAnnouncementThreadChannel")
+local GuildPublicThreadChannel = require("GuildPublicThreadChannel")
+local GuildPrivateThreadChannel = require("GuildPrivateThreadChannel")
+local GuildStageVoiceChannel = require("GuildStageVoiceChannel")
+local GuildDirectoryChannel = require("GuildDirectoryChannel")
+local GuildForumChannel = require("GuildForumChannel")
+local GuildMediaChannel = require("GuildMediaChannel")
 
 --[=[
 	@class Objects.DiscordChannel
@@ -29,319 +24,59 @@ local DiscordChannel = {}
 DiscordChannel.Prototype = {}
 DiscordChannel.Interface = {}
 
---[=[
-	@prop type string
-	@within Objects.DiscordChannel
-	@readonly
+function DiscordChannel.Interface.from(
+	discordClient: any,
+	rawChannelData: {
+		id: string,
+		type: number,
 
-	The type of the Discord channel. Default is "DiscordChannel".
-]=]
-DiscordChannel.Prototype.type = "DiscordChannel"
-
---[=[
-	Triggers the typing indicator in the channel.
-
-	@method triggerTypingIndicator
-	@within Objects.DiscordChannel
-	@return Future
-]=]
-function DiscordChannel.Prototype.triggerTypingIndicator(self: DiscordChannel)
-	return Future.try(function()
-		return self.discordClient.discordGateway
-			:postAsync(string.format(DiscordEndpoints.BotTriggerTypingChannel, self.id))
-			:await()
-	end)
-end
-
---[=[
-	set overwrites for a specific role permissions for this channel in a discord guild.
-
-	@method overwriteRolePermissionsAsync
-	@param roleId string
-	@param allowedPermissions PermissionsBuilder.PermissionsBuilder
-	@param disallowedPermissions PermissionsBuilder.PermissionsBuilder
-	@within Objects.DiscordChannel
-	@return Future
-]=]
-function DiscordChannel.Prototype.overwriteRolePermissionsAsync(
-	self: DiscordChannel,
-	roleId: string,
-	allowedPermissions: PermissionsBuilder.PermissionsBuilder,
-	disallowedPermissions: PermissionsBuilder.PermissionsBuilder
-)
-	return Future.try(function()
-		return self.discordClient.discordGateway
-			:putAsync(
-				string.format(DiscordEndpoints.BotEditChannelPermissions, self.id, roleId),
-				Resolvable.new(ResolvableType.JSON, {
-					allow = allowedPermissions:getValue(),
-					deny = disallowedPermissions:getValue(),
-					type = 0,
-				})
-			)
-			:await()
-	end)
-end
-
---[=[
-	set overwrites for a specific members permissions for this channel in a discord guild.
-
-	@method overwriteMemberPermissionssync
-	@param memberId string
-	@param allowedPermissions PermissionsBuilder.PermissionsBuilder
-	@param disallowedPermissions PermissionsBuilder.PermissionsBuilder
-	@within Objects.DiscordChannel
-	@return Future
-]=]
-function DiscordChannel.Prototype.overwriteMemberPermissionssync(
-	self: DiscordChannel,
-	memberId: string,
-	allowedPermissions: PermissionsBuilder.PermissionsBuilder,
-	disallowedPermissions: PermissionsBuilder.PermissionsBuilder
-)
-	return Future.try(function()
-		return self.discordClient.discordGateway
-			:putAsync(
-				string.format(DiscordEndpoints.BotEditChannelPermissions, self.id, memberId),
-				Resolvable.new(ResolvableType.JSON, {
-					allow = allowedPermissions:getValue(),
-					deny = disallowedPermissions:getValue(),
-					type = 1,
-				})
-			)
-			:await()
-	end)
-end
-
---[=[
-	deletes overwritten permissions for the given id, the given id must be either a role id or a user id
-
-	@method overwriteMemberPermissionssync
-	@param roleIdOrUserId string
-	@within Objects.DiscordChannel
-	@return Future
-]=]
-function DiscordChannel.Prototype.deletePermissionOverwriteAsync(self: DiscordChannel, roleIdOrUserId: string)
-	return Future.try(function()
-		return self.discordClient.discordGateway
-			:deleteAsync(string.format(DiscordEndpoints.BotDeleteChannelPermission, self.id, roleIdOrUserId))
-			:await()
-	end)
-end
-
---[=[
-	Deletes the channel asynchronously.
-
-	@method deleteAsync
-	@within Objects.DiscordChannel
-	@return Future
-]=]
-function DiscordChannel.Prototype.deleteAsync(self: DiscordChannel)
-	return Future.try(function()
-		return self.discordClient.discordGateway
-			:deleteAsync(string.format(DiscordEndpoints.BotDeleteChannel, self.id))
-			:await()
-	end)
-end
-
---[=[
-	Gets messages from the channel asynchronously.
-
-	@method getMessagesAsync
-	@param limit number? -- The maximum number of messages to retrieve.
-	@within Objects.DiscordChannel
-	@return Future
-]=]
-function DiscordChannel.Prototype.getMessagesAsync(self: DiscordChannel, limit: number?)
-	return Future.try(function()
-		local url = string.format(DiscordEndpoints.BotGetChannelMessages, self.id)
-
-		if limit then
-			url ..= `?limit={limit}`
-		end
-
-		local messageObjects = self.discordClient.discordGateway:getAsync(url):await()
-
-		for index, messageObject in messageObjects do
-			messageObjects[index] = DiscordMessage.new(self.discordClient, messageObject)
-		end
-
-		return messageObjects
-	end)
-end
-
---[=[
-	Gets a specific message from the channel asynchronously.
-
-	@method getMessageAsync
-	@param messageId string -- The ID of the message to retrieve.
-	@within Objects.DiscordChannel
-	@return Future
-]=]
-function DiscordChannel.Prototype.getMessageAsync(self: DiscordChannel, messageId: string)
-	return Future.try(function()
-		local messageObject = self.discordClient.discordGateway
-			:getAsync(string.format(DiscordEndpoints.BotGetChannelMessage, self.id, messageId))
-			:await()
-
-		return DiscordMessage.new(self.discordClient, messageObject)
-	end)
-end
-
---[=[
-	Deletes multiple messages from the channel asynchronously.
-
-	@method bulkDeleteMessagesAsync
-	@param messageIds {string} -- A list of message IDs to delete.
-	@within Objects.DiscordChannel
-	@return Future
-]=]
-function DiscordChannel.Prototype.bulkDeleteMessagesAsync(self: DiscordChannel, messageIds: { string })
-	return Future.try(function()
-		return self.discordClient.discordGateway
-			:postAsync(
-				string.format(DiscordEndpoints.BotBulkDeleteMessages, self.id),
-				Resolvable.new(ResolvableType.JSON, {
-					messages = messageIds,
-				})
-			)
-			:await()
-	end)
-end
-
---[=[
-	Sends a message to the channel asynchronously.
-
-	@method sendMessageAsync
-	@param messageBuilder MessageBuilder -- The message builder object.
-	@within Objects.DiscordChannel
-	@return Future
-]=]
-function DiscordChannel.Prototype.sendMessageAsync(self: DiscordChannel, messageBuilder: MessageBuilder.MessageBuilder)
-	return Future.try(function()
-		return self.discordClient.discordGateway
-			:postAsync(string.format(DiscordEndpoints.BotCreateMessage, self.id), messageBuilder:toPayloadObject())
-			:await()
-	end)
-end
-
---[=[
-	Gets the invites for the channel asynchronously.
-
-	@method getInvitesAsync
-	@within Objects.DiscordChannel
-	@return Future
-]=]
-function DiscordChannel.Prototype.getInvitesAsync(self: DiscordChannel)
-	return Future.try(function()
-		local invites =
-			self.discordClient.discordGateway:getAsync(string.format(DiscordEndpoints.BotGetInvites, self.id)):await()
-
-		for index, inviteData in invites do
-			invites[index] = DiscordInvite.new(self.discordClient, inviteData)
-		end
-
-		return invites
-	end)
-end
-
---[=[
-	Creates an invite for the channel asynchronously.
-
-	@method createInviteAsync
-	@param maxAge number? -- The maximum age of the invite in seconds.
-	@param maxUses number? -- The maximum number of uses for the invite.
-	@param temporary boolean? -- Whether the invite grants temporary membership.
-	@within Objects.DiscordChannel
-	@return Future
-]=]
-function DiscordChannel.Prototype.createInviteAsync(
-	self: DiscordChannel,
-	maxAge: number?,
-	maxUses: number?,
-	temporary: boolean?
-)
-	return Future.try(function()
-		local inviteData = self.discordClient.discordGateway
-			:postAsync(
-				string.format(DiscordEndpoints.BotGetInvites, self.id),
-				Resolvable.new(ResolvableType.JSON, {
-					max_age = maxAge,
-					max_uses = maxUses,
-					temporary = temporary,
-				})
-			)
-			:await()
-
-		return DiscordInvite.new(self.discordClient, inviteData)
-	end)
-end
-
---[=[
-	Sets the position of the channel asynchronously.
-
-	@method setPositionAsync
-	@param position number -- The new position of the channel.
-	@param parentId string? -- The ID of the new parent category.
-	@param syncPermissions boolean? -- Whether to sync permissions with the new parent.
-	@within Objects.DiscordChannel
-	@return Future
-]=]
-function DiscordChannel.Prototype.setPositionAsync(
-	self: DiscordChannel,
-	position: number,
-	parentId: string?,
-	syncPermissions: boolean?
-)
-	return Future.try(function()
-		return self.discordClient.discordGateway
-			:patchAsync(
-				string.format(DiscordEndpoints.BotModifyGuildChannelPosition, self.id),
-				Resolvable.new(ResolvableType.JSON, {
-					id = self.id,
-					position = position,
-					parent_id = parentId,
-					lock_permissions = syncPermissions,
-				})
-			)
-			:await()
-	end)
-end
-
---[=[
-	Creates a new DiscordChannel instance.
-	
-	@function new
-	@param discordClient any -- The Discord client instance.
-	@param rawChannelData any -- The raw data for the channel.
-	@within Objects.DiscordChannel
-	@return DiscordChannel
-]=]
-function DiscordChannel.Interface.new(discordClient: any, rawChannelData: any): DiscordChannel
-	-- https://discord.com/developers/docs/resources/channel#channel-object-channel-types
-	-- todo: support other channel types lol
-
-	local baseChannelObject
-
-	if rawChannelData.type == 0 then
-		baseChannelObject = DiscordTextChannel.new(discordClient, rawChannelData) :: any
-	elseif rawChannelData.type == 2 then
-		baseChannelObject = DiscordVoiceChannel.new(discordClient, rawChannelData) :: any
-	elseif rawChannelData.type == 10 or rawChannelData.type == 11 or rawChannelData.type == 12 then
-		baseChannelObject = DiscordThreadChannel.new(discordClient, rawChannelData) :: any
-	elseif rawChannelData.type == 15 then
-		baseChannelObject = DiscordForumChannel.new(discordClient, rawChannelData) :: any
-	elseif rawChannelData.type == 16 then
-		baseChannelObject = DiscordMediaChannel.new(discordClient, rawChannelData) :: any
+		[any]: any,
+	}
+): DiscordChannel
+	if rawChannelData.type == ChannelType.GuildTextChannel then
+		return GuildTextChannel.new(discordClient, rawChannelData)
+	elseif rawChannelData.type == ChannelType.UserDMChannel then
+		return UserDMChannel.new(discordClient, rawChannelData)
+	elseif rawChannelData.type == ChannelType.GuildVoiceChannel then
+		return GuildVoiceChannel.new(discordClient, rawChannelData)
+	elseif rawChannelData.type == ChannelType.UserGroupChannel then
+		return UserGroupChannel.new(discordClient, rawChannelData)
+	elseif rawChannelData.type == ChannelType.GuildCategory then
+		return GuildCategoryChannel.new(discordClient, rawChannelData)
+	elseif rawChannelData.type == ChannelType.GuildAnnouncement then
+		return GuildAnnouncementChannel.new(discordClient, rawChannelData)
+	elseif rawChannelData.type == ChannelType.GuildAnnouncementThread then
+		return GuildAnnouncementThreadChannel.new(discordClient, rawChannelData)
+	elseif rawChannelData.type == ChannelType.GuildPublicThread then
+		return GuildPublicThreadChannel.new(discordClient, rawChannelData)
+	elseif rawChannelData.type == ChannelType.GuildPrivateThread then
+		return GuildPrivateThreadChannel.new(discordClient, rawChannelData)
+	elseif rawChannelData.type == ChannelType.GuildStageVoiceChannel then
+		return GuildStageVoiceChannel.new(discordClient, rawChannelData)
+	elseif rawChannelData.type == ChannelType.GuildDirectory then
+		return GuildDirectoryChannel.new(discordClient, rawChannelData)
+	elseif rawChannelData.type == ChannelType.GuildForumChannel then
+		return GuildForumChannel.new(discordClient, rawChannelData)
+	elseif rawChannelData.type == ChannelType.GuildMediaChannel then
+		return GuildMediaChannel.new(discordClient, rawChannelData)
 	else
-		baseChannelObject = rawChannelData
+		error(`Unknown discord channel type '{rawChannelData.type}'`)
 	end
-
-	return Inherit(DiscordChannel.Prototype, baseChannelObject)
 end
 
 export type DiscordChannel =
-	(DiscordTextChannel.DiscordTextChannel | DiscordVoiceChannel.DiscordVoiceChannel)
-	& typeof(DiscordChannel.Prototype)
+	GuildTextChannel.GuildTextChannel
+	| UserDMChannel.UserDMChannel
+	| GuildVoiceChannel.GuildVoiceChannel
+	| UserGroupChannel.UserGroupChannel
+	| GuildCategoryChannel.GuildCategoryChannel
+	| GuildAnnouncementChannel.GuildAnnouncementChannel
+	| GuildAnnouncementThreadChannel.GuildAnnouncementThreadChannel
+	| GuildPublicThreadChannel.GuildPublicThreadChannel
+	| GuildPrivateThreadChannel.GuildPrivateThreadChannel
+	| GuildStageVoiceChannel.GuildStageVoiceChannel
+	| GuildDirectoryChannel.GuildDirectoryChannel
+	| GuildForumChannel.GuildForumChannel
+	| GuildMediaChannel.GuildMediaChannel
 
 return DiscordChannel.Interface

@@ -217,8 +217,8 @@ end
 	@private
 	@method connectAsync
 	@param self DiscordVoiceConnection
-	@param guildId string -- The ID of the guild.
-	@param channelId string -- The ID of the channel.
+	@param guildId string
+	@param channelId string
 	@within Network.DiscordVoiceConnection
 	@return Future
 ]=]
@@ -376,18 +376,20 @@ end
 	@return DiscordVoiceConnection
 ]=]
 function DiscordVoiceConnection.Interface.new(discordClient: any, id: string): DiscordVoiceConnection
-	local self = Construct({
-		voiceWebsocket = DiscordWebsocket.new(),
-		discordClient = discordClient,
+	local self = (
+		Construct({
+			voiceWebsocket = DiscordWebsocket.new(),
+			discordClient = discordClient,
 
-		reporter = Console.new(`🖲️  DiscordVoiceConnection {id}`),
+			reporter = Console.new(`🖲️  DiscordVoiceConnection {id}`),
 
-		heartbeatTask = nil,
-		resumeSessionId = nil,
-		heartbeatInterval = nil,
+			heartbeatTask = nil,
+			resumeSessionId = nil,
+			heartbeatInterval = nil,
 
-		onEvent = Signal.new(),
-	}, DiscordVoiceConnection.Prototype) :: any
+			onEvent = Signal.new(),
+		}, DiscordVoiceConnection.Prototype) :: unknown
+	) :: DiscordVoiceConnection
 
 	self:observeWebsocketOperations()
 

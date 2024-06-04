@@ -340,11 +340,13 @@ end
 	@within Builders.CommandOptionBuilder
 	@return Builders.CommandOptionBuilder -- A new instance of CommandOptionBuilder.
 ]=]
-function CommandOptionBuilder.Interface.new(): CommandOptionBuilder
-	return Construct({
-		choices = {},
-		options = {},
-	}, CommandOptionBuilder.Prototype) :: any
+function CommandOptionBuilder.Interface.new()
+	return (
+		Construct({
+			choices = {},
+			options = {},
+		}, CommandOptionBuilder.Prototype) :: unknown
+	) :: CommandOptionBuilder
 end
 
 export type CommandOptionBuilder = typeof(CommandOptionBuilder.Prototype) & {

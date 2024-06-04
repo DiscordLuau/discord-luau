@@ -151,7 +151,7 @@ function DiscordGuild.Prototype.fetchGuildChannels(self: DiscordGuild)
 			:await()
 
 		for key, channelData in guildChannels do
-			guildChannels[key] = DiscordChannel.new(self.discordClient, channelData)
+			guildChannels[key] = DiscordChannel.from(self.discordClient, channelData)
 		end
 
 		return guildChannels
@@ -197,7 +197,7 @@ function DiscordGuild.Prototype.getGuildAuditLogs(self: DiscordGuild)
 			:await()
 
 		for index, channelObject in guildAuditLogs.threads do
-			guildAuditLogs.threads[index] = DiscordChannel.new(self.discordClient, channelObject)
+			guildAuditLogs.threads[index] = DiscordChannel.from(self.discordClient, channelObject)
 		end
 
 		for index, userObject in guildAuditLogs.users do
@@ -274,7 +274,7 @@ function DiscordGuild.Prototype.getChannelsAsync(self: DiscordGuild)
 			:await()
 
 		for index, value in rawChannelDatas do
-			rawChannelDatas[index] = DiscordChannel.new(self.discordClient, value)
+			rawChannelDatas[index] = DiscordChannel.from(self.discordClient, value)
 		end
 
 		return rawChannelDatas
