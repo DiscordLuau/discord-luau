@@ -348,7 +348,6 @@ function DiscordMessage.Interface.new(
 			messageData.member =
 				DiscordGuildMember.new(discordClient, messageData.author.id, messageData.guildId, messageData.member)
 		end
-
 		if messageData.guildId then
 			local discordChannel = discordClient.discordCache:getData(CacheType.DiscordChannel, messageData.guildId)
 
