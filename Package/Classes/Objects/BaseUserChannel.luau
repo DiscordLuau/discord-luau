@@ -1,19 +1,15 @@
 local Construct = require("../../Utils/Construct")
 local Extend = require("../../Utils/Extend")
 
-local CacheType = require("../../Enums/CacheType")
 local DiscordEndpoints = require("../../Data/DiscordEndpoints")
 
 local Future = require("../../Vendor/Future")
 
-local BaseDiscordGuildChannel = require("BaseDiscordGuildChannel")
 local BaseDiscordChannel = require("BaseDiscordChannel")
 local DiscordMessage = require("DiscordMessage")
 local DiscordUser = require("DiscordUser")
 
 local MessageBuilder = require("../Builders/MessageBuilder")
-
-local DiscordVoiceConnection = require("../Network/DiscordVoiceConnection")
 
 local Resolvable = require("../Network/Resolvable")
 local ResolvableType = require("../../Enums/ResolveableType")

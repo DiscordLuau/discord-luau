@@ -1,13 +1,4 @@
-local DiscordEndpoints = require("../../Data/DiscordEndpoints")
-
 local ChannelType = require("../../Enums/ChannelType")
-
-local Future = require("../../Vendor/Future")
-
-local DiscordMessage = require("../Objects/DiscordMessage")
-
-local MessageBuilder = require("../Builders/MessageBuilder")
-local PermissionsBuilder = require("../Builders/PermissionsBuilder")
 
 local GuildVoiceChannel = require("GuildVoiceChannel")
 local GuildTextChannel = require("GuildTextChannel")

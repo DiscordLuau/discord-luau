@@ -1,7 +1,5 @@
 local Construct = require("../../Utils/Construct")
 
-local CacheType = require("../../Enums/CacheType")
-
 local DiscordEndpoints = require("../../Data/DiscordEndpoints")
 
 local Future = require("../../Vendor/Future")

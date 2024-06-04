@@ -5,8 +5,6 @@ local DiscordEndpoints = require("../../Data/DiscordEndpoints")
 
 local Future = require("../../Vendor/Future")
 
-local CacheType = require("../../Enums/CacheType")
-
 local BaseDiscordGuildChannel = require("BaseDiscordGuildChannel")
 
 local DiscordMessage = require("../Objects/DiscordMessage")

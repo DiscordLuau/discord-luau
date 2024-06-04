@@ -1,5 +1,4 @@
 local Construct = require("../../Utils/Construct")
-local Enumerate = require("../../Utils/Enumerate")
 
 local PermissionsBuilder = require("../Builders/PermissionsBuilder")
 
@@ -23,7 +22,7 @@ function DiscordPermission.Interface.from(bitfield: string)
 
 	assert(numberBitfield, `Invalid BitField '{bitfield}'`)
 
-	for key, value in PermissionsBuilder.Permissions :: { number } do
+	for _, value in PermissionsBuilder.Permissions :: { number } do
 		if bit32.band(numberBitfield, value) == value then
 			table.insert(permissions.permissions, value)
 		end
