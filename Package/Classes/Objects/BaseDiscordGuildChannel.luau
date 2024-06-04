@@ -16,6 +16,8 @@ local ResolvableType = require("../../Enums/ResolveableType")
 local PermissionsBuilder = require("../Builders/PermissionsBuilder")
 local ChannelBuilder = require("../Builders/ChannelBuilder")
 
+local Datetime = require("../../Std/Datetime")
+
 --[=[
 	@class Objects.BaseDiscordGuildChannel
 ]=]
@@ -204,6 +206,114 @@ function BaseDiscordGuildChannel.Prototype.modifyAsync(
 		return self.discordClient.discordGateway
 			:patchAsync(string.format(DiscordEndpoints.BotModifyChannel, self.id), channelBuilder:toPayloadObject())
 			:await()
+	end)
+end
+
+--[=[
+	Gets all archived public threads in the guild channel asynchronously.
+
+	@method getPublicArchivedThreadsAsync
+	@param epoch number?
+	@pram limit number?
+	@return Future<{ number }>
+	@within Objects.BaseDiscordGuildChannel
+]=]
+function BaseDiscordGuildChannel.Prototype.getPublicArchivedThreadsAsync(
+	self: BaseDiscordGuildChannel,
+	epoch: number?,
+	limit: number?
+)
+	return Future.try(function()
+		local rawThreadData = self.discordClient.discordGateway
+			:getAsync(
+				string.format(
+					DiscordEndpoints.BotListPublicArchivedThreads,
+					self.id,
+					(epoch and Datetime.fromUnixTimestamp(epoch) or Datetime.now()):toIsoDate(),
+					limit or 100
+				)
+			)
+			:await()
+
+		local threads: { string } = {}
+
+		for _, threadObject in rawThreadData.threads do
+			table.insert(threads, threadObject.id)
+		end
+
+		return threads
+	end)
+end
+
+--[=[
+	Gets all archived private threads in the guild channel asynchronously.
+
+	@method getPrivateArchivedThreadsAsync
+	@param epoch number?
+	@pram limit number?
+	@return Future<{ number }>
+	@within Objects.BaseDiscordGuildChannel
+]=]
+function BaseDiscordGuildChannel.Prototype.getPrivateArchivedThreadsAsync(
+	self: BaseDiscordGuildChannel,
+	epoch: number?,
+	limit: number?
+)
+	return Future.try(function()
+		local rawThreadData = self.discordClient.discordGateway
+			:getAsync(
+				string.format(
+					DiscordEndpoints.BotListPrivateArchivedThreads,
+					self.id,
+					(epoch and Datetime.fromUnixTimestamp(epoch) or Datetime.now()):toIsoDate(),
+					limit or 100
+				)
+			)
+			:await()
+
+		local threads: { string } = {}
+
+		for _, threadObject in rawThreadData.threads do
+			table.insert(threads, threadObject.id)
+		end
+
+		return threads
+	end)
+end
+
+--[=[
+	Gets all archived private threads that the bot is a member of, in the guild channel asynchronously.
+
+	@method getJoinedPrivateArchivedThreads
+	@param epoch number?
+	@pram limit number?
+	@return Future<{ number }>
+	@within Objects.BaseDiscordGuildChannel
+]=]
+function BaseDiscordGuildChannel.Prototype.getJoinedPrivateArchivedThreads(
+	self: BaseDiscordGuildChannel,
+	epoch: number?,
+	limit: number?
+)
+	return Future.try(function()
+		local rawThreadData = self.discordClient.discordGateway
+			:getAsync(
+				string.format(
+					DiscordEndpoints.BotListJoinedPrivateArchivedThreads,
+					self.id,
+					(epoch and Datetime.fromUnixTimestamp(epoch) or Datetime.now()):toIsoDate(),
+					limit or 100
+				)
+			)
+			:await()
+
+		local threads: { string } = {}
+
+		for _, threadObject in rawThreadData.threads do
+			table.insert(threads, threadObject.id)
+		end
+
+		return threads
 	end)
 end
 

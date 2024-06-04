@@ -89,6 +89,26 @@ end
 --[=[
 	Returns a list of members that are active in the current thread channel
 	
+	@method getThreadMemberAsync
+	@param userId string
+	@within Objects.BaseGuildThread
+	@return Future<{ DiscordGuildMember }> -- A future the bot has joined the thread channel
+]=]
+function BaseGuildThread.Prototype.getThreadMemberAsync(self: BaseGuildThread, userId: string)
+	return Future.try(function()
+		local memberObject = self.discordClient.discordGateway
+			:getAsync(string.format(DiscordEndpoints.BotGetThreadMember, self.id, userId))
+			:await()
+
+		memberObject = DiscordGuildMember.new(self.discordClient, memberObject.userId, self.guildId, memberObject)
+
+		return memberObject
+	end)
+end
+
+--[=[
+	Returns a list of members that are active in the current thread channel
+	
 	@method removeMemberFromThreadAsync
 	@param userId string
 	@within Objects.BaseGuildThread
