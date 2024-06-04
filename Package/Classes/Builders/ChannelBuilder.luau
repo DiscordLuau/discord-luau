@@ -91,7 +91,7 @@ ChannelBuilder.Interface.ForumLayout = Enumerate.new({
 function ChannelBuilder.Prototype.setType(self: ChannelBuilder, type: number)
 	assert(ChannelBuilder.Interface.Type:Is(type), `Expected Type to be of 'ChannelBuilder.Type'`)
 
-	self.type = type :: any
+	self.channelType = type :: any
 
 	return self
 end
@@ -358,7 +358,7 @@ function ChannelBuilder.Prototype.toPayloadObject(self: ChannelBuilder)
 	return Resolvable.new(ResolvableType.JSON, {
 		name = self.name,
 		bitrate = self.bitrate,
-		type = self.type,
+		type = self.channelType,
 		rtc_region = self.region,
 		video_quality_mode = self.videoQualityMode,
 		sort_order = self.sortOrder,
@@ -371,7 +371,7 @@ function ChannelBuilder.Prototype.toPayloadObject(self: ChannelBuilder)
 		default_auto_archive_duration = self.defaultAutoArchiveDuration,
 		thread_rate_limit_per_user = self.threadRateLimitPerUser,
 
-		permission_overwrites = overwrites,
+		permission_overwrites = #overwrites > 0 and overwrites or nil,
 
 		default_reaction_emoji = self.defaultReaction and {
 			emoji_id = self.defaultReaction.emojiId,
@@ -388,15 +388,15 @@ end
 	@return Builders.ChannelBuilder -- A new instance of ChannelBuilder.
 ]=]
 function ChannelBuilder.Interface.new()
-	return Construct({
+	return (Construct({
 		overwrites = {},
-	}, ChannelBuilder.Prototype)
+	}, ChannelBuilder.Prototype) :: unknown) :: ChannelBuilder
 end
 
 export type ChannelBuilder = typeof(ChannelBuilder.Prototype) & {
 	name: string?,
 	bitrate: number?,
-	type: number?,
+	channelType: number?,
 	region: number?,
 	-- flags: number?, -- to-do: add channel flag support!
 	-- tags: { ? } -- to-do: add channel tags support!

@@ -63,12 +63,17 @@ end
 	@return Builders.SettingsBuilder -- A new instance of SettingsBuilder.
 ]=]
 function SettingsBuilder.Interface.new(discordToken: string, discordIntents: IntentsBuilder.IntentsBuilder?)
-	return Construct({
-		discordToken = discordToken,
-		discordIntents = discordIntents or IntentsBuilder.fromDefault(),
-	}, SettingsBuilder.Prototype)
+	return (
+		Construct({
+			discordToken = discordToken,
+			discordIntents = discordIntents or IntentsBuilder.fromDefault(),
+		}, SettingsBuilder.Prototype) :: unknown
+	) :: SettingsBuilder
 end
 
-export type SettingsBuilder = typeof(SettingsBuilder.Interface.new(""))
+export type SettingsBuilder = typeof(SettingsBuilder.Prototype) & {
+	discordToken: string,
+	discordIntents: IntentsBuilder.IntentsBuilder,
+}
 
 return SettingsBuilder.Interface

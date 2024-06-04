@@ -276,12 +276,14 @@ end
 	@within Builders.AutomoderationRuleBuilder
 	@return Builders.AutomoderationRuleBuilder -- A new instance of AutomoderationRuleBuilder.
 ]=]
-function AutomoderationRuleBuilder.Interface.new(): AutomoderationRuleBuilder
-	return Construct({
-		actions = {},
-		exemptRoles = {},
-		exemptChannels = {},
-	}, AutomoderationRuleBuilder.Prototype) :: any
+function AutomoderationRuleBuilder.Interface.new()
+	return (
+		Construct({
+			actions = {},
+			exemptRoles = {},
+			exemptChannels = {},
+		}, AutomoderationRuleBuilder.Prototype) :: unknown
+	) :: AutomoderationRuleBuilder
 end
 
 export type AutomoderationRuleBuilder = typeof(AutomoderationRuleBuilder.Prototype) & {

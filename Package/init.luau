@@ -10,6 +10,7 @@ local CommandOptionBuilder = require("Classes/Builders/CommandOptionBuilder")
 
 local ActivityBuilder = require("Classes/Builders/ActivityBuilder")
 local AutomoderationRuleBuilder = require("Classes/Builders/AutomoderationRuleBuilder")
+local ChannelBuilder = require("Classes/Builders/ChannelBuilder")
 local EmbedBuilder = require("Classes/Builders/EmbedBuilder")
 local IntentsBuilder = require("Classes/Builders/IntentsBuilder")
 local ModalBuilder = require("Classes/Builders/ModalBuilder")
@@ -18,6 +19,7 @@ local PresenceBuilder = require("Classes/Builders/PresenceBuilder")
 local SettingsBuilder = require("Classes/Builders/SettingsBuilder")
 local MessageBuilder = require("Classes/Builders/MessageBuilder")
 local AttachmentBuilder = require("Classes/Builders/AttachmentBuilder")
+
 -- Objects
 local DiscordApplication = require("Classes/Objects/DiscordApplication")
 local DiscordAutomoderationRule = require("Classes/Objects/DiscordAutomoderationRule")
@@ -42,6 +44,8 @@ local GuildStageVoiceChannel = require("Classes/Objects/GuildStageVoiceChannel")
 local UserDMChannel = require("Classes/Objects/UserDMChannel")
 local UserGroupChannel = require("Classes/Objects/UserGroupChannel")
 local DiscordUser = require("Classes/Objects/DiscordUser")
+local GuildTextChannel = require("Classes/Objects/GuildTextChannel")
+local GuildVoiceChannel = require("Classes/Objects/GuildVoiceChannel")
 
 -- Components
 local ActionRowBuilder = require("Classes/Builders/Interface/ActionRowBuilder")
@@ -96,6 +100,13 @@ export type MessageBuilder = MessageBuilder.MessageBuilder
 DiscordLuau.MessageBuilder = MessageBuilder
 --[=[
 	@prop MessageBuilder Builders.MessageBuilder
+	@within DiscordLuau
+]=]
+
+export type ChannelBuilder = ChannelBuilder.ChannelBuilder
+DiscordLuau.ChannelBuilder = ChannelBuilder
+--[=[
+	@prop ChannelBuilder Builders.ChannelBuilder
 	@within DiscordLuau
 ]=]
 
@@ -215,6 +226,8 @@ export type GuildPublicThreadChannel = GuildPublicThreadChannel.GuildPublicThrea
 export type GuildStageVoiceChannel = GuildStageVoiceChannel.GuildStageVoiceChannel
 export type UserDMChannel = UserDMChannel.UserDMChannel
 export type UserGroupChannel = UserGroupChannel.UserGroupChannel
+export type GuildTextChannel = GuildTextChannel.GuildTextChannel
+export type GuildVoiceChannel = GuildVoiceChannel.GuildVoiceChannel
 --#endregion
 
 return DiscordLuau

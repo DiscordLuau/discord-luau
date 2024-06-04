@@ -115,11 +115,13 @@ end
 	@return Builders.ActivityBuilder -- A new instance of ActivityBuilder.
 ]=]
 function ActivityBuilder.Interface.new()
-	return Construct({
-		name = "Discord-Luau",
-		activityType = 0,
-		streamingURL = nil,
-	}, ActivityBuilder.Prototype)
+	return (
+		Construct({
+			name = "Discord-Luau",
+			activityType = 0,
+			streamingURL = nil,
+		}, ActivityBuilder.Prototype) :: unknown
+	) :: ActivityBuilder
 end
 
 export type ActivityBuilder = typeof(ActivityBuilder.Prototype) & {

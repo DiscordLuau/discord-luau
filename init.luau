@@ -42,5 +42,7 @@ export type GuildStageVoiceChannel = DiscordLuau.GuildStageVoiceChannel
 export type UserDMChannel = DiscordLuau.UserDMChannel
 export type UserGroupChannel = DiscordLuau.UserGroupChannel
 export type DiscordUser = DiscordLuau.DiscordUser
+export type GuildTextChannel = DiscordLuau.GuildTextChannel
+export type GuildVoiceChannel = DiscordLuau.GuildVoiceChannel
 
 return DiscordLuau

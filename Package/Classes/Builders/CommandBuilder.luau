@@ -259,13 +259,15 @@ end
 	@within Builders.CommandBuilder
 	@return Builders.CommandBuilder -- A new instance of CommandBuilder.
 ]=]
-function CommandBuilder.Interface.new(): CommandBuilder
-	return Construct({
-		choices = {},
-		options = {},
-		contexts = {},
-		integrations = {},
-	}, CommandBuilder.Prototype) :: any
+function CommandBuilder.Interface.new()
+	return (
+		Construct({
+			choices = {},
+			options = {},
+			contexts = {},
+			integrations = {},
+		}, CommandBuilder.Prototype) :: unknown
+	) :: CommandBuilder
 end
 
 export type CommandBuilder = typeof(CommandBuilder.Prototype) & {
