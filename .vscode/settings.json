@@ -6,7 +6,16 @@
   "luau-lsp.inlayHints.parameterTypes": true,
   "luau-lsp.inlayHints.typeHintMaxLength": 50,
   "luau-lsp.require.directoryAliases": {
-    "@lune/": "~/.lune/.typedefs/0.8.2/"
+    "@lune/": "~/.lune/.typedefs/0.8.2/",
+
+    "@Builders": "Package/Classes/Builders",
+    "@Network": "Package/Classes/Network",
+    "@Objects": "Package/Classes/Objects",
+    "@Data": "Package/Data",
+    "@Enums": "Package/Enums",
+    "@Std": "Package/Std",
+    "@Utils": "Package/Utils",
+    "@Vendor": "Package/Vendor",
   },
 
   "[lua]": {

@@ -1,4 +1,4 @@
-local Construct = require("../../../Utils/Construct")
+local Construct = require("@Utils/Construct")
 
 --[=[
 	@class Network.Middleware.EventIn

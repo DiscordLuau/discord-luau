@@ -1,6 +1,6 @@
-local Construct = require("../../Utils/Construct")
+local Construct = require("@Utils/Construct")
 
-local IntentsBuilder = require("IntentsBuilder")
+local IntentsBuilder = require("@Builders/IntentsBuilder")
 
 --[=[
 	@class Builders.SettingsBuilder

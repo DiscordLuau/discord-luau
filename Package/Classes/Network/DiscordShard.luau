@@ -1,19 +1,18 @@
-local WebsocketOperationCodes = require("../../Enums/WebsocketOperationCodes")
-local WebsocketOperationKeys = require("../../Enums/WebsocketOperationKeys")
-local WebsocketCloseCodes = require("../../Enums/WebsocketCloseCodes")
+local Process = require("@Std/Process")
+local Task = require("@Std/Task")
 
-local WebsocketEvents = require("../../Enums/WebsocketEvents")
+local Future = require("@Vendor/Future")
+local Console = require("@Vendor/Console")
+local Signal = require("@Vendor/Signal")
 
-local Construct = require("../../Utils/Construct")
+local Construct = require("@Utils/Construct")
 
-local Future = require("../../Vendor/Future")
-local Console = require("../../Vendor/Console")
-local Signal = require("../../Vendor/Signal")
+local DiscordWebsocket = require("@Network/DiscordWebsocket")
 
-local DiscordWebsocket = require("DiscordWebsocket")
-
-local Process = require("../../Std/Process")
-local Task = require("../../Std/Task")
+local WebsocketOperationCodes = require("@Enums/WebsocketOperationCodes")
+local WebsocketOperationKeys = require("@Enums/WebsocketOperationKeys")
+local WebsocketCloseCodes = require("@Enums/WebsocketCloseCodes")
+local WebsocketEvents = require("@Enums/WebsocketEvents")
 
 local LIBRARY_IDENTIFIER = "DiscordLuau"
 

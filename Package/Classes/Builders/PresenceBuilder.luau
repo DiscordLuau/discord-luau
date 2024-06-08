@@ -1,10 +1,11 @@
-local Construct = require("../../Utils/Construct")
-local Enumerate = require("../../Utils/Enumerate")
+local Construct = require("@Utils/Construct")
+local Enumerate = require("@Utils/Enumerate")
 
-local ActivityBuilder = require("ActivityBuilder")
+local Resolvable = require("@Network/Resolvable")
 
-local ResolvableType = require("../../Enums/ResolveableType")
-local Resolvable = require("../Network/Resolvable")
+local ActivityBuilder = require("@Builders/ActivityBuilder")
+
+local ResolvableType = require("@Enums/ResolveableType")
 
 --[=[
 	@class Builders.PresenceBuilder

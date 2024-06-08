@@ -8,7 +8,9 @@ local CacheType = {
 	DiscordMember = "DiscordMember",
 	DiscordSticker = "DiscordSticker",
 	DiscordGuild = "DiscordGuild",
+	DiscordInvite = "DiscordInvite",
 	DiscordGuildRole = "DiscordGuildRole",
+	AutoModeration = "AutoModeration",
 	DiscordUser = "DiscordUser",
 	DiscordChannel = "DiscordChannel",
 	DiscordMessage = "DiscordMessage",
@@ -20,7 +22,9 @@ export type CacheType =
 	| "DiscordMember"
 	| "DiscordEmoji"
 	| "DiscordSticker"
-	| "DiscordGuilded"
+	| "AutoModeration"
+	| "DiscordGuild"
+	| "DiscordInvite"
 	| "DiscordGuildRole"
 	| "DiscordUser"
 	| "DiscordChannel"

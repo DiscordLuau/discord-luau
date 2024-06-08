@@ -1,8 +1,8 @@
-local Construct = require("../../Utils/Construct")
+local Future = require("@Vendor/Future")
 
-local DiscordEndpoints = require("../../Data/DiscordEndpoints")
+local Construct = require("@Utils/Construct")
 
-local Future = require("../../Vendor/Future")
+local DiscordEndpoints = require("@Data/DiscordEndpoints")
 
 --[=[
 	@class Objects.BaseDiscordChannel

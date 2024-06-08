@@ -1,17 +1,17 @@
-local Datetime = require("../../Std/Datetime")
+local Datetime = require("@Std/Datetime")
 
-local Construct = require("../../Utils/Construct")
+local Construct = require("@Utils/Construct")
 
-local DiscordEndpoints = require("../../Data/DiscordEndpoints")
+local Resolvable = require("@Network/Resolvable")
 
-local CacheType = require("../../Enums/CacheType")
+local DiscordUser = require("@Objects/DiscordUser")
 
-local DiscordUser = require("DiscordUser")
+local MemberBuilder = require("@Builders/MemberBuilder")
 
-local Resolvable = require("../Network/Resolvable")
-local ResolvableType = require("../../Enums/ResolveableType")
+local DiscordEndpoints = require("@Data/DiscordEndpoints")
 
-local MemberBuilder = require("../Builders/MemberBuilder")
+local ResolvableType = require("@Enums/ResolveableType")
+local CacheType = require("@Enums/CacheType")
 
 --[=[
 	@class Objects.DiscordGuildMember

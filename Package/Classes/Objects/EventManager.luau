@@ -1,17 +1,17 @@
-local Construct = require("../../Utils/Construct")
+local Signal = require("@Vendor/Signal")
 
-local DiscordEvents = require("../../Enums/DiscordEvents")
+local Construct = require("@Utils/Construct")
 
-local DiscordMessage = require("DiscordMessage")
-local DiscordChannel = require("DiscordChannel")
+local DiscordMessage = require("@Objects/DiscordMessage")
+local DiscordChannel = require("@Objects/DiscordChannel")
 
-local DiscordUser = require("DiscordUser")
-local DiscordGuild = require("DiscordGuild")
-local DiscordGuildMember = require("DiscordGuildMember")
+local DiscordUser = require("@Objects/DiscordUser")
+local DiscordGuild = require("@Objects/DiscordGuild")
+local DiscordGuildMember = require("@Objects/DiscordGuildMember")
 
-local DiscordInteraction = require("DiscordInteraction")
+local DiscordInteraction = require("@Objects/DiscordInteraction")
 
-local Signal = require("../../Vendor/Signal")
+local DiscordEvents = require("@Enums/DiscordEvents")
 
 --[=[
 	@class Objects.EventManager

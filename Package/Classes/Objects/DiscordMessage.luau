@@ -1,22 +1,23 @@
-local Construct = require("../../Utils/Construct")
+local Future = require("@Vendor/Future")
 
-local CacheType = require("../../Enums/CacheType")
-local DiscordEndpoints = require("../../Data/DiscordEndpoints")
+local Net = require("@Std/Net")
 
-local MessageBuilder = require("../Builders/MessageBuilder")
-local DiscordGuildMember = require("../Objects/DiscordGuildMember")
+local Construct = require("@Utils/Construct")
 
-local Future = require("../../Vendor/Future")
+local DiscordEndpoints = require("@Data/DiscordEndpoints")
 
-local Net = require("../../Std/Net")
+local Resolvable = require("@Network/Resolvable")
 
-local ActionRowBuilder = require("../Builders/Interface/ActionRowBuilder")
-local ButtonBuilder = require("../Builders/Interface/ButtonBuilder")
-local SelectionBuilder = require("../Builders/Interface/SelectionBuilder")
-local TextInputBuilder = require("../Builders/Interface/TextInputBuilder")
+local MessageBuilder = require("@Builders/MessageBuilder")
+local DiscordGuildMember = require("@Objects/DiscordGuildMember")
 
-local Resolvable = require("../Network/Resolvable")
-local ResolvableType = require("../../Enums/ResolveableType")
+local ActionRowBuilder = require("@Builders/Interface/ActionRowBuilder")
+local ButtonBuilder = require("@Builders/Interface/ButtonBuilder")
+local SelectionBuilder = require("@Builders/Interface/SelectionBuilder")
+local TextInputBuilder = require("@Builders/Interface/TextInputBuilder")
+
+local ResolvableType = require("@Enums/ResolveableType")
+local CacheType = require("@Enums/CacheType")
 
 --[=[
 	@class Objects.DiscordMessage

@@ -1,20 +1,19 @@
-local VoiceWebsocketOperationCodes = require("../../Enums/VoiceWebsocketOperationCodes")
-local VoiceWebsocketCloseCodes = require("../../Enums/VoiceWebsocketCloseCodes")
-local WebsocketOperationCodes = require("../../Enums/WebsocketOperationCodes")
-local WebsocketOperationKeys = require("../../Enums/WebsocketOperationKeys")
+local Task = require("@Std/Task")
 
-local WebsocketEvents = require("../../Enums/WebsocketEvents")
+local Future = require("@Vendor/Future")
+local Console = require("@Vendor/Console")
+local Signal = require("@Vendor/Signal")
 
-local Construct = require("../../Utils/Construct")
+local Construct = require("@Utils/Construct")
 
-local Future = require("../../Vendor/Future")
-local Console = require("../../Vendor/Console")
-local Signal = require("../../Vendor/Signal")
+local DiscordWebsocket = require("@Network/DiscordWebsocket")
+local DiscordUDP = require("@Network/DiscordUDP")
 
-local DiscordWebsocket = require("DiscordWebsocket")
-local DiscordUDP = require("DiscordUDP")
-
-local Task = require("../../Std/Task")
+local VoiceWebsocketOperationCodes = require("@Enums/VoiceWebsocketOperationCodes")
+local VoiceWebsocketCloseCodes = require("@Enums/VoiceWebsocketCloseCodes")
+local WebsocketOperationCodes = require("@Enums/WebsocketOperationCodes")
+local WebsocketOperationKeys = require("@Enums/WebsocketOperationKeys")
+local WebsocketEvents = require("@Enums/WebsocketEvents")
 
 local BASE_VOICE_CONNECTION_PORT = 1050
 

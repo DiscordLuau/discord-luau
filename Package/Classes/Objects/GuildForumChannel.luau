@@ -1,9 +1,9 @@
-local Construct = require("../../Utils/Construct")
-local Extend = require("../../Utils/Extend")
+local Construct = require("@Utils/Construct")
+local Extend = require("@Utils/Extend")
 
-local CacheType = require("../../Enums/CacheType")
+local BaseDiscordChannel = require("@Objects/BaseDiscordChannel")
 
-local BaseDiscordChannel = require("BaseDiscordChannel")
+local CacheType = require("@Enums/CacheType")
 
 --[=[
 	@class Objects.GuildForumChannel

@@ -1,12 +1,13 @@
-local Construct = require("../../Utils/Construct")
+local Construct = require("@Utils/Construct")
 
-local ActionRowBuilder = require("Interface/ActionRowBuilder")
-local ButtonBuilder = require("Interface/ButtonBuilder")
-local SelectionBuilder = require("Interface/SelectionBuilder")
-local TextInputBuilder = require("Interface/TextInputBuilder")
+local Resolvable = require("@Network/Resolvable")
 
-local ResolvableType = require("../../Enums/ResolveableType")
-local Resolvable = require("../Network/Resolvable")
+local ActionRowBuilder = require("@Builders/Interface/ActionRowBuilder")
+local ButtonBuilder = require("@Builders/Interface/ButtonBuilder")
+local SelectionBuilder = require("@Builders/Interface/SelectionBuilder")
+local TextInputBuilder = require("@Builders/Interface/TextInputBuilder")
+
+local ResolvableType = require("@Enums/ResolveableType")
 
 --[=[
 	@class Builders.ModalBuilder

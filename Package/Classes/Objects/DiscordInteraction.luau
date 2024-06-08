@@ -1,21 +1,21 @@
-local DiscordEndpoints = require("../../Data/DiscordEndpoints")
+local DiscordEndpoints = require("@Data/DiscordEndpoints")
 
-local Future = require("../../Vendor/Future")
+local Future = require("@Vendor/Future")
 
-local Construct = require("../../Utils/Construct")
+local Construct = require("@Utils/Construct")
 
-local ModalBuilder = require("../Builders/ModalBuilder")
-local PermissionsBuilder = require("../Builders/PermissionsBuilder")
-local MessageBuilder = require("../Builders/MessageBuilder")
+local ModalBuilder = require("@Builders/ModalBuilder")
+local PermissionsBuilder = require("@Builders/PermissionsBuilder")
+local MessageBuilder = require("@Builders/MessageBuilder")
 
-local DiscordGuildMember = require("DiscordGuildMember")
+local DiscordGuildMember = require("@Objects/DiscordGuildMember")
 
-local DiscordChannel = require("DiscordChannel")
-local DiscordUser = require("DiscordUser")
-local DiscordGuild = require("DiscordGuild")
+local DiscordChannel = require("@Objects/DiscordChannel")
+local DiscordUser = require("@Objects/DiscordUser")
+local DiscordGuild = require("@Objects/DiscordGuild")
 
-local Resolvable = require("../Network/Resolvable")
-local ResolvableType = require("../../Enums/ResolveableType")
+local Resolvable = require("@Network/Resolvable")
+local ResolvableType = require("@Enums/ResolveableType")
 
 --[=[
 	@class Objects.DiscordInteraction

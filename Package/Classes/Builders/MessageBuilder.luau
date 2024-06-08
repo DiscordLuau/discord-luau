@@ -1,15 +1,16 @@
-local Construct = require("../../Utils/Construct")
+local Construct = require("@Utils/Construct")
 
-local EmbedBuilder = require("EmbedBuilder")
-local AttachmentBuilder = require("AttachmentBuilder")
+local Resolvable = require("@Network/Resolvable")
 
-local ActionRowBuilder = require("../Builders/Interface/ActionRowBuilder")
-local ButtonBuilder = require("../Builders/Interface/ButtonBuilder")
-local SelectionBuilder = require("../Builders/Interface/SelectionBuilder")
-local TextInputBuilder = require("../Builders/Interface/TextInputBuilder")
+local EmbedBuilder = require("@Builders/EmbedBuilder")
+local AttachmentBuilder = require("@Builders/AttachmentBuilder")
 
-local ResolvableType = require("../../Enums/ResolveableType")
-local Resolvable = require("../Network/Resolvable")
+local ActionRowBuilder = require("@Builders/Interface/ActionRowBuilder")
+local ButtonBuilder = require("@Builders/Interface/ButtonBuilder")
+local SelectionBuilder = require("@Builders/Interface/SelectionBuilder")
+local TextInputBuilder = require("@Builders/Interface/TextInputBuilder")
+
+local ResolvableType = require("@Enums/ResolveableType")
 
 --[=[
 	@class Builders.MessageBuilder

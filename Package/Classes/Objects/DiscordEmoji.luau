@@ -1,6 +1,6 @@
-local Construct = require("../../Utils/Construct")
+local Construct = require("@Utils/Construct")
 
-local CacheType = require("../../Enums/CacheType")
+local CacheType = require("@Enums/CacheType")
 
 --[=[
 	@class Objects.DiscordEmoji

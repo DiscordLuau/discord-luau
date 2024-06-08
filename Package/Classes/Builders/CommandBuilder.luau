@@ -1,11 +1,12 @@
-local Enumerate = require("../../Utils/Enumerate")
-local Construct = require("../../Utils/Construct")
+local Enumerate = require("@Utils/Enumerate")
+local Construct = require("@Utils/Construct")
 
-local CommandOptionBuilder = require("CommandOptionBuilder")
-local PermissionsBuilder = require("PermissionsBuilder")
+local Resolvable = require("@Network/Resolvable")
 
-local ResolvableType = require("../../Enums/ResolveableType")
-local Resolvable = require("../Network/Resolvable")
+local CommandOptionBuilder = require("@Builders/CommandOptionBuilder")
+local PermissionsBuilder = require("@Builders/PermissionsBuilder")
+
+local ResolvableType = require("@Enums/ResolveableType")
 
 --[=[
 	@class Builders.CommandBuilder
@@ -47,7 +48,7 @@ CommandBuilder.Interface.Type = Enumerate.new({
 	MessageContextAction = 3,
 })
 
---[=[
+--[=[..
 	@prop Context table
 	@within Builders.CommandBuilder
 

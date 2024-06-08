@@ -1,9 +1,9 @@
-local Construct = require("../../Utils/Construct")
+local Construct = require("@Utils/Construct")
 
-local ResolvableType = require("../../Enums/ResolveableType")
+local ResolvableType = require("@Enums/ResolveableType")
 
-local EventOut = require("Middleware/EventOut")
-local EventIn = require("Middleware/EventIn")
+local EventOut = require("@Network/Middleware/EventOut")
+local EventIn = require("@Network/Middleware/EventIn")
 
 --[=[
 	@class Network.Resolvable

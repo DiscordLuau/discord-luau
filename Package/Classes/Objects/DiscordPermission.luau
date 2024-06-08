@@ -1,6 +1,6 @@
-local Construct = require("../../Utils/Construct")
+local Construct = require("@Utils/Construct")
 
-local PermissionsBuilder = require("../Builders/PermissionsBuilder")
+local PermissionsBuilder = require("@Builders/PermissionsBuilder")
 
 --[=[
 	@class Builders.DiscordPermission

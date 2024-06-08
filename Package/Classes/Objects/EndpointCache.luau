@@ -1,6 +1,6 @@
-local Task = require("../../Std/Task")
+local Task = require("@Std/Task")
 
-local Construct = require("../../Utils/Construct")
+local Construct = require("@Utils/Construct")
 
 --[=[
 	@class Objects.EndpointCache

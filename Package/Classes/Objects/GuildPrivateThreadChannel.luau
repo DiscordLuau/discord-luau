@@ -1,9 +1,9 @@
-local Construct = require("../../Utils/Construct")
-local Extend = require("../../Utils/Extend")
+local Construct = require("@Utils/Construct")
+local Extend = require("@Utils/Extend")
 
-local CacheType = require("../../Enums/CacheType")
+local BaseGuildThread = require("@Objects/BaseGuildThread")
 
-local BaseGuildThread = require("BaseGuildThread")
+local CacheType = require("@Enums/CacheType")
 
 --[=[
 	@class Objects.GuildPrivateThreadChannel

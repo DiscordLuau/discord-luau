@@ -1,9 +1,9 @@
-local Construct = require("../../Utils/Construct")
-local Extend = require("../../Utils/Extend")
+local Construct = require("@Utils/Construct")
+local Extend = require("@Utils/Extend")
 
-local CacheType = require("../../Enums/CacheType")
+local BaseUserChannel = require("@Objects/BaseUserChannel")
 
-local BaseUserChannel = require("BaseUserChannel")
+local CacheType = require("@Enums/CacheType")
 
 --[=[
 	@class Objects.UserDMChannel

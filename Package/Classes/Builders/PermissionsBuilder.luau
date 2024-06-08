@@ -1,5 +1,5 @@
-local Construct = require("../../Utils/Construct")
-local Enumerate = require("../../Utils/Enumerate")
+local Construct = require("@Utils/Construct")
+local Enumerate = require("@Utils/Enumerate")
 
 --[=[
 	@class Builders.PermissionsBuilder

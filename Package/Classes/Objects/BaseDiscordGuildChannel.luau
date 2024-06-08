@@ -1,20 +1,21 @@
-local Construct = require("../../Utils/Construct")
-local Extend = require("../../Utils/Extend")
+local Datetime = require("@Std/Datetime")
 
-local DiscordEndpoints = require("../../Data/DiscordEndpoints")
+local Future = require("@Vendor/Future")
 
-local Future = require("../../Vendor/Future")
+local Construct = require("@Utils/Construct")
+local Extend = require("@Utils/Extend")
 
-local BaseDiscordChannel = require("BaseDiscordChannel")
-local DiscordInvite = require("DiscordInvite")
+local Resolvable = require("@Network/Resolvable")
 
-local Resolvable = require("../Network/Resolvable")
-local ResolvableType = require("../../Enums/ResolveableType")
+local BaseDiscordChannel = require("@Objects/BaseDiscordChannel")
+local DiscordInvite = require("@Objects/DiscordInvite")
 
-local PermissionsBuilder = require("../Builders/PermissionsBuilder")
-local ChannelBuilder = require("../Builders/ChannelBuilder")
+local PermissionsBuilder = require("@Builders/PermissionsBuilder")
+local ChannelBuilder = require("@Builders/ChannelBuilder")
 
-local Datetime = require("../../Std/Datetime")
+local DiscordEndpoints = require("@Data/DiscordEndpoints")
+
+local ResolvableType = require("@Enums/ResolveableType")
 
 --[=[
 	@class Objects.BaseDiscordGuildChannel

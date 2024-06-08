@@ -1,7 +1,7 @@
-local Intents = require("../../Enums/Intents")
+local Construct = require("@Utils/Construct")
+local FetchKeys = require("@Utils/Dictionary/FetchKeys")
 
-local Construct = require("../../Utils/Construct")
-local FetchKeys = require("../../Utils/Dictionary/FetchKeys")
+local Intents = require("@Enums/Intents")
 
 --[=[
 	@class Builders.IntentsBuilder

@@ -1,10 +1,10 @@
-local Enumerate = require("../../Utils/Enumerate")
-local Construct = require("../../Utils/Construct")
+local Enumerate = require("@Utils/Enumerate")
+local Construct = require("@Utils/Construct")
 
-local ResolvableType = require("../../Enums/ResolveableType")
-local Resolvable = require("../Network/Resolvable")
+local ResolvableType = require("@Enums/ResolveableType")
+local Resolvable = require("@Network/Resolvable")
 
-local PermissionsBuilder = require("PermissionsBuilder")
+local PermissionsBuilder = require("@Builders/PermissionsBuilder")
 
 --[=[
 	@class Builders.ChannelBuilder

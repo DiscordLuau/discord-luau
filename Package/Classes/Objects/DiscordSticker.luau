@@ -1,9 +1,9 @@
-local Construct = require("../../Utils/Construct")
-local Construct = require("../../Utils/Construct")
+local Construct = require("@Utils/Construct")
+local Construct = require("@Utils/Construct")
 
-local CacheType = require("../../Enums/CacheType")
+local DiscordUser = require("@Objects/DiscordUser")
 
-local DiscordUser = require("DiscordUser")
+local CacheType = require("@Enums/CacheType")
 
 --[=[
 	@class Objects.DiscordSticker

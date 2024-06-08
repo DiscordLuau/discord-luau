@@ -1,15 +1,15 @@
-local Construct = require("../../Utils/Construct")
-local Extend = require("../../Utils/Extend")
+local Future = require("@Vendor/Future")
 
-local CacheType = require("../../Enums/CacheType")
+local Construct = require("@Utils/Construct")
+local Extend = require("@Utils/Extend")
 
-local BaseUserChannel = require("BaseUserChannel")
+local ChannelBuilder = require("@Builders/ChannelBuilder")
 
-local Future = require("../../Vendor/Future")
+local BaseUserChannel = require("@Objects/BaseUserChannel")
 
-local DiscordEndpoints = require("../../Data/DiscordEndpoints")
+local DiscordEndpoints = require("@Data/DiscordEndpoints")
 
-local ChannelBuilder = require("../Builders/ChannelBuilder")
+local CacheType = require("@Enums/CacheType")
 
 --[=[
 	@class Objects.UserGroupChannel

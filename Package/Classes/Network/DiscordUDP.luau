@@ -1,11 +1,11 @@
-local Construct = require("../../Utils/Construct")
+local Net = require("@Std/Net")
+local Task = require("@Std/Task")
 
-local Future = require("../../Vendor/Future")
-local Signal = require("../../Vendor/Signal")
-local Console = require("../../Vendor/Console")
+local Future = require("@Vendor/Future")
+local Signal = require("@Vendor/Signal")
+local Console = require("@Vendor/Console")
 
-local Net = require("../../Std/Net")
-local Task = require("../../Std/Task")
+local Construct = require("@Utils/Construct")
 
 --[=[
 	@class Network.DiscordUDP

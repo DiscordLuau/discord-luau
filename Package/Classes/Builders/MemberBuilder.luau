@@ -1,10 +1,11 @@
-local Enumerate = require("../../Utils/Enumerate")
-local Construct = require("../../Utils/Construct")
+local Datetime = require("@Std/Datetime")
 
-local ResolvableType = require("../../Enums/ResolveableType")
-local Resolvable = require("../Network/Resolvable")
+local Enumerate = require("@Utils/Enumerate")
+local Construct = require("@Utils/Construct")
 
-local Datetime = require("../../Std/Datetime")
+local Resolvable = require("@Network/Resolvable")
+
+local ResolvableType = require("@Enums/ResolveableType")
 
 --[=[
 	@class Builders.MemberBuilder

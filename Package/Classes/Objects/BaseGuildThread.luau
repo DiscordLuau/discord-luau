@@ -1,14 +1,13 @@
-local Construct = require("../../Utils/Construct")
-local Extend = require("../../Utils/Extend")
+local Future = require("@Vendor/Future")
 
-local DiscordEndpoints = require("../../Data/DiscordEndpoints")
+local Construct = require("@Utils/Construct")
+local Extend = require("@Utils/Extend")
 
-local Future = require("../../Vendor/Future")
+local DiscordGuildMember = require("@Objects/DiscordGuildMember")
+local BaseGuildTextChannel = require("@Objects/BaseGuildTextChannel")
+local DiscordEmoji = require("@Objects/DiscordEmoji")
 
-local DiscordGuildMember = require("../Objects/DiscordGuildMember")
-
-local BaseGuildTextChannel = require("BaseGuildTextChannel")
-local DiscordEmoji = require("DiscordEmoji")
+local DiscordEndpoints = require("@Data/DiscordEndpoints")
 
 --[=[
 	@class Objects.BaseGuildThread

@@ -1,9 +1,9 @@
-local Construct = require("../../Utils/Construct")
+local Construct = require("@Utils/Construct")
 
-local CacheType = require("../../Enums/CacheType")
-local DiscordEndpoints = require("../../Data/DiscordEndpoints")
+local CacheType = require("@Enums/CacheType")
+local DiscordEndpoints = require("@Data/DiscordEndpoints")
 
-local AutomoderationRuleBuilder = require("../Builders/AutomoderationRuleBuilder")
+local AutomoderationRuleBuilder = require("@Builders/AutomoderationRuleBuilder")
 
 --[=[
 	@class Objects.DiscordAutomoderationRule

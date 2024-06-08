@@ -1,20 +1,19 @@
-local Future = require("../../Vendor/Future")
-local Console = require("../../Vendor/Console")
+local Serde = require("@Std/Serde")
+local Net = require("@Std/Net")
+local Task = require("@Std/Task")
 
-local Construct = require("../../Utils/Construct")
+local Future = require("@Vendor/Future")
+local Console = require("@Vendor/Console")
 
-local HTTPRatelimit = require("HTTPRatelimit")
-local HTTPScheduler = require("HTTPScheduler")
+local Construct = require("@Utils/Construct")
 
-local EventIn = require("Middleware/EventIn")
+local HTTPRatelimit = require("@Network/HTTPRatelimit")
+local HTTPScheduler = require("@Network/HTTPScheduler")
+local Resolvable = require("@Network/Resolvable")
 
-local Resolvable = require("Resolvable")
+local EventIn = require("@Network/Middleware/EventIn")
 
-local ResolveableType = require("../../Enums/ResolveableType")
-
-local Serde = require("../../Std/Serde")
-local Net = require("../../Std/Net")
-local Task = require("../../Std/Task")
+local ResolveableType = require("@Enums/ResolveableType")
 
 local DISCORD_API_VERSION = 9
 

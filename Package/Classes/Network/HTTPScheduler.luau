@@ -1,8 +1,8 @@
-local Task = require("../../Std/Task")
+local Task = require("@Std/Task")
 
-local Construct = require("../../Utils/Construct")
+local Console = require("@Vendor/Console")
 
-local Console = require("../../Vendor/Console")
+local Construct = require("@Utils/Construct")
 
 local DEFAULT_QUEUE_FREQUENCY = 0
 

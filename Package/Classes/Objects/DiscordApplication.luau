@@ -1,14 +1,15 @@
-local Construct = require("../../Utils/Construct")
+local Future = require("@Vendor/Future")
 
-local Future = require("../../Vendor/Future")
+local Construct = require("@Utils/Construct")
+
+local Resolvable = require("../Network/Resolvable")
 
 local CommandBuilder = require("../Builders/CommandBuilder")
 
-local Resolvable = require("../Network/Resolvable")
-local ResolvableType = require("../../Enums/ResolveableType")
+local DiscordEndpoints = require("@Data/DiscordEndpoints")
 
-local DiscordEndpoints = require("../../Data/DiscordEndpoints")
-local CacheType = require("../../Enums/CacheType")
+local ResolvableType = require("@Enums/ResolveableType")
+local CacheType = require("@Enums/CacheType")
 
 --[=[
 	@class Objects.DiscordApplication

@@ -1,20 +1,20 @@
-local WebsocketOperationKeys = require("../../Enums/WebsocketOperationKeys")
-local WebsocketOperationCodes = require("../../Enums/WebsocketOperationCodes")
+local Net = require("@Std/Net")
+local Serde = require("@Std/Serde")
+local Task = require("@Std/Task")
 
-local Construct = require("../../Utils/Construct")
+local Future = require("@Vendor/Future")
+local Signal = require("@Vendor/Signal")
+local Console = require("@Vendor/Console")
 
-local Future = require("../../Vendor/Future")
-local Signal = require("../../Vendor/Signal")
-local Console = require("../../Vendor/Console")
+local Construct = require("@Utils/Construct")
 
-local EventIn = require("Middleware/EventIn")
-local EventOut = require("Middleware/EventOut")
+local EventIn = require("@Network/Middleware/EventIn")
+local EventOut = require("@Network/Middleware/EventOut")
 
-local WebsocketBuffer = require("WebsocketBuffer")
+local WebsocketBuffer = require("@Network/WebsocketBuffer")
 
-local Net = require("../../Std/Net")
-local Serde = require("../../Std/Serde")
-local Task = require("../../Std/Task")
+local WebsocketOperationKeys = require("@Enums/WebsocketOperationKeys")
+local WebsocketOperationCodes = require("@Enums/WebsocketOperationCodes")
 
 local ZLIB_SUFFIX_START = "\120"
 local ZLIB_SUFFIX_END = "\84"

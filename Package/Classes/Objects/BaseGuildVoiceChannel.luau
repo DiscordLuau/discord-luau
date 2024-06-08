@@ -1,11 +1,11 @@
-local Construct = require("../../Utils/Construct")
-local Extend = require("../../Utils/Extend")
+local Future = require("@Vendor/Future")
 
-local Future = require("../../Vendor/Future")
+local Construct = require("@Utils/Construct")
+local Extend = require("@Utils/Extend")
 
-local BaseDiscordGuildChannel = require("BaseDiscordGuildChannel")
+local DiscordVoiceConnection = require("@Network/DiscordVoiceConnection")
 
-local DiscordVoiceConnection = require("../Network/DiscordVoiceConnection")
+local BaseDiscordGuildChannel = require("@Objects/BaseDiscordGuildChannel")
 
 --[=[
 	@class Objects.BaseGuildVoiceChannel

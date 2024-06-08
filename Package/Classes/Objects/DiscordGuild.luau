@@ -1,28 +1,29 @@
-local Construct = require("../../Utils/Construct")
+local Future = require("@Vendor/Future")
 
-local CacheType = require("../../Enums/CacheType")
-local DiscordEndpoints = require("../../Data/DiscordEndpoints")
+local Construct = require("@Utils/Construct")
 
-local CommandBuilder = require("../Builders/CommandBuilder")
-local AutomoderationRuleBuilder = require("../Builders/AutomoderationRuleBuilder")
-local GuildBuilder = require("../Builders/GuildBuilder")
-local ChannelBuilder = require("../Builders/ChannelBuilder")
-local MemberBuilder = require("../Builders/MemberBuilder")
+local Resolvable = require("@Network/Resolvable")
 
-local GuildPreview = require("GuildPreview")
-local DiscordEmoji = require("DiscordEmoji")
-local DiscordGuildRole = require("DiscordGuildRole")
-local DiscordChannel = require("DiscordChannel")
-local DiscordUser = require("DiscordUser")
+local GuildPreview = require("@Objects/GuildPreview")
+local DiscordEmoji = require("@Objects/DiscordEmoji")
+local DiscordGuildRole = require("@Objects/DiscordGuildRole")
+local DiscordChannel = require("@Objects/DiscordChannel")
+local DiscordUser = require("@Objects/DiscordUser")
 
-local DiscordGuildMember = require("DiscordGuildMember")
+local DiscordGuildMember = require("@Objects/DiscordGuildMember")
 
-local DiscordAutomoderationRule = require("DiscordAutomoderationRule")
+local DiscordAutomoderationRule = require("@Objects/DiscordAutomoderationRule")
 
-local Future = require("../../Vendor/Future")
+local CommandBuilder = require("@Builders/CommandBuilder")
+local AutomoderationRuleBuilder = require("@Builders/AutomoderationRuleBuilder")
+local GuildBuilder = require("@Builders/GuildBuilder")
+local ChannelBuilder = require("@Builders/ChannelBuilder")
+local MemberBuilder = require("@Builders/MemberBuilder")
 
-local Resolvable = require("../Network/Resolvable")
-local ResolvableType = require("../../Enums/ResolveableType")
+local DiscordEndpoints = require("@Data/DiscordEndpoints")
+
+local CacheType = require("@Enums/CacheType")
+local ResolvableType = require("@Enums/ResolveableType")
 
 --[=[
 	@class Objects.DiscordGuild
