@@ -8,6 +8,11 @@ return {
 	BotGateway = "gateway/bot",
 
 	BotGetGuild = "guilds/%s",
+	BotCreateGuild = "guilds",
+	BotGetGuildPreview = "guilds/%s/preview",
+	BotCreateGuildChannel = "guilds/%s/channels",
+	BotGetAllActiveGuildThreads = "guilds/%s/threads/active",
+	BotAddGuildMember = "guilds/%s/members/%s",
 
 	BotGetChannel = "channels/%s",
 	BotCreateMessage = "channels/%s/messages",
@@ -64,6 +69,7 @@ return {
 	BotDeleteGuild = "guilds/%s",
 	BotGetGuildChannels = "guilds/%s/channels",
 	BotGetGuildMember = "guilds/%s/members/%s",
+	BotModifyCurrentMemberGuild = "guilds/%s/members/@me",
 	BotGetGuildMembers = "guilds/%s/members?limit=%s&after=%s",
 	BotBanGuildMember = "guilds/%s/members/%s",
 	BotRemoveGuildMember = "guilds/%s/members/%s",

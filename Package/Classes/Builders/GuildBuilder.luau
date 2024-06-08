@@ -462,7 +462,41 @@ end
 	@return Network.Resolvable
 ]=]
 function GuildBuilder.Prototype.toPayloadObject(self: GuildBuilder)
-	return Resolvable.new(ResolvableType.JSON, {})
+	local roleObjects = {}
+	local channelObjects = {}
+
+	for _, role in self.roles do
+		table.insert(roleObjects, role:toPayloadObject():resolve())
+	end
+
+	for _, channel in self.channels do
+		table.insert(channelObjects, channel:toPayloadObject():resolve())
+	end
+
+	return Resolvable.new(ResolvableType.JSON, {
+		name = self.name,
+		description = self.description,
+		verification_level = self.verificationLevel,
+		default_message_notifications = self.defaultMessageNotifications,
+		explicit_content_filter = self.explicitContentFilter,
+		afk_channel_id = self.afkChannelId,
+		afk_timeout = self.afkTimeout,
+		icon = self.icon,
+		owner_id = self.ownerId,
+		splash = self.splash,
+		discovery_splash = self.discoverySplash,
+		banner = self.banner,
+		system_channel_id = self.systemChannelId,
+		system_channel_flags = self.systemChannelFlags,
+		rules_channel_id = self.rulesChannelId,
+		public_updates_channel_id = self.publicUpdateChannelId,
+		preferred_locale = self.preferredLocale,
+		features = self.features,
+		premium_progress_bar_enabled = self.premiumProgressBarEnabled,
+		safety_alerts_channel_id = self.safetyAlertsChannelId,
+		roles = #roleObjects > 0 and roleObjects or nil,
+		channels = #channelObjects > 0 and channelObjects or nil,
+	})
 end
 
 --[=[

@@ -5,7 +5,11 @@ local DiscordEndpoints = require("../../Data/DiscordEndpoints")
 
 local CommandBuilder = require("../Builders/CommandBuilder")
 local AutomoderationRuleBuilder = require("../Builders/AutomoderationRuleBuilder")
+local GuildBuilder = require("../Builders/GuildBuilder")
+local ChannelBuilder = require("../Builders/ChannelBuilder")
+local MemberBuilder = require("../Builders/MemberBuilder")
 
+local GuildPreview = require("GuildPreview")
 local DiscordEmoji = require("DiscordEmoji")
 local DiscordGuildRole = require("DiscordGuildRole")
 local DiscordChannel = require("DiscordChannel")
@@ -212,34 +216,32 @@ end
 	Modifies the guild settings asynchronously.
 
 	@method modifyAsync
-	@param guildSchema DiscordGuildSchema -- The schema containing the new settings for the guild.
+	@param guildBuilder Builders.GuildBuilder
 	@return Future
 	@within Objects.DiscordGuild
 ]=]
-function DiscordGuild.Prototype.modifyAsync(self: DiscordGuild, guildSchema: DiscordGuildSchema)
+function DiscordGuild.Prototype.modifyAsync(self: DiscordGuild, guildBuilder: GuildBuilder.GuildBuilder)
+	return Future.try(function()
+		return self.discordClient.discordGateway
+			:patchAsync(string.format(DiscordEndpoints.BotModifyGuild, self.id), guildBuilder:toPayloadObject())
+			:await()
+	end)
+end
+
+--[=[
+	Modifies the current member of the discord guild
+
+	@method modifyCurrentMemberAsync
+	@param memberBuilder Builders.MemberBuilder
+	@return Future
+	@within Objects.DiscordGuild
+]=]
+function DiscordGuild.Prototype.modifyCurrentMemberAsync(self: DiscordGuild, memberBuilder: MemberBuilder.MemberBuilder)
 	return Future.try(function()
 		return self.discordClient.discordGateway
 			:patchAsync(
-				string.format(DiscordEndpoints.BotModifyGuild, self.id),
-				Resolvable.new(ResolvableType.JSON, { -- todo: throw GuildSchema into a guild builder
-					name = guildSchema.name,
-					region = guildSchema.region,
-					verification_level = guildSchema.verificationLevel,
-					default_message_notifications = guildSchema.defaultMessageNotifications,
-					explicit_content_filter = guildSchema.explicitContentFilter,
-					afk_channel_id = guildSchema.afkChannelId,
-					afk_timeout = guildSchema.afkTimeout,
-					owner_id = guildSchema.ownerId,
-					system_channel_id = guildSchema.systemChannelId,
-					system_channel_flags = guildSchema.systemChannelFlags,
-					rules_channel_id = guildSchema.rulesChannelId,
-					public_update_channel_id = guildSchema.publicUpdateChannelId,
-					preferred_locale = guildSchema.preferredLocale,
-					features = guildSchema.features,
-					description = guildSchema.description,
-					premium_progress_bar_enabled = guildSchema.premiumProgressBarEnabled,
-					safety_alerts_channel_id = guildSchema.safetyAlertsChannelId,
-				})
+				string.format(DiscordEndpoints.BotModifyCurrentMemberGuild, self.id),
+				memberBuilder:toPayloadObject()
 			)
 			:await()
 	end)
@@ -411,6 +413,86 @@ function DiscordGuild.Prototype.createAutomoderationRuleAsync(
 end
 
 --[=[
+	Get the preview of the current Guild
+
+	@method getPreviewAsync
+	@return Future<Objects.GuildPreview>
+	@within Objects.DiscordGuild
+]=]
+function DiscordGuild.Prototype.getPreviewAsync(self: DiscordGuild)
+	return Future.try(function()
+		local previewData = self.discordClient.discordGateway
+			:getAsync(string.format(DiscordEndpoints.BotGetGuildPreview, self.id))
+			:await()
+
+		return GuildPreview.new(self.discordClient, previewData)
+	end)
+end
+
+--[=[
+	Creates a Guild Channel under a Guild.
+
+	@method createChannelAsync
+	@param channelBuilder Builders.ChannelBuilder
+	@return Future<Objects.DiscordChannel>
+	@within Objects.DiscordGuild
+]=]
+function DiscordGuild.Prototype.createChannelAsync(self: DiscordGuild, channelBuilder: ChannelBuilder.ChannelBuilder)
+	return Future.try(function()
+		local channelData = self.discordClient.discordGateway
+			:postAsync(string.format(DiscordEndpoints.BotCreateGuildChannel, self.id), channelBuilder:toPayloadObject())
+			:await()
+
+		return DiscordChannel.from(self.discordClient, channelData)
+	end)
+end
+
+--[=[
+	Fetches all active guild threads.
+
+	@method getActiveGuildThreads
+	@return Future<{ Objects.DiscordChannel }>
+	@within Objects.DiscordGuild
+]=]
+function DiscordGuild.Prototype.getActiveGuildThreads(self: DiscordGuild)
+	return Future.try(function()
+		local threadDatas: { DiscordChannel.DiscordChannel } = self.discordClient.discordGateway
+			:getAsync(string.format(DiscordEndpoints.BotGetAllActiveGuildThreads, self.id))
+			:await()
+
+		for key, value in threadDatas do
+			threadDatas[key] = DiscordChannel.from(self.discordClient, value)
+		end
+
+		return threadDatas
+	end)
+end
+
+--[=[
+	Adds a discordian to a guild.
+
+	@method addMemberAsync
+	@param userId string
+	@param accessToken string
+	@return Future<{ Objects.DiscordChannel }>
+	@within Objects.DiscordGuild
+]=]
+function DiscordGuild.Prototype.addMemberAsync(self: DiscordGuild, userId: string, accessToken: string)
+	return Future.try(function()
+		local guildMember = self.discordClient.discordGateway
+			:putAsync(
+				string.format(DiscordEndpoints.BotAddGuildMember, self.id, userId),
+				Resolvable.new(ResolvableType.JSON, {
+					access_token = accessToken,
+				})
+			)
+			:await()
+
+		return DiscordGuildMember.new(self.discordClient, userId, self.id, guildMember)
+	end)
+end
+
+--[=[
 	Creates a new DiscordGuild instance.
 
 	@function new
@@ -463,26 +545,6 @@ export type DiscordGuild = typeof(DiscordGuild.Prototype) & {
 
 	roles: { DiscordGuildRole.DiscordGuildRole },
 	emojis: { DiscordEmoji.DiscordEmoji },
-}
-
-export type DiscordGuildSchema = {
-	name: string,
-	region: string?,
-	verificationLevel: number,
-	defaultMessageNotifications: number,
-	explicitContentFilter: number,
-	afkChannelId: string,
-	afkTimeout: number,
-	ownerId: string,
-	systemChannelId: string,
-	systemChannelFlags: number,
-	rulesChannelId: string,
-	publicUpdateChannelId: string,
-	preferredLocale: string,
-	features: { string },
-	description: string,
-	premiumProgressBarEnabled: boolean,
-	safetyAlertsChannelId: string,
 }
 
 return DiscordGuild.Interface

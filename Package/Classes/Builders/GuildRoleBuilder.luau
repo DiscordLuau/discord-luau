@@ -146,7 +146,17 @@ end
 	@return Network.Resolvable
 ]=]
 function GuildRoleBuilder.Prototype.toPayloadObject(self: GuildRoleBuilder)
-	return Resolvable.new(ResolvableType.JSON, {})
+	return Resolvable.new(ResolvableType.JSON, {
+		name = self.name,
+		color = self.color,
+		hoist = self.hoist,
+		icon = self.icon,
+		unicode_emoji = self.unicodeEmoji,
+		position = self.position,
+		permission = self.permissions:getValue(),
+		mentionable = self.mentionable,
+		flags = self.flags,
+	})
 end
 
 --[=[

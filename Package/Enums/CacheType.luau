@@ -3,7 +3,10 @@
 
 local CacheType = {
 	Application = "Application",
+	GuildPreview = "GuildPreview",
 	DiscordEmoji = "DiscordEmoji",
+	DiscordMember = "DiscordMember",
+	DiscordSticker = "DiscordSticker",
 	DiscordGuild = "DiscordGuild",
 	DiscordGuildRole = "DiscordGuildRole",
 	DiscordUser = "DiscordUser",
@@ -13,7 +16,10 @@ local CacheType = {
 
 export type CacheType =
 	"Application"
+	| "GuildPreview"
+	| "DiscordMember"
 	| "DiscordEmoji"
+	| "DiscordSticker"
 	| "DiscordGuilded"
 	| "DiscordGuildRole"
 	| "DiscordUser"

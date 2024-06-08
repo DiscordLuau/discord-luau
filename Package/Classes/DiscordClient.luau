@@ -12,11 +12,13 @@ local WebsocketOperationCodes = require("../Enums/WebsocketOperationCodes")
 local WebsocketOperationKeys = require("../Enums/WebsocketOperationKeys")
 
 local PresenceBuilder = require("Builders/PresenceBuilder")
+local GuildBuilder = require("Builders/GuildBuilder")
 
 local EndpointCache = require("Objects/EndpointCache")
 local DiscordCache = require("Objects/DiscordCache")
 local DiscordUser = require("Objects/DiscordUser")
 local DiscordGuild = require("Objects/DiscordGuild")
+local GuildPreview = require("Objects/GuildPreview")
 local DiscordChannel = require("Objects/DiscordChannel")
 local DiscordMessage = require("Objects/DiscordMessage")
 local DiscordApplication = require("Objects/DiscordApplication")
@@ -210,7 +212,7 @@ end
 	@method fetchChannelAsync
 	@param channelId string -- The ID of the channel to fetch.
 	@within DiscordClient
-	@return Future<DiscordChannel> -- A future resolving to the fetched DiscordChannel.
+	@return Future<Objects.DiscordChannel> -- A future resolving to the fetched DiscordChannel.
 ]=]
 function DiscordClient.Prototype.fetchChannelAsync(
 	self: DiscordClient,
@@ -247,6 +249,27 @@ function DiscordClient.Prototype.updatePresenceAsync(
 		end
 
 		return true
+	end)
+end
+
+--[=[
+	Creates a Guild, owned by the application.
+	
+	@method createGuildAsync
+	@param guildBuilder Builders.GuildBuilder
+	@within DiscordClient
+	@return Future<DiscordGuild>
+]=]
+function DiscordClient.Prototype.createGuildAsync(
+	self: DiscordClient,
+	guildBuilder: GuildBuilder.GuildBuilder
+): Future.Future<DiscordGuild.DiscordGuild>
+	return Future.try(function()
+		local rawGuildData: any = self.discordGateway
+			:postAsync(string.format(DiscordEndpoints.BotCreateGuild), guildBuilder:toPayloadObject())
+			:await()
+
+		return DiscordGuild.new(self, rawGuildData)
 	end)
 end
 

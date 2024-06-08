@@ -11,6 +11,8 @@ local DiscordUser = require("DiscordUser")
 local Resolvable = require("../Network/Resolvable")
 local ResolvableType = require("../../Enums/ResolveableType")
 
+local MemberBuilder = require("../Builders/MemberBuilder")
+
 --[=[
 	@class Objects.DiscordGuildMember
 
@@ -112,9 +114,7 @@ end
 	@within Objects.DiscordGuildMember
 ]=]
 function DiscordGuildMember.Prototype.timeoutAsync(self: DiscordGuildMember, seconds: number)
-	return self:modifyAsync({
-		timeoutUntil = seconds,
-	})
+	return self:modifyAsync(MemberBuilder.new():setTimeoutFor(seconds))
 end
 
 --[=[
@@ -125,9 +125,7 @@ end
 	@within Objects.DiscordGuildMember
 ]=]
 function DiscordGuildMember.Prototype.muteAsync(self: DiscordGuildMember)
-	return self:modifyAsync({
-		mute = true,
-	})
+	return self:modifyAsync(MemberBuilder.new():setMuted(true))
 end
 
 --[=[
@@ -138,9 +136,7 @@ end
 	@within Objects.DiscordGuildMember
 ]=]
 function DiscordGuildMember.Prototype.unmuteAsync(self: DiscordGuildMember)
-	return self:modifyAsync({
-		mute = false,
-	})
+	return self:modifyAsync(MemberBuilder.new():setMuted(false))
 end
 
 --[=[
@@ -151,9 +147,7 @@ end
 	@within Objects.DiscordGuildMember
 ]=]
 function DiscordGuildMember.Prototype.deafenAsync(self: DiscordGuildMember)
-	return self:modifyAsync({
-		deaf = true,
-	})
+	return self:modifyAsync(MemberBuilder.new():setDeafened(true))
 end
 
 --[=[
@@ -164,9 +158,7 @@ end
 	@within Objects.DiscordGuildMember
 ]=]
 function DiscordGuildMember.Prototype.undeafenAsync(self: DiscordGuildMember)
-	return self:modifyAsync({
-		deaf = false,
-	})
+	return self:modifyAsync(MemberBuilder.new():setDeafened(false))
 end
 
 --[=[
@@ -178,50 +170,22 @@ end
 	@within Objects.DiscordGuildMember
 ]=]
 function DiscordGuildMember.Prototype.setNicknameAsync(self: DiscordGuildMember, nickname: string)
-	return self:modifyAsync({
-		nickname = nickname,
-	})
+	return self:modifyAsync(MemberBuilder.new():setNickname(nickname))
 end
 
 --[=[
 	Modifies the guild member asynchronously.
 
 	@method modifyAsync
-	@param modificationsTable table -- A table containing the modifications.
+	@param memberBuilder Builders.MemberBuilder
 	@return Future
 	@within Objects.DiscordGuildMember
 ]=]
-function DiscordGuildMember.Prototype.modifyAsync(
-	self: DiscordGuildMember,
-	modificationsTable: {
-		nickname: string?,
-		roles: { string }?,
-		mute: boolean?,
-		deaf: boolean?,
-		channelId: string?,
-		timeoutUntil: number?,
-		flags: number?,
-	}
-)
-	local communication_disabled_until
-
-	if modificationsTable.timeoutUntil then
-		communication_disabled_until = Datetime.fromUnixTimestamp(os.time() + modificationsTable.timeoutUntil)
-			:toIsoDate()
-	end
-
+function DiscordGuildMember.Prototype.modifyAsync(self: DiscordGuildMember, memberBuilder: MemberBuilder.MemberBuilder)
 	return self.discordClient.discordGateway
 		:patchAsync(
 			string.format(DiscordEndpoints.BotModifyGuildMember, self.guildId, self.user.id),
-			Resolvable.new(ResolvableType.JSON, {
-				nick = modificationsTable.nickname,
-				roles = modificationsTable.roles,
-				mute = modificationsTable.mute,
-				deaf = modificationsTable.deaf,
-				channel_id = modificationsTable.channelId,
-				communication_disabled_until = communication_disabled_until,
-				flags = modificationsTable.flags,
-			})
+			memberBuilder:toPayloadObject()
 		)
 		:await()
 end
