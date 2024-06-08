@@ -1,20 +1,16 @@
 {
 	"languageMode": "strict",
 	"lint": {
-		// Lints are handled by Selene
 		"*": false
 	},
 	"aliases": {
-		"Builders": "Package/Classes/Builders",
-		"Network": "Package/Classes/Network",
-		"Objects": "Package/Classes/Objects",
-		"Data": "Package/Data",
-		"Enums": "Package/Enums",
-		"Std": "Package/Std",
-		"Utils": "Package/Utils",
-		"Vendor": "Package/Vendor",
-
-		"DiscordLuau": "Package",
-		"@Env": ".env.luau"
+		"Builders": "./Package/Classes/Builders",
+		"Network": "./Package/Classes/Network",
+		"Objects": "./Package/Classes/Objects",
+		"Data": "./Package/Data",
+		"Enums": "./Package/Enums",
+		"Std": "./Package/Std",
+		"Utils": "./Package/Utils",
+		"Vendor": "./Package/Vendor"
 	}
 }

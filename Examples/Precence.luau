@@ -1,5 +1,5 @@
-local DiscordLuau = require("@DiscordLuau")
-local Env = require("@Env")
+local DiscordLuau = require("..")
+local Env = require("../.env")
 
 local DiscordSettings = DiscordLuau.SettingsBuilder.new(Env.DISCORD_BOT_TOKEN)
 local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettings)
