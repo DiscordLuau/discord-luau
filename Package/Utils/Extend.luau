@@ -15,7 +15,25 @@ return function<S, M>(class0: S, class1: M): S & M & { super: M }
 
 	object = setmetatable({}, {
 		__index = function(_, index)
-			return class0[index] or class1[index]
+			if class0[index] then
+				return class0[index]
+			end
+
+			local index = class1[index]
+
+			if type(index) == "function" then
+				return function(...)
+					local args = { ... }
+
+					if select(1, ...) == object then
+						args[1] = class1
+					end
+
+					return index(table.unpack(args))
+				end
+			else
+				return index
+			end
 		end,
 		-- __newindex = source,
 

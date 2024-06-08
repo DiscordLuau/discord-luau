@@ -67,7 +67,7 @@ end
 	@return Builders.ActivityBuilder -- Returns the ActivityBuilder instance for method chaining.
 ]=]
 function ActivityBuilder.Prototype.setActivityType(self: ActivityBuilder, activityType: number)
-	assert(ActivityBuilder.Interface.Type:Is(activityType), `Expected 'activityType' to be of class 'activityType'`)
+	ActivityBuilder.Interface.Type:Assert(activityType)
 
 	self.activityType = activityType
 

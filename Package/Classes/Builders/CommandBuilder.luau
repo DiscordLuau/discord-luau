@@ -86,7 +86,7 @@ CommandBuilder.Interface.IntegrationType = Enumerate.new({
 	@return Builders.CommandBuilder -- Returns the CommandBuilder instance for method chaining.
 ]=]
 function CommandBuilder.Prototype.setType(self: CommandBuilder, commandType: number)
-	assert(CommandBuilder.Interface.Type:Is(commandType), `Expected 'commandType' to be of enum 'commandType'`)
+	CommandBuilder.Interface.Type:Assert(commandType)
 
 	self.commandType = commandType
 

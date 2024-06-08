@@ -19,6 +19,10 @@ function Enumeration.Prototype:Is(item)
 	return false
 end
 
+function Enumeration.Prototype:Assert(item)
+	assert(self:Is(item), `EnumItem is invalid!`)
+end
+
 function Enumeration.Prototype:ToString()
 	return `{Enumeration.Type}<"{table.concat(self, ", ")}">`
 end
