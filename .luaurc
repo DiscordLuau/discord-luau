@@ -5,13 +5,13 @@
 		"*": false
 	},
 	"aliases": {
-		"@Builders": "Package/Classes/Builders",
-		"@Network": "Package/Classes/Network",
-		"@Objects": "Package/Classes/Objects",
-		"@Data": "Package/Data",
-		"@Enums": "Package/Enums",
-		"@Std": "Package/Std",
-		"@Utils": "Package/Utils",
-		"@Vendor": "Package/Vendor",
+		"Builders": "Package/Classes/Builders",
+		"Network": "Package/Classes/Network",
+		"Objects": "Package/Classes/Objects",
+		"Data": "Package/Data",
+		"Enums": "Package/Enums",
+		"Std": "Package/Std",
+		"Utils": "Package/Utils",
+		"Vendor": "Package/Vendor",
 	}
 }
