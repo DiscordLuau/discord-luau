@@ -1,7 +1,7 @@
-local Task = require("@lune/task")
+local Task = require("@Std/Task")
 
-local DiscordLuau = require("..")
-local Env = require("../.env")
+local DiscordLuau = require("@DiscordLuau")
+local Env = require("@Env")
 
 local DiscordSettings = DiscordLuau.SettingsBuilder.new(Env.DISCORD_BOT_TOKEN)
 local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettings)

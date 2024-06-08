@@ -13,5 +13,8 @@
 		"Std": "Package/Std",
 		"Utils": "Package/Utils",
 		"Vendor": "Package/Vendor",
+
+		"DiscordLuau": "Package",
+		"@Env": ".env.luau"
 	}
 }
