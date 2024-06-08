@@ -102,7 +102,7 @@ CommandOptionBuilder.Interface.ChannelType = Enumerate.new({
 	@return Builders.CommandOptionBuilder -- Returns the CommandOptionBuilder instance for method chaining.
 ]=]
 function CommandOptionBuilder.Prototype.setType(self: CommandOptionBuilder, optionType: number)
-	assert(CommandOptionBuilder.Interface.Type:Is(optionType), `Expected 'optionType' to be of enum 'optionType'`)
+	CommandOptionBuilder.Interface.Type:Assert(optionType)
 
 	self.optionType = optionType
 
@@ -175,10 +175,7 @@ end
 ]=]
 function CommandOptionBuilder.Prototype.setChannelTypes(self: CommandOptionBuilder, ...)
 	for _, channelType in { ... } do
-		assert(
-			CommandOptionBuilder.Interface.ChannelType:Is(channelType),
-			`Expected 'channelType' to be of enum 'ChannelType'`
-		)
+		CommandOptionBuilder.Interface.ChannelType:Assert(channelType)
 	end
 
 	self.optionChannelTypes = { ... }

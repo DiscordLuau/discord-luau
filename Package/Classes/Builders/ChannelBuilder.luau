@@ -89,7 +89,7 @@ ChannelBuilder.Interface.ForumLayout = Enumerate.new({
 	@return Builders.ChannelBuilder
 ]=]
 function ChannelBuilder.Prototype.setType(self: ChannelBuilder, type: number)
-	assert(ChannelBuilder.Interface.Type:Is(type), `Expected Type to be of 'ChannelBuilder.Type'`)
+	ChannelBuilder.Interface.Type:Assert(type)
 
 	self.channelType = type :: any
 
@@ -130,10 +130,7 @@ end
 	@return Builders.ChannelBuilder
 ]=]
 function ChannelBuilder.Prototype.setVideoQualityMode(self: ChannelBuilder, videoQualityMode: number)
-	assert(
-		ChannelBuilder.Interface.VideoQualityMode:Is(videoQualityMode),
-		`Expected Type to be of 'ChannelBuilder.VideoQualityMode'`
-	)
+	ChannelBuilder.Interface.VideoQualityMode:Assert(videoQualityMode)
 
 	self.videoQualityMode = videoQualityMode
 
@@ -210,7 +207,7 @@ end
 	@return Builders.ChannelBuilder
 ]=]
 function ChannelBuilder.Prototype.setDefaultSortOrder(self: ChannelBuilder, sortOrder: number)
-	assert(ChannelBuilder.Interface.SortOrder:Is(sortOrder), `Expected Type to be of 'ChannelBuilder.SortOrder'`)
+	ChannelBuilder.Interface.SortOrder:Assert(sortOrder)
 
 	self.sortOrder = sortOrder
 
@@ -225,7 +222,7 @@ end
 	@return Builders.ChannelBuilder
 ]=]
 function ChannelBuilder.Prototype.setDefaultForumLayout(self: ChannelBuilder, layoutOrder: number)
-	assert(ChannelBuilder.Interface.ForumLayout:Is(layoutOrder), `Expected Type to be of 'ChannelBuilder.SortOrder'`)
+	ChannelBuilder.Interface.ForumLayout:Assert(layoutOrder)
 
 	self.forumLayout = layoutOrder
 
