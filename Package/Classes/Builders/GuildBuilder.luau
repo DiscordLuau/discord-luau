@@ -3,7 +3,6 @@ local Construct = require("@Utils/Construct")
 
 local Resolvable = require("@Network/Resolvable")
 
-local PermissionsBuilder = require("@Builders/PermissionsBuilder")
 local GuildRoleBuilder = require("@Builders/GuildRoleBuilder")
 local ChannelBuilder = require("@Builders/ChannelBuilder")
 

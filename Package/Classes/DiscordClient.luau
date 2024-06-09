@@ -17,7 +17,6 @@ local EndpointCache = require("@Objects/EndpointCache")
 local DiscordCache = require("@Objects/DiscordCache")
 local DiscordUser = require("@Objects/DiscordUser")
 local DiscordGuild = require("@Objects/DiscordGuild")
-local GuildPreview = require("@Objects/GuildPreview")
 local DiscordChannel = require("@Objects/DiscordChannel")
 local DiscordMessage = require("@Objects/DiscordMessage")
 local DiscordApplication = require("@Objects/DiscordApplication")
@@ -265,9 +264,8 @@ function DiscordClient.Prototype.createGuildAsync(
 	guildBuilder: GuildBuilder.GuildBuilder
 ): Future.Future<DiscordGuild.DiscordGuild>
 	return Future.try(function()
-		local rawGuildData: any = self.discordGateway
-			:postAsync(string.format(DiscordEndpoints.BotCreateGuild), guildBuilder:toPayloadObject())
-			:await()
+		local rawGuildData: any =
+			self.discordGateway:postAsync(DiscordEndpoints.BotCreateGuild, guildBuilder:toPayloadObject()):await()
 
 		return DiscordGuild.new(self, rawGuildData)
 	end)

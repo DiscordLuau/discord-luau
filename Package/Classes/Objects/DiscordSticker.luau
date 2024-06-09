@@ -1,5 +1,4 @@
 local Construct = require("@Utils/Construct")
-local Construct = require("@Utils/Construct")
 
 local DiscordUser = require("@Objects/DiscordUser")
 

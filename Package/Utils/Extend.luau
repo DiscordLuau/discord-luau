@@ -19,9 +19,9 @@ return function<S, M>(class0: S, class1: M): S & M & { super: M }
 				return class0[index]
 			end
 
-			local index = class1[index]
+			local indexOf = class1[index]
 
-			if type(index) == "function" then
+			if type(indexOf) == "function" then
 				return function(...)
 					local args = { ... }
 
@@ -29,10 +29,10 @@ return function<S, M>(class0: S, class1: M): S & M & { super: M }
 						args[1] = class1
 					end
 
-					return index(table.unpack(args))
+					return indexOf(table.unpack(args))
 				end
 			else
-				return index
+				return indexOf
 			end
 		end,
 		-- __newindex = source,

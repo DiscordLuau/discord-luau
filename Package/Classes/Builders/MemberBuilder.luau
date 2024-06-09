@@ -1,6 +1,5 @@
 local Datetime = require("@Std/Datetime")
 
-local Enumerate = require("@Utils/Enumerate")
 local Construct = require("@Utils/Construct")
 
 local Resolvable = require("@Network/Resolvable")
