@@ -21,6 +21,28 @@ return {
 	BotCreateGuildRole = "guilds/%s/roles",
 	BotGetGuildBan = "guilds/%s/bans/%s",
 
+	GetGuildAuditLogs = "guilds/%s/audit-logs",
+	BotModifyGuild = "guilds/%s",
+	BotDeleteGuild = "guilds/%s",
+	BotGetGuildChannels = "guilds/%s/channels",
+	BotGetGuildMember = "guilds/%s/members/%s",
+	BotModifyCurrentMemberGuild = "guilds/%s/members/@me",
+	BotGetGuildMembers = "guilds/%s/members?limit=%s&after=%s",
+	BotBanGuildMember = "guilds/%s/members/%s",
+	BotRemoveGuildMember = "guilds/%s/members/%s",
+	BotRemoveGuildMemberBan = "guilds/%s/bans/%s",
+	BotAddGuildMemberRole = "guilds/%s/members/%s/roles/%s",
+	BotRemoveGuildMemberRole = "guilds/%s/members/%s/roles/%s",
+	BotModifyGuildMember = "guilds/%s/members/%s",
+	BotSearchGuildMembers = "guilds/%s/members/search?query=%s&limit=%s",
+	BotModifyGuildChannelPosition = "channels/%s/channels",
+
+	BotListAutomoderationRules = "guilds/%s/auto-moderation/rules",
+	BotGetAutomoderationRule = "guilds/%s/auto-moderation/rules/%s",
+	BotCreateAutomoderationRule = "guilds/%s/auto-moderation/rules",
+	BotModifyAutomoderationRule = "guilds/%s/auto-moderation/rules/%s",
+	BotDeleteAutomoderationRule = "guilds/%s/auto-moderation/rules/%s",
+
 	BotGetChannel = "channels/%s",
 	BotCreateMessage = "channels/%s/messages",
 	BotGetChannelMessages = "channels/%s/messages",
@@ -33,7 +55,6 @@ return {
 	BotCreateForumOrMediaThread = "channels/%s/threads",
 
 	BotGetInvites = "channels/%s/invites",
-	BotDeleteInvite = "invites/%s",
 
 	BotCreateReaction = "channels/%s/messages/%s/reactions/%s/@me",
 	BotDeleteReaction = "channels/%s/messages/%s/reactions/%s/@me",
@@ -71,28 +92,6 @@ return {
 	GetGlobalApplicationCommand = "applications/%s/commands/%s",
 	DeleteGlobalApplicationCommand = "applications/%s/commands/%s",
 
-	GetGuildAuditLogs = "guilds/%s/audit-logs",
-	BotModifyGuild = "guilds/%s",
-	BotDeleteGuild = "guilds/%s",
-	BotGetGuildChannels = "guilds/%s/channels",
-	BotGetGuildMember = "guilds/%s/members/%s",
-	BotModifyCurrentMemberGuild = "guilds/%s/members/@me",
-	BotGetGuildMembers = "guilds/%s/members?limit=%s&after=%s",
-	BotBanGuildMember = "guilds/%s/members/%s",
-	BotRemoveGuildMember = "guilds/%s/members/%s",
-	BotRemoveGuildMemberBan = "guilds/%s/bans/%s",
-	BotAddGuildMemberRole = "guilds/%s/members/%s/roles/%s",
-	BotRemoveGuildMemberRole = "guilds/%s/members/%s/roles/%s",
-	BotModifyGuildMember = "guilds/%s/members/%s",
-	BotSearchGuildMembers = "guilds/%s/members/search?query=%s&limit=%s",
-	BotModifyGuildChannelPosition = "channels/%s/channels",
-
-	BotListAutomoderationRules = "guilds/%s/auto-moderation/rules",
-	BotGetAutomoderationRule = "guilds/%s/auto-moderation/rules/%s",
-	BotCreateAutomoderationRule = "guilds/%s/auto-moderation/rules",
-	BotModifyAutomoderationRule = "guilds/%s/auto-moderation/rules/%s",
-	BotDeleteAutomoderationRule = "guilds/%s/auto-moderation/rules/%s",
-
 	CreateGuildApplicationCommand = "applications/%s/guilds/%s/commands",
 	EditGuildApplicationCommand = "applications/%s/guilds/%s/commands/%s",
 	GetGuildApplicationCommands = "applications/%s/guilds/%s/commands",
@@ -100,6 +99,7 @@ return {
 	GetGuildApplicationCommand = "applications/%s/guilds/%s/commands/%s",
 	DeleteGuildApplicationCommand = "applications/%s/guilds/%s/commands/%s",
 
+	BotDeleteInvite = "invites/%s",
 	CreateInteractionResponse = "interactions/%s/%s/callback",
 	EditOriginalInteractionResponse = "webhooks/%s/%s/messages/@original",
 }
