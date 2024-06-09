@@ -10,10 +10,10 @@ local DiscordGuildRole = require("@Objects/DiscordGuildRole")
 local DiscordChannel = require("@Objects/DiscordChannel")
 local DiscordUser = require("@Objects/DiscordUser")
 local DiscordGuildBan = require("@Objects/DiscordGuildBan")
-
 local DiscordGuildMember = require("@Objects/DiscordGuildMember")
-
 local DiscordAutomoderationRule = require("@Objects/DiscordAutomoderationRule")
+local DiscordInvite = require("@Objects/DiscordInvite")
+local DiscordIntegration = require("@Objects/DiscordIntegration")
 
 local CommandBuilder = require("@Builders/CommandBuilder")
 local AutomoderationRuleBuilder = require("@Builders/AutomoderationRuleBuilder")
@@ -616,6 +616,8 @@ end
 	Fetches the prune count.
 
 	@method getPruneCountAsync
+	@param days number?
+	@param includedRoles { string }?
 	@return Future<{ pruned: number }>
 	@within Objects.DiscordGuild
 ]=]
@@ -632,6 +634,139 @@ function DiscordGuild.Prototype.getPruneCountAsync(self: DiscordGuild, days: num
 			)
 			:await() :: {
 			pruned: number,
+		}
+	end)
+end
+
+--[=[
+	Requests discord to prune the Discord guild.
+
+	@method getPruneCountAsync
+	@param days number?
+	@param computePruneCount boolean?
+	@param includeRoles { string }?
+	@return Future<{ pruned: number }>
+	@within Objects.DiscordGuild
+]=]
+function DiscordGuild.Prototype.beginPruneAsync(
+	self: DiscordGuild,
+	days: number?,
+	computePruneCount: boolean?,
+	includeRoles: { string }?
+)
+	return Future.try(function()
+		return self.discordClient.discordGateway
+			:postAsync(
+				string.format(DiscordEndpoints.BotBeginGuildPrune, self.id),
+				Resolvable.new(ResolvableType.JSON, {
+					days = days,
+					compute_prune_count = computePruneCount,
+					include_roles = includeRoles,
+				})
+			)
+			:await() :: {
+			pruned: number?,
+		}
+	end)
+end
+
+--[=[
+	Fetches the avaliable voice regions for the guild.
+
+	@method getGuildVoiceRegionsAsync
+	@return Future<{ { id: string, name: string, optimal: boolean, deprecated: boolean, custom: boolean } }>
+	@within Objects.DiscordGuild
+]=]
+function DiscordGuild.Prototype.getGuildVoiceRegionsAsync(self: DiscordGuild)
+	return Future.try(function()
+		return self.discordClient.discordGateway
+			:getAsync(string.format(DiscordEndpoints.BotGetGuildVoiceRegions, self.id))
+			:await() :: { { id: string, name: string, optimal: boolean, deprecated: boolean, custom: boolean } }
+	end)
+end
+
+--[=[
+	Fetches all guild invite objects.
+
+	@method getGuildInvitesAsync
+	@return Future<{ Objects.DiscordInvite }>
+	@within Objects.DiscordGuild
+]=]
+function DiscordGuild.Prototype.getGuildInvitesAsync(self: DiscordGuild)
+	return Future.try(function()
+		local guildInvites: { DiscordInvite.DiscordInvite } = self.discordClient.discordGateway
+			:getAsync(string.format(DiscordEndpoints.BotGetGuildInvites, self.id))
+			:await()
+
+		for key, value in guildInvites do
+			guildInvites[key] = DiscordInvite.new(self.discordClient, value)
+		end
+
+		return guildInvites
+	end)
+end
+
+--[=[
+	Fetches all guild integrations
+
+	@method getGuildIntegrationsAsync
+	@return Future<{ Objects.DiscordIntegration }>
+	@within Objects.DiscordGuild
+]=]
+function DiscordGuild.Prototype.getGuildIntegrationsAsync(self: DiscordGuild)
+	return Future.try(function()
+		local guildIntegrations: { DiscordIntegration.DiscordIntegration } = self.discordClient.discordGateway
+			:getAsync(string.format(DiscordEndpoints.BotGetGuildIntegrations, self.id))
+			:await()
+
+		for key, value in guildIntegrations do
+			guildIntegrations[key] = DiscordIntegration.new(self.discordClient, self.id, value)
+		end
+
+		return guildIntegrations
+	end)
+end
+
+--[=[
+	Fetches the widget settings for the current guild.
+
+	@method getGuildWidgetSettingsAsync
+	@return Future<{ enabled: boolean, cannelId: string }>
+	@within Objects.DiscordGuild
+]=]
+function DiscordGuild.Prototype.getGuildWidgetSettingsAsync(self: DiscordGuild)
+	return Future.try(function()
+		return self.discordClient.discordGateway
+			:getAsync(string.format(DiscordEndpoints.BotGetGuildWidgetSettings, self.id))
+			:await() :: {
+			enabled: boolean,
+			cannelId: string,
+		}
+	end)
+end
+
+--[=[
+	Updates the widget settings for the current guild
+
+	@method updateGuildWidgetSettingsAsync
+	@param widgetEnabled boolean
+	@param channelId string
+	@return Future<{ enabled: boolean, cannelId: string }>
+	@within Objects.DiscordGuild
+]=]
+function DiscordGuild.Prototype.updateGuildWidgetSettingsAsync(self: DiscordGuild, enabled: boolean, channelId: string?)
+	return Future.try(function()
+		return self.discordClient.discordGateway
+			:patchAsync(
+				string.format(DiscordEndpoints.BotModifyGuildWidgetSettings, self.id),
+				Resolvable.new(ResolvableType.JSON, {
+					enabled = enabled,
+					channelId = channelId,
+				})
+			)
+			:await() :: {
+			enabled: boolean,
+			cannelId: string,
 		}
 	end)
 end

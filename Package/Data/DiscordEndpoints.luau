@@ -20,6 +20,12 @@ return {
 	BotBulkGuildBan = "guilds/%s/bulk-ban",
 	BotCreateGuildRole = "guilds/%s/roles",
 	BotModifyGuildMFALevel = "guilds/%s/mfa",
+	BotBeginGuildPrune = "guilds/%s/prune",
+	BotGetGuildVoiceRegions = "guilds/%s/regions",
+	BotGetGuildInvites = "guilds/%s/invites",
+	BotGetGuildIntegrations = "guilds/%s/integrations",
+	BotGetGuildWidgetSettings = "guilds/%s/widget",
+	BotModifyGuildWidgetSettings = "guilds/%s/widget",
 	BotGetGuildPruneCount = "guilds/%s/prune?days=%s&include_roles=%s",
 	BotGetGuildBan = "guilds/%s/bans/%s",
 
@@ -37,7 +43,7 @@ return {
 	BotRemoveGuildMemberRole = "guilds/%s/members/%s/roles/%s",
 	BotModifyGuildMember = "guilds/%s/members/%s",
 	BotSearchGuildMembers = "guilds/%s/members/search?query=%s&limit=%s",
-	BotModifyGuildChannelPosition = "channels/%s/channels",
+	BotDeleteGuildIntegration = "guilds/%s/integrations/%s",
 
 	BotListAutomoderationRules = "guilds/%s/auto-moderation/rules",
 	BotGetAutomoderationRule = "guilds/%s/auto-moderation/rules/%s",
@@ -46,6 +52,7 @@ return {
 	BotDeleteAutomoderationRule = "guilds/%s/auto-moderation/rules/%s",
 
 	BotGetChannel = "channels/%s",
+	BotModifyGuildChannelPosition = "channels/%s/channels",
 	BotCreateMessage = "channels/%s/messages",
 	BotGetChannelMessages = "channels/%s/messages",
 	BotGetChannelMessage = "channels/%s/messages/%s",
