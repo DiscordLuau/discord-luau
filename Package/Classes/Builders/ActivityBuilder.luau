@@ -3,7 +3,7 @@ local Construct = require("@Utils/Construct")
 
 local Resolvable = require("@Network/Resolvable")
 
-local ResolvableType = require("@Enums/ResolveableType")
+local ResolvableType = require("@Enums/ResolvableType")
 
 --[=[
 	@class Builders.ActivityBuilder

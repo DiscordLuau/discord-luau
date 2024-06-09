@@ -16,7 +16,7 @@ local ButtonBuilder = require("@Builders/Interface/ButtonBuilder")
 local SelectionBuilder = require("@Builders/Interface/SelectionBuilder")
 local TextInputBuilder = require("@Builders/Interface/TextInputBuilder")
 
-local ResolvableType = require("@Enums/ResolveableType")
+local ResolvableType = require("@Enums/ResolvableType")
 local CacheType = require("@Enums/CacheType")
 
 --[=[

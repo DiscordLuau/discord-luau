@@ -7,7 +7,7 @@ local PermissionsBuilder = require("@Builders/PermissionsBuilder")
 local GuildRoleBuilder = require("@Builders/GuildRoleBuilder")
 local ChannelBuilder = require("@Builders/ChannelBuilder")
 
-local ResolvableType = require("@Enums/ResolveableType")
+local ResolvableType = require("@Enums/ResolvableType")
 
 --[=[
 	@class Builders.GuildBuilder

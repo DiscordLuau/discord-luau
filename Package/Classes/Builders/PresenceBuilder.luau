@@ -5,7 +5,7 @@ local Resolvable = require("@Network/Resolvable")
 
 local ActivityBuilder = require("@Builders/ActivityBuilder")
 
-local ResolvableType = require("@Enums/ResolveableType")
+local ResolvableType = require("@Enums/ResolvableType")
 
 --[=[
 	@class Builders.PresenceBuilder

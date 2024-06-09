@@ -1,7 +1,7 @@
 local Enumerate = require("@Utils/Enumerate")
 local Construct = require("@Utils/Construct")
 
-local ResolvableType = require("@Enums/ResolveableType")
+local ResolvableType = require("@Enums/ResolvableType")
 local Resolvable = require("@Network/Resolvable")
 
 local PermissionsBuilder = require("@Builders/PermissionsBuilder")

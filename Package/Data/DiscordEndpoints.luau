@@ -13,6 +13,13 @@ return {
 	BotCreateGuildChannel = "guilds/%s/channels",
 	BotGetAllActiveGuildThreads = "guilds/%s/threads/active",
 	BotAddGuildMember = "guilds/%s/members/%s",
+	BotModifyGuildRolePositions = "guilds/%s/roles",
+	BotDeleteGuildRole = "guilds/%s/roles/%s",
+	BotModifyGuildRole = "guilds/%s/roles/%s",
+	BotGetGuildBans = "guilds/%s/bans?before=%s&after=%s&limit=%s",
+	BotBulkGuildBan = "guilds/%s/bulk-ban",
+	BotCreateGuildRole = "guilds/%s/roles",
+	BotGetGuildBan = "guilds/%s/bans/%s",
 
 	BotGetChannel = "channels/%s",
 	BotCreateMessage = "channels/%s/messages",

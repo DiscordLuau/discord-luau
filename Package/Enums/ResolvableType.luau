@@ -1,10 +1,10 @@
 -- Types of Resolveables, only used internally to convey the data
 
-local ResolveableType = {
+local ResolvableType = {
 	JSON = "JSON",
 	FORMDATA = "FORMDATA",
 }
 
-export type ResolveableType = "JSON" | "FORMDATA"
+export type ResolvableType = "JSON" | "FORMDATA"
 
-return ResolveableType
+return ResolvableType

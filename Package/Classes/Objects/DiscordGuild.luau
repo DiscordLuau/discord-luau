@@ -9,6 +9,7 @@ local DiscordEmoji = require("@Objects/DiscordEmoji")
 local DiscordGuildRole = require("@Objects/DiscordGuildRole")
 local DiscordChannel = require("@Objects/DiscordChannel")
 local DiscordUser = require("@Objects/DiscordUser")
+local DiscordGuildBan = require("@Objects/DiscordGuildBan")
 
 local DiscordGuildMember = require("@Objects/DiscordGuildMember")
 
@@ -19,11 +20,12 @@ local AutomoderationRuleBuilder = require("@Builders/AutomoderationRuleBuilder")
 local GuildBuilder = require("@Builders/GuildBuilder")
 local ChannelBuilder = require("@Builders/ChannelBuilder")
 local MemberBuilder = require("@Builders/MemberBuilder")
+local GuildRoleBuilder = require("@Builders/GuildRoleBuilder")
 
 local DiscordEndpoints = require("@Data/DiscordEndpoints")
 
 local CacheType = require("@Enums/CacheType")
-local ResolvableType = require("@Enums/ResolveableType")
+local ResolvableType = require("@Enums/ResolvableType")
 
 --[=[
 	@class Objects.DiscordGuild
@@ -494,6 +496,102 @@ function DiscordGuild.Prototype.addMemberAsync(self: DiscordGuild, userId: strin
 end
 
 --[=[
+	Fetches an array of Guild Bans
+
+	@method getGuildBansAsync
+	@param limit number?
+	@param before string?
+	@param after string?
+	@return Future<{ Objects.DiscordGuildBan }>
+	@within Objects.DiscordGuild
+]=]
+function DiscordGuild.Prototype.getGuildBansAsync(self: DiscordGuild, limit: number?, before: string?, after: string?)
+	return Future.try(function()
+		local guildBans = self.discordClient.discordGateway
+			:getAsync(string.format(DiscordEndpoints.BotGetGuildBans, self.id, before, after, limit))
+			:await()
+
+		for key, value in guildBans do
+			guildBans[key] = DiscordGuildBan.new(self.discordClient, value)
+		end
+
+		return guildBans
+	end)
+end
+
+--[=[
+	Fetches the ban object for a specific user id
+
+	@method getGuildBanAsync
+	@param userId string
+	@return Future<Objects.DiscordGuildBan?>
+	@within Objects.DiscordGuild
+]=]
+function DiscordGuild.Prototype.getGuildBanAsync(self: DiscordGuild, userId: string)
+	return Future.try(function()
+		local guildBan = self.discordClient.discordGateway
+			:getAsync(string.format(DiscordEndpoints.BotGetGuildBans, self.id, userId))
+			:await()
+
+		return DiscordGuildBan.new(self.discordClient, guildBan)
+	end)
+end
+
+--[=[
+	Bans up to 200 members asynchronously
+
+	@method bulkGuildBanAsync
+	@param userIds { string }
+	@return Future
+	@within Objects.DiscordGuild
+]=]
+function DiscordGuild.Prototype.bulkGuildBanAsync(self: DiscordGuild, userIds: { string })
+	return Future.try(function()
+		return self.discordClient.discordGateway
+			:postAsync(
+				string.format(DiscordEndpoints.BotBulkGuildBan, self.id),
+				Resolvable.new(ResolvableType.JSON, userIds)
+			)
+			:await()
+	end)
+end
+
+--[=[
+	Allows you to get all roles within a guild.
+
+	@method bulkGuildBanAsync
+	@return Future<{ Objects.DiscordGuildRole }>
+	@within Objects.DiscordGuild
+]=]
+function DiscordGuild.Prototype.getGuildRolesAsync(self: DiscordGuild)
+	return Future.try(function()
+		local guildRoles: { DiscordGuildRole.DiscordGuildRole } =
+			self.discordClient.discordGateway:getAsync(string.format(DiscordEndpoints.BotBulkGuildBan, self.id)):await()
+
+		for key, value in guildRoles do
+			guildRoles[key] = DiscordGuildRole.new(self.discordClient, self.id, value)
+		end
+
+		return guildRoles
+	end)
+end
+
+--[=[
+	Allows you to get all roles within a guild.
+
+	@method bulkGuildBanAsync
+	@return Future<{ Objects.DiscordGuildRole }>
+	@within Objects.DiscordGuild
+]=]
+function DiscordGuild.Prototype.createGuildRoleAsync(self: DiscordGuild, roleBuilder: GuildRoleBuilder.GuildRoleBuilder)
+	return Future.try(function()
+		return self.discordClient.discordGateway
+			:postAsync(string.format(DiscordEndpoints.BotCreateGuildRole, self.id), roleBuilder:toPayloadObject())
+			:await()
+	end)
+end
+
+--[=[
 	Creates a new DiscordGuild instance.
 
 	@function new
@@ -521,7 +619,7 @@ function DiscordGuild.Interface.new(
 
 	if guildData.roles then
 		for index, value in guildData.roles do
-			guildData.roles[index] = DiscordGuildRole.new(discordClient, value)
+			guildData.roles[index] = DiscordGuildRole.new(discordClient, guildData.id, value)
 		end
 	end
 

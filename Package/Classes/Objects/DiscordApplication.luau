@@ -8,7 +8,7 @@ local CommandBuilder = require("../Builders/CommandBuilder")
 
 local DiscordEndpoints = require("@Data/DiscordEndpoints")
 
-local ResolvableType = require("@Enums/ResolveableType")
+local ResolvableType = require("@Enums/ResolvableType")
 local CacheType = require("@Enums/CacheType")
 
 --[=[

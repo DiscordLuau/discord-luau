@@ -10,7 +10,7 @@ local MemberBuilder = require("@Builders/MemberBuilder")
 
 local DiscordEndpoints = require("@Data/DiscordEndpoints")
 
-local ResolvableType = require("@Enums/ResolveableType")
+local ResolvableType = require("@Enums/ResolvableType")
 local CacheType = require("@Enums/CacheType")
 
 --[=[

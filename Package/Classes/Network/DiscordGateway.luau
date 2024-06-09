@@ -13,7 +13,7 @@ local Resolvable = require("@Network/Resolvable")
 
 local EventIn = require("@Network/Middleware/EventIn")
 
-local ResolveableType = require("@Enums/ResolveableType")
+local ResolvableType = require("@Enums/ResolvableType")
 
 local DISCORD_API_VERSION = 9
 
@@ -158,9 +158,9 @@ function DiscordGateway.Prototype.requestAsync(
 			end
 
 			if data then
-				if data.type == ResolveableType.JSON then
+				if data.type == ResolvableType.JSON then
 					bodyObject = Serde.encode("json", data:resolve())
-				elseif data.type == ResolveableType.FORMDATA then
+				elseif data.type == ResolvableType.FORMDATA then
 					local jsonContent = Serde.encode("json", data:resolve())
 
 					local multiformUuid = `DiscordLuau.{math.random()}`

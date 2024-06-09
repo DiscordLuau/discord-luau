@@ -6,7 +6,7 @@ local Resolvable = require("@Network/Resolvable")
 local CommandOptionBuilder = require("@Builders/CommandOptionBuilder")
 local PermissionsBuilder = require("@Builders/PermissionsBuilder")
 
-local ResolvableType = require("@Enums/ResolveableType")
+local ResolvableType = require("@Enums/ResolvableType")
 
 --[=[
 	@class Builders.CommandBuilder

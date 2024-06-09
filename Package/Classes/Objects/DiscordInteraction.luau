@@ -15,7 +15,7 @@ local DiscordUser = require("@Objects/DiscordUser")
 local DiscordGuild = require("@Objects/DiscordGuild")
 
 local Resolvable = require("@Network/Resolvable")
-local ResolvableType = require("@Enums/ResolveableType")
+local ResolvableType = require("@Enums/ResolvableType")
 
 --[=[
 	@class Objects.DiscordInteraction

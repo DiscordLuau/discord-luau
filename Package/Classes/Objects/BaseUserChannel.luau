@@ -13,7 +13,7 @@ local MessageBuilder = require("@Builders/MessageBuilder")
 
 local DiscordEndpoints = require("@Data/DiscordEndpoints")
 
-local ResolvableType = require("@Enums/ResolveableType")
+local ResolvableType = require("@Enums/ResolvableType")
 
 --[=[
 	@class Objects.BaseUserChannel

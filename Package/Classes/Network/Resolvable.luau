@@ -1,6 +1,6 @@
 local Construct = require("@Utils/Construct")
 
-local ResolvableType = require("@Enums/ResolveableType")
+local ResolvableType = require("@Enums/ResolvableType")
 
 local EventOut = require("@Network/Middleware/EventOut")
 local EventIn = require("@Network/Middleware/EventIn")
@@ -101,7 +101,7 @@ end
 
 export type Resolvable = typeof(Resolvable.Prototype) & {
 	data: any,
-	type: ResolvableType.ResolveableType,
+	type: ResolvableType.ResolvableType,
 
 	eventOutMiddleware: EventOut.EventOut,
 	eventInMiddleware: EventIn.EventIn,
