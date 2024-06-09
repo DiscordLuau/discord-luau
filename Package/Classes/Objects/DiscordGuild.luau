@@ -508,7 +508,7 @@ end
 function DiscordGuild.Prototype.getGuildBansAsync(self: DiscordGuild, limit: number?, before: string?, after: string?)
 	return Future.try(function()
 		local guildBans = self.discordClient.discordGateway
-			:getAsync(string.format(DiscordEndpoints.BotGetGuildBans, self.id, before, after, limit))
+			:getAsync(string.format(DiscordEndpoints.BotGetGuildBans, self.id, before or "", after or "", limit or 100))
 			:await()
 
 		for key, value in guildBans do
@@ -530,7 +530,7 @@ end
 function DiscordGuild.Prototype.getGuildBanAsync(self: DiscordGuild, userId: string)
 	return Future.try(function()
 		local guildBan = self.discordClient.discordGateway
-			:getAsync(string.format(DiscordEndpoints.BotGetGuildBans, self.id, userId))
+			:getAsync(string.format(DiscordEndpoints.BotGetGuildBan, self.id, userId))
 			:await()
 
 		return DiscordGuildBan.new(self.discordClient, guildBan)
@@ -588,6 +588,51 @@ function DiscordGuild.Prototype.createGuildRoleAsync(self: DiscordGuild, roleBui
 		return self.discordClient.discordGateway
 			:postAsync(string.format(DiscordEndpoints.BotCreateGuildRole, self.id), roleBuilder:toPayloadObject())
 			:await()
+	end)
+end
+
+--[=[
+	Setst he guilds MFA level.
+
+	@method setMFALevelAsync
+	@param mfaLevel number
+	@return Future
+	@within Objects.DiscordGuild
+]=]
+function DiscordGuild.Prototype.setMFALevelAsync(self: DiscordGuild, mfaLevel: number)
+	return Future.try(function()
+		return self.discordClient.discordGateway
+			:postAsync(
+				string.format(DiscordEndpoints.BotModifyGuildMFALevel, self.id),
+				Resolvable.new(ResolvableType.JSON, {
+					level = mfaLevel,
+				})
+			)
+			:await()
+	end)
+end
+
+--[=[
+	Fetches the prune count.
+
+	@method getPruneCountAsync
+	@return Future<{ pruned: number }>
+	@within Objects.DiscordGuild
+]=]
+function DiscordGuild.Prototype.getPruneCountAsync(self: DiscordGuild, days: number?, includedRoles: { string }?)
+	return Future.try(function()
+		return self.discordClient.discordGateway
+			:getAsync(
+				string.format(
+					DiscordEndpoints.BotGetGuildPruneCount,
+					self.id,
+					days or 7,
+					includedRoles and table.concat(includedRoles, ",") or ""
+				)
+			)
+			:await() :: {
+			pruned: number,
+		}
 	end)
 end
 

@@ -19,6 +19,8 @@ return {
 	BotGetGuildBans = "guilds/%s/bans?before=%s&after=%s&limit=%s",
 	BotBulkGuildBan = "guilds/%s/bulk-ban",
 	BotCreateGuildRole = "guilds/%s/roles",
+	BotModifyGuildMFALevel = "guilds/%s/mfa",
+	BotGetGuildPruneCount = "guilds/%s/prune?days=%s&include_roles=%s",
 	BotGetGuildBan = "guilds/%s/bans/%s",
 
 	GetGuildAuditLogs = "guilds/%s/audit-logs",

@@ -19,6 +19,20 @@ GuildBuilder.Prototype = {}
 GuildBuilder.Prototype.type = "GuildBuilder"
 
 --[=[
+	@prop MFALevel table
+	@within Builders.GuildBuilder
+
+	An enumeration of MFA levels.
+
+	- None: 0
+	- Elevated: 1
+]=]
+GuildBuilder.Interface.MFALevel = Enumerate.new({
+	None = 0,
+	Elevated = 1,
+})
+
+--[=[
 	@prop VerificationLevel table
 	@within Builders.GuildBuilder
 
