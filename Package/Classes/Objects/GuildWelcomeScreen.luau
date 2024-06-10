@@ -7,7 +7,7 @@ local CacheType = require("@Enums/CacheType")
 --[=[
 	@class Objects.GuildWelcomeScreen
 
-	The `GuildWelcomeScreen` class provides a way for developers to interact with a Widget.
+	The `GuildWelcomeScreen` class provides a way for developers to interact with a Welcome Screen.
 ]=]
 local GuildWelcomeScreen = {}
 

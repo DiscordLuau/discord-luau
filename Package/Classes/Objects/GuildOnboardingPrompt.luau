@@ -7,7 +7,7 @@ local CacheType = require("@Enums/CacheType")
 --[=[
 	@class Objects.GuildOnboardingPrompt
 
-	The `GuildOnboardingPrompt` class provides a way for developers to interact with a Widget.
+	The `GuildOnboardingPrompt` class provides a way for developers to interact with a guild onboarding prompt.
 ]=]
 local GuildOnboardingPrompt = {}
 

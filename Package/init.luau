@@ -7,7 +7,6 @@
 -- Builders
 local CommandBuilder = require("@Builders/CommandBuilder")
 local CommandOptionBuilder = require("@Builders/CommandOptionBuilder")
-
 local ActivityBuilder = require("@Builders/ActivityBuilder")
 local AutomoderationRuleBuilder = require("@Builders/AutomoderationRuleBuilder")
 local ChannelBuilder = require("@Builders/ChannelBuilder")
@@ -19,6 +18,11 @@ local PresenceBuilder = require("@Builders/PresenceBuilder")
 local SettingsBuilder = require("@Builders/SettingsBuilder")
 local MessageBuilder = require("@Builders/MessageBuilder")
 local AttachmentBuilder = require("@Builders/AttachmentBuilder")
+
+local OnboardingBuilder = require("@Builders/OnboardingBuilder")
+local OnboardingPromptBuilder = require("@Builders/OnboardingPromptBuilder")
+local OnboardingPromptOptionBuilder = require("@Builders/OnboardingPromptOptionBuilder")
+local WelcomeScreenBuilder = require("@Builders/WelcomeScreenBuilder")
 
 -- Objects
 local DiscordApplication = require("@Objects/DiscordApplication")
@@ -95,6 +99,34 @@ DiscordLuau.TextInputBuilder = TextInputBuilder
 
 --#region
 --#MARK: Discord-Luau Builders
+
+export type OnboardingBuilder = OnboardingBuilder.OnboardingBuilder
+DiscordLuau.OnboardingBuilder = OnboardingBuilder
+--[=[
+	@prop OnboardingBuilder Builders.OnboardingBuilder
+	@within DiscordLuau
+]=]
+
+export type OnboardingPromptBuilder = OnboardingPromptBuilder.OnboardingPromptBuilder
+DiscordLuau.OnboardingPromptBuilder = OnboardingPromptBuilder
+--[=[
+	@prop OnboardingPromptBuilder Builders.OnboardingPromptBuilder
+	@within DiscordLuau
+]=]
+
+export type OnboardingPromptOptionBuilder = OnboardingPromptOptionBuilder.OnboardingPromptOptionBuilder
+DiscordLuau.OnboardingPromptOptionBuilder = OnboardingPromptOptionBuilder
+--[=[
+	@prop OnboardingPromptOptionBuilder Builders.OnboardingPromptOptionBuilder
+	@within DiscordLuau
+]=]
+
+export type WelcomeScreenBuilder = WelcomeScreenBuilder.WelcomeScreenBuilder
+DiscordLuau.WelcomeScreenBuilder = WelcomeScreenBuilder
+--[=[
+	@prop WelcomeScreenBuilder Builders.WelcomeScreenBuilder
+	@within DiscordLuau
+]=]
 
 export type MessageBuilder = MessageBuilder.MessageBuilder
 DiscordLuau.MessageBuilder = MessageBuilder
