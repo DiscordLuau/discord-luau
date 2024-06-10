@@ -78,13 +78,13 @@ end
 function WelcomeScreenBuilder.Prototype.toPayloadObject(self: WelcomeScreenBuilder): Resolvable.Resolvable
 	local welcomeChannels = {}
 
-	for index, welcomeChannels in self.welcomeChannels do
+	for index, welcomeChannel in self.welcomeChannels do
 		welcomeChannels[index] = {
-			channel_id = welcomeChannels.channelId,
-			description = welcomeChannels.description,
+			channel_id = welcomeChannel.channelId,
+			description = welcomeChannel.description,
 
-			emoji_id = welcomeChannels.emojiId,
-			emoji_name = welcomeChannels.emojiName,
+			emoji_id = welcomeChannel.emojiId,
+			emoji_name = welcomeChannel.emojiName,
 		}
 	end
 
