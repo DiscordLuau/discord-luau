@@ -3,10 +3,14 @@
 
 local CacheType = {
 	Application = "Application",
+	GuildWidget = "GuildWidget",
 	GuildPreview = "GuildPreview",
 	DiscordEmoji = "DiscordEmoji",
 	DiscordMember = "DiscordMember",
 	DiscordSticker = "DiscordSticker",
+	WelcomeScreen = "WelcomeScreen",
+	OnboardingPromptOption = "OnboardingPromptOption",
+	OnboardingPrompt = "OnboardingPrompt",
 	DiscordGuild = "DiscordGuild",
 	DiscordIntegration = "DiscordIntegration",
 	DiscordInvite = "DiscordInvite",
@@ -21,8 +25,12 @@ export type CacheType =
 	"Application"
 	| "GuildPreview"
 	| "DiscordMember"
+	| "WelcomeScreen"
 	| "DiscordEmoji"
+	| "GuildWidget"
 	| "DiscordSticker"
+	| "OnboardingPromptOption"
+	| "OnboardingPrompt"
 	| "AutoModeration"
 	| "DiscordIntegration"
 	| "DiscordGuild"
