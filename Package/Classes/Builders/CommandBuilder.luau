@@ -48,7 +48,7 @@ CommandBuilder.Interface.Type = Enumerate.new({
 	MessageContextAction = 3,
 })
 
---[=[..
+--[=[
 	@prop Context table
 	@within Builders.CommandBuilder
 
