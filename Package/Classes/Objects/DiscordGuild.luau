@@ -4,6 +4,9 @@ local Construct = require("@Utils/Construct")
 
 local Resolvable = require("@Network/Resolvable")
 
+local GuildWidget = require("@Objects/GuildWidget")
+local GuildOnboarding = require("@Objects/GuildOnboarding")
+local GuildWelcomeScreen = require("@Objects/GuildWelcomeScreen")
 local GuildPreview = require("@Objects/GuildPreview")
 local DiscordEmoji = require("@Objects/DiscordEmoji")
 local DiscordGuildRole = require("@Objects/DiscordGuildRole")
@@ -21,6 +24,8 @@ local GuildBuilder = require("@Builders/GuildBuilder")
 local ChannelBuilder = require("@Builders/ChannelBuilder")
 local MemberBuilder = require("@Builders/MemberBuilder")
 local GuildRoleBuilder = require("@Builders/GuildRoleBuilder")
+local WelcomeScreenBuilder = require("@Builders/WelcomeScreenBuilder")
+local OnboardingBuilder = require("@Builders/OnboardingBuilder")
 
 local DiscordEndpoints = require("@Data/DiscordEndpoints")
 
@@ -768,6 +773,138 @@ function DiscordGuild.Prototype.updateGuildWidgetSettingsAsync(self: DiscordGuil
 			enabled: boolean,
 			cannelId: string,
 		}
+	end)
+end
+
+--[=[
+	Gets the guild widget for this guild.
+
+	@method getGuldWidgetAsync
+	@return Future<Objects.GuildWidget>
+	@within Objects.DiscordGuild
+]=]
+function DiscordGuild.Prototype.getGuildWidgetAsync(self: DiscordGuild)
+	return Future.try(function()
+		local widgetObject = self.discordClient.discordGateway
+			:getAsync(string.format(DiscordEndpoints.BotGetGuildWidget, self.id))
+			:await()
+
+		return GuildWidget.new(self.discordClient, widgetObject)
+	end)
+end
+
+--[=[
+	Gets the vanity url for this guild.
+
+	@method getGuildVanityUrlAsync
+	@return Future<{ code: string, uses: number }>
+	@within Objects.DiscordGuild
+]=]
+function DiscordGuild.Prototype.getGuildVanityUrlAsync(self: DiscordGuild)
+	return Future.try(function()
+		return self.discordClient.discordGateway
+			:getAsync(string.format(DiscordEndpoints.BotGetGuildVanityURL, self.id))
+			:await() :: {
+			code: string,
+			uses: number,
+		}
+	end)
+end
+
+--[=[
+	Gets the guild welcome screen for this guild.
+
+	@method getGuildWelcomeScreenAsync
+	@return Future<Objects.GuildWelcomeScreen>
+	@within Objects.DiscordGuild
+]=]
+function DiscordGuild.Prototype.getGuildWelcomeScreenAsync(self: DiscordGuild)
+	return Future.try(function()
+		local welcomeScreen = self.discordClient.discordGateway
+			:getAsync(string.format(DiscordEndpoints.BotGetGuildWelcomeScreen, self.id))
+			:await()
+
+		return GuildWelcomeScreen.new(self.discordClient, welcomeScreen)
+	end)
+end
+
+--[=[
+	Gets the binary PNG image for a server widget
+
+	@method getGuildWidgetImageAsync
+	@param style "shield" | "banner1" | "banner2" | "banner3" | "banner4"
+	@return Future<string>
+	@within Objects.DiscordGuild
+]=]
+function DiscordGuild.Prototype.getGuildWidgetImageAsync(
+	self: DiscordGuild,
+	style: ("shield" | "banner1" | "banner2" | "banner3" | "banner4")?
+)
+	return Future.try(function()
+		return self.discordClient.discordGateway
+			:getAsync(string.format(DiscordEndpoints.BotGetWidgetImage, self.id, style or "shield"))
+			:await()
+	end)
+end
+
+--[=[
+	Updates the guild welcome screen for this guild.
+
+	@method modifyGuildWelcomeScreenAsync
+	@param welcomeScreenBuilder Builders.WelcomeScreenBuilder
+	@return Future
+	@within Objects.DiscordGuild
+]=]
+function DiscordGuild.Prototype.modifyGuildWelcomeScreenAsync(
+	self: DiscordGuild,
+	welcomeScreenBuilder: WelcomeScreenBuilder.WelcomeScreenBuilder
+)
+	return Future.try(function()
+		return self.discordClient.discordGateway
+			:patchAsync(
+				string.format(DiscordEndpoints.BotModifyGuildWelcomeScreen, self.id),
+				welcomeScreenBuilder:toPayloadObject()
+			)
+			:await()
+	end)
+end
+
+--[=[
+	Gets the onboarding for this guild
+
+	@method getGuldOnboardingAsync
+	@return Future<Objects.GuildOnboarding>
+	@within Objects.DiscordGuild
+]=]
+function DiscordGuild.Prototype.getGuildOnboardingAsync(self: DiscordGuild)
+	return Future.try(function()
+		local onboarding = self.discordClient.discordGateway
+			:getAsync(string.format(DiscordEndpoints.BotGetGuildOnboarding, self.id))
+			:await()
+
+		return GuildOnboarding.new(self.discordClient, onboarding)
+	end)
+end
+
+--[=[
+	Updates the onboarding for this guild
+
+	@method getGuldOnboardingAsync
+	@param guildOnboardingBuilder Builders.OnboardingBuilder
+	@return Future<Objects.GuildOnboarding>
+	@within Objects.DiscordGuild
+]=]
+function DiscordGuild.Prototype.modifyGuildOnboardingAsync(
+	self: DiscordGuild,
+	guildOnboardingBuilder: OnboardingBuilder.OnboardingBuilder
+)
+	return Future.try(function()
+		return self.discordClient.discordGateway
+			:putAsync(
+				string.format(DiscordEndpoints.BotModifyGuildOnboarding, self.id),
+				guildOnboardingBuilder:toPayloadObject()
+			)
+			:await()
 	end)
 end
 
