@@ -10,7 +10,7 @@ local CacheType = require("@Enums/CacheType")
 
 	Represents the implementation of a Discord Direct Message Channel
 
-	=@inherit Objects.BaseUserChannel
+	@tag inherit Objects.BaseUserChannel
 ]=]
 local UserDMChannel = {}
 

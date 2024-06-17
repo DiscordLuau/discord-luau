@@ -10,7 +10,7 @@ local CacheType = require("@Enums/CacheType")
 
 	Represents the implementation of a Discord Private Thread channel.
 
-	=@inherit Objects.BaseGuildThread
+	@tag inherit Objects.BaseGuildThread
 ]=]
 local GuildPrivateThreadChannel = {}
 

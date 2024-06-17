@@ -10,7 +10,7 @@ local CacheType = require("@Enums/CacheType")
 
 	Represents the implementation of a Discord Announcement thread channel.
 
-	=@inherit Objects.BaseGuildThread
+	@tag inherit Objects.BaseGuildThread
 ]=]
 local GuildAnnouncementThreadChannel = {}
 

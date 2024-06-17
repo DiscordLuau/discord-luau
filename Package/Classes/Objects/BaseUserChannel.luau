@@ -20,7 +20,7 @@ local ResolvableType = require("@Enums/ResolvableType")
 
 	A base User channel, allwoing bots to interact with channels outside of a discord Guild.
 
-	=@inherit Objects.BaseDiscordChannel
+	@tag inherit Objects.BaseDiscordChannel
 ]=]
 local BaseUserChannel = {}
 

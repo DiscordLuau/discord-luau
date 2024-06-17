@@ -22,7 +22,7 @@ local ResolvableType = require("@Enums/ResolvableType")
 
 	Represents a base object for any/all guild channels.
 
-	=@inherit Objects.BaseDiscordChannel
+	@tag inherit Objects.BaseDiscordChannel
 ]=]
 local BaseDiscordGuildChannel = {}
 

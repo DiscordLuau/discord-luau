@@ -10,7 +10,7 @@ local CacheType = require("@Enums/CacheType")
 
 	Represents the implementation of a Discord Voice channel.
 
-	=@inherit Objects.BaseGuildVoiceChannel
+	@tag inherit Objects.BaseGuildVoiceChannel
 ]=]
 local GuildVoiceChannel = {}
 

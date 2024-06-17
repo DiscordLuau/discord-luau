@@ -12,7 +12,7 @@ local BaseDiscordGuildChannel = require("@Objects/BaseDiscordGuildChannel")
 
 	A base discord voice channel, every Guild Voice channel extends from.
 
-	=@inherit Objects.BaseDiscordGuildChannel
+	@tag inherit Objects.BaseDiscordGuildChannel
 ]=]
 local BaseGuildVoiceChannel = {}
 

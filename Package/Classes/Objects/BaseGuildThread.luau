@@ -14,7 +14,7 @@ local DiscordEndpoints = require("@Data/DiscordEndpoints")
 
 	A base discord Thread channel, all discord threads extend from.
 
-	=@inherit Objects.BaseGuildTextChannel
+	@tag inherit Objects.BaseGuildTextChannel
 ]=]
 local BaseGuildThread = {}
 
