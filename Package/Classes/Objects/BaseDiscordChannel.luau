@@ -21,7 +21,7 @@ BaseDiscordChannel.Prototype.type = "BaseDiscordChannel"
 
 	@method deleteAsync
 	@within Objects.BaseDiscordChannel
-	@return Future
+	@return Vendor.Future
 ]=]
 function BaseDiscordChannel.Prototype.deleteAsync(self: BaseDiscordChannel)
 	return Future.try(function()

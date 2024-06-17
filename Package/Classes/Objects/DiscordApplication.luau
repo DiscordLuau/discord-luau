@@ -38,7 +38,7 @@ DiscordApplication.Prototype.type = "DiscordApplication"
 	@method createSlashCommandAsync
 	@param command CommandBuilder.CommandBuilder The command to create.
 	@within Objects.DiscordApplication
-	@return Future<CommandResponse>
+	@return Vendor.Future<CommandResponse>
 
 	Creates a new slash command for the Discord application.
 ]=]
@@ -60,7 +60,7 @@ end
 	@method deleteSlashCommandAsync
 	@param commandId string The ID of the command to delete.
 	@within Objects.DiscordApplication
-	@return Future<CommandResponse>
+	@return Vendor.Future<CommandResponse>
 
 	Deletes an existing slash command from the Discord application.
 ]=]
@@ -77,7 +77,7 @@ end
 	@param commandId string The ID of the command to edit.
 	@param command CommandBuilder.CommandBuilder The updated command data.
 	@within Objects.DiscordApplication
-	@return Future<CommandResponse>
+	@return Vendor.Future<CommandResponse>
 
 	Edits an existing slash command for the Discord application.
 ]=]
@@ -99,7 +99,7 @@ end
 --[=[
 	@method fetchSlashCommandsAsync
 	@within Objects.DiscordApplication
-	@return Future<{ApplicationCommand}>
+	@return Vendor.Future<{ApplicationCommand}>
 
 	Fetches all existing slash commands for the Discord application.
 ]=]
@@ -115,7 +115,7 @@ end
 	@method setSlashCommandsAsync
 	@param commands {CommandBuilder.CommandBuilder} The list of commands to set.
 	@within Objects.DiscordApplication
-	@return Future<nil>
+	@return Vendor.Future<nil>
 
 	Sets the slash commands for the Discord application, updating existing ones and creating or deleting as necessary.
 ]=]

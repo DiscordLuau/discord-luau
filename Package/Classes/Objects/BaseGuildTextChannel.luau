@@ -33,7 +33,7 @@ BaseGuildTextChannel.Prototype.type = "BaseGuildTextChannel"
 
 	@method triggerTypingIndicator
 	@within Objects.BaseGuildTextChannel
-	@return Future
+	@return Vendor.Future
 ]=]
 function BaseGuildTextChannel.Prototype.triggerTypingIndicator(self: BaseGuildTextChannel)
 	return Future.try(function()
@@ -49,7 +49,7 @@ end
 	@method getMessagesAsync
 	@param limit number? -- The maximum number of messages to retrieve.
 	@within Objects.BaseGuildTextChannel
-	@return Future
+	@return Vendor.Future
 ]=]
 function BaseGuildTextChannel.Prototype.getMessagesAsync(self: BaseGuildTextChannel, limit: number?)
 	return Future.try(function()
@@ -75,7 +75,7 @@ end
 	@method getMessageAsync
 	@param messageId string -- The ID of the message to retrieve.
 	@within Objects.BaseGuildTextChannel
-	@return Future
+	@return Vendor.Future
 ]=]
 function BaseGuildTextChannel.Prototype.getMessageAsync(self: BaseGuildTextChannel, messageId: string)
 	return Future.try(function()
@@ -93,7 +93,7 @@ end
 	@method bulkDeleteMessagesAsync
 	@param messageIds {string} -- A list of message IDs to delete.
 	@within Objects.BaseGuildTextChannel
-	@return Future
+	@return Vendor.Future
 ]=]
 function BaseGuildTextChannel.Prototype.bulkDeleteMessagesAsync(self: BaseGuildTextChannel, messageIds: { string })
 	return Future.try(function()
@@ -114,7 +114,7 @@ end
 	@method sendMessageAsync
 	@param messageBuilder MessageBuilder -- The message builder object.
 	@within Objects.BaseGuildTextChannel
-	@return Future
+	@return Vendor.Future
 ]=]
 function BaseGuildTextChannel.Prototype.sendMessageAsync(
 	self: BaseGuildTextChannel,
@@ -132,7 +132,7 @@ end
 	
 	@method getPinnedMessagesAsync
 	@within Objects.BaseGuildTextChannel
-	@return Future<{[number]: DiscordMessage}> -- A future that resolves to an array of pinned messages.
+	@return Vendor.Future<{[number]: DiscordMessage}> -- A future that resolves to an array of pinned messages.
 ]=]
 function BaseGuildTextChannel.Prototype.getPinnedMessagesAsync(self: BaseGuildTextChannel)
 	return Future.try(function()

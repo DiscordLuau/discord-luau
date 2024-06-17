@@ -39,7 +39,7 @@ BaseDiscordGuildChannel.Prototype.type = "BaseDiscordGuildChannel"
 	@param allowedPermissions PermissionsBuilder.PermissionsBuilder
 	@param disallowedPermissions PermissionsBuilder.PermissionsBuilder
 	@within Objects.BaseDiscordGuildChannel
-	@return Future
+	@return Vendor.Future
 ]=]
 function BaseDiscordGuildChannel.Prototype.overwriteRolePermissionsAsync(
 	self: BaseDiscordGuildChannel,
@@ -69,7 +69,7 @@ end
 	@param allowedPermissions PermissionsBuilder.PermissionsBuilder
 	@param disallowedPermissions PermissionsBuilder.PermissionsBuilder
 	@within Objects.BaseDiscordGuildChannel
-	@return Future
+	@return Vendor.Future
 ]=]
 function BaseDiscordGuildChannel.Prototype.overwriteMemberPermissionssync(
 	self: BaseDiscordGuildChannel,
@@ -97,7 +97,7 @@ end
 	@method overwriteMemberPermissionssync
 	@param roleIdOrUserId string
 	@within Objects.BaseDiscordGuildChannel
-	@return Future
+	@return Vendor.Future
 ]=]
 function BaseDiscordGuildChannel.Prototype.deletePermissionOverwriteAsync(
 	self: BaseDiscordGuildChannel,
@@ -115,7 +115,7 @@ end
 
 	@method getInvitesAsync
 	@within Objects.BaseDiscordGuildChannel
-	@return Future
+	@return Vendor.Future
 ]=]
 function BaseDiscordGuildChannel.Prototype.getInvitesAsync(self: BaseDiscordGuildChannel)
 	return Future.try(function()
@@ -138,7 +138,7 @@ end
 	@param maxUses number? -- The maximum number of uses for the invite.
 	@param temporary boolean? -- Whether the invite grants temporary membership.
 	@within Objects.BaseDiscordGuildChannel
-	@return Future
+	@return Vendor.Future
 ]=]
 function BaseDiscordGuildChannel.Prototype.createInviteAsync(
 	self: BaseDiscordGuildChannel,
@@ -170,7 +170,7 @@ end
 	@param parentId string? -- The ID of the new parent category.
 	@param syncPermissions boolean? -- Whether to sync permissions with the new parent.
 	@within Objects.BaseDiscordGuildChannel
-	@return Future
+	@return Vendor.Future
 ]=]
 function BaseDiscordGuildChannel.Prototype.setPositionAsync(
 	self: BaseDiscordGuildChannel,
@@ -199,7 +199,7 @@ end
 	@method modifyAsync
 	@param channelBuilder ChannelBuilder.ChannelBuilder
 	@within Objects.BaseDiscordGuildChannel
-	@return Future<unknown>
+	@return Vendor.Future<unknown>
 ]=]
 function BaseDiscordGuildChannel.Prototype.modifyAsync(
 	self: BaseDiscordGuildChannel,
@@ -218,7 +218,7 @@ end
 	@method getPublicArchivedThreadsAsync
 	@param epoch number?
 	@param limit number?
-	@return Future<{ number }>
+	@return Vendor.Future<{ number }>
 	@within Objects.BaseDiscordGuildChannel
 ]=]
 function BaseDiscordGuildChannel.Prototype.getPublicArchivedThreadsAsync(
@@ -254,7 +254,7 @@ end
 	@method getPrivateArchivedThreadsAsync
 	@param epoch number?
 	@param limit number?
-	@return Future<{ number }>
+	@return Vendor.Future<{ number }>
 	@within Objects.BaseDiscordGuildChannel
 ]=]
 function BaseDiscordGuildChannel.Prototype.getPrivateArchivedThreadsAsync(
@@ -290,7 +290,7 @@ end
 	@method getJoinedPrivateArchivedThreads
 	@param epoch number?
 	@param limit number?
-	@return Future<{ number }>
+	@return Vendor.Future<{ number }>
 	@within Objects.BaseDiscordGuildChannel
 ]=]
 function BaseDiscordGuildChannel.Prototype.getJoinedPrivateArchivedThreads(

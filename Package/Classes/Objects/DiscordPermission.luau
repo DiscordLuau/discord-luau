@@ -17,6 +17,11 @@ function DiscordPermission.Prototype.hasPermission(self: DiscordPermission, perm
 end
 
 function DiscordPermission.Interface.from(bitfield: string)
+	--[=[
+		@prop permissions { number }
+		@within Objects.DiscordPermission
+	]=]
+
 	local permissions = Construct({ permissions = {} }, DiscordPermission.Prototype)
 	local numberBitfield = tonumber(bitfield)
 

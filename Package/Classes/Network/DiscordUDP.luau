@@ -30,7 +30,7 @@ DiscordUDP.Prototype.type = "DiscordUDP"
 	@method sendAsync
 	@param dataPacket string -- The data packet to send.
 	@within Network.DiscordUDP
-	@return Future -- A Future that resolves when the packet is sent.
+	@return Vendor.Future -- A Future that resolves when the packet is sent.
 ]=]
 function DiscordUDP.Prototype.sendAsync(self: DiscordUDP, dataPacket: string)
 	return Future.try(function()
@@ -49,7 +49,7 @@ end
 	@method connectAsync
 	@param discordUdp string -- The UDP address to connect to.
 	@within Network.DiscordUDP
-	@return Future -- A Future that resolves when the connection is established.
+	@return Vendor.Future -- A Future that resolves when the connection is established.
 ]=]
 function DiscordUDP.Prototype.connectAsync(self: DiscordUDP, discordUdp: string)
 	return Future.try(function()
@@ -88,7 +88,7 @@ end
 	@method disconnectAsync
 	@param closingCode string -- The closing code for the disconnection.
 	@within Network.DiscordUDP
-	@return Future -- A Future that resolves when the socket is disconnected.
+	@return Vendor.Future -- A Future that resolves when the socket is disconnected.
 ]=]
 function DiscordUDP.Prototype.disconnectAsync(self: DiscordUDP, closingCode: string)
 	return Future.try(function()

@@ -35,7 +35,7 @@ DiscordMessage.Prototype.type = "DiscordMessage"
 	Crossposts the message in an Announcement Channel to all following channels.
 	
 	@method crosspostAsync
-	@return Future<Objects.DiscordMessage>
+	@return Vendor.Future<Objects.DiscordMessage>
 	@within Objects.DiscordMessage
 ]=]
 function DiscordMessage.Prototype.crosspostAsync(self: DiscordMessage)
@@ -53,7 +53,7 @@ end
 	
 	@method replyAsync
 	@param messageBuilder MessageBuilder -- The message builder containing the reply content.
-	@return Future<unknown> -- A future that resolves when the reply is sent.
+	@return Vendor.Future<unknown> -- A future that resolves when the reply is sent.
 	@within Objects.DiscordMessage
 ]=]
 function DiscordMessage.Prototype.replyAsync(self: DiscordMessage, messageBuilder: MessageBuilder.MessageBuilder)
@@ -74,7 +74,7 @@ end
 	@param name string
 	@param autoArchiveDuration: number
 	@param rateLimitPerUser: number?
-	@return Future<string>
+	@return Vendor.Future<string>
 	@within Objects.DiscordMessage
 ]=]
 function DiscordMessage.Prototype.startThreadAsync(
@@ -106,7 +106,7 @@ end
 	Deletes the message asynchronously.
 	
 	@method deleteAsync
-	@return Future<unknown> -- A future that resolves when the message is deleted.
+	@return Vendor.Future<unknown> -- A future that resolves when the message is deleted.
 	@within Objects.DiscordMessage
 ]=]
 function DiscordMessage.Prototype.deleteAsync(self: DiscordMessage)
@@ -121,7 +121,7 @@ end
 	Pins the message asynchronously.
 	
 	@method pinAsync
-	@return Future<unknown> -- A future that resolves when the message is pinned.
+	@return Vendor.Future<unknown> -- A future that resolves when the message is pinned.
 	@within Objects.DiscordMessage
 ]=]
 function DiscordMessage.Prototype.pinAsync(self: DiscordMessage)
@@ -136,7 +136,7 @@ end
 	Unpins the message asynchronously.
 	
 	@method unpinAsync
-	@return Future<unknown> -- A future that resolves when the message is unpinned.
+	@return Vendor.Future<unknown> -- A future that resolves when the message is unpinned.
 	@within Objects.DiscordMessage
 ]=]
 function DiscordMessage.Prototype.unpinAsync(self: DiscordMessage)
@@ -153,7 +153,7 @@ end
 	@method editAsync
 	@param messageBuilder MessageBuilder -- The message builder containing the new content.
 	@within Objects.DiscordMessage
-	@return Future<unknown> -- A future that resolves when the message is edited.
+	@return Vendor.Future<unknown> -- A future that resolves when the message is edited.
 ]=]
 function DiscordMessage.Prototype.editAsync(self: DiscordMessage, messageBuilder: MessageBuilder.MessageBuilder)
 	return Future.try(function()
@@ -172,7 +172,7 @@ end
 	@method addReactionAsync
 	@param reaction string -- The reaction to be added.
 	@within Objects.DiscordMessage
-	@return Future<unknown> -- A future that resolves when the reaction is added.
+	@return Vendor.Future<unknown> -- A future that resolves when the reaction is added.
 ]=]
 function DiscordMessage.Prototype.addReactionAsync(self: DiscordMessage, reaction: string)
 	return Future.try(function()
@@ -197,7 +197,7 @@ end
 	@method removeReactionAsync
 	@param reaction string -- The reaction to be removed.
 	@within Objects.DiscordMessage
-	@return Future<unknown> -- A future that resolves when the reaction is removed.
+	@return Vendor.Future<unknown> -- A future that resolves when the reaction is removed.
 ]=]
 function DiscordMessage.Prototype.removeReactionAsync(self: DiscordMessage, reaction: string)
 	return Future.try(function()
@@ -224,7 +224,7 @@ end
 	@param userId string -- The ID of the user whose reaction is to be removed.
 	@param reaction string -- The reaction to be removed.
 	@within Objects.DiscordMessage
-	@return Future<unknown> -- A future that resolves when the user's reaction is removed.
+	@return Vendor.Future<unknown> -- A future that resolves when the user's reaction is removed.
 ]=]
 function DiscordMessage.Prototype.removeUserReactionAsync(self: DiscordMessage, userId: string, reaction: string)
 	return Future.try(function()
@@ -250,7 +250,7 @@ end
 	@method getReactionsAsync
 	@param reaction string -- The reaction to retrieve.
 	@within Objects.DiscordMessage
-	@return Future<unknown> -- A future that resolves to the reactions.
+	@return Vendor.Future<unknown> -- A future that resolves to the reactions.
 ]=]
 function DiscordMessage.Prototype.getReactionsAsync(self: DiscordMessage, reaction: string)
 	return Future.try(function()
@@ -273,7 +273,7 @@ end
 	Removes all reactions from the message asynchronously.
 	
 	@method removeAllReactionsAsync
-	@return Future<unknown> -- A future that resolves when all reactions are removed.
+	@return Vendor.Future<unknown> -- A future that resolves when all reactions are removed.
 	@within Objects.DiscordMessage
 ]=]
 function DiscordMessage.Prototype.removeAllReactionsAsync(self: DiscordMessage)
@@ -290,7 +290,7 @@ end
 	@method removeAllReactionsForEmojiAsync
 	@param reaction string -- The emoji whose reactions are to be removed.
 	@within Objects.DiscordMessage
-	@return Future<unknown> -- A future that resolves when the reactions for the emoji are removed.
+	@return Vendor.Future<unknown> -- A future that resolves when the reactions for the emoji are removed.
 ]=]
 function DiscordMessage.Prototype.removeAllReactionsForEmojiAsync(self: DiscordMessage, reaction: string)
 	return Future.try(function()
@@ -340,6 +340,80 @@ function DiscordMessage.Interface.new(
 		},
 	}
 )
+	--[=[
+		@prop mentionRoles { string }
+		@within Objects.DiscordMessage
+	]=]
+
+	--[=[
+		@prop tts boolean
+		@within Objects.DiscordMessage
+	]=]
+
+	--[=[
+		@prop mentionEveryone boolean
+		@within Objects.DiscordMessage
+	]=]
+
+	--[=[
+		@prop nonce string
+		@within Objects.DiscordMessage
+	]=]
+
+	--[=[
+		@prop id string
+		@within Objects.DiscordMessage
+	]=]
+
+	--[=[
+		@prop author { username: string, globalName: string, avatar: string, id: string, publicFlags: number, discriminator: string, }
+		@within Objects.DiscordMessage
+	]=]
+
+	--[=[
+		@prop content string
+		@within Objects.DiscordMessage
+	]=]
+
+	--[=[
+		@prop mentions { string }
+		@within Objects.DiscordMessage
+	]=]
+
+	--[=[
+		@prop flags string
+		@within Objects.DiscordMessage
+	]=]
+
+	--[=[
+		@prop timestamp string
+		@within Objects.DiscordMessage
+	]=]
+
+	--[=[
+		@prop type number
+		@within Objects.DiscordMessage
+	]=]
+
+	--[=[
+		@prop pinned boolean
+		@within Objects.DiscordMessage
+	]=]
+
+	--[=[
+		@prop guildId string
+		@within Objects.DiscordMessage
+	]=]
+
+	--[=[
+		@prop channelId string
+		@within Objects.DiscordMessage
+	]=]
+
+	--[=[
+		@prop member { flags: number, deaf: boolean, roles: { [string]: string }, pending: boolean, mute: boolean, joinedAt: string, }
+		@within Objects.DiscordMessage
+	]=]
 	local self = discordClient.discordCache:getDataOr(CacheType.DiscordMessage, messageData.id, function()
 		local messageStruct = {
 			discordClient = discordClient,
@@ -377,9 +451,9 @@ export type DiscordMessage = typeof(DiscordMessage.Prototype) & {
 	discordClient: any,
 
 	mentionRoles: { string },
-	components: { InterfaceBuidler },
-	-- attachments: { unknown },
-	-- embeds: { unknown },
+	-- components: { InterfaceBuidler }, -- todo: add components to message
+	-- attachments: { unknown }, -- todo: add attachments from messages
+	-- embeds: { unknown }, -- todo: add embeds from messages
 	tts: boolean,
 	mentionEveryone: boolean,
 	nonce: string,
@@ -394,12 +468,12 @@ export type DiscordMessage = typeof(DiscordMessage.Prototype) & {
 	},
 	content: string,
 	mentions: { string },
-	flags: number,
+	flags: string,
 	timestamp: string,
 	type: number,
 	pinned: boolean,
-	guildId: boolean,
-	channelId: boolean,
+	guildId: string,
+	channelId: string,
 	member: {
 		flags: number,
 		deaf: boolean,

@@ -2,6 +2,8 @@ local Future = require("@Vendor/Future")
 
 local Construct = require("@Utils/Construct")
 
+local DiscordUser = require("@Objects/DiscordUser")
+
 local DiscordEndpoints = require("@Data/DiscordEndpoints")
 
 local CacheType = require("@Enums/CacheType")
@@ -22,7 +24,7 @@ DiscordInvite.Prototype.type = "DiscordInvite"
 	Deletes the invite asynchronously.
 	
 	@method deleteAsync
-	@return Future<unknown> -- A future that resolves when the invite is deleted.
+	@return Vendor.Future<unknown> -- A future that resolves when the invite is deleted.
 	@within Objects.DiscordInvite
 ]=]
 function DiscordInvite.Prototype.deleteAsync(self: DiscordInvite)
@@ -46,8 +48,45 @@ function DiscordInvite.Interface.new(
 	discordClient: any,
 	inviteData: {
 		code: string,
+
+		[string]: any,
 	}
 )
+	--[=[
+		@prop code string
+		@within Objects.DiscordInvite
+	]=]
+
+	--[=[
+		@prop type number
+		@within Objects.DiscordInvite
+	]=]
+
+	--[=[
+		@prop guild { id: string, name: string, }?
+		@within Objects.DiscordInvite
+	]=]
+
+	--[=[
+		@prop inviter Objects.DiscordUser?
+		@within Objects.DiscordInvite
+	]=]
+
+	--[=[
+		@prop targetType number
+		@within Objects.DiscordInvite
+	]=]
+
+	--[=[
+		@prop targetUser Objects.DiscordUser?
+		@within Objects.DiscordInvite
+	]=]
+
+	--[=[
+		@prop targetApplication { id: string, }?
+		@within Objects.DiscordInvite
+	]=]
+
 	local self = discordClient.discordCache:getDataOr(CacheType.DiscordInvite, inviteData.code, function()
 		return Construct({
 			discordClient = discordClient,
@@ -55,6 +94,14 @@ function DiscordInvite.Interface.new(
 	end)
 
 	if inviteData then
+		if inviteData.inviter then
+			inviteData.inviter = DiscordUser.new(discordClient, inviteData.inviter)
+		end
+
+		if inviteData.targetUser then
+			inviteData.targetUser = DiscordUser.new(discordClient, inviteData.targetUser)
+		end
+
 		for index, value in inviteData do
 			self[index] = value
 		end
@@ -66,6 +113,17 @@ end
 export type DiscordInvite = typeof(DiscordInvite.Prototype) & {
 	discordClient: any,
 	code: string,
+	type: number,
+	guild: {
+		id: string,
+		name: string,
+	}?,
+	inviter: DiscordUser.DiscordUser?,
+	targetType: number,
+	targetUser: DiscordUser.DiscordUser?,
+	targetApplication: {
+		id: string,
+	}?,
 }
 
 return DiscordInvite.Interface

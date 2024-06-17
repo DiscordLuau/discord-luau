@@ -72,7 +72,7 @@ DiscordAutomoderationRule.Prototype.type = "DiscordAutomoderationRule"
 	@method modifyAsync
 	@param moderationRoleBuilder DiscordAutomoderationRule.DiscordAutomoderationRule The builder for the modified rule.
 	@within Objects.DiscordAutomoderationRule
-	@return Future<CommandResponse>
+	@return Vendor.Future<CommandResponse>
 
 	Modifies an existing auto-moderation rule.
 ]=]
@@ -89,7 +89,7 @@ end
 --[=[
 	@method deleteAsync
 	@within Objects.DiscordAutomoderationRule
-	@return Future<CommandResponse>
+	@return Vendor.Future<CommandResponse>
 
 	Deletes an existing auto-moderation rule.
 ]=]

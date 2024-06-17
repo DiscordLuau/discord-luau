@@ -162,7 +162,7 @@ end
 	@param self DiscordVoiceConnection
 	@param ignoreHeartbeatAck boolean? -- Whether to ignore heartbeat acknowledgements.
 	@within Network.DiscordVoiceConnection
-	@return Future
+	@return Vendor.Future
 ]=]
 function DiscordVoiceConnection.Prototype.heartbeatAsync(self: DiscordVoiceConnection, ignoreHeartbeatAck: boolean?)
 	return Future.try(function()
@@ -219,7 +219,7 @@ end
 	@param guildId string
 	@param channelId string
 	@within Network.DiscordVoiceConnection
-	@return Future
+	@return Vendor.Future
 ]=]
 function DiscordVoiceConnection.Prototype.connectAsync(self: DiscordVoiceConnection, guildId: string, channelId: string)
 	return Future.try(function()
@@ -287,7 +287,7 @@ end
 	@method resumeAsync
 	@param self DiscordVoiceConnection
 	@within Network.DiscordVoiceConnection
-	@return Future
+	@return Vendor.Future
 ]=]
 function DiscordVoiceConnection.Prototype.resumeAsync(self: DiscordVoiceConnection)
 	return Future.try(function()
@@ -314,7 +314,7 @@ end
 	@method reconnectAsync
 	@param self DiscordVoiceConnection
 	@within Network.DiscordVoiceConnection
-	@return Future
+	@return Vendor.Future
 ]=]
 function DiscordVoiceConnection.Prototype.reconnectAsync(self: DiscordVoiceConnection)
 	if self.heartbeatTask then
@@ -337,7 +337,7 @@ end
 	@method disconnectAsync
 	@param self DiscordVoiceConnection
 	@within Network.DiscordVoiceConnection
-	@return Future
+	@return Vendor.Future
 ]=]
 function DiscordVoiceConnection.Prototype.disconnectAsync(self: DiscordVoiceConnection)
 	return Future.try(function()

@@ -25,7 +25,7 @@ DiscordIntegration.Prototype.type = "DiscordIntegration"
 	Deletes the invite asynchronously.
 	
 	@method deleteAsync
-	@return Future<unknown> -- A future that resolves when the invite is deleted.
+	@return Vendor.Future<unknown> -- A future that resolves when the invite is deleted.
 	@within Objects.DiscordIntegration
 ]=]
 function DiscordIntegration.Prototype.deleteAsync(self: DiscordIntegration)

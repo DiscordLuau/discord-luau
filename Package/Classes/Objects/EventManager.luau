@@ -39,7 +39,7 @@ EventManager.Prototype.type = "EventManager"
 function EventManager.Interface.new(discordClient): EventManager
 	local self = Construct({
 		--[=[
-			@prop onReady Signal
+			@prop onReady Vendor.Signal<>
 			@within Objects.EventManager
 			@tag Event
 
@@ -48,7 +48,7 @@ function EventManager.Interface.new(discordClient): EventManager
 		onReady = Signal.new(),
 
 		--[=[
-			@prop onMessage Signal
+			@prop onMessage Vendor.Signal<>
 			@within Objects.EventManager
 			@tag Event
 
@@ -58,7 +58,7 @@ function EventManager.Interface.new(discordClient): EventManager
 		onMessage = Signal.new(),
 
 		--[=[
-			@prop onMessageChanged Signal
+			@prop onMessageChanged Vendor.Signal<>
 			@within Objects.EventManager
 			@tag Event
 
@@ -68,7 +68,7 @@ function EventManager.Interface.new(discordClient): EventManager
 		onMessageChanged = Signal.new(),
 
 		--[=[
-			@prop onMessageDeleted Signal
+			@prop onMessageDeleted Vendor.Signal<>
 			@within Objects.EventManager
 			@tag Event
 
@@ -78,7 +78,7 @@ function EventManager.Interface.new(discordClient): EventManager
 		onMessageDeleted = Signal.new(),
 
 		--[=[
-			@prop onMessageBulkDeleted Signal
+			@prop onMessageBulkDeleted Vendor.Signal<>
 			@within Objects.EventManager
 			@tag Event
 
@@ -88,7 +88,7 @@ function EventManager.Interface.new(discordClient): EventManager
 		onMessageBulkDeleted = Signal.new(),
 
 		--[=[
-			@prop onChannelCreate Signal
+			@prop onChannelCreate Vendor.Signal<>
 			@within Objects.EventManager
 			@tag Event
 
@@ -98,7 +98,7 @@ function EventManager.Interface.new(discordClient): EventManager
 		onChannelCreate = Signal.new(),
 
 		--[=[
-			@prop onChannelUpdate Signal
+			@prop onChannelUpdate Vendor.Signal<>
 			@within Objects.EventManager
 			@tag Event
 
@@ -108,7 +108,7 @@ function EventManager.Interface.new(discordClient): EventManager
 		onChannelUpdate = Signal.new(),
 
 		--[=[
-			@prop onChannelDelete Signal
+			@prop onChannelDelete Vendor.Signal<>
 			@within Objects.EventManager
 			@tag Event
 
@@ -118,7 +118,7 @@ function EventManager.Interface.new(discordClient): EventManager
 		onChannelDelete = Signal.new(),
 
 		--[=[
-			@prop onUserUpdated Signal
+			@prop onUserUpdated Vendor.Signal<>
 			@within Objects.EventManager
 			@tag Event
 
@@ -128,7 +128,7 @@ function EventManager.Interface.new(discordClient): EventManager
 		onUserUpdated = Signal.new(),
 
 		--[=[
-			@prop onChannelPinsUpdate Signal
+			@prop onChannelPinsUpdate Vendor.Signal<>
 			@within Objects.EventManager
 			@tag Event
 
@@ -138,7 +138,7 @@ function EventManager.Interface.new(discordClient): EventManager
 		onChannelPinsUpdate = Signal.new(),
 
 		--[=[
-			@prop onGuildCreate Signal
+			@prop onGuildCreate Vendor.Signal<>
 			@within Objects.EventManager
 			@tag Event
 
@@ -148,7 +148,7 @@ function EventManager.Interface.new(discordClient): EventManager
 		onGuildCreate = Signal.new(),
 
 		--[=[
-			@prop onGuildUpdate Signal
+			@prop onGuildUpdate Vendor.Signal<>
 			@within Objects.EventManager
 			@tag Event
 
@@ -158,7 +158,7 @@ function EventManager.Interface.new(discordClient): EventManager
 		onGuildUpdate = Signal.new(),
 
 		--[=[
-			@prop onGuildDelete Signal
+			@prop onGuildDelete Vendor.Signal<>
 			@within Objects.EventManager
 			@tag Event
 
@@ -168,7 +168,7 @@ function EventManager.Interface.new(discordClient): EventManager
 		onGuildDelete = Signal.new(),
 
 		--[=[
-			@prop onGuildMemberBanned Signal
+			@prop onGuildMemberBanned Vendor.Signal<>
 			@within Objects.EventManager
 			@tag Event
 
@@ -178,7 +178,7 @@ function EventManager.Interface.new(discordClient): EventManager
 		onGuildMemberBanned = Signal.new(),
 
 		--[=[
-			@prop onGuildMemberUnbanned Signal
+			@prop onGuildMemberUnbanned Vendor.Signal<>
 			@within Objects.EventManager
 			@tag Event
 
@@ -188,7 +188,7 @@ function EventManager.Interface.new(discordClient): EventManager
 		onGuildMemberUnbanned = Signal.new(),
 
 		--[=[
-			@prop onGuildMemberJoined Signal
+			@prop onGuildMemberJoined Vendor.Signal<>
 			@within Objects.EventManager
 			@tag Event
 
@@ -198,7 +198,7 @@ function EventManager.Interface.new(discordClient): EventManager
 		onGuildMemberJoined = Signal.new(),
 
 		--[=[
-			@prop onGuildMemberLeft Signal
+			@prop onGuildMemberLeft Vendor.Signal<>
 			@within Objects.EventManager
 			@tag Event
 
@@ -208,7 +208,7 @@ function EventManager.Interface.new(discordClient): EventManager
 		onGuildMemberLeft = Signal.new(),
 
 		--[=[
-			@prop onGuildMemberUpdated Signal
+			@prop onGuildMemberUpdated Vendor.Signal<>
 			@within Objects.EventManager
 			@tag Event
 
@@ -218,7 +218,7 @@ function EventManager.Interface.new(discordClient): EventManager
 		onGuildMemberUpdated = Signal.new(),
 
 		--[=[
-			@prop onInteraction Signal
+			@prop onInteraction Vendor.Signal<>
 			@within Objects.EventManager
 			@tag Event
 

@@ -36,6 +36,46 @@ function DiscordUser.Interface.new(
 		discriminator: string?,
 	}
 )
+	--[=[
+		@prop username string
+		@within Objects.DiscordUser
+	]=]
+
+	--[=[
+		@prop flags string
+		@within Objects.DiscordUser
+	]=]
+
+	--[=[
+		@prop mfaEnabled boolean
+		@within Objects.DiscordUser
+	]=]
+
+	--[=[
+		@prop avatar string
+		@within Objects.DiscordUser
+	]=]
+
+	--[=[
+		@prop id string
+		@within Objects.DiscordUser
+	]=]
+
+	--[=[
+		@prop bot boolean
+		@within Objects.DiscordUser
+	]=]
+
+	--[=[
+		@prop verified boolean
+		@within Objects.DiscordUser
+	]=]
+
+	--[=[
+		@prop discriminator string
+		@within Objects.DiscordUser
+	]=]
+
 	local self = discordClient.discordCache:getDataOr(CacheType.DiscordUser, partialUserData.id, function()
 		return Construct({
 			id = partialUserData.id,
@@ -55,7 +95,7 @@ end
 
 export type DiscordUser = typeof(DiscordUser.Prototype) & {
 	username: string?,
-	flags: number?,
+	flags: string?,
 	mfaEnabled: boolean?,
 	avatar: string?,
 	id: string,

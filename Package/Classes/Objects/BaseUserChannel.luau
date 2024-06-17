@@ -34,7 +34,7 @@ BaseUserChannel.Prototype.type = "BaseUserChannel"
 
 	@method triggerTypingIndicator
 	@within Objects.BaseUserChannel
-	@return Future
+	@return Vendor.Future
 ]=]
 function BaseUserChannel.Prototype.triggerTypingIndicator(self: BaseUserChannel)
 	return Future.try(function()
@@ -50,7 +50,7 @@ end
 	@method getMessagesAsync
 	@param limit number? -- The maximum number of messages to retrieve.
 	@within Objects.BaseUserChannel
-	@return Future
+	@return Vendor.Future
 ]=]
 function BaseUserChannel.Prototype.getMessagesAsync(self: BaseUserChannel, limit: number?)
 	return Future.try(function()
@@ -76,7 +76,7 @@ end
 	@method getMessageAsync
 	@param messageId string -- The ID of the message to retrieve.
 	@within Objects.BaseUserChannel
-	@return Future
+	@return Vendor.Future
 ]=]
 function BaseUserChannel.Prototype.getMessageAsync(self: BaseUserChannel, messageId: string)
 	return Future.try(function()
@@ -94,7 +94,7 @@ end
 	@method bulkDeleteMessagesAsync
 	@param messageIds {string} -- A list of message IDs to delete.
 	@within Objects.BaseUserChannel
-	@return Future
+	@return Vendor.Future
 ]=]
 function BaseUserChannel.Prototype.bulkDeleteMessagesAsync(self: BaseUserChannel, messageIds: { string })
 	return Future.try(function()
@@ -115,7 +115,7 @@ end
 	@method sendMessageAsync
 	@param messageBuilder MessageBuilder -- The message builder object.
 	@within Objects.BaseUserChannel
-	@return Future
+	@return Vendor.Future
 ]=]
 function BaseUserChannel.Prototype.sendMessageAsync(
 	self: BaseUserChannel,
@@ -133,7 +133,7 @@ end
 	
 	@method getPinnedMessagesAsync
 	@within Objects.BaseUserChannel
-	@return Future<{[number]: DiscordMessage}> -- A future that resolves to an array of pinned messages.
+	@return Vendor.Future<{[number]: DiscordMessage}> -- A future that resolves to an array of pinned messages.
 ]=]
 function BaseUserChannel.Prototype.getPinnedMessagesAsync(self: BaseUserChannel)
 	return Future.try(function()

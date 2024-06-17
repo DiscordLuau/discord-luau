@@ -41,7 +41,7 @@ DiscordInteraction.Prototype.type = "DiscordInteraction"
 
 	@method editMessageAsync
 	@param messageBuilder MessageBuilder -- The message builder object.
-	@return Future
+	@return Vendor.Future
 	@within Objects.DiscordInteraction
 ]=]
 function DiscordInteraction.Prototype.editMessageAsync(
@@ -67,7 +67,7 @@ end
 
 	@method sendModalAsync
 	@param modalObject ModalBuilder -- The modal builder object.
-	@return Future
+	@return Vendor.Future
 	@within Objects.DiscordInteraction
 ]=]
 function DiscordInteraction.Prototype.sendModalAsync(self: DiscordInteraction, modalObject: ModalBuilder.ModalBuilder)
@@ -93,7 +93,7 @@ end
 
 	@method sendMessageAsync
 	@param messageBuilder MessageBuilder -- The message builder object.
-	@return Future
+	@return Vendor.Future
 	@within Objects.DiscordInteraction
 ]=]
 function DiscordInteraction.Prototype.sendMessageAsync(
@@ -125,7 +125,7 @@ end
 	Defers the interaction response asynchronously.
 
 	@method deferAsync
-	@return Future
+	@return Vendor.Future
 	@within Objects.DiscordInteraction
 ]=]
 function DiscordInteraction.Prototype.deferAsync(self: DiscordInteraction)

@@ -35,7 +35,7 @@ DiscordGuildRole.Prototype.type = "DiscordGuildRole"
 
 	@function updatePositionAsync
 	@param position number
-	@return Future<>
+	@return Vendor.Future<>
 	@within Objects.DiscordGuildRole
 ]=]
 function DiscordGuildRole.Prototype.updatePositionAsync(self: DiscordGuildRole, position: number)
@@ -57,7 +57,7 @@ end
 
 	@function modifyAsync
 	@param position Objects.GuildRoleBuilder
-	@return Future<>
+	@return Vendor.Future<>
 	@within Objects.DiscordGuildRole
 ]=]
 function DiscordGuildRole.Prototype.modifyAsync(self: DiscordGuildRole, roleBuilder: GuildRoleBuilder.GuildRoleBuilder)
@@ -75,7 +75,7 @@ end
 	Deletes the Role from the discord guild asynchronously.
 
 	@function deleteAsync
-	@return Future<>
+	@return Vendor.Future<>
 	@within Objects.DiscordGuildRole
 ]=]
 function DiscordGuildRole.Prototype.deleteAsync(self: DiscordGuildRole)

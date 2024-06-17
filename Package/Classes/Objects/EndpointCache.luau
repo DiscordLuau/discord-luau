@@ -69,6 +69,11 @@ end
 ]=]
 function EndpointCache.Interface.new(expiryTime: number?)
 	return Construct({
+		--[=[
+			@prop expiry number
+			@within Objects.EndpointCache
+		]=]
+
 		expiry = expiryTime or 5,
 	}, EndpointCache.Prototype)
 end

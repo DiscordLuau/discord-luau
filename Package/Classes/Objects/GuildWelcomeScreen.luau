@@ -38,6 +38,16 @@ function GuildWelcomeScreen.Interface.new(
 		[string]: any,
 	}
 )
+	--[=[
+		@prop description string?
+		@within Objects.GuildWelcomeScreen
+	]=]
+
+	--[=[
+		@prop welcomeChannels { Objects.DiscordChannel }
+		@within Objects.GuildWelcomeScreen
+	]=]
+
 	local self = discordClient.discordCache:getDataOr(CacheType.WelcomeScreen, welcomeScreenData.id, function()
 		return Construct({
 			id = welcomeScreenData.id,
@@ -60,7 +70,7 @@ function GuildWelcomeScreen.Interface.new(
 end
 
 export type GuildWelcomeScreen = typeof(GuildWelcomeScreen.Prototype) & {
-	description: string,
+	description: string?,
 	welcomeChannels: { DiscordChannel.DiscordChannel },
 }
 

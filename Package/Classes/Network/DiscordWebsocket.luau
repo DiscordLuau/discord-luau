@@ -43,7 +43,7 @@ DiscordWebsocket.Prototype.type = "DiscordWebsocket"
 	@param self DiscordWebsocket
 	@param dataPacket table -- The data packet to send.
 	@within Network.DiscordWebsocket
-	@return Future
+	@return Vendor.Future
 ]=]
 function DiscordWebsocket.Prototype.sendAsync(self: DiscordWebsocket, dataPacket: { [any]: any })
 	local traceback = debug.traceback()
@@ -91,7 +91,7 @@ end
 	@param self DiscordWebsocket
 	@param websocketUrl string -- The URL to connect to.
 	@within Network.DiscordWebsocket
-	@return Future
+	@return Vendor.Future
 ]=]
 function DiscordWebsocket.Prototype.connectAsync(self: DiscordWebsocket, websocketUrl: string)
 	return Future.try(function()
@@ -137,7 +137,7 @@ end
 	@param self DiscordWebsocket
 	@param closingCode string -- The closing code for the disconnection.
 	@within Network.DiscordWebsocket
-	@return Future
+	@return Vendor.Future
 ]=]
 function DiscordWebsocket.Prototype.disconnectAsync(self: DiscordWebsocket, closingCode: string)
 	return Future.try(function()

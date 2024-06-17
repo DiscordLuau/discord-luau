@@ -35,7 +35,7 @@ DiscordGuildMember.Prototype.type = "DiscordGuildMember"
 
 	@method kickAsync
 	@param deleteMessagesSeconds number? -- The number of seconds of messages to delete.
-	@return Future
+	@return Vendor.Future
 	@within Objects.DiscordGuildMember
 ]=]
 function DiscordGuildMember.Prototype.kickAsync(self: DiscordGuildMember, deleteMessagesSeconds: number?)
@@ -53,7 +53,7 @@ end
 	Bans the guild member asynchronously.
 
 	@method banAsync
-	@return Future
+	@return Vendor.Future
 	@within Objects.DiscordGuildMember
 ]=]
 function DiscordGuildMember.Prototype.banAsync(self: DiscordGuildMember)
@@ -66,7 +66,7 @@ end
 	Unbans the guild member asynchronously.
 
 	@method unbanAsync
-	@return Future
+	@return Vendor.Future
 	@within Objects.DiscordGuildMember
 ]=]
 function DiscordGuildMember.Prototype.unbanAsync(self: DiscordGuildMember)
@@ -80,7 +80,7 @@ end
 
 	@method addRoleAsync
 	@param roleId string -- The ID of the role to add.
-	@return Future
+	@return Vendor.Future
 	@within Objects.DiscordGuildMember
 ]=]
 function DiscordGuildMember.Prototype.addRoleAsync(self: DiscordGuildMember, roleId: string)
@@ -94,7 +94,7 @@ end
 
 	@method removeRoleAsync
 	@param roleId string -- The ID of the role to remove.
-	@return Future
+	@return Vendor.Future
 	@within Objects.DiscordGuildMember
 ]=]
 function DiscordGuildMember.Prototype.removeRoleAsync(self: DiscordGuildMember, roleId: string)
@@ -108,7 +108,7 @@ end
 
 	@method timeoutAsync
 	@param seconds number -- The duration of the timeout in seconds.
-	@return Future
+	@return Vendor.Future
 	@within Objects.DiscordGuildMember
 ]=]
 function DiscordGuildMember.Prototype.timeoutAsync(self: DiscordGuildMember, seconds: number)
@@ -119,7 +119,7 @@ end
 	Mutes the guild member asynchronously.
 
 	@method muteAsync
-	@return Future
+	@return Vendor.Future
 	@within Objects.DiscordGuildMember
 ]=]
 function DiscordGuildMember.Prototype.muteAsync(self: DiscordGuildMember)
@@ -130,7 +130,7 @@ end
 	Unmutes the guild member asynchronously.
 
 	@method unmuteAsync
-	@return Future
+	@return Vendor.Future
 	@within Objects.DiscordGuildMember
 ]=]
 function DiscordGuildMember.Prototype.unmuteAsync(self: DiscordGuildMember)
@@ -141,7 +141,7 @@ end
 	Deafens the guild member asynchronously.
 
 	@method deafenAsync
-	@return Future
+	@return Vendor.Future
 	@within Objects.DiscordGuildMember
 ]=]
 function DiscordGuildMember.Prototype.deafenAsync(self: DiscordGuildMember)
@@ -152,7 +152,7 @@ end
 	Undeafens the guild member asynchronously.
 
 	@method undeafenAsync
-	@return Future
+	@return Vendor.Future
 	@within Objects.DiscordGuildMember
 ]=]
 function DiscordGuildMember.Prototype.undeafenAsync(self: DiscordGuildMember)
@@ -164,7 +164,7 @@ end
 
 	@method setNicknameAsync
 	@param nickname string -- The new nickname.
-	@return Future
+	@return Vendor.Future
 	@within Objects.DiscordGuildMember
 ]=]
 function DiscordGuildMember.Prototype.setNicknameAsync(self: DiscordGuildMember, nickname: string)
@@ -176,7 +176,7 @@ end
 
 	@method modifyAsync
 	@param memberBuilder Builders.MemberBuilder
-	@return Future
+	@return Vendor.Future
 	@within Objects.DiscordGuildMember
 ]=]
 function DiscordGuildMember.Prototype.modifyAsync(self: DiscordGuildMember, memberBuilder: MemberBuilder.MemberBuilder)

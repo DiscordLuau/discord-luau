@@ -28,7 +28,7 @@ BaseGuildThread.Prototype.type = "BaseGuildThread"
 	
 	@method joinThreadAsync
 	@within Objects.BaseGuildThread
-	@return Future<unknown> -- A future the bot has joined the thread channel
+	@return Vendor.Future<unknown> -- A future the bot has joined the thread channel
 ]=]
 function BaseGuildThread.Prototype.joinThreadAsync(self: BaseGuildThread)
 	return Future.try(function()
@@ -44,7 +44,7 @@ end
 	@method addMemberToThreadAsync
 	@param userId string
 	@within Objects.BaseGuildThread
-	@return Future<unknown> -- A future the bot has joined the thread channel
+	@return Vendor.Future<unknown> -- A future the bot has joined the thread channel
 ]=]
 function BaseGuildThread.Prototype.addMemberToThreadAsync(self: BaseGuildThread, userId: string)
 	return Future.try(function()
@@ -59,7 +59,7 @@ end
 	
 	@method leaveThreadAsync
 	@within Objects.BaseGuildThread
-	@return Future<unknown> -- A future the bot has joined the thread channel
+	@return Vendor.Future<unknown> -- A future the bot has joined the thread channel
 ]=]
 function BaseGuildThread.Prototype.leaveThreadAsync(self: BaseGuildThread)
 	return Future.try(function()
@@ -75,7 +75,7 @@ end
 	@method removeMemberFromThreadAsync
 	@param userId string
 	@within Objects.BaseGuildThread
-	@return Future<unknown> -- A future the bot has joined the thread channel
+	@return Vendor.Future<unknown> -- A future the bot has joined the thread channel
 ]=]
 function BaseGuildThread.Prototype.removeMemberFromThreadAsync(self: BaseGuildThread, userId: string)
 	return Future.try(function()
@@ -91,7 +91,7 @@ end
 	@method getThreadMemberAsync
 	@param userId string
 	@within Objects.BaseGuildThread
-	@return Future<{ DiscordGuildMember }> -- A future the bot has joined the thread channel
+	@return Vendor.Future<{ DiscordGuildMember }> -- A future the bot has joined the thread channel
 ]=]
 function BaseGuildThread.Prototype.getThreadMemberAsync(self: BaseGuildThread, userId: string)
 	return Future.try(function()
@@ -111,7 +111,7 @@ end
 	@method removeMemberFromThreadAsync
 	@param userId string
 	@within Objects.BaseGuildThread
-	@return Future<{ DiscordGuildMember }> -- A future the bot has joined the thread channel
+	@return Vendor.Future<{ DiscordGuildMember }> -- A future the bot has joined the thread channel
 ]=]
 function BaseGuildThread.Prototype.getThreadMembersAsync(self: BaseGuildThread)
 	return Future.try(function()

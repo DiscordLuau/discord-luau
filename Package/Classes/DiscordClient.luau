@@ -55,7 +55,7 @@ DiscordClient.Prototype.type = "DiscordClient"
 	@method connectAsync
 	@within DiscordClient
 
-	@return Future
+	@return Vendor.Future
 
 	Connects the current DiscordClient to the Discord API.
 
@@ -191,7 +191,7 @@ end
 	@method fetchGuildAsync
 	@param guildId string -- The ID of the guild to fetch.
 	@within DiscordClient
-	@return Future<DiscordGuild> -- A future resolving to the fetched DiscordGuild.
+	@return Vendor.Future<DiscordGuild> -- A future resolving to the fetched DiscordGuild.
 ]=]
 function DiscordClient.Prototype.fetchGuildAsync(
 	self: DiscordClient,
@@ -211,7 +211,7 @@ end
 	@method fetchChannelAsync
 	@param channelId string -- The ID of the channel to fetch.
 	@within DiscordClient
-	@return Future<Objects.DiscordChannel> -- A future resolving to the fetched DiscordChannel.
+	@return Vendor.Future<Objects.DiscordChannel> -- A future resolving to the fetched DiscordChannel.
 ]=]
 function DiscordClient.Prototype.fetchChannelAsync(
 	self: DiscordClient,
@@ -231,7 +231,7 @@ end
 	@method updatePresenceAsync
 	@param discordPresence table -- The presence data to update.
 	@within DiscordClient
-	@return Future<boolean> -- A future resolving to a boolean indicating success.
+	@return Vendor.Future<boolean> -- A future resolving to a boolean indicating success.
 ]=]
 function DiscordClient.Prototype.updatePresenceAsync(
 	self: DiscordClient,
@@ -257,7 +257,7 @@ end
 	@method createGuildAsync
 	@param guildBuilder Builders.GuildBuilder
 	@within DiscordClient
-	@return Future<DiscordGuild>
+	@return Vendor.Future<DiscordGuild>
 ]=]
 function DiscordClient.Prototype.createGuildAsync(
 	self: DiscordClient,
@@ -313,7 +313,7 @@ function DiscordClient.Interface.new(discordSettings: SettingsBuilder.SettingsBu
 		discordCache = DiscordCache.new(),
 
 		--[=[
-			@prop reporter Reporter
+			@prop reporter Vendor.Reporter
 			@within DiscordClient
 		]=]
 		reporter = Console.new("🎮 DiscordClient"),
@@ -337,26 +337,26 @@ function DiscordClient.Interface.new(discordSettings: SettingsBuilder.SettingsBu
 		maxConcurrency = 0,
 
 		--[=[
-			@prop discordShards { DiscordShard }
+			@prop discordShards { Network.DiscordShard }
 			@within DiscordClient
 		]=]
 		discordShards = {},
 
 		--[=[
-			@prop onEvent Signal
+			@prop onEvent Vendor.Signal<string, { [any]: any }?>
 			@within DiscordClient
 		]=]
 		onEvent = Signal.new(),
 	}, DiscordClient.Prototype) :: any
 
 	--[=[
-		@prop discordGateway DiscordGateway
+		@prop discordGateway Objects.DiscordGateway
 		@within DiscordClient
 	]=]
 	self.discordGateway = DiscordGateway.new(self :: any)
 
 	--[=[
-		@prop eventManager EventManager
+		@prop eventManager Objects.EventManager
 		@within DiscordClient
 	]=]
 	self.eventManager = EventManager.new(self :: any)

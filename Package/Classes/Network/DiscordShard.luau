@@ -202,7 +202,7 @@ end
 	@method heartbeatAsync
 	@within Network.DiscordShard
 	@param ignoreHeartbeatAck boolean? -- Whether to ignore the heartbeat acknowledgment (optional).
-	@return Future -- A Future that resolves when the heartbeat is sent.
+	@return Vendor.Future -- A Future that resolves when the heartbeat is sent.
 ]=]
 function DiscordShard.Prototype.heartbeatAsync(self: DiscordShard, ignoreHeartbeatAck: boolean?)
 	return Future.try(function()
@@ -254,7 +254,7 @@ end
 	@private
 	@method identifyAsync
 	@within Network.DiscordShard
-	@return Future -- A Future that resolves when the client is identified.
+	@return Vendor.Future -- A Future that resolves when the client is identified.
 ]=]
 function DiscordShard.Prototype.identifyAsync(self: DiscordShard)
 	return Future.try(function()
@@ -290,7 +290,7 @@ end
 	@method connectAsync
 	@param websocketUrl string -- The WebSocket URL.
 	@within Network.DiscordShard
-	@return Future -- A Future that resolves when the shard is connected.
+	@return Vendor.Future -- A Future that resolves when the shard is connected.
 ]=]
 function DiscordShard.Prototype.connectAsync(self: DiscordShard, websocketUrl: string)
 	self.websocketUrl = websocketUrl
@@ -308,7 +308,7 @@ end
 	@private
 	@method resumeAsync
 	@within Network.DiscordShard
-	@return Future -- A Future that resolves when the session is resumed.
+	@return Vendor.Future -- A Future that resolves when the session is resumed.
 ]=]
 function DiscordShard.Prototype.resumeAsync(self: DiscordShard)
 	return Future.try(function()
@@ -337,7 +337,7 @@ end
 	@private
 	@method reconnectAsync
 	@within Network.DiscordShard
-	@return Future -- A Future that resolves when the shard is reconnected.
+	@return Vendor.Future -- A Future that resolves when the shard is reconnected.
 ]=]
 function DiscordShard.Prototype.reconnectAsync(self: DiscordShard)
 	if self.heartbeatTask then

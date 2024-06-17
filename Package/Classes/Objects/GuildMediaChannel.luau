@@ -28,6 +28,11 @@ function GuildMediaChannel.Interface.new(
 		[string]: any,
 	}
 )
+	--[=[
+		@prop defaultForumLayout number
+		@within Objects.GuildMediaChannel
+	]=]
+
 	local self = discordClient.discordCache:getDataOr(CacheType.DiscordChannel, channelData.id, function()
 		local channelStruct = {
 			discordClient = discordClient,

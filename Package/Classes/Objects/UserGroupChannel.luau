@@ -31,7 +31,7 @@ UserGroupChannel.Prototype.type = "UserGroupChannel"
 	@method modifyAsync
 	@param channelBuilder ChannelBuilder.ChannelBuilder
 	@within Objects.UserGroupChannel
-	@return Future<unknown>
+	@return Vendor.Future<unknown>
 ]=]
 function UserGroupChannel.Prototype.modifyAsync(self: UserGroupChannel, channelBuilder: ChannelBuilder.ChannelBuilder)
 	return Future.try(function()
@@ -47,6 +47,26 @@ function UserGroupChannel.Interface.new(
 		id: string,
 	}
 )
+	--[=[
+		@prop icon string
+		@within Objects.UserGroupChannel
+	]=]
+
+	--[=[
+		@prop ownerId string
+		@within Objects.UserGroupChannel
+	]=]
+
+	--[=[
+		@prop applicationId string
+		@within Objects.UserGroupChannel
+	]=]
+
+	--[=[
+		@prop managed boolean
+		@within Objects.UserGroupChannel
+	]=]
+
 	local self = discordClient.discordCache:getDataOr(CacheType.DiscordChannel, channelData.id, function()
 		local channelStruct = {
 			discordClient = discordClient,

@@ -28,6 +28,11 @@ function GuildForumChannel.Interface.new(
 		[string]: any,
 	}
 )
+	--[=[
+		@prop defaultSortOrder number
+		@within Objects.GuildForumChannel
+	]=]
+
 	local self = discordClient.discordCache:getDataOr(CacheType.DiscordChannel, channelData.id, function()
 		local channelStruct = {
 			discordClient = discordClient,

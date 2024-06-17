@@ -56,7 +56,7 @@ DiscordGuild.Prototype.type = "DiscordGuild"
 
 	@method createSlashCommandAsync
 	@param command CommandBuilder -- The command builder object.
-	@return Future
+	@return Vendor.Future
 	@within Objects.DiscordGuild
 ]=]
 function DiscordGuild.Prototype.createSlashCommandAsync(self: DiscordGuild, command: CommandBuilder.CommandBuilder)
@@ -79,7 +79,7 @@ end
 
 	@method deleteSlashCommandAsync
 	@param commandId string -- The ID of the command to delete.
-	@return Future
+	@return Vendor.Future
 	@within Objects.DiscordGuild
 ]=]
 function DiscordGuild.Prototype.deleteSlashCommandAsync(self: DiscordGuild, commandId: string)
@@ -103,7 +103,7 @@ end
 	@method editSlashCommandAsync
 	@param commandId string -- The ID of the command to edit.
 	@param command CommandBuilder -- The command builder object with updated information.
-	@return Future
+	@return Vendor.Future
 	@within Objects.DiscordGuild
 ]=]
 function DiscordGuild.Prototype.editSlashCommandAsync(
@@ -130,7 +130,7 @@ end
 	Fetches all slash commands in the guild asynchronously.
 
 	@method fetchSlashCommandsAsync
-	@return Future
+	@return Vendor.Future
 	@within Objects.DiscordGuild
 ]=]
 function DiscordGuild.Prototype.fetchSlashCommandsAsync(self: DiscordGuild)
@@ -151,7 +151,7 @@ end
 	Fetches all channels in the guild asynchronously.
 
 	@method fetchGuildChannels
-	@return Future
+	@return Vendor.Future
 	@within Objects.DiscordGuild
 ]=]
 function DiscordGuild.Prototype.fetchGuildChannels(self: DiscordGuild)
@@ -175,7 +175,7 @@ end
 
 	@method setSlashCommandsAsync
 	@param commands {CommandBuilder} -- An array of command builder objects.
-	@return Future
+	@return Vendor.Future
 	@within Objects.DiscordGuild
 ]=]
 function DiscordGuild.Prototype.setSlashCommandsAsync(self: DiscordGuild, commands: { CommandBuilder.CommandBuilder })
@@ -199,7 +199,7 @@ end
 	Gets the audit logs of the guild asynchronously.
 
 	@method getGuildAuditLogs
-	@return Future
+	@return Vendor.Future
 	@within Objects.DiscordGuild
 ]=]
 function DiscordGuild.Prototype.getGuildAuditLogs(self: DiscordGuild)
@@ -225,7 +225,7 @@ end
 
 	@method modifyAsync
 	@param guildBuilder Builders.GuildBuilder
-	@return Future
+	@return Vendor.Future
 	@within Objects.DiscordGuild
 ]=]
 function DiscordGuild.Prototype.modifyAsync(self: DiscordGuild, guildBuilder: GuildBuilder.GuildBuilder)
@@ -241,7 +241,7 @@ end
 
 	@method modifyCurrentMemberAsync
 	@param memberBuilder Builders.MemberBuilder
-	@return Future
+	@return Vendor.Future
 	@within Objects.DiscordGuild
 ]=]
 function DiscordGuild.Prototype.modifyCurrentMemberAsync(self: DiscordGuild, memberBuilder: MemberBuilder.MemberBuilder)
@@ -259,7 +259,7 @@ end
 	Deletes the guild asynchronously.
 
 	@method deleteAsync
-	@return Future
+	@return Vendor.Future
 	@within Objects.DiscordGuild
 ]=]
 function DiscordGuild.Prototype.deleteAsync(self: DiscordGuild)
@@ -274,7 +274,7 @@ end
 	Gets all channels in the guild asynchronously.
 
 	@method getChannelsAsync
-	@return Future
+	@return Vendor.Future
 	@within Objects.DiscordGuild
 ]=]
 function DiscordGuild.Prototype.getChannelsAsync(self: DiscordGuild)
@@ -296,7 +296,7 @@ end
 
 	@method getMemberAsync
 	@param userId string -- The ID of the user to retrieve.
-	@return Future
+	@return Vendor.Future
 	@within Objects.DiscordGuild
 ]=]
 function DiscordGuild.Prototype.getMemberAsync(self: DiscordGuild, userId: string)
@@ -315,7 +315,7 @@ end
 	@method fetchGuildMembersAsync
 	@param limit number -- The maximum number of members to retrieve.
 	@param lastUserId number? -- The ID of the last user retrieved (for pagination).
-	@return Future
+	@return Vendor.Future
 	@within Objects.DiscordGuild
 ]=]
 function DiscordGuild.Prototype.fetchGuildMembersAsync(self: DiscordGuild, limit: number, lastUserId: number?)
@@ -339,7 +339,7 @@ end
 	@method searchGuildMembersAsync
 	@param query string -- The search query.
 	@param limit number? -- The maximum number of members to retrieve.
-	@return Future
+	@return Vendor.Future
 	@within Objects.DiscordGuild
 ]=]
 function DiscordGuild.Prototype.searchGuildMembersAsync(self: DiscordGuild, query: string, limit: number?)
@@ -361,7 +361,7 @@ end
 	Lists all automoderation rules in the guild asynchronously.
 
 	@method listAutomoderationRulesAsync
-	@return Future
+	@return Vendor.Future
 	@within Objects.DiscordGuild
 ]=]
 function DiscordGuild.Prototype.listAutomoderationRulesAsync(self: DiscordGuild)
@@ -383,7 +383,7 @@ end
 
 	@method getAutomoderationRuleAsync
 	@param ruleId string -- The ID of the rule to retrieve.
-	@return Future
+	@return Vendor.Future
 	@within Objects.DiscordGuild
 ]=]
 function DiscordGuild.Prototype.getAutomoderationRuleAsync(self: DiscordGuild, ruleId: string)
@@ -401,7 +401,7 @@ end
 
 	@method createAutomoderationRuleAsync
 	@param getAutomoderationRuleBuilder AutomoderationRuleBuilder -- The rule builder object.
-	@return Future
+	@return Vendor.Future
 	@within Objects.DiscordGuild
 ]=]
 function DiscordGuild.Prototype.createAutomoderationRuleAsync(
@@ -424,7 +424,7 @@ end
 	Get the preview of the current Guild
 
 	@method getPreviewAsync
-	@return Future<Objects.GuildPreview>
+	@return Vendor.Future<Objects.GuildPreview>
 	@within Objects.DiscordGuild
 ]=]
 function DiscordGuild.Prototype.getPreviewAsync(self: DiscordGuild)
@@ -442,7 +442,7 @@ end
 
 	@method createChannelAsync
 	@param channelBuilder Builders.ChannelBuilder
-	@return Future<Objects.DiscordChannel>
+	@return Vendor.Future<Objects.DiscordChannel>
 	@within Objects.DiscordGuild
 ]=]
 function DiscordGuild.Prototype.createChannelAsync(self: DiscordGuild, channelBuilder: ChannelBuilder.ChannelBuilder)
@@ -459,7 +459,7 @@ end
 	Fetches all active guild threads.
 
 	@method getActiveGuildThreads
-	@return Future<{ Objects.DiscordChannel }>
+	@return Vendor.Future<{ Objects.DiscordChannel }>
 	@within Objects.DiscordGuild
 ]=]
 function DiscordGuild.Prototype.getActiveGuildThreads(self: DiscordGuild)
@@ -482,7 +482,7 @@ end
 	@method addMemberAsync
 	@param userId string
 	@param accessToken string
-	@return Future<{ Objects.DiscordChannel }>
+	@return Vendor.Future<{ Objects.DiscordChannel }>
 	@within Objects.DiscordGuild
 ]=]
 function DiscordGuild.Prototype.addMemberAsync(self: DiscordGuild, userId: string, accessToken: string)
@@ -507,7 +507,7 @@ end
 	@param limit number?
 	@param before string?
 	@param after string?
-	@return Future<{ Objects.DiscordGuildBan }>
+	@return Vendor.Future<{ Objects.DiscordGuildBan }>
 	@within Objects.DiscordGuild
 ]=]
 function DiscordGuild.Prototype.getGuildBansAsync(self: DiscordGuild, limit: number?, before: string?, after: string?)
@@ -529,7 +529,7 @@ end
 
 	@method getGuildBanAsync
 	@param userId string
-	@return Future<Objects.DiscordGuildBan?>
+	@return Vendor.Future<Objects.DiscordGuildBan?>
 	@within Objects.DiscordGuild
 ]=]
 function DiscordGuild.Prototype.getGuildBanAsync(self: DiscordGuild, userId: string)
@@ -547,7 +547,7 @@ end
 
 	@method bulkGuildBanAsync
 	@param userIds { string }
-	@return Future
+	@return Vendor.Future
 	@within Objects.DiscordGuild
 ]=]
 function DiscordGuild.Prototype.bulkGuildBanAsync(self: DiscordGuild, userIds: { string })
@@ -565,7 +565,7 @@ end
 	Allows you to get all roles within a guild.
 
 	@method bulkGuildBanAsync
-	@return Future<{ Objects.DiscordGuildRole }>
+	@return Vendor.Future<{ Objects.DiscordGuildRole }>
 	@within Objects.DiscordGuild
 ]=]
 function DiscordGuild.Prototype.getGuildRolesAsync(self: DiscordGuild)
@@ -585,7 +585,7 @@ end
 	Allows you to get all roles within a guild.
 
 	@method bulkGuildBanAsync
-	@return Future<{ Objects.DiscordGuildRole }>
+	@return Vendor.Future<{ Objects.DiscordGuildRole }>
 	@within Objects.DiscordGuild
 ]=]
 function DiscordGuild.Prototype.createGuildRoleAsync(self: DiscordGuild, roleBuilder: GuildRoleBuilder.GuildRoleBuilder)
@@ -601,7 +601,7 @@ end
 
 	@method setMFALevelAsync
 	@param mfaLevel number
-	@return Future
+	@return Vendor.Future
 	@within Objects.DiscordGuild
 ]=]
 function DiscordGuild.Prototype.setMFALevelAsync(self: DiscordGuild, mfaLevel: number)
@@ -623,7 +623,7 @@ end
 	@method getPruneCountAsync
 	@param days number?
 	@param includedRoles { string }?
-	@return Future<{ pruned: number }>
+	@return Vendor.Future<{ pruned: number }>
 	@within Objects.DiscordGuild
 ]=]
 function DiscordGuild.Prototype.getPruneCountAsync(self: DiscordGuild, days: number?, includedRoles: { string }?)
@@ -650,7 +650,7 @@ end
 	@param days number?
 	@param computePruneCount boolean?
 	@param includeRoles { string }?
-	@return Future<{ pruned: number }>
+	@return Vendor.Future<{ pruned: number }>
 	@within Objects.DiscordGuild
 ]=]
 function DiscordGuild.Prototype.beginPruneAsync(
@@ -679,7 +679,7 @@ end
 	Fetches the avaliable voice regions for the guild.
 
 	@method getGuildVoiceRegionsAsync
-	@return Future<{ { id: string, name: string, optimal: boolean, deprecated: boolean, custom: boolean } }>
+	@return Vendor.Future<{ { id: string, name: string, optimal: boolean, deprecated: boolean, custom: boolean } }>
 	@within Objects.DiscordGuild
 ]=]
 function DiscordGuild.Prototype.getGuildVoiceRegionsAsync(self: DiscordGuild)
@@ -694,7 +694,7 @@ end
 	Fetches all guild invite objects.
 
 	@method getGuildInvitesAsync
-	@return Future<{ Objects.DiscordInvite }>
+	@return Vendor.Future<{ Objects.DiscordInvite }>
 	@within Objects.DiscordGuild
 ]=]
 function DiscordGuild.Prototype.getGuildInvitesAsync(self: DiscordGuild)
@@ -715,7 +715,7 @@ end
 	Fetches all guild integrations
 
 	@method getGuildIntegrationsAsync
-	@return Future<{ Objects.DiscordIntegration }>
+	@return Vendor.Future<{ Objects.DiscordIntegration }>
 	@within Objects.DiscordGuild
 ]=]
 function DiscordGuild.Prototype.getGuildIntegrationsAsync(self: DiscordGuild)
@@ -736,7 +736,7 @@ end
 	Fetches the widget settings for the current guild.
 
 	@method getGuildWidgetSettingsAsync
-	@return Future<{ enabled: boolean, cannelId: string }>
+	@return Vendor.Future<{ enabled: boolean, cannelId: string }>
 	@within Objects.DiscordGuild
 ]=]
 function DiscordGuild.Prototype.getGuildWidgetSettingsAsync(self: DiscordGuild)
@@ -756,7 +756,7 @@ end
 	@method updateGuildWidgetSettingsAsync
 	@param widgetEnabled boolean
 	@param channelId string
-	@return Future<{ enabled: boolean, cannelId: string }>
+	@return Vendor.Future<{ enabled: boolean, cannelId: string }>
 	@within Objects.DiscordGuild
 ]=]
 function DiscordGuild.Prototype.updateGuildWidgetSettingsAsync(self: DiscordGuild, enabled: boolean, channelId: string?)
@@ -780,7 +780,7 @@ end
 	Gets the guild widget for this guild.
 
 	@method getGuldWidgetAsync
-	@return Future<Objects.GuildWidget>
+	@return Vendor.Future<Objects.GuildWidget>
 	@within Objects.DiscordGuild
 ]=]
 function DiscordGuild.Prototype.getGuildWidgetAsync(self: DiscordGuild)
@@ -797,7 +797,7 @@ end
 	Gets the vanity url for this guild.
 
 	@method getGuildVanityUrlAsync
-	@return Future<{ code: string, uses: number }>
+	@return Vendor.Future<{ code: string, uses: number }>
 	@within Objects.DiscordGuild
 ]=]
 function DiscordGuild.Prototype.getGuildVanityUrlAsync(self: DiscordGuild)
@@ -815,7 +815,7 @@ end
 	Gets the guild welcome screen for this guild.
 
 	@method getGuildWelcomeScreenAsync
-	@return Future<Objects.GuildWelcomeScreen>
+	@return Vendor.Future<Objects.GuildWelcomeScreen>
 	@within Objects.DiscordGuild
 ]=]
 function DiscordGuild.Prototype.getGuildWelcomeScreenAsync(self: DiscordGuild)
@@ -833,7 +833,7 @@ end
 
 	@method getGuildWidgetImageAsync
 	@param style "shield" | "banner1" | "banner2" | "banner3" | "banner4"
-	@return Future<string>
+	@return Vendor.Future<string>
 	@within Objects.DiscordGuild
 ]=]
 function DiscordGuild.Prototype.getGuildWidgetImageAsync(
@@ -852,7 +852,7 @@ end
 
 	@method modifyGuildWelcomeScreenAsync
 	@param welcomeScreenBuilder Builders.WelcomeScreenBuilder
-	@return Future
+	@return Vendor.Future
 	@within Objects.DiscordGuild
 ]=]
 function DiscordGuild.Prototype.modifyGuildWelcomeScreenAsync(
@@ -873,7 +873,7 @@ end
 	Gets the onboarding for this guild
 
 	@method getGuldOnboardingAsync
-	@return Future<Objects.GuildOnboarding>
+	@return Vendor.Future<Objects.GuildOnboarding>
 	@within Objects.DiscordGuild
 ]=]
 function DiscordGuild.Prototype.getGuildOnboardingAsync(self: DiscordGuild)
@@ -891,7 +891,7 @@ end
 
 	@method getGuldOnboardingAsync
 	@param guildOnboardingBuilder Builders.OnboardingBuilder
-	@return Future<Objects.GuildOnboarding>
+	@return Vendor.Future<Objects.GuildOnboarding>
 	@within Objects.DiscordGuild
 ]=]
 function DiscordGuild.Prototype.modifyGuildOnboardingAsync(

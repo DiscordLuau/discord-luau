@@ -126,7 +126,7 @@ end
 	@param method string -- The HTTP method (e.g., "GET", "POST").
 	@param data table? -- The data to send with the request (optional).
 	@within Network.DiscordGateway
-	@return Future -- A Future that resolves with the response.
+	@return Vendor.Future -- A Future that resolves with the response.
 ]=]
 function DiscordGateway.Prototype.requestAsync(
 	self: DiscordGateway,
@@ -250,7 +250,7 @@ end
 	@param api string -- The API endpoint.
 	@param headers { [string]: string }
 	@within Network.DiscordGateway
-	@return Future -- A Future that resolves with the response.
+	@return Vendor.Future -- A Future that resolves with the response.
 ]=]
 function DiscordGateway.Prototype.getAsync(self: DiscordGateway, api: string, headers: { [string]: string }?)
 	return Future.try(function()
@@ -280,7 +280,7 @@ end
 	@param data table -- The data to send with the request.
 	@param headers { [string]: string }
 	@within Network.DiscordGateway
-	@return Future -- A Future that resolves with the response.
+	@return Vendor.Future -- A Future that resolves with the response.
 ]=]
 function DiscordGateway.Prototype.postAsync(
 	self: DiscordGateway,
@@ -301,7 +301,7 @@ end
 	@param data table -- The data to send with the request.
 	@param headers { [string]: string }
 	@within Network.DiscordGateway
-	@return Future -- A Future that resolves with the response.
+	@return Vendor.Future -- A Future that resolves with the response.
 ]=]
 function DiscordGateway.Prototype.putAsync(
 	self: DiscordGateway,
@@ -321,7 +321,7 @@ end
 	@param data table? -- The data to send with the request (optional).
 	@param headers { [string]: string }
 	@within Network.DiscordGateway
-	@return Future -- A Future that resolves with the response.
+	@return Vendor.Future -- A Future that resolves with the response.
 ]=]
 function DiscordGateway.Prototype.deleteAsync(
 	self: DiscordGateway,
@@ -341,7 +341,7 @@ end
 	@param data table -- The data to send with the request.
 	@param headers { [string]: string }
 	@within Network.DiscordGateway
-	@return Future -- A Future that resolves with the response.
+	@return Vendor.Future -- A Future that resolves with the response.
 ]=]
 function DiscordGateway.Prototype.patchAsync(
 	self: DiscordGateway,

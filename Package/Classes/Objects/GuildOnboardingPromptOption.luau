@@ -5,32 +5,32 @@ local DiscordEmoji = require("@Objects/DiscordEmoji")
 local CacheType = require("@Enums/CacheType")
 
 --[=[
-	@class Objects.GuildOnboardingPrompt
+	@class Objects.GuildOnboardingPromptOption
 
-	The `GuildOnboardingPrompt` class provides a way for developers to interact with a guild onboarding prompt option.
+	The `GuildOnboardingPromptOption` class provides a way for developers to interact with a guild onboarding prompt option.
 ]=]
-local GuildOnboardingPrompt = {}
+local GuildOnboardingPromptOption = {}
 
-GuildOnboardingPrompt.Prototype = {}
-GuildOnboardingPrompt.Interface = {}
+GuildOnboardingPromptOption.Prototype = {}
+GuildOnboardingPromptOption.Interface = {}
 
 --[=[
 	@prop type string
-	@within Objects.GuildOnboardingPrompt
+	@within Objects.GuildOnboardingPromptOption
 	@readonly
 
-	The type of the GuildOnboardingPrompt. Default is "GuildOnboardingPrompt".
+	The type of the GuildOnboardingPromptOption. Default is "GuildOnboardingPromptOption".
 ]=]
-GuildOnboardingPrompt.Prototype.type = "GuildOnboardingPrompt"
+GuildOnboardingPromptOption.Prototype.type = "GuildOnboardingPromptOption"
 
 --[=[
-	Creates a new GuildOnboardingPrompt instance.
+	Creates a new GuildOnboardingPromptOption instance.
 
 	@function new
-	@return GuildOnboardingPrompt
-	@within Objects.GuildOnboardingPrompt
+	@return GuildOnboardingPromptOption
+	@within Objects.GuildOnboardingPromptOption
 ]=]
-function GuildOnboardingPrompt.Interface.new(
+function GuildOnboardingPromptOption.Interface.new(
 	discordClient: any,
 	onboardingPromptData: {
 		id: string,
@@ -38,6 +38,31 @@ function GuildOnboardingPrompt.Interface.new(
 		[string]: any,
 	}
 )
+	--[=[
+		@prop id string
+		@within Objects.GuildOnboardingPromptOption
+	]=]
+
+	--[=[
+		@prop channelIds { string }
+		@within Objects.GuildOnboardingPromptOption
+	]=]
+
+	--[=[
+		@prop roleIds { string }
+		@within Objects.GuildOnboardingPromptOption
+	]=]
+
+	--[=[
+		@prop title string
+		@within Objects.GuildOnboardingPromptOption
+	]=]
+
+	--[=[
+		@prop description string?
+		@within Objects.GuildOnboardingPromptOption
+	]=]
+
 	local self = discordClient.discordCache:getDataOr(
 		CacheType.OnboardingPromptOption,
 		onboardingPromptData.id,
@@ -61,7 +86,7 @@ function GuildOnboardingPrompt.Interface.new(
 	return self
 end
 
-export type GuildOnboardingPrompt = typeof(GuildOnboardingPrompt.Prototype) & {
+export type GuildOnboardingPromptOption = typeof(GuildOnboardingPromptOption.Prototype) & {
 	id: string,
 	channelIds: { string },
 	roleIds: { string },
@@ -70,4 +95,4 @@ export type GuildOnboardingPrompt = typeof(GuildOnboardingPrompt.Prototype) & {
 	description: string?,
 }
 
-return GuildOnboardingPrompt.Interface
+return GuildOnboardingPromptOption.Interface

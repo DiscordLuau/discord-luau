@@ -38,6 +38,31 @@ function GuildOnboarding.Interface.new(
 		[string]: any,
 	}
 )
+	--[=[
+		@prop guildId string
+		@within Objects.GuildOnboarding
+	]=]
+
+	--[=[
+		@prop prompts { Objects.GuildOnboardingPrompt }
+		@within Objects.GuildOnboarding
+	]=]
+
+	--[=[
+		@prop defaultChannelIds { string }
+		@within Objects.GuildOnboarding
+	]=]
+
+	--[=[
+		@prop enabled boolean
+		@within Objects.GuildOnboarding
+	]=]
+
+	--[=[
+		@prop mode number
+		@within Objects.GuildOnboarding
+	]=]
+
 	local self = discordClient.discordCache:getDataOr(CacheType.OnboardingPrompt, onboardingData.guildId, function()
 		return Construct({
 			id = onboardingData.guildId,

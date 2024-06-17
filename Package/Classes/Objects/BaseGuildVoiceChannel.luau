@@ -26,7 +26,7 @@ BaseGuildVoiceChannel.Prototype.type = "BaseGuildVoiceChannel"
 	
 	@method connectAsync
 	@within Objects.BaseGuildVoiceChannel
-	@return Future<boolean> -- A future that resolves to a boolean indicating success.
+	@return Vendor.Future<boolean> -- A future that resolves to a boolean indicating success.
 ]=]
 function BaseGuildVoiceChannel.Prototype.connectAsync(self: BaseGuildVoiceChannel)
 	return Future.try(function()
@@ -43,7 +43,7 @@ end
 	
 	@method disconnectAsync
 	@within Objects.BaseGuildVoiceChannel
-	@return Future<unknown> -- A future that resolves when the disconnection is complete.
+	@return Vendor.Future<unknown> -- A future that resolves when the disconnection is complete.
 ]=]
 function BaseGuildVoiceChannel.Prototype.disconnectAsync(self: BaseGuildVoiceChannel): Future.Future<unknown>
 	return Future.try(function()

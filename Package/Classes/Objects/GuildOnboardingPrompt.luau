@@ -38,6 +38,41 @@ function GuildOnboardingPrompt.Interface.new(
 		[string]: any,
 	}
 )
+	--[=[
+		@prop id string
+		@within Objects.GuildOnboardingPrompt
+	]=]
+
+	--[=[
+		@prop type number
+		@within Objects.GuildOnboardingPrompt
+	]=]
+
+	--[=[
+		@prop options { Objects.GuildOnboardingPromptOption }
+		@within Objects.GuildOnboardingPrompt
+	]=]
+
+	--[=[
+		@prop title string
+		@within Objects.GuildOnboardingPrompt
+	]=]
+
+	--[=[
+		@prop singleSelect boolean
+		@within Objects.GuildOnboardingPrompt
+	]=]
+
+	--[=[
+		@prop required boolean
+		@within Objects.GuildOnboardingPrompt
+	]=]
+
+	--[=[
+		@prop inOboarding boolean
+		@within Objects.GuildOnboardingPrompt
+	]=]
+
 	local self = discordClient.discordCache:getDataOr(CacheType.OnboardingPrompt, onboardingPromptData.id, function()
 		return Construct({
 			id = onboardingPromptData.id,
@@ -62,7 +97,7 @@ end
 export type GuildOnboardingPrompt = typeof(GuildOnboardingPrompt.Prototype) & {
 	id: string,
 	type: number,
-	options: { GuildOnboardingPromptOption.GuildOnboardingPrompt },
+	options: { GuildOnboardingPromptOption.GuildOnboardingPromptOption },
 	title: string,
 	singleSelect: boolean,
 	required: boolean,
