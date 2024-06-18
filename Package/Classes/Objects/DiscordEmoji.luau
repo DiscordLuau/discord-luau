@@ -42,6 +42,40 @@ function DiscordEmoji.Interface.new(
 		avaliable: boolean,
 	}
 )
+	--[=[
+		@prop id string
+		@within Objects.DiscordEmoji
+	]=]
+
+	--[=[
+		@prop name string
+		@within Objects.DiscordEmoji
+	]=]
+
+	--[=[
+		@prop roles { string }
+		@within Objects.DiscordEmoji
+	]=]
+
+	--[=[
+		@prop requireColons boolean
+		@within Objects.DiscordEmoji
+	]=]
+
+	--[=[
+		@prop managed boolean
+		@within Objects.DiscordEmoji
+	]=]
+
+	--[=[
+		@prop animated boolean
+		@within Objects.DiscordEmoji
+	]=]
+
+	--[=[
+		@prop avaliable boolean
+		@within Objects.DiscordEmoji
+	]=]
 	return discordClient.discordCache:getDataOr(CacheType.DiscordEmoji, emojiData.id, function()
 		local emojiStruct = {
 			discordClient = discordClient,

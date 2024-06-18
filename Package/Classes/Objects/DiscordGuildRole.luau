@@ -5,6 +5,7 @@ local Construct = require("@Utils/Construct")
 local Resolvable = require("@Network/Resolvable")
 
 local GuildRoleBuilder = require("@Builders/GuildRoleBuilder")
+local PermissionsBuilder = require("@Builders/PermissionsBuilder")
 
 local DiscordEndpoints = require("@Data/DiscordEndpoints")
 
@@ -100,28 +101,72 @@ function DiscordGuildRole.Interface.new(
 	guildId: string,
 	roleData: {
 		id: string,
-		name: string,
-		permissions: string,
-		position: number,
-		color: number,
-		hoist: boolean,
-		managed: boolean,
-		mentionable: boolean,
+
+		[string]: any,
 	}
 )
-	return discordClient.discordCache:getDataOr(CacheType.DiscordGuildRole, roleData.id, function()
+	--[=[
+		@prop guildId string
+		@within Objects.DiscordGuildRole
+	]=]
+
+	--[=[
+		@prop id string
+		@within Objects.DiscordGuildRole
+	]=]
+
+	--[=[
+		@prop name string
+		@within Objects.DiscordGuildRole
+	]=]
+
+	--[=[
+		@prop permissions string
+		@within Objects.DiscordGuildRole
+	]=]
+
+	--[=[
+		@prop position number
+		@within Objects.DiscordGuildRole
+	]=]
+
+	--[=[
+		@prop color number
+		@within Objects.DiscordGuildRole
+	]=]
+
+	--[=[
+		@prop hoist boolean
+		@within Objects.DiscordGuildRole
+	]=]
+
+	--[=[
+		@prop managed boolean
+		@within Objects.DiscordGuildRole
+	]=]
+
+	--[=[
+		@prop mentionable boolean
+		@within Objects.DiscordGuildRole
+	]=]
+
+	local self = discordClient.discordCache:getDataOr(CacheType.DiscordGuildRole, roleData.id, function()
 		local roleStruct = {
 			discordClient = discordClient,
 		}
 
-		for index, value in roleData do
-			roleStruct[index] = value
-		end
-
-		roleStruct.guildId = guildId
-
 		return Construct(roleStruct, DiscordGuildRole.Prototype)
 	end)
+
+	if roleData.permissions then
+		roleData.permissions = PermissionsBuilder.from(roleData.permissions)
+	end
+
+	for index, value in roleData do
+		self[index] = value
+	end
+
+	return self
 end
 
 export type DiscordGuildRole = typeof(DiscordGuildRole.Prototype) & {
@@ -131,7 +176,7 @@ export type DiscordGuildRole = typeof(DiscordGuildRole.Prototype) & {
 
 	id: string,
 	name: string,
-	permissions: string,
+	permissions: PermissionsBuilder.PermissionsBuilder,
 	position: number,
 	color: number,
 	hoist: boolean,

@@ -155,6 +155,15 @@ function BaseGuildTextChannel.Interface.new(
 		guildId: string,
 	}
 )
+	--[=[
+		@prop lastPinTimestamp string
+		@within Objects.BaseGuildTextChannel
+	]=]
+
+	--[=[
+		@prop lastMessageId string?
+		@within Objects.BaseGuildTextChannel
+	]=]
 	local channelObject = Construct({
 		discordClient = discordClient,
 	}, BaseGuildTextChannel.Prototype)

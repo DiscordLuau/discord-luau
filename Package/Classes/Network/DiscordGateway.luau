@@ -401,6 +401,31 @@ end
 	@return DiscordGateway -- A new instance of DiscordGateway.
 ]=]
 function DiscordGateway.Interface.new(discordClient: any)
+	--[=[
+		@prop discordScheduler Network.HTTPScheduler
+		@within Network.DiscordGateway
+	]=]
+
+	--[=[
+		@prop gatewayEventIn Network.EventIn
+		@within Network.DiscordGateway
+	]=]
+
+	--[=[
+		@prop reporter Vendor.Console
+		@within Network.DiscordGateway
+	]=]
+
+	--[=[
+		@prop endpointRateLimits { [string]: HTTPRatelimit.HTTPRatelimit }
+		@within Network.DiscordGateway
+	]=]
+
+	--[=[
+		@prop endpointCaches { [string]: { [any]: any } }
+		@within Network.DiscordGateway
+	]=]
+
 	return Construct({
 		discordClient = discordClient,
 		discordScheduler = HTTPScheduler.new(1),
@@ -414,6 +439,16 @@ function DiscordGateway.Interface.new(discordClient: any)
 	}, DiscordGateway.Prototype)
 end
 
-export type DiscordGateway = typeof(DiscordGateway.Interface.new())
+export type DiscordGateway = typeof(DiscordGateway.Prototype) & {
+	discordClient: any,
+	discordScheduler: HTTPScheduler.HTTPScheduler,
+
+	gatewayEventIn: EventIn.EventIn,
+
+	reporter: Console.Console,
+
+	endpointRateLimits: { [string]: HTTPRatelimit.HTTPRatelimit },
+	endpointCaches: { [string]: { [any]: any } },
+}
 
 return DiscordGateway.Interface

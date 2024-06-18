@@ -39,6 +39,15 @@ function BaseDiscordChannel.Interface.new(
 		[any]: any,
 	}
 ): BaseDiscordChannel
+	--[=[
+		@prop id string
+		@within Objects.BaseDiscordChannel
+	]=]
+
+	--[=[
+		@prop type number
+		@within Objects.BaseDiscordChannel
+	]=]
 	local self = Construct({
 		discordClient = discordClient,
 	}, BaseDiscordChannel.Prototype) :: any

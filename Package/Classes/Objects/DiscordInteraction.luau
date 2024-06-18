@@ -154,6 +154,76 @@ end
 	@within Objects.DiscordInteraction
 ]=]
 function DiscordInteraction.Interface.new(discordClient: any, jsonData: { [any]: any })
+	--[=[
+		@prop channel Objects.DiscordChannel
+		@within Objects.DiscordInteraction
+	]=]
+
+	--[=[
+		@prop guild objects.DiscordGuild
+		@within Objects.DiscordInteraction
+	]=]
+
+	--[=[
+		@prop user objects.DiscordUser
+		@within Objects.DiscordInteraction
+	]=]
+
+	--[=[
+		@prop token string
+		@within Objects.DiscordInteraction
+	]=]
+
+	--[=[
+		@prop applicationId string
+		@within Objects.DiscordInteraction
+	]=]
+
+	--[=[
+		@prop id string
+		@within Objects.DiscordInteraction
+	]=]
+
+	--[=[
+		@prop data { [any]: any }
+		@within Objects.DiscordInteraction
+	]=]
+
+	--[=[
+		@prop channelId string
+		@within Objects.DiscordInteraction
+	]=]
+
+	--[=[
+		@prop guilldId string
+		@within Objects.DiscordInteraction
+	]=]
+
+	--[=[
+		@prop version number
+		@within Objects.DiscordInteraction
+	]=]
+
+	--[=[
+		@prop appPermissions Builders.PermissionsBuilder
+		@within Objects.DiscordInteraction
+	]=]
+
+	--[=[
+		@prop guildLocale string
+		@within Objects.DiscordInteraction
+	]=]
+
+	--[=[
+		@prop locale string
+		@within Objects.DiscordInteraction
+	]=]
+
+	--[=[
+		@prop defered boolean
+		@within Objects.DiscordInteraction
+	]=]
+
 	local interactionStruct = {
 		discordClient = discordClient,
 
@@ -208,11 +278,11 @@ export type DiscordInteraction = typeof(DiscordInteraction.Prototype) & {
 	channelId: string,
 	guilldId: string,
 	version: number,
-	appPermissions: PermissionsBuilder.PermissionsBuilder,
+	appPermissions: PermissionsBuilder.PermissionsBuilder, -- todo: implement discord permission
 	guildLocale: string,
 	locale: string,
-	entitlements: { unknown },
-	entitlementSkuIds: { unknown },
+	-- entitlements: { unknown }, -- todo: support interaction entitlements
+	-- entitlementSkuIds: { unknown }, -- todo: support interaction entitlements
 
 	defered: boolean,
 }

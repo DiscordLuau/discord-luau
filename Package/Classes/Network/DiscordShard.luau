@@ -364,6 +364,86 @@ end
 	@return DiscordShard -- A new instance of DiscordShard.
 ]=]
 function DiscordShard.Interface.new(discordClient: any, shardId: number): DiscordShard
+	--[=[
+		@prop discordWebsocket Network.DiscordWebsocket
+		@within Network.DiscordUDP
+	]=]
+
+	--[=[
+		@prop websocketUrl string
+		@within Network.DiscordUDP
+	]=]
+
+	--[=[
+		@prop reporter Vendor.Console
+		@within Network.DiscordUDP
+	]=]
+
+	--[=[
+		@prop heartbeatTask thread?
+		@within Network.DiscordUDP
+	]=]
+
+	--[=[
+		@prop resumeSessionId string
+		@within Network.DiscordUDP
+	]=]
+
+	--[=[
+		@prop dispatchSequence number
+		@within Network.DiscordUDP
+	]=]
+
+	--[=[
+		@prop heartbeatInterval number
+		@within Network.DiscordUDP
+	]=]
+
+	--[=[
+		@prop heartbeatClockTime number
+		@within Network.DiscordUDP
+	]=]
+
+	--[=[
+		@prop heartbeatPing number
+		@within Network.DiscordUDP
+	]=]
+
+	--[=[
+		@prop identified boolean?
+		@within Network.DiscordUDP
+	]=]
+
+	--[=[
+		@prop resumeGatewayUrl string
+		@within Network.DiscordUDP
+	]=]
+
+	--[=[
+		@prop heartbeatAck boolean?
+		@within Network.DiscordUDP
+	]=]
+
+	--[=[
+		@prop activeConnections { unknown }
+		@within Network.DiscordUDP
+	]=]
+
+	--[=[
+		@prop onEvent Vendor.Signal<string, { [any]: any }>
+		@within Network.DiscordUDP
+	]=]
+
+	--[=[
+		@prop onIdentified Vendor.Signal
+		@within Network.DiscordUDP
+	]=]
+
+	--[=[
+		@prop shardId number
+		@within Network.DiscordUDP
+	]=]
+
 	local self = Construct({
 		discordClient = discordClient,
 		discordWebsocket = nil,
@@ -409,7 +489,6 @@ export type DiscordShard = typeof(DiscordShard.Prototype) & {
 	resumeGatewayUrl: string?,
 
 	heartbeatAck: boolean?,
-	heartbeatClockTime: number?,
 
 	activeConnections: { Signal.Connection },
 

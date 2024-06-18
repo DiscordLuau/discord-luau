@@ -375,6 +375,90 @@ end
 	@return DiscordVoiceConnection
 ]=]
 function DiscordVoiceConnection.Interface.new(discordClient: any, id: string): DiscordVoiceConnection
+	--[=[
+		@prop voiceWebsocket Network.DiscordWebsocket
+		@within Network.DiscordVoiceConnection
+	]=]
+
+	--[=[
+		@prop voiceUDP Network.VoiceUDP
+		@within Network.DiscordVoiceConnection
+	]=]
+
+	--[=[
+		@prop reporter Vendor.Console
+		@within Network.DiscordVoiceConnection
+	]=]
+
+	--[=[
+		@prop heartbeatTask thread?
+		@within Network.DiscordVoiceConnection
+	]=]
+
+	--[=[
+		@prop resumeSessionId string
+		@within Network.DiscordVoiceConnection
+	]=]
+
+	--[=[
+		@prop heartbeatInterval number
+		@within Network.DiscordVoiceConnection
+	]=]
+
+	--[=[
+		@prop heartbeatAck boolean?
+		@within Network.DiscordVoiceConnection
+	]=]
+
+	--[=[
+		@prop heartbeatPing number?
+		@within Network.DiscordVoiceConnection
+	]=]
+
+	--[=[
+		@prop heartbeatNonce number?
+		@within Network.DiscordVoiceConnection
+	]=]
+
+	--[=[
+		@prop heartbeatClockTime number?
+		@within Network.DiscordVoiceConnection
+	]=]
+
+	--[=[
+		@prop encryptionKey buffer
+		@within Network.DiscordVoiceConnection
+	]=]
+
+	--[=[
+		@prop mediaSessionId string
+		@within Network.DiscordVoiceConnection
+	]=]
+
+	--[=[
+		@prop channelId string
+		@within Network.DiscordVoiceConnection
+	]=]
+
+	--[=[
+		@prop guildId string
+		@within Network.DiscordVoiceConnection
+	]=]
+
+	--[=[
+		@prop voiceServerUpdate { endpoint: string, token: string, guildId: string, }
+		@within Network.DiscordVoiceConnection
+	]=]
+
+	--[=[
+		@prop voiceStateUpdate { sessionId: string, }
+		@within Network.DiscordVoiceConnection
+	]=]
+
+	--[=[
+		@prop onEvent Vendor.Signal
+		@within Network.DiscordVoiceConnection
+	]=]
 	local self = (
 		Construct({
 			voiceWebsocket = DiscordWebsocket.new(),

@@ -155,6 +155,16 @@ function DiscordApplication.Interface.new(
 		flags: number,
 	}
 )
+	--[=[
+		@prop id string
+		@within Objects.DiscordApplication
+	]=]
+
+	--[=[
+		@prop flags number
+		@within Objects.DiscordApplication
+	]=]
+
 	return discordClient.discordCache:getDataOr(CacheType.Application, applicationData.id, function()
 		return Construct({
 			id = applicationData.id,

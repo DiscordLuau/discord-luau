@@ -157,6 +157,16 @@ function BaseUserChannel.Interface.new(
 		[string]: any,
 	}
 )
+	--[=[
+		@prop id string
+		@within Objects.DiscordApplication
+	]=]
+
+	--[=[
+		@prop recipients { Objects.DiscordUser }
+		@within Objects.DiscordApplication
+	]=]
+
 	local channelObject = Construct({
 		discordClient = discordClient,
 	}, BaseUserChannel.Prototype)

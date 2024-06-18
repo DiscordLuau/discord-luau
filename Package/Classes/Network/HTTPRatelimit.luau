@@ -83,6 +83,21 @@ end
 	@return HTTPRatelimit
 ]=]
 function HTTPRatelimit.Interface.new(remaining: number?, limit: number?)
+	--[=[
+		@prop remaining number
+		@within Network.HTTPRatelimit
+	]=]
+
+	--[=[
+		@prop limit number
+		@within Network.HTTPRatelimit
+	]=]
+
+	--[=[
+		@prop resetAfterThread thread?
+		@within Network.HTTPRatelimit
+	]=]
+
 	return Construct({
 		remaining = remaining or 0,
 		limit = limit or 0,

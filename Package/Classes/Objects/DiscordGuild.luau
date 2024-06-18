@@ -925,6 +925,26 @@ function DiscordGuild.Interface.new(
 		emojis: { any },
 	}
 )
+	--[=[
+		@prop shardId number
+		@within Objects.DiscordGuildBan
+	]=]
+
+	--[=[
+		@prop id string?
+		@within Objects.DiscordGuildBan
+	]=]
+
+	--[=[
+		@prop roles { Objects.DiscordGuildRole }
+		@within Objects.DiscordGuildBan
+	]=]
+
+	--[=[
+		@prop emojis { Objects.DiscordEmoji }
+		@within Objects.DiscordGuildBan
+	]=]
+
 	local self = discordClient.discordCache:getDataOr(CacheType.DiscordGuild, guildData.id, function()
 		local guildStruct = {
 			discordClient = discordClient,

@@ -109,6 +109,56 @@ end
 	@return DiscordUDP -- A new instance of DiscordUDP.
 ]=]
 function DiscordUDP.Interface.new(publicUdp: string)
+	--[=[
+		@prop udpActive boolean
+		@within Network.DiscordUDP
+	]=]
+
+	--[=[
+		@prop publicUdp Nstring
+		@within Network.DiscordUDP
+	]=]
+
+	--[=[
+		@prop onMessageRecv Vendor.Signal<string>
+		@within Network.DiscordUDP
+	]=]
+
+	--[=[
+		@prop onSocketDead Vendor.Signal<number>
+		@within Network.DiscordUDP
+	]=]
+
+	--[=[
+		@prop socketInstance WebSocket
+		@within Network.DiscordUDP
+	]=]
+
+	--[=[
+		@prop reporter Vendor.Console
+		@within Network.DiscordUDP
+	]=]
+
+	--[=[
+		@prop socketUrl string
+		@within Network.DiscordUDP
+	]=]
+
+	--[=[
+		@prop socketActive string
+		@within Network.DiscordUDP
+	]=]
+
+	--[=[
+		@prop socketActiveChanged Vendor.Signal<boolean>
+		@within Network.DiscordUDP
+	]=]
+
+	--[=[
+		@prop socketThread thread?
+		@within Network.DiscordUDP
+	]=]
+
 	local self = Construct({
 		publicUdp = publicUdp,
 		socketInstance = (Net :: any).udpSocket(publicUdp),

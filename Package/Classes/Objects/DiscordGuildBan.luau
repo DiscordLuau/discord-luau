@@ -29,6 +29,16 @@ DiscordGuildBan.Prototype.type = "DiscordGuildBan"
 	@within Objects.DiscordGuildBan
 ]=]
 function DiscordGuildBan.Interface.new(discordClient: any, discordBan: { [string]: any })
+	--[=[
+		@prop user Objects.DiscordUser
+		@within Objects.DiscordGuildBan
+	]=]
+
+	--[=[
+		@prop reason string?
+		@within Objects.DiscordGuildBan
+	]=]
+
 	local self = Construct({}, DiscordGuildBan.Prototype)
 
 	if discordBan.user then

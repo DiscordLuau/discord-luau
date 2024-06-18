@@ -62,6 +62,40 @@ function BaseGuildVoiceChannel.Interface.new(
 		guildId: string,
 	}
 )
+	--[=[
+		@prop id string
+		@within Objects.DiscordApplication
+	]=]
+
+	--[=[
+		@prop guildId string
+		@within Objects.DiscordApplication
+	]=]
+
+	--[=[
+		@prop voiceConnection Network.DiscordVoiceConnection?
+		@within Objects.DiscordApplication
+	]=]
+
+	--[=[
+		@prop bitrate number
+		@within Objects.DiscordApplication
+	]=]
+
+	--[=[
+		@prop userLimit number
+		@within Objects.DiscordApplication
+	]=]
+
+	--[=[
+		@prop rtcRegion string
+		@within Objects.DiscordApplication
+	]=]
+
+	--[=[
+		@prop videoQualityMode number
+		@within Objects.DiscordApplication
+	]=]
 	local channelObject = Construct({
 		discordClient = discordClient,
 	}, BaseGuildVoiceChannel.Prototype)
@@ -85,7 +119,7 @@ export type BaseGuildVoiceChannel =
 		bitrate: number,
 		userLimit: number,
 
-		rtc_region: string,
+		rtcRegion: string,
 		videoQualityMode: number,
 	}
 

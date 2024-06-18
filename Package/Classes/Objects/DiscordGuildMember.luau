@@ -205,6 +205,16 @@ function DiscordGuildMember.Interface.new(
 	guildId: string,
 	memberData: { [any]: any }
 )
+	--[=[
+		@prop user Objects.DiscordUser
+		@within Objects.DiscordGuildMember
+	]=]
+
+	--[=[
+		@prop guildId string
+		@within Objects.DiscordGuildMember
+	]=]
+
 	local self = discordClient.discordCache:getDataOr(CacheType.DiscordMember, `{guildId}-{userId}`, function()
 		return Construct({
 			discordClient = discordClient,

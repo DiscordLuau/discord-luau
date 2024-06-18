@@ -75,6 +75,11 @@ end
 	@within Objects.DiscordCache
 ]=]
 function DiscordCache.Interface.new()
+	--[=[
+		@prop cache { [string]: any },
+		@within Objects.DiscordCache
+	]=]
+
 	return Construct({
 		cache = {},
 	}, DiscordCache.Prototype)

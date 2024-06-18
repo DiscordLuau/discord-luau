@@ -173,6 +173,36 @@ end
 	@return HTTPScheduler
 ]=]
 function HTTPScheduler.Interface.new(threadCount: number?): HTTPScheduler
+	--[=[
+		@prop stack { () -> () }
+		@within Network.HTTPScheduler
+	]=]
+
+	--[=[
+		@prop processing { boolean }
+		@within Network.HTTPScheduler
+	]=]
+
+	--[=[
+		@prop workers { thread }
+		@within Network.HTTPScheduler
+	]=]
+
+	--[=[
+		@prop reporter Vendor.Console
+		@within Network.HTTPScheduler
+	]=]
+
+	--[=[
+		@prop limit number?
+		@within Network.HTTPScheduler
+	]=]
+
+	--[=[
+		@prop frequency number
+		@within Network.HTTPScheduler
+	]=]
+
 	local self = Construct({
 		stack = {},
 		processing = {},

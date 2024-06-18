@@ -23,7 +23,7 @@ WebsocketBuffer.Prototype.type = "WebsocketBuffer"
 	@method flush
 	@param self WebsocketBuffer
 	@within Network.WebsocketBuffer
-	@return string -- The accumulated data.
+	@return string
 ]=]
 function WebsocketBuffer.Prototype.flush(self: WebsocketBuffer)
 	local data = self.data
@@ -40,7 +40,7 @@ end
 	@method add
 	@param self WebsocketBuffer
 	@within Network.WebsocketBuffer
-	@param data string -- The data to add.
+	@param data string
 ]=]
 function WebsocketBuffer.Prototype.add(self: WebsocketBuffer, data: string)
 	self.data ..= data
@@ -55,6 +55,11 @@ end
 	@return WebsocketBuffer
 ]=]
 function WebsocketBuffer.Interface.new()
+	--[=[
+		@prop data string
+		@within Network.WebsocketBuffer
+	]=]
+
 	return Construct({
 		data = "",
 	}, WebsocketBuffer.Prototype)

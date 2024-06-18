@@ -167,6 +167,71 @@ end
 	@within Network.DiscordWebsocket
 ]=]
 function DiscordWebsocket.Interface.new()
+	--[=[
+		@prop websocketWebsocketBuffer Network.WebsocketBuffer
+		@within Network.DiscordWebsocket
+	]=]
+
+	--[=[
+		@prop socketActiveChanged Vendor.Signal<boolean>
+		@within Network.DiscordWebsocket
+	]=]
+
+	--[=[
+		@prop socketActive boolean
+		@within Network.DiscordWebsocket
+	]=]
+
+	--[=[
+		@prop gatewayEventIn Network.EventIn
+		@within Network.DiscordWebsocket
+	]=]
+
+	--[=[
+		@prop gatewayEventOut Network.EventOut
+		@within Network.DiscordWebsocket
+	]=]
+
+	--[=[
+		@prop onMessageRecv Vendor.Signal<string>
+		@within Network.DiscordWebsocket
+	]=]
+
+	--[=[
+		@prop onSocketDead Vendor.Signal<number?>
+		@within Network.DiscordWebsocket
+	]=]
+
+	--[=[
+		@prop onOperationRecv Vendor.Signal<number, any, string?, number?>
+		@within Network.DiscordWebsocket
+	]=]
+
+	--[=[
+		@prop reporter Vendor.Console
+		@within Network.DiscordWebsocket
+	]=]
+
+	--[=[
+		@prop socketUrl STRING?
+		@within Network.DiscordWebsocket
+	]=]
+
+	--[=[
+		@prop socketInstance WebSocket
+		@within Network.DiscordWebsocket
+	]=]
+
+	--[=[
+		@prop socketRequestSuccess boolean?
+		@within Network.DiscordWebsocket
+	]=]
+
+	--[=[
+		@prop socketThread thread?
+		@within Network.DiscordWebsocket
+	]=]
+
 	local self = Construct({
 		websocketWebsocketBuffer = WebsocketBuffer.new(),
 

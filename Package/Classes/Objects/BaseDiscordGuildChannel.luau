@@ -327,6 +327,35 @@ function BaseDiscordGuildChannel.Interface.new(
 		guildId: string?,
 	}
 )
+	--[=[
+		@prop guildId string
+		@within Objects.BaseGuildTextChannel
+	]=]
+
+	--[=[
+		@prop topic string
+		@within Objects.BaseGuildTextChannel
+	]=]
+
+	--[=[
+		@prop nsfw boolean
+		@within Objects.BaseGuildTextChannel
+	]=]
+
+	--[=[
+		@prop rateLimitPerUser number
+		@within Objects.BaseGuildTextChannel
+	]=]
+
+	--[=[
+		@prop parentId string
+		@within Objects.BaseGuildTextChannel
+	]=]
+
+	--[=[
+		@prop flags number
+		@within Objects.BaseGuildTextChannel
+	]=]
 	local channelObject = Construct({
 		discordClient = discordClient,
 	}, BaseDiscordGuildChannel.Prototype)

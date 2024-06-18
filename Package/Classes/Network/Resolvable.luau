@@ -81,6 +81,31 @@ function Resolvable.Interface.new(
 		attachments: { any },
 	}?
 ): Resolvable
+	--[=[
+		@prop data any
+		@within Network.WebsocketBuffer
+	]=]
+
+	--[=[
+		@prop type string
+		@within Network.WebsocketBuffer
+	]=]
+
+	--[=[
+		@prop eventOutMiddleware Network.EventOut
+		@within Network.WebsocketBuffer
+	]=]
+
+	--[=[
+		@prop eventInMiddleware Network.EventIn
+		@within Network.WebsocketBuffer
+	]=]
+
+	--[=[
+		@prop metadata { headers: { [string]: string }, attachments: { any }, },
+		@within Network.WebsocketBuffer
+	]=]
+
 	local self = (
 		Construct({
 			data = data,

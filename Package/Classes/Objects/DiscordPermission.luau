@@ -19,7 +19,7 @@ end
 function DiscordPermission.Interface.from(bitfield: string)
 	--[=[
 		@prop permissions { number }
-		@within Objects.DiscordPermission
+		@within Builders.DiscordPermission
 	]=]
 
 	local permissions = Construct({ permissions = {} }, DiscordPermission.Prototype)
