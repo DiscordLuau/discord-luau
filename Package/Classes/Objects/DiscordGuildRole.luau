@@ -98,7 +98,6 @@ end
 ]=]
 function DiscordGuildRole.Interface.new(
 	discordClient: any,
-	guildId: string,
 	roleData: {
 		id: string,
 
