@@ -366,82 +366,82 @@ end
 function DiscordShard.Interface.new(discordClient: any, shardId: number): DiscordShard
 	--[=[
 		@prop discordWebsocket Network.DiscordWebsocket
-		@within Network.DiscordUDP
+		@within Network.DiscordShard
 	]=]
 
 	--[=[
 		@prop websocketUrl string
-		@within Network.DiscordUDP
+		@within Network.DiscordShard
 	]=]
 
 	--[=[
 		@prop reporter Vendor.Console
-		@within Network.DiscordUDP
+		@within Network.DiscordShard
 	]=]
 
 	--[=[
 		@prop heartbeatTask thread?
-		@within Network.DiscordUDP
+		@within Network.DiscordShard
 	]=]
 
 	--[=[
 		@prop resumeSessionId string
-		@within Network.DiscordUDP
+		@within Network.DiscordShard
 	]=]
 
 	--[=[
 		@prop dispatchSequence number
-		@within Network.DiscordUDP
+		@within Network.DiscordShard
 	]=]
 
 	--[=[
 		@prop heartbeatInterval number
-		@within Network.DiscordUDP
+		@within Network.DiscordShard
 	]=]
 
 	--[=[
 		@prop heartbeatClockTime number
-		@within Network.DiscordUDP
+		@within Network.DiscordShard
 	]=]
 
 	--[=[
 		@prop heartbeatPing number
-		@within Network.DiscordUDP
+		@within Network.DiscordShard
 	]=]
 
 	--[=[
 		@prop identified boolean?
-		@within Network.DiscordUDP
+		@within Network.DiscordShard
 	]=]
 
 	--[=[
 		@prop resumeGatewayUrl string
-		@within Network.DiscordUDP
+		@within Network.DiscordShard
 	]=]
 
 	--[=[
 		@prop heartbeatAck boolean?
-		@within Network.DiscordUDP
+		@within Network.DiscordShard
 	]=]
 
 	--[=[
 		@prop activeConnections { unknown }
-		@within Network.DiscordUDP
+		@within Network.DiscordShard
 	]=]
 
 	--[=[
 		@prop onEvent Vendor.Signal<string, { [any]: any }>
-		@within Network.DiscordUDP
+		@within Network.DiscordShard
 	]=]
 
 	--[=[
 		@prop onIdentified Vendor.Signal
-		@within Network.DiscordUDP
+		@within Network.DiscordShard
 	]=]
 
 	--[=[
 		@prop shardId number
-		@within Network.DiscordUDP
+		@within Network.DiscordShard
 	]=]
 
 	local self = Construct({
