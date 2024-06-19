@@ -832,7 +832,7 @@ end
 	Gets the binary PNG image for a server widget
 
 	@method getGuildWidgetImageAsync
-	@param style "shield" | "banner1" | "banner2" | "banner3" | "banner4"
+	@param style 'shield' | 'banner1' | 'banner2' | 'banner3' | 'banner4'
 	@return Vendor.Future<string>
 	@within Objects.DiscordGuild
 ]=]
