@@ -446,12 +446,12 @@ function DiscordVoiceConnection.Interface.new(discordClient: any, id: string): D
 	]=]
 
 	--[=[
-		@prop voiceServerUpdate { endpoint: string, token: string, guildId: string, }
+		@prop voiceServerUpdate { endpoint: string, token: string, guildId: string }
 		@within Network.DiscordVoiceConnection
 	]=]
 
 	--[=[
-		@prop voiceStateUpdate { sessionId: string, }
+		@prop voiceStateUpdate { sessionId: string }
 		@within Network.DiscordVoiceConnection
 	]=]
 

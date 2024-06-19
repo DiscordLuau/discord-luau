@@ -158,12 +158,12 @@ function BaseGuildThread.Interface.new(
 	]=]
 
 	--[=[
-		@prop threadMetadata { archived: boolean, autoArchiveDuration: number, archiveTimestamp: string, locked: boolean, invitable: boolean?, createTimestamp: string?, },
+		@prop threadMetadata { archived: boolean, autoArchiveDuration: number, archiveTimestamp: string, locked: boolean, invitable: boolean?, createTimestamp: string? },
 		@within Objects.BaseGuildThread
 	]=]
 
 	--[=[
-		@prop availableTags { { id: string, name: string, moderated: boolean, emojiId: string?, emojiName: string?, }, },
+		@prop availableTags { { id: string, name: string, moderated: boolean, emojiId: string?, emojiName: string? } },
 		@within Objects.BaseGuildThread
 	]=]
 

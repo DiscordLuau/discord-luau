@@ -366,7 +366,7 @@ function DiscordMessage.Interface.new(
 	]=]
 
 	--[=[
-		@prop author { username: string, globalName: string, avatar: string, id: string, publicFlags: number, discriminator: string, }
+		@prop author { username: string, globalName: string, avatar: string, id: string, publicFlags: number, discriminator: string }
 		@within Objects.DiscordMessage
 	]=]
 
@@ -411,7 +411,7 @@ function DiscordMessage.Interface.new(
 	]=]
 
 	--[=[
-		@prop member { flags: number, deaf: boolean, roles: { [string]: string }, pending: boolean, mute: boolean, joinedAt: string, }
+		@prop member { flags: number, deaf: boolean, roles: { [string]: string }, pending: boolean, mute: boolean, joinedAt: string }
 		@within Objects.DiscordMessage
 	]=]
 	local self = discordClient.discordCache:getDataOr(CacheType.DiscordMessage, messageData.id, function()

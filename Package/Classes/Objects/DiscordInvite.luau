@@ -63,7 +63,7 @@ function DiscordInvite.Interface.new(
 	]=]
 
 	--[=[
-		@prop guild { id: string, name: string, }?
+		@prop guild { id: string, name: string }?
 		@within Objects.DiscordInvite
 	]=]
 
@@ -83,7 +83,7 @@ function DiscordInvite.Interface.new(
 	]=]
 
 	--[=[
-		@prop targetApplication { id: string, }?
+		@prop targetApplication { id: string }?
 		@within Objects.DiscordInvite
 	]=]
 

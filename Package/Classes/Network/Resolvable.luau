@@ -102,7 +102,7 @@ function Resolvable.Interface.new(
 	]=]
 
 	--[=[
-		@prop metadata { headers: { [string]: string }, attachments: { any }, },
+		@prop metadata { headers: { [string]: string }, attachments: { any } },
 		@within Network.WebsocketBuffer
 	]=]
 

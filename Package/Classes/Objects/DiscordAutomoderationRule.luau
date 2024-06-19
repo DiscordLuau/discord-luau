@@ -105,12 +105,12 @@ function DiscordAutomoderationRule.Interface.new(
 	]=]
 
 	--[=[
-		@prop triggerMetadata { keywordFilter: { string }, regexPatterns: { string }, presets: { number }, allowList: { string }, mentionTotalLimit: number, mentionRaidProtectionEnabled: boolean, }
+		@prop triggerMetadata { keywordFilter: { string }, regexPatterns: { string }, presets: { number }, allowList: { string }, mentionTotalLimit: number, mentionRaidProtectionEnabled: boolean }
 		@within Objects.DiscordAutomoderationRule
 	]=]
 
 	--[=[
-		@prop actions { type: number, metadata: { channelId: string, durationSeconds: number, customMessage: string?, }?, },
+		@prop actions { type: number, metadata: { channelId: string, durationSeconds: number, customMessage: string? }? },
 		@within Objects.DiscordAutomoderationRule
 	]=]
 
