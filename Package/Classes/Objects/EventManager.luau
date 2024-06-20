@@ -41,189 +41,116 @@ function EventManager.Interface.new(discordClient): EventManager
 		--[=[
 			@prop onReady Vendor.Signal<>
 			@within Objects.EventManager
-			@tag Event
-
-			Fires when the Discord client is ready.
 		]=]
 		onReady = Signal.new(),
 
 		--[=[
-			@prop onMessage Vendor.Signal<>
+			@prop onMessage Vendor.Signal<Objects.DiscordMessage>
 			@within Objects.EventManager
-			@tag Event
-
-			Fires when a new message is received.
-			@param message DiscordMessage -- The message received.
 		]=]
 		onMessage = Signal.new(),
 
 		--[=[
-			@prop onMessageChanged Vendor.Signal<>
+			@prop onMessageChanged Vendor.Signal<Objects.DiscordMessage>
 			@within Objects.EventManager
-			@tag Event
-
-			Fires when a message is edited.
-			@param message DiscordMessage -- The message that was edited.
 		]=]
 		onMessageChanged = Signal.new(),
 
 		--[=[
-			@prop onMessageDeleted Vendor.Signal<>
+			@prop onMessageDeleted Vendor.Signal<Objects.DiscordMessage>
 			@within Objects.EventManager
-			@tag Event
-
-			Fires when a message is deleted.
-			@param message DiscordMessage -- The message that was deleted.
 		]=]
 		onMessageDeleted = Signal.new(),
 
 		--[=[
-			@prop onMessageBulkDeleted Vendor.Signal<>
+			@prop onMessageBulkDeleted Vendor.Signal<{ channelId: string, guildId: string, ids: { string } }>
 			@within Objects.EventManager
-			@tag Event
-
-			Fires when multiple messages are deleted.
-			@param data table -- The data containing channelId, guildId, and ids of deleted messages.
 		]=]
 		onMessageBulkDeleted = Signal.new(),
 
 		--[=[
-			@prop onChannelCreate Vendor.Signal<>
+			@prop onChannelCreate Vendor.Signal<Objects.DiscordChannel>
 			@within Objects.EventManager
-			@tag Event
-
-			Fires when a new channel is created.
-			@param channel DiscordChannel -- The channel created.
 		]=]
 		onChannelCreate = Signal.new(),
 
 		--[=[
-			@prop onChannelUpdate Vendor.Signal<>
+			@prop onChannelUpdate Vendor.Signal<Objects.DiscordChannel>
 			@within Objects.EventManager
-			@tag Event
-
-			Fires when a channel is updated.
-			@param channel DiscordChannel -- The channel that was updated.
 		]=]
 		onChannelUpdate = Signal.new(),
 
 		--[=[
-			@prop onChannelDelete Vendor.Signal<>
+			@prop onChannelDelete Vendor.Signal<Objects.DiscordChannel>
 			@within Objects.EventManager
-			@tag Event
-
-			Fires when a channel is deleted.
-			@param channel DiscordChannel -- The channel that was deleted.
 		]=]
 		onChannelDelete = Signal.new(),
 
 		--[=[
-			@prop onUserUpdated Vendor.Signal<>
+			@prop onUserUpdated Vendor.Signal<Objects.DiscordUser>
 			@within Objects.EventManager
-			@tag Event
-
-			Fires when a user is updated.
-			@param user DiscordUser -- The user that was updated.
 		]=]
 		onUserUpdated = Signal.new(),
 
 		--[=[
-			@prop onChannelPinsUpdate Vendor.Signal<>
+			@prop onChannelPinsUpdate Vendor.Signal<{ guildId: string, channelId: string, lastPinTimestamp: string }>
 			@within Objects.EventManager
-			@tag Event
-
-			Fires when a channel's pins are updated.
-			@param data table -- The data containing guildId, channelId, and lastPinTimestamp.
 		]=]
 		onChannelPinsUpdate = Signal.new(),
 
 		--[=[
-			@prop onGuildCreate Vendor.Signal<>
+			@prop onGuildCreate Vendor.Signal<Objects.DiscordGuild>
 			@within Objects.EventManager
-			@tag Event
-
-			Fires when a new guild is created.
-			@param guild DiscordGuild -- The guild created.
 		]=]
 		onGuildCreate = Signal.new(),
 
 		--[=[
-			@prop onGuildUpdate Vendor.Signal<>
+			@prop onGuildUpdate Vendor.Signal<Objects.DiscordGuild>
 			@within Objects.EventManager
-			@tag Event
-
-			Fires when a guild is updated.
-			@param guild DiscordGuild -- The guild that was updated.
 		]=]
 		onGuildUpdate = Signal.new(),
 
 		--[=[
-			@prop onGuildDelete Vendor.Signal<>
+			@prop onGuildDelete Vendor.Signal<Objects.DiscordGuild>
 			@within Objects.EventManager
-			@tag Event
-
-			Fires when a guild is deleted.
-			@param guild DiscordGuild -- The guild that was deleted.
 		]=]
 		onGuildDelete = Signal.new(),
 
 		--[=[
-			@prop onGuildMemberBanned Vendor.Signal<>
+			@prop onGuildMemberBanned Vendor.Signal<{ guildId: string, user: Objects.DiscordUser }>
 			@within Objects.EventManager
-			@tag Event
-
-			Fires when a guild member is banned.
-			@param data table -- The data containing guildId and user.
 		]=]
 		onGuildMemberBanned = Signal.new(),
 
 		--[=[
-			@prop onGuildMemberUnbanned Vendor.Signal<>
+			@prop onGuildMemberUnbanned Vendor.Signal<{ guildId: string, user: Objects.DiscordUser }>
 			@within Objects.EventManager
-			@tag Event
-
-			Fires when a guild member is unbanned.
-			@param data table -- The data containing guildId and user.
 		]=]
 		onGuildMemberUnbanned = Signal.new(),
 
 		--[=[
-			@prop onGuildMemberJoined Vendor.Signal<>
+			@prop onGuildMemberJoined Vendor.Signal<Objects.DiscordGuildMember & { guildId: string }>
 			@within Objects.EventManager
-			@tag Event
-
-			Fires when a new member joins a guild.
-			@param member DiscordGuildMember -- The member that joined.
 		]=]
 		onGuildMemberJoined = Signal.new(),
 
 		--[=[
-			@prop onGuildMemberLeft Vendor.Signal<>
+			@prop onGuildMemberLeft Vendor.Signal<{ guildId: string, user: Objects.DiscordUser }>
 			@within Objects.EventManager
-			@tag Event
-
-			Fires when a member leaves a guild.
-			@param data table -- The data containing guildId and user.
 		]=]
 		onGuildMemberLeft = Signal.new(),
 
 		--[=[
-			@prop onGuildMemberUpdated Vendor.Signal<>
+			@prop onGuildMemberUpdated Vendor.Signal<{ ... }>
 			@within Objects.EventManager
-			@tag Event
-
-			Fires when a guild member is updated.
-			@param data table -- The data containing guildId, roles, user, nick, avatar, joinedAt, premiumSince, deaf, mute, pending, and communicationDisabledUntil.
 		]=]
 		onGuildMemberUpdated = Signal.new(),
 
 		--[=[
-			@prop onInteraction Vendor.Signal<>
+			@prop onInteraction Vendor.Signal<Objects.DiscordInteraction>
 			@within Objects.EventManager
-			@tag Event
 
 			Fires when an interaction occurs.
-			@param interaction DiscordInteraction -- The interaction that occurred.
 		]=]
 		onInteraction = Signal.new(),
 	}, EventManager.Prototype)
