@@ -32,126 +32,127 @@ EventManager.Prototype.type = "EventManager"
 	Creates a new instance of EventManager and connects it to the provided Discord client.
 	
 	@function new
-	@param discordClient any -- The Discord client instance to connect with the EventManager.
+	@param discordClient any
 	@within Objects.EventManager
-	@return EventManager -- A new instance of EventManager.
+	@return EventManager
 ]=]
 function EventManager.Interface.new(discordClient): EventManager
+	--[=[
+		@prop onReady Vendor.Signal<>
+		@within Objects.EventManager
+	]=]
+
+	--[=[
+		@prop onMessage Vendor.Signal<Objects.DiscordMessage>
+		@within Objects.EventManager
+	]=]
+
+	--[=[
+		@prop onMessageChanged Vendor.Signal<Objects.DiscordMessage>
+		@within Objects.EventManager
+	]=]
+
+	--[=[
+		@prop onMessageDeleted Vendor.Signal<Objects.DiscordMessage>
+		@within Objects.EventManager
+	]=]
+
+	--[=[
+		@prop onMessageBulkDeleted Vendor.Signal<{ channelId: string, guildId: string, ids: { string } }>
+		@within Objects.EventManager
+	]=]
+
+	--[=[
+		@prop onChannelCreate Vendor.Signal<Objects.DiscordChannel>
+		@within Objects.EventManager
+	]=]
+
+	--[=[
+		@prop onChannelUpdate Vendor.Signal<Objects.DiscordChannel>
+		@within Objects.EventManager
+	]=]
+
+	--[=[
+		@prop onChannelDelete Vendor.Signal<Objects.DiscordChannel>
+		@within Objects.EventManager
+	]=]
+
+	--[=[
+		@prop onUserUpdated Vendor.Signal<Objects.DiscordUser>
+		@within Objects.EventManager
+	]=]
+
+	--[=[
+		@prop onChannelPinsUpdate Vendor.Signal<{ guildId: string, channelId: string, lastPinTimestamp: string }>
+		@within Objects.EventManager
+	]=]
+
+	--[=[
+		@prop onGuildCreate Vendor.Signal<Objects.DiscordGuild>
+		@within Objects.EventManager
+	]=]
+
+	--[=[
+		@prop onGuildUpdate Vendor.Signal<Objects.DiscordGuild>
+		@within Objects.EventManager
+	]=]
+
+	--[=[
+		@prop onGuildDelete Vendor.Signal<Objects.DiscordGuild>
+		@within Objects.EventManager
+	]=]
+
+	--[=[
+		@prop onGuildMemberBanned Vendor.Signal<{ guildId: string, user: Objects.DiscordUser }>
+		@within Objects.EventManager
+	]=]
+
+	--[=[
+		@prop onGuildMemberUnbanned Vendor.Signal<{ guildId: string, user: Objects.DiscordUser }>
+		@within Objects.EventManager
+	]=]
+
+	--[=[
+		@prop onGuildMemberJoined Vendor.Signal<Objects.DiscordGuildMember & { guildId: string }>
+		@within Objects.EventManager
+	]=]
+
+	--[=[
+		@prop onGuildMemberLeft Vendor.Signal<{ guildId: string, user: Objects.DiscordUser }>
+		@within Objects.EventManager
+	]=]
+
+	--[=[
+		@prop onGuildMemberUpdated Vendor.Signal<{ ... }>
+		@within Objects.EventManager
+	]=]
+
+	--[=[
+		@prop onInteraction Vendor.Signal<Objects.DiscordInteraction>
+		@within Objects.EventManager
+
+		Fires when an interaction occurs.
+	]=]
+
 	local self = Construct({
-		--[=[
-			@prop onReady Vendor.Signal<>
-			@within Objects.EventManager
-		]=]
 		onReady = Signal.new(),
-
-		--[=[
-			@prop onMessage Vendor.Signal<Objects.DiscordMessage>
-			@within Objects.EventManager
-		]=]
 		onMessage = Signal.new(),
-
-		--[=[
-			@prop onMessageChanged Vendor.Signal<Objects.DiscordMessage>
-			@within Objects.EventManager
-		]=]
 		onMessageChanged = Signal.new(),
-
-		--[=[
-			@prop onMessageDeleted Vendor.Signal<Objects.DiscordMessage>
-			@within Objects.EventManager
-		]=]
 		onMessageDeleted = Signal.new(),
-
-		--[=[
-			@prop onMessageBulkDeleted Vendor.Signal<{ channelId: string, guildId: string, ids: { string } }>
-			@within Objects.EventManager
-		]=]
 		onMessageBulkDeleted = Signal.new(),
-
-		--[=[
-			@prop onChannelCreate Vendor.Signal<Objects.DiscordChannel>
-			@within Objects.EventManager
-		]=]
 		onChannelCreate = Signal.new(),
-
-		--[=[
-			@prop onChannelUpdate Vendor.Signal<Objects.DiscordChannel>
-			@within Objects.EventManager
-		]=]
 		onChannelUpdate = Signal.new(),
-
-		--[=[
-			@prop onChannelDelete Vendor.Signal<Objects.DiscordChannel>
-			@within Objects.EventManager
-		]=]
 		onChannelDelete = Signal.new(),
-
-		--[=[
-			@prop onUserUpdated Vendor.Signal<Objects.DiscordUser>
-			@within Objects.EventManager
-		]=]
 		onUserUpdated = Signal.new(),
-
-		--[=[
-			@prop onChannelPinsUpdate Vendor.Signal<{ guildId: string, channelId: string, lastPinTimestamp: string }>
-			@within Objects.EventManager
-		]=]
 		onChannelPinsUpdate = Signal.new(),
-
-		--[=[
-			@prop onGuildCreate Vendor.Signal<Objects.DiscordGuild>
-			@within Objects.EventManager
-		]=]
 		onGuildCreate = Signal.new(),
-
-		--[=[
-			@prop onGuildUpdate Vendor.Signal<Objects.DiscordGuild>
-			@within Objects.EventManager
-		]=]
 		onGuildUpdate = Signal.new(),
-
-		--[=[
-			@prop onGuildDelete Vendor.Signal<Objects.DiscordGuild>
-			@within Objects.EventManager
-		]=]
 		onGuildDelete = Signal.new(),
-
-		--[=[
-			@prop onGuildMemberBanned Vendor.Signal<{ guildId: string, user: Objects.DiscordUser }>
-			@within Objects.EventManager
-		]=]
 		onGuildMemberBanned = Signal.new(),
-
-		--[=[
-			@prop onGuildMemberUnbanned Vendor.Signal<{ guildId: string, user: Objects.DiscordUser }>
-			@within Objects.EventManager
-		]=]
 		onGuildMemberUnbanned = Signal.new(),
-
-		--[=[
-			@prop onGuildMemberJoined Vendor.Signal<Objects.DiscordGuildMember & { guildId: string }>
-			@within Objects.EventManager
-		]=]
 		onGuildMemberJoined = Signal.new(),
-
-		--[=[
-			@prop onGuildMemberLeft Vendor.Signal<{ guildId: string, user: Objects.DiscordUser }>
-			@within Objects.EventManager
-		]=]
 		onGuildMemberLeft = Signal.new(),
-
-		--[=[
-			@prop onGuildMemberUpdated Vendor.Signal<{ ... }>
-			@within Objects.EventManager
-		]=]
 		onGuildMemberUpdated = Signal.new(),
-
-		--[=[
-			@prop onInteraction Vendor.Signal<Objects.DiscordInteraction>
-			@within Objects.EventManager
-
-			Fires when an interaction occurs.
-		]=]
 		onInteraction = Signal.new(),
 	}, EventManager.Prototype)
 
