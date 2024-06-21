@@ -1,24 +1,24 @@
 {
-  "luau-lsp.require.mode": "relativeToFile",
-  "luau-lsp.inlayHints.variableTypes": true,
-  "luau-lsp.inlayHints.functionReturnTypes": true,
-  "luau-lsp.inlayHints.parameterNames": "all",
-  "luau-lsp.inlayHints.parameterTypes": true,
-  "luau-lsp.inlayHints.typeHintMaxLength": 50,
-  "luau-lsp.require.directoryAliases": {
-    "@lune/": "~/.lune/.typedefs/0.8.2/",
-
-    "@Builders": "Package/Classes/Builders",
-    "@Network": "Package/Classes/Network",
-    "@Objects": "Package/Classes/Objects",
-    "@Data": "Package/Data",
-    "@Enums": "Package/Enums",
-    "@Std": "Package/Std",
-    "@Utils": "Package/Utils",
-    "@Vendor": "Package/Vendor",
-  },
-
-  "[lua]": {
+	"luau-lsp.require.mode": "relativeToFile",
+	"luau-lsp.inlayHints.variableTypes": true,
+	"luau-lsp.inlayHints.functionReturnTypes": true,
+	"luau-lsp.inlayHints.parameterNames": "all",
+	"luau-lsp.inlayHints.parameterTypes": true,
+	"luau-lsp.inlayHints.typeHintMaxLength": 10,
+	"editor.formatOnSave": true,
+	"luau-lsp.require.directoryAliases": {
+		"@lune/": "~/.lune/.typedefs/0.8.2/",
+		
+		"@builders": "./packages/discord-luau/src/builders",
+		"@network": "./packages/discord-luau/src/network",
+		"@classes": "./packages/discord-luau/src/classes",
+		"@data": "./packages/discord-luau/src/data",
+		"@enums": "./packages/discord-luau/src/enums",
+		"@std": "./packages/std-polyfills",
+		"@util": "./packages/util",
+		"@dep": "./packages/vendor"
+	},
+	"[lua]": {
 		"editor.formatOnSave": true
 	},
 	"[luau]": {

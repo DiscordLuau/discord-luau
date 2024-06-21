@@ -4,13 +4,13 @@
 		"*": false
 	},
 	"aliases": {
-		"Builders": "./Package/Classes/Builders",
-		"Network": "./Package/Classes/Network",
-		"Objects": "./Package/Classes/Objects",
-		"Data": "./Package/Data",
-		"Enums": "./Package/Enums",
-		"Std": "./Package/Std",
-		"Utils": "./Package/Utils",
-		"Vendor": "./Package/Vendor"
+		"builders": "./packages/discord-luau/src/builders",
+		"network": "./packages/discord-luau/src/network",
+		"classes": "./packages/discord-luau/src/classes",
+		"data": "./packages/discord-luau/src/data",
+		"enums": "./packages/discord-luau/src/enums",
+		"std": "./packages/std-polyfills",
+		"util": "./packages/util",
+		"dep": "./packages/vendor"
 	}
 }
