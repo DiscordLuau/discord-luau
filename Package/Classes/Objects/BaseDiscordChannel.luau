@@ -64,6 +64,9 @@ export type BaseDiscordChannel = typeof(BaseDiscordChannel.Prototype) & {
 
 	id: string,
 	type: number,
+
+	name: string,
+	description: string?,
 }
 
 return BaseDiscordChannel.Interface
