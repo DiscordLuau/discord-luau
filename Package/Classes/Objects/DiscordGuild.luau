@@ -978,6 +978,7 @@ export type DiscordGuild = typeof(DiscordGuild.Prototype) & {
 	shardId: number,
 
 	id: string,
+	name: string,
 
 	roles: { DiscordGuildRole.DiscordGuildRole },
 	emojis: { DiscordEmoji.DiscordEmoji },
