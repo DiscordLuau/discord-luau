@@ -189,7 +189,11 @@ function DiscordGuild.Prototype.setSlashCommandsAsync(self: DiscordGuild, comman
 
 		return self.discordClient.discordGateway
 			:putAsync(
-				string.format(DiscordEndpoints.OverwriteGuildApplicationCommands, self.id),
+				string.format(
+					DiscordEndpoints.OverwriteGuildApplicationCommands,
+					self.discordClient.discordApplication.id,
+					self.id
+				),
 				Resolvable.new(ResolvableType.JSON, commandObjects)
 			)
 			:await()
