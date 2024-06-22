@@ -574,7 +574,7 @@ function DiscordGuild.Prototype.getGuildRolesAsync(self: DiscordGuild)
 			self.discordClient.discordGateway:getAsync(string.format(DiscordEndpoints.BotBulkGuildBan, self.id)):await()
 
 		for key, value in guildRoles do
-			guildRoles[key] = DiscordGuildRole.new(self.discordClient, self.id, value)
+			guildRoles[key] = DiscordGuildRole.new(self.discordClient, value)
 		end
 
 		return guildRoles
@@ -956,7 +956,7 @@ function DiscordGuild.Interface.new(
 
 	if guildData.roles then
 		for index, value in guildData.roles do
-			guildData.roles[index] = DiscordGuildRole.new(discordClient, guildData.id, value)
+			guildData.roles[index] = DiscordGuildRole.new(discordClient, value)
 		end
 	end
 
