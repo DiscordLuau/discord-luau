@@ -13,6 +13,42 @@ local CacheType = require("@Enums/CacheType")
 
 	DiscordInvite represents an invite link to a Discord server, providing methods to delete the invite.
 ]=]
+
+--[=[
+	@prop code string
+	@within Objects.DiscordInvite
+]=]
+
+--[=[
+	@prop type number
+	@within Objects.DiscordInvite
+]=]
+
+--[=[
+	@prop guild { id: string, name: string }?
+	@within Objects.DiscordInvite
+]=]
+
+--[=[
+	@prop inviter Objects.DiscordUser?
+	@within Objects.DiscordInvite
+]=]
+
+--[=[
+	@prop targetType number
+	@within Objects.DiscordInvite
+]=]
+
+--[=[
+	@prop targetUser Objects.DiscordUser?
+	@within Objects.DiscordInvite
+]=]
+
+--[=[
+	@prop targetApplication { id: string }?
+	@within Objects.DiscordInvite
+]=]
+
 local DiscordInvite = {}
 
 DiscordInvite.Prototype = {}
@@ -52,41 +88,6 @@ function DiscordInvite.Interface.new(
 		[string]: any,
 	}
 )
-	--[=[
-		@prop code string
-		@within Objects.DiscordInvite
-	]=]
-
-	--[=[
-		@prop type number
-		@within Objects.DiscordInvite
-	]=]
-
-	--[=[
-		@prop guild { id: string, name: string }?
-		@within Objects.DiscordInvite
-	]=]
-
-	--[=[
-		@prop inviter Objects.DiscordUser?
-		@within Objects.DiscordInvite
-	]=]
-
-	--[=[
-		@prop targetType number
-		@within Objects.DiscordInvite
-	]=]
-
-	--[=[
-		@prop targetUser Objects.DiscordUser?
-		@within Objects.DiscordInvite
-	]=]
-
-	--[=[
-		@prop targetApplication { id: string }?
-		@within Objects.DiscordInvite
-	]=]
-
 	local self = discordClient.discordCache:getDataOr(CacheType.DiscordInvite, inviteData.code, function()
 		return Construct({
 			discordClient = discordClient,

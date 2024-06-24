@@ -9,6 +9,17 @@ local DiscordEndpoints = require("@Data/DiscordEndpoints")
 
 	Represents a base discord channel, every discord channel object will extend from this as a base.
 ]=]
+
+--[=[
+	@prop id string
+	@within Objects.BaseDiscordChannel
+]=]
+
+--[=[
+	@prop type number
+	@within Objects.BaseDiscordChannel
+]=]
+
 local BaseDiscordChannel = {}
 
 BaseDiscordChannel.Prototype = {}
@@ -39,15 +50,6 @@ function BaseDiscordChannel.Interface.new(
 		[any]: any,
 	}
 ): BaseDiscordChannel
-	--[=[
-		@prop id string
-		@within Objects.BaseDiscordChannel
-	]=]
-
-	--[=[
-		@prop type number
-		@within Objects.BaseDiscordChannel
-	]=]
 	local self = Construct({
 		discordClient = discordClient,
 	}, BaseDiscordChannel.Prototype) :: any

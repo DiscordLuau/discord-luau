@@ -18,6 +18,27 @@ local CacheType = require("@Enums/CacheType")
 
 	@tag inherit Objects.BaseUserChannel
 ]=]
+
+--[=[
+	@prop icon string
+	@within Objects.UserGroupChannel
+]=]
+
+--[=[
+	@prop ownerId string
+	@within Objects.UserGroupChannel
+]=]
+
+--[=[
+	@prop applicationId string
+	@within Objects.UserGroupChannel
+]=]
+
+--[=[
+	@prop managed boolean
+	@within Objects.UserGroupChannel
+]=]
+
 local UserGroupChannel = {}
 
 UserGroupChannel.Prototype = {}
@@ -47,26 +68,6 @@ function UserGroupChannel.Interface.new(
 		id: string,
 	}
 )
-	--[=[
-		@prop icon string
-		@within Objects.UserGroupChannel
-	]=]
-
-	--[=[
-		@prop ownerId string
-		@within Objects.UserGroupChannel
-	]=]
-
-	--[=[
-		@prop applicationId string
-		@within Objects.UserGroupChannel
-	]=]
-
-	--[=[
-		@prop managed boolean
-		@within Objects.UserGroupChannel
-	]=]
-
 	local self = discordClient.discordCache:getDataOr(CacheType.DiscordChannel, channelData.id, function()
 		local channelStruct = {
 			discordClient = discordClient,

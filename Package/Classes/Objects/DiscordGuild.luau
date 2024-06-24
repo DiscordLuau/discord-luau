@@ -38,6 +38,222 @@ local ResolvableType = require("@Enums/ResolvableType")
 
 	The `DiscordGuild` class represents a Discord guild (server) and provides methods to interact with and manage the guild.
 ]=]
+
+--[=[
+	@prop shardId number
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop id string
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop name string
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop icon string?
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop iconHash string?
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop splash string?
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop discoverySplash string?
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop owner boolean
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop ownerId string
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop permissions number
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop afkChannelId string?
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop afkTimeout number
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop widgetEnabled boolean
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop widgetChannelId string?
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop verificationLevel number
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop defaultMessageNotifications number
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop explicitContentFilter number
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop roles { Objects.DiscordGuildRole }
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop emojis { Objects.DiscordEmoji }
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop features { string }
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop mfaLevel number
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop applicationId string?
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop systemChannelId string?
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop systemChannelFlags number
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop rulesChannelId string?
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop maxPresences number?
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop maxMembers number
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop vanityUrlCode string?
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop description string?
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop banner string?
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop premiumTier number
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop premiumSubscriptionCount number
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop preferredLocale string
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop publicUpdatesChannelId string?
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop maxVideoChannelUsers number
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop maxStageVideoChannelUsers number
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop approximateMemberCount number
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop approximatePresenceCount number
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop welcomeScreen Objects.GuildWelcomeScreen?
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop nsfwLevel number
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop stickers { Objects.DiscordSticker }
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop premiumProgressBarEnabled boolean
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop safetyAlertsChannelId string?
+	@within Objects.DiscordGuild
+]=]
+
 local DiscordGuild = {}
 
 DiscordGuild.Prototype = {}
@@ -681,7 +897,7 @@ function DiscordGuild.Prototype.beginPruneAsync(
 end
 
 --[=[
-	Fetches the avaliable voice regions for the guild.
+	Fetches the available voice regions for the guild.
 
 	@method getGuildVoiceRegionsAsync
 	@return Vendor.Future<{ { id: string, name: string, optimal: boolean, deprecated: boolean, custom: boolean } }>
@@ -930,221 +1146,6 @@ function DiscordGuild.Interface.new(
 		emojis: { any },
 	}
 )
-	--[=[
-		@prop shardId number
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop id string
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop name string
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop icon string?
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop iconHash string?
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop splash string?
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop discoverySplash string?
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop owner boolean
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop ownerId string
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop permissions number
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop afkChannelId string?
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop afkTimeout number
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop widgetEnabled boolean
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop widgetChannelId string?
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop verificationLevel number
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop defaultMessageNotifications number
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop explicitContentFilter number
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop roles { Objects.DiscordGuildRole }
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop emojis { Objects.DiscordEmoji }
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop features { string }
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop mfaLevel number
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop applicationId string?
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop systemChannelId string?
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop systemChannelFlags number
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop rulesChannelId string?
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop maxPresences number?
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop maxMembers number
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop vanityUrlCode string?
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop description string?
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop banner string?
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop premiumTier number
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop premiumSubscriptionCount number
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop preferredLocale string
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop publicUpdatesChannelId string?
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop maxVideoChannelUsers number
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop maxStageVideoChannelUsers number
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop approximateMemberCount number
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop approximatePresenceCount number
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop welcomeScreen Objects.GuildWelcomeScreen?
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop nsfwLevel number
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop stickers { Objects.DiscordSticker }
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop premiumProgressBarEnabled boolean
-		@within Objects.DiscordGuild
-	]=]
-
-	--[=[
-		@prop safetyAlertsChannelId string?
-		@within Objects.DiscordGuild
-	]=]
-
 	local self = discordClient.discordCache:getDataOr(CacheType.DiscordGuild, guildData.id, function()
 		local guildStruct = {
 			discordClient = discordClient,

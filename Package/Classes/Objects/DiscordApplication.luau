@@ -18,12 +18,22 @@ local CacheType = require("@Enums/CacheType")
 ]=]
 
 --[=[
-	@prop id string The unique identifier of the Discord application.
+	@prop id string
 	@within Objects.DiscordApplication
 ]=]
 
 --[=[
-	@prop flags number The flags associated with the Discord application.
+	@prop flags number
+	@within Objects.DiscordApplication
+]=]
+
+--[=[
+	@prop id string
+	@within Objects.DiscordApplication
+]=]
+
+--[=[
+	@prop flags number
 	@within Objects.DiscordApplication
 ]=]
 
@@ -155,16 +165,6 @@ function DiscordApplication.Interface.new(
 		flags: number,
 	}
 )
-	--[=[
-		@prop id string
-		@within Objects.DiscordApplication
-	]=]
-
-	--[=[
-		@prop flags number
-		@within Objects.DiscordApplication
-	]=]
-
 	return discordClient.discordCache:getDataOr(CacheType.Application, applicationData.id, function()
 		return Construct({
 			id = applicationData.id,

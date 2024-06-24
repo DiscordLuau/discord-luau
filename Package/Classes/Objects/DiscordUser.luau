@@ -7,6 +7,47 @@ local CacheType = require("@Enums/CacheType")
 
 	DiscordUser represents a user on Discord, encapsulating user data such as username, avatar, and various flags.
 ]=]
+
+--[=[
+	@prop username string
+	@within Objects.DiscordUser
+]=]
+
+--[=[
+	@prop flags string
+	@within Objects.DiscordUser
+]=]
+
+--[=[
+	@prop mfaEnabled boolean
+	@within Objects.DiscordUser
+]=]
+
+--[=[
+	@prop avatar string
+	@within Objects.DiscordUser
+]=]
+
+--[=[
+	@prop id string
+	@within Objects.DiscordUser
+]=]
+
+--[=[
+	@prop bot boolean
+	@within Objects.DiscordUser
+]=]
+
+--[=[
+	@prop verified boolean
+	@within Objects.DiscordUser
+]=]
+
+--[=[
+	@prop discriminator string
+	@within Objects.DiscordUser
+]=]
+
 local DiscordUser = {}
 
 DiscordUser.Prototype = {}
@@ -36,46 +77,6 @@ function DiscordUser.Interface.new(
 		discriminator: string?,
 	}
 )
-	--[=[
-		@prop username string
-		@within Objects.DiscordUser
-	]=]
-
-	--[=[
-		@prop flags string
-		@within Objects.DiscordUser
-	]=]
-
-	--[=[
-		@prop mfaEnabled boolean
-		@within Objects.DiscordUser
-	]=]
-
-	--[=[
-		@prop avatar string
-		@within Objects.DiscordUser
-	]=]
-
-	--[=[
-		@prop id string
-		@within Objects.DiscordUser
-	]=]
-
-	--[=[
-		@prop bot boolean
-		@within Objects.DiscordUser
-	]=]
-
-	--[=[
-		@prop verified boolean
-		@within Objects.DiscordUser
-	]=]
-
-	--[=[
-		@prop discriminator string
-		@within Objects.DiscordUser
-	]=]
-
 	local self = discordClient.discordCache:getDataOr(CacheType.DiscordUser, partialUserData.id, function()
 		return Construct({
 			id = partialUserData.id,

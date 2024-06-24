@@ -9,6 +9,32 @@ local CacheType = require("@Enums/CacheType")
 
 	The `GuildOnboardingPromptOption` class provides a way for developers to interact with a guild onboarding prompt option.
 ]=]
+
+--[=[
+	@prop id string
+	@within Objects.GuildOnboardingPromptOption
+]=]
+
+--[=[
+	@prop channelIds { string }
+	@within Objects.GuildOnboardingPromptOption
+]=]
+
+--[=[
+	@prop roleIds { string }
+	@within Objects.GuildOnboardingPromptOption
+]=]
+
+--[=[
+	@prop title string
+	@within Objects.GuildOnboardingPromptOption
+]=]
+
+--[=[
+	@prop description string?
+	@within Objects.GuildOnboardingPromptOption
+]=]
+
 local GuildOnboardingPromptOption = {}
 
 GuildOnboardingPromptOption.Prototype = {}
@@ -38,31 +64,6 @@ function GuildOnboardingPromptOption.Interface.new(
 		[string]: any,
 	}
 )
-	--[=[
-		@prop id string
-		@within Objects.GuildOnboardingPromptOption
-	]=]
-
-	--[=[
-		@prop channelIds { string }
-		@within Objects.GuildOnboardingPromptOption
-	]=]
-
-	--[=[
-		@prop roleIds { string }
-		@within Objects.GuildOnboardingPromptOption
-	]=]
-
-	--[=[
-		@prop title string
-		@within Objects.GuildOnboardingPromptOption
-	]=]
-
-	--[=[
-		@prop description string?
-		@within Objects.GuildOnboardingPromptOption
-	]=]
-
 	local self = discordClient.discordCache:getDataOr(
 		CacheType.OnboardingPromptOption,
 		onboardingPromptData.id,

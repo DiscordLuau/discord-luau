@@ -24,6 +24,37 @@ local ResolvableType = require("@Enums/ResolvableType")
 
 	@tag inherit Objects.BaseDiscordChannel
 ]=]
+
+--[=[
+	@prop guildId string
+	@within Objects.BaseDiscordGuildChannel
+]=]
+
+--[=[
+	@prop topic string
+	@within Objects.BaseDiscordGuildChannel
+]=]
+
+--[=[
+	@prop nsfw boolean
+	@within Objects.BaseDiscordGuildChannel
+]=]
+
+--[=[
+	@prop rateLimitPerUser number
+	@within Objects.BaseDiscordGuildChannel
+]=]
+
+--[=[
+	@prop parentId string
+	@within Objects.BaseDiscordGuildChannel
+]=]
+
+--[=[
+	@prop flags number
+	@within Objects.BaseDiscordGuildChannel
+]=]
+
 local BaseDiscordGuildChannel = {}
 
 BaseDiscordGuildChannel.Prototype = {}
@@ -327,35 +358,6 @@ function BaseDiscordGuildChannel.Interface.new(
 		guildId: string?,
 	}
 )
-	--[=[
-		@prop guildId string
-		@within Objects.BaseGuildTextChannel
-	]=]
-
-	--[=[
-		@prop topic string
-		@within Objects.BaseGuildTextChannel
-	]=]
-
-	--[=[
-		@prop nsfw boolean
-		@within Objects.BaseGuildTextChannel
-	]=]
-
-	--[=[
-		@prop rateLimitPerUser number
-		@within Objects.BaseGuildTextChannel
-	]=]
-
-	--[=[
-		@prop parentId string
-		@within Objects.BaseGuildTextChannel
-	]=]
-
-	--[=[
-		@prop flags number
-		@within Objects.BaseGuildTextChannel
-	]=]
 	local channelObject = Construct({
 		discordClient = discordClient,
 	}, BaseDiscordGuildChannel.Prototype)

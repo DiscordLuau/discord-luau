@@ -14,6 +14,92 @@ local CacheType = require("@Enums/CacheType")
 
 	DiscordIntegration represents a guild integration.
 ]=]
+
+--[=[
+	@prop guildId string
+	@within Objects.DiscordIntegration
+]=]
+
+--[=[
+	@prop id string
+	@within Objects.DiscordIntegration
+]=]
+
+--[=[
+	@prop name string
+	@within Objects.DiscordIntegration
+]=]
+
+--[=[
+	@prop type number
+	@within Objects.DiscordIntegration
+]=]
+
+--[=[
+	@prop enabled boolean
+	@within Objects.DiscordIntegration
+]=]
+
+--[=[
+	@prop syncing boolean?
+	@within Objects.DiscordIntegration
+]=]
+
+--[=[
+	@prop roleId string?
+	@within Objects.DiscordIntegration
+]=]
+
+--[=[
+	@prop enableEmoticons boolean?
+	@within Objects.DiscordIntegration
+]=]
+
+--[=[
+	@prop expireBehaviour number?
+	@within Objects.DiscordIntegration
+]=]
+
+--[=[
+	@prop expireGracePeriod number?
+	@within Objects.DiscordIntegration
+]=]
+
+--[=[
+	@prop user Objects.DiscordUser?
+	@within Objects.DiscordIntegration
+]=]
+
+--[=[
+	@prop account { id: string, name: string }?
+	@within Objects.DiscordIntegration
+]=]
+
+--[=[
+	@prop syncedAt string?
+	@within Objects.DiscordIntegration
+]=]
+
+--[=[
+	@prop subscriberCount number?
+	@within Objects.DiscordIntegration
+]=]
+
+--[=[
+	@prop revoked boolean?
+	@within Objects.DiscordIntegration
+]=]
+
+--[=[
+	@prop application Objects.Application?
+	@within Objects.DiscordIntegration
+]=]
+
+--[=[
+	@prop scopes { string }?
+	@within Objects.DiscordIntegration
+]=]
+
 local DiscordIntegration = {}
 
 DiscordIntegration.Prototype = {}
@@ -54,91 +140,6 @@ function DiscordIntegration.Interface.new(
 		[string]: any,
 	}
 )
-	--[=[
-		@prop guildId string
-		@within Objects.DiscordIntegration
-	]=]
-
-	--[=[
-		@prop id string
-		@within Objects.DiscordIntegration
-	]=]
-
-	--[=[
-		@prop name string
-		@within Objects.DiscordIntegration
-	]=]
-
-	--[=[
-		@prop type number
-		@within Objects.DiscordIntegration
-	]=]
-
-	--[=[
-		@prop enabled boolean
-		@within Objects.DiscordIntegration
-	]=]
-
-	--[=[
-		@prop syncing boolean?
-		@within Objects.DiscordIntegration
-	]=]
-
-	--[=[
-		@prop roleId string?
-		@within Objects.DiscordIntegration
-	]=]
-
-	--[=[
-		@prop enableEmoticons boolean?
-		@within Objects.DiscordIntegration
-	]=]
-
-	--[=[
-		@prop expireBehaviour number?
-		@within Objects.DiscordIntegration
-	]=]
-
-	--[=[
-		@prop expireGracePeriod number?
-		@within Objects.DiscordIntegration
-	]=]
-
-	--[=[
-		@prop user Objects.DiscordUser?
-		@within Objects.DiscordIntegration
-	]=]
-
-	--[=[
-		@prop account { id: string, name: string }?
-		@within Objects.DiscordIntegration
-	]=]
-
-	--[=[
-		@prop syncedAt string?
-		@within Objects.DiscordIntegration
-	]=]
-
-	--[=[
-		@prop subscriberCount number?
-		@within Objects.DiscordIntegration
-	]=]
-
-	--[=[
-		@prop revoked boolean?
-		@within Objects.DiscordIntegration
-	]=]
-
-	--[=[
-		@prop application Objects.Application?
-		@within Objects.DiscordIntegration
-	]=]
-
-	--[=[
-		@prop scopes { string }?
-		@within Objects.DiscordIntegration
-	]=]
-
 	local self = discordClient.discordCache:getDataOr(
 		CacheType.DiscordIntegration,
 		`{guildId}-{integrationData.id}`,

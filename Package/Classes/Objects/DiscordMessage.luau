@@ -24,6 +24,82 @@ local CacheType = require("@Enums/CacheType")
 
 	DiscordMessage represents a message in a Discord channel, providing methods to reply, delete, pin, unpin, edit, and manage reactions.
 ]=]
+
+--[=[
+	@prop mentionRoles { string }
+	@within Objects.DiscordMessage
+]=]
+
+--[=[
+	@prop tts boolean
+	@within Objects.DiscordMessage
+]=]
+
+--[=[
+	@prop mentionEveryone boolean
+	@within Objects.DiscordMessage
+]=]
+
+--[=[
+	@prop nonce string
+	@within Objects.DiscordMessage
+]=]
+
+--[=[
+	@prop id string
+	@within Objects.DiscordMessage
+]=]
+
+--[=[
+	@prop author { username: string, globalName: string, avatar: string, id: string, publicFlags: number, discriminator: string }
+	@within Objects.DiscordMessage
+]=]
+
+--[=[
+	@prop content string
+	@within Objects.DiscordMessage
+]=]
+
+--[=[
+	@prop mentions { string }
+	@within Objects.DiscordMessage
+]=]
+
+--[=[
+	@prop flags string
+	@within Objects.DiscordMessage
+]=]
+
+--[=[
+	@prop timestamp string
+	@within Objects.DiscordMessage
+]=]
+
+--[=[
+	@prop type number
+	@within Objects.DiscordMessage
+]=]
+
+--[=[
+	@prop pinned boolean
+	@within Objects.DiscordMessage
+]=]
+
+--[=[
+	@prop guildId string
+	@within Objects.DiscordMessage
+]=]
+
+--[=[
+	@prop channelId string
+	@within Objects.DiscordMessage
+]=]
+
+--[=[
+	@prop member { flags: number, deaf: boolean, roles: { [string]: string }, pending: boolean, mute: boolean, joinedAt: string }
+	@within Objects.DiscordMessage
+]=]
+
 local DiscordMessage = {}
 
 DiscordMessage.Prototype = {}
@@ -340,80 +416,6 @@ function DiscordMessage.Interface.new(
 		},
 	}
 )
-	--[=[
-		@prop mentionRoles { string }
-		@within Objects.DiscordMessage
-	]=]
-
-	--[=[
-		@prop tts boolean
-		@within Objects.DiscordMessage
-	]=]
-
-	--[=[
-		@prop mentionEveryone boolean
-		@within Objects.DiscordMessage
-	]=]
-
-	--[=[
-		@prop nonce string
-		@within Objects.DiscordMessage
-	]=]
-
-	--[=[
-		@prop id string
-		@within Objects.DiscordMessage
-	]=]
-
-	--[=[
-		@prop author { username: string, globalName: string, avatar: string, id: string, publicFlags: number, discriminator: string }
-		@within Objects.DiscordMessage
-	]=]
-
-	--[=[
-		@prop content string
-		@within Objects.DiscordMessage
-	]=]
-
-	--[=[
-		@prop mentions { string }
-		@within Objects.DiscordMessage
-	]=]
-
-	--[=[
-		@prop flags string
-		@within Objects.DiscordMessage
-	]=]
-
-	--[=[
-		@prop timestamp string
-		@within Objects.DiscordMessage
-	]=]
-
-	--[=[
-		@prop type number
-		@within Objects.DiscordMessage
-	]=]
-
-	--[=[
-		@prop pinned boolean
-		@within Objects.DiscordMessage
-	]=]
-
-	--[=[
-		@prop guildId string
-		@within Objects.DiscordMessage
-	]=]
-
-	--[=[
-		@prop channelId string
-		@within Objects.DiscordMessage
-	]=]
-
-	--[=[
-		@prop member { flags: number, deaf: boolean, roles: { [string]: string }, pending: boolean, mute: boolean, joinedAt: string }
-		@within Objects.DiscordMessage
-	]=]
 	local self = discordClient.discordCache:getDataOr(CacheType.DiscordMessage, messageData.id, function()
 		local messageStruct = {
 			discordClient = discordClient,

@@ -16,6 +16,47 @@ local DiscordEndpoints = require("@Data/DiscordEndpoints")
 
 	@tag inherit Objects.BaseGuildTextChannel
 ]=]
+
+--[=[
+	@prop ownerId string
+	@within Objects.BaseGuildThread
+]=]
+
+--[=[
+	@prop messageCount number
+	@within Objects.BaseGuildThread
+]=]
+
+--[=[
+	@prop memberCount number
+	@within Objects.BaseGuildThread
+]=]
+
+--[=[
+	@prop totalMessageSent number
+	@within Objects.BaseGuildThread
+]=]
+
+--[=[
+	@prop threadMetadata { archived: boolean, autoArchiveDuration: number, archiveTimestamp: string, locked: boolean, invitable: boolean?, createTimestamp: string? },
+	@within Objects.BaseGuildThread
+]=]
+
+--[=[
+	@prop availableTags { { id: string, name: string, moderated: boolean, emojiId: string?, emojiName: string? } },
+	@within Objects.BaseGuildThread
+]=]
+
+--[=[
+	@prop appliedTags { string }
+	@within Objects.BaseGuildThread
+]=]
+
+--[=[
+	@prop defaultReactionEmoji Objects.DiscordEmoji
+	@within Objects.BaseGuildThread
+]=]
+
 local BaseGuildThread = {}
 
 BaseGuildThread.Prototype = {}
@@ -137,45 +178,6 @@ function BaseGuildThread.Interface.new(
 		[string]: any,
 	}
 )
-	--[=[
-		@prop ownerId string
-		@within Objects.BaseGuildThread
-	]=]
-
-	--[=[
-		@prop messageCount number
-		@within Objects.BaseGuildThread
-	]=]
-
-	--[=[
-		@prop memberCount number
-		@within Objects.BaseGuildThread
-	]=]
-
-	--[=[
-		@prop totalMessageSent number
-		@within Objects.BaseGuildThread
-	]=]
-
-	--[=[
-		@prop threadMetadata { archived: boolean, autoArchiveDuration: number, archiveTimestamp: string, locked: boolean, invitable: boolean?, createTimestamp: string? },
-		@within Objects.BaseGuildThread
-	]=]
-
-	--[=[
-		@prop availableTags { { id: string, name: string, moderated: boolean, emojiId: string?, emojiName: string? } },
-		@within Objects.BaseGuildThread
-	]=]
-
-	--[=[
-		@prop appliedTags { string }
-		@within Objects.BaseGuildThread
-	]=]
-
-	--[=[
-		@prop defaultReactionEmoji Objects.DiscordEmoji
-		@within Objects.BaseGuildThread
-	]=]
 	local channelObject = Construct({
 		discordClient = discordClient,
 	}, BaseGuildThread.Prototype)

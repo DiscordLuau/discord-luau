@@ -44,6 +44,67 @@ local CONCURRENT_IDENTIFY_YIELD = 5
 	local DiscordClient = DiscordLuau.DiscordClient.new(SettingsBuilder)
 	```
 ]=]
+
+--[=[
+	@prop eventManager Objects.EventManager
+	@within DiscordClient
+]=]
+
+--[=[
+	@prop discordGateway Objects.DiscordGateway
+	@within DiscordClient
+]=]
+
+--[=[
+	@prop onEvent Vendor.Signal<string, { [any]: any }?>
+	@within DiscordClient
+]=]
+
+--[=[
+	@prop discordSettings SettingsBuilder
+	@within DiscordClient
+]=]
+
+--[=[
+	@prop discordCache DiscordCache
+	@within DiscordClient
+]=]
+
+--[=[
+	@prop reporter Vendor.Reporter
+	@within DiscordClient
+]=]
+
+--[=[
+	@prop websocketUrl string
+	@within DiscordClient
+]=]
+
+--[=[
+	@prop shardCount number
+	@within DiscordClient
+]=]
+
+--[=[
+	@prop maxConcurrency number
+	@within DiscordClient
+]=]
+
+--[=[
+	@prop discordShards { Network.DiscordShard }
+	@within DiscordClient
+]=]
+
+--[=[
+	@prop discordUser Objects.DiscordUser?
+	@within DiscordClient
+]=]
+
+--[=[
+	@prop discordApplication Objects.discordApplication
+	@within DiscordClient
+]=]
+
 local DiscordClient = {}
 
 DiscordClient.Prototype = {}
@@ -189,9 +250,9 @@ end
 	Fetches a guild by its ID.
 	
 	@method fetchGuildAsync
-	@param guildId string -- The ID of the guild to fetch.
+	@param guildId string
 	@within DiscordClient
-	@return Vendor.Future<DiscordGuild> -- A future resolving to the fetched DiscordGuild.
+	@return Vendor.Future<Objects.DiscordGuild>
 ]=]
 function DiscordClient.Prototype.fetchGuildAsync(
 	self: DiscordClient,
@@ -209,9 +270,9 @@ end
 	Fetches a channel by its ID.
 	
 	@method fetchChannelAsync
-	@param channelId string -- The ID of the channel to fetch.
+	@param channelId string
 	@within DiscordClient
-	@return Vendor.Future<Objects.DiscordChannel> -- A future resolving to the fetched DiscordChannel.
+	@return Vendor.Future<Objects.DiscordChannel>
 ]=]
 function DiscordClient.Prototype.fetchChannelAsync(
 	self: DiscordClient,
@@ -229,9 +290,9 @@ end
 	Updates the client's presence.
 	
 	@method updatePresenceAsync
-	@param discordPresence table -- The presence data to update.
+	@param discordPresence Builders.PresenceBuilder
 	@within DiscordClient
-	@return Vendor.Future<boolean> -- A future resolving to a boolean indicating success.
+	@return Vendor.Future<boolean>
 ]=]
 function DiscordClient.Prototype.updatePresenceAsync(
 	self: DiscordClient,
@@ -241,7 +302,7 @@ function DiscordClient.Prototype.updatePresenceAsync(
 		for shardId = 1, self.shardCount do
 			(self.discordShards :: { DiscordShard.DiscordShard })[shardId].discordWebsocket
 				:sendAsync({
-					[WebsocketOperationKeys.OperationCode] = WebsocketOperationCodes.PresenseUpdate,
+					[WebsocketOperationKeys.OperationCode] = WebsocketOperationCodes.PresenceUpdate,
 					[WebsocketOperationKeys.Data] = discordPresence:toPayloadObject():resolve(),
 				})
 				:await()
@@ -276,7 +337,7 @@ end
 	
 	@method setVerbose
 	@within DiscordClient
-	@param verbose boolean -- Whether to enable verbose logging.
+	@param verbose boolean
 ]=]
 function DiscordClient.Prototype.setVerbose(_: DiscordClient, verbose: boolean)
 	Console.setGlobalLogLevel(verbose and Console.LogLevel.debug or Console.LogLevel.warn)
@@ -286,9 +347,9 @@ end
 	Constructor function for the Discord Client, used to instantiate a Discord Client object.
 		
 	@function new
-	@param discordSettings SettingsBuilder -- The settings builder for the client.
+	@param discordSettings Builders.SettingsBuilder
 	@within DiscordClient
-	@return DiscordClient -- A new instance of DiscordClient.
+	@return DiscordClient
 
 	```lua
 	local DiscordClient = DiscordLuau.DiscordClient.new(SettingsBuilder)
@@ -300,65 +361,17 @@ end
 ]=]
 function DiscordClient.Interface.new(discordSettings: SettingsBuilder.SettingsBuilder): DiscordClient
 	local self = Construct({
-		--[=[
-			@prop discordSettings SettingsBuilder
-			@within DiscordClient
-		]=]
 		discordSettings = discordSettings,
-
-		--[=[
-			@prop discordCache DiscordCache
-			@within DiscordClient
-		]=]
 		discordCache = DiscordCache.new(),
-
-		--[=[
-			@prop reporter Vendor.Reporter
-			@within DiscordClient
-		]=]
 		reporter = Console.new("🎮 DiscordClient"),
-
-		--[=[
-			@prop websocketUrl string
-			@within DiscordClient
-		]=]
 		websocketUrl = "",
-
-		--[=[
-			@prop shardCount number
-			@within DiscordClient
-		]=]
 		shardCount = 0,
-
-		--[=[
-			@prop maxConcurrency number
-			@within DiscordClient
-		]=]
 		maxConcurrency = 0,
-
-		--[=[
-			@prop discordShards { Network.DiscordShard }
-			@within DiscordClient
-		]=]
 		discordShards = {},
-
-		--[=[
-			@prop onEvent Vendor.Signal<string, { [any]: any }?>
-			@within DiscordClient
-		]=]
 		onEvent = Signal.new(),
 	}, DiscordClient.Prototype) :: any
 
-	--[=[
-		@prop discordGateway Objects.DiscordGateway
-		@within DiscordClient
-	]=]
 	self.discordGateway = DiscordGateway.new(self :: any)
-
-	--[=[
-		@prop eventManager Objects.EventManager
-		@within DiscordClient
-	]=]
 	self.eventManager = EventManager.new(self :: any)
 
 	return self

@@ -7,6 +7,12 @@ local Construct = require("@Utils/Construct")
 
 	EndpointCache is a caching mechanism designed to store data temporarily with an expiration time.
 ]=]
+
+--[=[
+	@prop expiry number
+	@within Objects.EndpointCache
+]=]
+
 local EndpointCache = {}
 
 EndpointCache.Prototype = {}
@@ -69,11 +75,6 @@ end
 ]=]
 function EndpointCache.Interface.new(expiryTime: number?)
 	return Construct({
-		--[=[
-			@prop expiry number
-			@within Objects.EndpointCache
-		]=]
-
 		expiry = expiryTime or 5,
 	}, EndpointCache.Prototype)
 end

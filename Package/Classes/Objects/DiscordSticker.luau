@@ -9,6 +9,62 @@ local CacheType = require("@Enums/CacheType")
 
 	The `DiscordSticker` class represents a Discord sticker and provides a structure for sticker data.
 ]=]
+
+--[=[
+	@prop id string
+	@within Objects.DiscordSticker
+]=]
+
+--[=[
+	@prop packId string
+	@within Objects.DiscordSticker
+]=]
+
+--[=[
+	@prop name string
+	@within Objects.DiscordSticker
+]=]
+
+--[=[
+	@prop description string
+	@within Objects.DiscordSticker
+]=]
+
+--[=[
+	@prop tags string
+	@within Objects.DiscordSticker
+]=]
+
+--[=[
+	@prop type number
+	@within Objects.DiscordSticker
+]=]
+
+--[=[
+	@prop formatType number
+	@within Objects.DiscordSticker
+]=]
+
+--[=[
+	@prop available boolean?
+	@within Objects.DiscordSticker
+]=]
+
+--[=[
+	@prop guildId string?
+	@within Objects.DiscordSticker
+]=]
+
+--[=[
+	@prop user Objects.DiscordUser?
+	@within Objects.DiscordSticker
+]=]
+
+--[=[
+	@prop sortValue number?
+	@within Objects.DiscordSticker
+]=]
+
 local DiscordSticker = {}
 
 DiscordSticker.Prototype = {}
@@ -40,60 +96,6 @@ function DiscordSticker.Interface.new(
 		[string]: any,
 	}
 )
-	--[=[
-		@prop id string
-		@within Objects.DiscordSticker
-	]=]
-
-	--[=[
-		@prop packId string
-		@within Objects.DiscordSticker
-	]=]
-
-	--[=[
-		@prop name string
-		@within Objects.DiscordSticker
-	]=]
-
-	--[=[
-		@prop description string
-		@within Objects.DiscordSticker
-	]=]
-
-	--[=[
-		@prop tags string
-		@within Objects.DiscordSticker
-	]=]
-
-	--[=[
-		@prop type number
-		@within Objects.DiscordSticker
-	]=]
-
-	--[=[
-		@prop formatType number
-		@within Objects.DiscordSticker
-	]=]
-
-	--[=[
-		@prop avaliable boolean?
-		@within Objects.DiscordSticker
-	]=]
-
-	--[=[
-		@prop guildId string?
-		@within Objects.DiscordSticker
-	]=]
-
-	--[=[
-		@prop user Objects.DiscordUser?
-		@within Objects.DiscordSticker
-	]=]
-
-	--[=[
-		@prop sortValue number?
-		@within Objects.DiscordSticker
-	]=]
 	local self = discordClient.discordCache:getDataOr(CacheType.DiscordSticker, stickerData.id, function()
 		local emojiStruct = {
 			discordClient = discordClient,
@@ -121,7 +123,7 @@ export type DiscordSticker = typeof(DiscordSticker.Prototype) & {
 	tags: string,
 	type: number,
 	formatType: number,
-	avaliable: boolean?,
+	available: boolean?,
 	guildId: string?,
 	user: DiscordUser.DiscordUser?,
 	sortValue: number?,

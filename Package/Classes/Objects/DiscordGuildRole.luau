@@ -17,6 +17,52 @@ local ResolvableType = require("@Enums/ResolvableType")
 
 	The `DiscordGuildRole` class represents a role in a Discord guild (server) and provides a structure for role data.
 ]=]
+
+--[=[
+	@prop guildId string
+	@within Objects.DiscordGuildRole
+]=]
+
+--[=[
+	@prop id string
+	@within Objects.DiscordGuildRole
+]=]
+
+--[=[
+	@prop name string
+	@within Objects.DiscordGuildRole
+]=]
+
+--[=[
+	@prop permissions string
+	@within Objects.DiscordGuildRole
+]=]
+
+--[=[
+	@prop position number
+	@within Objects.DiscordGuildRole
+]=]
+
+--[=[
+	@prop color number
+	@within Objects.DiscordGuildRole
+]=]
+
+--[=[
+	@prop hoist boolean
+	@within Objects.DiscordGuildRole
+]=]
+
+--[=[
+	@prop managed boolean
+	@within Objects.DiscordGuildRole
+]=]
+
+--[=[
+	@prop mentionable boolean
+	@within Objects.DiscordGuildRole
+]=]
+
 local DiscordGuildRole = {}
 
 DiscordGuildRole.Prototype = {}
@@ -104,51 +150,6 @@ function DiscordGuildRole.Interface.new(
 		[string]: any,
 	}
 )
-	--[=[
-		@prop guildId string
-		@within Objects.DiscordGuildRole
-	]=]
-
-	--[=[
-		@prop id string
-		@within Objects.DiscordGuildRole
-	]=]
-
-	--[=[
-		@prop name string
-		@within Objects.DiscordGuildRole
-	]=]
-
-	--[=[
-		@prop permissions string
-		@within Objects.DiscordGuildRole
-	]=]
-
-	--[=[
-		@prop position number
-		@within Objects.DiscordGuildRole
-	]=]
-
-	--[=[
-		@prop color number
-		@within Objects.DiscordGuildRole
-	]=]
-
-	--[=[
-		@prop hoist boolean
-		@within Objects.DiscordGuildRole
-	]=]
-
-	--[=[
-		@prop managed boolean
-		@within Objects.DiscordGuildRole
-	]=]
-
-	--[=[
-		@prop mentionable boolean
-		@within Objects.DiscordGuildRole
-	]=]
-
 	local self = discordClient.discordCache:getDataOr(CacheType.DiscordGuildRole, roleData.id, function()
 		local roleStruct = {
 			discordClient = discordClient,

@@ -108,7 +108,7 @@ GuildBuilder.Interface.ExplicitContentFilterLevel = Enumerate.new({
 	- PreviewEnabled: "PREVIEW_ENABLED"
 	- RaidAlertsDisabled: "RAID_ALERTS_DISABLED"
 	- RoleIcons: "ROLE_ICONS"
-	- RoleSubscriptionsAvaliableForPurchase: "ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE"
+	- RoleSubscriptionsAvailableForPurchase: "ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE"
 	- RoleSubscriptionsEnabled: "ROLE_SUBSCRIPTIONS_ENABLED"
 	- TicketedEventsEnabled: "TICKETED_EVENTS_ENABLED"
 	- VanityUrl: "VANITY_URL"
@@ -137,7 +137,7 @@ GuildBuilder.Interface.GuildFeature = Enumerate.new({
 	PreviewEnabled = "PREVIEW_ENABLED",
 	RaidAlertsDisabled = "RAID_ALERTS_DISABLED",
 	RoleIcons = "ROLE_ICONS",
-	RoleSubscriptionsAvaliableForPurchase = "ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE",
+	RoleSubscriptionsAvailableForPurchase = "ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE",
 	RoleSubscriptionsEnabled = "ROLE_SUBSCRIPTIONS_ENABLED",
 	TicketedEventsEnabled = "TICKETED_EVENTS_ENABLED",
 	VanityUrl = "VANITY_URL",

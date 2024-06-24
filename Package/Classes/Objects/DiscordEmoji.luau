@@ -7,6 +7,42 @@ local CacheType = require("@Enums/CacheType")
 
 	The `DiscordEmoji` class represents a Discord emoji and provides a structure for emoji data.
 ]=]
+
+--[=[
+	@prop id string
+	@within Objects.DiscordEmoji
+]=]
+
+--[=[
+	@prop name string
+	@within Objects.DiscordEmoji
+]=]
+
+--[=[
+	@prop roles { string }
+	@within Objects.DiscordEmoji
+]=]
+
+--[=[
+	@prop requireColons boolean
+	@within Objects.DiscordEmoji
+]=]
+
+--[=[
+	@prop managed boolean
+	@within Objects.DiscordEmoji
+]=]
+
+--[=[
+	@prop animated boolean
+	@within Objects.DiscordEmoji
+]=]
+
+--[=[
+	@prop available boolean
+	@within Objects.DiscordEmoji
+]=]
+
 local DiscordEmoji = {}
 
 DiscordEmoji.Prototype = {}
@@ -39,43 +75,9 @@ function DiscordEmoji.Interface.new(
 		requireColons: boolean,
 		managed: boolean,
 		animated: boolean,
-		avaliable: boolean,
+		available: boolean,
 	}
 )
-	--[=[
-		@prop id string
-		@within Objects.DiscordEmoji
-	]=]
-
-	--[=[
-		@prop name string
-		@within Objects.DiscordEmoji
-	]=]
-
-	--[=[
-		@prop roles { string }
-		@within Objects.DiscordEmoji
-	]=]
-
-	--[=[
-		@prop requireColons boolean
-		@within Objects.DiscordEmoji
-	]=]
-
-	--[=[
-		@prop managed boolean
-		@within Objects.DiscordEmoji
-	]=]
-
-	--[=[
-		@prop animated boolean
-		@within Objects.DiscordEmoji
-	]=]
-
-	--[=[
-		@prop avaliable boolean
-		@within Objects.DiscordEmoji
-	]=]
 	return discordClient.discordCache:getDataOr(CacheType.DiscordEmoji, emojiData.id, function()
 		local emojiStruct = {
 			discordClient = discordClient,
@@ -96,7 +98,7 @@ export type DiscordEmoji = typeof(DiscordEmoji.Prototype) & {
 	requireColons: boolean,
 	managed: boolean,
 	animated: boolean,
-	avaliable: boolean,
+	available: boolean,
 }
 
 return DiscordEmoji.Interface
