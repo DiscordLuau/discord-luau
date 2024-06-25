@@ -4,6 +4,7 @@
 		"*": false
 	},
 	"aliases": {
+		"root": ".",
 		"builders": "./packages/discord-luau/src/builders",
 		"network": "./packages/discord-luau/src/network",
 		"classes": "./packages/discord-luau/src/classes",
