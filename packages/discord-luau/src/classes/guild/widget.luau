@@ -10,6 +10,37 @@ local CacheType = require("@enums/cacheType")
 
 	The `GuildWidget` class provides a way for developers to interact with a Widget.
 ]=]
+
+--[=[
+	@prop id string
+	@within Objects.GuildWidget
+]=]
+
+--[=[
+	@prop name string
+	@within Objects.GuildWidget
+]=]
+
+--[=[
+	@prop instantInvite string?
+	@within Objects.GuildWidget
+]=]
+
+--[=[
+	@prop channels { Objects.DiscordChannel }
+	@within Objects.GuildWidget
+]=]
+
+--[=[
+	@prop members { Objects.DiscordUser }
+	@within Objects.GuildWidget
+]=]
+
+--[=[
+	@prop presenceCount number
+	@within Objects.GuildWidget
+]=]
+
 local GuildWidget = {}
 
 GuildWidget.Prototype = {}
@@ -39,36 +70,6 @@ function GuildWidget.Interface.new(
 		[string]: any,
 	}
 )
-	--[=[
-		@prop id string
-		@within Objects.GuildWidget
-	]=]
-
-	--[=[
-		@prop name string
-		@within Objects.GuildWidget
-	]=]
-
-	--[=[
-		@prop instantInvite string?
-		@within Objects.GuildWidget
-	]=]
-
-	--[=[
-		@prop channels { Objects.DiscordChannel }
-		@within Objects.GuildWidget
-	]=]
-
-	--[=[
-		@prop members { Objects.DiscordUser }
-		@within Objects.GuildWidget
-	]=]
-
-	--[=[
-		@prop presenceCount number
-		@within Objects.GuildWidget
-	]=]
-
 	local self = discordClient.discordCache:getDataOr(CacheType.GuildWidget, widgetInformation.id, function()
 		return construct({
 			id = widgetInformation.id,

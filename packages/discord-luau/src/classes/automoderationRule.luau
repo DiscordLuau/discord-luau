@@ -11,6 +11,56 @@ local AutomoderationRuleBuilder = require("@builders/automoderationRule")
 	The `DiscordAutomoderationRule` class provides methods to interact with Discord auto-moderation rules, including modifying and deleting rules.
 ]=]
 
+--[=[
+	@prop id string
+	@within Objects.DiscordAutomoderationRule
+]=]
+
+--[=[
+	@prop guildId string
+	@within Objects.DiscordAutomoderationRule
+]=]
+
+--[=[
+	@prop name string
+	@within Objects.DiscordAutomoderationRule
+]=]
+
+--[=[
+	@prop eventType number
+	@within Objects.DiscordAutomoderationRule
+]=]
+
+--[=[
+	@prop triggerType number
+	@within Objects.DiscordAutomoderationRule
+]=]
+
+--[=[
+	@prop enabled boolean
+	@within Objects.DiscordAutomoderationRule
+]=]
+
+--[=[
+	@prop exemptRoles { string }
+	@within Objects.DiscordAutomoderationRule
+]=]
+
+--[=[
+	@prop exemptChannels { string }
+	@within Objects.DiscordAutomoderationRule
+]=]
+
+--[=[
+	@prop triggerMetadata { keywordFilter: { string }, regexPatterns: { string }, presets: { number }, allowList: { string }, mentionTotalLimit: number, mentionRaidProtectionEnabled: boolean }
+	@within Objects.DiscordAutomoderationRule
+]=]
+
+--[=[
+	@prop actions { type: number, metadata: { channelId: string, durationSeconds: number, customMessage: string? }? },
+	@within Objects.DiscordAutomoderationRule
+]=]
+
 local DiscordAutomoderationRule = {}
 
 DiscordAutomoderationRule.Prototype = {}
@@ -44,7 +94,7 @@ end
 	Deletes an existing auto-moderation rule.
 ]=]
 function DiscordAutomoderationRule.Prototype.deleteAsync(self: DiscordAutomoderationRule)
-	return self.discordClient.discordGateway:deletAsync(
+	return self.discordClient.discordGateway:deleteAsync(
 		string.format(DiscordEndpoints.BotDeleteAutomoderationRule, self.guildId, self.id)
 	)
 end
@@ -64,56 +114,6 @@ function DiscordAutomoderationRule.Interface.new(
 		id: string,
 	}
 ): DiscordAutomoderationRule
-	--[=[
-		@prop id string
-		@within Objects.DiscordAutomoderationRule
-	]=]
-
-	--[=[
-		@prop guildId sring
-		@within Objects.DiscordAutomoderationRule
-	]=]
-
-	--[=[
-		@prop name string
-		@within Objects.DiscordAutomoderationRule
-	]=]
-
-	--[=[
-		@prop eventType number
-		@within Objects.DiscordAutomoderationRule
-	]=]
-
-	--[=[
-		@prop triggerType number
-		@within Objects.DiscordAutomoderationRule
-	]=]
-
-	--[=[
-		@prop enabled boolean
-		@within Objects.DiscordAutomoderationRule
-	]=]
-
-	--[=[
-		@prop exemptRoles { string }
-		@within Objects.DiscordAutomoderationRule
-	]=]
-
-	--[=[
-		@prop exemptChannels { string }
-		@within Objects.DiscordAutomoderationRule
-	]=]
-
-	--[=[
-		@prop triggerMetadata { keywordFilter: { string }, regexPatterns: { string }, presets: { number }, allowList: { string }, mentionTotalLimit: number, mentionRaidProtectionEnabled: boolean }
-		@within Objects.DiscordAutomoderationRule
-	]=]
-
-	--[=[
-		@prop actions { type: number, metadata: { channelId: string, durationSeconds: number, customMessage: string? }? },
-		@within Objects.DiscordAutomoderationRule
-	]=]
-
 	local self = discordClient.discordCache:getDataOr(CacheType.AutoModeration, automoderationData.id, function()
 		return construct({
 			id = automoderationData.id,

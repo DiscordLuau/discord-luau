@@ -17,6 +17,7 @@ local DiscordGuildMember = require("@classes/guild/member")
 local DiscordAutomoderationRule = require("@classes/automoderationRule")
 local DiscordInvite = require("@classes/invite")
 local DiscordIntegration = require("@classes/integration")
+local DiscordSticker = require("@classes/sticker")
 
 local CommandBuilder = require("@builders/command")
 local AutomoderationRuleBuilder = require("@builders/automoderationRule")
@@ -37,6 +38,222 @@ local ResolvableType = require("@enums/resolvableType")
 
 	The `DiscordGuild` class represents a Discord guild (server) and provides methods to interact with and manage the guild.
 ]=]
+
+--[=[
+	@prop shardId number
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop id string
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop name string
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop icon string?
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop iconHash string?
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop splash string?
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop discoverySplash string?
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop owner boolean
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop ownerId string
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop permissions number
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop afkChannelId string?
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop afkTimeout number
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop widgetEnabled boolean
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop widgetChannelId string?
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop verificationLevel number
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop defaultMessageNotifications number
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop explicitContentFilter number
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop roles { Objects.DiscordGuildRole }
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop emojis { Objects.DiscordEmoji }
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop features { string }
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop mfaLevel number
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop applicationId string?
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop systemChannelId string?
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop systemChannelFlags number
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop rulesChannelId string?
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop maxPresences number?
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop maxMembers number
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop vanityUrlCode string?
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop description string?
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop banner string?
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop premiumTier number
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop premiumSubscriptionCount number
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop preferredLocale string
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop publicUpdatesChannelId string?
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop maxVideoChannelUsers number
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop maxStageVideoChannelUsers number
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop approximateMemberCount number
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop approximatePresenceCount number
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop welcomeScreen Objects.GuildWelcomeScreen?
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop nsfwLevel number
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop stickers { Objects.DiscordSticker }
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop premiumProgressBarEnabled boolean
+	@within Objects.DiscordGuild
+]=]
+
+--[=[
+	@prop safetyAlertsChannelId string?
+	@within Objects.DiscordGuild
+]=]
+
 local DiscordGuild = {}
 
 DiscordGuild.Prototype = {}
@@ -188,7 +405,11 @@ function DiscordGuild.Prototype.setSlashCommandsAsync(self: DiscordGuild, comman
 
 		return self.discordClient.discordGateway
 			:putAsync(
-				string.format(DiscordEndpoints.OverwriteGuildApplicationCommands, self.id),
+				string.format(
+					DiscordEndpoints.OverwriteGuildApplicationCommands,
+					self.discordClient.discordApplication.id,
+					self.id
+				),
 				Resolvable.new(ResolvableType.JSON, commandObjects)
 			)
 			:await()
@@ -574,7 +795,7 @@ function DiscordGuild.Prototype.getGuildRolesAsync(self: DiscordGuild)
 			self.discordClient.discordGateway:getAsync(string.format(DiscordEndpoints.BotBulkGuildBan, self.id)):await()
 
 		for key, value in guildRoles do
-			guildRoles[key] = DiscordGuildRole.new(self.discordClient, self.id, value)
+			guildRoles[key] = DiscordGuildRole.new(self.discordClient, value)
 		end
 
 		return guildRoles
@@ -676,7 +897,7 @@ function DiscordGuild.Prototype.beginPruneAsync(
 end
 
 --[=[
-	Fetches the avaliable voice regions for the guild.
+	Fetches the available voice regions for the guild.
 
 	@method getGuildVoiceRegionsAsync
 	@return Vendor.Future<{ { id: string, name: string, optimal: boolean, deprecated: boolean, custom: boolean } }>
@@ -925,26 +1146,6 @@ function DiscordGuild.Interface.new(
 		emojis: { any },
 	}
 )
-	--[=[
-		@prop shardId number
-		@within Objects.DiscordGuildBan
-	]=]
-
-	--[=[
-		@prop id string?
-		@within Objects.DiscordGuildBan
-	]=]
-
-	--[=[
-		@prop roles { Objects.DiscordGuildRole }
-		@within Objects.DiscordGuildBan
-	]=]
-
-	--[=[
-		@prop emojis { Objects.DiscordEmoji }
-		@within Objects.DiscordGuildBan
-	]=]
-
 	local self = discordClient.discordCache:getDataOr(CacheType.DiscordGuild, guildData.id, function()
 		local guildStruct = {
 			discordClient = discordClient,
@@ -956,7 +1157,7 @@ function DiscordGuild.Interface.new(
 
 	if guildData.roles then
 		for index, value in guildData.roles do
-			guildData.roles[index] = DiscordGuildRole.new(discordClient, guildData.id, value)
+			guildData.roles[index] = DiscordGuildRole.new(discordClient, value)
 		end
 	end
 
@@ -976,11 +1177,48 @@ end
 export type DiscordGuild = typeof(DiscordGuild.Prototype) & {
 	discordClient: any,
 	shardId: number,
-
 	id: string,
-
+	name: string,
+	icon: string?,
+	iconHash: string?,
+	splash: string?,
+	discoverySplash: string?,
+	owner: boolean,
+	ownerId: string,
+	permissions: number,
+	afkChannelId: string?,
+	afkTimeout: number,
+	widgetEnabled: boolean,
+	widgetChannelId: string?,
+	verificationLevel: number,
+	defaultMessageNotifications: number,
+	explicitContentFilter: number,
 	roles: { DiscordGuildRole.DiscordGuildRole },
 	emojis: { DiscordEmoji.DiscordEmoji },
+	features: { string },
+	mfaLevel: number,
+	applicationId: string?,
+	systemChannelId: string?,
+	systemChannelFlags: number,
+	rulesChannelId: string?,
+	maxPresences: number?,
+	maxMembers: number,
+	vanityUrlCode: string?,
+	description: string?,
+	banner: string?,
+	premiumTier: number,
+	premiumSubscriptionCount: number,
+	preferredLocale: string,
+	publicUpdatesChannelId: string?,
+	maxVideoChannelUsers: number,
+	maxStageVideoChannelUsers: number,
+	approximateMemberCount: number,
+	approximatePresenceCount: number,
+	welcomeScreen: GuildWelcomeScreen.GuildWelcomeScreen?,
+	nsfwLevel: number,
+	stickers: { DiscordSticker.DiscordSticker },
+	premiumProgressBarEnabled: boolean,
+	safetyAlertsChannelId: string?,
 }
 
 return DiscordGuild.Interface

@@ -22,6 +22,17 @@ local ResolvableType = require("@enums/resolvableType")
 
 	@tag inherit Objects.BaseDiscordChannel
 ]=]
+
+--[=[
+	@prop id string
+	@within Objects.BaseUserChannel
+]=]
+
+--[=[
+	@prop recipients { Objects.DiscordUser }
+	@within Objects.BaseUserChannel
+]=]
+
 local BaseUserChannel = {}
 
 BaseUserChannel.Prototype = {}
@@ -157,16 +168,6 @@ function BaseUserChannel.Interface.new(
 		[string]: any,
 	}
 )
-	--[=[
-		@prop id string
-		@within Objects.DiscordApplication
-	]=]
-
-	--[=[
-		@prop recipients { Objects.DiscordUser }
-		@within Objects.DiscordApplication
-	]=]
-
 	local channelObject = construct({
 		discordClient = discordClient,
 	}, BaseUserChannel.Prototype)

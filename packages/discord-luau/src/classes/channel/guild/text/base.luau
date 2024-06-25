@@ -21,6 +21,17 @@ local ResolvableType = require("@enums/resolvableType")
 
 	@tag inherit Objects.BaseDiscordGuildChannel
 ]=]
+
+--[=[
+	@prop lastPinTimestamp string
+	@within Objects.BaseGuildTextChannel
+]=]
+
+--[=[
+	@prop lastMessageId string?
+	@within Objects.BaseGuildTextChannel
+]=]
+
 local BaseGuildTextChannel = {}
 
 BaseGuildTextChannel.Prototype = {}
@@ -155,15 +166,6 @@ function BaseGuildTextChannel.Interface.new(
 		guildId: string,
 	}
 )
-	--[=[
-		@prop lastPinTimestamp string
-		@within Objects.BaseGuildTextChannel
-	]=]
-
-	--[=[
-		@prop lastMessageId string?
-		@within Objects.BaseGuildTextChannel
-	]=]
 	local channelObject = construct({
 		discordClient = discordClient,
 	}, BaseGuildTextChannel.Prototype)

@@ -14,6 +14,42 @@ local BaseDiscordGuildChannel = require("../base")
 
 	@tag inherit Objects.BaseDiscordGuildChannel
 ]=]
+
+--[=[
+	@prop id string
+	@within Objects.BaseGuildVoiceChannel
+]=]
+
+--[=[
+	@prop guildId string
+	@within Objects.BaseGuildVoiceChannel
+]=]
+
+--[=[
+	@prop voiceConnection Network.DiscordVoiceConnection?
+	@within Objects.BaseGuildVoiceChannel
+]=]
+
+--[=[
+	@prop bitrate number
+	@within Objects.BaseGuildVoiceChannel
+]=]
+
+--[=[
+	@prop userLimit number
+	@within Objects.BaseGuildVoiceChannel
+]=]
+
+--[=[
+	@prop rtcRegion string
+	@within Objects.BaseGuildVoiceChannel
+]=]
+
+--[=[
+	@prop videoQualityMode number
+	@within Objects.BaseGuildVoiceChannel
+]=]
+
 local BaseGuildVoiceChannel = {}
 
 BaseGuildVoiceChannel.Prototype = {}
@@ -62,40 +98,6 @@ function BaseGuildVoiceChannel.Interface.new(
 		guildId: string,
 	}
 )
-	--[=[
-		@prop id string
-		@within Objects.DiscordApplication
-	]=]
-
-	--[=[
-		@prop guildId string
-		@within Objects.DiscordApplication
-	]=]
-
-	--[=[
-		@prop voiceConnection Network.DiscordVoiceConnection?
-		@within Objects.DiscordApplication
-	]=]
-
-	--[=[
-		@prop bitrate number
-		@within Objects.DiscordApplication
-	]=]
-
-	--[=[
-		@prop userLimit number
-		@within Objects.DiscordApplication
-	]=]
-
-	--[=[
-		@prop rtcRegion string
-		@within Objects.DiscordApplication
-	]=]
-
-	--[=[
-		@prop videoQualityMode number
-		@within Objects.DiscordApplication
-	]=]
 	local channelObject = construct({
 		discordClient = discordClient,
 	}, BaseGuildVoiceChannel.Prototype)

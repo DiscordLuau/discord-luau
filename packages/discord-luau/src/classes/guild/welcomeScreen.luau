@@ -9,6 +9,17 @@ local CacheType = require("@enums/cacheType")
 
 	The `GuildWelcomeScreen` class provides a way for developers to interact with a Welcome Screen.
 ]=]
+
+--[=[
+	@prop description string?
+	@within Objects.GuildWelcomeScreen
+]=]
+
+--[=[
+	@prop welcomeChannels { Objects.DiscordChannel }
+	@within Objects.GuildWelcomeScreen
+]=]
+
 local GuildWelcomeScreen = {}
 
 GuildWelcomeScreen.Prototype = {}
@@ -38,16 +49,6 @@ function GuildWelcomeScreen.Interface.new(
 		[string]: any,
 	}
 )
-	--[=[
-		@prop description string?
-		@within Objects.GuildWelcomeScreen
-	]=]
-
-	--[=[
-		@prop welcomeChannels { Objects.DiscordChannel }
-		@within Objects.GuildWelcomeScreen
-	]=]
-
 	local self = discordClient.discordCache:getDataOr(CacheType.WelcomeScreen, welcomeScreenData.id, function()
 		return construct({
 			id = welcomeScreenData.id,

@@ -12,6 +12,12 @@ local CacheType = require("@enums/cacheType")
 
 	@tag inherit Objects.BaseDiscordChannel
 ]=]
+
+--[=[
+	@prop defaultForumLayout number
+	@within Objects.GuildMediaChannel
+]=]
+
 local GuildMediaChannel = {}
 
 GuildMediaChannel.Prototype = {}
@@ -28,11 +34,6 @@ function GuildMediaChannel.Interface.new(
 		[string]: any,
 	}
 )
-	--[=[
-		@prop defaultForumLayout number
-		@within Objects.GuildMediaChannel
-	]=]
-
 	local self = discordClient.discordCache:getDataOr(CacheType.DiscordChannel, channelData.id, function()
 		local channelStruct = {
 			discordClient = discordClient,

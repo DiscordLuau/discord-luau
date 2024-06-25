@@ -4,18 +4,14 @@ local Env = require("../.env")
 local DiscordSettings = DiscordLuau.SettingsBuilder.new(Env.DISCORD_BOT_TOKEN)
 local DiscordClient = DiscordLuau.DiscordClient.new(DiscordSettings)
 
--- DiscordClient:setVerbose(true)
+DiscordClient:setVerbose(true)
 
 DiscordClient.eventManager.onReady:connect(function()
 	print(`🎉🎉 {DiscordClient.discordUser.username} is online! 🎉🎉`)
 
-	DiscordClient:fetchChannelAsync("1246395956296155197"):after(function(textChannel)
-		local e = textChannel :: DiscordLuau.GuildForumChannel
+	local guild = DiscordClient:fetchGuildAsync("737382889947136000"):await() :: DiscordLuau.DiscordGuild
 
-		e:deleteAsync():after(function()
-			print("DELETED!")
-		end)
-	end)
+	print(guild.name)
 end)
 
 return DiscordClient:connectAsync()

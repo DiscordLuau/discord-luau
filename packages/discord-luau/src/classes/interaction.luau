@@ -22,6 +22,77 @@ local ResolvableType = require("@enums/resolvableType")
 
 	The `DiscordInteraction` class represents an interaction with the Discord API, such as a message interaction, a command, or a modal submission.
 ]=]
+
+--[=[
+	@prop channel Objects.DiscordChannel
+	@within Objects.DiscordInteraction
+]=]
+
+--[=[
+	@prop guild objects.DiscordGuild
+	@within Objects.DiscordInteraction
+]=]
+
+--[=[
+	@prop user objects.DiscordUser
+	@within Objects.DiscordInteraction
+]=]
+
+--[=[
+	@prop token string
+	@within Objects.DiscordInteraction
+]=]
+
+--[=[
+	@prop applicationId string
+	@within Objects.DiscordInteraction
+]=]
+
+--[=[
+	@prop id string
+	@within Objects.DiscordInteraction
+]=]
+
+--[=[
+	@prop data { [any]: any }
+	@within Objects.DiscordInteraction
+]=]
+
+--[=[
+	@prop channelId string
+	@within Objects.DiscordInteraction
+]=]
+
+--[=[
+	@prop guilldId string
+	@within Objects.DiscordInteraction
+]=]
+
+--[=[
+	@prop version number
+	@within Objects.DiscordInteraction
+]=]
+
+--[=[
+	@prop appPermissions Builders.PermissionsBuilder
+	@within Objects.DiscordInteraction
+]=]
+
+--[=[
+	@prop guildLocale string
+	@within Objects.DiscordInteraction
+]=]
+
+--[=[
+	@prop locale string
+	@within Objects.DiscordInteraction
+]=]
+
+--[=[
+	@prop deferred boolean
+	@within Objects.DiscordInteraction
+]=]
+
 local DiscordInteraction = {}
 
 DiscordInteraction.Interface = {}
@@ -88,7 +159,7 @@ end
 	Sends a message in response to the interaction asynchronously.
 
 	:::caution
-	MessageBuilder cannot support Attachments UNLESS deffered, so if you're wanting to send attachments, please call `deferAsync` first!
+	MessageBuilder cannot support Attachments UNLESS deferred, so if you're wanting to send attachments, please call `deferAsync` first!
 	:::
 
 	@method sendMessageAsync
@@ -100,7 +171,7 @@ function DiscordInteraction.Prototype.sendMessageAsync(
 	self: DiscordInteraction,
 	messageBuilder: MessageBuilder.MessageBuilder
 )
-	if self.defered then
+	if self.deferred then
 		return self:editMessageAsync(messageBuilder)
 	else
 		return Future.new(function()
@@ -130,7 +201,7 @@ end
 ]=]
 function DiscordInteraction.Prototype.deferAsync(self: DiscordInteraction)
 	return Future.try(function()
-		self.defered = true
+		self.deferred = true
 
 		self.discordClient.discordGateway
 			:postAsync(
@@ -154,80 +225,10 @@ end
 	@within Objects.DiscordInteraction
 ]=]
 function DiscordInteraction.Interface.new(discordClient: any, jsonData: { [any]: any })
-	--[=[
-		@prop channel Objects.DiscordChannel
-		@within Objects.DiscordInteraction
-	]=]
-
-	--[=[
-		@prop guild objects.DiscordGuild
-		@within Objects.DiscordInteraction
-	]=]
-
-	--[=[
-		@prop user objects.DiscordUser
-		@within Objects.DiscordInteraction
-	]=]
-
-	--[=[
-		@prop token string
-		@within Objects.DiscordInteraction
-	]=]
-
-	--[=[
-		@prop applicationId string
-		@within Objects.DiscordInteraction
-	]=]
-
-	--[=[
-		@prop id string
-		@within Objects.DiscordInteraction
-	]=]
-
-	--[=[
-		@prop data { [any]: any }
-		@within Objects.DiscordInteraction
-	]=]
-
-	--[=[
-		@prop channelId string
-		@within Objects.DiscordInteraction
-	]=]
-
-	--[=[
-		@prop guilldId string
-		@within Objects.DiscordInteraction
-	]=]
-
-	--[=[
-		@prop version number
-		@within Objects.DiscordInteraction
-	]=]
-
-	--[=[
-		@prop appPermissions Builders.PermissionsBuilder
-		@within Objects.DiscordInteraction
-	]=]
-
-	--[=[
-		@prop guildLocale string
-		@within Objects.DiscordInteraction
-	]=]
-
-	--[=[
-		@prop locale string
-		@within Objects.DiscordInteraction
-	]=]
-
-	--[=[
-		@prop defered boolean
-		@within Objects.DiscordInteraction
-	]=]
-
 	local interactionStruct = {
 		discordClient = discordClient,
 
-		defered = false,
+		deferred = false,
 	}
 
 	if jsonData.channel then
@@ -284,7 +285,7 @@ export type DiscordInteraction = typeof(DiscordInteraction.Prototype) & {
 	-- entitlements: { unknown }, -- todo: support interaction entitlements
 	-- entitlementSkuIds: { unknown }, -- todo: support interaction entitlements
 
-	defered: boolean,
+	deferred: boolean,
 }
 
 return DiscordInteraction.Interface

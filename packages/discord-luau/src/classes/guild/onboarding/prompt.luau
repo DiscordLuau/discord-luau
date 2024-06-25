@@ -9,6 +9,42 @@ local CacheType = require("@enums/cacheType")
 
 	The `GuildOnboardingPrompt` class provides a way for developers to interact with a guild onboarding prompt.
 ]=]
+
+--[=[
+	@prop id string
+	@within Objects.GuildOnboardingPrompt
+]=]
+
+--[=[
+	@prop type number
+	@within Objects.GuildOnboardingPrompt
+]=]
+
+--[=[
+	@prop options { Objects.GuildOnboardingPromptOption }
+	@within Objects.GuildOnboardingPrompt
+]=]
+
+--[=[
+	@prop title string
+	@within Objects.GuildOnboardingPrompt
+]=]
+
+--[=[
+	@prop singleSelect boolean
+	@within Objects.GuildOnboardingPrompt
+]=]
+
+--[=[
+	@prop required boolean
+	@within Objects.GuildOnboardingPrompt
+]=]
+
+--[=[
+	@prop inOboarding boolean
+	@within Objects.GuildOnboardingPrompt
+]=]
+
 local GuildOnboardingPrompt = {}
 
 GuildOnboardingPrompt.Prototype = {}
@@ -38,41 +74,6 @@ function GuildOnboardingPrompt.Interface.new(
 		[string]: any,
 	}
 )
-	--[=[
-		@prop id string
-		@within Objects.GuildOnboardingPrompt
-	]=]
-
-	--[=[
-		@prop type number
-		@within Objects.GuildOnboardingPrompt
-	]=]
-
-	--[=[
-		@prop options { Objects.GuildOnboardingPromptOption }
-		@within Objects.GuildOnboardingPrompt
-	]=]
-
-	--[=[
-		@prop title string
-		@within Objects.GuildOnboardingPrompt
-	]=]
-
-	--[=[
-		@prop singleSelect boolean
-		@within Objects.GuildOnboardingPrompt
-	]=]
-
-	--[=[
-		@prop required boolean
-		@within Objects.GuildOnboardingPrompt
-	]=]
-
-	--[=[
-		@prop inOboarding boolean
-		@within Objects.GuildOnboardingPrompt
-	]=]
-
 	local self = discordClient.discordCache:getDataOr(CacheType.OnboardingPrompt, onboardingPromptData.id, function()
 		return construct({
 			id = onboardingPromptData.id,

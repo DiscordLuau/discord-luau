@@ -5,6 +5,12 @@ local construct = require("@util/construct")
 
 	The `DiscordCache` class provides a caching mechanism for storing and retrieving data associated with Discord objects.
 ]=]
+
+--[=[
+	@prop cache { [string]: any },
+	@within Objects.DiscordCache
+]=]
+
 local DiscordCache = {}
 
 DiscordCache.Prototype = {}
@@ -75,11 +81,6 @@ end
 	@within Objects.DiscordCache
 ]=]
 function DiscordCache.Interface.new()
-	--[=[
-		@prop cache { [string]: any },
-		@within Objects.DiscordCache
-	]=]
-
 	return construct({
 		cache = {},
 	}, DiscordCache.Prototype)

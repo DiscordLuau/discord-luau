@@ -4,7 +4,15 @@ local PermissionsBuilder = require("@builders/permissions")
 
 --[=[
 	@class Builders.DiscordPermission
+
+	Represents a set of Discord permissions.
 ]=]
+
+--[=[
+	@prop permissions { number }
+	@within Builders.DiscordPermission
+]=]
+
 local DiscordPermission = {}
 
 DiscordPermission.Interface = {}
@@ -17,11 +25,6 @@ function DiscordPermission.Prototype.hasPermission(self: DiscordPermission, perm
 end
 
 function DiscordPermission.Interface.from(bitfield: string)
-	--[=[
-		@prop permissions { number }
-		@within Builders.DiscordPermission
-	]=]
-
 	local permissions = construct({ permissions = {} }, DiscordPermission.Prototype)
 	local numberBitfield = tonumber(bitfield)
 
