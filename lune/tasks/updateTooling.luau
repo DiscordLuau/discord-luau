@@ -73,7 +73,7 @@ local function updateTooling(args: { string }, task: shared.TaskEnv): number
 		local latestVersion = string.gsub(releasesList[1].tag_name, "v", "")
 		if version ~= latestVersion then
 			task.logger.info(`Updating {alias} {version}->{latestVersion}`)
-			manifest[alias] = `{path}@{latestVersion}`
+			manifest.tools[alias] = `{path}@{latestVersion}`
 		end
 	end
 
@@ -84,10 +84,7 @@ local function updateTooling(args: { string }, task: shared.TaskEnv): number
 		fs.writeFile("aftman.toml", serde.encode("toml", manifest))
 	end
 
-	local toInstallPackages = stdio.prompt("confirm", "Install updated packages?")
-	if toInstallPackages then
-		return task.execute("aftman", "install")
-	end
+	print("Please run `aftman install` to install the updated tooling.")
 
 	return 0
 end
