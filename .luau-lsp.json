@@ -1,13 +1,15 @@
 {
-    "luau-lsp.require.mode": "relativeToFile",
+	"luau-lsp.require.mode": "relativeToFile",
 	"luau-lsp.inlayHints.variableTypes": true,
 	"luau-lsp.inlayHints.functionReturnTypes": true,
 	"luau-lsp.inlayHints.parameterNames": "all",
 	"luau-lsp.inlayHints.parameterTypes": true,
 	"luau-lsp.inlayHints.typeHintMaxLength": 10,
+	"luau-lsp.fflags.override": {
+		"LuauTinyControlFlowAnalysis": "true"
+	},
 	"luau-lsp.require.directoryAliases": {
-		"@lune/": "~/.lune/.typedefs/0.8.2/",
-		
+		"@lune/": "~/.lune/.typedefs/0.8.5/",
 		"@builders": "./packages/discord-luau/src/builders",
 		"@network": "./packages/discord-luau/src/network",
 		"@classes": "./packages/discord-luau/src/classes",

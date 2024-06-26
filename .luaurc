@@ -1,5 +1,8 @@
 {
 	"languageMode": "strict",
+	"globals": [
+		"warn"
+	],
 	"lint": {
 		"*": false
 	},

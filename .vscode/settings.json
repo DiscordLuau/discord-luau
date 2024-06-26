@@ -5,6 +5,9 @@
 	"luau-lsp.inlayHints.parameterNames": "all",
 	"luau-lsp.inlayHints.parameterTypes": true,
 	"luau-lsp.inlayHints.typeHintMaxLength": 10,
+	"luau-lsp.fflags.override": {
+		"LuauTinyControlFlowAnalysis": "true"
+	},
 	"editor.formatOnSave": true,
 	"luau-lsp.require.directoryAliases": {
 		"@root/": ".",
