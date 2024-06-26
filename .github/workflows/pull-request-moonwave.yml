@@ -17,4 +17,4 @@ jobs:
       - name: Generate Standard Library
         run: selene generate-roblox-std
       - name: Run Moonwave Extract
-        run: moonwave extract Package
+        run: moonwave extract packages/discord-luau

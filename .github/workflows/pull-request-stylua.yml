@@ -17,4 +17,4 @@ jobs:
       - name: Generate Standard Library
         run: selene generate-roblox-std
       - name: Run Stylua
-        run: stylua --check --output-format Summary Package
+        run: lune run task fmt -- --check --output-format Summary

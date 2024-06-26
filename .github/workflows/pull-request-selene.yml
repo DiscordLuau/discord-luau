@@ -14,7 +14,5 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - uses: ok-nick/setup-aftman@v0.4.2
-      - name: Generate Standard Library
-        run: selene generate-roblox-std
-      - name: Run Selene
-        run: selene Package
+      - name: Lint Packages
+        run: lune run task lint
