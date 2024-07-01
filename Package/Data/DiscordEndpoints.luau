@@ -35,6 +35,7 @@ return {
 	BotModifyGuildWidgetSettings = "guilds/%s/widget",
 	BotGetGuildPruneCount = "guilds/%s/prune?days=%s&include_roles=%s",
 	BotGetGuildBan = "guilds/%s/bans/%s",
+	BotGetGuildRoles = "guilds/%s/roles",
 
 	GetGuildAuditLogs = "guilds/%s/audit-logs",
 	BotModifyGuild = "guilds/%s",

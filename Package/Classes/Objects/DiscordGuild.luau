@@ -791,8 +791,9 @@ end
 ]=]
 function DiscordGuild.Prototype.getGuildRolesAsync(self: DiscordGuild)
 	return Future.try(function()
-		local guildRoles: { DiscordGuildRole.DiscordGuildRole } =
-			self.discordClient.discordGateway:getAsync(string.format(DiscordEndpoints.BotBulkGuildBan, self.id)):await()
+		local guildRoles: { DiscordGuildRole.DiscordGuildRole } = self.discordClient.discordGateway
+			:getAsync(string.format(DiscordEndpoints.BotGetGuildRoles, self.id))
+			:await()
 
 		for key, value in guildRoles do
 			guildRoles[key] = DiscordGuildRole.new(self.discordClient, value)
