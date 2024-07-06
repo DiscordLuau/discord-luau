@@ -4,13 +4,16 @@
 		"*": false
 	},
 	"aliases": {
-		"Builders": "./Package/Classes/Builders",
-		"Network": "./Package/Classes/Network",
-		"Objects": "./Package/Classes/Objects",
-		"Data": "./Package/Data",
-		"Enums": "./Package/Enums",
-		"Std": "./Package/Std",
-		"Utils": "./Package/Utils",
-		"Vendor": "./Package/Vendor"
+		"builders": "./packages/builders",
+		"cdn": "./packages/cdn/src",
+		"classes": "./packages/classes/src",
+		"core": "./packages/core/src",
+		"extensions": "./packages/extensions/src",
+		"std-polyfills": "./packages/std-polyfills/src",
+		"types": "./packages/types/src",
+		"utils": "./packages/utils/src",
+		"vendor": "./packages/vendor/src",
+		"voice": "./packages/voice/src",
+		"websocket": "./packages/websocket/src"
 	}
 }
