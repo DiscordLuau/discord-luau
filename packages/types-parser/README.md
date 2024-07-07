@@ -7,3 +7,4 @@
 ## DiscordLuau - Types Parser
 
 This packcage is responsible for parsing and compiling MoonWave documentation into Luau types.
+

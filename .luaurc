@@ -11,6 +11,7 @@
 		"extensions": "./packages/extensions/src",
 		"std-polyfills": "./packages/std-polyfills/src",
 		"types": "./packages/types/src",
+		"types-parser": "./packages/types-parser/src",
 		"utils": "./packages/utils/src",
 		"vendor": "./packages/vendor/src",
 		"voice": "./packages/voice/src",
