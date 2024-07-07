@@ -4,6 +4,6 @@
 	</p>
 </div>
 
-## DiscordLuau - CDN
+## DiscordLuau - REST
 
-This package provides developers with a way to manipulate files stored on discords CDN.
+This package provides developers with a way to interact with the Discord API.
