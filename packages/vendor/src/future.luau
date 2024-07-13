@@ -25,7 +25,7 @@
 
 local Task = require("@std-polyfills/task")
 
-local vendorTypes = require("@types/vendorTypes")
+local vendorTypes = require("@api-types/vendorTypes")
 
 local Future = {}
 
@@ -68,15 +68,18 @@ end
 	@return Vendor.Future
 ]=]
 function Future.Interface.new<T..., A...>(asyncFunction: (A...) -> (), ...): vendorTypes.Future<T...>
-	local future = setmetatable({
-		_threads = { },
-		_errorHandlers = { },
-		_valueList = { },
+	local future = setmetatable(
+		{
+			_threads = {},
+			_errorHandlers = {},
+			_valueList = {},
 
-		isPending = true,
-	} :: vendorTypes.Future<T...>, {
-		__index = Future.Prototype,
-	})
+			isPending = true,
+		} :: vendorTypes.Future<T...>,
+		{
+			__index = Future.Prototype,
+		}
+	)
 
 	local args = { ... }
 

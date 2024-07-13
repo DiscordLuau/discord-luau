@@ -19,7 +19,7 @@
 
 local Connection = require("connection")
 
-local vendorTypes = require("@types/vendorTypes")
+local vendorTypes = require("@api-types/vendorTypes")
 
 local Signal = {}
 
@@ -103,12 +103,15 @@ end
 	@return Vendor.Signal
 ]=]
 function Signal.Interface.new<T...>(): vendorTypes.Signal<T...>
-	return setmetatable({
-		_connections = {},
-		_yielding = {},
-	} :: vendorTypes.Signal<T...>, {
-		__index = Signal.Prototype,
-	})
+	return setmetatable(
+		{
+			_connections = {},
+			_yielding = {},
+		} :: vendorTypes.Signal<T...>,
+		{
+			__index = Signal.Prototype,
+		}
+	)
 end
 
 return Signal.Interface

@@ -7,7 +7,7 @@
 	@within Vendor.Logger
 ]=]
 
-local vendorTypes = require("@types/vendorTypes")
+local vendorTypes = require("@api-types/vendorTypes")
 
 local Logger = {}
 
@@ -110,11 +110,14 @@ end
 	@return Vendor.Logger
 ]=]
 function Logger.Interface.new(logUuid: string): vendorTypes.Logger
-	return setmetatable({
-		logUuid = logUuid,
-	} :: vendorTypes.Logger, {
-		__index = Logger.Prototype,
-	})
+	return setmetatable(
+		{
+			logUuid = logUuid,
+		} :: vendorTypes.Logger,
+		{
+			__index = Logger.Prototype,
+		}
+	)
 end
 
 --[=[

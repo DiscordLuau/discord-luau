@@ -12,7 +12,7 @@
 	@within Vendor.Connection
 ]=]
 
-local vendorTypes = require("@types/vendorTypes")
+local vendorTypes = require("@api-types/vendorTypes")
 
 local Connection = {}
 
@@ -45,13 +45,16 @@ end
 	@return Vendor.Connection
 ]=]
 function Connection.Interface.new(disconnectHandler: () -> ()): vendorTypes.Connection
-	return setmetatable({
-		Connected = true,
+	return setmetatable(
+		{
+			Connected = true,
 
-		_disconnectHandler = disconnectHandler,
-	} :: vendorTypes.Connection, {
-		__index = Connection.Prototype,
-	})
+			_disconnectHandler = disconnectHandler,
+		} :: vendorTypes.Connection,
+		{
+			__index = Connection.Prototype,
+		}
+	)
 end
 
 return Connection.Interface
