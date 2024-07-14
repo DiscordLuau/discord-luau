@@ -63,33 +63,34 @@ local endpoints = table.freeze({
 	-- https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-guild-application-commands
 	BulkOverwriteGuildApplicationCommands = "/applications/%s/guilds/%s/commands",
 
-	-- https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command-permissions
-	GetGuildApplicationCommandPermissions = "/applications/%s/guilds/%s/commands/permissions",
+	-- https:/oks/%s/%s",
 
-	-- https://discord.com/developers/docs/interactions/application-commands#get-application-command-permissions
-	GetApplicationCommandPermissions = "/applications/%s/guilds/%s/commands/%s/permissions",
+	-- https://discord.com/developers/docs/interactions/receiving-and-responding#get-followup-message
+	GetFollowupMessage = "/webhooks/%s/%s/messages/%s",
 
-	-- https://discord.com/developers/docs/interactions/application-commands#edit-application-command-permissions
-	EditApplicationCommandPermissions = "/applications/%s/guilds/%s/commands/%s/permissions",
+	-- https://discord.com/developers/docs/interactions/receiving-and-responding#edit-followup-message
+	EditFollowupMessage = "/webhooks/%s/%s/messages/%s",
 
-	-- https://discord.com/developers/docs/interactions/application-commands#batch-edit-application-command-permissions
-	BatchEditApplicationCommandPermissions = "/applications/%s/guilds/%s/commands/permissions",
+	-- https://discord.com/developers/docs/interactions/receiving-and-responding#delete-followup-message
+	DeleteFollowupMessage = "/webhooks/%s/%s/messages/%s",
 
-	-- https://discord.com/developers/docs/resources/application#get-current-application
-	GetCurrentApplication = "/applications/@me",
+	-- https://discord.com/developers/docs/interactions/application-commands#get-global-application-commands
+	GetGlobalApplicationCommands = "/applications/%s/commands",
 
-	-- https://discord.com/developers/docs/resources/application#edit-current-application
-	EditCurrentApplication = "/applications/@me",
+	-- https://discord.com/developers/docs/interactions/application-commands#create-global-application-command
+	CreateGlobalApplicationCommand = "/applications/%s/commands",
 
-	-- https://discord.com/developers/docs/resources/application-role-connection-metadata#get-application-role-connection-metadata-records
-	GetApplicationRoleConnectionMetadataRecords = "/applications/%s/role-connections/metadata",
+	-- https://discord.com/developers/docs/interactions/application-commands#get-global-application-command
+	GetGlobalApplicationCommand = "/applications/%s/commands/%s",
 
-	-- https://discord.com/developers/docs/resources/application-role-connection-metadata#update-application-role-connection-metadata-records
-	UpdateApplicationRoleConnectionMetadataRecords = "/applications/%s/role-connections/metadata",
+	-- https://discord.com/developers/docs/interactions/application-commands#edit-global-application-command
+	EditGlobalApplicationCommand = "/applications/%s/commands/%s",
 
-	-- https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log
-	GetGuildAuditLog = "/guilds/%s/audit-logs",
+	-- https://discord.com/developers/docs/interactions/application-commands#delete-global-application-command
+	DeleteGlobalApplicationCommand = "/applications/%s/commands/%s",
 
+	-- https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-global-application-commands
+	BulkOverwriteGlobalApplicatio
 	-- https://discord.com/developers/docs/resources/auto-moderation#list-auto-moderation-rules-for-guild
 	ListAutoModerationRulesForGuild = "/guilds/%s/auto-moderation/rules",
 
@@ -542,88 +543,197 @@ local endpoints = table.freeze({
 
 	-- https://discord.com/developers/docs/resources/webhook#delete-webhook-message
 	DeleteWebhookMessage = "/webhooks/%s/%s/messages/%s",
+
+	-- https://discord.com/developers/docs/topics/gateway#get-gateway
+	GetGateway = "/gateway",
+
+	-- https://discord.com/developers/docs/topics/gateway#get-gateway-bot
+	GetGatewayBot = "/gateway/bot",
+
+	-- https://discord.com/developers/docs/topics/oauth2#get-current-bot-application-information
+	GetCurrentBotApplicationInformation = "/oauth2/applications/@me",
+
+	-- https://discord.com/developers/docs/topics/oauth2#get-current-authorization-information
+	GetCurrentAuthorizationInformation = "/oauth2/@me",
+
+
 })
 
 export type Endpoint =
-	"Gateway"
-	| "GetGuild"
-	| "GetGuildWidget"
-	| "GetGuildVanityURL"
-	| "GetGuildOnboarding"
-	| "ModifyGuildWidgetSettings"
-	| "GetGuildPruneCount"
-	| "GetGuildBan"
-	| "GetGuildAuditLogs"
-	| "ModifyGuild"
-	| "DeleteGuild"
-	| "GetGuildChannels"
-	| "GetGuildMember"
-	| "ModifyCurrentMemberGuild"
-	| "GetGuildMembers"
-	| "BanGuildMember"
-	| "RemoveGuildMember"
-	| "RemoveGuildMemberBan"
-	| "AddGuildMemberRole"
-	| "RemoveGuildMemberRole"
-	| "ModifyGuildMember"
-	| "SearchGuildMembers"
-	| "DeleteGuildIntegration"
-	| "ListAutomoderationRules"
-	| "GetAutomoderationRule"
-	| "CreateAutomoderationRule"
-	| "ModifyAutomoderationRule"
-	| "DeleteAutomoderationRule"
+	"CreateInteractionResponse"
+	| "GetOriginalInteractionResponse"
+	| "EditOriginalInteractionResponse"
+	| "DeleteOriginalInteractionResponse"
+	| "CreateFollowupMessage"
+	| "GetFollowupMessage"
+	| "EditFollowupMessage"
+	| "DeleteFollowupMessage"
+	| "GetGlobalApplicationCommands"
+	| "CreateGlobalApplicationCommand"
+	| "GetGlobalApplicationCommand"
+	| "EditGlobalApplicationCommand"
+	| "DeleteGlobalApplicationCommand"
+	| "BulkOverwriteGlobalApplicationCommands"
+	| "GetGuildApplicationCommands"
+	| "CreateGuildApplicationCommand"
+	| "GetGuildApplicationCommand"
+	| "EditGuildApplicationCommand"
+	| "DeleteGuildApplicationCommand"
+	| "BulkOverwriteGuildApplicationCommands"
+	| "ListAutoModerationRulesForGuild"
+	| "GetAutoModerationRule"
+	| "CreateAutoModerationRule"
+	| "ModifyAutoModerationRule"
+	| "DeleteAutoModerationRule"
 	| "GetChannel"
-	| "ModifyGuildChannelPosition"
-	| "CreateMessage"
+	| "ModifyChannel"
+	| "DeleteOrCloseChannel"
 	| "GetChannelMessages"
 	| "GetChannelMessage"
-	| "DeleteMessage"
-	| "EditMessage"
+	| "CreateMessage"
 	| "CrosspostMessage"
-	| "CreateThreadFromMessage"
-	| "CreateThread"
-	| "CreateForumOrMediaThread"
-	| "GetInvites"
 	| "CreateReaction"
-	| "DeleteReaction"
+	| "DeleteOwnReaction"
 	| "DeleteUserReaction"
 	| "GetReactions"
 	| "DeleteAllReactions"
 	| "DeleteAllReactionsForEmoji"
-	| "DeleteChannel"
-	| "ModifyChannel"
+	| "EditMessage"
+	| "DeleteMessage"
+	| "BulkDeleteMessages"
+	| "EditChannelPermissions"
+	| "GetChannelInvites"
+	| "CreateChannelInvite"
+	| "DeleteChannelPermission"
+	| "FollowAnnouncementChannel"
+	| "TriggerTypingChannel"
+	| "GetPinnedMessages"
 	| "PinMessage"
 	| "UnpinMessage"
-	| "TriggerTypingChannel"
-	| "EditChannelPermissions"
-	| "DeleteChannelPermission"
-	| "GetPinnedMessages"
-	| "FollowAnnouncementChannel"
-	| "GetThreadMembers"
+	| "GroupDMAddRecipient"
+	| "GroupDMRemoveRecipient"
+	| "StartThreadFromMessage"
+	| "StartThreadWithoutMessage"
+	| "StartThreadInForumOrMediaChannel"
+	| "JoinThread"
+	| "AddThreadMember"
+	| "LeaveThread"
+	| "RemoveThreadMember"
 	| "GetThreadMember"
-	| "JoinThreadChannel"
-	| "AddMemberToThreadChannel"
-	| "LeaveThreadChannel"
-	| "RemoveMemberFromThreadChannel"
+	| "ListThreadMembers"
 	| "ListPublicArchivedThreads"
 	| "ListPrivateArchivedThreads"
 	| "ListJoinedPrivateArchivedThreads"
-	| "BulkDeleteMessages"
-	| "CreateGlobalApplicationCommand"
-	| "EditGlobalApplicationCommand"
-	| "OverwriteGlobalApplicationCommand"
-	| "GetGlobalApplicationCommands"
-	| "GetGlobalApplicationCommand"
-	| "DeleteGlobalApplicationCommand"
-	| "CreateGuildApplicationCommand"
-	| "EditGuildApplicationCommand"
-	| "GetGuildApplicationCommands"
-	| "OverwriteGuildApplicationCommands"
-	| "GetGuildApplicationCommand"
-	| "DeleteGuildApplicationCommand"
+	| "ListGuildEmojis"
+	| "GetGuildEmoji"
+	| "CreateGuildEmoji"
+	| "ModifyGuildEmoji"
+	| "DeleteGuildEmoji"
+	| "CreateGuild"
+	| "GetGuild"
+	| "GetGuildPreview"
+	| "ModifyGuild"
+	| "DeleteGuild"
+	| "GetGuildChannels"
+	| "CreateGuildChannel"
+	| "ModifyGuildChannelPositions"
+	| "ListActiveGuildThreads"
+	| "GetGuildMember"
+	| "ListGuildMembers"
+	| "SearchGuildMembers"
+	| "AddGuildMember"
+	| "ModifyGuildMember"
+	| "ModifyCurrentMember"
+	| "ModifyCurrentUserNick"
+	| "AddGuildMemberRole"
+	| "RemoveGuildMemberRole"
+	| "RemoveGuildMember"
+	| "GetGuildBans"
+	| "GetGuildBan"
+	| "CreateGuildBan"
+	| "RemoveGuildBan"
+	| "BulkGuildBan"
+	| "GetGuildRoles"
+	| "CreateGuildRole"
+	| "ModifyGuildRolePositions"
+	| "ModifyGuildRole"
+	| "ModifyGuildMFALevel"
+	| "DeleteGuildRole"
+	| "GetGuildPruneCount"
+	| "BeginGuildPrune"
+	| "GetGuildVoiceRegions"
+	| "GetGuildInvites"
+	| "GetGuildIntegrations"
+	| "DeleteGuildIntegration"
+	| "GetGuildWidgetSettings"
+	| "ModifyGuildWidget"
+	| "GetGuildWidget"
+	| "GetGuildVanityURL"
+	| "GetGuildWidgetImage"
+	| "GetGuildWelcomeScreen"
+	| "ModifyGuildWelcomeScreen"
+	| "GetGuildOnboarding"
+	| "ModifyGuildOnboarding"
+	| "ModifyCurrentUserVoiceState"
+	| "ModifyUserVoiceState"
+	| "ListGuildScheduledForEvents"
+	| "CreateGuildScheduledEvent"
+	| "GetGuildScheduledEvent"
+	| "ModifyGuildScheduledEvent"
+	| "DeleteGuildScheduledEvent"
+	| "GetGuildScheduledEventUsers"
+	| "GetGuildTemplate"
+	| "CreateGuildFromTemplate"
+	| "GetGuildTemplates"
+	| "CreateGuildTemplate"
+	| "SyncGuildTemplate"
+	| "ModifyGuildTemplate"
+	| "DeleteGuildTemplate"
+	| "GetInvite"
 	| "DeleteInvite"
-	| "CreateInteractionResponse"
-	| "EditOriginalInteractionResponse"
+	| "GetAnswerVoters"
+	| "EndPoll"
+	| "CreateStageInstance"
+	| "GetStageInstance"
+	| "ModifyStageInstance"
+	| "DeleteStageInstance"
+	| "GetSticker"
+	| "ListStickerPacks"
+	| "ListGuildStickers"
+	| "GetGuildSticker"
+	| "CreateGuildSticker"
+	| "ModifyGuildSticker"
+	| "DeleteGuildSticker"
+	| "GetCurrentUser"
+	| "GetUser"
+	| "ModifyCurrentUser"
+	| "GetCurrentUserGuilds"
+	| "GetCurrentUserGuildMember"
+	| "LeaveGuild"
+	| "CreateDM"
+	| "CreateGroupDM"
+	| "GetCurrentUserConnections"
+	| "GetCurrentUserApplicationRolConnections"
+	| "UpdateCurrentUserApplicationRoleConnection"
+	| "ListVoiceRegions"
+	| "CreateWebhook"
+	| "GetChannelWebhooks"
+	| "GetGuildWebhooks"
+	| "GetWebhook"
+	| "GetWebhookWithToken"
+	| "ModifyWebhook"
+	| "ModifyWebhookWithToken"
+	| "DeleteWebhook"
+	| "DeleteWebhookWithToken"
+	| "ExecuteWebhook"
+	| "ExecuteSlackCompatibleWebhook"
+	| "ExecuteGithubCompatibleWebhook"
+	| "GetWebhookMessage"
+	| "EditWebhookMessage"
+	| "DeleteWebhookMessage"
+	| "GetGateway"
+	| "GetGatewayBot"
+	| "GetCurrentBotApplicationInformation"
+	| "GetCurrentAuthorizationInformation"
 
 return endpoints
