@@ -63,34 +63,33 @@ local endpoints = table.freeze({
 	-- https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-guild-application-commands
 	BulkOverwriteGuildApplicationCommands = "/applications/%s/guilds/%s/commands",
 
-	-- https:/oks/%s/%s",
+	-- https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command-permissions
+	GetGuildApplicationCommandPermissions = "/applications/%s/guilds/%s/commands/permissions",
 
-	-- https://discord.com/developers/docs/interactions/receiving-and-responding#get-followup-message
-	GetFollowupMessage = "/webhooks/%s/%s/messages/%s",
+	-- https://discord.com/developers/docs/interactions/application-commands#get-application-command-permissions
+	GetApplicationCommandPermissions = "/applications/%s/guilds/%s/commands/%s/permissions",
 
-	-- https://discord.com/developers/docs/interactions/receiving-and-responding#edit-followup-message
-	EditFollowupMessage = "/webhooks/%s/%s/messages/%s",
+	-- https://discord.com/developers/docs/interactions/application-commands#edit-application-command-permissions
+	EditApplicationCommandPermissions = "/applications/%s/guilds/%s/commands/%s/permissions",
 
-	-- https://discord.com/developers/docs/interactions/receiving-and-responding#delete-followup-message
-	DeleteFollowupMessage = "/webhooks/%s/%s/messages/%s",
+	-- https://discord.com/developers/docs/interactions/application-commands#batch-edit-application-command-permissions
+	BatchEditApplicationCommandPermissions = "/applications/%s/guilds/%s/commands/permissions",
 
-	-- https://discord.com/developers/docs/interactions/application-commands#get-global-application-commands
-	GetGlobalApplicationCommands = "/applications/%s/commands",
+	-- https://discord.com/developers/docs/resources/application#get-current-application
+	GetCurrentApplication = "/applications/@me",
 
-	-- https://discord.com/developers/docs/interactions/application-commands#create-global-application-command
-	CreateGlobalApplicationCommand = "/applications/%s/commands",
+	-- https://discord.com/developers/docs/resources/application#edit-current-application
+	EditCurrentApplication = "/applications/@me",
 
-	-- https://discord.com/developers/docs/interactions/application-commands#get-global-application-command
-	GetGlobalApplicationCommand = "/applications/%s/commands/%s",
+	-- https://discord.com/developers/docs/resources/application-role-connection-metadata#get-application-role-connection-metadata-records
+	GetApplicationRoleConnectionMetadataRecords = "/applications/%s/role-connections/metadata",
 
-	-- https://discord.com/developers/docs/interactions/application-commands#edit-global-application-command
-	EditGlobalApplicationCommand = "/applications/%s/commands/%s",
+	-- https://discord.com/developers/docs/resources/application-role-connection-metadata#update-application-role-connection-metadata-records
+	UpdateApplicationRoleConnectionMetadataRecords = "/applications/%s/role-connections/metadata",
 
-	-- https://discord.com/developers/docs/interactions/application-commands#delete-global-application-command
-	DeleteGlobalApplicationCommand = "/applications/%s/commands/%s",
+	-- https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log
+	GetGuildAuditLog = "/guilds/%s/audit-logs",
 
-	-- https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-global-application-commands
-	BulkOverwriteGlobalApplicatio
 	-- https://discord.com/developers/docs/resources/auto-moderation#list-auto-moderation-rules-for-guild
 	ListAutoModerationRulesForGuild = "/guilds/%s/auto-moderation/rules",
 
@@ -555,8 +554,6 @@ local endpoints = table.freeze({
 
 	-- https://discord.com/developers/docs/topics/oauth2#get-current-authorization-information
 	GetCurrentAuthorizationInformation = "/oauth2/@me",
-
-
 })
 
 export type Endpoint =
@@ -580,6 +577,15 @@ export type Endpoint =
 	| "EditGuildApplicationCommand"
 	| "DeleteGuildApplicationCommand"
 	| "BulkOverwriteGuildApplicationCommands"
+	| "GetGuildApplicationCommandPermissions"
+	| "GetApplicationCommandPermissions"
+	| "EditApplicationCommandPermissions"
+	| "GetCurrentApplication"
+	| "EditCurrentApplication"
+	| "GetApplicationRoleConnectionMetadataRecords"
+	| "UpdateApplicationRoleConnectionMetadataRecords"
+	| "GetGuildAuditLog"
+	| "BatchEditApplicationCommandPermissions"
 	| "ListAutoModerationRulesForGuild"
 	| "GetAutoModerationRule"
 	| "CreateAutoModerationRule"
