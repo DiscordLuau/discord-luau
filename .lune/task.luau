@@ -19,7 +19,7 @@ end
 
 function main(args: { string })
 	local taskName = table.remove(args, 1) or "main"
-	local exists, taskSrc = pcall(fs.readFile, "lune/tasks/" .. taskName .. ".luau")
+	local exists, taskSrc = pcall(fs.readFile, ".lune/" .. taskName .. ".luau")
 
 	if not exists then
 		logger.error(`Task "{taskName}" not found.`)
