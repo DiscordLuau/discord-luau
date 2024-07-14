@@ -2,14 +2,11 @@
 	<p>
 		<a href=""><img src="https://raw.githubusercontent.com/DiscordLuau/.github/master/resource/DiscordLuau-Banner.png" width="512" alt="discord-luau"/></a>
 	</p>
+
+ ---
+ 
+<a href="https://discord.gg/DpQwdD8zD3"><img alt="Discord" src="https://img.shields.io/discord/385151591524597761?style=plastic&logo=discord&color=%235865F2"></a>
+<a href="https://discord-luau-docs.deno.dev"><img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/DiscordLuau/discord-luau/update-documentation.yml?style=plastic&logo=githubactions&label=docs&labelColor=%232a3036"></a>
+<a href="https://lune-org.github.io/docs"><img alt="Lune" src=".lune/powered-by-lune.svg"></a>
+
 </div>
-
-## About
-
-This is the **[Discord API](https://discord.com/developers/docs/intro) [Wrapper](https://rapidapi.com/blog/api-glossary/api-wrapper/)**, the resource that you'll be interacting with if you want to create a Discord Bot/Application! 🎉
-
-### Project Status
-
-This project is undergoing a major change to the structure, breaking the project down into several packages instead of a single package.
-
-If you'd like to reach out to me, i'm available in the [Roblox OSS discord.](https://discord.gg/V3HZe4H75u), specifically in the `#discord-luau` channel under #projects.
