@@ -222,6 +222,18 @@ export type InviteTargetTypes = number
 -- https://discord.com/developers/docs/resources/channel#get-reactions-reaction-types
 export type ReactionType = number
 
+-- https://discord.com/developers/docs/resources/application-role-connection-metadata#application-role-connection-metadata-object-application-role-connection-metadata-type
+export type ApplicationRoleConnectionMetadataType = number
+
+-- https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-types
+export type ApplicationCommandType = number
+
+-- https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-audit-log-events
+export type AuditLogEventType = number
+
+-- https://discord.com/developers/docs/resources/webhook#webhook-object-webhook-types
+export type WebhookType = number
+
 -- https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-timestamps
 export type ActivityTimestampObject = {
 	start: number, -- Unix time (in milliseconds) of when the activity started
@@ -1116,6 +1128,123 @@ export type InteractionObject = {
 	entitlements: { EntitlementObject }, -- For monetized apps, any entitlements for the invoking user, representing access to premium SKUs
 	authorizing_integration_owners: { IntegrationType }, -- Mapping of installation contexts that the interaction was authorized for to related user or guild IDs. See Authorizing Integration Owners Object for details
 	context: InteractionContextType, -- Context where the interaction was triggered from
+}
+
+-- https://discord.com/developers/docs/resources/application-role-connection-metadata#application-role-connection-metadata-object
+export type ApplicationRoleConnectionMetadataObject = {
+	type: ApplicationRoleConnectionMetadataType, -- type of metadata value
+	key: string, -- dictionary key for the metadata field (must be a-z, 0-9, or _ characters; 1-50 characters)
+	name: string, -- name of the metadata field (1-100 characters)
+	name_localizations: { [LanguageLocales]: string }?, -- translations of the name
+	description: string, -- description of the metadata field (1-200 characters)
+	description_localizations: { [LanguageLocales]: string }?, -- translations of the description
+}
+
+-- https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-choice-structure
+export type ApplicationCommandOptionChoiceObject = {
+	name: string, -- 1-100 character choice name
+	name_localizations: { [LanguageLocales]: string }?, -- Localization dictionary for the name field. Values follow the same restrictions as name
+	value: string | number, -- Value for the choice, up to 100 characters if string
+}
+
+-- https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure
+export type ApplicationCommandOptionObject = {
+	type: ApplicationCommandOptionType, -- Type of option
+	name: string, -- 1-32 character name
+	name_localizations: { [LanguageLocales]: string }?, -- Localization dictionary for the name field. Values follow the same restrictions as name
+	description: string, -- 1-100 character description
+	description_localizations: { [LanguageLocales]: string }?, -- Localization dictionary for the description field. Values follow the same restrictions as description
+	required: boolean?, -- Whether the parameter is required or optional, default false
+	choices: { ApplicationCommandOptionChoiceObject }, -- Choices for the user to pick from, max 25
+	options: { ApplicationCommandOptionObject }?, -- If the option is a subcommand or subcommand group type, these nested options will be the parameters or subcommands respectively; up to 25
+	channel_types: { ChannelType }?, -- The channels shown will be restricted to these types
+	min_value: number?, -- The minimum value permitted
+	max_value: number?, -- The maximum value permitted
+	min_length: number?, -- The minimum allowed length (minimum of 0, maximum of 6000)
+	max_length: number?, -- The maximum allowed length (minimum of 1, maximum of 6000)
+	autocomplete: boolean?, -- If autocomplete interactions are enabled for this option
+}
+
+-- https://discord.com/developers/docs/interactions/application-commands#application-command-object
+export type ApplicationCommandObject = {
+	id: Snowflake, -- Unique ID of command
+	type: ApplicationCommandType?, -- Type of command, defaults to 1
+	application_id: Snowflake, -- ID of the parent application
+	guild_id: Snowflake?, -- Guild ID of the command, if not global
+	name: string, -- Name of command, 1-32 characters
+	name_localizations: { [LanguageLocales]: string }?, -- Localization dictionary for name field. Values follow the same restrictions as name
+	description: string, -- Description for CHAT_INPUT commands, 1-100 characters. Empty string for USER and MESSAGE commands
+	description_localizations: { [LanguageLocales]: string }?, -- Localization dictionary for description field. Values follow the same restrictions as description
+	options: { ApplicationCommandOptionObject }?, -- Parameters for the command, max of 25
+	default_member_permissions: string?, -- Set of permissions represented as a bit set
+	dm_permission: string?, -- Deprecated (use contexts instead); Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible.
+	default_permission: boolean?, -- Not recommended for use as field will soon be deprecated. Indicates whether the command is enabled by default when the app is added to a guild, defaults to true
+	nsfw: boolean?, -- Indicates whether the command is age-restricted, defaults to false
+	integration_types: { IntegrationType }?, -- Installation contexts where the command is available, only for globally-scoped commands. Defaults to your app's configured contexts
+	contexts: { InteractionContextType }?, -- Interaction context(s) where the command can be used, only for globally-scoped commands. By default, all interaction context types included for new commands.
+	version: Snowflake, -- Autoincrementing version identifier updated during substantial record changes
+}
+
+-- https://discord.com/developers/docs/resources/audit-log#audit-log-change-object
+export type AuditLogChangeObject = {
+	new_value: any?, -- New value of the key
+	old_value: any?, -- Old value of the key
+	key: string, -- Name of the changed entity, with a few exceptions
+}
+
+-- https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-optional-audit-entry-info
+export type OptionalAuditEntryInfoObject = {
+	application_id: Snowflake, -- ID of the app whose permissions were targeted
+	auto_moderation_rule_name: string, -- Name of the Auto Moderation rule that was triggered
+	auto_moderation_rule_trigger_type: AutomoderationRuleTriggerType, -- Trigger type of the Auto Moderation rule that was triggered
+	channel_id: Snowflake, -- Channel in which the entities were targeted
+	count: string, -- Number of entities that were targeted
+	delete_member_days: string, -- Number of days after which inactive members were kicked
+	id: Snowflake, -- ID of the overwritten entity
+	members_removed: string, -- Number of members removed by the prune
+	message_id: Snowflake, -- ID of the message that was targeted
+	role_name: string, -- Name of the role if type is "0" (not present if type is "1")
+	type: string, -- Type of overwritten entity - role ("0") or member ("1")
+	integration_type: IntegrationType, -- The type of integration which performed the action
+}
+
+-- https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object
+export type AuditLogEntryObject = {
+	target_id: string?, -- ID of the affected entity (webhook, user, role, etc.)
+	changes: { AuditLogChangeObject }?, -- Changes made to the target_id
+	user_id: Snowflake?, -- User or app that made the changes
+	id: Snowflake, -- ID of the entry
+	action_type: AuditLogEventType, -- Type of action that occurred
+	options: { OptionalAuditEntryInfoObject }?, -- Additional info for certain event types
+	reason: string?, -- Reason for the change (1-512 characters)
+}
+
+-- https://discord.com/developers/docs/resources/webhook#webhook-object
+export type WebhookObject = {
+	id: Snowflake, -- the id of the webhook
+	type: WebhookType, -- the type of the webhook
+	guild_id: Snowflake?, -- the guild id this webhook is for, if any
+	channel_id: Snowflake?, -- the channel id this webhook is for, if any
+	user: UserObject?, -- the user this webhook was created by (not returned when getting a webhook with its token)
+	name: string?, -- the default name of the webhook
+	avatar: string?, -- the default user avatar hash of the webhook
+	token: string?, -- the secure token of the webhook (returned for Incoming Webhooks)
+	application_id: Snowflake?, -- the bot/OAuth2 application that created this webhook
+	source_guild: GuildObject?, -- the guild of the channel that this webhook is following (returned for Channel Follower Webhooks)
+	source_channel: ChannelObject?, -- the channel that this webhook is following (returned for Channel Follower Webhooks)
+	url: string?, -- the url used for executing the webhook (returned by the webhooks OAuth2 flow)
+}
+
+-- https://discord.com/developers/docs/resources/audit-log#audit-log-object
+export type AuditLogObject = {
+	application_commands: { ApplicationCommandObject }, -- List of application commands referenced in the audit log
+	audit_log_entries: { AuditLogEntryObject }, -- List of audit log entries, sorted from most to least recent
+	auto_moderation_rules: { AutomoderationRuleObject }, -- List of auto moderation rules referenced in the audit log
+	guild_scheduled_events: { GuildScheduledEventObject }, -- List of guild scheduled events referenced in the audit log
+	integrations: { IntegrationObject }, -- List of partial integration objects
+	threads: { ChannelObject }, -- List of threads referenced in the audit log*
+	users: { UserObject }, -- List of users referenced in the audit log
+	webhooks: { WebhookObject }, -- List of webhooks referenced in the audit log
 }
 
 return "DISCORD_V10_PAYLOAD_TYPES"
