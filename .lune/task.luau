@@ -26,7 +26,14 @@ function main(args: { string })
 		return 1
 	end
 
-	local runTask: (args: { string }, env: shared.TaskEnv) -> number = luau.load(taskSrc)()
+	local runTask: (args: { string }, env: shared.TaskEnv) -> number = luau.load(taskSrc, {
+		env = {
+			require = function<T>(path: any)
+				return require(".lune" .. path) :: T
+			end,
+		},
+		codegenEnabled = true,
+	})()
 	local result = runTask(args, {
 		logger = logger,
 		execute = envExecute,
