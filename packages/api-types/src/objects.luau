@@ -216,6 +216,9 @@ export type ApplicationCommandOptionType = number
 -- https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-context-types
 export type InteractionContextType = number
 
+-- https://discord.com/developers/docs/resources/invite#invite-object-invite-types
+export type InviteTypes = number
+
 -- https://discord.com/developers/docs/resources/invite#invite-object-invite-target-types
 export type InviteTargetTypes = number
 
@@ -233,6 +236,39 @@ export type AuditLogEventType = number
 
 -- https://discord.com/developers/docs/resources/webhook#webhook-object-webhook-types
 export type WebhookType = number
+
+-- https://discord.com/developers/docs/resources/guild#guild-onboarding-object-onboarding-mode
+export type OnboardingMode = number
+
+-- https://discord.com/developers/docs/resources/guild#guild-onboarding-object-prompt-types
+export type PromptTypes = number
+
+-- https://discord.com/developers/docs/resources/user#connection-object-services
+export type ConnectionObjectServices =
+	"battlenet"
+	| "bungie"
+	| "domain"
+	| "ebay"
+	| "epicgames"
+	| "facebook"
+	| "github"
+	| "instagram"
+	| "leagueoflegends"
+	| "paypal"
+	| "playstation"
+	| "reddit"
+	| "riotgames"
+	| "spotify"
+	| "skype"
+	| "stream"
+	| "tiktok"
+	| "twitch"
+	| "twitter"
+	| "xbox"
+	| "youtube"
+
+-- https://discord.com/developers/docs/resources/user#connection-object-visibility-types
+export type ConnectionVisibilityTypes = number
 
 -- https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-timestamps
 export type ActivityTimestampObject = {
@@ -1245,6 +1281,179 @@ export type AuditLogObject = {
 	threads: { ChannelObject }, -- List of threads referenced in the audit log*
 	users: { UserObject }, -- List of users referenced in the audit log
 	webhooks: { WebhookObject }, -- List of webhooks referenced in the audit log
+}
+
+-- https://discord.com/developers/docs/resources/invite#invite-object
+export type InviteObject = {
+	type: InviteTypes, -- the type of invite
+	code: string, -- the invite code (unique ID)
+	guild: GuildObject?, -- the guild this invite is for
+	channel: ChannelObject?, -- the channel this invite is for
+	inviter: UserObject?, -- the user who created the invite
+	target_type: InviteTargetTypes, -- the type of target for this voice channel invite
+	target_user: UserObject?, -- the user whose stream to display for this voice channel stream invite
+	target_application: ApplicationObject?, -- the embedded application to open for this voice channel embedded application invite
+	approximate_presence_count: number?, -- approximate count of online members, returned from the GET /invites/<code> endpoint when with_counts is true
+	approximate_member_count: number?, -- approximate count of total members, returned from the GET /invites/<code> endpoint when with_counts is true
+	expires_at: string?, -- the expiration date of this invite, returned from the GET /invites/<code> endpoint when with_expiration is true
+	stage_instance: StageInstanceObject?, -- stage instance data if there is a public Stage instance in the Stage channel this invite is for (deprecated)
+	guild_scheduled_event: GuildScheduledEventObject?, -- guild scheduled event data, only included if guild_scheduled_event_id contains a valid guild scheduled event id
+}
+
+-- https://discord.com/developers/docs/resources/invite#invite-metadata-object
+export type InviteMetadataObject = {
+	uses: number, -- number of times this invite has been used
+	max_uses: number, -- max number of times this invite can be used
+	max_age: number, -- duration (in seconds) after which the invite expires
+	temporary: boolean, -- whether this invite only grants temporary membership
+	created_at: string, -- when this invite was created
+}
+
+-- https://discord.com/developers/docs/resources/channel#followed-channel-object
+export type FollowedChannelObject = {
+	channel_id: Snowflake, -- source channel id
+	webhook_id: Snowflake, -- created target webhook id
+}
+
+-- https://discord.com/developers/docs/resources/guild#guild-preview-object
+export type GuildPreviewObject = {
+	id: Snowflake, -- guild id
+	name: string, -- guild name (2-100 characters)
+	icon: string?, -- icon hash
+	splash: string?, -- splash hash
+	discovery_splash: string?, -- discovery splash hash
+	emojis: { EmojiObject }, -- custom guild emojis
+	features: { GuildFeature }, -- enabled guild features
+	approximate_member_count: number, -- approximate number of members in this guild
+	approximate_presence_count: number, -- approximate number of online members in this guild
+	description: string?, -- the description for the guild
+	stickers: { StickerObject }, -- custom guild stickers
+}
+
+-- https://discord.com/developers/docs/resources/guild#ban-object
+export type BanObject = {
+	reason: string?, -- the reason for the ban
+	user: UserObject, -- the banned user=
+}
+
+-- https://discord.com/developers/docs/resources/voice#voice-region-object
+export type VoiceRegionObject = {
+	id: string, -- unique ID for the region
+	name: string, -- name of the region
+	optimal: boolean, -- true for a single server that is closest to the current user's client
+	deprecated: boolean, -- whether this is a deprecated voice region (avoid switching to these)
+	custom: boolean, -- whether this is a custom voice region (used for events/etc)
+}
+
+-- https://discord.com/developers/docs/resources/guild#guild-widget-settings-object
+export type GuildWidgetSettingsObject = {
+	enabled: boolean, -- whether the widget is enabled
+	channel_id: Snowflake?, -- the widget channel id
+}
+
+-- https://discord.com/developers/docs/resources/guild#guild-widget-object
+export type GuildWidgetObject = {
+	id: Snowflake, -- guild id
+	name: string, -- guild name (2-100 characters)
+	instant_invite: string?, -- instant invite for the guilds specified widget invite channel
+	channels: { ChannelObject }, -- voice and stage channels which are accessible by @everyone
+	members: { UserObject }, -- special widget user objects that includes users presence (Limit 100)
+	presence_count: number, -- number of online members in this guild
+}
+
+-- https://discord.com/developers/docs/resources/guild#guild-onboarding-object-prompt-option-structure
+export type PromptOptionObject = {
+	id: Snowflake, -- ID of the prompt option
+	channel_ids: { Snowflake }, -- IDs for channels a member is added to when the option is selected
+	role_ids: { Snowflake }, -- IDs for roles assigned to a member when the option is selected
+	emoji: EmojiObject?, -- Emoji of the option (see below)
+	emoji_id: Snowflake, -- Emoji ID of the option (see below)
+	emoji_name: string?, -- Emoji name of the option (see below)
+	emoji_animated: boolean?, -- Whether the emoji is animated (see below)
+	title: string, -- Title of the option
+	description: string?, -- Description of the option
+}
+
+-- https://discord.com/developers/docs/resources/guild#guild-onboarding-object-onboarding-prompt-structure
+export type OnboardingPromptObject = {
+	id: Snowflake, -- ID of the prompt
+	type: PromptTypes, -- Type of prompt
+	options: { PromptOptionObject }, -- Options available within the prompt
+	title: string, -- Title of the prompt
+	single_select: boolean, -- Indicates whether users are limited to selecting one option for the prompt
+	required: boolean, -- Indicates whether the prompt is required before a user completes the onboarding flow
+	in_onboarding: boolean, -- Indicates whether the prompt is present in the onboarding flow. If false, the prompt will only appear in the Channels & Roles tab
+}
+
+-- https://discord.com/developers/docs/resources/guild#guild-onboarding-object
+export type GuildOnboardingObject = {
+	guild_id: Snowflake, -- ID of the guild this onboarding is part of
+	prompts: { OnboardingPromptObject }, -- Prompts shown during onboarding and in customize community
+	default_channel_ids: { Snowflake }, -- Channel IDs that members get opted into automatically
+	enabled: boolean, -- Whether onboarding is enabled in the guild
+	mode: OnboardingMode, -- Current mode of onboarding
+}
+
+-- https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-user-object
+export type GuildScheduledEventUserObject = {
+	guild_scheduled_event_id: Snowflake, -- the scheduled event id which the user subscribed to
+	user: UserObject, -- user which subscribed to an event
+	member: GuildMemberObject?, -- guild member data for this user for the guild which this event belongs to, if any
+}
+
+-- https://discord.com/developers/docs/resources/guild-template#guild-template-object
+export type GuildTemplateObject = {
+	code: string, -- the template code (unique ID)
+	name: string, -- template name
+	description: string?, -- the description for the template
+	usage_count: number, -- number of times this template has been used
+	creator_id: Snowflake, -- the ID of the user who created the template
+	creator: UserObject, -- the user who created the template
+	created_at: string, -- when this template was created
+	updated_at: string, -- when this template was last synced to the source guild
+	source_guild_id: Snowflake, -- the ID of the guild this template is based on
+	serialized_source_guild: GuildObject, -- the guild snapshot this template contains
+	is_dirty: boolean?, -- whether the template has unsynced changes
+}
+
+-- https://discord.com/developers/docs/resources/sticker#sticker-pack-object
+export type StickerPackObject = {
+	id: Snowflake, -- id of the sticker pack
+	stickers: { StickerObject }, -- the stickers in the pack
+	name: string, -- name of the sticker pack
+	sku_id: Snowflake, -- id of the pack's SKU
+	cover_sticker_id: Snowflake?, -- id of a sticker in the pack which is shown as the pack's icon
+	description: string, -- description of the sticker pack
+	banner_asset_id: Snowflake?, -- id of the sticker pack's banner image
+}
+
+-- https://discord.com/developers/docs/resources/user#connection-object
+export type ConnectionObject = {
+	id: string, -- id of the connection account
+	name: string, -- the username of the connection account
+	type: ConnectionObjectServices, -- the service of this connection
+	revoked: boolean?, -- whether the connection is revoked
+	integrations: { IntegrationObject }?, -- an array of partial server integrations
+	verified: boolean, -- whether the connection is verified
+	friend_sync: boolean, -- whether friend sync is enabled for this connection
+	show_Activity: boolean, -- whether activities related to this connection will be shown in presence updates
+	two_way_link: boolean, -- whether this connection has a corresponding third party OAuth2 token
+	visibility: ConnectionVisibilityTypes, -- visibility of this connection
+}
+
+-- https://discord.com/developers/docs/resources/user#application-role-connection-object
+export type ApplicationRoleConnectionObject = {
+	platform_name: string?, -- the vanity name of the platform a bot has connected (max 50 characters)
+	platform_username: string?, -- the username on the platform a bot has connected (max 100 characters)
+	metadata: ApplicationRoleConnectionMetadataObject, -- object mapping application role connection metadata keys to their string-ified value (max 100 characters) for the user on the platform a bot has connected
+}
+
+-- https://discord.com/developers/docs/topics/gateway#session-start-limit-object
+export type SessionStartLimitObject = {
+	total: number, -- Total number of session starts the current user is allowed
+	remaining: number, -- Remaining number of session starts the current user is allowed
+	reset_after: number, -- Number of milliseconds after which the limit resets
+	max_concurrency: number, -- Number of identify requests allowed per 5 seconds
 }
 
 return "DISCORD_V10_PAYLOAD_TYPES"
