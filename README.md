@@ -41,5 +41,3 @@ Please head on over to the [Wiki](https://github.com/DiscordLuau/Discord-Luau/wi
 ## Examples
 
 Please take a look at the [/Examples](https://github.com/DiscordLuau/Discord-Luau/tree/Master/Examples) folder under the Master branch!
-
-<meta name="google-site-verification" content="v_W8ZeYM5qEnoZ9-rPBF8dPuvFNb5KEKkIx5862K1Qc" />
