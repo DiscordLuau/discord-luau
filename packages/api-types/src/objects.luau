@@ -267,8 +267,20 @@ export type ConnectionObjectServices =
 	| "xbox"
 	| "youtube"
 
+-- https://discord.com/developers/docs/resources/channel#allowed-mentions-object-allowed-mention-types
+export type AllowedMentionTypes = "roles" | "users" | "everyone"
+
 -- https://discord.com/developers/docs/resources/user#connection-object-visibility-types
 export type ConnectionVisibilityTypes = number
+
+-- https://discord.com/developers/docs/resources/channel#message-reference-types
+export type MessageReferenceType = number
+
+-- https://discord.com/developers/docs/resources/guild#guild-member-object-guild-member-flags
+export type GuildMemberFlags = number
+
+-- https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
+export type InteractionCallbackType = number
 
 -- https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-timestamps
 export type ActivityTimestampObject = {
@@ -601,7 +613,7 @@ export type AutomoderationRuleObject = {
 }
 
 -- https://discord.com/developers/docs/resources/channel#overwrite-object
-export type ChannelOverwriteObject = {
+export type OverwriteObject = {
 	id: Snowflake, -- role or user id
 	type: OverwriteObjectType, -- either 0 (role) or 1 (member)
 	allow: string, -- permission bit set
@@ -665,7 +677,7 @@ export type ChannelObject = {
 	type: ChannelType, -- the type of channel
 	guild_id: Snowflake?, -- the id of the guild (may be missing for some channel objects received over gateway guild dispatches)
 	position: number?, -- sorting position of the channel (channels with the same position are sorted by id)
-	permission_overwrites: { ChannelOverwriteObject }?, -- explicit permission overwrites for members and roles
+	permission_overwrites: { OverwriteObject }?, -- explicit permission overwrites for members and roles
 	name: string?, -- the name of the channel (1-100 characters)
 	topic: string?, -- the channel topic (0-4096 characters for GUILD_FORUM and GUILD_MEDIA channels, 0-1024 characters for all others)
 	nsfw: boolean?, -- whether the channel is nsfw
@@ -926,6 +938,7 @@ export type MessageActivityObject = {
 
 -- https://discord.com/developers/docs/resources/channel#message-reference-object-message-reference-structure
 export type MessageReferenceObject = {
+	type: MessageReferenceType?, -- type of reference.
 	message_id: Snowflake?, -- id of the originating message
 	channel_id: Snowflake?, -- id of the originating message's channel
 	guild_id: Snowflake?, -- id of the originating message's guild
@@ -1454,6 +1467,43 @@ export type SessionStartLimitObject = {
 	remaining: number, -- Remaining number of session starts the current user is allowed
 	reset_after: number, -- Number of milliseconds after which the limit resets
 	max_concurrency: number, -- Number of identify requests allowed per 5 seconds
+}
+
+-- https://discord.com/developers/docs/resources/channel#allowed-mentions-object
+export type AllowedMentionObject = {
+	parse: { AllowedMentionTypes }?, -- An array of allowed mention types to parse from the content.
+	users: { string }?, -- Array of role_ids to mention (Max size of 100)
+	roles: { string }?, -- Array of user_ids to mention (Max size of 100)
+	replied_user: boolean?, -- For replies, whether to mention the author of the message being replied to (default false)
+}
+
+-- https://discord.com/developers/docs/resources/channel#start-thread-in-forum-or-media-channel-forum-and-media-thread-message-params-object
+export type ForumAndMediaThreadMessageObject = {
+	content: string?, -- Message contents (up to 2000 characters)
+	embeds: { EmbedObject }?, -- Up to 10 rich embeds (up to 6000 characters)
+	allowed_mentions: AllowedMentionObject?, -- Allowed mentions for the message
+	components: { ComponentObjects }?, -- Components to include with the message
+	sticker_ids: { Snowflake }?, -- IDs of up to 3 stickers in the server to send in the message
+	attachments: { AttachmentObject }?, -- Attachment objects with filename and description. See Uploading Files
+	flags: number?, -- Message flags combined as a bitfield (only SUPPRESS_EMBEDS and SUPPRESS_NOTIFICATIONS can be set)
+}
+
+-- https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-data-structure
+export type InteractionCallbackDataObject = {
+	tts: boolean?, -- is the response TTS
+	content: string?, -- message content
+	embeds: { EmbedObject }?, -- supports up to 10 embeds
+	allowed_mentions: AllowedMentionObject?, -- allowed mentions object
+	flags: number?, -- message flags combined as a bitfield (only SUPPRESS_EMBEDS, EPHEMERAL, and SUPPRESS_NOTIFICATIONS can be set)
+	components: { ComponentObjects }?, -- message components
+	attachments: { AttachmentObject }?, -- attachment objects with filename and description
+	poll: PollObject?, -- discord poll object
+}
+
+-- https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
+export type InteractionResponseObject = {
+	type: InteractionCallbackType, -- the type of response
+	data: InteractionCallbackDataObject?, -- an optional response message
 }
 
 return "DISCORD_V10_PAYLOAD_TYPES"
