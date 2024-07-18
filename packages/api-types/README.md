@@ -6,4 +6,4 @@
 
 ## DiscordLuau - Types
 
-This package contains complete type definitions for DiscordLuau. Types are parsed and then compiled through the `types-parser` package. DiscordLuau aims to be completely typed.
+This package contains luau types for every/all discord v10 APIs, allowing developers to type the HTTP, Websocket requests that they get from the discord API.
