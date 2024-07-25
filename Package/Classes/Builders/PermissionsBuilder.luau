@@ -132,7 +132,7 @@ PermissionsBuilder.Interface.Permissions = Enumerate.new({
 ]=]
 function PermissionsBuilder.Prototype.addPermission(self: PermissionsBuilder, permission: number)
 	if table.find(self.permissions, permission) then
-		return
+		return self
 	end
 
 	table.insert(self.permissions, permission)
