@@ -8,7 +8,7 @@
 	"luau-lsp.inlayHints.typeHintMaxLength": 50,
 	"luau-lsp.require.directoryAliases": {
 		"@lune/": "~/.lune/.typedefs/0.8.6/",
-		"@builders": "./packages/builders",
+		"@builders": "./packages/builders/src",
 		"@cdn": "./packages/cdn/src",
 		"@classes": "./packages/classes/src",
 		"@core": "./packages/core/src",

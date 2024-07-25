@@ -157,7 +157,7 @@ export type AutomoderationActionType = number
 export type ChannelType = number
 
 -- https://discord.com/developers/docs/resources/channel#channel-object-video-quality-modes
-export type ViceoQualityMode = number
+export type VideoQualityMode = number
 
 -- https://discord.com/developers/docs/resources/channel#channel-object-channel-flags
 export type ChannelFlags = number
@@ -418,18 +418,18 @@ export type GuildRoleTagObject = {
 
 -- https://discord.com/developers/docs/topics/permissions#role-object
 export type GuildRoleObject = {
-	id: Snowflake, -- role id
+	id: Snowflake?, -- role id
 	name: string, -- role name
 	color: number, -- integer representation of hexadecimal color code
 	hoist: boolean, -- if this role is pinned in the user listing
 	icon: string?, -- role icon hash
-	unicode_emoji: string, -- role unicode emoji
-	position: number, -- position of this role (roles with the same position are sorted by id)
+	unicode_emoji: string?, -- role unicode emoji
+	position: number?, -- position of this role (roles with the same position are sorted by id)
 	permissions: string, -- permission bit set
-	managed: boolean, -- whether this role is managed by an integration
+	managed: boolean?, -- whether this role is managed by an integration
 	mentionable: boolean, -- whether this role is mentionable
 	tags: GuildRoleTagObject?, -- the tags this role has
-	flags: number, -- role flags combined as a bitfield
+	flags: number?, -- role flags combined as a bitfield
 }
 
 -- https://discord.com/developers/docs/resources/emoji#emoji-object
@@ -614,7 +614,7 @@ export type AutomoderationRuleObject = {
 
 -- https://discord.com/developers/docs/resources/channel#overwrite-object
 export type OverwriteObject = {
-	id: Snowflake, -- role or user id
+	id: Snowflake?, -- role or user id
 	type: OverwriteObjectType, -- either 0 (role) or 1 (member)
 	allow: string, -- permission bit set
 	deny: string, --permission bit set
@@ -693,7 +693,7 @@ export type ChannelObject = {
 	parent_id: Snowflake?, -- for guild channels: id of the parent category for a channel (each parent category can contain up to 50 channels), for threads: id of the text channel this thread was created
 	last_pin_timestamp: string?, -- when the last pinned message was pinned. This may be null in events such as GUILD_CREATE when a message is not pinned.
 	rtc_region: string?, -- voice region id for the voice channel, automatic when set to null
-	video_quality_mode: ViceoQualityMode?, -- the camera video quality mode of the voice channel, 1 when not present
+	video_quality_mode: VideoQualityMode?, -- the camera video quality mode of the voice channel, 1 when not present
 	message_count: number?, -- number of messages (not including the initial message or deleted messages) in a thread.
 	member_count: number?, -- an approximate count of users in a thread, stops counting at 50
 	thread_metadata: ThreadMetadataObject?, -- thread-specific fields not needed by other channels

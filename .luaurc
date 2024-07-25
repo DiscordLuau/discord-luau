@@ -4,7 +4,7 @@
 		"*": false
 	},
 	"aliases": {
-		"builders": "./packages/builders",
+		"builders": "./packages/builders/src",
 		"cdn": "./packages/cdn/src",
 		"classes": "./packages/classes/src",
 		"core": "./packages/core/src",

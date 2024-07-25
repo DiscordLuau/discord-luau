@@ -2,7 +2,7 @@
 	Mapping out all discord responses that we can get from the Discord v10 REST/HTTP API.
 ]]
 
-local objects = require("@api-types/objects")
+local objects = require("@api-types/apiTypes")
 
 -- [[ Base ]] --
 
@@ -105,7 +105,7 @@ export type ModifyChannelRequest = Request<{
 	permission_overwrites: { [objects.Snowflake]: objects.OverwriteObject }?, -- channel or category-specific permissions
 	parent_id: objects.Snowflake?, -- id of the new parent category for a channel
 	rtc_region: string?, -- channel voice region id, automatic when set to null
-	video_quality_mode: objects.ViceoQualityMode, -- the camera video quality mode of the voice channel
+	video_quality_mode: objects.VideoQualityMode, -- the camera video quality mode of the voice channel
 	default_auto_archive_duration: number?, -- the default duration that the clients use (not the API) for newly created threads in the channel, in minutes, to automatically archive the thread after recent activity
 	flags: number?, -- channel flags combined as a bitfield. Currently only REQUIRE_TAG (1 << 4) is supported by GUILD_FORUM and GUILD_MEDIA channels. HIDE_MEDIA_DOWNLOAD_OPTIONS (1 << 15) is supported only by GUILD_MEDIA channels
 	available_tags: { objects.ForumTagObject }?, -- the set of tags that can be used in a GUILD_FORUM or a GUILD_MEDIA channel; limited to 20
@@ -266,7 +266,7 @@ export type CreateGuildChannelRequest = Request<{
 	parent_id: objects.Snowflake?, -- id of the parent category for a channel
 	nsfw: boolean?, -- whether the channel is nsfw
 	rtc_region: string?, -- channel voice region id of the voice or stage channel, automatic when set to null
-	video_quality_mode: objects.ViceoQualityMode?, -- the camera video quality mode of the voice channel
+	video_quality_mode: objects.VideoQualityMode?, -- the camera video quality mode of the voice channel
 	default_auto_archive_duration: number?, -- the default duration that the clients use (not the API) for newly created threads in the channel, in minutes, to automatically archive the thread after recent activity
 	default_reaction_emoji: objects.EmojiObject?, -- emoji to show in the add reaction button on a thread in a GUILD_FORUM or a GUILD_MEDIA channel
 	available_tags: { objects.ForumTagObject }?, -- set of tags that can be used in a GUILD_FORUM or a GUILD_MEDIA channel
