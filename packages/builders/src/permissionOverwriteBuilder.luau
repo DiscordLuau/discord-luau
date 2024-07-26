@@ -1,5 +1,10 @@
 --[[
-	permissionOverwriteBuilder - class responsible for building the OverwriteObject JSON that can be parsed by the Discord API.
+	Implementation of discords Permission Overwrite object as a Luau builder.	
+
+	See permissions for more information about the allow and deny fields.
+
+	https://discord.com/developers/docs/topics/permissions#permissions
+	https://discord.com/developers/docs/resources/channel#overwrite-object
 ]]
 
 local apiTypes = require("@api-types/apiTypes")
@@ -12,14 +17,6 @@ PermissionOverwriteBuilder.Interface = {}
 
 --[[
 	Responsible for allowing specific permission to be set on either a Role of a Member.
-
-	```lua
-	local permissionOverwriteObject = PermissionOverwriteBuilder.new("role")
-		:AllowPermissions(Permission.ManageMessages, Permission.ManageRoles)
-		:Build()
-
-	print(permissionOverwriteObject)
-	```
 ]]
 function PermissionOverwriteBuilder.Prototype.allowPermissions(
 	self: PermissionOverwriteBuilder,
@@ -34,14 +31,6 @@ end
 
 --[[
 	Responsible for denying specific permission to be set on either a Role of a Member.
-
-	```lua
-	local permissionOverwriteObject = PermissionOverwriteBuilder.new("member")
-		:DenyPermissions(Permission.ManageMessages, Permission.ManageRoles)
-		:Build()
-
-	print(permissionOverwriteObject)
-	```
 ]]
 function PermissionOverwriteBuilder.Prototype.denyPermissions(
 	self: PermissionOverwriteBuilder,
@@ -85,6 +74,15 @@ end
 	Responsible for creating a new PermissionOverwriteBuilder.
 
 	With this builder, you can specify allow/deny permissions for either a Role or a Member.
+
+	```lua
+	local permissionOverwrite = PermissionOverwriteBuilder.new("role")
+		:allowPermissions(Permission.ManageMessages, Permission.ManageRoles)
+		:denyPermissions(Permission.KickMembers)
+		:build()
+
+	print(permissionOverwriteObject)
+	```
 ]]
 function PermissionOverwriteBuilder.Interface.new(
 	permissionType: PermissionOverwriteType,

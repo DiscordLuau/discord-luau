@@ -1,5 +1,7 @@
 --[[
-	Guild Role Builder, responsible for building a Role object that Discords API can understand.
+	Implementation of a Discord Guild Role as a Luau builder.
+
+	https://discord.com/developers/docs/resources/guild#create-guild-role-json-params
 ]]
 
 local apiTypes = require("@api-types/apiTypes")
@@ -89,11 +91,11 @@ end
 	Constructs a new Role Builder.
 
 	```lua
-	local roleBuilder = GuildRoleBuilder.new("Role Name", { permissions.Permission.SendMessages })
-		:SetColor(0xFFFFFF)
-		:SetHoisted(true)
-		:SetMentionable(true)
-		:Build()
+	local role = GuildRoleBuilder.new("Role Name", { permissions.Permission.SendMessages })
+		:setColor(0xFFFFFF)
+		:setHoisted(true)
+		:setMentionable(true)
+		:build()
 	```
 ]]
 function GuildRoleBuilder.Interface.new(
