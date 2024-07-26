@@ -21,10 +21,10 @@ PermissionOverwriteBuilder.Interface = {}
 	print(permissionOverwriteObject)
 	```
 ]]
-function PermissionOverwriteBuilder.Prototype.AllowPermissions(
+function PermissionOverwriteBuilder.Prototype.allowPermissions(
 	self: PermissionOverwriteBuilder,
 	...: permissions.Permission
-)
+): PermissionOverwriteBuilder
 	for _, permission in { ... } do
 		table.insert(self.allowedPermissionFlags, permission)
 	end
@@ -43,10 +43,10 @@ end
 	print(permissionOverwriteObject)
 	```
 ]]
-function PermissionOverwriteBuilder.Prototype.DenyPermissions(
+function PermissionOverwriteBuilder.Prototype.denyPermissions(
 	self: PermissionOverwriteBuilder,
 	...: permissions.Permission
-)
+): PermissionOverwriteBuilder
 	for _, permission in { ... } do
 		table.insert(self.deniedPermissionFlags, permission)
 	end
@@ -57,7 +57,7 @@ end
 --[[
 	Responsible for building the OverwriteObject JSON that can be parsed by the Discord API.
 ]]
-function PermissionOverwriteBuilder.Prototype.Build(self: PermissionOverwriteBuilder): apiTypes.OverwriteObject
+function PermissionOverwriteBuilder.Prototype.build(self: PermissionOverwriteBuilder): apiTypes.OverwriteObject
 	local allowPermissionBits = {}
 	local denyPermissionBits = {}
 
