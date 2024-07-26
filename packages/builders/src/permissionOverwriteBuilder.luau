@@ -88,15 +88,18 @@ function PermissionOverwriteBuilder.Interface.new(
 	permissionType: PermissionOverwriteType,
 	allowFlags: { permissions.Permission }?,
 	denyFlags: { permissions.Permission }?
-)
-	return setmetatable({
-		allowedPermissionFlags = allowFlags or {},
-		deniedPermissionFlags = denyFlags or {},
+): PermissionOverwriteBuilder
+	return setmetatable(
+		{
+			allowedPermissionFlags = allowFlags or {},
+			deniedPermissionFlags = denyFlags or {},
 
-		permissionType = permissionType,
-	}, {
-		__index = PermissionOverwriteBuilder.Prototype,
-	})
+			permissionType = permissionType,
+		} :: PermissionOverwriteBuilder,
+		{
+			__index = PermissionOverwriteBuilder.Prototype,
+		}
+	)
 end
 
 export type PermissionOverwriteBuilder = typeof(PermissionOverwriteBuilder.Prototype) & {
