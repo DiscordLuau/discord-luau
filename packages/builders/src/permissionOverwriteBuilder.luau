@@ -63,7 +63,7 @@ function PermissionOverwriteBuilder.Prototype.build(self: PermissionOverwriteBui
 	end
 
 	return {
-		type = self.permissionType == "role" and 0 or 1,
+		type = self.type == "role" and 0 or 1,
 
 		allow = tostring(bit32.bor(table.unpack(allowPermissionBits))),
 		deny = tostring(bit32.bor(table.unpack(denyPermissionBits))),
@@ -94,7 +94,7 @@ function PermissionOverwriteBuilder.Interface.new(
 			allowedPermissionFlags = allowFlags or {},
 			deniedPermissionFlags = denyFlags or {},
 
-			permissionType = permissionType,
+			type = permissionType,
 		} :: PermissionOverwriteBuilder,
 		{
 			__index = PermissionOverwriteBuilder.Prototype,
@@ -102,11 +102,30 @@ function PermissionOverwriteBuilder.Interface.new(
 	)
 end
 
+--[[
+	Responsible for creating a new PermissionOverwriteBuilder from an existing ID/Object.
+
+	Supports properties that the .new constructor doesn't support. (id)
+]]
+function PermissionOverwriteBuilder.Interface.from(
+	permissionId: apiTypes.Snowflake,
+	permissionType: PermissionOverwriteType,
+	allowFlags: { permissions.Permission }?,
+	denyFlags: { permissions.Permission }?
+): PermissionOverwriteBuilder
+	local self = PermissionOverwriteBuilder.Interface.new(permissionType, allowFlags, denyFlags)
+
+	self.id = permissionId
+
+	return self
+end
+
 export type PermissionOverwriteBuilder = typeof(PermissionOverwriteBuilder.Prototype) & {
 	allowedPermissionFlags: { permissions.Permission },
 	deniedPermissionFlags: { permissions.Permission },
 
-	permissionType: PermissionOverwriteType,
+	type: PermissionOverwriteType,
+	id: apiTypes.Snowflake,
 }
 
 export type PermissionOverwriteType = "role" | "member"

@@ -7,6 +7,8 @@
 local apiTypes = require("@api-types/apiTypes")
 local permissions = require("@api-types/permissions")
 
+local validateKebabCase = require("@utils/validateKebabCase")
+
 local GuildRoleBuilder = {}
 
 GuildRoleBuilder.Prototype = {}
@@ -15,10 +17,13 @@ GuildRoleBuilder.Interface = {}
 --[[
 	Sets the name of the role, optionally this could be defined when creating the Role Builder as well.
 ]]
-function GuildRoleBuilder.Prototype.setName(self: GuildRoleBuilder, name: string): GuildRoleBuilder
-	assert(#name <= 100, `Role name must be less than 100 characters.`)
+function GuildRoleBuilder.Prototype.setName(self: GuildRoleBuilder, roleName: string): GuildRoleBuilder
+	assert(#roleName <= 100, `Role name must be less than 100 characters.`)
+	assert(#roleName > 1, `Role name must be more than 1 characters.`)
 
-	self.name = name
+	assert(validateKebabCase(roleName), `Tag name must be kebab-case.`)
+
+	self.name = roleName
 
 	return self
 end

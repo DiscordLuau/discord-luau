@@ -658,7 +658,7 @@ export type ThreadMemberObject = {
 
 -- https://discord.com/developers/docs/resources/channel#forum-tag-object
 export type ForumTagObject = {
-	id: Snowflake, -- the id of the tag
+	id: Snowflake?, -- the id of the tag
 	name: string, -- the name of the tag (0-20 characters)
 	moderated: boolean, -- whether this tag can only be added to or removed from threads by a member with the MANAGE_THREADS permission
 	emoji_id: string?, -- the id of a guild's custom emoji
@@ -673,12 +673,12 @@ export type DefaultReactionObject = {
 
 -- https://discord.com/developers/docs/resources/channel#channel-object
 export type ChannelObject = {
-	id: Snowflake, -- the id of this channel
+	id: Snowflake?, -- the id of this channel
 	type: ChannelType, -- the type of channel
 	guild_id: Snowflake?, -- the id of the guild (may be missing for some channel objects received over gateway guild dispatches)
-	position: number?, -- sorting position of the channel (channels with the same position are sorted by id)
-	permission_overwrites: { OverwriteObject }?, -- explicit permission overwrites for members and roles
-	name: string?, -- the name of the channel (1-100 characters)
+	position: number, -- sorting position of the channel (channels with the same position are sorted by id)
+	permission_overwrites: { OverwriteObject }, -- explicit permission overwrites for members and roles
+	name: string, -- the name of the channel (1-100 characters)
 	topic: string?, -- the channel topic (0-4096 characters for GUILD_FORUM and GUILD_MEDIA channels, 0-1024 characters for all others)
 	nsfw: boolean?, -- whether the channel is nsfw
 	last_message_id: Snowflake?, -- the id of the last message sent in this channel (or thread for GUILD_FORUM or GUILD_MEDIA channels) (may not point to an existing or valid message or thread)
