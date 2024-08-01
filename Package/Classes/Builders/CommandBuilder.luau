@@ -221,7 +221,7 @@ end
 	@return Network.Resolvable
 ]=]
 function CommandBuilder.Prototype.toPayloadObject(self: CommandBuilder)
-	local permissions = "0"
+	local permissions = nil
 	local options = {}
 
 	for _, commandOption in self.options do
