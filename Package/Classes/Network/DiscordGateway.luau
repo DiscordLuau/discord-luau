@@ -217,7 +217,7 @@ function DiscordGateway.Prototype.requestAsync(
 			if ratelimitLimit and ratelimitRemaining and ratelimitResetAfter then
 				if not self.endpointRateLimits[ratelimitApi] then
 					self.endpointRateLimits[ratelimitApi] = (
-						HTTPRatelimit.new(ratelimitLimit, ratelimitRemaining) :: unknown
+						HTTPRatelimit.new(ratelimitRemaining, ratelimitLimit) :: unknown
 					) :: HTTPRatelimit.HTTPRatelimit
 				end
 
