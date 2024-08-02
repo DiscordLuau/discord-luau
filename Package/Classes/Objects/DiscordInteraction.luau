@@ -246,8 +246,6 @@ function DiscordInteraction.Interface.new(discordClient: any, jsonData: { [any]:
 	if jsonData.member then
 		jsonData.member =
 			DiscordGuildMember.new(discordClient, jsonData.member.user.id, jsonData.guild.id, jsonData.member)
-
-		jsonData.member.user = nil
 	end
 
 	if jsonData.appPermissions then
