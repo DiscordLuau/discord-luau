@@ -1,4 +1,4 @@
-name: Stylua Formatter
+name: Pull Request & Push CI
 
 on:
   push:
@@ -16,5 +16,11 @@ jobs:
       - uses: ok-nick/setup-aftman@v0.4.2
       - name: Generate Standard Library
         run: selene generate-roblox-std
-      - name: Run Stylua
-        run: lune run task fmt -- --check --output-format Summary
+      - name: Execute Formatter
+        run: lune run executeFormatter
+      - name: Execute Linter
+        run: lune run executeLinter
+      - name: Execute LSP
+        run: lune run executeLsp
+      - name: Execute Unit Tests
+        run: lune run executeTests

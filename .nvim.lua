@@ -23,6 +23,7 @@ require("luau-lsp").config({
 						["@vendor"] = "./packages/vendor/src",
 						["@voice"] = "./packages/voice/src",
 						["@websocket"] = "./packages/voice/src",
+						["@frktest"] = "./extern/frktest/src",
 					},
 				},
 				completion = {

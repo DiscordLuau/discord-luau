@@ -788,7 +788,7 @@ export type GuildScheduledEventObject = {
 	entity_type: GuildScheduledEventEntityType, -- the type of the scheduled event
 	entity_id: Snowflake?, -- the id of an entity associated with a guild scheduled event
 	entity_metadata: GuildScheduledEventEntityMetadata?, -- additional metadata for the guild scheduled event
-	creator: UserGameSettings?, -- the user that created the scheduled event
+	creator: UserObject?, -- the user that created the scheduled event
 	user_count: number, -- the number of users subscribed to the scheduled event
 	image: string?, -- the cover image hash of the scheduled event
 }

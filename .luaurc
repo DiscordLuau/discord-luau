@@ -15,6 +15,7 @@
 		"utils": "./packages/utils/src",
 		"vendor": "./packages/vendor/src",
 		"voice": "./packages/voice/src",
-		"websocket": "./packages/websocket/src"
+		"websocket": "./packages/websocket/src",
+		"frktest": "./extern/frktest/src"
 	}
 }
