@@ -3,7 +3,7 @@
 local frktest = require("@frktest/frktest")
 local reporter = require("@frktest/reporters/lune_console_reporter")
 
-local requireTests = require("task/tests")
+local requireTests = require("task/requireTests")
 
 requireTests("tests")
 
