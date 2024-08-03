@@ -31,7 +31,7 @@ local ILLEGAL_HTTP_TOKEN_CHARACTERS = table.freeze({
 	["\9"] = true,
 	["\r"] = true,
 	["\n"] = true,
-})
+}) :: { [string]: boolean }
 
 local function validateEncodedToken_RFC2047(source: string)
 	local sourceSplit = string.split(source, "")
@@ -81,9 +81,9 @@ local function parseMultipartContentDisposition(stream: Stream.Stream): (string,
 	validateEncodedToken_RFC2047(name)
 
 	-- todo: fix this
-	-- name = string.gsub(name, "%%0A", "\n")
-	-- name = string.gsub(name, "%%0D", "\r")
-	-- name = string.gsub(name, "%%22", '"')
+	name = string.gsub(name, "%%0A", "\n")
+	name = string.gsub(name, "%%0D", "\r")
+	name = string.gsub(name, "%%22", '"')
 
 	return name, filename
 end
