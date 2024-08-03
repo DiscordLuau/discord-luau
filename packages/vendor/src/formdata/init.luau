@@ -1,8 +1,12 @@
 --[[
-	FormData implementation in Luau, this file follows the following spec:
+	A multipart/form-data implementation for luau.
 	
+	This implementation is based on the following spec(s):
+	- https://www.rfc-editor.org/rfc/rfc2388
 	- https://xhr.spec.whatwg.org/#formdata
 ]]
+
+local parser = require("parser")
 
 local FILE_FORMATS = table.freeze({
 	jpg = "image/jpg",
@@ -64,8 +68,8 @@ function FormData.Prototype.getBody(self: FormData): string
 		local fileType = string.match(entry.filename or "", ".+%.(%S+)")
 
 		multiformContent ..= `--{self.boundary}\r\n`
-		multiformContent ..= `Content-Disposition: form-data; name="{entry.name}"{entry.filename and `; filename="{entry.filename}" or ""`}\r\n`
-		multiformContent ..= `Content-Type: {FILE_FORMATS[fileType] or "text/plain"}\r\n`
+		multiformContent ..= `Content-Disposition: form-data; name="{entry.name}"{entry.filename and `; filename="{entry.filename}"` or ""}\r\n`
+		multiformContent ..= `Content-Type: {FILE_FORMATS[fileType] or "application/octet-stream"}\r\n`
 
 		multiformContent ..= `\r\n`
 		multiformContent ..= `{entry.value}\r\n`
@@ -86,11 +90,18 @@ end
 --[[
 	Appends a new entry to the form data's internal 'entries' table.
 ]]
-function FormData.Prototype.append(self: FormData, name: string, value: string, filename: string?): ()
+function FormData.Prototype.append(
+	self: FormData,
+	name: string,
+	value: string,
+	filename: string?,
+	encoding: string?
+): ()
 	table.insert(self.entries, {
 		name = name,
 		value = value,
 		filename = filename,
+		encoding = encoding,
 	})
 end
 
@@ -99,7 +110,7 @@ end
 
 	Follows the standard found here: https://xhr.spec.whatwg.org/#dom-formdata-append
 ]]
-function FormData.Prototype.set(self: FormData, name: string, value: string, filename: string?): ()
+function FormData.Prototype.set(self: FormData, name: string, value: string, filename: string?, encoding: string?): ()
 	local index = filter(self.entries, function(object)
 		return object.name == name
 	end)
@@ -116,6 +127,7 @@ function FormData.Prototype.set(self: FormData, name: string, value: string, fil
 			name = name,
 			value = value,
 			filename = filename,
+			encoding = encoding,
 		}
 
 		local nextIndex = filter(self.entries, function(object)
@@ -222,8 +234,22 @@ function FormData.Interface.new(): FormData
 	)
 end
 
+--[[
+	Parses formdata a string into a FormData object.
+]]
+function FormData.Interface.parse(textSource: string, mimeType: string): FormData
+	local formData = FormData.Interface.new()
+	local parsedFiles = parser(textSource, mimeType)
+
+	for _, entry in parsedFiles do
+		formData:append(entry.name, entry.body, entry.filename, entry.contentTransferEncoding)
+	end
+
+	return formData
+end
+
 export type FormDataEntryValue = string
-export type FormDataEntryMap = { name: string, value: string, filename: string? }
+export type FormDataEntryMap = { name: string, value: string, filename: string?, encoding: string? }
 export type FormData = typeof(FormData.Prototype) & {
 	entries: { FormDataEntryMap },
 	boundary: string,
