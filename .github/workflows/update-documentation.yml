@@ -18,6 +18,6 @@ jobs:
         uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ secrets.PAT }}
-          repository: DiscordLuau/Discord-Luau-Site
+          repository: DiscordLuau/docs
           event-type: update-ref
           client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
