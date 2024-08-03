@@ -2,7 +2,6 @@
 
 local DiscordEvents = {
 	Ready = "Ready",
-	Disconnected = "Disconnected",
 
 	Message = "Message",
 	MessageChanged = "MessageChanged",
@@ -33,7 +32,6 @@ local DiscordEvents = {
 
 export type DiscordEvents =
 	"Ready"
-	| "Disconnected"
 	| "Message"
 	| "MessageChanged"
 	| "MessageDeleted"

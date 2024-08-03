@@ -14,6 +14,8 @@ local WebsocketOperationKeys = require("@Enums/WebsocketOperationKeys")
 local WebsocketCloseCodes = require("@Enums/WebsocketCloseCodes")
 local WebsocketEvents = require("@Enums/WebsocketEvents")
 
+local EventManager = require("../Objects/EventManager")
+
 local LIBRARY_IDENTIFIER = "DiscordLuau"
 
 --[=[
@@ -39,10 +41,13 @@ DiscordShard.Prototype.type = "DiscordShard"
 	@method observeWebsocketErrors
 	@within Network.DiscordShard
 ]=]
+
 function DiscordShard.Prototype.observeWebsocketErrors(self: DiscordShard)
 	table.insert(
 		self.activeConnections,
 		self.discordWebsocket.onSocketDead:connect(function(closeCode)
+			self.onEvent:fire("onDisconnect", { closeCode, self.shardId })
+
 			if closeCode == WebsocketCloseCodes.UnknownError then
 				self:reconnectAsync()
 			elseif closeCode == WebsocketCloseCodes.UnknownOperation then
