@@ -33,6 +33,9 @@ local ILLEGAL_HTTP_TOKEN_CHARACTERS = table.freeze({
 	["\n"] = true,
 }) :: { [string]: boolean }
 
+--[[
+	Validate that the name of the Content-Disposition header is valid ABNF grammar as defined in RFC 2047.
+]]
 local function validateEncodedToken_RFC2047(source: string)
 	local sourceSplit = string.split(source, "")
 
@@ -45,6 +48,9 @@ local function validateEncodedToken_RFC2047(source: string)
 	end
 end
 
+--[[
+	This function is responsible for parsing the Content-Disposition header.
+]]
 local function parseMultipartContentDisposition(stream: Stream.Stream): (string, string?)
 	local header = stream:advance(20)
 
@@ -80,7 +86,6 @@ local function parseMultipartContentDisposition(stream: Stream.Stream): (string,
 
 	validateEncodedToken_RFC2047(name)
 
-	-- todo: fix this
 	name = string.gsub(name, "%%0A", "\n")
 	name = string.gsub(name, "%%0D", "\r")
 	name = string.gsub(name, "%%22", '"')
@@ -88,6 +93,9 @@ local function parseMultipartContentDisposition(stream: Stream.Stream): (string,
 	return name, filename
 end
 
+--[[
+	This function is responsible for parsing the Content-Type header.
+]]
 local function parseContentType(stream: Stream.Stream): string
 	local header = stream:advance(13)
 
@@ -111,6 +119,9 @@ local function parseContentType(stream: Stream.Stream): string
 	return contentType
 end
 
+--[[
+	This function is responsible for parsing the optional Content-Transfer-Encoding header.
+]]
 local function parseContentTransferEncoding(stream: Stream.Stream): string?
 	local header = stream:peek(26)
 
@@ -135,6 +146,10 @@ local function parseContentTransferEncoding(stream: Stream.Stream): string?
 	end
 end
 
+--[[
+	This function is responsible for parsing the entire form data, it uses a combination of the above
+		functions to parse the form data.
+]]
 local function parseMultipartFormDataValue(stream: Stream.Stream): DecodedFormDataValue
 	local name, filename = parseMultipartContentDisposition(stream)
 	local contentType = parseContentType(stream)
@@ -155,6 +170,9 @@ local function parseMultipartFormDataValue(stream: Stream.Stream): DecodedFormDa
 	}
 end
 
+--[[
+	The main function that is called to parse the form data.
+]]
 local function parseMultipartFormData(stream: Stream.Stream, boundary: string): { DecodedFormDataValue }
 	local formData = {}
 
@@ -195,6 +213,9 @@ local function parseMultipartFormData(stream: Stream.Stream, boundary: string): 
 	return formData
 end
 
+--[[
+	This function is responsible for parsing the mime type. Returning the 'boundary' from the mime parameters.
+]]
 local function parseMultipartMime(stream: Stream.Stream): string
 	local matchedBoundary
 	local boundary
