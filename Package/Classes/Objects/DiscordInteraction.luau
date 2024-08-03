@@ -264,7 +264,9 @@ export type DiscordInteraction = typeof(DiscordInteraction.Prototype) & {
 
 	channel: DiscordChannel.DiscordChannel,
 	guild: DiscordGuild.DiscordGuild,
-	user: DiscordUser.DiscordUser,
+
+	user: DiscordUser.DiscordUser?,
+	member: DiscordGuildMember.DiscordGuildMember?,
 
 	token: string,
 	applicationId: string,
