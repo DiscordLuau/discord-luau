@@ -1,11 +1,9 @@
---[[
-	This file is used to execute all unit tests found under the `tests` directory.
-]]
+--> Task for running unit-tests using frktest
 
 local frktest = require("@frktest/frktest")
 local reporter = require("@frktest/reporters/lune_console_reporter")
 
-local requireTests = require("src/requireTests")
+local requireTests = require("task/tests")
 
 requireTests("tests")
 

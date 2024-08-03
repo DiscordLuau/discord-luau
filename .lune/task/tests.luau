@@ -1,7 +1,4 @@
---[[
-	Responsible for requiring all descendants of the 'tests' directory, and then calling those test functions
-		by calling these test functions, we're able to run all unit tests.
-]]
+--> Runs tests located in the tests/ directory
 
 -- WARNING: we're using the `Lune` runtime in the CI/CD environment, so we're not going to be using the `@std-polyfills`
 -- package that the discord-luau package uses.

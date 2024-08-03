@@ -1,9 +1,6 @@
---[[
-	Task is responsible for executing binary applications in a CI/CD environment, this task object is used in several
-		CI/CD pipelines.
-]]
+--> An internal library for lune scripts to execute tasks in CI/CD
 
--- WARNING: we're using the `Lune` runtime in the CI/CD environment, so we're not going to be using the `@std-polyfills`
+-- NOTE: we're using the `Lune` runtime in the CI/CD environment, so we're not going to be using the `@std-polyfills`
 -- package that the discord-luau package uses.
 
 local process = require("@lune/process")
