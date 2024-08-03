@@ -72,20 +72,20 @@ end
 	:build()
 	```
 ]]
-function ForumTagBuilder.Interface.new(
+function ForumTagBuilder.Interface.new(resource: {
 	tagName: string,
 	emoji: {
 		name: string,
 		id: apiTypes.Snowflake,
-	}?
-): ForumTagBuilder
+	}?,
+}): ForumTagBuilder
 	local self = setmetatable(
 		{
-			name = tagName,
+			name = resource.tagName,
 			moderated = true,
 
-			emojiId = emoji and emoji.id,
-			emojiName = emoji and emoji.name,
+			emojiId = resource.emoji and resource.emoji.id,
+			emojiName = resource.emoji and resource.emoji.name,
 		} :: ForumTagBuilder,
 		{ __index = ForumTagBuilder.Prototype }
 	)
@@ -96,17 +96,17 @@ end
 --[[
 	Enables us to construct a Tag Builder object from an existing tag object, used when modifying forum tags.
 ]]
-function ForumTagBuilder.Interface.from(
+function ForumTagBuilder.Interface.from(resource: {
 	tagId: apiTypes.Snowflake,
 	tagName: string,
 	emoji: {
 		name: string,
 		id: apiTypes.Snowflake,
-	}?
-): ForumTagBuilder
-	local self = ForumTagBuilder.Interface.new(tagName, emoji)
+	}?,
+}): ForumTagBuilder
+	local self = ForumTagBuilder.Interface.new(resource)
 
-	self.id = tagId
+	self.id = resource.tagId
 
 	return self
 end

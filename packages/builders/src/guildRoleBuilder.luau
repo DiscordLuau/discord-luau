@@ -103,10 +103,10 @@ end
 		:build()
 	```
 ]]
-function GuildRoleBuilder.Interface.new(
+function GuildRoleBuilder.Interface.new(resource: {
 	roleName: string?,
-	rolePermissions: { permissions.Permission }?
-): GuildRoleBuilder
+	rolePermissions: { permissions.Permission }?,
+}): GuildRoleBuilder
 	local self = setmetatable(
 		{
 			name = "",
@@ -121,13 +121,13 @@ function GuildRoleBuilder.Interface.new(
 		{ __index = GuildRoleBuilder.Prototype }
 	)
 
-	if roleName then
-		self:setName(roleName)
+	if resource.roleName then
+		self:setName(resource.roleName)
 	end
 
-	if rolePermissions then
+	if resource.rolePermissions then
 		-- HACK: Typecasting here so that all varargs are typed as a Permission.
-		self:setPermissions(table.unpack(rolePermissions) :: permissions.Permission)
+		self:setPermissions(table.unpack(resource.rolePermissions) :: permissions.Permission)
 	end
 
 	return self

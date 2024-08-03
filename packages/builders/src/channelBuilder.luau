@@ -384,18 +384,18 @@ end
 --[[
 	Constructor for the Discord Channel Builder.
 ]]
-function ChannelBuilder.Interface.new(
+function ChannelBuilder.Interface.new(resource: {
 	channelName: string?,
 	channelType: ChannelType?,
 	channelPosition: number?,
-	channelPermissionOverwrites: { apiTypes.OverwriteObject }?
-): ChannelBuilder
+	channelPermissionOverwrites: { apiTypes.OverwriteObject }?,
+}): ChannelBuilder
 	local self = setmetatable(
 		{
-			name = channelName or "channel-object",
-			type = channelType or "GuildText",
-			position = channelPosition or 0,
-			permissionOverwrites = channelPermissionOverwrites or {},
+			name = resource.channelName or "channel-object",
+			type = resource.channelType or "GuildText",
+			position = resource.channelPosition or 0,
+			permissionOverwrites = resource.channelPermissionOverwrites or {},
 		} :: ChannelBuilder,
 		{ __index = ChannelBuilder.Prototype }
 	)
@@ -406,16 +406,16 @@ end
 --[[
 	Construct a channel builder from the provided channel id.
 ]]
-function ChannelBuilder.Interface.from(
+function ChannelBuilder.Interface.from(resource: {
 	channelId: apiTypes.Snowflake,
 	channelName: string?,
 	channelType: ChannelType?,
 	channelPosition: number?,
-	channelPermissionOverwrites: { apiTypes.OverwriteObject }?
-): ChannelBuilder
-	local self = ChannelBuilder.Interface.new(channelName, channelType, channelPosition, channelPermissionOverwrites)
+	channelPermissionOverwrites: { apiTypes.OverwriteObject }?,
+}): ChannelBuilder
+	local self = ChannelBuilder.Interface.new(resource)
 
-	self.id = channelId
+	self.id = resource.channelId
 
 	return self
 end

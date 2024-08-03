@@ -84,17 +84,17 @@ end
 	print(permissionOverwriteObject)
 	```
 ]]
-function PermissionOverwriteBuilder.Interface.new(
+function PermissionOverwriteBuilder.Interface.new(resource: {
 	permissionType: PermissionOverwriteType,
 	allowFlags: { permissions.Permission }?,
-	denyFlags: { permissions.Permission }?
-): PermissionOverwriteBuilder
+	denyFlags: { permissions.Permission }?,
+}): PermissionOverwriteBuilder
 	return setmetatable(
 		{
-			allowedPermissionFlags = allowFlags or {},
-			deniedPermissionFlags = denyFlags or {},
+			allowedPermissionFlags = resource.allowFlags or {},
+			deniedPermissionFlags = resource.denyFlags or {},
 
-			type = permissionType,
+			type = resource.permissionType,
 		} :: PermissionOverwriteBuilder,
 		{
 			__index = PermissionOverwriteBuilder.Prototype,
@@ -107,15 +107,15 @@ end
 
 	Supports properties that the .new constructor doesn't support. (id)
 ]]
-function PermissionOverwriteBuilder.Interface.from(
+function PermissionOverwriteBuilder.Interface.from(resource: {
 	permissionId: apiTypes.Snowflake,
 	permissionType: PermissionOverwriteType,
 	allowFlags: { permissions.Permission }?,
-	denyFlags: { permissions.Permission }?
-): PermissionOverwriteBuilder
-	local self = PermissionOverwriteBuilder.Interface.new(permissionType, allowFlags, denyFlags)
+	denyFlags: { permissions.Permission }?,
+}): PermissionOverwriteBuilder
+	local self = PermissionOverwriteBuilder.Interface.new(resource)
 
-	self.id = permissionId
+	self.id = resource.permissionId
 
 	return self
 end

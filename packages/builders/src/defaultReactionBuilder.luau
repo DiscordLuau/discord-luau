@@ -30,11 +30,14 @@ end
 	local defaultReaction = DefaultReactionBuilder.new("000000000000000000", "secret-emoji"):build()
 	```
 ]]
-function DefaultReactionBuilder.Interface.new(emojiId: apiTypes.Snowflake?, emojiName: string?): DefaultReactionBuilder
+function DefaultReactionBuilder.Interface.new(resource: {
+	emojiId: apiTypes.Snowflake?,
+	emojiName: string?,
+}): DefaultReactionBuilder
 	local self = setmetatable(
 		{
-			emojiId = emojiId,
-			emojiName = emojiName,
+			emojiId = resource.emojiId,
+			emojiName = resource.emojiName,
 		} :: DefaultReactionBuilder,
 		{ __index = DefaultReactionBuilder.Prototype }
 	)
