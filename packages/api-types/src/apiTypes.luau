@@ -1466,7 +1466,7 @@ export type SessionStartLimitObject = {
 	total: number, -- Total number of session starts the current user is allowed
 	remaining: number, -- Remaining number of session starts the current user is allowed
 	reset_after: number, -- Number of milliseconds after which the limit resets
-	max_concurrency: number, -- Number of identify requests allowed per 5 seconds
+	max_concurrently: number, -- Number of identify requests allowed per 5 seconds
 }
 
 -- https://discord.com/developers/docs/resources/channel#allowed-mentions-object

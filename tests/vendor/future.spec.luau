@@ -27,5 +27,7 @@ return function()
 		end)
 
 		object:await()
+
+		check.equal(variable, "Hello World")
 	end)
 end

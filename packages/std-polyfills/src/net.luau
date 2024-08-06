@@ -3,7 +3,10 @@
 ]=]
 
 local Net = {}
+local LuneNet = require("@lune/net")
 
-setmetatable(Net, { __index = require("@lune/net") })
+export type WebSocket = LuneNet.WebSocket
+
+setmetatable(Net, { __index = LuneNet })
 
 return Net

@@ -8,6 +8,8 @@ local objects = require("@api-types/apiTypes")
 export type Payload<DATA> = {
 	op: number,
 	d: DATA,
+	s: number?,
+	t: string?,
 }
 
 -- [[ Send Events - https://discord.com/developers/docs/topics/gateway-events#send-events ]] --
