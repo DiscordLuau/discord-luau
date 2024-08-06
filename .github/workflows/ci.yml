@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  fmt:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install tooling
+        uses: CompeyDev/setup-rokit@v0.1.0
+        with:
+          cache: true
+      - name: Check formatting
+        run: lune run fmt
+
+  lint:
+    runs-on: ubuntu-latest
+    needs: ["fmt"]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install tooling
+        uses: CompeyDev/setup-rokit@v0.1.0
+        with:
+          cache: true
+      - name: Lint
+        run: lune run lint
+  typecheck:
+    runs-on: ubuntu-latest
+    needs: ["lint"]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install tooling
+        uses: CompeyDev/setup-rokit@v0.1.0
+        with:
+          cache: true
+      - name: Typecheck
+        run: lune run analyze
+  test:
+    runs-on: ubuntu-latest
+    needs: ["typecheck"]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: Install tooling
+        uses: CompeyDev/setup-rokit@v0.1.0
+        with:
+          cache: true
+      - name: Setup lune typedefs
+        run: lune setup
+      - name: Run unit-tests
+        run: lune run test

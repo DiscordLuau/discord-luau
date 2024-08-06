@@ -1,6 +1,4 @@
-std = "luau"
-
-exclude = ["luneTypes.d.luau"]
+std = "lune"
 
 [lints]
 high_cyclomatic_complexity = "warn"
