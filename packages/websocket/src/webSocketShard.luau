@@ -12,14 +12,48 @@ local receiveEvents = require("@api-types/gateway/receiveEvents")
 local opcodes = require("@api-types/gateway/opcodes")
 local gatewayTypes = require("@api-types/gateway/types")
 
+-- selene: allow(bad_string_escape)
 local ZLIB_HEADER = "\x00\x00\xff\xff"
 local LIBRARY_IDENTIFIER = "DiscordLuau"
 
+--[[
+	WebSocketShard is responsible for managing a single WebSocket connection to Discord's Gateway API.
+		Its key responsibilities include:
+
+	1. Establishing and maintaining a WebSocket connection
+	2. Handling incoming messages:
+		- Decompressing ZLIB-compressed messages
+		- Decoding JSON payloads
+		- Invoking callbacks for processed messages
+	3. Sending outgoing messages, including heartbeats
+	4. Managing the heartbeat mechanism:
+		- Sending periodic heartbeats to keep the connection alive
+		- Tracking heartbeat acknowledgements
+		- Initiating reconnection if heartbeats are not acknowledged
+	5. Handling reconnection logic when the connection becomes unstable or "zombified"
+	6. Providing an interface for other parts of the application to interact with the WebSocket connection
+
+	The WebSocketShard module is crucial for maintaining real-time communication with Discord's Gateway,
+		ensuring the bot stays connected and can send and receive updates efficiently.
+]]
 local WebSocketShard = {}
 
 WebSocketShard.Interface = {}
 WebSocketShard.Prototype = {}
 
+--[[
+	Function responsible for handling incoming messages from the WebSocket connection.
+	
+	It performs the following steps:
+	1. Decompresses the incoming message if it's ZLIB-compressed
+		i. It's worth noting that payloads may not be complete, meaning we should add data to the
+			buffer until we have a complete message
+	2. Decodes the JSON payload
+	3. Invokes the appropriate callback based on the received event type
+
+	Roufhly based on the following documentation:
+	https://discord.com/developers/docs/topics/gateway#zlibstream
+]]
 function WebSocketShard.Prototype._handleMessage(self: WebSocketShard, message: string): ()
 	self.zlibBuffer:write(message)
 
@@ -49,6 +83,9 @@ function WebSocketShard.Prototype._handleMessage(self: WebSocketShard, message: 
 	end
 end
 
+--[[
+	This function is responsible for sending a heartbeat to the Discord Gateway API.
+]]
 function WebSocketShard.Prototype.heartbeatAsync(self: WebSocketShard, requested: boolean?): future.Future<nil>
 	return future.new(function()
 		if not self.heartbeatAcknowledged and not requested then
@@ -67,6 +104,9 @@ function WebSocketShard.Prototype.heartbeatAsync(self: WebSocketShard, requested
 	end)
 end
 
+--[[
+	This function is responsible for identifying the current shard with the Discord Gateway.
+]]
 function WebSocketShard.Prototype.identifyAsync(self: WebSocketShard): future.Future<nil>
 	return future.new(function()
 		self:sendAsync(net.jsonEncode({
@@ -90,6 +130,12 @@ function WebSocketShard.Prototype.identifyAsync(self: WebSocketShard): future.Fu
 	end)
 end
 
+--[[
+	This function is responsible for disconnecting the Shard from the Discord Gateway.
+
+	optionally, a WebSocket close code can be provided, websocket close code spec can be found here:
+		https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent/code
+]]
 function WebSocketShard.Prototype.disconnectAsync(self: WebSocketShard, code: number?): future.Future<nil>
 	return future.new(function()
 		assert(self.socketActive and self.socketInstance, `expected socket to be connected.`)
@@ -108,6 +154,15 @@ function WebSocketShard.Prototype.disconnectAsync(self: WebSocketShard, code: nu
 	end)
 end
 
+--[[
+	Responsible for connecting the shard to a Discord Gateway.
+
+	Expects both a Socket URL, and Socket Version to be provided. It will prepend the socket version
+		to the socket URL, and then connect to the socket.
+
+	This function is also responsible for spawning the thread that will be responsible for
+		receiving messages from the socket.
+]]
 function WebSocketShard.Prototype.connectAsync(
 	self: WebSocketShard,
 	socketUrl: string,
@@ -163,6 +218,10 @@ function WebSocketShard.Prototype.connectAsync(
 	end)
 end
 
+--[[
+	Responsible for resuming a shard session if for some reason the session has either become
+		zombified, or the session has been invalidated by Discord.
+]]
 function WebSocketShard.Prototype.resumeAsync(self: WebSocketShard): future.Future<nil>
 	return future.new(function()
 		self:connectAsync(self.sessionGateway :: string, self.socketVersion :: number)
@@ -183,6 +242,10 @@ function WebSocketShard.Prototype.resumeAsync(self: WebSocketShard): future.Futu
 	end)
 end
 
+--[[
+	Responsible for the closure of the WebSocket, and then the reconnection of the shard.
+		This is not a re-instantiation of the shard, but a re-connection of the shard.
+]]
 function WebSocketShard.Prototype.reconnectAsync(self: WebSocketShard): future.Future<nil>
 	return future.new(function()
 		self:disconnectAsync(1012)
@@ -195,6 +258,9 @@ function WebSocketShard.Prototype.reconnectAsync(self: WebSocketShard): future.F
 	end)
 end
 
+--[[
+	Send a message through the WebSocket to Discords Gateway. Messages are expected to be JSON encoded strings.
+]]
 function WebSocketShard.Prototype.sendAsync(self: WebSocketShard, data: string): future.Future<nil>
 	local debugTraceback = debug.traceback()
 
@@ -216,6 +282,15 @@ function WebSocketShard.Prototype.sendAsync(self: WebSocketShard, data: string):
 	end)
 end
 
+--[[
+	This function is responsible for disconnecting the Shard, and then re-instantiating the shard.
+
+	Re-instantiation is the reconnection of the shard to the original socket passed, and not the
+		session URL/ID that was passed.
+
+	This means that any events from now, and since this shard has been down would of been dropped, or
+		not received.
+]]
 function WebSocketShard.Prototype.reinstantiateAsync(self: WebSocketShard): future.Future<nil>
 	return future.new(function()
 		self:disconnectAsync(1012)
@@ -236,6 +311,10 @@ function WebSocketShard.Prototype.reinstantiateAsync(self: WebSocketShard): futu
 	end)
 end
 
+--[[
+	Responsible for the heartbeat of the shard after X milliseconds, it will then loop and continue
+		to heartbeat until the shard is disconnected.
+]]
 function WebSocketShard.Prototype.heartbeatIn(self: WebSocketShard, milliseconds: number): ()
 	if self.heartbeatThread then
 		task.cancel(self.heartbeatThread)
@@ -256,6 +335,9 @@ function WebSocketShard.Prototype.heartbeatIn(self: WebSocketShard, milliseconds
 	end)
 end
 
+--[[
+	Constructor function for the WebSocketShard.
+]]
 function WebSocketShard.Interface.new(settings: {
 	token: string,
 
@@ -288,18 +370,28 @@ function WebSocketShard.Interface.new(settings: {
 		{ __index = WebSocketShard.Prototype }
 	)
 
+	-- The following handles "raw" payload/messages from the Discord Websocket.
 	self.onSocketRawMessage:listen(function(payload)
 		if payload.op == opcodes.Dispatch then
+			-- https://discord.com/developers/docs/topics/gateway#dispatch-events
+
 			self.logger:debug(`WebSocketShard received dispatch message: {payload.t}`)
+
+			self.lastSequence = payload.s
 
 			self.onSocketDispatch:invoke(payload.t, payload.d)
 		elseif payload.op == opcodes.Heartbeat then
-			self.logger:debug(`WebSocketShard received heartbeat request, responding.`)
+			-- https://discord.com/developers/docs/topics/gateway-events#heartbeat
 
+			self.logger:debug(`WebSocketShard received heartbeat request, responding.`)
 			self:heartbeatAsync(true)
 		elseif payload.op == opcodes.Reconnect then
+			-- https://discord.com/developers/docs/topics/gateway-events#reconnect
+
 			self:reconnectAsync()
 		elseif payload.op == opcodes.InvalidSession then
+			-- https://discord.com/developers/docs/topics/gateway-events#invalid-session
+
 			local messageObject = payload :: gatewayTypes.InvalidSessionPayload
 
 			self.logger:warn(`Discord returned invalid session, reconnecting..`)
@@ -318,6 +410,8 @@ function WebSocketShard.Interface.new(settings: {
 				self:reinstantiateAsync()
 			end
 		elseif payload.op == opcodes.Hello then
+			-- https://discord.com/developers/docs/topics/gateway-events#hello
+
 			self.logger:debug(`WebSocketShard received hello message, starting heartbeat..`)
 
 			local messageObject = payload :: gatewayTypes.HelloPayload
@@ -338,6 +432,8 @@ function WebSocketShard.Interface.new(settings: {
 
 			self.logger:warn(`Handler for shard {payload.op} not implemented.`)
 		elseif payload.op == opcodes.HeartbeatACK then
+			-- https://discord.com/developers/docs/topics/gateway#heartbeat-interval
+
 			self.logger:debug(`WebSocketShard received heartbeat acknowledgement.`)
 
 			self.heartbeatAcknowledged = true
@@ -357,6 +453,13 @@ function WebSocketShard.Interface.new(settings: {
 		end
 	end)
 
+	--[[
+		The following handles events from the Discord Websocket, we're specifically awaiting the 'Ready'
+			event, which is emitted when the shard has identified.
+
+		The Ready event contains the resume gateway url, and the session id, which is key for us
+			in order to resume the session.
+	]]
 	self.onSocketDispatch:listen(function(event, payload)
 		if event ~= receiveEvents.Ready then
 			return
