@@ -8,6 +8,7 @@ local gatewayTypes = require("@api-types/gateway/types")
 local restTypes = require("@api-types/rest/types")
 
 local opcodes = require("@api-types/gateway/opcodes")
+local receiveEvents = require("@api-types/gateway/receiveEvents")
 
 local webSocketShard = require("@websocket/webSocketShard")
 
@@ -30,14 +31,24 @@ function WebSocketManager.Prototype.connectAsync(
 
 		for shardId = 0, shardCount - 1 do
 			table.insert(self.shardIds, shardId)
-			table.insert(self.webSocketShards, webSocketShard.new())
+			table.insert(
+				self.webSocketShards,
+				webSocketShard.new({
+					token = self.token,
+					intents = self.intents,
+					largeThreshold = self.largeThreshold,
+
+					shardId = shardId,
+					shardCount = shardCount,
+				})
+			)
 		end
 
 		for bucketIndex = 0, shardCount - 1, maxConcurrently do
 			for shardId = bucketIndex, bucketIndex + maxConcurrently do
 				local webSocketShardInstance = self.webSocketShards[shardId]
 
-				webSocketShardInstance:connectAsync(websocketUrl):await()
+				webSocketShardInstance:connectAsync(websocketUrl, self.webSocketVersion):await()
 			end
 
 			task.wait(CONCURRENT_IDENTIFY_YIELD)
@@ -46,41 +57,29 @@ function WebSocketManager.Prototype.connectAsync(
 		for shardId = 0, shardCount - 1 do
 			local webSocketShardInstance = self.webSocketShards[shardId]
 
-			webSocketShardInstance.onSocketMessage:listen(function(message)
-				if message.op == opcodes.Dispatch then
-					local _dispatchEvent = message.t :: string
-
-					self.logger:warn(`Handler for shard {message.op} not implemented.`)
-				elseif message.op == opcodes.Hello then
-					self.logger:warn(`Handler for shard {message.op} not implemented.`)
-				elseif message.op == opcodes.Heartbeat then
-					self.logger:warn(`Handler for shard {message.op} not implemented.`)
-				elseif message.op == opcodes.HeartbeatACK then
-					self.logger:warn(`Handler for shard {message.op} not implemented.`)
-				elseif message.op == opcodes.Reconnect then
-					self.logger:warn(`Handler for shard {message.op} not implemented.`)
-				elseif message.op == opcodes.InvalidSession then
-					self.logger:warn(`Handler for shard {message.op} not implemented.`)
-				end
+			webSocketShardInstance.onSocketDispatch:listen(function(event, message)
+				self.logger:warn(event, message)
 			end)
 		end
 	end)
 end
-
-function WebSocketManager.Prototype.disconnectAsync(self: WebSocketManager, code: number?) end
 
 function WebSocketManager.Prototype.send() end
 
 function WebSocketManager.Interface.new(settings: {
 	token: string,
 	intents: number,
+	largeThreshold: number?,
 
 	webSocketShards: { [ShardId]: webSocketShard.WebSocketShard },
+	webSocketVersion: number,
 }): WebSocketManager
 	return setmetatable(
 		{
 			token = settings.token,
 			intents = settings.intents,
+			webSocketVersion = settings.webSocketVersion,
+			largeThreshold = settings.largeThreshold,
 
 			shardIds = {},
 			webSocketShards = {},
@@ -103,6 +102,8 @@ export type ShardId = number
 export type WebSocketManager = typeof(WebSocketManager.Prototype) & {
 	token: string,
 	intents: number,
+	webSocketVersion: number,
+	largeThreshold: number?,
 
 	shardIds: { ShardId },
 	webSocketShards: { [ShardId]: webSocketShard.WebSocketShard },
@@ -115,7 +116,7 @@ export type WebSocketManager = typeof(WebSocketManager.Prototype) & {
 	onError: emitter.Emitter<string>,
 	onHeartbeat: emitter.Emitter<{ latency: number }>,
 	onReady: emitter.Emitter<gatewayTypes.ReadyPayload>,
-	onDispatch: emitter.Emitter<gatewayTypes.Payload<unknown>>,
+	onDispatch: emitter.Emitter<receiveEvents.ReceiveEvent, gatewayTypes.Payload<unknown>>,
 }
 
 return WebSocketManager
