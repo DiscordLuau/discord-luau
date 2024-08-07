@@ -107,7 +107,7 @@ end
 
 	Supports properties that the .new constructor doesn't support. (id)
 ]]
-function PermissionOverwriteBuilder.Interface.from(resource: {
+function PermissionOverwriteBuilder.Interface.fromId(resource: {
 	permissionId: apiTypes.Snowflake,
 	permissionType: PermissionOverwriteType,
 	allowFlags: { permissions.Permission }?,

@@ -406,7 +406,7 @@ end
 --[[
 	Construct a channel builder from the provided channel id.
 ]]
-function ChannelBuilder.Interface.from(resource: {
+function ChannelBuilder.Interface.fromId(resource: {
 	channelId: apiTypes.Snowflake,
 	channelName: string?,
 	channelType: ChannelType?,

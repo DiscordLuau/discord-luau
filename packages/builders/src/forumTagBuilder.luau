@@ -96,7 +96,7 @@ end
 --[[
 	Enables us to construct a Tag Builder object from an existing tag object, used when modifying forum tags.
 ]]
-function ForumTagBuilder.Interface.from(resource: {
+function ForumTagBuilder.Interface.fromId(resource: {
 	tagId: apiTypes.Snowflake,
 	tagName: string,
 	emoji: {
