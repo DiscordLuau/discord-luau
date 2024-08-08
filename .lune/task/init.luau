@@ -9,7 +9,7 @@ local stdio = require("@lune/stdio")
 local Task = {}
 export type Task = typeof(Task) & {
 	executable: string,
-	arguments: { string }
+	arguments: { string },
 }
 
 Task.Prototype = {}
@@ -31,13 +31,14 @@ end
 ]]
 function Task.Prototype.execute(self: Task): process.SpawnResult
 	local spawnResult = process.spawn(self.executable, self.arguments, {
-		stdio = "forward"
+		stdio = "forward",
 	})
 
 	if not spawnResult.ok then
 		print(
 			`[{stdio.color("red")}error{stdio.color("reset")}] \`{self.executable}\` exited with code {spawnResult.code} `
 		)
+	end
 
 	return spawnResult
 end
