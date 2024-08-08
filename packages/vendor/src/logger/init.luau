@@ -43,8 +43,8 @@ Logger.Interface = {}
 local function parseVaradic(args: { any }): string
 	local source = ""
 
-	for _, object in args do
-		source ..= `, {stdio.format(object)}`
+	for index, object in args do
+		source ..= `{index ~= 1 and ", " or ""}{stdio.format(object)}`
 	end
 
 	return source

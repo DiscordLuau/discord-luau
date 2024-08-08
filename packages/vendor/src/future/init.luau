@@ -6,6 +6,7 @@
 ]]
 
 local task = require("@std-polyfills/task")
+local stdio = require("@std-polyfills/stdio")
 
 local Future = {}
 
@@ -122,14 +123,22 @@ function Future.Prototype.execute<T>(self: Future<T>, ...): Future<T>
 			self.status = "Fulfilled"
 
 			for _, callback in self._afterCallbacks do
-				task.spawn(callback, table.unpack(self._valueList))
+				callback(table.unpack(self._valueList))
 			end
 		end, function(exception: string)
 			self.exception = exception
 			self.status = "Rejected"
 
-			for _, callback in self._catchCallback do
-				task.spawn(callback, exception)
+			if #self._catchCallback == 0 then
+				stdio.ewrite(
+					`{stdio.style("bold")}{stdio.color("red")}Future encountered and error that had no error handling!\n{stdio.color(
+						"blue"
+					)}{self.exception}\n`
+				)
+			else
+				for _, callback in self._catchCallback do
+					task.spawn(callback, exception)
+				end
 			end
 		end)
 

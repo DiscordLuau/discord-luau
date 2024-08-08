@@ -5,6 +5,8 @@
 	This library has Unit Tests written for it under the /tests directory.
 ]]
 
+local task = require("@std-polyfills/task")
+
 local Emitter = {}
 
 Emitter.Interface = {}
@@ -64,13 +66,13 @@ end
 ]]
 function Emitter.Prototype.invoke<T...>(self: Emitter<T...>, ...): ()
 	for _, thread in self._yieldingThreads do
-		coroutine.resume(thread, ...)
+		task.spawn(thread, ...)
 	end
 
 	self._yieldingThreads = {}
 
 	for _, thread in self._connectedThreads do
-		coroutine.resume(thread, ...)
+		task.spawn(thread, ...)
 	end
 end
 

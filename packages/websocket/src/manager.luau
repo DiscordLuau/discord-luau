@@ -9,7 +9,7 @@ local restTypes = require("@api-types/rest/types")
 
 local receiveEvents = require("@api-types/gateway/receiveEvents")
 
-local webSocketShard = require("@websocket/webSocketShard")
+local shard = require("@websocket/shard")
 
 local CONCURRENT_IDENTIFY_YIELD = 5
 
@@ -20,16 +20,20 @@ Manager.Prototype = {}
 
 function Manager.Prototype.connectAsync(self: Manager, gatewayInformation: restTypes.GetGatewayBotResponse)
 	return future.new(function()
-		local maxConcurrently = gatewayInformation.session_start_limit.max_concurrently
+		local maxConcurrency = gatewayInformation.session_start_limit.max_concurrency
 
 		local websocketUrl = gatewayInformation.url
 		local shardCount = gatewayInformation.shards
 
+		self.logger:debug(`Creating all Shards required for Manager..`)
+
 		for shardId = 0, shardCount - 1 do
+			self.logger:debug(`Creating new Shard '{shardId}'`)
+
 			table.insert(self.shardIds, shardId)
 			table.insert(
-				self.webSocketShards,
-				webSocketShard.new({
+				self.shards,
+				shard.new({
 					token = self.token,
 					intents = self.intents,
 					largeThreshold = self.largeThreshold,
@@ -40,21 +44,18 @@ function Manager.Prototype.connectAsync(self: Manager, gatewayInformation: restT
 			)
 		end
 
-		for bucketIndex = 0, shardCount - 1, maxConcurrently do
-			for shardId = bucketIndex, bucketIndex + maxConcurrently do
-				local webSocketShardInstance = self.webSocketShards[shardId]
+		self.logger:debug(`Connecting all Shards to the Discord Gateway..`)
 
-				webSocketShardInstance:connectAsync(websocketUrl, self.webSocketVersion):await()
+		for shardIndex, shardInstance in next, self.shards do
+			if shardIndex ~= 1 and shardIndex % maxConcurrency == 0 then
+				task.wait(CONCURRENT_IDENTIFY_YIELD)
 			end
 
-			task.wait(CONCURRENT_IDENTIFY_YIELD)
-		end
+			self.logger:debug(`Connecting Shard '{shardIndex - 1}' to Discord Gateway`)
 
-		for shardId = 0, shardCount - 1 do
-			local webSocketShardInstance = self.webSocketShards[shardId]
-
-			webSocketShardInstance.onSocketDispatch:listen(function(event, message)
-				self.logger:warn(event, message)
+			shardInstance:connectAsync(websocketUrl, self.webSocketVersion):await()
+			shardInstance.onSocketDispatch:listen(function(event)
+				-- self.logger:warn(event, message)
 			end)
 		end
 	end)
@@ -67,7 +68,6 @@ function Manager.Interface.new(settings: {
 	intents: number,
 	largeThreshold: number?,
 
-	webSocketShards: { [ShardId]: webSocketShard.WebSocketShard },
 	webSocketVersion: number,
 }): Manager
 	return setmetatable(
@@ -78,7 +78,7 @@ function Manager.Interface.new(settings: {
 			largeThreshold = settings.largeThreshold,
 
 			shardIds = {},
-			webSocketShards = {},
+			shards = {},
 
 			logger = logger.new("Manager"),
 
@@ -95,14 +95,14 @@ function Manager.Interface.new(settings: {
 end
 
 export type ShardId = number
-export type Manager = typeof(WebSocketManager.Prototype) & {
+export type Manager = typeof(Manager.Prototype) & {
 	token: string,
 	intents: number,
 	webSocketVersion: number,
 	largeThreshold: number?,
 
 	shardIds: { ShardId },
-	webSocketShards: { [ShardId]: webSocketShard.WebSocketShard },
+	shards: { [ShardId]: shard.Shard },
 
 	logger: logger.Logger,
 
@@ -115,4 +115,4 @@ export type Manager = typeof(WebSocketManager.Prototype) & {
 	onDispatch: emitter.Emitter<receiveEvents.ReceiveEvent, gatewayTypes.Payload<unknown>>,
 }
 
-return Manager
+return Manager.Interface
