@@ -36,7 +36,7 @@ function Task.Prototype.execute(self: Task): process.SpawnResult
 
 	if not spawnResult.ok then
 		print(
-			`[{stdio.color("red")}error{stdio.color("reset")}] \`{self.executable}\` exited with code {spawnResult.code} `
+			`\n[{stdio.color("red")}error{stdio.color("reset")}] \`{self.executable}\` exited with code {spawnResult.code} `
 		)
 	end
 

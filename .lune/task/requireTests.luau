@@ -14,7 +14,7 @@ function requireFile(fullPath: string)
 	local success, result = pcall(require, fullPath)
 
 	if not success then
-		print(`{stdio.color("red")}Failed to require unit-test at \`{fullPath}\`, error:`)
+		print(`\n{stdio.color("red")}Failed to require unit-test at \`{fullPath}\`, error:`)
 		print(`{stdio.style("dim")}{result}`)
 
 		process.exit(1)
