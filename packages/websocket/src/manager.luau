@@ -14,15 +14,12 @@ local webSocketShard = require("@websocket/webSocketShard")
 
 local CONCURRENT_IDENTIFY_YIELD = 5
 
-local WebSocketManager = {}
+local Manager = {}
 
-WebSocketManager.Interface = {}
-WebSocketManager.Prototype = {}
+Manager.Interface = {}
+Manager.Prototype = {}
 
-function WebSocketManager.Prototype.connectAsync(
-	self: WebSocketManager,
-	gatewayInformation: restTypes.GetGatewayBotResponse
-)
+function Manager.Prototype.connectAsync(self: Manager, gatewayInformation: restTypes.GetGatewayBotResponse)
 	return future.new(function()
 		local maxConcurrently = gatewayInformation.session_start_limit.max_concurrently
 
@@ -64,16 +61,16 @@ function WebSocketManager.Prototype.connectAsync(
 	end)
 end
 
-function WebSocketManager.Prototype.send() end
+function Manager.Prototype.send() end
 
-function WebSocketManager.Interface.new(settings: {
+function Manager.Interface.new(settings: {
 	token: string,
 	intents: number,
 	largeThreshold: number?,
 
 	webSocketShards: { [ShardId]: webSocketShard.WebSocketShard },
 	webSocketVersion: number,
-}): WebSocketManager
+}): Manager
 	return setmetatable(
 		{
 			token = settings.token,
@@ -84,7 +81,7 @@ function WebSocketManager.Interface.new(settings: {
 			shardIds = {},
 			webSocketShards = {},
 
-			logger = logger.new("WebSocketManager"),
+			logger = logger.new("Manager"),
 
 			onHello = emitter.new(),
 			onResumed = emitter.new(),
@@ -93,13 +90,13 @@ function WebSocketManager.Interface.new(settings: {
 			onHeartbeat = emitter.new(),
 			onReady = emitter.new(),
 			onDispatch = emitter.new(),
-		} :: WebSocketManager,
-		{ __index = WebSocketManager.Prototype }
+		} :: Manager,
+		{ __index = Manager.Prototype }
 	)
 end
 
 export type ShardId = number
-export type WebSocketManager = typeof(WebSocketManager.Prototype) & {
+export type Manager = typeof(WebSocketManager.Prototype) & {
 	token: string,
 	intents: number,
 	webSocketVersion: number,
@@ -119,4 +116,4 @@ export type WebSocketManager = typeof(WebSocketManager.Prototype) & {
 	onDispatch: emitter.Emitter<receiveEvents.ReceiveEvent, gatewayTypes.Payload<unknown>>,
 }
 
-return WebSocketManager
+return Manager
