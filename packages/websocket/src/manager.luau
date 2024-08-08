@@ -7,7 +7,6 @@ local logger = require("@vendor/logger")
 local gatewayTypes = require("@api-types/gateway/types")
 local restTypes = require("@api-types/rest/types")
 
-local opcodes = require("@api-types/gateway/opcodes")
 local receiveEvents = require("@api-types/gateway/receiveEvents")
 
 local webSocketShard = require("@websocket/webSocketShard")
