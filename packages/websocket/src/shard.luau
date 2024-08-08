@@ -243,31 +243,25 @@ end
 ]]
 function Shard.Prototype.resumeAsync(self: Shard): future.Future<nil>
 	return future.new(function()
-		if self.sessionGateway then
-			self:connectAsync(self.sessionGateway :: string, self.socketVersion :: number)
-				:after(function()
-					self.logger:debug(`Shard '{self.shardId}' attempting to resume..`)
+		self:connectAsync(self.sessionGateway :: string, self.socketVersion :: number)
+			:after(function()
+				self.logger:debug(`Shard '{self.shardId}' attempting to resume..`)
 
-					self:sendAsync(net.jsonEncode({
-						["op"] = opcodes.Resume,
-						["d"] = {
-							["token"] = self.token,
-							["session_id"] = self.sessionId,
-							["seq"] = self.lastSequence,
-						},
-					}, true)):after(function()
-						self.logger:debug(`Shard '{self.shardId}' has resumed!`)
-					end)
+				self:sendAsync(net.jsonEncode({
+					["op"] = opcodes.Resume,
+					["d"] = {
+						["token"] = self.token,
+						["session_id"] = self.sessionId,
+						["seq"] = self.lastSequence,
+					},
+				}, true)):after(function()
+					self.logger:debug(`Shard '{self.shardId}' has resumed!`)
 				end)
-				:catch(function(exception)
-					self.logger:critical(`Shard '{self.shardId}' failed to resume session: {exception}`)
-				end)
-				:await()
-		else
-			self.logger:warn(`Shard '{self.shardId}' failed to resume session! Re-instantiating instead!`)
-
-			self:reinstantiateAsync():await()
-		end
+			end)
+			:catch(function(exception)
+				self.logger:critical(`Shard '{self.shardId}' failed to resume session: {exception}`)
+			end)
+			:await()
 	end)
 end
 
@@ -277,19 +271,25 @@ end
 ]]
 function Shard.Prototype.reconnectAsync(self: Shard): future.Future<nil>
 	return future.new(function()
-		self.logger:debug(`Shard '{self.shardId}' reconnection requested, reconnecting..`)
+		if self.sessionGateway then
+			self.logger:debug(`Shard '{self.shardId}' reconnection requested, reconnecting..`)
 
-		self:disconnectAsync(1012)
-			:after(function()
-				task.wait(math.random())
+			self:disconnectAsync(1012)
+				:after(function()
+					task.wait(math.random())
 
-				self:resumeAsync()
-					:after(function()
-						self.logger:debug(`Shard '{self.shardId}' reconnection successful`)
-					end)
-					:await()
-			end)
-			:await()
+					self:resumeAsync()
+						:after(function()
+							self.logger:debug(`Shard '{self.shardId}' reconnection successful`)
+						end)
+						:await()
+				end)
+				:await()
+		else
+			self.logger:warn(`Shard '{self.shardId}' failed to reconnect! Re-instantiating instead!`)
+
+			self:reinstantiateAsync():await()
+		end
 	end)
 end
 
@@ -569,7 +569,7 @@ function Shard.Interface.new(settings: {
 				`If you have the time, please create an issue on the Discord-Luau repository! This is not normal behaviour!`
 			)
 
-			self:resumeAsync()
+			self:reconnectAsync()
 		end
 	end)
 
