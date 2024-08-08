@@ -1,12 +1,16 @@
 --> An internal library for lune scripts to execute tasks in CI/CD
 
--- NOTE: we're using the `Lune` runtime in the CI/CD environment, so we're not going to be using the `@std-polyfills`
+-- NOTE: We use the `Lune` runtime in the CI/CD environment, so we're not going to be using the `@std-polyfills`
 -- package that the discord-luau package uses.
 
 local process = require("@lune/process")
 local stdio = require("@lune/stdio")
 
 local Task = {}
+export type Task = typeof(Task) & {
+	executable: string,
+	arguments: { string }
+}
 
 Task.Prototype = {}
 Task.Interface = {}
@@ -23,23 +27,17 @@ end
 --[[
 	Responsible for executing the task.
 
-	Will dynamically error the CI/CD environment if the executable fails.
+	Inherits the standard IO of the process.
 ]]
 function Task.Prototype.execute(self: Task): process.SpawnResult
-	local spawnResult = process.spawn(self.executable, self.arguments)
+	local spawnResult = process.spawn(self.executable, self.arguments, {
+		stdio = "forward"
+	})
 
-	if spawnResult.ok then
+	if not spawnResult.ok then
 		print(
-			`{stdio.color("green")}Executable '{self.executable}' has passed with the following exit code: '{spawnResult.code}'`
+			`[{stdio.color("red")}error{stdio.color("reset")}] \`{self.executable}\` exited with code {spawnResult.code} `
 		)
-	else
-		print(
-			`{stdio.color("red")}Executable '{self.executable}' has failed with the following exit code: '{spawnResult.code}', stderr is as follows;`
-		)
-		print(`{stdio.color("cyan")}{spawnResult.stderr}`)
-
-		process.exit(spawnResult.code)
-	end
 
 	return spawnResult
 end
