@@ -38,6 +38,8 @@ function Task.Prototype.execute(self: Task): process.SpawnResult
 		print(
 			`\n[{stdio.color("red")}error{stdio.color("reset")}] \`{self.executable}\` exited with code {spawnResult.code} `
 		)
+
+		process.exit(spawnResult.code)
 	end
 
 	return spawnResult
