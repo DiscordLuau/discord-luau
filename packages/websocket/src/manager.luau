@@ -54,7 +54,7 @@ function Manager.Prototype.connectAsync(self: Manager, gatewayInformation: restT
 			self.logger:debug(`Connecting Shard '{shardIndex - 1}' to Discord Gateway`)
 
 			shardInstance:connectAsync(websocketUrl, self.webSocketVersion):await()
-			shardInstance.onSocketDispatch:listen(function(event)
+			shardInstance.onSocketDispatch:listen(function(_event)
 				-- self.logger:warn(event, message)
 			end)
 		end
