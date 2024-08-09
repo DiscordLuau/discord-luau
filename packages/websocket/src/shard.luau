@@ -406,14 +406,13 @@ function Shard.Interface.new(settings: {
 			zlibBuffer = buffer.new(),
 
 			onSocketConnected = emitter.new(),
+			onSocketReconnected = emitter.new(),
 			onSocketDisconnected = emitter.new(),
 
 			onSocketHeartbeat = emitter.new(),
 
 			onSocketDispatch = emitter.new(),
 			onSocketRawMessage = emitter.new(),
-
-			onSocketDisconnected = emitter.new(),
 
 			logger = logger.new(`Shard<{settings.shardId}>`),
 

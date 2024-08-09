@@ -25,6 +25,8 @@ function Manager.Prototype.connectAsync(self: Manager, gatewayInformation: restT
 		local websocketUrl = gatewayInformation.url
 		local shardCount = gatewayInformation.shards
 
+		local readyShards = {}
+
 		self.logger:debug(`Creating all Shards required for Manager..`)
 
 		for shardId = 0, shardCount - 1 do
@@ -60,6 +62,17 @@ function Manager.Prototype.connectAsync(self: Manager, gatewayInformation: restT
 					event = event.t,
 					payload = event,
 				})
+
+				if event.t == receiveEvents.Ready then
+					table.insert(readyShards, shardIndex - 1)
+
+					if #readyShards == shardCount then
+						self.onAllShardsReady:invoke({
+							shardId = shardIndex - 1,
+							payload = event,
+						})
+					end
+				end
 			end)
 
 			shardInstance.onSocketHeartbeat:listen(function(ping: number?)
@@ -117,6 +130,8 @@ function Manager.Interface.new(settings: {
 			onConnected = emitter.new(),
 			onHeartbeat = emitter.new(),
 			onDispatch = emitter.new(),
+
+			onAllShardsReady = emitter.new(),
 		} :: Manager,
 		{ __index = Manager.Prototype }
 	)
@@ -142,6 +157,10 @@ export type Manager = typeof(Manager.Prototype) & {
 	onHeartbeat: emitter.Emitter<ShardPayload<{ latency: number }>>,
 	onDispatch: emitter.Emitter<ShardPayload<{
 		event: receiveEvents.ReceiveEvent,
+		payload: gatewayTypes.Payload<unknown>,
+	}>>,
+
+	onAllShardsReady: emitter.Emitter<ShardPayload<{
 		payload: gatewayTypes.Payload<unknown>,
 	}>>,
 }
