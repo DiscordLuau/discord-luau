@@ -7,10 +7,6 @@ local process = require("@lune/process")
 local stdio = require("@lune/stdio")
 
 local Task = {}
-export type Task = typeof(Task) & {
-	executable: string,
-	arguments: { string },
-}
 
 Task.Prototype = {}
 Task.Interface = {}
