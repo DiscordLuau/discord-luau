@@ -598,10 +598,10 @@ export type EditApplicationCommandPermissions = Response<objects.GuildApplicatio
 export type BatchEditApplicationCommandPermissions = Response<{ objects.GuildApplicationCommandPermissionsObject }>
 
 -- https://discord.com/developers/docs/resources/application#get-current-application
-export type GetCurrentApplicationResponse = Response<objects.ApplicationObject>
+export type GetCurrentApplicationResponse = Response<{ objects.ApplicationObject }>
 
 -- https://discord.com/developers/docs/resources/application#edit-current-application
-export type EditCurrentApplicationResponse = Response<objects.ApplicationObject>
+export type EditCurrentApplicationResponse = Response<{ objects.ApplicationObject }>
 
 -- https://discord.com/developers/docs/resources/application-role-connection-metadata#get-application-role-connection-metadata-records
 export type GetApplicationRoleConnectionMetadataRecordsResponse = Response<

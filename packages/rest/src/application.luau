@@ -6,10 +6,15 @@ local future = require("@vendor/future")
 local restTypes = require("@api-types/rest/types")
 local restEndpoints = require("@api-types/rest/endpoints")
 
+--[[
+	HTTP Rest API implementation for the following Resource:
+
+	- https://discord.com/developers/docs/resources/application
+]]
 local Application = {}
 
 -- https://discord.com/developers/docs/resources/application#get-current-application
-function Application.getCurrentApplicationnAsync(
+function Application.getCurrentApplicationAsync(
 	instance: request.Request
 ): future.Future<restTypes.GetCurrentApplicationResponse>
 	return future.new(function()
@@ -25,7 +30,7 @@ function Application.getCurrentApplicationnAsync(
 end
 
 -- https://discord.com/developers/docs/resources/application#edit-current-application
-function Application.editCurrentApplicationnAsync(
+function Application.editCurrentApplicationAsync(
 	instance: request.Request,
 	jsonParams: restTypes.EditCurrentApplicationRequest
 ): future.Future<nil>
