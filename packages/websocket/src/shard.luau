@@ -153,6 +153,8 @@ function Shard.Prototype.disconnectAsync(self: Shard, code: number?): future.Fut
 	return future.new(function()
 		self.logger:debug(`Shard '{self.shardId}' requesting disconnect: {code or 0}`)
 
+		self.onSocketDisconnected:invoke(code)
+
 		if self.socketInstance then
 			self.socketInstance.close(code)
 		end
@@ -203,13 +205,15 @@ function Shard.Prototype.connectAsync(self: Shard, socketUrl: string, socketVers
 		self.socketThread = task.defer(function()
 			self.logger:debug(`Shard '{self.shardId}' Receive thread started, awaiting messages.`)
 
+			self.onSocketConnected:invoke()
+
 			while self.socketActive do
 				assert(self.socketInstance, `Socket instance is nil.`)
 
 				if self.socketInstance.closeCode then
 					self.logger:warn(`Shard '{self.shardId}' closed from server: {self.socketInstance.closeCode}`)
 
-					self.onSocketClose:invoke(self.socketInstance.closeCode)
+					self.onSocketDisconnected:invoke(self.socketInstance.closeCode)
 
 					self.socketActive = false
 					self.socketInstance = nil
@@ -223,7 +227,7 @@ function Shard.Prototype.connectAsync(self: Shard, socketUrl: string, socketVers
 							`Shard '{self.shardId}' error during receive: {response and response or "No error provided, see close code"}`
 						)
 
-						self.onSocketClose:invoke(self.socketInstance.closeCode)
+						self.onSocketDisconnected:invoke(self.socketInstance.closeCode)
 
 						self.socketActive = false
 						self.socketInstance = nil
@@ -314,7 +318,7 @@ function Shard.Prototype.sendAsync(self: Shard, data: string): future.Future<nil
 
 			self.logger:warn(`Shard '{self.shardId}' error during send: {response}\nTraceback: {debugTraceback}`)
 
-			self.onSocketClose:invoke(self.socketInstance.closeCode)
+			self.onSocketDisconnected:invoke(self.socketInstance.closeCode)
 		end
 	end)
 end
@@ -401,10 +405,15 @@ function Shard.Interface.new(settings: {
 
 			zlibBuffer = buffer.new(),
 
+			onSocketConnected = emitter.new(),
+			onSocketDisconnected = emitter.new(),
+
+			onSocketHeartbeat = emitter.new(),
+
 			onSocketDispatch = emitter.new(),
 			onSocketRawMessage = emitter.new(),
 
-			onSocketClose = emitter.new(),
+			onSocketDisconnected = emitter.new(),
 
 			logger = logger.new(`Shard<{settings.shardId}>`),
 
@@ -484,6 +493,8 @@ function Shard.Interface.new(settings: {
 			self.heartbeatAcknowledged = true
 			self.heartbeatPing = os.clock() - self.heartbeatClockTime :: number
 
+			self.onSocketHeartbeat:invoke(self.heartbeatPing)
+
 			if not self.hasIdentified then
 				self.hasIdentified = true
 
@@ -520,7 +531,7 @@ function Shard.Interface.new(settings: {
 		)
 	end)
 
-	self.onSocketClose:listen(function(code)
+	self.onSocketDisconnected:listen(function(code)
 		if self.heartbeatThread then
 			task.cancel(self.heartbeatThread)
 		end
@@ -588,10 +599,14 @@ export type Shard = typeof(Shard.Prototype) & {
 
 	zlibBuffer: buffer.Buffer,
 
+	onSocketConnected: emitter.Emitter<()>,
+	onSocketReconnected: emitter.Emitter<number?>,
+	onSocketDisconnected: emitter.Emitter<number?>,
+
+	onSocketHeartbeat: emitter.Emitter<number?>,
+
 	onSocketDispatch: emitter.Emitter<gatewayTypes.Payload<unknown>>,
 	onSocketRawMessage: emitter.Emitter<gatewayTypes.Payload<unknown>>,
-
-	onSocketClose: emitter.Emitter<number>,
 
 	heartbeatAcknowledged: boolean?,
 	heartbeatClockTime: number?,

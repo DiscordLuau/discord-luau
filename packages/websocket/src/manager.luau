@@ -54,8 +54,38 @@ function Manager.Prototype.connectAsync(self: Manager, gatewayInformation: restT
 			self.logger:debug(`Connecting Shard '{shardIndex - 1}' to Discord Gateway`)
 
 			shardInstance:connectAsync(websocketUrl, self.webSocketVersion):await()
-			shardInstance.onSocketDispatch:listen(function(_event)
-				-- self.logger:warn(event, message)
+			shardInstance.onSocketDispatch:listen(function(event)
+				self.onDispatch:invoke({
+					shardId = shardIndex - 1,
+					event = event.t,
+					payload = event,
+				})
+			end)
+
+			shardInstance.onSocketHeartbeat:listen(function(ping: number?)
+				self.onHeartbeat:invoke({
+					shardId = shardIndex - 1,
+					latency = ping,
+				})
+			end)
+
+			shardInstance.onSocketConnected:listen(function()
+				self.onConnected:invoke({
+					shardId = shardIndex - 1,
+				})
+			end)
+
+			shardInstance.onSocketReconnected:listen(function()
+				self.onReconnected:invoke({
+					shardId = shardIndex - 1,
+				})
+			end)
+
+			shardInstance.onSocketDisconnected:listen(function(code: number?)
+				self.onDisconnected:invoke({
+					shardId = shardIndex - 1,
+					errorCode = code,
+				})
 			end)
 		end
 	end)
@@ -82,12 +112,10 @@ function Manager.Interface.new(settings: {
 
 			logger = logger.new("Manager"),
 
-			onHello = emitter.new(),
-			onResumed = emitter.new(),
-			onClosed = emitter.new(),
-			onError = emitter.new(),
+			onDisconnected = emitter.new(),
+			onReconnected = emitter.new(),
+			onConnected = emitter.new(),
 			onHeartbeat = emitter.new(),
-			onReady = emitter.new(),
 			onDispatch = emitter.new(),
 		} :: Manager,
 		{ __index = Manager.Prototype }
@@ -95,6 +123,8 @@ function Manager.Interface.new(settings: {
 end
 
 export type ShardId = number
+export type ShardPayload<DATA> = { shardId: number } & DATA
+
 export type Manager = typeof(Manager.Prototype) & {
 	token: string,
 	intents: number,
@@ -106,13 +136,14 @@ export type Manager = typeof(Manager.Prototype) & {
 
 	logger: logger.Logger,
 
-	onHello: emitter.Emitter<()>,
-	onResumed: emitter.Emitter<()>,
-	onClosed: emitter.Emitter<string>,
-	onError: emitter.Emitter<string>,
-	onHeartbeat: emitter.Emitter<{ latency: number }>,
-	onReady: emitter.Emitter<gatewayTypes.ReadyPayload>,
-	onDispatch: emitter.Emitter<receiveEvents.ReceiveEvent, gatewayTypes.Payload<unknown>>,
+	onDisconnected: emitter.Emitter<ShardPayload<{ errorCode: number? }>>,
+	onReconnected: emitter.Emitter<ShardPayload<{}>>,
+	onConnected: emitter.Emitter<ShardPayload<{}>>,
+	onHeartbeat: emitter.Emitter<ShardPayload<{ latency: number }>>,
+	onDispatch: emitter.Emitter<ShardPayload<{
+		event: receiveEvents.ReceiveEvent,
+		payload: gatewayTypes.Payload<unknown>,
+	}>>,
 }
 
 return Manager.Interface
