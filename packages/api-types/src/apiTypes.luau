@@ -5,7 +5,7 @@ export type PremiumTypes = number
 
 -- https://discord.com/developers/docs/reference#locales
 export type LanguageLocales =
-	| "id"
+	"id"
 	| "da"
 	| "de"
 	| "en-GB"
@@ -63,8 +63,8 @@ export type PremiumTier = number
 export type SystemChannelFlags = number
 
 -- https://discord.com/developers/docs/resources/guild#guild-object-guild-features
-export type GuildFeature = 
-	| "ANIMATED_BANNER"
+export type GuildFeature =
+	"ANIMATED_BANNER"
 	| "ANIMATED_ICON"
 	| "APPLICATION_COMMAND_PERMISSIONS_V2"
 	| "AUTO_MODERATION"
@@ -103,7 +103,7 @@ export type StickerFormatType = number
 
 -- https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes
 export type OAuth2Scopes =
-	| "activities.read"
+	"activities.read"
 	| "activities.write"
 	| "applications.builds.read"
 	| "applications.builds.upload"
@@ -244,8 +244,8 @@ export type OnboardingMode = number
 export type PromptTypes = number
 
 -- https://discord.com/developers/docs/resources/user#connection-object-services
-export type ConnectionObjectServices = 
-	| "battlenet"
+export type ConnectionObjectServices =
+	"battlenet"
 	| "bungie"
 	| "domain"
 	| "ebay"
@@ -1026,7 +1026,7 @@ export type TextInputComponentObject = {
 
 -- https://discord.com/developers/docs/interactions/message-components#message-components
 export type ComponentObjects =
-	| ActionRowComponentObject
+	ActionRowComponentObject
 	| ButtonComponentObject
 	| SelectMenuComponentObject
 	| TextInputComponentObject
