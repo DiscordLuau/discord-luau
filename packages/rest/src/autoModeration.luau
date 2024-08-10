@@ -63,9 +63,7 @@ function AutoModeration.createAutoModerationRuleAsync(
 		instance:setMethod("POST")
 		instance:setUrl(string.format(restEndpoints.CreateAutoModerationRule, guildId))
 		instance:setBody(serde.encode("json", jsonParams, true))
-		instance:setHeaders({
-			["x-audit-log-reason"] = auditLogReason or "No reason provided",
-		})
+		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
 		local response = instance:executeAsync():await()
 
@@ -87,9 +85,7 @@ function AutoModeration.modifyAutoModerationRuleAsync(
 		instance:setMethod("PATCH")
 		instance:setUrl(string.format(restEndpoints.ModifyAutoModerationRule, guildId, autoModerationRuleId))
 		instance:setBody(serde.encode("json", jsonParams, true))
-		instance:setHeaders({
-			["x-audit-log-reason"] = auditLogReason or "No reason provided",
-		})
+		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
 		local response = instance:executeAsync():await()
 
@@ -109,9 +105,7 @@ function AutoModeration.deleteAutoModerationRuleAsync(
 
 		instance:setMethod("PATCH")
 		instance:setUrl(string.format(restEndpoints.DeleteAutoModerationRule, guildId, autoModerationRuleId))
-		instance:setHeaders({
-			["x-audit-log-reason"] = auditLogReason or "No reason provided",
-		})
+		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
 		instance:executeAsync():await()
 	end)

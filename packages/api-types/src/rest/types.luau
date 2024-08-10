@@ -547,6 +547,13 @@ export type EditWebhookMessageRequest = Request<{
 	attachments: objects.AttachmentObject, -- attached files to keep and possible descriptions for new files
 }>
 
+-- https://discord.com/developers/docs/resources/channel#edit-channel-permissions
+export type EditChannelPermissionsRequest = Response<{
+	allow: string?, -- the bitwise value of all allowed permissions (default "0")
+	deny: string?, -- the bitwise value of all disallowed permissions (default "0")
+	type: number, -- 0 for a role or 1 for a member
+}>
+
 -- [[ Responses ]] --
 
 -- https://discord.com/developers/docs/interactions/application-commands#get-global-application-commands

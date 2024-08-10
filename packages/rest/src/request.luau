@@ -24,17 +24,24 @@ function Request.Prototype.setBody(self: Request, body: string)
 end
 
 --[[
-	Responsible for setting the Headers of this request. Headers must be a table, where the key and values are strings.
+	Responsible for adding to the Url Params of this request. Both the param key and values are strings.
+]]
+function Request.Prototype.addUrlParam(self: Request, paramName: string, paramValue: string)
+	self.urlParams[paramName] = paramValue
+end
+
+--[[
+	Responsible for adding to the Headers of this request. Both the header key and values are strings.
 
 	You are not allowed to set the following headers:
 	- User-Agent
 	- Authorization
 ]]
-function Request.Prototype.setHeaders(self: Request, headers: { [string]: string })
-	assert(headers["user-agent"], `User-Agent header cannot be set!`)
-	assert(headers["authorization"], `Authorization header cannot be set!`)
+function Request.Prototype.addHeader(self: Request, headerName: string, headerValue: string)
+	assert(headerName ~= "user-agent", `User-Agent header cannot be set!`)
+	assert(headerName ~= "authorization", `Authorization header cannot be set!`)
 
-	self.headers = headers
+	self.headers[headerName] = headerValue
 end
 
 --[[
@@ -89,6 +96,8 @@ function Request.Prototype.executeAsync<Resolve>(self: Request): future.Future<{
 		end
 
 		local headerTable = {}
+		local baseUrl = `https://discord.com/api/{self.restApiVersion}{self.url}`
+		local hasUrlParams = next(self.urlParams) ~= nil
 
 		headerTable["user-agent"] = "DiscordBot (https://github.com/DiscordLuau/discord-luau, 0.1.0)"
 		headerTable["content-type"] = "application/json"
@@ -101,8 +110,20 @@ function Request.Prototype.executeAsync<Resolve>(self: Request): future.Future<{
 			headerTable[header] = value
 		end
 
+		if hasUrlParams then
+			baseUrl = baseUrl .. "&"
+		end
+
+		for param, value in self.urlParams do
+			baseUrl = baseUrl .. `{param}={value}?`
+		end
+
+		if hasUrlParams then
+			baseUrl = baseUrl:sub(1, #baseUrl - 1)
+		end
+
 		local request = net.request({
-			url = `https://discord.com/api/{self.restApiVersion}{self.url}`,
+			url = baseUrl,
 			method = self.method,
 			body = self.body,
 			headers = headerTable,
@@ -132,6 +153,7 @@ function Request.Interface.new(settings: {
 			token = settings.token,
 			restApiVersion = settings.restApiVersion,
 			headers = {},
+			urlParams = {},
 		} :: Request,
 		{ __index = Request.Prototype }
 	)
@@ -144,6 +166,7 @@ export type Request = typeof(Request.Prototype) & {
 	method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE",
 	url: string,
 	headers: { [string]: string },
+	urlParams: { [string]: string },
 	body: string,
 }
 

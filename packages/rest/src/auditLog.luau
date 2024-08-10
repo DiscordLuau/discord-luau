@@ -84,37 +84,19 @@ function AuditLog.getGuildAuditLogAsync(
 	}
 ): future.Future<restTypes.GetGuildAuditLogResponse>
 	return future.new(function()
-		local baseUrl = string.format(restEndpoints.GetGuildAuditLog, guildId)
-
-		if next(urlParams) then
-			baseUrl ..= "&"
-
-			for _, value in urlParams do
-				if value == urlParams.userId then
-					baseUrl ..= `user_id={value}?`
-				elseif value == urlParams.before then
-					baseUrl ..= `before={value}?`
-				elseif value == urlParams.after then
-					baseUrl ..= `after={value}?`
-				elseif value == urlParams.limit then
-					baseUrl ..= `limit={value}?`
-				elseif value == urlParams.actionType then
-					local actionTypeValue = ACTION_TYPE_MAPPING[value]
-
-					assert(actionTypeValue, `Invalid action type: {value}`)
-
-					baseUrl ..= `action_type={actionTypeValue}?`
-				end
-			end
-
-			-- remove the last '?'
-			baseUrl = string.sub(baseUrl, 1, #baseUrl - 1)
-		end
-
 		instance:assertToken()
 
+		instance:addUrlParam("user_id", urlParams.userId :: string)
+		instance:addUrlParam("before", urlParams.before :: string)
+		instance:addUrlParam("after", urlParams.after :: string)
+		instance:addUrlParam("limit", urlParams.limit and tostring(urlParams.limit) or (nil :: any))
+		instance:addUrlParam(
+			"action_type",
+			urlParams.actionType and ACTION_TYPE_MAPPING[urlParams.actionType] or (nil :: any)
+		)
+
 		instance:setMethod("GET")
-		instance:setUrl(baseUrl)
+		instance:setUrl(string.format(restEndpoints.GetGuildAuditLog, guildId))
 
 		local response = instance:executeAsync():await()
 
