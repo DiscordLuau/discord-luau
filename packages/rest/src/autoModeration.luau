@@ -1,3 +1,4 @@
+local serde = require("@std-polyfills/serde")
 local request = require("@rest/request")
 local future = require("@vendor/future")
 
@@ -13,7 +14,7 @@ local apiTypes = require("@api-types/apiTypes")
 local AutoModeration = {}
 
 -- https://discord.com/developers/docs/resources/auto-moderation#list-auto-moderation-rules-for-guild
-function AutoModeration.listAutoModerationRulesForGuild(
+function AutoModeration.listAutoModerationRulesForGuildAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake
 ): future.Future<
@@ -32,7 +33,7 @@ function AutoModeration.listAutoModerationRulesForGuild(
 end
 
 -- https://discord.com/developers/docs/resources/auto-moderation#get-auto-moderation-rule
-function AutoModeration.getAutoModerationRulesForGuild(
+function AutoModeration.getAutoModerationRulesForGuildAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	autoModerationRuleId: apiTypes.Snowflake
@@ -46,6 +47,73 @@ function AutoModeration.getAutoModerationRulesForGuild(
 		local response = instance:executeAsync():await()
 
 		return response.body
+	end)
+end
+
+-- https://discord.com/developers/docs/resources/auto-moderation#create-auto-moderation-rule
+function AutoModeration.createAutoModerationRuleAsync(
+	instance: request.Request,
+	guildId: apiTypes.Snowflake,
+	jsonParams: restTypes.CreateAutoModerationRuleRequest,
+	auditLogReason: string?
+): future.Future<apiTypes.AutomoderationRuleObject>
+	return future.new(function()
+		instance:assertToken()
+
+		instance:setMethod("POST")
+		instance:setUrl(string.format(restEndpoints.CreateAutoModerationRule, guildId))
+		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setHeaders({
+			["x-audit-log-reason"] = auditLogReason or "No reason provided",
+		})
+
+		local response = instance:executeAsync():await()
+
+		return response.body
+	end)
+end
+
+-- https://discord.com/developers/docs/resources/auto-moderation#modify-auto-moderation-rule
+function AutoModeration.modifyAutoModerationRuleAsync(
+	instance: request.Request,
+	guildId: apiTypes.Snowflake,
+	autoModerationRuleId: apiTypes.Snowflake,
+	jsonParams: restTypes.CreateAutoModerationRuleRequest,
+	auditLogReason: string?
+): future.Future<apiTypes.AutomoderationRuleObject>
+	return future.new(function()
+		instance:assertToken()
+
+		instance:setMethod("PATCH")
+		instance:setUrl(string.format(restEndpoints.ModifyAutoModerationRule, guildId, autoModerationRuleId))
+		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setHeaders({
+			["x-audit-log-reason"] = auditLogReason or "No reason provided",
+		})
+
+		local response = instance:executeAsync():await()
+
+		return response.body
+	end)
+end
+
+-- https://discord.com/developers/docs/resources/auto-moderation#delete-auto-moderation-rule
+function AutoModeration.deleteAutoModerationRuleAsync(
+	instance: request.Request,
+	guildId: apiTypes.Snowflake,
+	autoModerationRuleId: apiTypes.Snowflake,
+	auditLogReason: string?
+): future.Future<apiTypes.AutomoderationRuleObject>
+	return future.new(function()
+		instance:assertToken()
+
+		instance:setMethod("PATCH")
+		instance:setUrl(string.format(restEndpoints.DeleteAutoModerationRule, guildId, autoModerationRuleId))
+		instance:setHeaders({
+			["x-audit-log-reason"] = auditLogReason or "No reason provided",
+		})
+
+		instance:executeAsync():await()
 	end)
 end
 

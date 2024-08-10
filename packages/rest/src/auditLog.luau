@@ -72,7 +72,7 @@ local ACTION_TYPE_MAPPING = table.freeze({
 local AuditLog = {}
 
 -- https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log
-function AuditLog.getGuildAuditLog(
+function AuditLog.getGuildAuditLogAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	urlParams: {

@@ -13,7 +13,7 @@ local restEndpoints = require("@api-types/rest/endpoints")
 local ApplicationRoleConnectionMetadata = {}
 
 -- https://discord.com/developers/docs/resources/application-role-connection-metadata#get-application-role-connection-metadata-records
-function ApplicationRoleConnectionMetadata.getApplicationRoleConnectionMetadataRecords(
+function ApplicationRoleConnectionMetadata.getApplicationRoleConnectionMetadataRecordsAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake
 ): future.Future<
@@ -32,7 +32,7 @@ function ApplicationRoleConnectionMetadata.getApplicationRoleConnectionMetadataR
 end
 
 -- https://discord.com/developers/docs/resources/application-role-connection-metadata#update-application-role-connection-metadata-records
-function ApplicationRoleConnectionMetadata.updateApplicationRoleConnectionMetadataRecords(
+function ApplicationRoleConnectionMetadata.updateApplicationRoleConnectionMetadataRecordsAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake
 ): future.Future<
