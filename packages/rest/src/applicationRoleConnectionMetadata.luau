@@ -2,6 +2,7 @@ local request = require("@rest/request")
 local future = require("@vendor/future")
 
 local restTypes = require("@api-types/rest/types")
+local apiTypes = require("@api-types/apiTypes")
 local restEndpoints = require("@api-types/rest/endpoints")
 
 --[[
@@ -12,14 +13,17 @@ local restEndpoints = require("@api-types/rest/endpoints")
 local ApplicationRoleConnectionMetadata = {}
 
 -- https://discord.com/developers/docs/resources/application-role-connection-metadata#get-application-role-connection-metadata-records
-function ApplicationRoleConnectionMetadata.getApplicationRoleConnectionMetadataRecords(instance: request.Request): future.Future<
+function ApplicationRoleConnectionMetadata.getApplicationRoleConnectionMetadataRecords(
+	instance: request.Request,
+	applicationId: apiTypes.Snowflake
+): future.Future<
 	restTypes.GetCurrentApplicationResponse
 >
 	return future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(restEndpoints.GetApplicationRoleConnectionMetadataRecords)
+		instance:setUrl(string.format(restEndpoints.GetApplicationRoleConnectionMetadataRecords, applicationId))
 
 		local response = instance:executeAsync():await()
 
@@ -28,14 +32,17 @@ function ApplicationRoleConnectionMetadata.getApplicationRoleConnectionMetadataR
 end
 
 -- https://discord.com/developers/docs/resources/application-role-connection-metadata#update-application-role-connection-metadata-records
-function ApplicationRoleConnectionMetadata.updateApplicationRoleConnectionMetadataRecords(instance: request.Request): future.Future<
+function ApplicationRoleConnectionMetadata.updateApplicationRoleConnectionMetadataRecords(
+	instance: request.Request,
+	applicationId: apiTypes.Snowflake
+): future.Future<
 	restTypes.UpdateApplicationRoleConnectionMetadataRecordsResponse
 >
 	return future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PUT")
-		instance:setUrl(restEndpoints.UpdateApplicationRoleConnectionMetadataRecords)
+		instance:setUrl(string.format(restEndpoints.UpdateApplicationRoleConnectionMetadataRecords, applicationId))
 
 		local response = instance:executeAsync():await()
 

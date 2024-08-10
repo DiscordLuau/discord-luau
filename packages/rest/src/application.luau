@@ -4,6 +4,7 @@ local request = require("@rest/request")
 local future = require("@vendor/future")
 
 local restTypes = require("@api-types/rest/types")
+local apiTypes = require("@api-types/apiTypes")
 local restEndpoints = require("@api-types/rest/endpoints")
 
 --[[
@@ -15,13 +16,14 @@ local Application = {}
 
 -- https://discord.com/developers/docs/resources/application#get-current-application
 function Application.getCurrentApplicationAsync(
-	instance: request.Request
+	instance: request.Request,
+	applicationId: apiTypes.Snowflake
 ): future.Future<restTypes.GetCurrentApplicationResponse>
 	return future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(restEndpoints.GetCurrentApplication)
+		instance:setUrl(string.format(restEndpoints.GetCurrentApplication, applicationId))
 
 		local response = instance:executeAsync():await()
 
@@ -32,13 +34,14 @@ end
 -- https://discord.com/developers/docs/resources/application#edit-current-application
 function Application.editCurrentApplicationAsync(
 	instance: request.Request,
+	applicationId: apiTypes.Snowflake,
 	jsonParams: restTypes.EditCurrentApplicationRequest
 ): future.Future<nil>
 	return future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PATCH")
-		instance:setUrl(restEndpoints.EditCurrentApplication)
+		instance:setUrl(string.format(restEndpoints.EditCurrentApplication, applicationId))
 		instance:setBody(serde.encode("json", jsonParams, true))
 
 		instance:executeAsync():await()

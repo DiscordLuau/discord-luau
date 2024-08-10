@@ -74,6 +74,7 @@ local AuditLog = {}
 -- https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log
 function AuditLog.getGuildAuditLog(
 	instance: request.Request,
+	guildId: apiTypes.Snowflake,
 	urlParams: {
 		userId: apiTypes.Snowflake?,
 		before: apiTypes.Snowflake?,
@@ -83,7 +84,7 @@ function AuditLog.getGuildAuditLog(
 	}
 ): future.Future<restTypes.GetGuildAuditLogResponse>
 	return future.new(function()
-		local baseUrl = restEndpoints.GetGuildAuditLog
+		local baseUrl = string.format(restEndpoints.GetGuildAuditLog, guildId)
 
 		if next(urlParams) then
 			baseUrl ..= "&"

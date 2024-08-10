@@ -102,7 +102,7 @@ function Request.Prototype.executeAsync<Resolve>(self: Request): future.Future<{
 		end
 
 		local request = net.request({
-			url = self.url,
+			url = `https://discord.com/api/{self.restApiVersion}{self.url}`,
 			method = self.method,
 			body = self.body,
 			headers = headerTable,
@@ -124,10 +124,13 @@ end
 ]]
 function Request.Interface.new(settings: {
 	token: string?,
+
+	restApiVersion: number,
 }): Request
 	return setmetatable(
 		{
 			token = settings.token,
+			restApiVersion = settings.restApiVersion,
 			headers = {},
 		} :: Request,
 		{ __index = Request.Prototype }
@@ -136,6 +139,7 @@ end
 
 export type Request = typeof(Request.Prototype) & {
 	token: string?,
+	restApiVersion: number,
 
 	method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE",
 	url: string,
