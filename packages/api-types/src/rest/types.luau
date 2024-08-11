@@ -552,6 +552,9 @@ export type EditChannelPermissionsRequest = Request<{
 -- https://discord.com/developers/docs/resources/guild#modify-guild-widget
 export type ModifyGuildWidgetRequest = Request<objects.GuildWidgetSettingsObject>
 
+-- https://discord.com/developers/docs/resources/channel#crosspost-message
+export type CrosspostMessageRequest = Request<objects.MessageObject>
+
 -- [[ Responses ]] --
 
 -- https://discord.com/developers/docs/interactions/application-commands#get-global-application-commands
