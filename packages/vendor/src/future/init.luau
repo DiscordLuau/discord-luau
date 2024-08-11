@@ -98,7 +98,7 @@ function Future.Prototype.unwrapOr<T>(self: Future<T>, value: T): T
 	end
 
 	if status == "Fulfilled" then
-		local unwrappedObject = table.remove(valueList, 1)
+		local unwrappedObject = table.remove(valueList, 1) :: T
 
 		if unwrappedObject == nil then
 			return value
