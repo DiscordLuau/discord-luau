@@ -1084,7 +1084,7 @@ export type DeleteWebhookResponse = Response<nil>
 export type DeleteWebhookWitHTokenResponse = Response<nil>
 
 -- https://discord.com/developers/docs/resources/webhook#execute-webhook
-export type ExecuteWebhook = Response<objects.MessageObject?>
+export type ExecuteWebhookResponse = Response<objects.MessageObject?>
 
 -- https://discord.com/developers/docs/resources/webhook#execute-slackcompatible-webhook
 export type ExecuteSlackCompatibleWebhookResponse = Response<unknown>
