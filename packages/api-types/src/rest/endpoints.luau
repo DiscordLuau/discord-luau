@@ -450,6 +450,12 @@ local endpoints = table.freeze({
 	-- https://discord.com/developers/docs/resources/sticker#get-guild-sticker
 	GetGuildSticker = "/guilds/%s/stickers/%s",
 
+	-- https://discord.com/developers/docs/resources/voice#get-current-user-voice-state
+	GetCurrentUserVoiceState = "/guilds/%s/voice-states/@me",
+
+	-- https://discord.com/developers/docs/resources/voice#get-user-voice-state
+	GetUserVoiceState = "/guilds/%s/voice-states/%s",
+
 	-- https://discord.com/developers/docs/resources/sticker#create-guild-sticker
 	CreateGuildSticker = "/guilds/%s/stickers",
 

@@ -557,6 +557,12 @@ export type CrosspostMessageRequest = Request<objects.MessageObject>
 
 -- [[ Responses ]] --
 
+-- https://discord.com/developers/docs/resources/voice#get-current-user-voice-state
+export type GetCurrentUserVoiceStateResponse = Response<objects.VoiceStateObject>
+
+-- https://discord.com/developers/docs/resources/voice#get-user-voice-state
+export type GetUserVoiceStateResponse = Response<objects.VoiceStateObject>
+
 -- https://discord.com/developers/docs/interactions/application-commands#get-global-application-commands
 export type GetGlobalApplicationCommandsResponse = Response<{ objects.ApplicationCommandObject }>
 
