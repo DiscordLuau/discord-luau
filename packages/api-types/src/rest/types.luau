@@ -276,7 +276,7 @@ export type CreateGuildChannelRequest = Request<{
 }>
 
 -- https://discord.com/developers/docs/resources/guild#modify-guild-channel-positions
-export type ModifyGuildChannelPermissionsRequest = Request<{
+export type ModifyGuildChannelPositionsRequest = Request<{
 	id: objects.Snowflake, -- channel id
 	position: number?, -- sorting position of the channel (channels with the same position are sorted by id)
 	lock_permissions: boolean?, -- syncs the permission overwrites with the new parent, if moving to a new category
@@ -305,11 +305,6 @@ export type ModifyGuildMemberRequest = Request<{
 
 -- https://discord.com/developers/docs/resources/guild#modify-current-member
 export type ModifyCurrentMemberRequest = Request<{
-	nick: string, -- value to set user's nickname to
-}>
-
---https://discord.com/developers/docs/resources/guild#modify-current-user-nick
-export type ModifyCurrentUserNickRequest = Request<{
 	nick: string, -- value to set user's nickname to
 }>
 
@@ -548,11 +543,14 @@ export type EditWebhookMessageRequest = Request<{
 }>
 
 -- https://discord.com/developers/docs/resources/channel#edit-channel-permissions
-export type EditChannelPermissionsRequest = Response<{
+export type EditChannelPermissionsRequest = Request<{
 	allow: string?, -- the bitwise value of all allowed permissions (default "0")
 	deny: string?, -- the bitwise value of all disallowed permissions (default "0")
 	type: number, -- 0 for a role or 1 for a member
 }>
+
+-- https://discord.com/developers/docs/resources/guild#modify-guild-widget
+export type ModifyGuildWidgetRequest = Request<objects.GuildWidgetSettingsObject>
 
 -- [[ Responses ]] --
 
@@ -830,9 +828,6 @@ export type ModifyGuildMemberResponse = Response<objects.GuildMemberObject>
 -- https://discord.com/developers/docs/resources/guild#modify-current-member
 export type ModifyCurrentMemberResponse = Response<objects.GuildMemberObject>
 
--- https://discord.com/developers/docs/resources/guild#modify-current-user-nick
-export type ModifyCurrentUserNicknameResponse = Response<unknown>
-
 -- https://discord.com/developers/docs/resources/guild#add-guild-member-role
 export type AddGuildMemberRoleResponse = Response<nil>
 
@@ -867,7 +862,7 @@ export type GetGuildRolesResponse = Response<{ objects.GuildRoleObject }>
 export type CreateGuildRoleResponse = Response<objects.GuildRoleObject>
 
 -- https://discord.com/developers/docs/resources/guild#modify-guild-role-positions
-export type ModifyGuildRolePositions = Response<{ objects.GuildRoleObject }>
+export type ModifyGuildRolePositionsResponse = Response<{ objects.GuildRoleObject }>
 
 -- https://discord.com/developers/docs/resources/guild#modify-guild-role
 export type ModifyGuildRoleResponse = Response<objects.GuildRoleObject>
@@ -888,7 +883,7 @@ export type BeginGuildPruneResponse = Response<{ pruned: number }>
 export type GetGuildVoiceRegionsResponse = Response<{ objects.VoiceRegionObject }>
 
 -- https://discord.com/developers/docs/resources/guild#get-guild-invites
-export type GetGuldInvitesResponse = Response<{ objects.InviteObject & objects.InviteMetadataObject }>
+export type GetGuildInvitesResponse = Response<{ objects.InviteObject & objects.InviteMetadataObject }>
 
 -- https://discord.com/developers/docs/resources/guild#get-guild-integrations
 export type GetGuildIntegrationsResponse = Response<objects.IntegrationObject>

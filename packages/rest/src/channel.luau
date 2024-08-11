@@ -137,7 +137,7 @@ function Channel.deleteChannelPermissionAsync(
 	channelId: apiTypes.Snowflake,
 	overwriteId: apiTypes.Snowflake,
 	auditLogReason: string?
-): future.Future<restTypes.CreateChannelInviteResponse>
+): future.Future<restTypes.DeleteChannelPermissionResponse>
 	return future.new(function()
 		instance:assertToken()
 

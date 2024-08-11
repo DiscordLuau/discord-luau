@@ -133,9 +133,11 @@ function Request.Prototype.executeAsync<Resolve>(self: Request): future.Future<{
 			error(`HTTP REST Request failed: {request.statusCode} {request.statusMessage}`)
 		end
 
+		local decodeSuccess, decodedBody = pcall(net.jsonDecode, request.body)
+
 		return {
 			headers = request.headers,
-			body = net.jsonDecode(request.body),
+			body = decodeSuccess and decodedBody or request.body,
 		}
 	end)
 end

@@ -11,13 +11,6 @@ local restEndpoints = require("@api-types/rest/endpoints")
 	HTTP Rest API implementation for the following Resource:
 
 	- https://discord.com/developers/docs/resources/emoji#emoji-resource
-
-	This resource has not yet implemented the following endpoints:
-	- https://discord.com/developers/docs/resources/emoji#list-application-emojis
-	- https://discord.com/developers/docs/resources/emoji#get-application-emoji
-	- https://discord.com/developers/docs/resources/emoji#create-application-emoji
-	- https://discord.com/developers/docs/resources/emoji#modify-application-emoji
-	- https://discord.com/developers/docs/resources/emoji#delete-application-emoji
 ]]
 local Emoji = {}
 

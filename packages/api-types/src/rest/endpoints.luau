@@ -282,9 +282,6 @@ local endpoints = table.freeze({
 	-- https://discord.com/developers/docs/resources/guild#modify-current-member
 	ModifyCurrentMember = "/guilds/%s/members/@me",
 
-	-- https://discord.com/developers/docs/resources/guild#modify-current-user-nick
-	ModifyCurrentUserNick = "/guilds/%s/members/@me/nick",
-
 	-- https://discord.com/developers/docs/resources/guild#add-guild-member-role
 	AddGuildMemberRole = "/guilds/%s/members/%s/roles/%s",
 
