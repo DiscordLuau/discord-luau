@@ -141,7 +141,7 @@ function Channel.deleteChannelPermissionAsync(
 	return future.new(function()
 		instance:assertToken()
 
-		instance:setMethod("POST")
+		instance:setMethod("DELETE")
 		instance:setUrl(string.format(restEndpoints.DeleteChannelPermission, channelId, overwriteId))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
@@ -193,7 +193,7 @@ end
 function Channel.getPinnedMessagesAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake
-): future.Future<restTypes.TriggerTypingIndicatorResponse>
+): future.Future<restTypes.GetPinnedMessagesResponse>
 	return future.new(function()
 		instance:assertToken()
 

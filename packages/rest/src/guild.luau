@@ -132,11 +132,11 @@ function Guild.createGuildChannelAsync(
 	guildId: apiTypes.Snowflake,
 	jsonParams: restTypes.CreateGuildChannelRequest,
 	auditLogReason: string?
-): future.Future<restTypes.GetGuildChannelsResponse>
+): future.Future<restTypes.CreateGuildChannelResponse>
 	return future.new(function()
 		instance:assertToken()
 
-		instance:setMethod("GET")
+		instance:setMethod("POST")
 		instance:setUrl(string.format(restEndpoints.CreateGuildChannel, guildId))
 		instance:setBody(serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
@@ -523,7 +523,7 @@ end
 function Guild.modifyGuildRolePositionsAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
-	jsonParams: restTypes.CreateGuildRoleRequest,
+	jsonParams: restTypes.ModifyGuildRolePositionsRequest,
 	auditLogReason: string?
 ): future.Future<restTypes.ModifyGuildRolePositionsResponse>
 	return future.new(function()
