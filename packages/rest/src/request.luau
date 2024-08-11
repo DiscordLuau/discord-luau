@@ -122,12 +122,13 @@ function Request.Prototype.executeAsync<Resolve>(self: Request): future.Future<{
 			baseUrl = baseUrl:sub(1, #baseUrl - 1)
 		end
 
+		-- FIXME: This table satisfies FetchParams, yet it somehow cannot be casted
 		local request = net.request({
 			url = baseUrl,
 			method = self.method,
 			body = self.body,
 			headers = headerTable,
-		})
+		} :: any)
 
 		if not request.ok then
 			error(`HTTP REST Request failed: {request.statusCode} {request.statusMessage}`)

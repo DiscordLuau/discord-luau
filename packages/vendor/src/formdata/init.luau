@@ -202,7 +202,7 @@ function FormData.Prototype.getAll(self: FormData, name: string?): { FormDataEnt
 				break
 			end
 
-			table.insert(entries, formDataEntryValue.value)
+			table.insert(entries, (formDataEntryValue :: FormDataEntryMap).value)
 		end
 	else
 		for _, entry in self.entries do
