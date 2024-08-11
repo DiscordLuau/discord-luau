@@ -40,6 +40,8 @@ jobs:
         uses: CompeyDev/setup-rokit@v0.1.0
         with:
           cache: true
+      - name: Setup lune typedefs
+        run: lune setup
       - name: Typecheck
         run: lune run analyze
   test:
@@ -54,7 +56,5 @@ jobs:
         uses: CompeyDev/setup-rokit@v0.1.0
         with:
           cache: true
-      - name: Setup lune typedefs
-        run: lune setup
       - name: Run unit-tests
         run: lune run test
