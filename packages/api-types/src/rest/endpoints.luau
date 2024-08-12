@@ -72,9 +72,6 @@ local endpoints = table.freeze({
 	-- https://discord.com/developers/docs/interactions/application-commands#edit-application-command-permissions
 	EditApplicationCommandPermissions = "/applications/%s/guilds/%s/commands/%s/permissions",
 
-	-- https://discord.com/developers/docs/interactions/application-commands#batch-edit-application-command-permissions
-	BatchEditApplicationCommandPermissions = "/applications/%s/guilds/%s/commands/permissions",
-
 	-- https://discord.com/developers/docs/resources/application#get-current-application
 	GetCurrentApplication = "/applications/@me",
 

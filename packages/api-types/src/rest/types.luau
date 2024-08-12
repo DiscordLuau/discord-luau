@@ -12,7 +12,7 @@ export type Request<DATA> = DATA
 -- [[ Requests ]] --
 
 -- https://discord.com/developers/docs/interactions/receiving-and-responding#create-interaction-response
-export type CreateInteractionResponseRequest = Request<objects.InteractionResponseObject>
+export type CreateInteractionRequest = Request<objects.InteractionResponseObject>
 
 -- https://discord.com/developers/docs/interactions/receiving-and-responding#edit-original-interaction-response
 export type EditOriginalInteractionRequest = Request<{
@@ -555,6 +555,97 @@ export type ModifyGuildWidgetRequest = Request<objects.GuildWidgetSettingsObject
 -- https://discord.com/developers/docs/resources/channel#crosspost-message
 export type CrosspostMessageRequest = Request<objects.MessageObject>
 
+-- https://discord.com/developers/docs/interactions/application-commands#create-global-application-command
+export type CreateGlobalApplicationCommandRequest = Request<{
+	name: string, -- Name of command, 1-32 characters
+	name_localizations: { [objects.LanguageLocales]: string }?, -- Localization dictionary for the name field. Values follow the same restrictions as name
+	description: string?, -- 1-100 character description for CHAT_INPUT commands
+	description_localizations: { [objects.LanguageLocales]: string }?, -- Localization dictionary for the description field. Values follow the same restrictions as description
+	options: { objects.ApplicationCommandOptionObject }?, -- the parameters for the command, max of 25
+	default_member_permissions: string?, -- Set of permissions represented as a bit set
+	dm_permission: boolean?, -- Deprecated (use contexts instead); Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible.
+	default_permission: boolean, -- Replaced by default_member_permissions and will be deprecated in the future. Indicates whether the command is enabled by default when the app is added to a guild. Defaults to true
+	integration_types: { objects.IntegrationType }?, -- Installation context(s) where the command is available
+	contexts: { objects.InteractionContextType }?, -- Interaction context(s) where the command can be used
+	type: objects.ApplicationCommandType?, -- Type of command, defaults 1 if not set
+	nsfw: boolean?, -- Indicates whether the command is age-restricted
+}>
+
+-- https://discord.com/developers/docs/interactions/application-commands#edit-global-application-command
+export type EditGlobalApplicationCommandRequest = Request<{
+	name: string, -- Name of command, 1-32 characters
+	name_localizations: { [objects.LanguageLocales]: string }?, -- Localization dictionary for the name field. Values follow the same restrictions as name
+	description: string?, -- 1-100 character description for CHAT_INPUT commands
+	description_localizations: { [objects.LanguageLocales]: string }?, -- Localization dictionary for the description field. Values follow the same restrictions as description
+	options: { objects.ApplicationCommandOptionObject }?, -- the parameters for the command, max of 25
+	default_member_permissions: string?, -- Set of permissions represented as a bit set
+	dm_permission: boolean?, -- Deprecated (use contexts instead); Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible.
+	default_permission: boolean, -- Replaced by default_member_permissions and will be deprecated in the future. Indicates whether the command is enabled by default when the app is added to a guild. Defaults to true
+	integration_types: { objects.IntegrationType }?, -- Installation context(s) where the command is available
+	contexts: { objects.InteractionContextType }?, -- Interaction context(s) where the command can be used
+	nsfw: boolean?, -- Indicates whether the command is age-restricted
+}>
+
+-- https://discord.com/developers/docs/interactions/application-commands#create-guild-application-command
+export type CreateGuildApplicationCommandRequest = Request<{
+	name: string, -- Name of command, 1-32 characters
+	name_localizations: { [objects.LanguageLocales]: string }?, -- Localization dictionary for the name field. Values follow the same restrictions as name
+	description: string?, -- 1-100 character description for CHAT_INPUT commands
+	description_localizations: { [objects.LanguageLocales]: string }?, -- Localization dictionary for the description field. Values follow the same restrictions as description
+	options: { objects.ApplicationCommandOptionObject }?, -- the parameters for the command, max of 25
+	default_member_permissions: string?, -- Set of permissions represented as a bit set
+	dm_permission: boolean?, -- Deprecated (use contexts instead); Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible.
+	default_permission: boolean, -- Replaced by default_member_permissions and will be deprecated in the future. Indicates whether the command is enabled by default when the app is added to a guild. Defaults to true
+	integration_types: { objects.IntegrationType }?, -- Installation context(s) where the command is available
+	contexts: { objects.InteractionContextType }?, -- Interaction context(s) where the command can be used
+	type: objects.ApplicationCommandType?, -- Type of command, defaults 1 if not set
+	nsfw: boolean?, -- Indicates whether the command is age-restricted
+}>
+
+-- https://discord.com/developers/docs/interactions/application-commands#edit-guild-application-command
+export type EditGuildApplicationCommandRequest = Request<{
+	name: string, -- Name of command, 1-32 characters
+	name_localizations: { [objects.LanguageLocales]: string }?, -- Localization dictionary for the name field. Values follow the same restrictions as name
+	description: string?, -- 1-100 character description for CHAT_INPUT commands
+	description_localizations: { [objects.LanguageLocales]: string }?, -- Localization dictionary for the description field. Values follow the same restrictions as description
+	options: { objects.ApplicationCommandOptionObject }?, -- the parameters for the command, max of 25
+	default_member_permissions: string?, -- Set of permissions represented as a bit set
+	dm_permission: boolean?, -- Deprecated (use contexts instead); Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible.
+	default_permission: boolean, -- Replaced by default_member_permissions and will be deprecated in the future. Indicates whether the command is enabled by default when the app is added to a guild. Defaults to true
+	integration_types: { objects.IntegrationType }?, -- Installation context(s) where the command is available
+	contexts: { objects.InteractionContextType }?, -- Interaction context(s) where the command can be used
+	nsfw: boolean?, -- Indicates whether the command is age-restricted
+}>
+
+-- https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-global-application-commands
+export type BulkOverwriteGlobalApplicationCommandsRequest = Request<{ objects.ApplicationCommandObject }>
+
+-- https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-guild-application-commands
+export type BulkOverwriteGuildApplicationCommandsRequest = Request<
+	{
+		{
+			id: objects.Snowflake?, -- ID of the command, if known
+			name: string, -- Name of command, 1-32 characters
+			name_localizations: { [objects.LanguageLocales]: string }?, -- Localization dictionary for the name field. Values follow the same restrictions as name
+			description: string?, -- 1-100 character description for CHAT_INPUT commands
+			description_localizations: { [objects.LanguageLocales]: string }?, -- Localization dictionary for the description field. Values follow the same restrictions as description
+			options: { objects.ApplicationCommandOptionObject }?, -- the parameters for the command, max of 25
+			default_member_permissions: string?, -- Set of permissions represented as a bit set
+			dm_permission: boolean?, -- Deprecated (use contexts instead); Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible.
+			default_permission: boolean, -- Replaced by default_member_permissions and will be deprecated in the future. Indicates whether the command is enabled by default when the app is added to a guild. Defaults to true
+			integration_types: { objects.IntegrationType }?, -- Installation context(s) where the command is available
+			contexts: { objects.InteractionContextType }?, -- Interaction context(s) where the command can be used
+			type: objects.ApplicationCommandType?, -- Type of command, defaults 1 if not set
+			nsfw: boolean?, -- Indicates whether the command is age-restricted
+		}
+	}
+>
+
+-- https://discord.com/developers/docs/interactions/application-commands#edit-application-command-permissions
+export type EditApplicationCommandPermissionsRequest = Request<{
+	permissions: { objects.GuildApplicationCommandPermissionObject },
+}>
+
 -- [[ Responses ]] --
 
 -- https://discord.com/developers/docs/resources/voice#get-current-user-voice-state
@@ -600,16 +691,15 @@ export type DeleteGuildApplicationCommandResponse = Response<nil>
 export type BulkOverwriteGuildApplicationCommandsResponse = Response<{ objects.ApplicationCommandObject }>
 
 -- https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command-permissions
-export type GetGuildApplicationCommandPermissions = Response<{ objects.GuildApplicationCommandPermissionsObject }>
+export type GetGuildApplicationCommandPermissionsResponse = Response<
+	{ objects.GuildApplicationCommandPermissionsObject }
+>
 
 -- https://discord.com/developers/docs/interactions/application-commands#get-application-command-permissions
-export type GetApplicationCommandPermissions = Response<{ objects.GuildApplicationCommandPermissionsObject }>
+export type GetApplicationCommandPermissionsResponse = Response<{ objects.GuildApplicationCommandPermissionsObject }>
 
 -- https://discord.com/developers/docs/interactions/application-commands#edit-application-command-permissions
-export type EditApplicationCommandPermissions = Response<objects.GuildApplicationCommandPermissionsObject>
-
--- https://discord.com/developers/docs/interactions/application-commands#batch-edit-application-command-permissions
-export type BatchEditApplicationCommandPermissions = Response<{ objects.GuildApplicationCommandPermissionsObject }>
+export type EditApplicationCommandPermissionsResponse = Response<objects.GuildApplicationCommandPermissionsObject>
 
 -- https://discord.com/developers/docs/resources/application#get-current-application
 export type GetCurrentApplicationResponse = Response<{ objects.ApplicationObject }>
@@ -1112,5 +1202,29 @@ export type GetGatewayBotResponse = Response<{
 	shards: number, -- Recommended number of shards to use when connecting
 	session_start_limit: objects.SessionStartLimitObject, -- Information on the current session start limit
 }>
+
+-- https://discord.com/developers/docs/interactions/receiving-and-responding#create-interaction-response
+export type CreateInteractionResponse = Response<objects.MessageObject>
+
+-- https://discord.com/developers/docs/interactions/receiving-and-responding#get-original-interaction-response
+export type GetOriginalInteractionResponse = Response<objects.MessageObject>
+
+-- https://discord.com/developers/docs/interactions/receiving-and-responding#edit-original-interaction-response
+export type EditOriginalInteractionResponse = Response<objects.MessageObject>
+
+-- https://discord.com/developers/docs/interactions/receiving-and-responding#delete-original-interaction-response
+export type DeleteOriginalInteractionResponse = Response<nil>
+
+-- https://discord.com/developers/docs/interactions/receiving-and-responding#create-followup-message
+export type CreateFollowupMessageResponse = Response<objects.MessageObject>
+
+-- https://discord.com/developers/docs/interactions/receiving-and-responding#get-followup-message
+export type GetFollowupMessageResponse = Response<objects.MessageObject>
+
+-- https://discord.com/developers/docs/interactions/receiving-and-responding#edit-followup-message
+export type EditFollowupMessageResponse = Response<objects.MessageObject>
+
+-- https://discord.com/developers/docs/interactions/receiving-and-responding#delete-followup-message
+export type DeleteFollowupMessageResponse = Response<nil>
 
 return "DISCORD_V10_PAYLOAD_TYPES"
