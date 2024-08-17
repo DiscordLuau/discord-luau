@@ -1,8 +1,4 @@
-<div align="center">
-	<p>
-		<a href=""><img src="https://raw.githubusercontent.com/DiscordLuau/.github/master/resource/DiscordLuau-Banner.png" width="512" alt="discord-luau"/></a>
-	</p>
-</div>
+## [DiscordLuau is currently undergoing a rewrite](https://github.com/DiscordLuau/discord-luau/tree/refactor/monorepository-origin)
 
 ## About
 
