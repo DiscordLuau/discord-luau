@@ -78,6 +78,26 @@ function Request.Prototype.assertToken(self: Request)
 end
 
 --[[
+	Enables developers to add a hook to this request. Hooks are functions that are called before or after the request is
+	executed. Hooks are useful for things like logging, or modifying the request before it is executed.
+
+	The hook callback should return a boolean, and if it returns false, the request will not be executed.
+]]
+function Request.Prototype.addHook(
+	self: Request,
+	hookState: "BeforeRequest" | "AfterRequest",
+	hookCallback: (request: Request) -> boolean
+)
+	if hookState == "AfterRequest" then
+		table.insert(self.afterHooks, hookCallback)
+	elseif hookState == "BeforeRequest" then
+		table.insert(self.beforeHooks, hookCallback)
+	else
+		error(`Invalid hook state '{hookState}'`)
+	end
+end
+
+--[[
 	Responsible for executing this request asynchronously. This will return a future that will resolve when the request is
 	completed.
 
@@ -122,19 +142,41 @@ function Request.Prototype.executeAsync<Resolve>(self: Request): future.Future<{
 			baseUrl = baseUrl:sub(1, #baseUrl - 1)
 		end
 
+		for _, hook in self.beforeHooks do
+			if
+				not hook(self, {
+					url = baseUrl,
+					method = self.method,
+					body = self.body,
+					headers = headerTable,
+				})
+			then
+				error(`Hook: {debug.info(hook, "s")} returned false, failed to send Network request!`)
+			end
+		end
+
 		-- FIXME: This table satisfies FetchParams, yet it somehow cannot be casted
 		local request = net.request({
 			url = baseUrl,
 			method = self.method,
 			body = self.body,
 			headers = headerTable,
-		} :: any)
+		})
 
 		if not request.ok then
 			error(`HTTP REST Request failed: {request.statusCode} {request.statusMessage}`)
 		end
 
 		local decodeSuccess, decodedBody = pcall(net.jsonDecode, request.body)
+
+		for _, hook in self.afterHooks do
+			hook(self, {
+				url = baseUrl,
+				method = self.method,
+				body = self.body,
+				headers = headerTable,
+			}, request)
+		end
 
 		return {
 			headers = request.headers,
@@ -165,6 +207,20 @@ end
 export type Request = typeof(Request.Prototype) & {
 	token: string?,
 	restApiVersion: number,
+
+	beforeHooks: {
+		(
+			self: Request,
+			{ url: string, method: string, body: string, headers: { [string]: string } }
+		) -> boolean
+	},
+	afterHooks: {
+		(
+			self: Request,
+			{ url: string, method: string, body: string, headers: { [string]: string } },
+			net.FetchResponse
+		) -> ()
+	},
 
 	method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE",
 	url: string,

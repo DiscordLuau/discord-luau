@@ -291,14 +291,14 @@ export type ActivityTimestampObject = {
 -- https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-emoji
 export type ActivityEmojiObject = {
 	name: string, -- Name of the emoji
-	id: Snowflake?, -- ID of the emoji
+	id: Snowflake, -- ID of the emoji
 	animated: boolean?, -- Whether the emoji is animated
 }
 
 -- https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-party
 export type ActivityPartyObject = {
 	id: string, -- ID of the party
-	size: { number }, -- Used to show the party's current and maximum size
+	size: { number }, -- Used to show the party's current and maximum size, array of two integers (current_size, max_size)
 }
 
 -- https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-assets
@@ -328,7 +328,7 @@ export type ActivityObject = {
 	type: number, -- Activity's type
 	url: string?, -- Stream URL, is validated when type is 1
 	created_at: number, -- Unix timestamp (in milliseconds) of when the activity was added to the user's session
-	timestamps: { ActivityTimestampObject }, -- Unix timestamps for start and/or end of the game
+	timestamps: ActivityTimestampObject, -- Unix timestamps for start and/or end of the game
 	application_id: Snowflake, -- Application ID for the game
 	details: string?, -- What the player is currently doing
 	state: string?, -- User's current party status, or text used for a custom status
@@ -385,7 +385,7 @@ export type UserObject = {
 
 -- https://discord.com/developers/docs/resources/guild#unavailable-guild-object
 export type UnavailableGuildObject = {
-	id: string, -- guild id
+	id: Snowflake, -- guild id
 	unavailable: boolean, -- true, the guild is unavailable
 }
 
@@ -424,19 +424,19 @@ export type GuildRoleObject = {
 	hoist: boolean, -- if this role is pinned in the user listing
 	icon: string?, -- role icon hash
 	unicode_emoji: string?, -- role unicode emoji
-	position: number?, -- position of this role (roles with the same position are sorted by id)
+	position: number, -- position of this role (roles with the same position are sorted by id)
 	permissions: string, -- permission bit set
-	managed: boolean?, -- whether this role is managed by an integration
+	managed: boolean, -- whether this role is managed by an integration
 	mentionable: boolean, -- whether this role is mentionable
 	tags: GuildRoleTagObject?, -- the tags this role has
-	flags: number?, -- role flags combined as a bitfield
+	flags: number, -- role flags combined as a bitfield
 }
 
 -- https://discord.com/developers/docs/resources/emoji#emoji-object
 export type EmojiObject = {
 	id: Snowflake?, -- 	emoji id
 	name: string, -- emoji name
-	roles: { GuildRoleObject }?, -- roles allowed to use this emoji
+	roles: { Snowflake }?, -- roles allowed to use this emoji
 	user: UserObject?, -- user that created this emoji
 	require_colons: boolean?, -- whether this emoji must be wrapped in colons
 	managed: boolean?, -- whether this emoji is managed
@@ -499,7 +499,7 @@ export type GuildObject = {
 	mfa_level: MFALevel, -- required MFA level for the guild
 	application_id: Snowflake, -- application id of the guild creator if it is bot-created
 	system_channel_id: Snowflake, -- the id of the channel where guild notices such as welcome messages and boost events are posted
-	system_channel_clags: SystemChannelFlags, -- system channel flags
+	system_channel_flags: SystemChannelFlags, -- system channel flags
 	rules_channel_id: Snowflake?, -- the id of the channel where Community guilds can display rules and/or guidelines
 	max_presences: number?, -- the maximum number of presences for the guild (null is always returned, apart from the largest of guilds)
 	max_members: number?, -- the maximum number of members for the guild

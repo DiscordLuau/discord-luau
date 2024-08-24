@@ -1,3 +1,9 @@
+--[[
+	Implementation of the Discord User class in Luau
+
+	https://discord.com/developers/docs/resources/user#user-object
+]]
+
 local apiTypes = require("@api-types/apiTypes")
 
 local avatarDecoration = require("@classes/avatarDecoration")
@@ -38,10 +44,10 @@ function User.Prototype.sync(self: User, userData: apiTypes.UserObject)
 		and avatarDecoration.new(userData.avatar_decoration_data.asset, userData.avatar_decoration_data.sku_id)
 end
 
-function User.Interface.new(userId: apiTypes.Snowflake, userData: apiTypes.UserObject?): User
+function User.Interface.new(userData: apiTypes.UserObject): User
 	local self = setmetatable(
 		{
-			id = userId,
+			id = userData.id,
 		} :: User,
 		{ __index = User.Prototype }
 	)

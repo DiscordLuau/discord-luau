@@ -1,3 +1,9 @@
+--[[
+	Implementation of the Discord Presence class in Luau
+
+	https://discord.com/developers/docs/resources/user#avatar-decoration-data-object
+]]
+
 local apiTypes = require("@api-types/apiTypes")
 
 local AvatarDecoration = {}
