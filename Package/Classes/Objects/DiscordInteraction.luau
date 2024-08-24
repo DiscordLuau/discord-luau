@@ -278,7 +278,7 @@ export type DiscordInteraction = typeof(DiscordInteraction.Prototype) & {
 		resolved: any,
 		options: any,
 		guild_id: string?,
-		target_id: string?
+		target_id: string?,
 	},
 	channelId: string,
 	guilldId: string,
