@@ -1,51 +1,46 @@
 --[[
 	Implementation of the Discord Role class in Luau
 
-	https://discord.com/developers/docs/resources/emoji#emoji-resource
+	https://discord.com/developers/docs/topics/permissions#role-object
 ]]
 
 local apiTypes = require("@api-types/apiTypes")
 
 local roleTags = require("@classes/guild/roleTag")
+local roleBitflag = require("@classes/bitflags/role")
 
 local Role = {}
 
 Role.Interface = {}
 Role.Prototype = {}
 
---[[
-	Checks if the role is in an onboarding prompt.
-]]
-function Role.Prototype.isInOnboardingPrompt(self: Role)
-	return bit32.lshift(self.flags, 0) == 0
-end
-
-function Role.Prototype.sync(self: Role, emojiData: apiTypes.GuildRoleObject)
+function Role.Prototype.sync(self: Role, roleData: apiTypes.GuildRoleObject)
 	local tagArray = {}
 
 	-- fixme: need to use `next` iterator here to avoid LSP errors.
-	for _, tagData in next, emojiData.tags or {} do
+	for _, tagData in next, roleData.tags or {} do
 		table.insert(tagArray, roleTags.new(tagData))
 	end
 
+	self.flags = roleBitflag.new(roleData.flags)
+
 	self.tags = tagArray
-	self.id = emojiData.id
-	self.name = emojiData.name
-	self.color = emojiData.color
-	self.hoist = emojiData.hoist
-	self.icon = emojiData.icon
-	self.unicodeEmoji = emojiData.unicode_emoji
-	self.position = emojiData.position
-	self.permissions = emojiData.permissions
-	self.managed = emojiData.managed
-	self.mentionable = emojiData.mentionable
-	self.flags = emojiData.flags
+	self.id = roleData.id
+	self.name = roleData.name
+	self.color = roleData.color
+	self.hoist = roleData.hoist
+	self.icon = roleData.icon
+	self.unicodeEmoji = roleData.unicode_emoji
+	self.position = roleData.position
+	self.permissions = roleData.permissions
+	self.managed = roleData.managed
+	self.mentionable = roleData.mentionable
 end
 
-function Role.Interface.new(emojiData: apiTypes.GuildRoleObject): Role
+function Role.Interface.new(roleData: apiTypes.GuildRoleObject): Role
 	local self = setmetatable({} :: Role, { __index = Role.Prototype })
 
-	self:sync(emojiData)
+	self:sync(roleData)
 
 	return self
 end
@@ -62,7 +57,7 @@ export type Role = typeof(Role.Prototype) & {
 	managed: boolean,
 	mentionable: boolean,
 	tags: { roleTags.RoleTag }?,
-	flags: number,
+	flags: roleBitflag.RoleBitflag,
 }
 
 return Role.Interface

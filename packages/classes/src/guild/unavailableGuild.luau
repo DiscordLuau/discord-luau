@@ -26,12 +26,20 @@ function UnavailableGuild.Prototype.getAsync(
 	withCounts: boolean?
 ): future.Future<classGuild.Guild>
 	return future.new(function()
+		local guildData = self.state.cache.guilds:get(self.id)
+
+		if guildData then
+			return classGuild.new(self.state, self.id, guildData)
+		end
+
 		local request = self.state.rest:newRequest()
 		local guildData = restGuild
 			.getGuildAsync(request, self.id, {
 				withCounts = withCounts,
 			})
 			:await()
+
+		self.state.cache.guilds:set(self.id, guildData)
 
 		return classGuild.new(self.state, self.id, guildData)
 	end)

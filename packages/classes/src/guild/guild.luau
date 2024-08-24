@@ -1,5 +1,5 @@
 --[[
-	Implementation of the Discord Unavailable Guild class in Luau
+	Implementation of the Discord Guild class in Luau
 
 	https://discord.com/developers/docs/resources/guild#guild-object
 ]]
@@ -17,6 +17,8 @@ local emoji = require("@classes/emoji")
 local sticker = require("@classes/sticker")
 local role = require("@classes/guild/role")
 local welcomeScreen = require("@classes/guild/welcomeScreen")
+
+local systemChannelBitflag = require("@classes/bitflags/systemChannel")
 
 local Guild = {}
 
@@ -48,6 +50,39 @@ function Guild.Prototype.sync(self: Guild, guildData: apiTypes.GuildObject)
 	self.roles = rolesArray
 	self.emojis = emojiArray
 
+	self.verificationLevel = (
+		guildData.verification_level == 0 and "None"
+		or guildData.verification_level == 1 and "Low"
+		or guildData.verification_level == 2 and "Medium"
+		or guildData.verification_level == 3 and "High"
+		or guildData.verification_level == 4 and "VeryHigh"
+	) :: GuildVerificationLevel
+	self.defaultMessageNotifications = (
+		guildData.default_message_notifications == 0 and "AllMessages"
+		or guildData.default_message_notifications == 1 and "OnlyMmentions"
+	) :: GuildDefaultMessageNotificationLevel
+	self.explicitContentFilter = (
+		guildData.explicit_content_filter == 0 and "Disabled"
+		or guildData.explicit_content_filter == 1 and "MembersWithoutRoles"
+		or guildData.explicit_content_filter == 2 and "AllMembers"
+	) :: GuildExplicitContentFilterLevel
+	self.premiumTier = (
+		guildData.premium_tier == 0 and "None"
+		or guildData.premium_tier == 1 and "Tier1"
+		or guildData.premium_tier == 2 and "Tier2"
+		or guildData.premium_tier == 3 and "Tier3"
+	) :: GuildPremiumTier
+	self.nsfwLevel = (
+		guildData.nsfw_level == 0 and "Default"
+		or guildData.nsfw_level == 1 and "Explicit"
+		or guildData.nsfw_level == 2 and "Safe"
+		or guildData.nsfw_level == 3 and "AgeRestricted"
+	) :: GuildNSFWLevel
+	self.mfaLevel = (guildData.mfa_level == 0 and "None" or guildData.mfa_level == 1 and "Elevated") :: GuildMFALevel
+
+	self.systemChannelFlags = guildData.system_channel_flags
+		and systemChannelBitflag.new(guildData.system_channel_flags)
+
 	self.icon = guildData.icon
 	self.iconHash = guildData.icon_hash
 	self.name = guildData.name
@@ -61,21 +96,15 @@ function Guild.Prototype.sync(self: Guild, guildData: apiTypes.GuildObject)
 	self.afkTimeout = guildData.afk_timeout
 	self.widgetEnabled = guildData.widget_enabled
 	self.widgetChannelId = guildData.widget_channel_id
-	self.verificationLevel = guildData.verification_level
-	self.defaultMessageNotifications = guildData.default_message_notifications
-	self.explicitContentFilter = guildData.explicit_content_filter
 	self.features = guildData.features
-	self.mfaLevel = guildData.mfa_level
 	self.applicationId = guildData.application_id
 	self.systemChannelId = guildData.system_channel_id
-	self.systemChannelFlags = guildData.system_channel_flags
 	self.rulesChannelId = guildData.rules_channel_id
 	self.maxPresences = guildData.max_presences
 	self.maxMembers = guildData.max_members
 	self.vanityUrlCode = guildData.vanity_url_code
 	self.description = guildData.description
 	self.banner = guildData.banner
-	self.premiumTier = guildData.premium_tier
 	self.premiumSubscriptionCount = guildData.premium_subscription_count
 	self.preferredLocale = guildData.preferred_locale
 	self.publicUpdatesChannelId = guildData.public_updates_channel_id
@@ -83,7 +112,6 @@ function Guild.Prototype.sync(self: Guild, guildData: apiTypes.GuildObject)
 	self.maxStageVideoChannelUsers = guildData.max_stage_video_channel_users
 	self.approximateMemberCount = guildData.approximate_member_count
 	self.approximatePresenceCount = guildData.approximate_presence_count
-	self.nsfwLevel = guildData.nsfw_level
 	self.premiumProgressBarEnabled = guildData.premium_progress_bar_enabled
 	self.safetyAlertsChannelId = guildData.safety_alerts_channel_id
 end
@@ -103,6 +131,13 @@ function Guild.Interface.new(state: state.State, id: apiTypes.Snowflake, guildDa
 
 	return self
 end
+
+export type GuildNSFWLevel = "Default" | "Explicit" | "Safe" | "AgeRestricted"
+export type GuildPremiumTier = "None" | "Tier1" | "Tier2" | "Tier3"
+export type GuildMFALevel = "None" | "Elevated"
+export type GuildExplicitContentFilterLevel = "Disabled" | "MembersWithoutRoles" | "AllMembers"
+export type GuildDefaultMessageNotificationLevel = "AllMessages" | "OnlyMmentions"
+export type GuildVerificationLevel = "None" | "Low" | "Medium" | "High" | "VeryHigh"
 
 export type Guild = typeof(Guild.Prototype) & {
 	state: state.State,
@@ -128,21 +163,21 @@ export type Guild = typeof(Guild.Prototype) & {
 	afkTimeout: number,
 	widgetEnabled: boolean,
 	widgetChannelId: apiTypes.Snowflake?,
-	verificationLevel: apiTypes.VerificationLevel,
-	defaultMessageNotifications: apiTypes.DefaultMessageNotificationLevel,
-	explicitContentFilter: apiTypes.ExplicitContentFilterLevel,
+	verificationLevel: GuildVerificationLevel,
+	defaultMessageNotifications: GuildDefaultMessageNotificationLevel,
+	explicitContentFilter: GuildExplicitContentFilterLevel,
 	features: { apiTypes.GuildFeature },
-	mfaLevel: apiTypes.MFALevel,
+	mfaLevel: GuildMFALevel,
 	applicationId: apiTypes.Snowflake,
 	systemChannelId: apiTypes.Snowflake?,
-	systemChannelFlags: apiTypes.SystemChannelFlags,
+	systemChannelFlags: systemChannelBitflag.SystemChannelBitflag?,
 	rulesChannelId: apiTypes.Snowflake?,
 	maxPresences: number?,
 	maxMembers: number?,
 	vanityUrlCode: string?,
 	description: string?,
 	banner: string?,
-	premiumTier: apiTypes.PremiumTier,
+	premiumTier: GuildPremiumTier,
 	premiumSubscriptionCount: number?,
 	preferredLocale: string,
 	publicUpdatesChannelId: apiTypes.Snowflake?,
@@ -150,7 +185,7 @@ export type Guild = typeof(Guild.Prototype) & {
 	maxStageVideoChannelUsers: number?,
 	approximateMemberCount: number?,
 	approximatePresenceCount: number?,
-	nsfwLevel: apiTypes.GuildNSFWLevel,
+	nsfwLevel: GuildNSFWLevel,
 	premiumProgressBarEnabled: boolean,
 	safetyAlertsChannelId: apiTypes.Snowflake?,
 }
