@@ -11,7 +11,7 @@ local classGuild = require("@classes/guild/guild")
 
 local apiTypes = require("@api-types/apiTypes")
 
-local rest = require("@classes/rest")
+local state = require("@classes/state")
 
 local UnavailableGuild = {}
 
@@ -26,21 +26,21 @@ function UnavailableGuild.Prototype.getAsync(
 	withCounts: boolean?
 ): future.Future<classGuild.Guild>
 	return future.new(function()
-		local request = self.rest:newRequest()
+		local request = self.state.rest:newRequest()
 		local guildData = restGuild
 			.getGuildAsync(request, self.id, {
 				withCounts = withCounts,
 			})
 			:await()
 
-		return classGuild.new(self.rest, self.id, guildData)
+		return classGuild.new(self.state, self.id, guildData)
 	end)
 end
 
-function UnavailableGuild.Interface.new(REST: rest.REST, id: apiTypes.Snowflake): UnavailableGuild
+function UnavailableGuild.Interface.new(state: state.State, id: apiTypes.Snowflake): UnavailableGuild
 	local self = setmetatable(
 		{
-			rest = REST,
+			state = state,
 
 			id = id,
 			isUnavailable = true,
@@ -52,7 +52,7 @@ function UnavailableGuild.Interface.new(REST: rest.REST, id: apiTypes.Snowflake)
 end
 
 export type UnavailableGuild = typeof(UnavailableGuild.Prototype) & {
-	rest: rest.REST,
+	state: state.State,
 
 	id: apiTypes.Snowflake,
 	isUnavailable: boolean,

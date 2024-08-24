@@ -12,7 +12,7 @@ local guild = require("@rest/guild")
 
 local apiTypes = require("@api-types/apiTypes")
 
-local rest = require("@classes/rest")
+local state = require("@classes/state")
 local emoji = require("@classes/emoji")
 local sticker = require("@classes/sticker")
 local role = require("@classes/guild/role")
@@ -88,10 +88,10 @@ function Guild.Prototype.sync(self: Guild, guildData: apiTypes.GuildObject)
 	self.safetyAlertsChannelId = guildData.safety_alerts_channel_id
 end
 
-function Guild.Interface.new(REST: rest.REST, id: apiTypes.Snowflake, guildData: apiTypes.GuildObject): Guild
+function Guild.Interface.new(state: state.State, id: apiTypes.Snowflake, guildData: apiTypes.GuildObject): Guild
 	local self = setmetatable(
 		{
-			rest = REST,
+			state = state,
 
 			id = id,
 			isUnavailable = false,
@@ -105,7 +105,7 @@ function Guild.Interface.new(REST: rest.REST, id: apiTypes.Snowflake, guildData:
 end
 
 export type Guild = typeof(Guild.Prototype) & {
-	rest: rest.REST,
+	state: state.State,
 
 	id: apiTypes.Snowflake,
 	isUnavailable: boolean,

@@ -8,19 +8,26 @@ local Secret = {}
 Secret.Interface = {}
 Secret.Prototype = {}
 
-function Secret.Interface.new(value: string): Secret
+function Secret.Interface.new<T>(value: T): Secret<T>
 	local self = setmetatable(
 		{
 			value = value,
-		} :: Secret,
+		} :: Secret<T>,
 		{
-			__concat = function(_self: Secret, otherValue: string)
+			__concat = function(_self: Secret<T>, otherValue: string)
+				assert(typeof(_self.value) == "string", "Cannot concat a Secret with a non-string value.")
+
 				return _self.value .. otherValue
 			end,
-			__eq = function(_self: Secret, otherValue: string)
+			__eq = function(_self: Secret<T>, otherValue: string)
 				return _self.value == otherValue
 			end,
-			__len = function(_self: Secret)
+			__len = function(_self: Secret<T>)
+				assert(
+					typeof(_self.value) == "table" or typeof(_self.value) == "string",
+					"Cannot length a Secret with a non-table/non-string value."
+				)
+
 				return #_self.value
 			end,
 
@@ -29,12 +36,20 @@ function Secret.Interface.new(value: string): Secret
 			__newindex = function()
 				error(`Cannot modify a Secret.`)
 			end,
-			__tostring = function(_self: Secret)
-				if #_self.value < 20 then
-					return "Secret(" .. string.rep("#", #_self.value) .. ")"
-				end
+			__tostring = function(_self: Secret<T>)
+				local typeOfValue = typeof(_self.value)
 
-				return `Secret({string.sub(_self.value, 1, #_self.value - 20)}####################)`
+				if typeOfValue == "string" then
+					local value = (_self.value :: any) :: string
+
+					if #value < 20 then
+						return "Secret(" .. string.rep("#", #value) .. ")"
+					end
+
+					return `Secret({string.sub(value, 1, #value - 20)}####################)`
+				else
+					return `Secret({typeOfValue})`
+				end
 			end,
 		}
 	)
@@ -42,8 +57,8 @@ function Secret.Interface.new(value: string): Secret
 	return self
 end
 
-export type Secret = typeof(Secret.Prototype) & {
-	value: string,
+export type Secret<T> = typeof(Secret.Prototype) & {
+	value: T,
 }
 
 return Secret.Interface

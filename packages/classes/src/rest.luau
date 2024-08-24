@@ -46,7 +46,7 @@ function REST.Interface.new(token: string, intents: number, version: number): RE
 end
 
 export type REST = typeof(REST.Prototype) & {
-	token: secret.Secret,
+	token: secret.Secret<string>,
 
 	intents: number,
 	version: number,
