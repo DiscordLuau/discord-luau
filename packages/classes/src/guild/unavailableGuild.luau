@@ -1,0 +1,61 @@
+--[[
+	Implementation of the Discord Unavailable Guild class in Luau
+
+	https://discord.com/developers/docs/resources/guild#unavailable-guild-object
+]]
+
+local future = require("@vendor/future")
+
+local restGuild = require("@rest/guild")
+local classGuild = require("@classes/guild/guild")
+
+local apiTypes = require("@api-types/apiTypes")
+
+local rest = require("@classes/rest")
+
+local UnavailableGuild = {}
+
+UnavailableGuild.Interface = {}
+UnavailableGuild.Prototype = {}
+
+--[[
+	Asynchronously retrieves the full Guild object for this UnavailableGuild.
+]]
+function UnavailableGuild.Prototype.getAsync(
+	self: UnavailableGuild,
+	withCounts: boolean?
+): future.Future<classGuild.Guild>
+	return future.new(function()
+		local request = self.rest:newRequest()
+		local guildData = restGuild
+			.getGuildAsync(request, self.id, {
+				withCounts = withCounts,
+			})
+			:await()
+
+		return classGuild.new(self.rest, self.id, guildData)
+	end)
+end
+
+function UnavailableGuild.Interface.new(REST: rest.REST, id: apiTypes.Snowflake): UnavailableGuild
+	local self = setmetatable(
+		{
+			rest = REST,
+
+			id = id,
+			isUnavailable = true,
+		} :: UnavailableGuild,
+		{ __index = UnavailableGuild.Prototype }
+	)
+
+	return self
+end
+
+export type UnavailableGuild = typeof(UnavailableGuild.Prototype) & {
+	rest: rest.REST,
+
+	id: apiTypes.Snowflake,
+	isUnavailable: boolean,
+}
+
+return UnavailableGuild.Interface
