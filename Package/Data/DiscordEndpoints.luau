@@ -7,6 +7,8 @@
 return {
 	BotGateway = "gateway/bot",
 
+	BotCreateDM = "users/@me/channels",
+
 	BotGetGuild = "guilds/%s",
 	BotCreateGuild = "guilds",
 	BotGetGuildPreview = "guilds/%s/preview",

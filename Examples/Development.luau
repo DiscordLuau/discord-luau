@@ -9,9 +9,9 @@ DiscordClient:setVerbose(true)
 DiscordClient.eventManager.onReady:connect(function()
 	print(`🎉🎉 {DiscordClient.discordUser.username} is online! 🎉🎉`)
 
-	local guild = DiscordClient:fetchGuildAsync("737382889947136000"):await() :: DiscordLuau.DiscordGuild
+	local channel = DiscordClient:fetchDMChannelAsync("685566749516628033"):await() :: DiscordLuau.UserDMChannel
 
-	print(guild.name)
+	channel:sendMessageAsync(DiscordLuau.MessageBuilder.new():setContent("hello!"))
 end)
 
 return DiscordClient:connectAsync()

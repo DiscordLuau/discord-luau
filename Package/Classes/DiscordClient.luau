@@ -8,6 +8,7 @@ local Construct = require("@Utils/Construct")
 
 local DiscordGateway = require("@Network/DiscordGateway")
 local DiscordShard = require("@Network/DiscordShard")
+local Resolvable = require("@Network/Resolvable")
 
 local SettingsBuilder = require("@Builders/SettingsBuilder")
 local PresenceBuilder = require("@Builders/PresenceBuilder")
@@ -281,6 +282,32 @@ function DiscordClient.Prototype.fetchChannelAsync(
 	return Future.try(function()
 		local rawChannelData =
 			self.discordGateway:getAsync(string.format(DiscordEndpoints.BotGetChannel, channelId)):await()
+
+		return DiscordChannel.from(self, rawChannelData) :: DiscordChannel.DiscordChannel
+	end)
+end
+
+--[=[
+	Fetches a DM channel between a user and the client.
+	
+	@method fetchDMChannelAsync
+	@param recipientId string
+	@within DiscordClient
+	@return Vendor.Future<Objects.DiscordChannel>
+]=]
+function DiscordClient.Prototype.fetchDMChannelAsync(
+	self: DiscordClient,
+	recipientId: string
+): Future.Future<DiscordChannel.DiscordChannel>
+	return Future.try(function()
+		local rawChannelData = self.discordGateway
+			:postAsync(
+				DiscordEndpoints.BotCreateDM,
+				Resolvable.new("JSON", {
+					recipient_id = recipientId,
+				})
+			)
+			:await()
 
 		return DiscordChannel.from(self, rawChannelData) :: DiscordChannel.DiscordChannel
 	end)
