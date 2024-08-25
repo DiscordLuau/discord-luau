@@ -3,6 +3,7 @@
 ]]
 
 local apiTypes = require("@api-types/apiTypes")
+local channelTypes = require("@api-types/channel")
 
 local forumTag = require("@classes/channels/forumTag")
 local defaultReaction = require("@classes/channels/defaultReaction")
@@ -29,13 +30,13 @@ function ForumBehaviour.Interface.inheritProperties(class: any, channelData: api
 	class.defaultSortOrder = (
 		channelData.default_sort_order == 0 and "LatestActivity"
 		or channelData.default_sort_order == 1 and "CreationDate"
-	) :: ForumSortOrder
+	) :: channelTypes.ForumSortOrder
 
 	class.defaultForumLayout = (
 		channelData.default_forum_layout == 0 and "NotSet"
 		or channelData.default_forum_layout == 1 and "ListView"
 		or channelData.default_forum_layout == 2 and "GalleryView"
-	) :: ForumLayout
+	) :: channelTypes.ForumLayout
 end
 
 function ForumBehaviour.Interface.inheritMethods(class: any)
@@ -44,16 +45,13 @@ function ForumBehaviour.Interface.inheritMethods(class: any)
 	end
 end
 
-export type ForumSortOrder = "LatestActivity" | "CreationDate"
-export type ForumLayout = "NotSet" | "ListView" | "GalleryView"
-
 export type ForumBehaviourMethods = typeof(ForumBehaviour.Prototype)
 export type ForumBehaviourProperties = {
 	availableTags: { forumTag.ForumTag },
 	defaultReaction: defaultReaction.DefaultReaction?,
 	appliedTags: { apiTypes.Snowflake },
-	defaultSortOrder: ForumSortOrder,
-	defaultForumLayout: ForumLayout,
+	defaultSortOrder: channelTypes.ForumSortOrder,
+	defaultForumLayout: channelTypes.ForumLayout,
 }
 
 export type ForumBehaviour = ForumBehaviourMethods & ForumBehaviourProperties

@@ -3,6 +3,7 @@
 ]]
 
 local apiTypes = require("@api-types/apiTypes")
+local channelTypes = require("@api-types/channel")
 
 local forumTag = require("@classes/channels/forumTag")
 local defaultReaction = require("@classes/channels/defaultReaction")
@@ -31,7 +32,7 @@ function MediaBehaviour.Interface.inheritProperties(class: any, channelData: api
 	class.defaultSortOrder = (
 		channelData.default_sort_order == 0 and "LatestActivity"
 		or channelData.default_sort_order == 1 and "CreationDate"
-	) :: MediaSortOrder
+	) :: channelTypes.MediaSortOrder
 end
 
 function MediaBehaviour.Interface.inheritMethods(class: any)
@@ -40,14 +41,12 @@ function MediaBehaviour.Interface.inheritMethods(class: any)
 	end
 end
 
-export type MediaSortOrder = "LatestActivity" | "CreationDate"
-
 export type MediaBehaviourMethods = typeof(MediaBehaviour.Prototype)
 export type MediaBehaviourProperties = {
 	availableTags: { forumTag.ForumTag },
 	defaultReaction: defaultReaction.DefaultReaction?,
 	appliedTags: { apiTypes.Snowflake },
-	defaultForumLayout: MediaSortOrder,
+	defaultForumLayout: channelTypes.MediaSortOrder,
 }
 
 export type MediaBehaviour = MediaBehaviourMethods & MediaBehaviourProperties

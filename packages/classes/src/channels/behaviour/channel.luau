@@ -3,7 +3,8 @@
 	channel object.
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
+local apiTypes: string = require("@api-types/apiTypes")
+local channelTypes = require("@api-types/channel")
 
 local channelBitflags = require("@classes/bitflags/channel")
 
@@ -39,25 +40,10 @@ function ChannelBehaviour.Interface.inheritMethods(class: any)
 	end
 end
 
-export type ChannelType =
-	"GuildText"
-	| "DM"
-	| "GuildVoice"
-	| "GroupDM"
-	| "GuildCategory"
-	| "GuildAnnouncement"
-	| "AnnouncementThread"
-	| "PublicThread"
-	| "PrivateThread"
-	| "GuildStageVoice"
-	| "GuildDirectory"
-	| "GuildForum"
-	| "GuildMedia"
-
 export type ChannelBehaviourMethods = typeof(ChannelBehaviour.Prototype)
 export type ChannelBehaviourProperties = {
 	id: apiTypes.Snowflake,
-	type: ChannelType,
+	type: channelTypes.ChannelType,
 	name: string?,
 	flags: channelBitflags.ChannelBitflag?,
 }
