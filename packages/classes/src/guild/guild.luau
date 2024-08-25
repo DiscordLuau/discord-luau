@@ -116,12 +116,12 @@ function Guild.Prototype.sync(self: Guild, guildData: apiTypes.GuildObject)
 	self.safetyAlertsChannelId = guildData.safety_alerts_channel_id
 end
 
-function Guild.Interface.new(state: state.State, id: apiTypes.Snowflake, guildData: apiTypes.GuildObject): Guild
+function Guild.Interface.new(state: state.State, guildData: apiTypes.GuildObject): Guild
 	local self = setmetatable(
 		{
 			state = state,
 
-			id = id,
+			id = guildData.id,
 			isUnavailable = false,
 		} :: Guild,
 		{ __index = Guild.Prototype }
