@@ -27,13 +27,15 @@ State.Prototype = {}
 	Constructor for the State class.
 ]]
 function State.Interface.new(token: string, intents: number, version: number): State
+	local secretToken = secret.new(token)
+
 	local self = setmetatable(
 		{
-			token = secret.new(token),
+			token = secretToken,
 
-			rest = rest.new(token, intents, version),
+			rest = rest.new(secretToken, intents, version),
 			webSocketManager = webSocketManager.new({
-				token = token,
+				token = secretToken,
 				intents = intents,
 				webSocketVersion = version,
 				largeThreshold = 250,
