@@ -1,3 +1,7 @@
+--[[
+	Guild Behaviour, responsible for implementing the various properties, and methods for a guild channels.
+]]
+
 local apiTypes = require("@api-types/apiTypes")
 
 local overwrite = require("@classes/channels/overwrite")

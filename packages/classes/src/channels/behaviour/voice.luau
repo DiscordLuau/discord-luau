@@ -1,3 +1,7 @@
+--[[
+	Voice Behaviour, responsible for implementing the various properties, and methods for a voice-able channels.
+]]
+
 local apiTypes = require("@api-types/apiTypes")
 
 local VoiceBehaviour = {}

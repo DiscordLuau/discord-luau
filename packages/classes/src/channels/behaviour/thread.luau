@@ -1,3 +1,7 @@
+--[[
+	Thread Behaviour, responsible for implementing the various properties, and methods for a generic thread channels.
+]]
+
 local apiTypes = require("@api-types/apiTypes")
 
 local threadMember = require("@classes/threadMember")

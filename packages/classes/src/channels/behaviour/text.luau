@@ -1,3 +1,7 @@
+--[[
+	Text Behaviour, responsible for implementing the various properties, and methods for a text-able channels.
+]]
+
 local datetime = require("@std-polyfills/datetime")
 
 local apiTypes = require("@api-types/apiTypes")

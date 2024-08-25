@@ -1,3 +1,7 @@
+--[[
+	Media Behaviour, responsible for implementing the various properties, and methods for a media thread channel.
+]]
+
 local apiTypes = require("@api-types/apiTypes")
 
 local forumTag = require("@classes/channels/forumTag")

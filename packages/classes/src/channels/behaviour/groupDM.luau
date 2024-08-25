@@ -1,3 +1,7 @@
+--[[
+	Group DM Behaviour, responsible for implementing the various properties, and methods for a group DM.
+]]
+
 local apiTypes = require("@api-types/apiTypes")
 
 local user = require("@classes/user")

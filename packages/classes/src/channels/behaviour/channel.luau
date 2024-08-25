@@ -1,3 +1,8 @@
+--[[
+	Channel Behaviour, responsible for implementing the various properties, and methods for a generic
+	channel object.
+]]
+
 local apiTypes = require("@api-types/apiTypes")
 
 local channelBitflags = require("@classes/bitflags/channel")
