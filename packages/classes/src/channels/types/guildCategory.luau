@@ -1,0 +1,42 @@
+--[[
+	Implementation of the Discord GuildCategory class in Luau
+
+	https://discord.com/developers/docs/resources/channel#channel-object
+]]
+
+local apiTypes = require("@api-types/apiTypes")
+
+local channelBehaviour = require("@classes/channels/behaviour/channel")
+local guildBehaviour = require("@classes/channels/behaviour/guild")
+
+local GuildCategory = {}
+
+GuildCategory.Interface = {}
+GuildCategory.Prototype = {}
+GuildCategory.Behaviours = {
+	channelBehaviour,
+	guildBehaviour,
+}
+
+function GuildCategory.Prototype.sync(self: GuildCategory, channelData: apiTypes.ChannelObject)
+	for _, behaviour in GuildCategory.Behaviours do
+		behaviour.inheritMethods(self)
+		behaviour.inheritProperties(self, channelData)
+	end
+end
+
+function GuildCategory.Interface.new(channelData: apiTypes.ChannelObject): GuildCategory
+	local self = setmetatable({} :: GuildCategory, { __index = GuildCategory.Prototype })
+
+	self:sync(channelData)
+
+	return self
+end
+
+export type GuildCategory =
+	typeof(GuildCategory.Prototype)
+	& {}
+	& channelBehaviour.ChannelBehaviour
+	& guildBehaviour.GuildBehaviour
+
+return GuildCategory.Interface
