@@ -35,7 +35,9 @@ function GuildScheduledEvent.listScheduledEventsForGuildAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.ListGuildScheduledForEvents, guildId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -56,7 +58,9 @@ function GuildScheduledEvent.createGuildScheduledEvent(
 		instance:setBody(serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -82,7 +86,9 @@ function GuildScheduledEvent.getScheduledEventsForGuildAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetGuildScheduledEvent, guildId, scheduledEventId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -104,7 +110,9 @@ function GuildScheduledEvent.modifyGuildScheduledEvent(
 		instance:setBody(serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -122,7 +130,9 @@ function GuildScheduledEvent.deleteGuildScheduledEvent(
 		instance:setMethod("DELETE")
 		instance:setUrl(string.format(restEndpoints.DeleteGuildScheduledEvent, guildId, scheduledEventId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -140,7 +150,9 @@ function GuildScheduledEvent.getGuildScheduledEventUsers(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetGuildScheduledEventUsers, guildId, scheduledEventId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)

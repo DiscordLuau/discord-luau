@@ -25,7 +25,9 @@ function Sticker.getStickerAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetSticker, stickerId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -39,7 +41,9 @@ function Sticker.listStickerPacksAsync(instance: request.Request): future.Future
 		instance:setMethod("GET")
 		instance:setUrl(restEndpoints.ListStickerPacks)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -56,7 +60,9 @@ function Sticker.listGuildStickersAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.ListGuildStickers, guildId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -74,7 +80,9 @@ function Sticker.getGuildStickerAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetGuildSticker, guildId, stickerId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -95,7 +103,9 @@ function Sticker.createGuildStickerAsync(
 		instance:setBody(serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -117,7 +127,9 @@ function Sticker.modifyGuildStickerAsync(
 		instance:setBody(serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -137,7 +149,9 @@ function Sticker.deleteGuildStickerAsync(
 		instance:setUrl(string.format(restEndpoints.DeleteGuildSticker, guildId, stickerId))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)

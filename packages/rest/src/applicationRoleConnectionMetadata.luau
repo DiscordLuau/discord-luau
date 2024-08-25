@@ -25,7 +25,9 @@ function ApplicationRoleConnectionMetadata.getApplicationRoleConnectionMetadataR
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetApplicationRoleConnectionMetadataRecords, applicationId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -44,7 +46,9 @@ function ApplicationRoleConnectionMetadata.updateApplicationRoleConnectionMetada
 		instance:setMethod("PUT")
 		instance:setUrl(string.format(restEndpoints.UpdateApplicationRoleConnectionMetadataRecords, applicationId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)

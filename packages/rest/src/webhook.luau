@@ -29,7 +29,9 @@ function Webhook.createWebhookAsync(
 		instance:setBody(serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -46,7 +48,9 @@ function Webhook.getChannelWebhooksAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetChannelWebhooks, channelId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -63,7 +67,9 @@ function Webhook.getGuildWebhooksAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetGuildWebhooks, guildId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -80,7 +86,9 @@ function Webhook.getWebhookAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetWebhook, webhookId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -98,7 +106,9 @@ function Webhook.getWebhookWithTokenAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetWebhookWithToken, webhookId, webhookToken))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -119,7 +129,9 @@ function Webhook.modifyWebhookAsync(
 		instance:setBody(serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -141,7 +153,9 @@ function Webhook.modifyWebhookWithTokenAsync(
 		instance:setBody(serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -160,7 +174,9 @@ function Webhook.deleteWebhookAsync(
 		instance:setUrl(string.format(restEndpoints.DeleteWebhook, webhookId))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -180,7 +196,9 @@ function Webhook.deleteWebhookWithTokenAsync(
 		instance:setUrl(string.format(restEndpoints.DeleteWebhookWithToken, webhookId, webhookToken))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -207,7 +225,9 @@ function Webhook.executeWebhookAsync(
 		instance:setUrl(string.format(restEndpoints.ExecuteWebhook, webhookId, webhookToken))
 		instance:setBody(serde.encode("json", jsonParams, true))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -231,7 +251,9 @@ function Webhook.getWebhookMessageAsync(
 		instance:setMethod("POST")
 		instance:setUrl(string.format(restEndpoints.GetWebhookMessage, webhookId, webhookToken, messageId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -257,7 +279,9 @@ function Webhook.editWebhookMessageAsync(
 		instance:setUrl(string.format(restEndpoints.EditWebhookMessage, webhookId, webhookToken, messageId))
 		instance:setBody(serde.encode("json", jsonParams, true))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -281,7 +305,9 @@ function Webhook.deleteWebhookMessageAsync(
 		instance:setMethod("DELETE")
 		instance:setUrl(string.format(restEndpoints.EditWebhookMessage, webhookId, webhookToken, messageId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)

@@ -28,7 +28,9 @@ function Interaction.createInteractionResponseAsync(
 		instance:setUrl(string.format(restEndpoints.CreateInteractionResponse, interactionId, interactionToken))
 		instance:setBody(serde.encode("json", jsonParams, true))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -51,7 +53,9 @@ function Interaction.getOriginalInteractionResponseAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetOriginalInteractionResponse, applicationId, interactionToken))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -76,7 +80,9 @@ function Interaction.editOriginalInteractionResponseAsync(
 		instance:setUrl(string.format(restEndpoints.GetOriginalInteractionResponse, applicationId, interactionToken))
 		instance:setBody(serde.encode("json", jsonParams, true))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -94,7 +100,9 @@ function Interaction.deleteOriginalInteractionResponseAsync(
 		instance:setMethod("DELETE")
 		instance:setUrl(string.format(restEndpoints.DeleteOriginalInteractionResponse, applicationId, interactionToken))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -121,7 +129,9 @@ function Interaction.createFollowupMessageAsync(
 		instance:setUrl(string.format(restEndpoints.CreateFollowupMessage, applicationId, interactionToken))
 		instance:setBody(serde.encode("json", jsonParams, true))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -145,7 +155,9 @@ function Interaction.getFollowupMessageAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetFollowupMessage, applicationId, interactionToken, messageId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -171,7 +183,9 @@ function Interaction.editFollowupMessageAsync(
 		instance:setUrl(string.format(restEndpoints.EditFollowupMessage, applicationId, interactionToken, messageId))
 		instance:setBody(serde.encode("json", jsonParams, true))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -190,7 +204,9 @@ function Interaction.deleteFollowupMessageAsync(
 		instance:setMethod("DELETE")
 		instance:setUrl(string.format(restEndpoints.DeleteFollowupMessage, applicationId, interactionToken, messageId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)

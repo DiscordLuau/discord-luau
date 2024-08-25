@@ -37,7 +37,9 @@ function Message.getChannelMessagesAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetChannelMessages, channelId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -55,7 +57,9 @@ function Message.getChannelMessageAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetChannelMessage, channelId, messageId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -74,7 +78,9 @@ function Message.createMessageAsync(
 		instance:setUrl(string.format(restEndpoints.CreateMessage, channelId))
 		instance:setBody(serde.encode("json", jsonParams, true))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -93,7 +99,9 @@ function Message.crosspostMessageAsync(
 		instance:setUrl(string.format(restEndpoints.CrosspostMessage, channelId))
 		instance:setBody(serde.encode("json", jsonParams, true))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -115,7 +123,9 @@ function Message.createReactionAsync(
 			string.format(restEndpoints.CreateReaction, channelId, messageId, net.urlEncode(`{emojiName}:{emojiId}`))
 		)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -137,7 +147,9 @@ function Message.deleteOwnReactionAsync(
 			string.format(restEndpoints.DeleteOwnReaction, channelId, messageId, net.urlEncode(`{emojiName}:{emojiId}`))
 		)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -166,7 +178,9 @@ function Message.deleteUserReactionAsync(
 			)
 		)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -197,7 +211,9 @@ function Message.getReactionsAsync(
 			string.format(restEndpoints.GetReactions, channelId, messageId, net.urlEncode(`{emojiName}:{emojiId}`))
 		)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -215,7 +231,9 @@ function Message.deleteAllReactionsAsync(
 		instance:setMethod("DELETE")
 		instance:setUrl(string.format(restEndpoints.DeleteAllReactions, channelId, messageId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -242,7 +260,9 @@ function Message.deleteAllReactionsForEmojiAsync(
 			)
 		)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -262,7 +282,9 @@ function Message.editMessageAsync(
 		instance:setUrl(string.format(restEndpoints.EditMessage, channelId, messageId))
 		instance:setBody(serde.encode("json", jsonParams, true))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -280,7 +302,9 @@ function Message.deleteMessageAsync(
 		instance:setMethod("DELETE")
 		instance:setUrl(string.format(restEndpoints.DeleteMessage, channelId, messageId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -299,7 +323,9 @@ function Message.bulkDeleteMessagesAsync(
 		instance:setUrl(string.format(restEndpoints.BulkDeleteMessages, channelId))
 		instance:setBody(serde.encode("json", jsonParams, true))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)

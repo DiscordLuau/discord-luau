@@ -25,7 +25,9 @@ function Application.getCurrentApplicationAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetCurrentApplication, applicationId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)

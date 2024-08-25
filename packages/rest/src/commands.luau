@@ -30,7 +30,9 @@ function Commands.getGlobalApplicationCommandsAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetGlobalApplicationCommands, applicationId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -49,7 +51,9 @@ function Commands.createGlobalApplicationCommandAsync(
 		instance:setUrl(string.format(restEndpoints.CreateGlobalApplicationCommand, applicationId))
 		instance:setBody(serde.encode("json", jsonParams, true))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -67,7 +71,9 @@ function Commands.getGlobalApplicationCommandAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetGlobalApplicationCommand, applicationId, commandId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -87,7 +93,9 @@ function Commands.editGlobalApplicationCommandAsync(
 		instance:setUrl(string.format(restEndpoints.EditGlobalApplicationCommand, applicationId, commandId))
 		instance:setBody(serde.encode("json", jsonParams, true))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -105,7 +113,9 @@ function Commands.deleteGlobalApplicationCommandAsync(
 		instance:setMethod("DELETE")
 		instance:setUrl(string.format(restEndpoints.DeleteGlobalApplicationCommand, applicationId, commandId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -126,7 +136,9 @@ function Commands.bulkOverwriteGlobalApplicationCommandsAsync(
 		instance:setUrl(string.format(restEndpoints.BulkOverwriteGlobalApplicationCommands, applicationId))
 		instance:setBody(serde.encode("json", jsonParams, true))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -148,7 +160,9 @@ function Commands.getGuildApplicationCommandsAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetGuildApplicationCommands, applicationId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -168,7 +182,9 @@ function Commands.createGuildApplicationCommandAsync(
 		instance:setUrl(string.format(restEndpoints.CreateGuildApplicationCommand, applicationId, guildId))
 		instance:setBody(serde.encode("json", jsonParams, true))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -187,7 +203,9 @@ function Commands.getGuildApplicationCommandAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetGuildApplicationCommand, applicationId, guildId, commandId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -208,7 +226,9 @@ function Commands.editGuildApplicationCommandAsync(
 		instance:setUrl(string.format(restEndpoints.EditGuildApplicationCommand, applicationId, guildId, commandId))
 		instance:setBody(serde.encode("json", jsonParams, true))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -227,7 +247,9 @@ function Commands.deleteGuildApplicationCommandAsync(
 		instance:setMethod("DELETE")
 		instance:setUrl(string.format(restEndpoints.DeleteGuildApplicationCommand, applicationId, guildId, commandId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -249,7 +271,9 @@ function Commands.bulkOverwriteGuildApplicationCommandsAsync(
 		instance:setUrl(string.format(restEndpoints.BulkOverwriteGuildApplicationCommands, applicationId, guildId))
 		instance:setBody(serde.encode("json", jsonParams, true))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -269,7 +293,9 @@ function Commands.getGuildApplicationCommandPermissionsAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetGuildApplicationCommandPermissions, applicationId, guildId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -292,7 +318,9 @@ function Commands.getApplicationCommandPermissionsAsync(
 			string.format(restEndpoints.GetApplicationCommandPermissions, applicationId, guildId, commandId)
 		)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -317,7 +345,9 @@ function Commands.editApplicationCommandPermissionsAsync(
 		)
 		instance:setBody(serde.encode("json", jsonParams, true))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)

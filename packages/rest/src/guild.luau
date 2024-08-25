@@ -26,7 +26,9 @@ function Guild.createGuildAsync(
 		instance:setUrl(restEndpoints.CreateGuild)
 		instance:setBody(serde.encode("json", jsonParams, true))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -48,7 +50,9 @@ function Guild.getGuildAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetGuild, guildId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -65,7 +69,9 @@ function Guild.getGuildPreviewAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetGuildPreview, guildId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -86,7 +92,9 @@ function Guild.modifyGuildAsync(
 		instance:setBody(serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -103,7 +111,9 @@ function Guild.deleteGuildAsync(
 		instance:setMethod("DELETE")
 		instance:setUrl(string.format(restEndpoints.DeleteGuild, guildId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -120,7 +130,9 @@ function Guild.getGuildChannelsAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetGuildChannels, guildId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -141,7 +153,9 @@ function Guild.createGuildChannelAsync(
 		instance:setBody(serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -160,7 +174,9 @@ function Guild.modifyGuildChannelPositionsAsync(
 		instance:setUrl(string.format(restEndpoints.ModifyGuildChannelPositions, guildId))
 		instance:setBody(serde.encode("json", jsonParams, true))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -177,7 +193,9 @@ function Guild.listActiveGuildThreadsAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.ListActiveGuildThreads, guildId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -195,7 +213,9 @@ function Guild.getGuildMemberAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetGuildMember, guildId, userId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -219,7 +239,9 @@ function Guild.listGuildMembersAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.ListGuildMembers, guildId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -243,7 +265,9 @@ function Guild.searchGuildMembersAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.SearchGuildMembers, guildId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -263,7 +287,9 @@ function Guild.addGuildMemberAsync(
 		instance:setUrl(string.format(restEndpoints.AddGuildMember, guildId, userId))
 		instance:setBody(serde.encode("json", jsonParams, true))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -285,7 +311,9 @@ function Guild.modifyGuildMemberAsync(
 		instance:setBody(serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -306,7 +334,9 @@ function Guild.modifyCurrentMemberAsync(
 		instance:setBody(serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -327,7 +357,9 @@ function Guild.addGuildMemberRoleAsync(
 		instance:setUrl(string.format(restEndpoints.AddGuildMemberRole, guildId, userId, roleId))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -348,7 +380,9 @@ function Guild.removeGuildMemberRoleAsync(
 		instance:setUrl(string.format(restEndpoints.RemoveGuildMemberRole, guildId, userId, roleId))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -368,7 +402,9 @@ function Guild.removeGuildMemberAsync(
 		instance:setUrl(string.format(restEndpoints.RemoveGuildMember, guildId, userId))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -394,7 +430,9 @@ function Guild.getGuildBansAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetGuildBans, guildId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -412,7 +450,9 @@ function Guild.getGuildBanAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetGuildBan, guildId, userId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -434,7 +474,9 @@ function Guild.createGuildBanAsync(
 		instance:setBody(serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -454,7 +496,9 @@ function Guild.removeGuildBanAsync(
 		instance:setUrl(string.format(restEndpoints.RemoveGuildBan, guildId, userId))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -475,7 +519,9 @@ function Guild.bulkGuildBanAsync(
 		instance:setBody(serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -492,7 +538,9 @@ function Guild.getGuildRolesAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetGuildRoles, guildId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -513,7 +561,9 @@ function Guild.createGuildRoleAsync(
 		instance:setBody(serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -534,7 +584,9 @@ function Guild.modifyGuildRolePositionsAsync(
 		instance:setBody(serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -556,7 +608,9 @@ function Guild.modifyGuildRoleAsync(
 		instance:setBody(serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -577,7 +631,9 @@ function Guild.modifyGuildMFALevelAsync(
 		instance:setBody(serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -597,7 +653,9 @@ function Guild.deleteGuildRoleAsync(
 		instance:setUrl(string.format(restEndpoints.DeleteGuildRole, guildId, roleId))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -621,7 +679,9 @@ function Guild.getGuildPruneCountAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetGuildPruneCount, guildId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -642,7 +702,9 @@ function Guild.beginGuildPruneAsync(
 		instance:setBody(serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -659,7 +721,9 @@ function Guild.getGuildVoiceRegionsAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetGuildVoiceRegions, guildId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -676,7 +740,9 @@ function Guild.getGuildInvitesAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetGuildInvites, guildId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -693,7 +759,9 @@ function Guild.getGuildIntegrationsAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetGuildIntegrations, guildId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -713,7 +781,9 @@ function Guild.deleteGuildIntegrationAsync(
 		instance:setUrl(string.format(restEndpoints.DeleteGuildIntegration, guildId, integrationId))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -730,7 +800,9 @@ function Guild.getGuildWidgetSettingsAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetGuildWidgetSettings, guildId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -751,7 +823,9 @@ function Guild.modifyGuildWidgetAsync(
 		instance:setBody(serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -768,7 +842,9 @@ function Guild.getGuildWidgetAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetGuildWidget, guildId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -785,7 +861,9 @@ function Guild.getGuildVanityURLAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetGuildVanityURL, guildId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -807,7 +885,9 @@ function Guild.getGuildWidgetImageAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetGuildWidgetImage, guildId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -824,7 +904,9 @@ function Guild.getGuildWelcomeScreenAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetGuildWelcomeScreen, guildId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -845,7 +927,9 @@ function Guild.modifyGuildWelcomeScreenAsync(
 		instance:setBody(serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -862,7 +946,9 @@ function Guild.getGuildOnboardingAsync(
 		instance:setMethod("PATCH")
 		instance:setUrl(string.format(restEndpoints.GetGuildOnboarding, guildId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -883,7 +969,9 @@ function Guild.modifyGuildOnboardingAsync(
 		instance:setBody(serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)

@@ -50,7 +50,7 @@ end
 	- https://example.com/path/to/resource
 ]]
 function Request.Prototype.setUrl(self: Request, url: string)
-	assert(url:match("^%a+://"), `Request URL '{url}' is not a valid URL`)
+	-- assert(url:match("^%a+://"), `Request URL '{url}' is not a valid URL`)
 
 	self.url = url
 end
@@ -116,7 +116,7 @@ function Request.Prototype.executeAsync<Resolve>(self: Request): future.Future<{
 		end
 
 		local headerTable = {}
-		local baseUrl = `https://discord.com/api/{self.restApiVersion}{self.url}`
+		local baseUrl = `https://discord.com/api/v{self.restApiVersion}{self.url}`
 		local hasUrlParams = next(self.urlParams) ~= nil
 
 		headerTable["user-agent"] = "DiscordBot (https://github.com/DiscordLuau/discord-luau, 0.1.0)"
@@ -199,6 +199,8 @@ function Request.Interface.new(settings: {
 			restApiVersion = settings.restApiVersion,
 			headers = {},
 			urlParams = {},
+			beforeHooks = {},
+			afterHooks = {},
 		} :: Request,
 		{ __index = Request.Prototype }
 	)

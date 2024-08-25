@@ -32,7 +32,9 @@ function Poll.getAnswerVotersAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetAnswerVoters, channelId, messageId, answerId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -50,7 +52,9 @@ function Poll.endPollAsync(
 		instance:setMethod("POST")
 		instance:setUrl(string.format(restEndpoints.EndPoll, channelId, messageId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)

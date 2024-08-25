@@ -25,7 +25,9 @@ function Channel.getChannelAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetChannel, channelId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -46,7 +48,9 @@ function Channel.modifyChannelAsync(
 		instance:setBody(serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -65,7 +69,9 @@ function Channel.deleteOrCloseChannelAsync(
 		instance:setUrl(string.format(restEndpoints.DeleteOrCloseChannel, channelId))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -87,7 +93,9 @@ function Channel.editChannelPermissionsAsync(
 		instance:setBody(serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -104,7 +112,9 @@ function Channel.getChannelInvitesAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetChannelInvites, channelId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -125,7 +135,9 @@ function Channel.createChannelInviteAsync(
 		instance:setBody(serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -145,7 +157,9 @@ function Channel.deleteChannelPermissionAsync(
 		instance:setUrl(string.format(restEndpoints.DeleteChannelPermission, channelId, overwriteId))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -166,7 +180,9 @@ function Channel.followAnnouncementChannelAsync(
 		instance:setBody(serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -183,7 +199,9 @@ function Channel.triggerTypingIndicatorAsync(
 		instance:setMethod("POST")
 		instance:setUrl(string.format(restEndpoints.TriggerTypingChannel, channelId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -200,7 +218,9 @@ function Channel.getPinnedMessagesAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetPinnedMessages, channelId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -220,7 +240,9 @@ function Channel.pinMessageAsync(
 		instance:setUrl(string.format(restEndpoints.PinMessage, channelId, messageId))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -240,7 +262,9 @@ function Channel.unpinMessageAsync(
 		instance:setUrl(string.format(restEndpoints.UnpinMessage, channelId, messageId))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -260,7 +284,9 @@ function Channel.groupDMAddRecipientAsync(
 		instance:setUrl(string.format(restEndpoints.GroupDMAddRecipient, channelId, userId))
 		instance:setBody(serde.encode("json", jsonParams, true))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -278,7 +304,9 @@ function Channel.groupDMRemoveRecipientAsync(
 		instance:setMethod("DELETE")
 		instance:setUrl(string.format(restEndpoints.GroupDMRemoveRecipient, channelId, userId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -300,7 +328,9 @@ function Channel.startThreadFromMessageAsync(
 		instance:setBody(serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -321,7 +351,9 @@ function Channel.startThreadWithoutMessageAsync(
 		instance:setBody(serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -344,7 +376,9 @@ function Channel.startThreadInForumOrMediaChannelAsync(
 		instance:setBody(serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -361,7 +395,9 @@ function Channel.joinThreadAsync(
 		instance:setMethod("PUT")
 		instance:setUrl(string.format(restEndpoints.JoinThread, channelId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -379,7 +415,9 @@ function Channel.addThreadMemberAsync(
 		instance:setMethod("PUT")
 		instance:setUrl(string.format(restEndpoints.AddThreadMember, channelId, userId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -396,7 +434,9 @@ function Channel.leaveThreadAsync(
 		instance:setMethod("DELETE")
 		instance:setUrl(string.format(restEndpoints.LeaveThread, channelId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -414,7 +454,9 @@ function Channel.removeThreadMemberAsync(
 		instance:setMethod("DELETE")
 		instance:setUrl(string.format(restEndpoints.RemoveThreadMember, channelId, userId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -437,7 +479,9 @@ function Channel.getThreadMemberAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetThreadMember, channelId, userId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -463,7 +507,9 @@ function Channel.listThreadMembersAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.ListThreadMembers, channelId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -487,7 +533,9 @@ function Channel.listPublicArchivedThreadsAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.ListPublicArchivedThreads, channelId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -511,7 +559,9 @@ function Channel.listPrivateArchivedThreadsAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.ListPrivateArchivedThreads, channelId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -535,7 +585,9 @@ function Channel.listJoinedPrivateArchivedThreadsAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.ListJoinedPrivateArchivedThreads, channelId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)

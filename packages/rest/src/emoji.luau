@@ -25,7 +25,9 @@ function Emoji.listGuildEmojisAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.ListGuildEmojis, guildId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -43,7 +45,9 @@ function Emoji.getGuildEmojisAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetGuildEmoji, guildId, emojId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -64,7 +68,9 @@ function Emoji.createGuildEmojiAsync(
 		instance:setBody(serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -86,7 +92,9 @@ function Emoji.modifyGuildEmojiAsync(
 		instance:setBody(serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -106,7 +114,9 @@ function Emoji.deleteGuildEmojiAsync(
 		instance:setUrl(string.format(restEndpoints.DeleteGuildEmoji, guildId, emojId))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)

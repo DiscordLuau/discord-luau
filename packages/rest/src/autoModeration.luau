@@ -26,7 +26,9 @@ function AutoModeration.listAutoModerationRulesForGuildAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.ListAutoModerationRulesForGuild, guildId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -44,7 +46,9 @@ function AutoModeration.getAutoModerationRulesForGuildAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetAutoModerationRule, guildId, autoModerationRuleId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -65,7 +69,9 @@ function AutoModeration.createAutoModerationRuleAsync(
 		instance:setBody(serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -87,7 +93,9 @@ function AutoModeration.modifyAutoModerationRuleAsync(
 		instance:setBody(serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)

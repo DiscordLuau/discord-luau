@@ -28,7 +28,9 @@ function StageInstance.createStageInstanceAsync(
 		instance:setBody(serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -45,7 +47,9 @@ function StageInstance.getStageInstanceAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetStageInstance, channelId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -66,7 +70,9 @@ function StageInstance.modifyStageInstanceAsync(
 		instance:setBody(serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -83,7 +89,9 @@ function StageInstance.deleteStageInstanceAsync(
 		instance:setMethod("DELETE")
 		instance:setUrl(string.format(restEndpoints.DeleteStageInstance, channelId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)

@@ -17,7 +17,9 @@ function Gateway.getGatewayAsync(instance: request.Request): future.Future<restT
 		instance:setMethod("GET")
 		instance:setUrl(restEndpoints.GetGateway)
 
-		local response = instance:executeAsync():await()
+				local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -31,7 +33,9 @@ function Gateway.getGatewayBotAsync(instance: request.Request): future.Future<re
 		instance:setMethod("GET")
 		instance:setUrl(restEndpoints.GetGatewayBot)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)

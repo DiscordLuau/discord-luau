@@ -1,4 +1,9 @@
+local bot = require("@core/bot")
+
 local DiscordLuau = {}
+
+DiscordLuau.Bot = bot
+export type Bot = bot.Bot
 
 return DiscordLuau
 

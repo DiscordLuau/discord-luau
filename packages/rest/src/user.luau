@@ -22,7 +22,9 @@ function User.getCurrentUserAsync(instance: request.Request): future.Future<rest
 		instance:setMethod("GET")
 		instance:setUrl(restEndpoints.GetCurrentUser)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -39,7 +41,9 @@ function User.getUserAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetUser, userId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -57,7 +61,9 @@ function User.modifyCurrentUserAsync(
 		instance:setUrl(restEndpoints.ModifyCurrentUser)
 		instance:setBody(serde.encode("json", jsonParams, true))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -75,7 +81,9 @@ function User.modifyCurrentUserAsync(
 		instance:setUrl(restEndpoints.ModifyCurrentUser)
 		instance:setBody(serde.encode("json", jsonParams, true))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -102,7 +110,9 @@ function User.getCurrentUserGuildsAsync(
 		instance:setMethod("GET")
 		instance:setUrl(restEndpoints.GetCurrentUserGuilds)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -119,7 +129,9 @@ function User.getCurrentUserGuildMember(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetCurrentUserGuilds, guildId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -136,7 +148,9 @@ function User.leaveGuildAsync(
 		instance:setMethod("DELETE")
 		instance:setUrl(string.format(restEndpoints.GetCurrentUserGuilds, guildId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -154,7 +168,9 @@ function User.createDMAsync(
 		instance:setUrl(restEndpoints.CreateDM)
 		instance:setBody(serde.encode("json", jsonParams, true))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -172,7 +188,9 @@ function User.createGroupDMAsync(
 		instance:setUrl(restEndpoints.CreateGroupDM)
 		instance:setBody(serde.encode("json", jsonParams, true))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -188,7 +206,9 @@ function User.getCurrentUserConnectionsAsync(
 		instance:setMethod("GET")
 		instance:setUrl(restEndpoints.GetCurrentUserConnections)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -207,7 +227,9 @@ function User.getCurrentUserApplicationRoleConnectionAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetCurrentUserApplicationRolConnections, applicationId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -228,7 +250,9 @@ function User.updateCurrentUserApplicationRoleConnectionAsync(
 		instance:setUrl(string.format(restEndpoints.UpdateCurrentUserApplicationRoleConnection, applicationId))
 		instance:setBody(serde.encode("json", jsonParams, true))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)

@@ -22,7 +22,9 @@ function Voice.listVoiceRegionsAsync(instance: request.Request): future.Future<r
 		instance:setMethod("GET")
 		instance:setUrl(restEndpoints.ListVoiceRegions)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -39,7 +41,9 @@ function Voice.getCurrentUserVoiceStateAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetCurrentUserVoiceState, guildId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -57,7 +61,9 @@ function Voice.getUserVoiceStateAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetUserVoiceState, guildId, userId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -76,7 +82,9 @@ function Voice.modifyCurrentUserVoiceStateAsync(
 		instance:setUrl(string.format(restEndpoints.ModifyCurrentUserVoiceState, guildId))
 		instance:setBody(serde.encode("json", jsonParams, true))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -96,7 +104,9 @@ function Voice.modifyUserVoiceStateAsync(
 		instance:setUrl(string.format(restEndpoints.ModifyUserVoiceState, guildId, userId))
 		instance:setBody(serde.encode("json", jsonParams, true))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)

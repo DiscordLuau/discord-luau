@@ -36,7 +36,9 @@ function Invite.getInviteAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetInvite, inviteCode))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -55,7 +57,9 @@ function Invite.deleteInviteAsync(
 		instance:setUrl(string.format(restEndpoints.DeleteInvite, inviteCode))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)

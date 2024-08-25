@@ -25,7 +25,9 @@ function GuildTemplate.getGuildTemplateAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetGuildTemplate, templateCode))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -44,7 +46,9 @@ function GuildTemplate.createGuildFromGuildTemplateAsync(
 		instance:setUrl(string.format(restEndpoints.CreateGuildFromTemplate, templateCode))
 		instance:setBody(serde.encode("json", jsonParams, true))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -61,7 +65,9 @@ function GuildTemplate.getGuildTemplatesAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetGuildTemplates, guildId))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -80,7 +86,9 @@ function GuildTemplate.createGuildTemplateAsync(
 		instance:setUrl(string.format(restEndpoints.CreateGuildTemplate, guildId))
 		instance:setBody(serde.encode("json", jsonParams, true))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -98,7 +106,9 @@ function GuildTemplate.syncGuildTemplateAsync(
 		instance:setMethod("PUT")
 		instance:setUrl(string.format(restEndpoints.SyncGuildTemplate, guildId, templateCode))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -118,7 +128,9 @@ function GuildTemplate.modifyGuildTemplateAsync(
 		instance:setUrl(string.format(restEndpoints.ModifyGuildTemplate, guildId, templateCode))
 		instance:setBody(serde.encode("json", jsonParams, true))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)
@@ -136,7 +148,9 @@ function GuildTemplate.deleteGuildTemplateAsync(
 		instance:setMethod("DELETE")
 		instance:setUrl(string.format(restEndpoints.DeleteGuildTemplate, guildId, templateCode))
 
-		local response = instance:executeAsync():await()
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", response)
 
 		return response.body
 	end)

@@ -16,7 +16,7 @@ Future.Interface = {}
 --[[
 	Wait for this future to be resolved, this will block the current thread until the future is resolved.
 ]]
-function Future.Prototype.await<T>(self: Future<T>): ...T
+function Future.Prototype.await<T>(self: Future<T>): (FutureStatus, ...T)
 	if self.status == "Pending" then
 		local thread = coroutine.running()
 
@@ -25,7 +25,7 @@ function Future.Prototype.await<T>(self: Future<T>): ...T
 		return coroutine.yield()
 	end
 
-	return table.unpack(self._valueList)
+	return self.status, table.unpack(self._valueList)
 end
 
 --[[
