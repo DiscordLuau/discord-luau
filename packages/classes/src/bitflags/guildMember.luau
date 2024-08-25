@@ -1,7 +1,7 @@
 --[[
 	Implementation of the Discord Role Bitflags in Luau
 
-	https://discord.com/developers/docs/resources/channel#channel-object-channel-flags
+	https://discord.com/developers/docs/resources/guild#guild-member-object-guild-member-flags
 ]]
 
 local GuildMemberBitflag = {}
@@ -13,28 +13,36 @@ GuildMemberBitflag.Prototype = {}
 	Member has left and rejoined the guild	
 ]]
 function GuildMemberBitflag.Prototype.didRejoin(self: GuildMemberBitflag)
-	return bit32.lshift(self.flag, 0) == 0
+	local bit = bit32.lshift(1, 0)
+
+	return bit32.band(self.flag, bit) == bit
 end
 
 --[[
 	Member has completed onboarding	
 ]]
 function GuildMemberBitflag.Prototype.completedOnboarding(self: GuildMemberBitflag)
-	return bit32.lshift(self.flag, 1) == 1
+	local bit = bit32.lshift(1, 1)
+
+	return bit32.band(self.flag, bit) == bit
 end
 
 --[[
 	Member is exempt from guild verification requirements	
 ]]
 function GuildMemberBitflag.Prototype.bypassesVerification(self: GuildMemberBitflag)
-	return bit32.lshift(self.flag, 2) == 2
+	local bit = bit32.lshift(1, 2)
+
+	return bit32.band(self.flag, bit) == bit
 end
 
 --[[
 	Member has started onboarding	
 ]]
 function GuildMemberBitflag.Prototype.startedOnboarding(self: GuildMemberBitflag)
-	return bit32.lshift(self.flag, 3) == 3
+	local bit = bit32.lshift(1, 3)
+
+	return bit32.band(self.flag, bit) == bit
 end
 
 function GuildMemberBitflag.Interface.new(flag: number): GuildMemberBitflag

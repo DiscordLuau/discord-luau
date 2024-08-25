@@ -13,7 +13,9 @@ RoleBitflag.Prototype = {}
 	Checks if the role is in an onboarding prompt.
 ]]
 function RoleBitflag.Prototype.isInOnboardingPrompt(self: RoleBitflag)
-	return bit32.lshift(self.flag, 0) == 0
+	local bit = bit32.lshift(1, 0)
+
+	return bit32.band(self.flag, bit) == bit
 end
 
 function RoleBitflag.Interface.new(flag: number): RoleBitflag
