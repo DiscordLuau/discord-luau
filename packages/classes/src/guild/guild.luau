@@ -4,11 +4,11 @@
 	https://discord.com/developers/docs/resources/guild#guild-object
 ]]
 
-local future = require("@vendor/future")
+local _future = require("@vendor/future")
 
-local request = require("@rest/request")
+local _request = require("@rest/request")
 
-local guild = require("@rest/guild")
+local _guild = require("@rest/guild")
 
 local apiTypes = require("@api-types/apiTypes")
 
