@@ -1,0 +1,45 @@
+--[[
+	Implementation of the Discord GuildAnnouncement class in Luau
+
+	https://discord.com/developers/docs/resources/channel#channel-object
+]]
+
+local apiTypes = require("@api-types/apiTypes")
+
+local channelBehaviour = require("@classes/channels/behaviour/channel")
+local guildBehaviour = require("@classes/channels/behaviour/guild")
+local textBehaviour = require("@classes/channels/behaviour/text")
+
+local GuildAnnouncement = {}
+
+GuildAnnouncement.Interface = {}
+GuildAnnouncement.Prototype = {}
+GuildAnnouncement.Behaviours = {
+	channelBehaviour,
+	guildBehaviour,
+	textBehaviour,
+}
+
+function GuildAnnouncement.Prototype.sync(self: GuildAnnouncement, channelData: apiTypes.ChannelObject)
+	for _, behaviour in GuildAnnouncement.Behaviours do
+		behaviour.inheritMethods(self)
+		behaviour.inheritProperties(self, channelData)
+	end
+end
+
+function GuildAnnouncement.Interface.new(channelData: apiTypes.ChannelObject): GuildAnnouncement
+	local self = setmetatable({} :: GuildAnnouncement, { __index = GuildAnnouncement.Prototype })
+
+	self:sync(channelData)
+
+	return self
+end
+
+export type GuildAnnouncement =
+	typeof(GuildAnnouncement.Prototype)
+	& {}
+	& channelBehaviour.ChannelBehaviour
+	& textBehaviour.TextBehaviour
+	& guildBehaviour.GuildBehaviour
+
+return GuildAnnouncement.Interface
