@@ -5,6 +5,7 @@
 ]]
 
 local apiTypes = require("@api-types/apiTypes")
+local userTypes = require("@api-types/user")
 
 local avatarDecoration = require("@classes/avatarDecoration")
 
@@ -14,7 +15,7 @@ User.Interface = {}
 User.Prototype = {}
 
 function User.Prototype.sync(self: User, userData: apiTypes.UserObject)
-	local premiumType: NitroType = "None"
+	local premiumType: userTypes.NitroType = "None"
 
 	if userData.premium_type == 1 then
 		premiumType = "NitroClassic"
@@ -59,7 +60,6 @@ function User.Interface.new(userData: apiTypes.UserObject): User
 	return self
 end
 
-export type NitroType = "None" | "NitroClassic" | "Nitro" | "NitroBasic"
 export type User = typeof(User.Prototype) & {
 	id: apiTypes.Snowflake,
 
@@ -76,7 +76,7 @@ export type User = typeof(User.Prototype) & {
 	verified: boolean?,
 	email: string?,
 	flags: number?,
-	premiumType: NitroType?,
+	premiumType: userTypes.NitroType?,
 	publicFlags: number?,
 	avatarDecorationData: avatarDecoration.AvatarDecoration?,
 }
