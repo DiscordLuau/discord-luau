@@ -614,7 +614,7 @@ export type AutomoderationRuleObject = {
 
 -- https://discord.com/developers/docs/resources/channel#overwrite-object
 export type OverwriteObject = {
-	id: Snowflake?, -- role or user id
+	id: Snowflake, -- role or user id
 	type: OverwriteObjectType, -- either 0 (role) or 1 (member)
 	allow: string, -- permission bit set
 	deny: string, --permission bit set
@@ -652,13 +652,13 @@ export type ThreadMemberObject = {
 	id: Snowflake?, -- ID of the thread
 	user_id: Snowflake?, -- ID of the user
 	join_timestamp: string, -- Time the user last joined the thread
-	flags: number?, -- Any user-thread settings, currently only used for notifications
+	flags: number, -- Any user-thread settings, currently only used for notifications
 	member: GuildMemberObject?, -- Additional information about the user
 }
 
 -- https://discord.com/developers/docs/resources/channel#forum-tag-object
 export type ForumTagObject = {
-	id: Snowflake?, -- the id of the tag
+	id: Snowflake, -- the id of the tag
 	name: string, -- the name of the tag (0-20 characters)
 	moderated: boolean, -- whether this tag can only be added to or removed from threads by a member with the MANAGE_THREADS permission
 	emoji_id: string?, -- the id of a guild's custom emoji
