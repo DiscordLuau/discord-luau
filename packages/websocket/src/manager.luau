@@ -7,6 +7,8 @@ local logger = require("@vendor/logger")
 local gatewayTypes = require("@api-types/gateway/types")
 local restTypes = require("@api-types/rest/types")
 
+local secret = require("@classes/secret")
+
 local receiveEvents = require("@api-types/gateway/receiveEvents")
 
 local shard = require("@websocket/shard")
@@ -36,7 +38,7 @@ function Manager.Prototype.connectAsync(self: Manager, gatewayInformation: restT
 			table.insert(
 				self.shards,
 				shard.new({
-					token = self.token,
+					token = self.token.value,
 					intents = self.intents,
 					largeThreshold = self.largeThreshold,
 
@@ -107,7 +109,7 @@ end
 function Manager.Prototype.send() end
 
 function Manager.Interface.new(settings: {
-	token: string,
+	token: secret.Secret<string>,
 	intents: number,
 	largeThreshold: number?,
 
@@ -141,7 +143,7 @@ export type ShardId = number
 export type ShardPayload<DATA> = { shardId: number } & DATA
 
 export type Manager = typeof(Manager.Prototype) & {
-	token: string,
+	token: secret.Secret<string>,
 	intents: number,
 	webSocketVersion: number,
 	largeThreshold: number?,
@@ -156,6 +158,7 @@ export type Manager = typeof(Manager.Prototype) & {
 	onConnected: emitter.Emitter<ShardPayload<{}>>,
 	onHeartbeat: emitter.Emitter<ShardPayload<{ latency: number }>>,
 	onDispatch: emitter.Emitter<ShardPayload<{
+		shardId: number,
 		event: receiveEvents.ReceiveEvent,
 		payload: gatewayTypes.Payload<unknown>,
 	}>>,
