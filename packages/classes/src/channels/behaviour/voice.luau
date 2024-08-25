@@ -3,6 +3,7 @@
 ]]
 
 local apiTypes = require("@api-types/apiTypes")
+local channelTypes = require("@api-types/channel")
 
 local VoiceBehaviour = {}
 
@@ -10,7 +11,7 @@ VoiceBehaviour.Interface = {}
 VoiceBehaviour.Prototype = {}
 
 function VoiceBehaviour.Interface.inheritProperties(class: any, channelData: apiTypes.ChannelObject)
-	class.videoQualityMode = (channelData.video_quality_mode == 1 and "Auto" or "Full") :: VideoQualityMode
+	class.videoQualityMode = (channelData.video_quality_mode == 1 and "Auto" or "Full") :: channelTypes.VideoQualityMode
 
 	class.bitrate = channelData.bitrate
 	class.userLimit = channelData.user_limit
@@ -23,14 +24,12 @@ function VoiceBehaviour.Interface.inheritMethods(class: any)
 	end
 end
 
-export type VideoQualityMode = "Auto" | "Full"
-
 export type VoiceBehaviourMethods = typeof(VoiceBehaviour.Prototype)
 export type VoiceBehaviourProperties = {
 	bitrate: number,
 	userLimit: number,
 	rtcRegion: string?,
-	videoQualityMode: VideoQualityMode,
+	videoQualityMode: channelTypes.VideoQualityMode,
 }
 
 export type VoiceBehaviour = VoiceBehaviourMethods & VoiceBehaviourProperties
