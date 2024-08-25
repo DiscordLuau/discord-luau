@@ -5,6 +5,7 @@
 ]]
 
 local apiTypes = require("@api-types/apiTypes")
+local stickerTypes = require("@api-types/sticker")
 
 local user = require("@classes/user")
 
@@ -19,14 +20,14 @@ function Sticker.Prototype.sync(self: Sticker, emojiData: apiTypes.StickerObject
 	self.name = emojiData.name
 	self.description = emojiData.description
 	self.tags = emojiData.tags
-	self.type = (emojiData.type == 1 and "Standard" or "Guild") :: StickerType
+	self.type = (emojiData.type == 1 and "Standard" or "Guild") :: stickerTypes.StickerType
 	self.formatType = (
 		emojiData.format_type == 1 and "PNG"
 		or emojiData.format_type == 2 and "APNG"
 		or emojiData.format_type == 3 and "LOTTIE"
 		or emojiData.format_type == 4 and "GIF"
 		or "Unknown"
-	) :: StickerFormatType
+	) :: stickerTypes.StickerFormatType
 	self.available = emojiData.available
 	self.guildId = emojiData.guild_id
 	self.user = emojiData.user and user.new(emojiData.user)
@@ -41,16 +42,14 @@ function Sticker.Interface.new(emojiData: apiTypes.StickerObject): Sticker
 	return self
 end
 
-export type StickerType = "Standard" | "Guild"
-export type StickerFormatType = "PNG" | "APNG" | "LOTTIE" | "GIF" | "Unknown"
 export type Sticker = typeof(Sticker.Prototype) & {
 	id: apiTypes.Snowflake,
 	packId: apiTypes.Snowflake?,
 	name: string,
 	description: string?,
 	tags: string,
-	type: StickerType,
-	formatType: StickerFormatType,
+	type: stickerTypes.StickerType,
+	formatType: stickerTypes.StickerFormatType,
 	available: boolean?,
 	guildId: apiTypes.Snowflake?,
 	user: user.User?,
