@@ -8,7 +8,7 @@
 ]]
 
 local apiTypes = require("@api-types/apiTypes")
-local permissions = require("@api-types/permissions")
+local permissionTypes = require("@api-types/permission")
 
 local PermissionOverwriteBuilder = {}
 
@@ -16,28 +16,28 @@ PermissionOverwriteBuilder.Prototype = {}
 PermissionOverwriteBuilder.Interface = {}
 
 --[[
-	Responsible for allowing specific permission to be set on either a Role of a Member.
+	Responsible for allowing specific permissionTypes to be set on either a Role of a Member.
 ]]
 function PermissionOverwriteBuilder.Prototype.allowPermissions(
 	self: PermissionOverwriteBuilder,
-	...: permissions.Permission
+	...: permissionTypes.Permissions
 ): PermissionOverwriteBuilder
-	for _, permission in { ... } do
-		table.insert(self.allowedPermissionFlags, permission)
+	for _, permissionTypes in { ... } do
+		table.insert(self.allowedPermissionFlags, permissionTypes)
 	end
 
 	return self
 end
 
 --[[
-	Responsible for denying specific permission to be set on either a Role of a Member.
+	Responsible for denying specific permissionTypes to be set on either a Role of a Member.
 ]]
 function PermissionOverwriteBuilder.Prototype.denyPermissions(
 	self: PermissionOverwriteBuilder,
-	...: permissions.Permission
+	...: permissionTypes.Permissions
 ): PermissionOverwriteBuilder
-	for _, permission in { ... } do
-		table.insert(self.deniedPermissionFlags, permission)
+	for _, permissionTypes in { ... } do
+		table.insert(self.deniedPermissionFlags, permissionTypes)
 	end
 
 	return self
@@ -50,14 +50,14 @@ function PermissionOverwriteBuilder.Prototype.build(self: PermissionOverwriteBui
 	local allowPermissionBits = {}
 	local denyPermissionBits = {}
 
-	for index, permission in self.allowedPermissionFlags do
-		local permissionBit = permissions[permission]
+	for index, permissionEnum in self.allowedPermissionFlags do
+		local permissionBit = permissionTypes[permissionEnum]
 
 		allowPermissionBits[index] = permissionBit
 	end
 
-	for index, permission in self.deniedPermissionFlags do
-		local permissionBit = permissions[permission]
+	for index, permissionEnum in self.deniedPermissionFlags do
+		local permissionBit = permissionTypes[permissionEnum]
 
 		denyPermissionBits[index] = permissionBit
 	end
@@ -67,7 +67,7 @@ function PermissionOverwriteBuilder.Prototype.build(self: PermissionOverwriteBui
 
 		allow = tostring(bit32.bor(table.unpack(allowPermissionBits))),
 		deny = tostring(bit32.bor(table.unpack(denyPermissionBits))),
-	}
+	} :: apiTypes.OverwriteObject
 end
 
 --[[
@@ -86,8 +86,8 @@ end
 ]]
 function PermissionOverwriteBuilder.Interface.new(resource: {
 	permissionType: PermissionOverwriteType,
-	allowFlags: { permissions.Permission }?,
-	denyFlags: { permissions.Permission }?,
+	allowFlags: { permissionTypes.Permissions }?,
+	denyFlags: { permissionTypes.Permissions }?,
 }): PermissionOverwriteBuilder
 	return setmetatable(
 		{
@@ -110,8 +110,8 @@ end
 function PermissionOverwriteBuilder.Interface.fromId(resource: {
 	permissionId: apiTypes.Snowflake,
 	permissionType: PermissionOverwriteType,
-	allowFlags: { permissions.Permission }?,
-	denyFlags: { permissions.Permission }?,
+	allowFlags: { permissionTypes.Permissions }?,
+	denyFlags: { permissionTypes.Permissions }?,
 }): PermissionOverwriteBuilder
 	local self = PermissionOverwriteBuilder.Interface.new(resource)
 
@@ -121,8 +121,8 @@ function PermissionOverwriteBuilder.Interface.fromId(resource: {
 end
 
 export type PermissionOverwriteBuilder = typeof(PermissionOverwriteBuilder.Prototype) & {
-	allowedPermissionFlags: { permissions.Permission },
-	deniedPermissionFlags: { permissions.Permission },
+	allowedPermissionFlags: { permissionTypes.Permissions },
+	deniedPermissionFlags: { permissionTypes.Permissions },
 
 	type: PermissionOverwriteType,
 	id: apiTypes.Snowflake,

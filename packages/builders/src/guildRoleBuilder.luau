@@ -5,7 +5,7 @@
 ]]
 
 local apiTypes = require("@api-types/apiTypes")
-local permissions = require("@api-types/permissions")
+local permissionTypes = require("@api-types/permission")
 
 local validateKebabCase = require("@utils/validateKebabCase")
 
@@ -33,10 +33,10 @@ end
 ]]
 function GuildRoleBuilder.Prototype.setPermissions(
 	self: GuildRoleBuilder,
-	...: permissions.Permission
+	...: permissionTypes.Permissions
 ): GuildRoleBuilder
-	for _, permission in { ... } do
-		table.insert(self.permissionFlags, permission)
+	for _, permissionTypes in { ... } do
+		table.insert(self.permissionFlags, permissionTypes)
 	end
 
 	return self
@@ -75,8 +75,8 @@ end
 function GuildRoleBuilder.Prototype.build(self: GuildRoleBuilder): apiTypes.GuildRoleObject
 	local permissionBits = {}
 
-	for index, permission in self.permissionFlags do
-		local permissionBit = permissions[permission]
+	for index, permissionEnum in self.permissionFlags do
+		local permissionBit = permissionTypes[permissionEnum]
 
 		permissionBits[index] = permissionBit
 	end
@@ -89,7 +89,7 @@ function GuildRoleBuilder.Prototype.build(self: GuildRoleBuilder): apiTypes.Guil
 		icon = self.icon,
 		unicode_emoji = self.unicodeEmoji,
 		mentionable = self.isMentionable,
-	}
+	} :: apiTypes.GuildRoleObject
 end
 
 --[[
@@ -105,7 +105,7 @@ end
 ]]
 function GuildRoleBuilder.Interface.new(resource: {
 	roleName: string?,
-	rolePermissions: { permissions.Permission }?,
+	rolePermissions: { permissionTypes.Permissions }?,
 }): GuildRoleBuilder
 	local self = setmetatable(
 		{
@@ -127,7 +127,7 @@ function GuildRoleBuilder.Interface.new(resource: {
 
 	if resource.rolePermissions then
 		-- HACK: Typecasting here so that all varargs are typed as a Permission.
-		self:setPermissions(table.unpack(resource.rolePermissions) :: permissions.Permission)
+		self:setPermissions(table.unpack(resource.rolePermissions) :: permissionTypes.Permissions)
 	end
 
 	return self
@@ -135,7 +135,7 @@ end
 
 export type GuildRoleBuilder = typeof(GuildRoleBuilder.Prototype) & {
 	name: string,
-	permissionFlags: { permissions.Permission },
+	permissionFlags: { permissionTypes.Permissions },
 	color: number,
 	isHoisted: boolean,
 	icon: string?,

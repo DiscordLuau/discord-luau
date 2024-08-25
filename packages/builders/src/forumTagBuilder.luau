@@ -55,12 +55,11 @@ end
 ]]
 function ForumTagBuilder.Prototype.build(self: ForumTagBuilder): apiTypes.ForumTagObject
 	return {
-		id = self.id,
 		name = self.name,
 		moderated = self.moderated,
 		emoji_id = self.emojiId,
 		emoji_name = self.emojiName,
-	}
+	} :: apiTypes.ForumTagObject
 end
 
 --[[
