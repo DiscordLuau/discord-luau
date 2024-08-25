@@ -29,19 +29,21 @@ function UnavailableGuild.Prototype.getAsync(
 		local guildData = self.state.cache.guilds:get(self.id)
 
 		if guildData then
-			return classGuild.new(self.state, self.id, guildData)
+			return classGuild.new(self.state, guildData)
 		end
 
 		local request = self.state.rest:newRequest()
-		local guildData = restGuild
+		local status, response = restGuild
 			.getGuildAsync(request, self.id, {
 				withCounts = withCounts,
 			})
 			:await()
 
-		self.state.cache.guilds:set(self.id, guildData)
+		assert(status == "Fulfilled", response)
 
-		return classGuild.new(self.state, self.id, guildData)
+		self.state.cache.guilds:set(self.id, response)
+
+		return classGuild.new(self.state, response)
 	end)
 end
 
