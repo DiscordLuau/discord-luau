@@ -13,42 +13,54 @@ SystemChannelBitflag.Prototype = {}
 	Returns if the system channel has the suppress join notifications bitflag set.
 ]]
 function SystemChannelBitflag.Prototype.suppressJoinNotifications(self: SystemChannelBitflag)
-	return bit32.lshift(self.flag, 0) == 0
+	local bit = bit32.lshift(1, 0)
+
+	return bit32.band(self.flag, bit) == bit
 end
 
 --[[
 	Returns if the system channel has the suppress premium subscriptions bitflag set.
 ]]
 function SystemChannelBitflag.Prototype.suppressPremiumSubscriptions(self: SystemChannelBitflag)
-	return bit32.lshift(self.flag, 0) == 1
+	local bit = bit32.lshift(1, 1)
+
+	return bit32.band(self.flag, bit) == bit
 end
 
 --[[
 	Returns if the system channel has the suppress guild reminder notifications bitflag set.
 ]]
 function SystemChannelBitflag.Prototype.suppressGuildReminderNotifications(self: SystemChannelBitflag)
-	return bit32.lshift(self.flag, 0) == 2
+	local bit = bit32.lshift(1, 2)
+
+	return bit32.band(self.flag, bit) == bit
 end
 
 --[[
 	Returns if the system channel has the suppress join notification replies bitflag set.
 ]]
 function SystemChannelBitflag.Prototype.suppressJoinNotificationReplies(self: SystemChannelBitflag)
-	return bit32.lshift(self.flag, 0) == 3
+	local bit = bit32.lshift(1, 3)
+
+	return bit32.band(self.flag, bit) == bit
 end
 
 --[[
 	Returns if the system channel has the suppress role subscriptions purchase notifications bitflag set.
 ]]
 function SystemChannelBitflag.Prototype.suppressRoleSubscriptionPurchaseNotifications(self: SystemChannelBitflag)
-	return bit32.lshift(self.flag, 0) == 4
+	local bit = bit32.lshift(1, 4)
+
+	return bit32.band(self.flag, bit) == bit
 end
 
 --[[
 	Returns if the system channel has the suppress role subscriptions purchase notification replies bitflag set.
 ]]
 function SystemChannelBitflag.Prototype.suppressRoleSubscriptionPurchaseNotificationReplies(self: SystemChannelBitflag)
-	return bit32.lshift(self.flag, 0) == 5
+	local bit = bit32.lshift(1, 5)
+
+	return bit32.band(self.flag, bit) == bit
 end
 
 function SystemChannelBitflag.Interface.new(flag: number): SystemChannelBitflag

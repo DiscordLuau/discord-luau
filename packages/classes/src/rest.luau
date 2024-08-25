@@ -29,10 +29,10 @@ end
 --[[
 	Constructor for the REST class.
 ]]
-function REST.Interface.new(token: string, intents: number, version: number): REST
+function REST.Interface.new(token: secret.Secret<string>, intents: number, version: number): REST
 	local self = setmetatable(
 		{
-			token = secret.new(token),
+			token = token,
 
 			intents = intents,
 			version = version,
