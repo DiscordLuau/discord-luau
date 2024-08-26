@@ -1,5 +1,5 @@
 --[[
-	Implementation of the Discord GuildMember class in Luau
+	Implementation of the Discord Member class in Luau
 
 	https://discord.com/developers/docs/resources/guild#guild-member-object
 ]]
@@ -13,12 +13,12 @@ local guildMemberBitflag = require("@classes/bitflags/guildMember")
 local user = require("@classes/user")
 local avatarDecoration = require("@classes/avatarDecoration")
 
-local GuildMember = {}
+local Member = {}
 
-GuildMember.Interface = {}
-GuildMember.Prototype = {}
+Member.Interface = {}
+Member.Prototype = {}
 
-function GuildMember.Prototype.sync(self: GuildMember, guildMemberData: apiTypes.GuildMemberObject)
+function Member.Prototype.sync(self: Member, guildMemberData: apiTypes.GuildMemberObject)
 	self.user = guildMemberData.user and user.new(guildMemberData.user)
 
 	self.communicationDisabledUntil = guildMemberData.communication_disabled_until
@@ -44,15 +44,15 @@ function GuildMember.Prototype.sync(self: GuildMember, guildMemberData: apiTypes
 	self.permissions = guildMemberData.permissions
 end
 
-function GuildMember.Interface.new(guildMemberData: apiTypes.GuildMemberObject): GuildMember
-	local self = setmetatable({} :: GuildMember, { __index = GuildMember.Prototype })
+function Member.Interface.new(guildMemberData: apiTypes.GuildMemberObject): Member
+	local self = setmetatable({} :: Member, { __index = Member.Prototype })
 
 	self:sync(guildMemberData)
 
 	return self
 end
 
-export type GuildMember = typeof(GuildMember.Prototype) & {
+export type Member = typeof(Member.Prototype) & {
 	user: user.User?,
 	nick: string?,
 	avatar: string?,
@@ -68,4 +68,4 @@ export type GuildMember = typeof(GuildMember.Prototype) & {
 	avatarDecorationData: avatarDecoration.AvatarDecoration?,
 }
 
-return GuildMember.Interface
+return Member.Interface
