@@ -1,7 +1,7 @@
 --[[
-	Implementation of a discord default reaction object as a luau builder.	
+	Implementation of a discord Interaction object as a luau builder.	
 
-	https://discord.com/developers/docs/interactions/application-commands#create-global-application-command-json-params
+	https://discord.com/developers/docs/interactions/application-commands#edit-global-application-command-json-params
 ]]
 
 local apiTypes = require("@api-types/apiTypes")
