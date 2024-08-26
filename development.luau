@@ -12,17 +12,7 @@ discordBot.onReady:listen(function(shardId)
 	print(`Shard {shardId} is ready!`)
 end)
 
-discordBot.onTextChannelCreate:listen(function(a)
-	print(`Channel '{a.name}' was created!`)
-end)
-
-discordBot.onTextChannelUpdated:listen(function(a)
-	print(`Channel '{a.name}' was updated!`)
-end)
-
-discordBot.onTextChannelDeleted:listen(function(a)
-	print(`Channel '{a.name}' was deleted!`)
-end)
+discordBot.onInteraction:listen(function(a) end)
 
 discordBot:connectAsync():after(function()
 	print("Connected to Discord!")

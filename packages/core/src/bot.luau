@@ -14,8 +14,9 @@ local receiveEvents = require("@api-types/gateway/receiveEvents")
 local guild = require("@classes/guild/guild")
 local unavailableGuild = require("@classes/guild/unavailableGuild")
 local user = require("@classes/user")
-local guildMember = require("@classes/guildMember")
+local member = require("@classes/guild/member")
 local message = require("@classes/message/message")
+local interaction = require("@classes/interaction/interaction")
 
 local dmChannel = require("@classes/channels/types/dm")
 local groupDmChannel = require("@classes/channels/types/groupDm")
@@ -232,7 +233,7 @@ function Bot.Prototype.connectAsync(self: Bot)
 
 				self.onGuildMemberJoined:invoke({
 					guildId = typedObject.d.guild_id,
-					member = guildMember.new(typedObject.d),
+					member = member.new(typedObject.d),
 				})
 			elseif object.event == receiveEvents["GuildMemberRemove"] then
 				local typedObject = object.payload :: gatewayTypes.GuildMemberRemovePayload
@@ -258,6 +259,10 @@ function Bot.Prototype.connectAsync(self: Bot)
 					communicationDisabledUntil = typedObject.d.communication_disabled_until
 						and datetime.fromIsoDate(typedObject.d.communication_disabled_until),
 				})
+			elseif object.event == receiveEvents["InteractionCreate"] then
+				local typedObject = object.payload :: gatewayTypes.InteractionCreatePayload
+
+				self.onInteraction:invoke(interaction.new(self.state, typedObject.d))
 			end
 		end)
 
@@ -380,7 +385,7 @@ export type Bot =
 
 		onGuildMemberBanned: emitter.Emitter<{ guildId: string, user: user.User }>,
 		onGuildMemberUnbanned: emitter.Emitter<{ guildId: string, user: user.User }>,
-		onGuildMemberJoined: emitter.Emitter<guildMember.GuildMember & { guildId: string }>,
+		onGuildMemberJoined: emitter.Emitter<member.Member & { guildId: string }>,
 		onGuildMemberLeft: emitter.Emitter<{ guildId: string, user: user.User }>,
 
 		onGuildMemberUpdated: emitter.Emitter<{
@@ -397,7 +402,7 @@ export type Bot =
 			communicationDisabledUntil: datetime.DateTime?,
 		}>,
 
-		onInteraction: emitter.Emitter<unknown>,
+		onInteraction: emitter.Emitter<interaction.Interaction>,
 	}
 
 return Bot.Interface

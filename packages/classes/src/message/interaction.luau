@@ -5,10 +5,10 @@
 ]]
 
 local apiTypes = require("@api-types/apiTypes")
-local messageTypes = require("@api-types/message")
+local interactionTypes = require("@api-types/interaction")
 
 local user = require("@classes/user")
-local guildMember = require("@classes/guildMember")
+local member = require("@classes/guild/member")
 
 local Interaction = {}
 
@@ -22,10 +22,10 @@ function Interaction.Prototype.sync(self: Interaction, interactionData: apiTypes
 		or interactionData.type == 3 and "MessageComponent"
 		or interactionData.type == 4 and "ApplicationCommandAutocomplete"
 		or interactionData.type == 5 and "ModalSubmit"
-	) :: messageTypes.InteractionType
+	) :: interactionTypes.InteractionType
 
 	self.user = user.new(interactionData.user)
-	self.member = interactionData.member and guildMember.new(interactionData.member)
+	self.member = interactionData.member and member.new(interactionData.member)
 
 	self.id = interactionData.id
 	self.name = interactionData.name
@@ -41,10 +41,10 @@ end
 
 export type Interaction = typeof(Interaction.Prototype) & {
 	id: apiTypes.Snowflake,
-	type: messageTypes.InteractionType,
+	type: interactionTypes.InteractionType,
 	name: string,
 	user: user.User,
-	member: guildMember.GuildMember?,
+	member: member.Member?,
 }
 
 return Interaction.Interface

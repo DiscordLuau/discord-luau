@@ -6,6 +6,8 @@
 
 local datetime = require("@std-polyfills/datetime")
 
+local import = require("@utils/import")
+
 local apiTypes = require("@api-types/apiTypes")
 local messageTypes = require("@api-types/message")
 
@@ -22,7 +24,7 @@ local interactionMetadata = require("@classes/message/ineractionMetadata")
 local interaction = require("@classes/message/interaction")
 local stickerItem = require("@classes/message/stickerItem")
 local roleSubscriptionData = require("@classes/message/roleSubscriptionData")
-local guildMember = require("@classes/guildMember")
+local member = require("@classes/guild/member")
 local poll = require("@classes/message/poll/poll")
 local call = require("@classes/message/call")
 local state = require("@classes/state")
@@ -40,8 +42,6 @@ Message.Interface = {}
 Message.Prototype = {}
 
 function Message.Prototype.sync(self: Message, messageData: apiTypes.MessageObject)
-	--muhaha final discord miniboss
-
 	self.type = (
 		messageData.type == 0 and "Default"
 		or messageData.type == 1 and "RecipientAdd"
@@ -82,8 +82,6 @@ function Message.Prototype.sync(self: Message, messageData: apiTypes.MessageObje
 		or messageData.type == 46 and "PollResult"
 	) :: messageTypes.MessageType
 
-	-- todo: figure out what `resolved` should be
-
 	local mentionArray = {}
 	local roleArray = {}
 	local channelMentionArray = {}
@@ -99,41 +97,6 @@ function Message.Prototype.sync(self: Message, messageData: apiTypes.MessageObje
 		| buttonComponent.Button
 	} =
 		{}
-
-	local resolved = {
-		users = {},
-		members = {},
-		roles = {},
-		-- channels = {},
-		messages = {},
-		attachments = {},
-	}
-
-	if messageData.resolved then
-		for _, userData in next, messageData.resolved.users or {} do
-			table.insert(resolved.users, user.new(userData))
-		end
-
-		for _, memberData in next, messageData.resolved.members or {} do
-			table.insert(resolved.members, guildMember.new(memberData))
-		end
-
-		for _, roleData in next, messageData.resolved.roles or {} do
-			table.insert(resolved.roles, role.new(roleData))
-		end
-
-		-- for _, channelData in next, messageData.resolved.channels or {} do
-		-- 	table.insert(resolved.channels, channel.new(channelData))
-		-- end
-
-		for _, messageData in next, messageData.resolved.messages or {} do
-			table.insert(resolved.messages, Message.Interface.new(self.state, messageData))
-		end
-
-		for _, attachmentData in next, messageData.resolved.attachments or {} do
-			table.insert(resolved.attachments, attachment.new(attachmentData))
-		end
-	end
 
 	for _, stickerData in next, messageData.sticker_items or {} do
 		table.insert(stickerItemArray, stickerItem.new(stickerData))
@@ -198,6 +161,9 @@ function Message.Prototype.sync(self: Message, messageData: apiTypes.MessageObje
 		and roleSubscriptionData.new(messageData.role_subscription_data)
 	self.poll = messageData.poll and poll.new(messageData.poll)
 	self.call = messageData.call and call.new(messageData.call)
+
+	-- cyclic dependency, can only require during runtime.
+	self.resolved = import("@classes/resolved").new(self.state, messageData.resolved)
 end
 
 function Message.Interface.new(state: state.State, messageData: apiTypes.MessageObject): Message
@@ -254,8 +220,10 @@ export type Message = typeof(Message.Prototype) & {
 	position: number?,
 	roleSubscriptionData: roleSubscriptionData.RoleSubscriptionData,
 	resolved: {
+		state: state.State,
+
 		users: { [apiTypes.Snowflake]: user.User }?,
-		members: { [apiTypes.Snowflake]: guildMember.GuildMember }?,
+		members: { [apiTypes.Snowflake]: member.Member }?,
 		roles: { [apiTypes.Snowflake]: role.Role },
 		-- channels: { [apiTypes.Snowflake]: unknown }, -- fixme: we can't type the channels since channels require this message class.
 		messages: { [apiTypes.Snowflake]: Message },

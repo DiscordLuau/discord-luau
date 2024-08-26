@@ -5,8 +5,8 @@
 ]]
 
 local apiTypes = require("@api-types/apiTypes")
-local messageTypes = require("@api-types/message")
 local applicationTypes = require("@api-types/application")
+local interactionTypes = require("@api-types/interaction")
 
 local user = require("@classes/user")
 
@@ -37,7 +37,7 @@ function IneractionMetadata.Prototype.sync(
 		or interactionData.type == 3 and "MessageComponent"
 		or interactionData.type == 4 and "ApplicationCommandAutocomplete"
 		or interactionData.type == 5 and "ModalSubmit"
-	) :: messageTypes.InteractionType
+	) :: interactionTypes.InteractionType
 
 	self.user = user.new(interactionData.user)
 
@@ -59,7 +59,7 @@ end
 
 export type IneractionMetadata = typeof(IneractionMetadata.Prototype) & {
 	id: apiTypes.Snowflake,
-	type: messageTypes.InteractionType,
+	type: interactionTypes.InteractionType,
 	user: user.User,
 	authorizingIntegrationOwners: {
 		[applicationTypes.IntegrationTypesConfig]: apiTypes.Snowflake,

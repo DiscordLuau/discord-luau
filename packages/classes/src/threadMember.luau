@@ -10,7 +10,7 @@ local apiTypes = require("@api-types/apiTypes")
 
 local threadMemberBitflag = require("@classes/bitflags/threadMember")
 
-local guildMember = require("@classes/guildMember")
+local member = require("@classes/guild/member")
 
 local ThreadMember = {}
 
@@ -21,7 +21,7 @@ function ThreadMember.Prototype.sync(self: ThreadMember, threadMemberData: apiTy
 	self.joinTimestamp = datetime.fromIsoDate(threadMemberData.join_timestamp)
 
 	self.flags = threadMemberData.flags and threadMemberBitflag.new(threadMemberData.flags)
-	self.member = threadMemberData.member and guildMember.new(threadMemberData.member)
+	self.member = threadMemberData.member and member.new(threadMemberData.member)
 
 	self.id = threadMemberData.id
 	self.userId = threadMemberData.user_id
@@ -40,7 +40,7 @@ export type ThreadMember = typeof(ThreadMember.Prototype) & {
 	userId: apiTypes.Snowflake?,
 	joinTimestamp: datetime.DateTime,
 	flags: threadMemberBitflag.ThreadMemberBitflag,
-	member: guildMember.GuildMember?,
+	member: member.Member?,
 }
 
 return ThreadMember.Interface
