@@ -8,19 +8,15 @@ local apiTypes = require("@api-types/apiTypes")
 
 local validateKebabCase = require("@utils/validateKebabCase")
 
-local ForumTagBuilder = {}
+local ForumTag = {}
 
-ForumTagBuilder.Prototype = {}
-ForumTagBuilder.Interface = {}
+ForumTag.Prototype = {}
+ForumTag.Interface = {}
 
 --[[
 	Sets either the id of a guilds custom emoji, or a unicode character of an emoji.
 ]]
-function ForumTagBuilder.Prototype.setEmoji(
-	self: ForumTagBuilder,
-	emojiId: string?,
-	emojiName: string?
-): ForumTagBuilder
+function ForumTag.Prototype.setEmoji(self: ForumTag, emojiId: string?, emojiName: string?): ForumTag
 	self.emojiId = emojiId
 	self.emojiName = emojiName
 
@@ -30,7 +26,7 @@ end
 --[[
 	Sets whether this tag can only be added to or removed from threads by a member with the MANAGE_THREADS permission
 ]]
-function ForumTagBuilder.Prototype.setModerated(self: ForumTagBuilder, isModerated: boolean): ForumTagBuilder
+function ForumTag.Prototype.setModerated(self: ForumTag, isModerated: boolean): ForumTag
 	self.moderated = isModerated
 
 	return self
@@ -39,7 +35,7 @@ end
 --[[
 	Set the name of this Forum Tag.
 ]]
-function ForumTagBuilder.Prototype.setName(self: ForumTagBuilder, tagName: string): ForumTagBuilder
+function ForumTag.Prototype.setName(self: ForumTag, tagName: string): ForumTag
 	assert(#tagName <= 20, `Tag name must be less than 20 characters.`)
 	assert(#tagName > 0, `Tag name must be more than 0 characters.`)
 
@@ -53,7 +49,7 @@ end
 --[[
 	Responsible for buillding the forum tag object that the Discord API can understand.
 ]]
-function ForumTagBuilder.Prototype.build(self: ForumTagBuilder): apiTypes.ForumTagObject
+function ForumTag.Prototype.build(self: ForumTag): apiTypes.ForumTagObject
 	return {
 		name = self.name,
 		moderated = self.moderated,
@@ -66,18 +62,18 @@ end
 	Constructs a new tag builder.
 
 	```lua
-	local tag = ForumTagBuilder.new("tag-name")
+	local tag = ForumTag.new("tag-name")
 	:setModerated(true)	
 	:build()
 	```
 ]]
-function ForumTagBuilder.Interface.new(resource: {
+function ForumTag.Interface.new(resource: {
 	tagName: string,
 	emoji: {
 		name: string,
 		id: apiTypes.Snowflake,
 	}?,
-}): ForumTagBuilder
+}): ForumTag
 	local self = setmetatable(
 		{
 			name = resource.tagName,
@@ -85,8 +81,8 @@ function ForumTagBuilder.Interface.new(resource: {
 
 			emojiId = resource.emoji and resource.emoji.id,
 			emojiName = resource.emoji and resource.emoji.name,
-		} :: ForumTagBuilder,
-		{ __index = ForumTagBuilder.Prototype }
+		} :: ForumTag,
+		{ __index = ForumTag.Prototype }
 	)
 
 	return self
@@ -95,22 +91,22 @@ end
 --[[
 	Enables us to construct a Tag Builder object from an existing tag object, used when modifying forum tags.
 ]]
-function ForumTagBuilder.Interface.fromId(resource: {
+function ForumTag.Interface.fromId(resource: {
 	tagId: apiTypes.Snowflake,
 	tagName: string,
 	emoji: {
 		name: string,
 		id: apiTypes.Snowflake,
 	}?,
-}): ForumTagBuilder
-	local self = ForumTagBuilder.Interface.new(resource)
+}): ForumTag
+	local self = ForumTag.Interface.new(resource)
 
 	self.id = resource.tagId
 
 	return self
 end
 
-export type ForumTagBuilder = typeof(ForumTagBuilder.Prototype) & {
+export type ForumTag = typeof(ForumTag.Prototype) & {
 	emojiId: apiTypes.Snowflake?,
 	emojiName: string?,
 	id: apiTypes.Snowflake?,
@@ -119,4 +115,4 @@ export type ForumTagBuilder = typeof(ForumTagBuilder.Prototype) & {
 	name: string,
 }
 
-return ForumTagBuilder.Interface
+return ForumTag.Interface

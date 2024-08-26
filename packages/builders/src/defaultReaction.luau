@@ -8,15 +8,15 @@
 
 local apiTypes = require("@api-types/apiTypes")
 
-local DefaultReactionBuilder = {}
+local DefaultReaction = {}
 
-DefaultReactionBuilder.Prototype = {}
-DefaultReactionBuilder.Interface = {}
+DefaultReaction.Prototype = {}
+DefaultReaction.Interface = {}
 
 --[[
 	Responsible for buillding the default reaction object that the Discord API can understand.
 ]]
-function DefaultReactionBuilder.Prototype.build(self: DefaultReactionBuilder): apiTypes.DefaultReactionObject
+function DefaultReaction.Prototype.build(self: DefaultReaction): apiTypes.DefaultReactionObject
 	return {
 		emoji_id = self.emojiId,
 		emoji_name = self.emojiName,
@@ -27,27 +27,27 @@ end
 	Constructor for the Discord Default Reaction Builder.
 
 	```lua
-	local defaultReaction = DefaultReactionBuilder.new("000000000000000000", "secret-emoji"):build()
+	local defaultReaction = DefaultReaction.new("000000000000000000", "secret-emoji"):build()
 	```
 ]]
-function DefaultReactionBuilder.Interface.new(resource: {
+function DefaultReaction.Interface.new(resource: {
 	emojiId: apiTypes.Snowflake?,
 	emojiName: string?,
-}): DefaultReactionBuilder
+}): DefaultReaction
 	local self = setmetatable(
 		{
 			emojiId = resource.emojiId,
 			emojiName = resource.emojiName,
-		} :: DefaultReactionBuilder,
-		{ __index = DefaultReactionBuilder.Prototype }
+		} :: DefaultReaction,
+		{ __index = DefaultReaction.Prototype }
 	)
 
 	return self
 end
 
-export type DefaultReactionBuilder = typeof(DefaultReactionBuilder.Prototype) & {
+export type DefaultReaction = typeof(DefaultReaction.Prototype) & {
 	emojiId: apiTypes.Snowflake?,
 	emojiName: string?,
 }
 
-return DefaultReactionBuilder.Interface
+return DefaultReaction.Interface

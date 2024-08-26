@@ -6,15 +6,15 @@
 
 local intents = require("@api-types/gateway/intents")
 
-local IntentsBuilder = {}
+local Intents = {}
 
-IntentsBuilder.Prototype = {}
-IntentsBuilder.Interface = {}
+Intents.Prototype = {}
+Intents.Interface = {}
 
 --[[
 	Sets either the id of a guilds custom emoji, or a unicode character of an emoji.
 ]]
-function IntentsBuilder.Prototype.addIntent(self: IntentsBuilder, intent: intents.Intent): IntentsBuilder
+function Intents.Prototype.addIntent(self: Intents, intent: intents.Intent): Intents
 	assert(intents[intent], `Invalid intent: {intent}`)
 	assert(table.find(self.intents, intent) == nil, `Intent {intent} already set`)
 
@@ -26,7 +26,7 @@ end
 --[[
 	Responsible for building all intent permissions into an integer that the Discord API can parse
 ]]
-function IntentsBuilder.Prototype.build(self: IntentsBuilder): number
+function Intents.Prototype.build(self: Intents): number
 	local intentsValue = 0
 
 	for _, intentEnum in self.intents do
@@ -44,25 +44,25 @@ end
 	Constructs a new intents builder.
 
 	```lua
-	IntentsBuilder.new()
+	Intents.new()
 		:addIntent("GuildMembers")
 		:addIntent("GuildMessages")
 		:build()
 	```
 ]]
-function IntentsBuilder.Interface.new(intents: {}?): IntentsBuilder
+function Intents.Interface.new(intents: {}?): Intents
 	local self = setmetatable(
 		{
 			intents = intents or {},
-		} :: IntentsBuilder,
-		{ __index = IntentsBuilder.Prototype }
+		} :: Intents,
+		{ __index = Intents.Prototype }
 	)
 
 	return self
 end
 
-export type IntentsBuilder = typeof(IntentsBuilder.Prototype) & {
+export type Intents = typeof(Intents.Prototype) & {
 	intents: { intents.Intent },
 }
 
-return IntentsBuilder.Interface
+return Intents.Interface

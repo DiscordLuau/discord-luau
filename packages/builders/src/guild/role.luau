@@ -9,15 +9,15 @@ local permissionTypes = require("@api-types/permission")
 
 local validateKebabCase = require("@utils/validateKebabCase")
 
-local GuildRoleBuilder = {}
+local Role = {}
 
-GuildRoleBuilder.Prototype = {}
-GuildRoleBuilder.Interface = {}
+Role.Prototype = {}
+Role.Interface = {}
 
 --[[
 	Sets the name of the role, optionally this could be defined when creating the Role Builder as well.
 ]]
-function GuildRoleBuilder.Prototype.setName(self: GuildRoleBuilder, roleName: string): GuildRoleBuilder
+function Role.Prototype.setName(self: Role, roleName: string): Role
 	assert(#roleName <= 100, `Role name must be less than 100 characters.`)
 	assert(#roleName > 1, `Role name must be more than 1 characters.`)
 
@@ -31,10 +31,7 @@ end
 --[[
 	Sets the permissions of the role, optionally this could be defined when creating the Role Builder as well.
 ]]
-function GuildRoleBuilder.Prototype.setPermissions(
-	self: GuildRoleBuilder,
-	...: permissionTypes.Permissions
-): GuildRoleBuilder
+function Role.Prototype.setPermissions(self: Role, ...: permissionTypes.Permissions): Role
 	for _, permissionTypes in { ... } do
 		table.insert(self.permissionFlags, permissionTypes)
 	end
@@ -45,7 +42,7 @@ end
 --[[
 	Sets the color of the role. Colors are presennted as a hexadecimal number.
 ]]
-function GuildRoleBuilder.Prototype.setColor(self: GuildRoleBuilder, color: number): GuildRoleBuilder
+function Role.Prototype.setColor(self: Role, color: number): Role
 	self.color = color
 
 	return self
@@ -54,7 +51,7 @@ end
 --[[
 	Sets the role to be hoisted. A hoisted role is displayed in the user listing, vs's an unhoisted role which is not displayed at all.
 ]]
-function GuildRoleBuilder.Prototype.setHoisted(self: GuildRoleBuilder, isHoisted: boolean): GuildRoleBuilder
+function Role.Prototype.setHoisted(self: Role, isHoisted: boolean): Role
 	self.isHoisted = isHoisted
 
 	return self
@@ -63,7 +60,7 @@ end
 --[[
 	Sets the role to be mentionable through the @ mention.
 ]]
-function GuildRoleBuilder.Prototype.setMentionable(self: GuildRoleBuilder, isMentionable: boolean): GuildRoleBuilder
+function Role.Prototype.setMentionable(self: Role, isMentionable: boolean): Role
 	self.isMentionable = isMentionable
 
 	return self
@@ -72,7 +69,7 @@ end
 --[[
 	Responsible for buillding the role object that the Discord API can understand.
 ]]
-function GuildRoleBuilder.Prototype.build(self: GuildRoleBuilder): apiTypes.GuildRoleObject
+function Role.Prototype.build(self: Role): apiTypes.GuildRoleObject
 	local permissionBits = {}
 
 	for index, permissionEnum in self.permissionFlags do
@@ -96,17 +93,17 @@ end
 	Constructs a new Role Builder.
 
 	```lua
-	local role = GuildRoleBuilder.new("Role Name", { permissions.Permission.SendMessages })
+	local role = Role.new("Role Name", { permissions.Permission.SendMessages })
 		:setColor(0xFFFFFF)
 		:setHoisted(true)
 		:setMentionable(true)
 		:build()
 	```
 ]]
-function GuildRoleBuilder.Interface.new(resource: {
+function Role.Interface.new(resource: {
 	roleName: string?,
 	rolePermissions: { permissionTypes.Permissions }?,
-}): GuildRoleBuilder
+}): Role
 	local self = setmetatable(
 		{
 			name = "",
@@ -117,8 +114,8 @@ function GuildRoleBuilder.Interface.new(resource: {
 
 			-- icon,
 			-- unicodeEmoji,
-		} :: GuildRoleBuilder,
-		{ __index = GuildRoleBuilder.Prototype }
+		} :: Role,
+		{ __index = Role.Prototype }
 	)
 
 	if resource.roleName then
@@ -133,7 +130,7 @@ function GuildRoleBuilder.Interface.new(resource: {
 	return self
 end
 
-export type GuildRoleBuilder = typeof(GuildRoleBuilder.Prototype) & {
+export type Role = typeof(Role.Prototype) & {
 	name: string,
 	permissionFlags: { permissionTypes.Permissions },
 	color: number,
@@ -143,4 +140,4 @@ export type GuildRoleBuilder = typeof(GuildRoleBuilder.Prototype) & {
 	isMentionable: boolean,
 }
 
-return GuildRoleBuilder.Interface
+return Role.Interface

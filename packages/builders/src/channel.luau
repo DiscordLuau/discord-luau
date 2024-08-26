@@ -40,15 +40,15 @@ local GUILD_FORUM_LAYOUT_MAP = {
 	["GalleryView"] = 2,
 }
 
-local ChannelBuilder = {}
+local Channel = {}
 
-ChannelBuilder.Prototype = {}
-ChannelBuilder.Interface = {}
+Channel.Prototype = {}
+Channel.Interface = {}
 
 --[[
 	Set the name of this Channel
 ]]
-function ChannelBuilder.Prototype.setName(self: ChannelBuilder, tagName: string): ChannelBuilder
+function Channel.Prototype.setName(self: Channel, tagName: string): Channel
 	assert(#tagName <= 100, `Channel name must be less than 100 characters.`)
 	assert(#tagName > 1, `Channel name must be more than 1 characters.`)
 
@@ -62,7 +62,7 @@ end
 --[[
 	Set the Type of channel this is.
 ]]
-function ChannelBuilder.Prototype.setType(self: ChannelBuilder, channelType: ChannelType): ChannelBuilder
+function Channel.Prototype.setType(self: Channel, channelType: ChannelType): Channel
 	self.type = channelType
 
 	return self
@@ -73,7 +73,7 @@ end
 
 	channels with the same position are sorted by id
 ]]
-function ChannelBuilder.Prototype.setPosition(self: ChannelBuilder, channelPosition: number): ChannelBuilder
+function Channel.Prototype.setPosition(self: Channel, channelPosition: number): Channel
 	self.position = channelPosition
 
 	return self
@@ -84,10 +84,7 @@ end
 
 	channel overwrites are responsible for handling user/role permission on a specific channel.
 ]]
-function ChannelBuilder.Prototype.setOverwrites(
-	self: ChannelBuilder,
-	overwriteObjects: { apiTypes.OverwriteObject }
-): ChannelBuilder
+function Channel.Prototype.setOverwrites(self: Channel, overwriteObjects: { apiTypes.OverwriteObject }): Channel
 	self.permissionOverwrites = overwriteObjects
 
 	return self
@@ -97,7 +94,7 @@ end
 	Sets the channels topic, topics appear at the top of the discord app and help to inform players about
 		the channel's purpose.
 ]]
-function ChannelBuilder.Prototype.setTopic(self: ChannelBuilder, channelTopic: string): ChannelBuilder
+function Channel.Prototype.setTopic(self: Channel, channelTopic: string): Channel
 	assert(
 		self.type == "GuildText"
 			or self.type == "GuildAnnouncement"
@@ -117,7 +114,7 @@ end
 --[[
 	Sets the bitrate of the voice channel, the bitrate (in bits) of the voice or stage channel.
 ]]
-function ChannelBuilder.Prototype.setBitrate(self: ChannelBuilder, bitrate: number): ChannelBuilder
+function Channel.Prototype.setBitrate(self: Channel, bitrate: number): Channel
 	assert(
 		self.type == "GuildVoice" or self.type == "GuildStageVoice",
 		`Channel bitrate is only supported for guild voice and stage voice channels.`
@@ -136,7 +133,7 @@ end
 
 	the user limit of a voice channel is the maximum number of users allowed in the channel at one time.
 ]]
-function ChannelBuilder.Prototype.setUserLimit(self: ChannelBuilder, userLimit: number?): ChannelBuilder
+function Channel.Prototype.setUserLimit(self: Channel, userLimit: number?): Channel
 	assert(
 		self.type == "GuildVoice" or self.type == "GuildStageVoice",
 		`Channel user limit is only supported for guild voice and stage voice channels.`
@@ -151,7 +148,7 @@ end
 	amount of seconds a user has to wait before sending another message; bots, as well as users with
 		the permission manage_messages or manage_channel, are unaffected
 ]]
-function ChannelBuilder.Prototype.setRateLimitPerUser(self: ChannelBuilder, rateLimitPerUser: number?): ChannelBuilder
+function Channel.Prototype.setRateLimitPerUser(self: Channel, rateLimitPerUser: number?): Channel
 	assert(
 		self.type == "GuildText"
 			or self.type == "GuildVoice"
@@ -172,7 +169,7 @@ end
 --[[
 	set the parent of the channel, channel parents are categories and can help break down a discord guild.
 ]]
-function ChannelBuilder.Prototype.setParentId(self: ChannelBuilder, parentId: apiTypes.Snowflake?): ChannelBuilder
+function Channel.Prototype.setParentId(self: Channel, parentId: apiTypes.Snowflake?): Channel
 	assert(
 		self.type == "GuildText"
 			or self.type == "GuildVoice"
@@ -191,7 +188,7 @@ end
 --[[
 	set weather this channel is NSFW or not.
 ]]
-function ChannelBuilder.Prototype.setNSFW(self: ChannelBuilder, isNSFW: boolean): ChannelBuilder
+function Channel.Prototype.setNSFW(self: Channel, isNSFW: boolean): Channel
 	assert(
 		self.type == "GuildText"
 			or self.type == "GuildVoice"
@@ -211,7 +208,7 @@ end
 
 	voice regions are regions that discord uses to host voice channels.
 ]]
-function ChannelBuilder.Prototype.setVoiceRegion(self: ChannelBuilder, voiceRegionId: string): ChannelBuilder
+function Channel.Prototype.setVoiceRegion(self: Channel, voiceRegionId: string): Channel
 	assert(
 		self.type == "GuildVoice" or self.type == "GuildStageVoice",
 		`Channel voice region is only supported for voice and stage voice.`
@@ -225,10 +222,7 @@ end
 --[[
 	sets the video quality mode of the voice channel.
 ]]
-function ChannelBuilder.Prototype.setVideoQualityMode(
-	self: ChannelBuilder,
-	videoQualityMode: VideoQualityMode
-): ChannelBuilder
+function Channel.Prototype.setVideoQualityMode(self: Channel, videoQualityMode: VideoQualityMode): Channel
 	assert(
 		self.type == "GuildVoice" or self.type == "GuildStageVoice",
 		`Channel video quality mode is only supported for voice and stage voice.`
@@ -243,10 +237,7 @@ end
 	sets the default auto archive duration for the channel, the default duration that the clients use (not the API)
 		for newly created threads in the channel, in minutes, to automatically archive the thread after recent activity	
 ]]
-function ChannelBuilder.Prototype.setDefaultAutoArchiveDuration(
-	self: ChannelBuilder,
-	autoArchiveDuration: number
-): ChannelBuilder
+function Channel.Prototype.setDefaultAutoArchiveDuration(self: Channel, autoArchiveDuration: number): Channel
 	assert(
 		self.type == "GuildText"
 			or self.type == "GuildAnnouncement"
@@ -265,10 +256,10 @@ end
 
 	This is the default emoji that the channel will use for the forum or media channel.
 ]]
-function ChannelBuilder.Prototype.setDefaultReactionEmoji(
-	self: ChannelBuilder,
+function Channel.Prototype.setDefaultReactionEmoji(
+	self: Channel,
 	defaultReactionEmoji: apiTypes.DefaultReactionObject
-): ChannelBuilder
+): Channel
 	assert(
 		self.type == "GuildForum" or self.type == "GuildMedia",
 		`Channel default reaction is only supported for forum, and media channels.`
@@ -284,10 +275,7 @@ end
 
 	This is the list of tags that the channel will use for the forum.
 ]]
-function ChannelBuilder.Prototype.setForumTags(
-	self: ChannelBuilder,
-	forumTags: { apiTypes.ForumTagObject }
-): ChannelBuilder
+function Channel.Prototype.setForumTags(self: Channel, forumTags: { apiTypes.ForumTagObject }): Channel
 	assert(
 		self.type == "GuildForum" or self.type == "GuildMedia",
 		`Channel forum tags are only supported for forum, and media channels.`
@@ -303,7 +291,7 @@ end
 
 	This is the sort order that the channel will use for newly created threads.
 ]]
-function ChannelBuilder.Prototype.setDefaultSortOrder(self: ChannelBuilder, sortOrder: SortOrderTypes): ChannelBuilder
+function Channel.Prototype.setDefaultSortOrder(self: Channel, sortOrder: SortOrderTypes): Channel
 	assert(
 		self.type == "GuildForum" or self.type == "GuildMedia",
 		`Channel sort order is only supported for forum, and media channels.`
@@ -319,10 +307,7 @@ end
 
 	This is the layout that the channel will use for newly created threads.
 ]]
-function ChannelBuilder.Prototype.setDefaultForumLayout(
-	self: ChannelBuilder,
-	forumLayout: ForumLayoutTypes
-): ChannelBuilder
+function Channel.Prototype.setDefaultForumLayout(self: Channel, forumLayout: ForumLayoutTypes): Channel
 	assert(self.type == "GuildForum", `Channel forum layout is only supported for forum channels.`)
 
 	self.defaultForumLayout = forumLayout
@@ -335,10 +320,7 @@ end
 
 	This is the amount of seconds a user has to wait before sending another message in the thread,
 ]]
-function ChannelBuilder.Prototype.setDefaultThreadRateLimitPerUser(
-	self: ChannelBuilder,
-	threadRateLimitPerUser: number
-): ChannelBuilder
+function Channel.Prototype.setDefaultThreadRateLimitPerUser(self: Channel, threadRateLimitPerUser: number): Channel
 	assert(
 		self.type == "GuildText"
 			or self.type == "GuildAnnouncement"
@@ -355,7 +337,7 @@ end
 --[[
 	Responsible for buillding the channel object that the Discord API can understand.
 ]]
-function ChannelBuilder.Prototype.build(self: ChannelBuilder): apiTypes.ChannelObject
+function Channel.Prototype.build(self: Channel): apiTypes.ChannelObject
 	return {
 		id = self.id,
 
@@ -384,20 +366,20 @@ end
 --[[
 	Constructor for the Discord Channel Builder.
 ]]
-function ChannelBuilder.Interface.new(resource: {
+function Channel.Interface.new(resource: {
 	channelName: string?,
 	channelType: ChannelType?,
 	channelPosition: number?,
 	channelPermissionOverwrites: { apiTypes.OverwriteObject }?,
-}): ChannelBuilder
+}): Channel
 	local self = setmetatable(
 		{
 			name = resource.channelName or "channel-object",
 			type = resource.channelType or "GuildText",
 			position = resource.channelPosition or 0,
 			permissionOverwrites = resource.channelPermissionOverwrites or {},
-		} :: ChannelBuilder,
-		{ __index = ChannelBuilder.Prototype }
+		} :: Channel,
+		{ __index = Channel.Prototype }
 	)
 
 	return self
@@ -406,21 +388,21 @@ end
 --[[
 	Construct a channel builder from the provided channel id.
 ]]
-function ChannelBuilder.Interface.fromId(resource: {
+function Channel.Interface.fromId(resource: {
 	channelId: apiTypes.Snowflake,
 	channelName: string?,
 	channelType: ChannelType?,
 	channelPosition: number?,
 	channelPermissionOverwrites: { apiTypes.OverwriteObject }?,
-}): ChannelBuilder
-	local self = ChannelBuilder.Interface.new(resource)
+}): Channel
+	local self = Channel.Interface.new(resource)
 
 	self.id = resource.channelId
 
 	return self
 end
 
-export type ChannelBuilder = typeof(ChannelBuilder.Prototype) & {
+export type Channel = typeof(Channel.Prototype) & {
 	id: apiTypes.Snowflake?,
 
 	name: string,
@@ -471,4 +453,4 @@ export type VideoQualityMode = "Auto" | "Full"
 export type SortOrderTypes = "LatestActivity" | "CreationDate"
 export type ForumLayoutTypes = "NotSet" | "ListView" | "GalleryView"
 
-return ChannelBuilder.Interface
+return Channel.Interface

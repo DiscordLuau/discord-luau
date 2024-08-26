@@ -10,18 +10,15 @@
 local apiTypes = require("@api-types/apiTypes")
 local permissionTypes = require("@api-types/permission")
 
-local PermissionOverwriteBuilder = {}
+local Overwrite = {}
 
-PermissionOverwriteBuilder.Prototype = {}
-PermissionOverwriteBuilder.Interface = {}
+Overwrite.Prototype = {}
+Overwrite.Interface = {}
 
 --[[
 	Responsible for allowing specific permissionTypes to be set on either a Role of a Member.
 ]]
-function PermissionOverwriteBuilder.Prototype.allowPermissions(
-	self: PermissionOverwriteBuilder,
-	...: permissionTypes.Permissions
-): PermissionOverwriteBuilder
+function Overwrite.Prototype.allowPermissions(self: Overwrite, ...: permissionTypes.Permissions): Overwrite
 	for _, permissionTypes in { ... } do
 		table.insert(self.allowedPermissionFlags, permissionTypes)
 	end
@@ -32,10 +29,7 @@ end
 --[[
 	Responsible for denying specific permissionTypes to be set on either a Role of a Member.
 ]]
-function PermissionOverwriteBuilder.Prototype.denyPermissions(
-	self: PermissionOverwriteBuilder,
-	...: permissionTypes.Permissions
-): PermissionOverwriteBuilder
+function Overwrite.Prototype.denyPermissions(self: Overwrite, ...: permissionTypes.Permissions): Overwrite
 	for _, permissionTypes in { ... } do
 		table.insert(self.deniedPermissionFlags, permissionTypes)
 	end
@@ -46,7 +40,7 @@ end
 --[[
 	Responsible for building the OverwriteObject JSON that can be parsed by the Discord API.
 ]]
-function PermissionOverwriteBuilder.Prototype.build(self: PermissionOverwriteBuilder): apiTypes.OverwriteObject
+function Overwrite.Prototype.build(self: Overwrite): apiTypes.OverwriteObject
 	local allowPermissionBits = {}
 	local denyPermissionBits = {}
 
@@ -71,12 +65,12 @@ function PermissionOverwriteBuilder.Prototype.build(self: PermissionOverwriteBui
 end
 
 --[[
-	Responsible for creating a new PermissionOverwriteBuilder.
+	Responsible for creating a new Overwrite.
 
 	With this builder, you can specify allow/deny permissions for either a Role or a Member.
 
 	```lua
-	local permissionOverwrite = PermissionOverwriteBuilder.new("role")
+	local permissionOverwrite = Overwrite.new("role")
 		:allowPermissions(Permission.ManageMessages, Permission.ManageRoles)
 		:denyPermissions(Permission.KickMembers)
 		:build()
@@ -84,43 +78,43 @@ end
 	print(permissionOverwriteObject)
 	```
 ]]
-function PermissionOverwriteBuilder.Interface.new(resource: {
+function Overwrite.Interface.new(resource: {
 	permissionType: PermissionOverwriteType,
 	allowFlags: { permissionTypes.Permissions }?,
 	denyFlags: { permissionTypes.Permissions }?,
-}): PermissionOverwriteBuilder
+}): Overwrite
 	return setmetatable(
 		{
 			allowedPermissionFlags = resource.allowFlags or {},
 			deniedPermissionFlags = resource.denyFlags or {},
 
 			type = resource.permissionType,
-		} :: PermissionOverwriteBuilder,
+		} :: Overwrite,
 		{
-			__index = PermissionOverwriteBuilder.Prototype,
+			__index = Overwrite.Prototype,
 		}
 	)
 end
 
 --[[
-	Responsible for creating a new PermissionOverwriteBuilder from an existing ID/Object.
+	Responsible for creating a new Overwrite from an existing ID/Object.
 
 	Supports properties that the .new constructor doesn't support. (id)
 ]]
-function PermissionOverwriteBuilder.Interface.fromId(resource: {
+function Overwrite.Interface.fromId(resource: {
 	permissionId: apiTypes.Snowflake,
 	permissionType: PermissionOverwriteType,
 	allowFlags: { permissionTypes.Permissions }?,
 	denyFlags: { permissionTypes.Permissions }?,
-}): PermissionOverwriteBuilder
-	local self = PermissionOverwriteBuilder.Interface.new(resource)
+}): Overwrite
+	local self = Overwrite.Interface.new(resource)
 
 	self.id = resource.permissionId
 
 	return self
 end
 
-export type PermissionOverwriteBuilder = typeof(PermissionOverwriteBuilder.Prototype) & {
+export type Overwrite = typeof(Overwrite.Prototype) & {
 	allowedPermissionFlags: { permissionTypes.Permissions },
 	deniedPermissionFlags: { permissionTypes.Permissions },
 
@@ -131,4 +125,4 @@ export type PermissionOverwriteBuilder = typeof(PermissionOverwriteBuilder.Proto
 export type PermissionOverwriteType = "role" | "member"
 export type PermissionOverwriteObject = apiTypes.OverwriteObject
 
-return PermissionOverwriteBuilder.Interface
+return Overwrite.Interface
