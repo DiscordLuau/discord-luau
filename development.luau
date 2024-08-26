@@ -5,24 +5,23 @@ local env = require(".env")
 
 local discordBot = Bot.new({
 	token = env.DISCORD_BOT_TOKEN,
-	intents = IntentsBuilder.new()
-		:addIntent("GuildMessages")
-		:addIntent("GuildMembers")
-		:addIntent("MessageContent")
-		:build(),
+	intents = IntentsBuilder.new():addIntent("Guilds"):build(),
 })
 
 discordBot.onReady:listen(function(shardId)
 	print(`Shard {shardId} is ready!`)
 end)
 
-discordBot.onMessage:listen(function(message)
-	if not message.flags then
-		return
-	end
+discordBot.onTextChannelCreate:listen(function(a)
+	print(`Channel '{a.name}' was created!`)
+end)
 
-	print(`MESSAGE CREATED:`, message.content)
-	print(`MESSAGE HAS THREAD:`, message.flags:hasThread())
+discordBot.onTextChannelUpdated:listen(function(a)
+	print(`Channel '{a.name}' was updated!`)
+end)
+
+discordBot.onTextChannelDeleted:listen(function(a)
+	print(`Channel '{a.name}' was deleted!`)
 end)
 
 discordBot:connectAsync():after(function()

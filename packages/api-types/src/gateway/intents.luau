@@ -3,9 +3,9 @@
 ]]
 
 local Intents = table.freeze({
+	Guilds = 0,
 	GuildMembers = 1,
 	GuildModeration = 2,
-	GuildBans = 2,
 	GuildEmojisAndStickers = 3,
 	GuildIntegrations = 4,
 	GuildWebhooks = 5,
@@ -19,6 +19,7 @@ local Intents = table.freeze({
 	DirectMessageReactions = 13,
 	DirectMessageTyping = 14,
 	MessageContent = 15,
+	GuildScheduleEvents = 16,
 	AutoModerationConfiguration = 20,
 	AutoModerationExecution = 21,
 	GuildMessagePolls = 24,
@@ -26,9 +27,9 @@ local Intents = table.freeze({
 })
 
 export type Intent =
-	"GuildMembers"
+	"Guilds"
+	| "GuildMembers"
 	| "GuildModeration"
-	| "GuildBans"
 	| "GuildEmojisAndStickers"
 	| "GuildIntegrations"
 	| "GuildWebhooks"
@@ -42,6 +43,7 @@ export type Intent =
 	| "DirectMessageReactions"
 	| "DirectMessageTyping"
 	| "MessageContent"
+	| "GuildScheduleEvents"
 	| "AutoModerationConfiguration"
 	| "AutoModerationExecution"
 	| "GuildMessagePolls"
