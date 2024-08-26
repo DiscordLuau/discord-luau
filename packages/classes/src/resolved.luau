@@ -1,0 +1,78 @@
+--[[
+	Implementation of the Discord Resolved class in Luau
+
+	https://discord.com/developers/docs/resources/message#attachment-object
+]]
+
+local apiTypes = require("@api-types/apiTypes")
+
+local user = require("@classes/user")
+local member = require("@classes/guild/member")
+local role = require("@classes/guild/role")
+local attachment = require("@classes/attachment")
+local message = require("@classes/message/message")
+local state = require("@classes/state")
+
+local Resolved = {}
+
+Resolved.Interface = {}
+Resolved.Prototype = {}
+
+function Resolved.Prototype.sync(self: Resolved, resolvedData: apiTypes.ResolvedDataStructure)
+	for id, userData in next, resolvedData.users or {} do
+		self.users[id] = user.new(userData)
+	end
+
+	for id, memberData in next, resolvedData.members or {} do
+		self.members[id] = member.new(memberData)
+	end
+
+	for id, roleData in next, resolvedData.roles or {} do
+		self.roles[id] = role.new(roleData)
+	end
+
+	-- for id, channelData in next, resolvedData.channels or {} do
+	-- 	self.channels[id] = channel.new(channelData)
+	-- end
+
+	for id, messageData in next, resolvedData.messages or {} do
+		self.messages[id] = message.new(self.state, messageData)
+	end
+
+	for id, attachmentData in next, resolvedData.attachments or {} do
+		self.attachments[id] = attachment.new(attachmentData)
+	end
+end
+
+function Resolved.Interface.new(state: state.State, resolvedData: apiTypes.ResolvedDataStructure): Resolved
+	local self = setmetatable(
+		{
+			state = state,
+
+			users = {},
+			members = {},
+			roles = {},
+			-- channels = {},
+			messages = {},
+			attachments = {},
+		} :: Resolved,
+		{ __index = Resolved.Prototype }
+	)
+
+	self:sync(resolvedData)
+
+	return self
+end
+
+export type Resolved = typeof(Resolved.Prototype) & {
+	state: state.State,
+
+	users: { [apiTypes.Snowflake]: user.User },
+	members: { [apiTypes.Snowflake]: member.Member },
+	roles: { [apiTypes.Snowflake]: role.Role },
+	-- channels: { [apiTypes.Snowflake]: unknown }, -- fixme: we can't type the channels since channels require this message class.
+	messages: { [apiTypes.Snowflake]: Message },
+	attachments: { [apiTypes.Snowflake]: attachment.Attachment },
+}
+
+return Resolved.Interface
