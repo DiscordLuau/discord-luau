@@ -15,19 +15,8 @@ User.Interface = {}
 User.Prototype = {}
 
 function User.Prototype.sync(self: User, userData: apiTypes.UserObject)
-	local premiumType: userTypes.NitroType = "None"
-
-	if userData.premium_type == 1 then
-		premiumType = "NitroClassic"
-	elseif userData.premium_type == 2 then
-		premiumType = "Nitro"
-	elseif userData.premium_type == 3 then
-		premiumType = "NitroBasic"
-	end
-
-	self.premiumType = premiumType
-
 	self.username = userData.username
+	self.premiumType = userTypes.NitroType[userData.premium_type]
 	self.discriminator = userData.discriminator
 	self.globalName = userData.global_name
 	self.avatar = userData.avatar

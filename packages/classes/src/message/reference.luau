@@ -13,11 +13,7 @@ Reference.Interface = {}
 Reference.Prototype = {}
 
 function Reference.Prototype.sync(self: Reference, referenceData: apiTypes.MessageReferenceObject)
-	self.type = (
-		referenceData.type == 0 and "Default"
-		or referenceData.type == 1 and "Forward"
-		or nil
-	) :: messageTypes.MessageReferenceType
+	self.type = messageTypes.MessageReferenceType[referenceData.type]
 
 	self.messageId = referenceData.message_id
 	self.guildId = referenceData.guild_id

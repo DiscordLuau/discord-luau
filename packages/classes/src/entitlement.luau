@@ -15,16 +15,7 @@ Entitlement.Interface = {}
 Entitlement.Prototype = {}
 
 function Entitlement.Prototype.sync(self: Entitlement, entitlementData: apiTypes.EntitlementObject)
-	self.type = (
-		entitlementData.type == 1 and "Purchase"
-		or entitlementData.type == 2 and "PremiumSubscription"
-		or entitlementData.type == 3 and "DeveloperGift"
-		or entitlementData.type == 4 and "TestModePurchase"
-		or entitlementData.type == 5 and "FreePurchase"
-		or entitlementData.type == 6 and "UserGift"
-		or entitlementData.type == 7 and "PremiumPurchase"
-		or entitlementData.type == 8 and "ApplicationSubscription"
-	) :: entitlementTypes.EntitlementType
+	self.type = entitlementTypes.EntitlementType[entitlementData.type]
 
 	self.id = entitlementData.id
 	self.skuId = entitlementData.sku_id

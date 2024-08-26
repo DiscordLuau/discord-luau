@@ -371,16 +371,29 @@ function Channel.Interface.new(resource: {
 	channelType: ChannelType?,
 	channelPosition: number?,
 	channelPermissionOverwrites: { apiTypes.OverwriteObject }?,
-}): Channel
+}?): Channel
 	local self = setmetatable(
 		{
-			name = resource.channelName or "channel-object",
-			type = resource.channelType or "GuildText",
-			position = resource.channelPosition or 0,
-			permissionOverwrites = resource.channelPermissionOverwrites or {},
+			permissionOverwrites = {},
 		} :: Channel,
 		{ __index = Channel.Prototype }
 	)
+
+	if resource and resource.channelType then
+		self:setType(resource.channelType)
+	end
+
+	if resource and resource.channelName then
+		self:setName(resource.channelName)
+	end
+
+	if resource and resource.channelPosition then
+		self:setPosition(resource.channelPosition)
+	end
+
+	if resource and resource.channelPermissionOverwrites then
+		self:setOverwrites(resource.channelPermissionOverwrites)
+	end
 
 	return self
 end

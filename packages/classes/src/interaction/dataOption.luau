@@ -18,19 +18,7 @@ function DataOption.Prototype.sync<T>(
 )
 	local optionArray = {}
 
-	self.type = (
-		optionData.type == 1 and "SubCommand"
-		or optionData.type == 2 and "SubCommandGroup"
-		or optionData.type == 3 and "String"
-		or optionData.type == 4 and "Integer"
-		or optionData.type == 5 and "Boolean"
-		or optionData.type == 6 and "User"
-		or optionData.type == 7 and "Channel"
-		or optionData.type == 8 and "Role"
-		or optionData.type == 9 and "Mentionable"
-		or optionData.type == 10 and "Number"
-		or optionData.type == 11 and "Attachment"
-	) :: interactionTypes.ApplicationCommandOptionType
+	self.type = interactionTypes.ApplicationCommandOptionType[optionData.type]
 
 	for _, option in next, optionData.options or {} do
 		table.insert(optionArray, DataOption.Interface.new(option))

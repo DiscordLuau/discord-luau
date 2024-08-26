@@ -31,13 +31,7 @@ function IneractionMetadata.Prototype.sync(
 		end
 	end
 
-	self.type = (
-		interactionData.type == 1 and "Ping"
-		or interactionData.type == 2 and "ApplicationCommand"
-		or interactionData.type == 3 and "MessageComponent"
-		or interactionData.type == 4 and "ApplicationCommandAutocomplete"
-		or interactionData.type == 5 and "ModalSubmit"
-	) :: interactionTypes.InteractionType
+	self.type = interactionTypes.InteractionType[interactionData.type]
 
 	self.user = user.new(interactionData.user)
 

@@ -15,7 +15,7 @@ TextInput.Prototype = {}
 function TextInput.Prototype.sync(self: TextInput, textInputData: apiTypes.TextInputComponentObject)
 	self.type = textInputData.type
 	self.customId = textInputData.custom_id
-	self.style = (textInputData.style == 1 and "Short" or "Paragraph") :: messageTypes.TextInputStyle
+	self.style = messageTypes.TextInputStyle[textInputData.style]
 	self.label = textInputData.label
 	self.minLength = textInputData.min_length
 	self.maxLength = textInputData.max_length

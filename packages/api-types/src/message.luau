@@ -1,3 +1,75 @@
+local reflect = require("@utils/table/reflect")
+
+local MessageType = table.freeze(reflect({
+	Default = 0,
+	RecipientAdd = 1,
+	RecipientRemove = 2,
+	Call = 3,
+	ChannelNameChange = 4,
+	ChannelIconChange = 5,
+	ChannelPinnedMessage = 6,
+	UserJoin = 7,
+	GuildBoost = 8,
+	GuildBoostTier1 = 9,
+	GuildBoostTier2 = 10,
+	GuildBoostTier3 = 11,
+	ChannelFollowAdd = 12,
+	GuildDiscoveryDisqualified = 14,
+	GuildDiscoveryRequalified = 15,
+	GuildDiscoveryGracePeriodInitialWarning = 16,
+	GuildDiscoveryGracePeriodFinalWarning = 17,
+	ThreadCreated = 18,
+	Reply = 19,
+	ChatInputCommand = 20,
+	ThreadStarterMessage = 21,
+	GuildInviteReminder = 22,
+	ContextMenuCommand = 23,
+	AutoModerationAction = 24,
+	RoleSubscriptionPurchase = 25,
+	InteractionPremiumUpsell = 26,
+	StageStart = 27,
+	StageEnd = 28,
+	StageSpeaker = 29,
+	StageTopic = 31,
+	GuildApplicationPremiumSubscription = 32,
+	GuildIncidentAlertModeEnabled = 36,
+	GuildIncidentAlertModeDisabled = 37,
+	GuildIncidentReportRaid = 38,
+	GuildIncidentReportFalseAlarm = 39,
+	PurchaseNotification = 44,
+	PollResult = 46,
+}))
+
+local MessageAcitvityType = table.freeze(reflect({
+	Join = 1,
+	Spectate = 2,
+	Listen = 3,
+	JoinRequest = 5,
+}))
+
+local MessageReferenceType = table.freeze(reflect({
+	Default = 0,
+	Forward = 1,
+}))
+
+local ButtonStyle = table.freeze(reflect({
+	Blurple = 1,
+	Grey = 2,
+	Green = 3,
+	Red = 4,
+}))
+
+local TextInputStyle = table.freeze(reflect({
+	Short = 1,
+	Paragraph = 2,
+}))
+
+local SelectDefaultValueType = table.freeze(reflect({
+	Role = "role",
+	User = "user",
+	Channel = "channel",
+}))
+
 export type MessageType =
 	"Default"
 	| "RecipientAdd"
@@ -40,17 +112,17 @@ export type MessageType =
 export type MessageAcitvityType = "Join" | "Spectate" | "Listen" | "JoinRequest"
 export type MessageReferenceType = "Default" | "Forward"
 
-export type InteractionType =
-	"Ping"
-	| "ApplicationCommand"
-	| "MessageComponent"
-	| "ApplicationCommandAutocomplete"
-	| "ModalSubmit"
-
 export type ButtonStyle = "Blurple" | "Grey" | "Green" | "Red" | "Grey"
 
 export type SelectDefaultValueType = "User" | "Role" | "Channel"
 
 export type TextInputStyle = "Short" | "Paragraph"
 
-return "DISCORD_V10_MESSAGE_TYPES"
+return {
+	MessageType = MessageType,
+	MessageAcitvityType = MessageAcitvityType,
+	MessageReferenceType = MessageReferenceType,
+	ButtonStyle = ButtonStyle,
+	TextInputStyle = TextInputStyle,
+	SelectDefaultValueType = SelectDefaultValueType,
+}

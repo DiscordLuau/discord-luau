@@ -1,3 +1,16 @@
+local reflect = require("@utils/table/reflect")
+
+local EntitlementType = table.freeze(reflect({
+	Purchase = 1,
+	PremiumSubscription = 2,
+	DeveloperGift = 3,
+	TestModePurchase = 4,
+	FreePurchase = 5,
+	UserGift = 6,
+	PremiumPurchase = 7,
+	ApplicationSubscription = 8,
+}))
+
 export type EntitlementType =
 	"Purchase"
 	| "PremiumSubscription"
@@ -8,4 +21,6 @@ export type EntitlementType =
 	| "PremiumPurchase"
 	| "ApplicationSubscription"
 
-return "DISCORD_V10_ENTITLEMENT_TYPES"
+return {
+	EntitlementType = EntitlementType,
+}

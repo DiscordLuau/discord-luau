@@ -14,11 +14,7 @@ DefaultValue.Prototype = {}
 
 function DefaultValue.Prototype.sync(self: DefaultValue, valueData: apiTypes.SelectDefaultValueObject)
 	self.id = valueData.id
-	self.type = (
-		valueData.type == "user" and "User"
-		or valueData.type == "role" and "Role"
-		or valueData.type == "channel" and "Channel"
-	) :: messageTypes.SelectDefaultValueType
+	self.type = messageTypes.SelectDefaultValueType[valueData.type]
 end
 
 function DefaultValue.Interface.new(valueData: apiTypes.SelectDefaultValueObject): DefaultValue

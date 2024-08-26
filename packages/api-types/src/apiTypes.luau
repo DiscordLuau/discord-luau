@@ -192,7 +192,7 @@ export type IntegrationExpireBehaviours = number
 -- https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-type
 export type InteractionType = number
 
--- https://discord.com/developers/docs/resources/channel#embed-object-embed-types
+-- https://discord.com/developers/docs/resources/message#embed-object-embed-types
 export type EmbedType = "Rich" | "Image" | "Video" | "GIFV" | "Article" | "Link" | "PollResult"
 
 -- https://discord.com/developers/docs/resources/channel#message-object-message-types

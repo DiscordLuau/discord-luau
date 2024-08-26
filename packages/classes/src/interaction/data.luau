@@ -24,19 +24,7 @@ function Data.Prototype.sync(self: Data, dataObject: apiTypes.InteractionDataObj
 		table.insert(optionArray, dataOption.new(option))
 	end
 
-	self.type = (
-		dataObject.type == 1 and "SubCommand"
-		or dataObject.type == 2 and "SubCommandGroup"
-		or dataObject.type == 3 and "String"
-		or dataObject.type == 4 and "Integer"
-		or dataObject.type == 5 and "Boolean"
-		or dataObject.type == 6 and "User"
-		or dataObject.type == 7 and "Channel"
-		or dataObject.type == 8 and "Role"
-		or dataObject.type == 9 and "Mentionable"
-		or dataObject.type == 10 and "Number"
-		or dataObject.type == 11 and "Attachment"
-	) :: interactionTypes.InteractionType
+	self.type = interactionTypes.InteractionType[dataObject.type]
 
 	self.id = dataObject.id
 	self.name = dataObject.name

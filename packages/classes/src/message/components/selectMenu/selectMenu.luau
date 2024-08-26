@@ -29,25 +29,7 @@ function SelectMenu.Prototype.sync(self: SelectMenu, selectMenuData: apiTypes.Se
 	end
 
 	for _, channelType in next, selectMenuData.channel_types or {} do
-		table.insert(
-			channelTypesArray,
-			(
-					channelType == 0 and "GuildText"
-					or channelType == 1 and "DM"
-					or channelType == 2 and "GuildVoice"
-					or channelType == 3 and "GroupDM"
-					or channelType == 4 and "GuildCategory"
-					or channelType == 5 and "GuildAnnouncement"
-					or channelType == 10 and "AnnouncementThread"
-					or channelType == 11 and "PublicThread"
-					or channelType == 12 and "PrivateThread"
-					or channelType == 13 and "GuildStageVoice"
-					or channelType == 14 and "GuildDirectory"
-					or channelType == 15 and "GuildForum"
-					or channelType == 16 and "GuildMedia"
-					or nil
-				) :: channelTypes.ChannelType
-		)
+		table.insert(channelTypesArray, channelTypes.ChannelTypes[channelType])
 	end
 
 	self.type = selectMenuData.type

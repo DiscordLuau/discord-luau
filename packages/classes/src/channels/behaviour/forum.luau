@@ -27,16 +27,8 @@ function ForumBehaviour.Interface.inheritProperties(class: any, channelData: api
 	class.defaultReaction = channelData.default_reaction_emoji
 		and defaultReaction.new(channelData.default_reaction_emoji)
 
-	class.defaultSortOrder = (
-		channelData.default_sort_order == 0 and "LatestActivity"
-		or channelData.default_sort_order == 1 and "CreationDate"
-	) :: channelTypes.ForumSortOrder
-
-	class.defaultForumLayout = (
-		channelData.default_forum_layout == 0 and "NotSet"
-		or channelData.default_forum_layout == 1 and "ListView"
-		or channelData.default_forum_layout == 2 and "GalleryView"
-	) :: channelTypes.ForumLayout
+	class.defaultSortOrder = channelTypes.ForumSortOrder[channelData.default_sort_order]
+	class.defaultForumLayout = channelTypes.ForumLayout[channelData.default_forum_layout]
 end
 
 function ForumBehaviour.Interface.inheritMethods(class: any)

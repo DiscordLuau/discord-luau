@@ -13,12 +13,8 @@ Activity.Interface = {}
 Activity.Prototype = {}
 
 function Activity.Prototype.sync(self: Activity, activityData: apiTypes.MessageActivityObject)
-	self.type = (
-		activityData.type == 1 and "Join"
-		or activityData.type == 2 and "Spectate"
-		or activityData.type == 3 and "Listen"
-		or activityData.type == 5 and "JoinRequest"
-	) :: messageTypes.MessageAcitvityType
+	self.type = messageTypes.MessageAcitvityType[activityData.type]
+	self.partyId = activityData.party_id
 end
 
 function Activity.Interface.new(activityData: apiTypes.MessageActivityObject): Activity

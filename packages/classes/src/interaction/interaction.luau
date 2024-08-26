@@ -40,19 +40,8 @@ function Interaction.Prototype.sync(self: Interaction, interactionData: apiTypes
 		end
 	end
 
-	self.type = (
-		interactionData.type == 1 and "Ping"
-		or interactionData.type == 2 and "ApplicationCommand"
-		or interactionData.type == 3 and "MessageComponent"
-		or interactionData.type == 4 and "ApplicationCommandAutocomplete"
-		or interactionData.type == 5 and "ModalSubmit"
-	) :: interactionTypes.InteractionType
-
-	self.context = (
-		interactionData.context == 0 and "Guild"
-		or interactionData.context == 1 and "BotDm"
-		or interactionData.context == 2 and "PrivateChannel"
-	) :: interactionTypes.InteractionContextType
+	self.type = interactionTypes.InteractionType[interactionData.type]
+	self.context = interactionTypes.InteractionContextType[interactionData.context]
 
 	self.id = interactionData.id
 	self.applicationId = interactionData.application_id

@@ -1,3 +1,33 @@
+local reflect = require("@utils/table/reflect")
+
+local InteractionType = table.freeze(reflect({
+	Ping = 1,
+	ApplicationCommand = 2,
+	MessageComponent = 3,
+	ApplicationCommandAutocomplete = 4,
+	ModalSubmit = 5,
+}))
+
+local ApplicationCommandOptionType = table.freeze(reflect({
+	SubCommand = 1,
+	SubCommandGroup = 2,
+	String = 3,
+	Integer = 4,
+	Boolean = 5,
+	User = 6,
+	Channel = 7,
+	Role = 8,
+	Mentionable = 9,
+	Number = 10,
+	Attachment = 11,
+}))
+
+local InteractionContextType = table.freeze(reflect({
+	Guild = 1,
+	BotDm = 2,
+	PrivateChannel = 3,
+}))
+
 export type InteractionType =
 	"Ping"
 	| "ApplicationCommand"
@@ -20,4 +50,8 @@ export type ApplicationCommandOptionType =
 
 export type InteractionContextType = "Guild" | "BotDm" | "PrivateChannel"
 
-return "DISCORD_V10_INTERACTION_TYPES"
+return {
+	InteractionType = InteractionType,
+	ApplicationCommandOptionType = ApplicationCommandOptionType,
+	InteractionContextType = InteractionContextType,
+}

@@ -15,7 +15,8 @@ Permission.Prototype = {}
 	Responsible for querying what permission a discord permission bitflag has.
 ]]
 function Permission.Prototype.hasPermission(self: Permission, permission: permissionTypes.Permissions)
-	return bit32.band(self.permission, permissionTypes[permission]) == permissionTypes[permission]
+	return bit32.band(self.permission, permissionTypes.Permissions[permission])
+		== permissionTypes.Permissions[permission]
 end
 
 function Permission.Interface.new(permission: string): Permission

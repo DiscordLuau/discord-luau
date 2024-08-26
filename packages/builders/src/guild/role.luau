@@ -32,8 +32,8 @@ end
 	Sets the permissions of the role, optionally this could be defined when creating the Role Builder as well.
 ]]
 function Role.Prototype.setPermissions(self: Role, ...: permissionTypes.Permissions): Role
-	for _, permissionTypes in { ... } do
-		table.insert(self.permissionFlags, permissionTypes)
+	for _, permissionType in { ... } do
+		table.insert(self.permissionFlags, permissionType)
 	end
 
 	return self
@@ -73,7 +73,7 @@ function Role.Prototype.build(self: Role): apiTypes.GuildRoleObject
 	local permissionBits = {}
 
 	for index, permissionEnum in self.permissionFlags do
-		local permissionBit = permissionTypes[permissionEnum]
+		local permissionBit = permissionTypes.Permissions[permissionEnum]
 
 		permissionBits[index] = permissionBit
 	end

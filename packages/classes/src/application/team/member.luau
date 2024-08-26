@@ -18,9 +18,7 @@ function Member.Prototype.sync(self: Member, memberData: apiTypes.TeamMemberObje
 	self.teamId = memberData.team_id
 	self.user = user.new(memberData.user)
 
-	self.membershipState = (
-		memberData.membership_state == 1 and "Invited" or memberData.membership_state == 2 and "Accepted"
-	) :: applicationTypes.MembershipState
+	self.membershipState = applicationTypes.MembershipState[memberData.membership_state]
 
 	self.role = (
 		memberData.role == "Admin" and "Admin"

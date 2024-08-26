@@ -11,7 +11,7 @@ VoiceBehaviour.Interface = {}
 VoiceBehaviour.Prototype = {}
 
 function VoiceBehaviour.Interface.inheritProperties(class: any, channelData: apiTypes.ChannelObject)
-	class.videoQualityMode = (channelData.video_quality_mode == 1 and "Auto" or "Full") :: channelTypes.VideoQualityMode
+	class.videoQualityMode = channelTypes.VideoQualityMode[channelData.video_quality_mode]
 
 	class.bitrate = channelData.bitrate
 	class.userLimit = channelData.user_limit

@@ -29,10 +29,7 @@ function MediaBehaviour.Interface.inheritProperties(class: any, channelData: api
 	class.defaultForumLayout = channelData.default_forum_layout
 	class.appliedTags = channelData.applied_tags
 
-	class.defaultSortOrder = (
-		channelData.default_sort_order == 0 and "LatestActivity"
-		or channelData.default_sort_order == 1 and "CreationDate"
-	) :: channelTypes.MediaSortOrder
+	class.defaultSortOrder = channelTypes.MediaSortOrder[channelData.default_sort_order]
 end
 
 function MediaBehaviour.Interface.inheritMethods(class: any)

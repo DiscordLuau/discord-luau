@@ -15,13 +15,7 @@ Button.Interface = {}
 Button.Prototype = {}
 
 function Button.Prototype.sync(self: Button, buttonData: apiTypes.ButtonComponentObject)
-	self.style = (
-		buttonData.style == 1 and "Blurple"
-		or buttonData.style == 2 and "Grey"
-		or buttonData.style == 3 and "Green"
-		or buttonData.style == 4 and "Red"
-		or buttonData.style == 5 and "Grey"
-	) :: messageTypes.ButtonStyle
+	self.style = messageTypes.ButtonStyle[buttonData.style]
 
 	self.type = 2
 	self.label = buttonData.label

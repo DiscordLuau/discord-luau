@@ -8,7 +8,7 @@ local datetime = require("@std-polyfills/datetime")
 
 local import = require("@utils/import")
 
-local apiTypes = require("@api-types/apiTypes")
+local apiTypes: string = require("@api-types/apiTypes")
 local messageTypes = require("@api-types/message")
 
 local user = require("@classes/user")
@@ -42,45 +42,7 @@ Message.Interface = {}
 Message.Prototype = {}
 
 function Message.Prototype.sync(self: Message, messageData: apiTypes.MessageObject)
-	self.type = (
-		messageData.type == 0 and "Default"
-		or messageData.type == 1 and "RecipientAdd"
-		or messageData.type == 2 and "RecipientRemove"
-		or messageData.type == 3 and "Call"
-		or messageData.type == 4 and "ChannelNameChange"
-		or messageData.type == 5 and "ChannelIconChange"
-		or messageData.type == 6 and "ChannelPinnedMessage"
-		or messageData.type == 7 and "UserJoin"
-		or messageData.type == 8 and "GuildBoost"
-		or messageData.type == 9 and "GuildBoostTier1"
-		or messageData.type == 10 and "GuildBoostTier2"
-		or messageData.type == 11 and "GuildBoostTier3"
-		or messageData.type == 12 and "ChannelFollowAdd"
-		or messageData.type == 14 and "GuildDiscoveryDisqualified"
-		or messageData.type == 15 and "GuildDiscoveryRequalified"
-		or messageData.type == 16 and "GuildDiscoveryGracePeriodInitialWarning"
-		or messageData.type == 17 and "GuildDiscoveryGracePeriodFinalWarning"
-		or messageData.type == 18 and "ThreadCreated"
-		or messageData.type == 19 and "Reply"
-		or messageData.type == 20 and "ChatInputCommand"
-		or messageData.type == 21 and "ThreadStarterMessage"
-		or messageData.type == 22 and "GuildInviteReminder"
-		or messageData.type == 23 and "ContextMenuCommand"
-		or messageData.type == 24 and "AutoModerationAction"
-		or messageData.type == 25 and "RoleSubscriptionPurchase"
-		or messageData.type == 26 and "InteractionPremiumUpsell"
-		or messageData.type == 27 and "StageStart"
-		or messageData.type == 28 and "StageEnd"
-		or messageData.type == 29 and "StageSpeaker"
-		or messageData.type == 31 and "StageTopic"
-		or messageData.type == 32 and "GuildApplicationPremiumSubscription"
-		or messageData.type == 36 and "GuildIncidentAlertModeEnabled"
-		or messageData.type == 37 and "GuildIncidentAlertModeDisabled"
-		or messageData.type == 38 and "GuildIncidentReportRaid"
-		or messageData.type == 39 and "GuildIncidentReportFalseAlarm"
-		or messageData.type == 44 and "PurchaseNotification"
-		or messageData.type == 46 and "PollResult"
-	) :: messageTypes.MessageType
+	self.type = messageTypes.MessageType[messageData.type]
 
 	local mentionArray = {}
 	local roleArray = {}

@@ -30,8 +30,8 @@ end
 	Responsible for denying specific permissionTypes to be set on either a Role of a Member.
 ]]
 function Overwrite.Prototype.denyPermissions(self: Overwrite, ...: permissionTypes.Permissions): Overwrite
-	for _, permissionTypes in { ... } do
-		table.insert(self.deniedPermissionFlags, permissionTypes)
+	for _, permissionType in { ... } do
+		table.insert(self.deniedPermissionFlags, permissionType)
 	end
 
 	return self
@@ -45,13 +45,13 @@ function Overwrite.Prototype.build(self: Overwrite): apiTypes.OverwriteObject
 	local denyPermissionBits = {}
 
 	for index, permissionEnum in self.allowedPermissionFlags do
-		local permissionBit = permissionTypes[permissionEnum]
+		local permissionBit = permissionTypes.Permissions[permissionEnum]
 
 		allowPermissionBits[index] = permissionBit
 	end
 
 	for index, permissionEnum in self.deniedPermissionFlags do
-		local permissionBit = permissionTypes[permissionEnum]
+		local permissionBit = permissionTypes.Permissions[permissionEnum]
 
 		denyPermissionBits[index] = permissionBit
 	end

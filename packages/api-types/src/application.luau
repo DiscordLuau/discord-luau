@@ -1,3 +1,10 @@
+local reflect = require("@utils/table/reflect")
+
+local MembershipState = table.freeze(reflect({
+	Invited = 1,
+	Accepted = 2,
+}))
+
 export type MembershipState = "Invited" | "Accepted"
 export type TeamRole = "Owner" | "Admin" | "Developer" | "ReadOnly"
 
@@ -33,4 +40,6 @@ export type OAuth2Scopes =
 	| "voice"
 	| "webhook.incoming"
 
-return "DISCORD_V10_APPLICATION_TYPES"
+return {
+	MembershipState = MembershipState,
+}

@@ -15,12 +15,7 @@ StickerItem.Prototype = {}
 function StickerItem.Prototype.sync(self: StickerItem, stickerData: apiTypes.SitckerItemObject)
 	self.id = stickerData.id
 	self.name = stickerData.name
-	self.formatType = (
-		stickerData.format_type == 1 and "PNG"
-		or stickerData.format_type == 2 and "APNG"
-		or stickerData.format_type == 3 and "LOTTIE"
-		or stickerData.format_type == 4 and "GIF"
-	) :: stickerTypes.StickerFormatType
+	self.formatType = stickerTypes.StickerFormatTypes[stickerData.format_type]
 end
 
 function StickerItem.Interface.new(stickerData: apiTypes.SitckerItemObject): StickerItem

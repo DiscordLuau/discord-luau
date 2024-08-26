@@ -1,4 +1,6 @@
-local permissions = {
+local reflect = require("@utils/table/reflect")
+
+local Permissions = table.freeze(reflect({
 	CreateInstantInvite = bit32.lshift(1, 0),
 	KickMembers = bit32.lshift(1, 1),
 	BanMembers = bit32.lshift(1, 2),
@@ -46,7 +48,7 @@ local permissions = {
 	SendVoiceMessages = bit32.lshift(1, 46),
 	SendPolls = bit32.lshift(1, 49),
 	UseExternalApps = bit32.lshift(1, 50),
-}
+}))
 
 export type Permissions =
 	"CreateInstantInvite"
@@ -99,4 +101,6 @@ export type Permissions =
 	| "SendPolls"
 	| "UseExternalApps"
 
-return permissions
+return {
+	Permissions = Permissions,
+}
