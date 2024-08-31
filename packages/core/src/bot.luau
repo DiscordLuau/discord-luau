@@ -16,7 +16,12 @@ local unavailableGuild = require("@classes/guild/unavailableGuild")
 local user = require("@classes/user")
 local member = require("@classes/guild/member")
 local message = require("@classes/message/message")
-local interaction = require("@classes/interaction/interaction")
+
+local autocompleteInteraction = require("@classes/interaction/types/autocomplete")
+local commandInteraction = require("@classes/interaction/types/command")
+local componentInteraction = require("@classes/interaction/types/component")
+local modalInteraction = require("@classes/interaction/types/modal")
+local pingInteraction = require("@classes/interaction/types/ping")
 
 local dmChannel = require("@classes/channels/types/dm")
 local groupDmChannel = require("@classes/channels/types/groupDm")
@@ -262,7 +267,19 @@ function Bot.Prototype.connectAsync(self: Bot)
 			elseif object.event == receiveEvents["InteractionCreate"] then
 				local typedObject = object.payload :: gatewayTypes.InteractionCreatePayload
 
-				self.onInteraction:invoke(interaction.new(self.state, typedObject.d))
+				if typedObject.d.type == 1 then
+					self.onPingInteraction:invoke(pingInteraction.new(self.state, typedObject.d))
+				elseif typedObject.d.type == 2 then
+					self.onCommandInteraction:invoke(commandInteraction.new(self.state, typedObject.d))
+				elseif typedObject.d.type == 3 then
+					self.onComponentInteraction:invoke(componentInteraction.new(self.state, typedObject.d))
+				elseif typedObject.d.type == 4 then
+					self.onAutocompleteInteraction:invoke(autocompleteInteraction.new(self.state, typedObject.d))
+				elseif typedObject.d.type == 5 then
+					self.onModalInteraction:invoke(modalInteraction.new(self.state, typedObject.d))
+				else
+					error(`Unknown interaction type: {typedObject.d.type}`)
+				end
 			end
 		end)
 
@@ -327,7 +344,12 @@ function Bot.Interface.new(options: {
 			onGuildMemberJoined = emitter.new(),
 			onGuildMemberLeft = emitter.new(),
 			onGuildMemberUpdated = emitter.new(),
-			onInteraction = emitter.new(),
+
+			onPingInteraction = emitter.new(),
+			onCommandInteraction = emitter.new(),
+			onComponentInteraction = emitter.new(),
+			onAutocompleteInteraction = emitter.new(),
+			onModalInteraction = emitter.new(),
 		} :: Bot,
 		{ __index = Bot.Prototype }
 	)
@@ -402,7 +424,11 @@ export type Bot =
 			communicationDisabledUntil: datetime.DateTime?,
 		}>,
 
-		onInteraction: emitter.Emitter<interaction.Interaction>,
+		onPingInteraction: emitter.Emitter<pingInteraction.Ping>,
+		onCommandInteraction: emitter.Emitter<commandInteraction.Command>,
+		onComponentInteraction: emitter.Emitter<componentInteraction.Component>,
+		onAutocompleteInteraction: emitter.Emitter<autocompleteInteraction.Autocomplete>,
+		onModalInteraction: emitter.Emitter<modalInteraction.Modal>,
 	}
 
 return Bot.Interface
