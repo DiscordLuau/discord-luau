@@ -10,6 +10,10 @@ local Interaction = {}
 Interaction.Interface = {}
 Interaction.Prototype = {}
 
+function Interaction.Prototype.newInteraction()
+	
+end
+
 function Interaction.Interface.new(bot: bot.Bot)
 	return setmetatable({} :: Interaction, { __index = Interaction.Prototype })
 end

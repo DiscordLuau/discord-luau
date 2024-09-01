@@ -12,7 +12,7 @@ discordBot.onReady:listen(function(shardId)
 	print(`Shard {shardId} is ready!`)
 end)
 
-discordBot.onInteraction:listen(function(a) end)
+discordBot.onCommandInteraction:listen(function(a) end)
 
 discordBot:connectAsync():after(function()
 	print("Connected to Discord!")

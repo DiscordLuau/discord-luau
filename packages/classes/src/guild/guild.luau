@@ -11,6 +11,7 @@ local _request = require("@rest/request")
 local _guild = require("@rest/guild")
 
 local apiTypes = require("@api-types/apiTypes")
+local guildTypes = require("@api-types/guild")
 
 local state = require("@classes/state")
 local emoji = require("@classes/emoji")
@@ -50,35 +51,12 @@ function Guild.Prototype.sync(self: Guild, guildData: apiTypes.GuildObject)
 	self.roles = rolesArray
 	self.emojis = emojiArray
 
-	self.verificationLevel = (
-		guildData.verification_level == 0 and "None"
-		or guildData.verification_level == 1 and "Low"
-		or guildData.verification_level == 2 and "Medium"
-		or guildData.verification_level == 3 and "High"
-		or guildData.verification_level == 4 and "VeryHigh"
-	) :: GuildVerificationLevel
-	self.defaultMessageNotifications = (
-		guildData.default_message_notifications == 0 and "AllMessages"
-		or guildData.default_message_notifications == 1 and "OnlyMmentions"
-	) :: GuildDefaultMessageNotificationLevel
-	self.explicitContentFilter = (
-		guildData.explicit_content_filter == 0 and "Disabled"
-		or guildData.explicit_content_filter == 1 and "MembersWithoutRoles"
-		or guildData.explicit_content_filter == 2 and "AllMembers"
-	) :: GuildExplicitContentFilterLevel
-	self.premiumTier = (
-		guildData.premium_tier == 0 and "None"
-		or guildData.premium_tier == 1 and "Tier1"
-		or guildData.premium_tier == 2 and "Tier2"
-		or guildData.premium_tier == 3 and "Tier3"
-	) :: GuildPremiumTier
-	self.nsfwLevel = (
-		guildData.nsfw_level == 0 and "Default"
-		or guildData.nsfw_level == 1 and "Explicit"
-		or guildData.nsfw_level == 2 and "Safe"
-		or guildData.nsfw_level == 3 and "AgeRestricted"
-	) :: GuildNSFWLevel
-	self.mfaLevel = (guildData.mfa_level == 0 and "None" or guildData.mfa_level == 1 and "Elevated") :: GuildMFALevel
+	self.verificationLevel = guildTypes.VerificationLevel[guildData.verification_level]
+	self.defaultMessageNotifications = guildTypes.DefaultMessageNotification[guildData.default_message_notifications]
+	self.explicitContentFilter = guildTypes.ExplicitContentFilterLevel[guildData.explicit_content_filter]
+	self.premiumTier = guildTypes.PremiumTier[guildData.premium_tier]
+	self.nsfwLevel = guildTypes.NSFWLevel[guildData.nsfw_level]
+	self.mfaLevel = guildTypes.MFALevel[guildData.mfa_level]
 
 	self.systemChannelFlags = guildData.system_channel_flags
 		and systemChannelBitflag.new(guildData.system_channel_flags)
@@ -132,13 +110,6 @@ function Guild.Interface.new(state: state.State, guildData: apiTypes.GuildObject
 	return self
 end
 
-export type GuildNSFWLevel = "Default" | "Explicit" | "Safe" | "AgeRestricted"
-export type GuildPremiumTier = "None" | "Tier1" | "Tier2" | "Tier3"
-export type GuildMFALevel = "None" | "Elevated"
-export type GuildExplicitContentFilterLevel = "Disabled" | "MembersWithoutRoles" | "AllMembers"
-export type GuildDefaultMessageNotificationLevel = "AllMessages" | "OnlyMmentions"
-export type GuildVerificationLevel = "None" | "Low" | "Medium" | "High" | "VeryHigh"
-
 export type Guild = typeof(Guild.Prototype) & {
 	state: state.State,
 
@@ -163,11 +134,11 @@ export type Guild = typeof(Guild.Prototype) & {
 	afkTimeout: number,
 	widgetEnabled: boolean,
 	widgetChannelId: apiTypes.Snowflake?,
-	verificationLevel: GuildVerificationLevel,
-	defaultMessageNotifications: GuildDefaultMessageNotificationLevel,
-	explicitContentFilter: GuildExplicitContentFilterLevel,
+	verificationLevel: guildTypes.VerificationLevel,
+	defaultMessageNotifications: guildTypes.DefaultMessageNotification,
+	explicitContentFilter: guildTypes.ExplicitContentFilterLevel,
 	features: { apiTypes.GuildFeature },
-	mfaLevel: GuildMFALevel,
+	mfaLevel: guildTypes.MFALevel,
 	applicationId: apiTypes.Snowflake,
 	systemChannelId: apiTypes.Snowflake?,
 	systemChannelFlags: systemChannelBitflag.SystemChannelBitflag?,
@@ -177,7 +148,7 @@ export type Guild = typeof(Guild.Prototype) & {
 	vanityUrlCode: string?,
 	description: string?,
 	banner: string?,
-	premiumTier: GuildPremiumTier,
+	premiumTier: guildTypes.PremiumTier,
 	premiumSubscriptionCount: number?,
 	preferredLocale: string,
 	publicUpdatesChannelId: apiTypes.Snowflake?,
@@ -185,7 +156,7 @@ export type Guild = typeof(Guild.Prototype) & {
 	maxStageVideoChannelUsers: number?,
 	approximateMemberCount: number?,
 	approximatePresenceCount: number?,
-	nsfwLevel: GuildNSFWLevel,
+	nsfwLevel: guildTypes.NSFWLevel,
 	premiumProgressBarEnabled: boolean,
 	safetyAlertsChannelId: apiTypes.Snowflake?,
 }

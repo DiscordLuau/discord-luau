@@ -45,7 +45,7 @@ export type TeamMemberRole = "Owner" | "Admin" | "Developer" | "Read-only"
 export type VerificationLevel = number
 
 -- https://discord.com/developers/docs/resources/guild#guild-object-default-message-notification-level
-export type DefaultMessageNotificationLevel = number
+export type DefaultMessageNotification = number
 
 -- https://discord.com/developers/docs/resources/guild#guild-object-explicit-content-filter-level
 export type ExplicitContentFilterLevel = number
@@ -476,48 +476,48 @@ export type StickerObject = {
 
 -- https://discord.com/developers/docs/resources/guild#guild-object
 export type GuildObject = {
-	id: Snowflake, -- guild id
-	name: string, -- guild name (2-100 characters, excluding trailing and leading whitespace)
-	icon: string, -- icon hash
-	icon_hash: string, -- icon hash, returned when in the template object
-	splash: string, -- 	splash hash
-	discovery_splash: string, -- discovery splash hash; only present for guilds with the "DISCOVERABLE" feature
-	owner: boolean, -- true if the user is the owner of the guild
-	owner_id: Snowflake, -- id of owner
-	permissions: string, -- total permissions for the user in the guild (excludes overwrites and implicit permissions)
-	region: string, -- voice region id for the guild (deprecated)
+	id: Snowflake?, -- guild id
+	name: string?, -- guild name (2-100 characters, excluding trailing and leading whitespace)
+	icon: string?, -- icon hash
+	icon_hash: string?, -- icon hash, returned when in the template object
+	splash: string?, -- 	splash hash
+	discovery_splash: string?, -- discovery splash hash; only present for guilds with the "DISCOVERABLE" feature
+	owner: boolean?, -- true if the user is the owner of the guild
+	owner_id: Snowflake?, -- id of owner
+	permissions: string?, -- total permissions for the user in the guild (excludes overwrites and implicit permissions)
+	region: string?, -- voice region id for the guild (deprecated)
 	afk_channel_id: Snowflake?, -- id of afk channel
-	afk_timeout: number, -- afk timeout in seconds
-	widget_enabled: boolean, -- true if the server widget is enabled
+	afk_timeout: number?, -- afk timeout in seconds
+	widget_enabled: boolean?, -- true if the server widget is enabled
 	widget_channel_id: Snowflake?, -- the channel id that the widget will generate an invite to, or null if set to no invite
-	verification_level: VerificationLevel, -- verification level required for the guild
-	default_message_notifications: DefaultMessageNotificationLevel, -- default message notifications level
-	explicit_content_filter: ExplicitContentFilterLevel, -- explicit content filter level
-	roles: { GuildRoleObject }, -- roles in the guild
-	emojis: { EmojiObject }, -- custom guild emojis
-	features: { GuildFeature }, -- enabled guild features
-	mfa_level: MFALevel, -- required MFA level for the guild
-	application_id: Snowflake, -- application id of the guild creator if it is bot-created
-	system_channel_id: Snowflake, -- the id of the channel where guild notices such as welcome messages and boost events are posted
-	system_channel_flags: SystemChannelFlags, -- system channel flags
+	verification_level: VerificationLevel?, -- verification level required for the guild
+	default_message_notifications: DefaultMessageNotification?, -- default message notifications level
+	explicit_content_filter: ExplicitContentFilterLevel?, -- explicit content filter level
+	roles: { GuildRoleObject }?, -- roles in the guild
+	emojis: { EmojiObject }?, -- custom guild emojis
+	features: { GuildFeature }?, -- enabled guild features
+	mfa_level: MFALevel?, -- required MFA level for the guild
+	application_id: Snowflake?, -- application id of the guild creator if it is bot-created
+	system_channel_id: Snowflake?, -- the id of the channel where guild notices such as welcome messages and boost events are posted
+	system_channel_flags: SystemChannelFlags?, -- system channel flags
 	rules_channel_id: Snowflake?, -- the id of the channel where Community guilds can display rules and/or guidelines
 	max_presences: number?, -- the maximum number of presences for the guild (null is always returned, apart from the largest of guilds)
 	max_members: number?, -- the maximum number of members for the guild
 	vanity_url_code: string?, -- the vanity url code for the guild
 	description: string?, -- the description of a guild
 	banner: string?, -- banner hash
-	premium_tier: PremiumTier, -- premium tier (Server Boost level)
+	premium_tier: PremiumTier?, -- premium tier (Server Boost level)
 	premium_subscription_count: number?, -- the number of boosts this guild currently has
-	preferred_locale: LanguageLocales, -- the preferred locale of a Community guild; used in server discovery and notices from Discord, and sent in interactions; defaults to "en-US"
+	preferred_locale: LanguageLocales?, -- the preferred locale of a Community guild; used in server discovery and notices from Discord, and sent in interactions; defaults to "en-US"
 	public_updates_channel_id: Snowflake?, -- the id of the channel where admins and moderators of Community guilds receive notices from Discord
 	max_video_channel_users: number?, -- the maximum amount of users in a video channel
 	max_stage_video_channel_users: number?, -- the maximum amount of users in a stage video channel
 	approximate_member_count: number?, -- approximate number of members in this guild, returned from the GET /guilds/<id> and /users/@me/guilds endpoints when with_counts is true
 	approximate_presence_count: number?, -- approximate number of non-offline members in this guild, returned from the GET /guilds/<id> and /users/@me/guilds endpoints when with_counts is true
 	welcome_screen: WelcomeScreenObject?, -- the welcome screen of a Community guild, shown to new members, returned in an Invite's guild object
-	nsfw_level: GuildNSFWLevel, -- 	guild NSFW level
+	nsfw_level: GuildNSFWLevel?, -- 	guild NSFW level
 	stickers: { StickerObject }?, -- custom guild stickers
-	premium_progress_bar_enabled: boolean, -- whether the guild has the boost progress bar enabled
+	premium_progress_bar_enabled: boolean?, -- whether the guild has the boost progress bar enabled
 	safety_alerts_channel_id: Snowflake?, -- the id of the channel where admins and moderators of Community guilds receive safety alerts from Discord
 }
 

@@ -218,7 +218,7 @@ export type CreateGuildRequest = Request<{
 	region: string?, -- voice region id (deprecated)
 	icon: string?, -- base64 128x128 image for the guild icon
 	verification_level: objects.VerificationLevel?, -- verification level
-	default_message_notifications: objects.DefaultMessageNotificationLevel?, -- default message notification level
+	default_message_notifications: objects.DefaultMessageNotification?, -- default message notification level
 	explicit_content_filter: objects.ExplicitContentFilterLevel?, -- explicit content filter level
 	roles: { objects.GuildRoleObject }?, -- new guild roles
 	channels: { objects.ChannelObject }?, -- new guild's channels
@@ -233,7 +233,7 @@ export type ModifyGuildRequest = Request<{
 	name: string, -- guild name
 	region: string?, -- guild voice region id (deprecated)
 	verificationn_level: objects.VerificationLevel?, -- verification level
-	default_message_notifications: objects.DefaultMessageNotificationLevel?, -- default message notification level
+	default_message_notifications: objects.DefaultMessageNotification?, -- default message notification level
 	explicit_content_filter: objects.ExplicitContentFilterLevel?, -- explicit content filter level
 	afk_channel_id: objects.Snowflake?, -- id for afk channel
 	afk_timeout: number?, -- afk timeout in seconds, can be set to: 60, 300, 900, 1800, 3600
