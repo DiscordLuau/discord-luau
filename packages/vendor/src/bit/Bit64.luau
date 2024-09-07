@@ -5,7 +5,7 @@
 local Bit64 = {}
 
 --[[
-	Will convert a number to a binary string.
+	Converts a number to a binary string.
 ]]
 local function toBinary(number: number)
 	local binary = select(
@@ -30,7 +30,7 @@ local function toBinary(number: number)
 end
 
 --[[
-	Will convert a binary string to a number.
+	Converts a binary string to a number.
 ]]
 local function toNumber(binary: string)
 	return tonumber(binary, 2)
