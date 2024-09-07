@@ -4,6 +4,9 @@
 ]]
 local Bit64 = {}
 
+--[[
+	Will convert a number to a binary string.
+]]
 local function toBinary(number: number)
 	local binary = select(
 		1,
@@ -26,10 +29,16 @@ local function toBinary(number: number)
 	return binary
 end
 
+--[[
+	Will convert a binary string to a number.
+]]
 local function toNumber(binary: string)
 	return tonumber(binary, 2)
 end
 
+--[[
+	Binary NOT operation for 64 bit ints
+]]
 function Bit64.bnot(value: number)
 	local binary = toBinary(value)
 
@@ -44,6 +53,9 @@ function Bit64.bnot(value: number)
 	return toNumber(binary)
 end
 
+--[[
+	Binary OR operation for 64 bit ints
+]]
 function Bit64.bor(value0: number, value1: number)
 	local binary0 = toBinary(value0)
 	local binary1 = toBinary(value1)
@@ -64,6 +76,9 @@ function Bit64.bor(value0: number, value1: number)
 	return toNumber(outputBinary)
 end
 
+--[[
+	Binary AND operation for 64 bit ints
+]]
 function Bit64.band(value0: number, value1: number)
 	local binary0 = toBinary(value0)
 	local binary1 = toBinary(value1)
@@ -80,6 +95,9 @@ function Bit64.band(value0: number, value1: number)
 	return toNumber(outputBinary)
 end
 
+--[[
+	Binary SHIFT operation for 64 bit ints, disposition is the number of bits to shift by, can support negative values
+]]
 function Bit64.shift(value: number, disposition: number)
 	local binary = toBinary(value)
 

@@ -10,6 +10,9 @@ local Bit32 = bit32
 
 local Bit = {}
 
+--[[
+	Binary NOT operation for 64 bit ints
+]]
 function Bit.bnot(value: number)
 	if value > MAXIMUM_32BIT_VALUE then
 		return Bit64.bnot(value)
@@ -18,6 +21,9 @@ function Bit.bnot(value: number)
 	end
 end
 
+--[[
+	Binary OR operation for 64 bit ints
+]]
 function Bit.bor(value0: number, value1: number)
 	if value0 > MAXIMUM_32BIT_VALUE then
 		return Bit64.bor(value0, value1)
@@ -26,6 +32,9 @@ function Bit.bor(value0: number, value1: number)
 	end
 end
 
+--[[
+	Binary AND operation for 64 bit ints
+]]
 function Bit.band(value0: number, value1: number)
 	if value0 > MAXIMUM_32BIT_VALUE then
 		return Bit64.band(value0, value1)
@@ -34,6 +43,9 @@ function Bit.band(value0: number, value1: number)
 	end
 end
 
+--[[
+	Binary SHIFT operation for 64 bit ints, disposition is the number of bits to shift by, can support negative values
+]]
 function Bit.shift(value: number, disposition: number)
 	if value > MAXIMUM_32BIT_VALUE then
 		return Bit64.shift(value, disposition)
