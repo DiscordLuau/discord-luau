@@ -8,6 +8,8 @@ local apiTypes = require("@api-types/apiTypes")
 local interactionTypes = require("@api-types/interaction")
 local channelTypes = require("@api-types/channel")
 
+local interactionChoice = require("@builders/interaction/choice")
+
 local validateKebabCase = require("@utils/validateKebabCase")
 
 local Option = {}
@@ -101,7 +103,7 @@ end
 --[[
 	add a choice to the option, will only work on String, Integer, or Number options.
 ]]
-function Option.Prototype.addChoice(self: Option, choice: apiTypes.ApplicationCommandOptionChoiceObject): Option
+function Option.Prototype.addChoice(self: Option, choice: interactionChoice.JSON): Option
 	assert(
 		self.type == "String" or self.type == "Integer" or self.type == "Number",
 		"Choices can only be added to String, Integer, or Number options"
@@ -115,7 +117,7 @@ end
 --[[
 	add an option to the option, will only work on SubCommand or SubCommandGroup options.
 ]]
-function Option.Prototype.addOption(self: Option, option: apiTypes.ApplicationCommandOptionObject): Option
+function Option.Prototype.addOption(self: Option, option: JSON): Option
 	assert(
 		self.type == "SubCommand" or self.type == "SubCommandGroup",
 		`Options can only be added to SubCommands, or SubCommandGroups`
@@ -198,7 +200,7 @@ end
 --[[
 	Responsible for buillding the default reaction object that the Discord API can understand.
 ]]
-function Option.Prototype.build(self: Option): apiTypes.ApplicationCommandOptionObject
+function Option.Prototype.build(self: Option): JSON
 	local channelTypeArray = {}
 
 	for _, channelType in self.channelTypes do
@@ -210,19 +212,19 @@ function Option.Prototype.build(self: Option): apiTypes.ApplicationCommandOption
 
 	return {
 		type = interactionTypes.InteractionType[self.type],
-		channelTypes = channelTypeArray,
+		channel_types = channelTypeArray,
 
 		name = self.name,
-		nameLocalizations = self.nameLocalizations,
+		name_localizations = self.nameLocalizations,
 		description = self.description,
-		descriptionLocalizations = self.descriptionLocalizations,
+		description_localizations = self.descriptionLocalizations,
 		required = self.required,
 		choices = self.choices,
 		options = self.options,
-		minValue = self.minValue,
-		maxValue = self.maxValue,
-		minLength = self.minLength,
-		maxLength = self.maxLength,
+		min_value = self.minValue,
+		max_value = self.maxValue,
+		min_length = self.minLength,
+		max_length = self.maxLength,
 		autocomplete = self.autocomplete,
 	}
 end
@@ -242,7 +244,7 @@ function Option.Interface.new(resource: {
 	descriptionLocalizations: { [apiTypes.LanguageLocales]: string }?,
 	required: boolean?,
 	choices: { apiTypes.ApplicationCommandOptionChoiceObject }?,
-	options: { apiTypes.ApplicationCommandOptionObject }?,
+	options: { JSON }?,
 	channelTypes: { apiTypes.ChannelType }?,
 	minValue: number?,
 	maxValue: number?,
@@ -280,8 +282,8 @@ export type Option = typeof(Option.Prototype) & {
 	description: string?,
 	descriptionLocalizations: { [apiTypes.LanguageLocales]: string },
 	required: boolean?,
-	choices: { apiTypes.ApplicationCommandOptionChoiceObject },
-	options: { apiTypes.ApplicationCommandOptionObject },
+	choices: { interactionChoice.JSON },
+	options: { JSON },
 	channelTypes: { channelTypes.ChannelType },
 	minValue: number?,
 	maxValue: number?,
@@ -289,5 +291,7 @@ export type Option = typeof(Option.Prototype) & {
 	maxLength: number?,
 	autocomplete: boolean?,
 }
+
+export type JSON = typeof(Option.Prototype.build(nil :: any))
 
 return Option.Interface
