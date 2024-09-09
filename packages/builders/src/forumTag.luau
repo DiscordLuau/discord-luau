@@ -49,7 +49,7 @@ end
 --[[
 	Responsible for buillding the forum tag object that the Discord API can understand.
 ]]
-function ForumTag.Prototype.build(self: ForumTag): apiTypes.ForumTagObject
+function ForumTag.Prototype.build(self: ForumTag): JSON
 	return {
 		name = self.name,
 		moderated = self.moderated,
@@ -114,5 +114,7 @@ export type ForumTag = typeof(ForumTag.Prototype) & {
 	moderated: boolean,
 	name: string,
 }
+
+export type JSON = typeof(ForumTag.Prototype.build(nil :: any))
 
 return ForumTag.Interface
