@@ -4,6 +4,8 @@
 	https://discord.com/developers/docs/resources/message#attachment-object-attachment-flags
 ]]
 
+local bit = require("@vendor/bit")
+
 local AttachmentBitflag = {}
 
 AttachmentBitflag.Interface = {}
@@ -14,9 +16,9 @@ AttachmentBitflag.Prototype = {}
 
 ]]
 function AttachmentBitflag.Prototype.isRemix(self: AttachmentBitflag)
-	local bit = bit32.lshift(1, 2)
+	local targetBit = bit.lshift(1, 2)
 
-	return bit32.band(self.flag, bit) == bit
+	return bit.band(self.flag, targetBit) == targetBit
 end
 
 function AttachmentBitflag.Interface.new(flag: number): AttachmentBitflag
