@@ -16,7 +16,7 @@ DefaultReaction.Interface = {}
 --[[
 	Responsible for buillding the default reaction object that the Discord API can understand.
 ]]
-function DefaultReaction.Prototype.build(self: DefaultReaction): apiTypes.DefaultReactionObject
+function DefaultReaction.Prototype.build(self: DefaultReaction): JSON
 	return {
 		emoji_id = self.emojiId,
 		emoji_name = self.emojiName,
@@ -49,5 +49,7 @@ export type DefaultReaction = typeof(DefaultReaction.Prototype) & {
 	emojiId: apiTypes.Snowflake?,
 	emojiName: string?,
 }
+
+export type JSON = typeof(DefaultReaction.Prototype.build(nil :: any))
 
 return DefaultReaction.Interface
