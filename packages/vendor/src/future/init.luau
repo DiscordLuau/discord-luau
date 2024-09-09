@@ -131,9 +131,7 @@ function Future.Prototype.execute<T>(self: Future<T>, ...): Future<T>
 
 			if #self._catchCallback == 0 then
 				stdio.ewrite(
-					`{stdio.style("bold")}{stdio.color("red")}Future encountered and error that had no error handling!\n{stdio.color(
-						"blue"
-					)}{self.exception}\n`
+					`{stdio.style("bold")}{stdio.color("red")}Future encountered an error:\n{stdio.color("blue")}{self.exception}\n`
 				)
 			else
 				for _, callback in self._catchCallback do
