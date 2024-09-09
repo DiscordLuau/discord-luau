@@ -6,6 +6,8 @@
 
 local intents = require("@api-types/gateway/intents")
 
+local bit = require("@vendor/bit")
+
 local Intents = {}
 
 Intents.Prototype = {}
@@ -34,7 +36,7 @@ function Intents.Prototype.build(self: Intents): number
 
 		assert(intentDisposition, `Unexpected intent '{intentEnum}'`)
 
-		intentsValue += bit32.lshift(1, intentDisposition)
+		intentsValue += bit.lshift(1, intentDisposition) :: number
 	end
 
 	return intentsValue
