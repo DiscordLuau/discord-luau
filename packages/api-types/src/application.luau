@@ -5,6 +5,11 @@ local MembershipState = table.freeze(reflect({
 	Accepted = 2,
 }))
 
+local IntegrationTypesConfig = table.freeze(reflect({
+	GuildInstall = 0,
+	UserInstall = 1,
+}))
+
 export type MembershipState = "Invited" | "Accepted"
 export type TeamRole = "Owner" | "Admin" | "Developer" | "ReadOnly"
 
@@ -42,4 +47,5 @@ export type OAuth2Scopes =
 
 return {
 	MembershipState = MembershipState,
+	IntegrationTypesConfig = IntegrationTypesConfig,
 }
