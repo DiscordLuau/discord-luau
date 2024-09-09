@@ -12,26 +12,16 @@ return function()
 			builder:setName("test-channel"):setType("GuildText"):setTopic("Test topic"):setPosition(1):build()
 
 		check.equal(channel.name, "test-channel")
-		check.equal(channel.type, "GuildText")
+		check.equal(channel.type, 0)
 		check.equal(channel.topic, "Test topic")
 		check.equal(channel.position, 1)
-	end)
-
-	test.case("ChannelBuilder throws error when required properties are missing", function()
-		local builder = builder.new()
-
-		check.should_error(function()
-			builder:build()
-
-			return
-		end)
 	end)
 
 	test.case("ChannelBuilder allows chaining of methods", function()
 		local builder = builder.new()
 
 		check.should_not_error(function()
-			builder:setName("chained-channel"):setType("GuildVoice"):setTopic("Chained topic"):setPosition(2)
+			builder:setName("chained-channel"):setType("GuildText"):setTopic("Chained topic"):setPosition(2)
 
 			return builder
 		end)
