@@ -39,7 +39,7 @@ function UnavailableGuild.Prototype.getAsync(
 			})
 			:await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		self.state.cache.guilds:set(self.id, response)
 
