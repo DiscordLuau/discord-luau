@@ -24,7 +24,7 @@ function User.getCurrentUserAsync(instance: request.Request): future.Future<rest
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -43,7 +43,7 @@ function User.getUserAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -63,7 +63,7 @@ function User.modifyCurrentUserAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -83,7 +83,7 @@ function User.modifyCurrentUserAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -112,7 +112,7 @@ function User.getCurrentUserGuildsAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -131,7 +131,7 @@ function User.getCurrentUserGuildMember(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -150,7 +150,7 @@ function User.leaveGuildAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -170,7 +170,7 @@ function User.createDMAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -190,7 +190,7 @@ function User.createGroupDMAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -208,7 +208,7 @@ function User.getCurrentUserConnectionsAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -229,7 +229,7 @@ function User.getCurrentUserApplicationRoleConnectionAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -252,7 +252,7 @@ function User.updateCurrentUserApplicationRoleConnectionAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)

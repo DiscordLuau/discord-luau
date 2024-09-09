@@ -27,7 +27,7 @@ function Channel.getChannelAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -50,7 +50,7 @@ function Channel.modifyChannelAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -71,7 +71,7 @@ function Channel.deleteOrCloseChannelAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -95,7 +95,7 @@ function Channel.editChannelPermissionsAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -114,7 +114,7 @@ function Channel.getChannelInvitesAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -137,7 +137,7 @@ function Channel.createChannelInviteAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -159,7 +159,7 @@ function Channel.deleteChannelPermissionAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -182,7 +182,7 @@ function Channel.followAnnouncementChannelAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -201,7 +201,7 @@ function Channel.triggerTypingIndicatorAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -220,7 +220,7 @@ function Channel.getPinnedMessagesAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -242,7 +242,7 @@ function Channel.pinMessageAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -264,7 +264,7 @@ function Channel.unpinMessageAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -286,7 +286,7 @@ function Channel.groupDMAddRecipientAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -306,7 +306,7 @@ function Channel.groupDMRemoveRecipientAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -330,7 +330,7 @@ function Channel.startThreadFromMessageAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -353,7 +353,7 @@ function Channel.startThreadWithoutMessageAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -378,7 +378,7 @@ function Channel.startThreadInForumOrMediaChannelAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -397,7 +397,7 @@ function Channel.joinThreadAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -417,7 +417,7 @@ function Channel.addThreadMemberAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -436,7 +436,7 @@ function Channel.leaveThreadAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -456,7 +456,7 @@ function Channel.removeThreadMemberAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -481,7 +481,7 @@ function Channel.getThreadMemberAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -509,7 +509,7 @@ function Channel.listThreadMembersAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -535,7 +535,7 @@ function Channel.listPublicArchivedThreadsAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -561,7 +561,7 @@ function Channel.listPrivateArchivedThreadsAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -587,7 +587,7 @@ function Channel.listJoinedPrivateArchivedThreadsAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)

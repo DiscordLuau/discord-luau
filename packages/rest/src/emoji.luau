@@ -27,7 +27,7 @@ function Emoji.listGuildEmojisAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -47,7 +47,7 @@ function Emoji.getGuildEmojisAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -70,7 +70,7 @@ function Emoji.createGuildEmojiAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -94,7 +94,7 @@ function Emoji.modifyGuildEmojiAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -116,7 +116,7 @@ function Emoji.deleteGuildEmojiAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)

@@ -100,7 +100,7 @@ function AuditLog.getGuildAuditLogAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)

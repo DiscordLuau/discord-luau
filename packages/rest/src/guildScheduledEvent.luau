@@ -37,7 +37,7 @@ function GuildScheduledEvent.listScheduledEventsForGuildAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -60,7 +60,7 @@ function GuildScheduledEvent.createGuildScheduledEvent(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -88,7 +88,7 @@ function GuildScheduledEvent.getScheduledEventsForGuildAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -112,7 +112,7 @@ function GuildScheduledEvent.modifyGuildScheduledEvent(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -132,7 +132,7 @@ function GuildScheduledEvent.deleteGuildScheduledEvent(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -152,7 +152,7 @@ function GuildScheduledEvent.getGuildScheduledEventUsers(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)

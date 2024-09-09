@@ -32,7 +32,7 @@ function Commands.getGlobalApplicationCommandsAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -53,7 +53,7 @@ function Commands.createGlobalApplicationCommandAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -73,7 +73,7 @@ function Commands.getGlobalApplicationCommandAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -95,7 +95,7 @@ function Commands.editGlobalApplicationCommandAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -115,7 +115,7 @@ function Commands.deleteGlobalApplicationCommandAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -138,7 +138,7 @@ function Commands.bulkOverwriteGlobalApplicationCommandsAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -148,6 +148,7 @@ end
 function Commands.getGuildApplicationCommandsAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
+	guildId: apiTypes.Snowflake,
 	urlParams: {
 		withLocalizations: boolean?,
 	}
@@ -158,11 +159,11 @@ function Commands.getGuildApplicationCommandsAsync(
 		instance:addUrlParam("with_localizations", urlParams.withLocalizations and "true" or (nil :: any))
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetGuildApplicationCommands, applicationId))
+		instance:setUrl(string.format(restEndpoints.GetGuildApplicationCommands, applicationId, guildId))
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -184,7 +185,7 @@ function Commands.createGuildApplicationCommandAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -205,7 +206,7 @@ function Commands.getGuildApplicationCommandAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -228,7 +229,7 @@ function Commands.editGuildApplicationCommandAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -249,7 +250,7 @@ function Commands.deleteGuildApplicationCommandAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -273,7 +274,7 @@ function Commands.bulkOverwriteGuildApplicationCommandsAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -295,7 +296,7 @@ function Commands.getGuildApplicationCommandPermissionsAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -320,7 +321,7 @@ function Commands.getApplicationCommandPermissionsAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)
@@ -347,7 +348,7 @@ function Commands.editApplicationCommandPermissionsAsync(
 
 		local status, response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response.body
 	end)

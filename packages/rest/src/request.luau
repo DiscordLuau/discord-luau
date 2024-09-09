@@ -164,7 +164,15 @@ function Request.Prototype.executeAsync<Resolve>(self: Request): future.Future<{
 		})
 
 		if not request.ok then
-			error(`HTTP REST Request failed: {request.statusCode} {request.statusMessage}`)
+			error(setmetatable({
+				statusCode = request.statusCode,
+				statusMessage = request.statusMessage,
+				body = request.body,
+			}, {
+				__tostring = function(self)
+					return `HTTP REST Request failed: {self.statusCode} {self.statusMessage}\n{self.body}`
+				end,
+			}))
 		end
 
 		local decodeSuccess, decodedBody = pcall(net.jsonDecode, request.body)
