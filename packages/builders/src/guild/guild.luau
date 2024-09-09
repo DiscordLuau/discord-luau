@@ -217,7 +217,7 @@ end
 --[[
 	Responsible for building the GuildObject JSON that can be parsed by the Discord API.
 ]]
-function Guild.Prototype.build(self: Guild): apiTypes.GuildObject
+function Guild.Prototype.build(self: Guild): JSON
 	return {
 		name = self.name,
 		verification_level = guildTypes.VerificationLevel[self.verificationLevel],
@@ -392,6 +392,6 @@ export type Guild = typeof(Guild.Prototype) & {
 	safetyAlertsChannelId: apiTypes.Snowflake?,
 }
 
-export type PermissionOverwriteObject = apiTypes.OverwriteObject
+export type JSON = typeof(Guild.Prototype.build(nil :: any))
 
 return Guild.Interface
