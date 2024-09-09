@@ -4,6 +4,8 @@
 	https://discord.com/developers/docs/resources/application#application-object-application-flags
 ]]
 
+local bit = require("@vendor/bit")
+
 local ApplicationBitflag = {}
 
 ApplicationBitflag.Interface = {}
@@ -13,18 +15,18 @@ ApplicationBitflag.Prototype = {}
 	Indicates if an app uses the Auto Moderation API
 ]]
 function ApplicationBitflag.Prototype.applicationAutoModerationRoleCreateBadge(self: ApplicationBitflag)
-	local bit = bit32.lshift(1, 6)
+	local targetBit = bit.lshift(1, 6)
 
-	return bit32.band(self.flag, bit) == bit
+	return bit.band(self.flag, targetBit) == targetBit
 end
 
 --[[
 	Intent required for bots in 100 or more servers to receive presence_update events
 ]]
 function ApplicationBitflag.Prototype.gatewayPresence(self: ApplicationBitflag)
-	local bit = bit32.lshift(1, 12)
+	local targetBit = bit.lshift(1, 12)
 
-	return bit32.band(self.flag, bit) == bit
+	return bit.band(self.flag, targetBit) == targetBit
 end
 
 --[[
@@ -32,9 +34,9 @@ end
 	found on the Bot page in your app's settings
 ]]
 function ApplicationBitflag.Prototype.gatewayPresenceLimited(self: ApplicationBitflag)
-	local bit = bit32.lshift(1, 13)
+	local targetBit = bit.lshift(1, 13)
 
-	return bit32.band(self.flag, bit) == bit
+	return bit.band(self.flag, targetBit) == targetBit
 end
 
 --[[
@@ -42,9 +44,9 @@ end
 	guild_member_add. See the list of member-related events under GUILD_MEMBERS
 ]]
 function ApplicationBitflag.Prototype.gatewayGuildMembers(self: ApplicationBitflag)
-	local bit = bit32.lshift(1, 14)
+	local targetBit = bit.lshift(1, 14)
 
-	return bit32.band(self.flag, bit) == bit
+	return bit.band(self.flag, targetBit) == targetBit
 end
 
 --[[
@@ -54,36 +56,36 @@ end
 	See the list of member-related events under GUILD_MEMBERS
 ]]
 function ApplicationBitflag.Prototype.gatewayGuildMembersLimited(self: ApplicationBitflag)
-	local bit = bit32.lshift(1, 15)
+	local targetBit = bit.lshift(1, 15)
 
-	return bit32.band(self.flag, bit) == bit
+	return bit.band(self.flag, targetBit) == targetBit
 end
 
 --[[
 	Indicates unusual growth of an app that prevents verification
 ]]
 function ApplicationBitflag.Prototype.verificationPendingGuildLimit(self: ApplicationBitflag)
-	local bit = bit32.lshift(1, 16)
+	local targetBit = bit.lshift(1, 16)
 
-	return bit32.band(self.flag, bit) == bit
+	return bit.band(self.flag, targetBit) == targetBit
 end
 
 --[[
 	Indicates if an app is embedded within the Discord client (currently unavailable publicly)
 ]]
 function ApplicationBitflag.Prototype.embedded(self: ApplicationBitflag)
-	local bit = bit32.lshift(1, 17)
+	local targetBit = bit.lshift(1, 17)
 
-	return bit32.band(self.flag, bit) == bit
+	return bit.band(self.flag, targetBit) == targetBit
 end
 
 --[[
 	Intent required for bots in 100 or more servers to receive message content
 ]]
 function ApplicationBitflag.Prototype.gatewayMessageContent(self: ApplicationBitflag)
-	local bit = bit32.lshift(1, 18)
+	local targetBit = bit.lshift(1, 18)
 
-	return bit32.band(self.flag, bit) == bit
+	return bit.band(self.flag, targetBit) == targetBit
 end
 
 --[[
@@ -91,18 +93,18 @@ end
 	found on the Bot page in your app's settings
 ]]
 function ApplicationBitflag.Prototype.gatewayMessageContentLimited(self: ApplicationBitflag)
-	local bit = bit32.lshift(1, 19)
+	local targetBit = bit.lshift(1, 19)
 
-	return bit32.band(self.flag, bit) == bit
+	return bit.band(self.flag, targetBit) == targetBit
 end
 
 --[[
 	Indicates if an app has registered global application commands
 ]]
 function ApplicationBitflag.Prototype.applicationCommandBadge(self: ApplicationBitflag)
-	local bit = bit32.lshift(1, 23)
+	local targetBit = bit.lshift(1, 23)
 
-	return bit32.band(self.flag, bit) == bit
+	return bit.band(self.flag, targetBit) == targetBit
 end
 
 function ApplicationBitflag.Interface.new(flag: number): ApplicationBitflag
