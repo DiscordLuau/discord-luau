@@ -5,6 +5,7 @@
 ]]
 
 local apiTypes = require("@api-types/apiTypes")
+local channelTypes = require("@api-types/channel")
 
 local validateKebabCase = require("@utils/validateKebabCase")
 
@@ -62,7 +63,7 @@ end
 --[[
 	Set the Type of channel this is.
 ]]
-function Channel.Prototype.setType(self: Channel, channelType: ChannelType): Channel
+function Channel.Prototype.setType(self: Channel, channelType: channelTypes.ChannelType): Channel
 	self.type = channelType
 
 	return self
@@ -222,7 +223,7 @@ end
 --[[
 	sets the video quality mode of the voice channel.
 ]]
-function Channel.Prototype.setVideoQualityMode(self: Channel, videoQualityMode: VideoQualityMode): Channel
+function Channel.Prototype.setVideoQualityMode(self: Channel, videoQualityMode: channelTypes.VideoQualityMode): Channel
 	assert(
 		self.type == "GuildVoice" or self.type == "GuildStageVoice",
 		`Channel video quality mode is only supported for voice and stage voice.`
@@ -291,7 +292,7 @@ end
 
 	This is the sort order that the channel will use for newly created threads.
 ]]
-function Channel.Prototype.setDefaultSortOrder(self: Channel, sortOrder: SortOrderTypes): Channel
+function Channel.Prototype.setDefaultSortOrder(self: Channel, sortOrder: channelTypes.ForumSortOrder): Channel
 	assert(
 		self.type == "GuildForum" or self.type == "GuildMedia",
 		`Channel sort order is only supported for forum, and media channels.`
@@ -307,7 +308,7 @@ end
 
 	This is the layout that the channel will use for newly created threads.
 ]]
-function Channel.Prototype.setDefaultForumLayout(self: Channel, forumLayout: ForumLayoutTypes): Channel
+function Channel.Prototype.setDefaultForumLayout(self: Channel, forumLayout: channelTypes.ForumLayout): Channel
 	assert(self.type == "GuildForum", `Channel forum layout is only supported for forum channels.`)
 
 	self.defaultForumLayout = forumLayout
@@ -337,7 +338,7 @@ end
 --[[
 	Responsible for buillding the channel object that the Discord API can understand.
 ]]
-function Channel.Prototype.build(self: Channel): apiTypes.ChannelObject
+function Channel.Prototype.build(self: Channel): JSON
 	return {
 		id = self.id,
 
@@ -368,7 +369,7 @@ end
 ]]
 function Channel.Interface.new(resource: {
 	channelName: string?,
-	channelType: ChannelType?,
+	channelType: channelTypes.ChannelType?,
 	channelPosition: number?,
 	channelPermissionOverwrites: { apiTypes.OverwriteObject }?,
 }?): Channel
@@ -398,28 +399,11 @@ function Channel.Interface.new(resource: {
 	return self
 end
 
---[[
-	Construct a channel builder from the provided channel id.
-]]
-function Channel.Interface.fromId(resource: {
-	channelId: apiTypes.Snowflake,
-	channelName: string?,
-	channelType: ChannelType?,
-	channelPosition: number?,
-	channelPermissionOverwrites: { apiTypes.OverwriteObject }?,
-}): Channel
-	local self = Channel.Interface.new(resource)
-
-	self.id = resource.channelId
-
-	return self
-end
-
 export type Channel = typeof(Channel.Prototype) & {
 	id: apiTypes.Snowflake?,
 
 	name: string,
-	type: ChannelType,
+	type: channelTypes.ChannelType,
 	position: number,
 	permissionOverwrites: { apiTypes.OverwriteObject },
 
@@ -434,36 +418,19 @@ export type Channel = typeof(Channel.Prototype) & {
 	-- MEDIA
 	defaultReactionEmoji: apiTypes.DefaultReactionObject?,
 	availableTags: { apiTypes.ForumTagObject }?,
-	defaultSortOrder: SortOrderTypes?,
+	defaultSortOrder: channelTypes.ForumSortOrder?,
 
 	-- FORUM
-	defaultForumLayout: ForumLayoutTypes?,
+	defaultForumLayout: channelTypes.ForumLayout?,
 
 	-- VOICE
-	videoQualityMode: VideoQualityMode?,
+	videoQualityMode: channelTypes.VideoQualityMode?,
 	rtcRegion: string?,
 	rateLimitPerUser: number?,
 	userLimit: number?,
 	bitrate: number?,
 }
 
-export type ChannelType =
-	"GuildText"
-	| "Dm"
-	| "GuildVoice"
-	| "GroupDm"
-	| "GuildCategory"
-	| "GuildAnnouncement"
-	| "AnnouncementThread"
-	| "PublicThread"
-	| "PrivateThread"
-	| "GuildStageVoice"
-	| "GuildDirectory"
-	| "GuildForum"
-	| "GuildMedia"
-
-export type VideoQualityMode = "Auto" | "Full"
-export type SortOrderTypes = "LatestActivity" | "CreationDate"
-export type ForumLayoutTypes = "NotSet" | "ListView" | "GalleryView"
+export type JSON = typeof(Channel.Prototype.build(nil :: any))
 
 return Channel.Interface
