@@ -4,11 +4,7 @@
 	https://discord.com/developers/docs/resources/guild#guild-object
 ]]
 
-local _future = require("@vendor/future")
-
-local _request = require("@rest/request")
-
-local _guild = require("@rest/guild")
+local future = require("@vendor/future")
 
 local apiTypes = require("@api-types/apiTypes")
 local guildTypes = require("@api-types/guild")
@@ -21,21 +17,137 @@ local welcomeScreen = require("@classes/guild/welcomeScreen")
 
 local systemChannelBitflag = require("@classes/bitflags/systemChannel")
 
+local commandsRest = require("@rest/commands")
+local interactionBuilder = require("@builders/interaction/interaction")
+
+local commandObject = require("@classes/application/command/command")
+
 local Guild = {}
 
 Guild.Interface = {}
 Guild.Prototype = {}
+
+--[[
+	Creates a guild Slash command for the application
+]]
+function Guild.Prototype.createSlashCommandAsync(
+	self: Guild,
+	slashCommand: interactionBuilder.JSON
+): future.Future<commandObject.Command>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local status, response = commandsRest
+			.createGuildApplicationCommandAsync(request, self.state.applicationId, self.id, slashCommand)
+			:await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		return commandObject.new(response)
+	end)
+end
+
+--[[
+	Delete an existing guild application command.
+]]
+function Guild.Prototype.deleteSlashCommandAsync(self: Guild, slashCommandId: apiTypes.Snowflake): future.Future<nil>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local status, response = commandsRest
+			.deleteGuildApplicationCommandAsync(request, self.state.applicationId, self.id, slashCommandId)
+			:await()
+
+		assert(status == "Fulfilled", tostring(response))
+	end)
+end
+
+--[[
+	Edit an existing guild application command.
+]]
+function Guild.Prototype.editSlashCommandAsync(
+	self: Guild,
+	slashCommandId: apiTypes.Snowflake,
+	slashCommand: interactionBuilder.JSON
+): future.Future<commandObject.Command>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local status, response = commandsRest
+			.editGuildApplicationCommandAsync(request, self.state.applicationId, self.id, slashCommandId, slashCommand)
+			:await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		return commandObject.new(response)
+	end)
+end
+
+--[[
+	Get a list of guild application commands.
+]]
+function Guild.Prototype.getSlashCommandsAsync(
+	self: Guild,
+	withLocalizations: boolean?
+): future.Future<{ commandObject.Command }>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local status, response = commandsRest
+			.getGuildApplicationCommandsAsync(request, self.state.applicationId, self.id, {
+				withLocalizations = withLocalizations,
+			})
+			:await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		local commands = {}
+
+		for _, commandData in response do
+			table.insert(commands, commandObject.new(commandData))
+		end
+
+		return commands
+	end)
+end
+
+--[[
+	Overwrite all guild application commands. This will skip over commands that are the same as the current commands, and will not remove any existing commands.
+]]
+function Guild.Prototype.overwriteSlashCommandsAsync(
+	self: Guild,
+	slashCommands: { interactionBuilder.JSON }
+): future.Future<{ commandObject.Command }>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		-- fixme: casted this as any, the command object itself has extra fields as required by the other APIs
+		local status, response = commandsRest
+			.bulkOverwriteGuildApplicationCommandsAsync(request, self.state.applicationId, self.id, slashCommands :: any)
+			:await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		local commands = {}
+
+		for _, commandData in response do
+			table.insert(commands, commandObject.new(commandData))
+		end
+
+		return commands
+	end)
+end
 
 function Guild.Prototype.sync(self: Guild, guildData: apiTypes.GuildObject)
 	local emojiArray = {}
 	local rolesArray = {}
 	local stickerArray = {}
 
-	for _, emojiData in guildData.emojis do
+	for _, emojiData in next, guildData.emojis or {} do
 		table.insert(emojiArray, emoji.new(emojiData))
 	end
 
-	for _, roleData in guildData.roles do
+	for _, roleData in next, guildData.roles or {} do
 		table.insert(rolesArray, role.new(roleData))
 	end
 
@@ -121,25 +233,25 @@ export type Guild = typeof(Guild.Prototype) & {
 	roles: { role.Role },
 	welcomeScreen: welcomeScreen.WelcomeScreen?,
 
-	icon: string,
+	icon: string?,
 	iconHash: string?,
-	name: string,
-	splash: string,
-	discoverySplash: string,
-	owner: boolean,
-	ownerId: apiTypes.Snowflake,
-	permissions: string,
-	region: string,
+	name: string?,
+	splash: string?,
+	discoverySplash: string?,
+	owner: boolean?,
+	ownerId: apiTypes.Snowflake?,
+	permissions: string?,
+	region: string?,
 	afkChannelId: apiTypes.Snowflake?,
-	afkTimeout: number,
-	widgetEnabled: boolean,
+	afkTimeout: number?,
+	widgetEnabled: boolean?,
 	widgetChannelId: apiTypes.Snowflake?,
 	verificationLevel: guildTypes.VerificationLevel,
 	defaultMessageNotifications: guildTypes.DefaultMessageNotification,
 	explicitContentFilter: guildTypes.ExplicitContentFilterLevel,
-	features: { apiTypes.GuildFeature },
-	mfaLevel: guildTypes.MFALevel,
-	applicationId: apiTypes.Snowflake,
+	features: { apiTypes.GuildFeature }?,
+	mfaLevel: guildTypes.MFALevel?,
+	applicationId: apiTypes.Snowflake?,
 	systemChannelId: apiTypes.Snowflake?,
 	systemChannelFlags: systemChannelBitflag.SystemChannelBitflag?,
 	rulesChannelId: apiTypes.Snowflake?,
@@ -150,14 +262,14 @@ export type Guild = typeof(Guild.Prototype) & {
 	banner: string?,
 	premiumTier: guildTypes.PremiumTier,
 	premiumSubscriptionCount: number?,
-	preferredLocale: string,
+	preferredLocale: string?,
 	publicUpdatesChannelId: apiTypes.Snowflake?,
 	maxVideoChannelUsers: number?,
 	maxStageVideoChannelUsers: number?,
 	approximateMemberCount: number?,
 	approximatePresenceCount: number?,
 	nsfwLevel: guildTypes.NSFWLevel,
-	premiumProgressBarEnabled: boolean,
+	premiumProgressBarEnabled: boolean?,
 	safetyAlertsChannelId: apiTypes.Snowflake?,
 }
 
