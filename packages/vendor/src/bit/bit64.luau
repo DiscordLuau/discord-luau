@@ -7,7 +7,7 @@ local Bit64 = {}
 --[[
 	Converts a number to a binary string.
 ]]
-local function toBinary(number: number)
+local function toBinary(number: number): string
 	local binary = select(
 		1,
 		string.gsub(string.format("%o", number), ".", function(x)
@@ -32,8 +32,8 @@ end
 --[[
 	Converts a binary string to a number.
 ]]
-local function toNumber(binary: string)
-	return tonumber(binary, 2)
+local function toNumber(binary: string): number
+	return tonumber(binary, 2) :: number
 end
 
 --[[
