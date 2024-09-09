@@ -11,6 +11,7 @@ local apiTypes = require("@api-types/apiTypes")
 
 local receiveEvents = require("@api-types/gateway/receiveEvents")
 
+local application = require("@classes/application/application")
 local guild = require("@classes/guild/guild")
 local unavailableGuild = require("@classes/guild/unavailableGuild")
 local user = require("@classes/user")
@@ -53,7 +54,7 @@ function Bot.Prototype.queryGatewayInformation(self: Bot)
 
 		local status, response = gateway.getGatewayBotAsync(request):await()
 
-		assert(status == "Fulfilled", response)
+		assert(status == "Fulfilled", tostring(response))
 
 		return response
 	end)
@@ -75,10 +76,15 @@ function Bot.Prototype.connectAsync(self: Bot)
 
 		assert(status == "Fulfilled", gatewayInformation)
 
-		self.state.webSocketManager.onAllShardsReady:listen(function(_: {
-			payload: gatewayTypes.Payload<unknown>,
-			shardId: number,
-		})
+		self.state.webSocketManager.onAllShardsReady:listen(function(data)
+			local application = application.new(self.state, data.payload.d.application)
+			local user = user.new(data.payload.d.user)
+
+			self.application = application
+			self.user = user
+
+			self.state:setApplicationId(application.id)
+
 			self.onAllShardsReady:invoke()
 		end)
 
@@ -196,7 +202,7 @@ function Bot.Prototype.connectAsync(self: Bot)
 				local typedObject = object.payload :: gatewayTypes.GuildCreatePayload
 
 				if typedObject.d.unavailable then
-					self.onGuildCreate:invoke(unavailableGuild.new(self.state, typedObject.d.id))
+					self.onGuildCreate:invoke(unavailableGuild.new(self.state, typedObject.d.id :: string))
 				else
 					-- fixme: using 'any' below because otherwise typedObject.d doesn't work with apiTypes.GuildObject?
 					local guildData = typedObject.d :: any
@@ -362,6 +368,9 @@ export type Bot =
 	& {
 		state: state.State,
 		logger: logger.Logger,
+
+		application: application.Application?,
+		user: user.User?,
 
 		onReady: emitter.Emitter<number>,
 		onAllShardsReady: emitter.Emitter<()>,
