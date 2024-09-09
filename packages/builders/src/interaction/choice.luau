@@ -65,7 +65,7 @@ end
 --[[
 	Responsible for buillding the default reaction object that the Discord API can understand.
 ]]
-function Choice.Prototype.build(self: Choice): apiTypes.ApplicationCommandOptionChoiceObject
+function Choice.Prototype.build(self: Choice): JSON
 	assert(self.name, `Missing name for choice: {self.name}`)
 	assert(self.value, `Missing value for choice: {self.name}`)
 
@@ -120,5 +120,7 @@ export type Choice = typeof(Choice.Prototype) & {
 	nameLocalizations: { [apiTypes.LanguageLocales]: string },
 	value: string | number,
 }
+
+export type JSON = typeof(Choice.Prototype.build(nil :: any))
 
 return Choice.Interface
