@@ -23,9 +23,16 @@ local ApplicationCommandOptionType = table.freeze(reflect({
 }))
 
 local InteractionContextType = table.freeze(reflect({
-	Guild = 1,
-	BotDm = 2,
-	PrivateChannel = 3,
+	Guild = 0,
+	BotDm = 1,
+	PrivateChannel = 2,
+}))
+
+local ApplicationCommandType = table.freeze(reflect({
+	ChatInput = 1,
+	User = 2,
+	Message = 3,
+	PrimaryEntryPoiant = 4,
 }))
 
 export type InteractionType =
@@ -48,10 +55,13 @@ export type ApplicationCommandOptionType =
 	| "Number"
 	| "Attachment"
 
+export type ApplicationCommandType = "ChatInput" | "User" | "Message" | "PrimaryEntryPoiant"
+
 export type InteractionContextType = "Guild" | "BotDm" | "PrivateChannel"
 
 return {
 	InteractionType = InteractionType,
 	ApplicationCommandOptionType = ApplicationCommandOptionType,
 	InteractionContextType = InteractionContextType,
+	ApplicationCommandType = ApplicationCommandType,
 }
