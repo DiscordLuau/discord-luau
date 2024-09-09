@@ -7,6 +7,8 @@
 local apiTypes = require("@api-types/apiTypes")
 local permissionTypes = require("@api-types/permission")
 
+local bit = require("@vendor/bit")
+
 local validateKebabCase = require("@utils/validateKebabCase")
 
 local Role = {}
@@ -69,7 +71,7 @@ end
 --[[
 	Responsible for buillding the role object that the Discord API can understand.
 ]]
-function Role.Prototype.build(self: Role): apiTypes.GuildRoleObject
+function Role.Prototype.build(self: Role): JSON
 	local permissionBits = {}
 
 	for index, permissionEnum in self.permissionFlags do
@@ -80,7 +82,7 @@ function Role.Prototype.build(self: Role): apiTypes.GuildRoleObject
 
 	return {
 		name = self.name,
-		permissions = tostring(bit32.bor(table.unpack(permissionBits))),
+		permissions = tostring(bit.bor(table.unpack(permissionBits))),
 		color = self.color,
 		hoist = self.isHoisted,
 		icon = self.icon,
@@ -139,5 +141,7 @@ export type Role = typeof(Role.Prototype) & {
 	unicodeEmoji: string?,
 	isMentionable: boolean,
 }
+
+export type JSON = typeof(Role.Prototype.build(nil :: any))
 
 return Role.Interface
