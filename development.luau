@@ -1,18 +1,37 @@
-local Bot = require("@core/bot")
-local IntentsBuilder = require("@builders/intentsBuilder")
+local botObject = require("@core/bot")
+
+local intentsBuilder = require("@builders/intents")
+local interactionBuilder = require("@builders/interaction/interaction")
 
 local env = require(".env")
 
-local discordBot = Bot.new({
+local discordIntents = intentsBuilder.new()
+
+discordIntents:addIntent("Guilds")
+
+local discordBot = botObject.new({
 	token = env.DISCORD_BOT_TOKEN,
-	intents = IntentsBuilder.new():addIntent("Guilds"):build(),
+	intents = discordIntents:build(),
 })
 
-discordBot.onReady:listen(function(shardId)
-	print(`Shard {shardId} is ready!`)
-end)
+discordBot.onAllShardsReady:listen(function()
+	assert(discordBot.application, ``)
 
-discordBot.onCommandInteraction:listen(function(a) end)
+	local interaction = interactionBuilder
+		.new()
+		:setName(`interaction-name`)
+		:setDescription("An example interaction, created with the rewrite of Discord-Luau!")
+		:addContext("Guild")
+		:addContext("BotDm")
+		:addContext("PrivateChannel")
+		:addIntegrationType("GuildInstall")
+		:addIntegrationType("UserInstall")
+
+	print(`Creating slash command...`)
+	discordBot.application:createSlashCommandAsync(interaction:build()):after(function(command)
+		print(`Created slash command:`, command)
+	end)
+end)
 
 discordBot:connectAsync():after(function()
 	print("Connected to Discord!")
