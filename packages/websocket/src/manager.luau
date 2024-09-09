@@ -164,7 +164,8 @@ export type Manager = typeof(Manager.Prototype) & {
 	}>>,
 
 	onAllShardsReady: emitter.Emitter<ShardPayload<{
-		payload: gatewayTypes.Payload<unknown>,
+		shardId: number,
+		payload: gatewayTypes.ReadyPayload,
 	}>>,
 }
 
