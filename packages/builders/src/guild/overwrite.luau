@@ -10,6 +10,8 @@
 local apiTypes = require("@api-types/apiTypes")
 local permissionTypes = require("@api-types/permission")
 
+local bit = require("@vendor/bit")
+
 local Overwrite = {}
 
 Overwrite.Prototype = {}
@@ -40,7 +42,7 @@ end
 --[[
 	Responsible for building the OverwriteObject JSON that can be parsed by the Discord API.
 ]]
-function Overwrite.Prototype.build(self: Overwrite): apiTypes.OverwriteObject
+function Overwrite.Prototype.build(self: Overwrite): JSON
 	local allowPermissionBits = {}
 	local denyPermissionBits = {}
 
@@ -59,9 +61,9 @@ function Overwrite.Prototype.build(self: Overwrite): apiTypes.OverwriteObject
 	return {
 		type = self.type == "role" and 0 or 1,
 
-		allow = tostring(bit32.bor(table.unpack(allowPermissionBits))),
-		deny = tostring(bit32.bor(table.unpack(denyPermissionBits))),
-	} :: apiTypes.OverwriteObject
+		allow = tostring(bit.bor(table.unpack(allowPermissionBits))),
+		deny = tostring(bit.bor(table.unpack(denyPermissionBits))),
+	}
 end
 
 --[[
@@ -121,6 +123,8 @@ export type Overwrite = typeof(Overwrite.Prototype) & {
 	type: PermissionOverwriteType,
 	id: apiTypes.Snowflake,
 }
+
+export type JSON = typeof(Overwrite.Prototype.build(nil :: any))
 
 export type PermissionOverwriteType = "role" | "member"
 export type PermissionOverwriteObject = apiTypes.OverwriteObject
