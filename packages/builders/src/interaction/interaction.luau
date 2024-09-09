@@ -8,6 +8,8 @@ local apiTypes = require("@api-types/apiTypes")
 local interactionTypes = require("@api-types/interaction")
 local applicationTypes = require("@api-types/application")
 
+local interactionOption = require("@builders/interaction/option")
+
 local validateKebabCase = require("@utils/validateKebabCase")
 
 local Interaction = {}
@@ -23,6 +25,18 @@ function Interaction.Prototype.setName(self: Interaction, name: string): Interac
 	assert(#name >= 1, "name must be at least 1 character")
 
 	self.name = name
+
+	return self
+end
+
+--[[
+	Set the Type of command
+]]
+function Interaction.Prototype.setType(
+	self: Interaction,
+	commandType: interactionTypes.ApplicationCommandType
+): Interaction
+	self.type = commandType
 
 	return self
 end
@@ -76,10 +90,7 @@ end
 --[[
 	the parameters for the command
 ]]
-function Interaction.Prototype.addOption(
-	self: Interaction,
-	option: apiTypes.ApplicationCommandOptionObject
-): Interaction
+function Interaction.Prototype.addOption(self: Interaction, option: interactionOption.JSON): Interaction
 	table.insert(self.options, option)
 
 	return self
@@ -130,15 +141,38 @@ end
 --[[
 	Responsible for buillding the default reaction object that the Discord API can understand.
 ]]
-function Interaction.Prototype.build(self: Interaction)
+function Interaction.Prototype.build(self: Interaction): JSON
+	assert(self.name, "name must be set")
+	assert(#self.integrationTypes > 0, `must have one or more integration types set`)
+	assert(#self.contexts > 0, `must have one or more contexts set`)
+
+	local contexts: { number } = {}
+	local integrationTypeArray: { number } = {}
+
+	for _, context in self.contexts do
+		table.insert(contexts, interactionTypes.InteractionContextType[context])
+	end
+
+	for _, interactionType in self.integrationTypes do
+		table.insert(integrationTypeArray, applicationTypes.IntegrationTypesConfig[interactionType])
+	end
+
 	return {
+		id = nil :: any,
+		application_id = nil :: any,
+		version = nil :: any,
+		guild_id = nil :: any,
 		name = self.name,
 		name_localizations = self.nameLocalizations,
 		description = self.description,
 		description_localizations = self.descriptionLocalizations,
 		options = self.options,
 		default_member_permissions = self.defaultMemberPermissions,
-		integration_types = self.integrationTypes,
+		dm_permission = nil :: any,
+		default_permission = nil :: any,
+		integration_types = integrationTypeArray,
+		contexts = contexts,
+		type = interactionTypes.ApplicationCommandType[self.type] or nil,
 		nsfw = self.nsfw,
 	}
 end
@@ -155,7 +189,7 @@ function Interaction.Interface.new(resource: {
 	nameLocalizations: { [apiTypes.LanguageLocales]: string }?,
 	description: string?,
 	descriptionLocalizations: { [apiTypes.LanguageLocales]: string }?,
-	options: { apiTypes.ApplicationCommandOptionObject }?,
+	options: { interactionOption.JSON }?,
 	defaultMemberPermissions: string?,
 	integrationTypes: { applicationTypes.IntegrationTypesConfig }?,
 	contexts: { interactionTypes.InteractionContextType }?,
@@ -224,13 +258,16 @@ end
 export type Interaction = typeof(Interaction.Prototype) & {
 	name: string,
 	nameLocalizations: { [apiTypes.LanguageLocales]: string },
-	description: string?,
+	description: string,
 	descriptionLocalizations: { [apiTypes.LanguageLocales]: string },
-	options: { apiTypes.ApplicationCommandOptionObject },
+	options: { interactionOption.JSON },
 	defaultMemberPermissions: string?,
 	integrationTypes: { applicationTypes.IntegrationTypesConfig },
 	contexts: { interactionTypes.InteractionContextType },
+	type: interactionTypes.ApplicationCommandType,
 	nsfw: boolean?,
 }
+
+export type JSON = typeof(Interaction.Prototype.build(nil :: any))
 
 return Interaction.Interface
