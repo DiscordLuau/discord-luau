@@ -23,6 +23,10 @@ local State = {}
 State.Interface = {}
 State.Prototype = {}
 
+function State.Prototype.setApplicationId(self: State, applicationId: apiTypes.Snowflake)
+	self.applicationId = applicationId
+end
+
 --[[
 	Constructor for the State class.
 ]]
@@ -32,6 +36,7 @@ function State.Interface.new(token: string, intents: number, version: number): S
 	local self = setmetatable(
 		{
 			token = secretToken,
+			applicationId = "",
 
 			rest = rest.new(secretToken, intents, version),
 			webSocketManager = webSocketManager.new({
@@ -62,6 +67,7 @@ end
 
 export type State = typeof(State.Prototype) & {
 	token: secret.Secret<string>,
+	applicationId: apiTypes.Snowflake,
 
 	rest: rest.REST,
 	webSocketManager: webSocketManager.Manager,
