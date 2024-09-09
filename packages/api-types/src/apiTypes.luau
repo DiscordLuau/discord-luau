@@ -133,7 +133,7 @@ export type OAuth2Scopes =
 	| "webhook.incoming"
 
 -- https://discord.com/developers/docs/resources/guild#integration-object
-export type IntegrationType = "twitch" | "youtube" | "discord" | "guild_subscriptions"
+export type IntegrationType = number -- "twitch" | "youtube" | "discord" | "guild_subscriptions"
 
 -- https://discord.com/developers/docs/resources/application#application-object-application-integration-types
 export type ApplicationIntegrationType = number
@@ -1201,7 +1201,7 @@ export type ApplicationCommandOptionObject = {
 	type: ApplicationCommandOptionType, -- Type of option
 	name: string, -- 1-32 character name
 	name_localizations: { [LanguageLocales]: string }?, -- Localization dictionary for the name field. Values follow the same restrictions as name
-	description: string, -- 1-100 character description
+	description: string?, -- 1-100 character description
 	description_localizations: { [LanguageLocales]: string }?, -- Localization dictionary for the description field. Values follow the same restrictions as description
 	required: boolean?, -- Whether the parameter is required or optional, default false
 	choices: { ApplicationCommandOptionChoiceObject }, -- Choices for the user to pick from, max 25
@@ -1216,9 +1216,9 @@ export type ApplicationCommandOptionObject = {
 
 -- https://discord.com/developers/docs/interactions/application-commands#application-command-object
 export type ApplicationCommandObject = {
-	id: Snowflake, -- Unique ID of command
+	id: Snowflake?, -- Unique ID of command
 	type: ApplicationCommandType?, -- Type of command, defaults to 1
-	application_id: Snowflake, -- ID of the parent application
+	application_id: Snowflake?, -- ID of the parent application
 	guild_id: Snowflake?, -- Guild ID of the command, if not global
 	name: string, -- Name of command, 1-32 characters
 	name_localizations: { [LanguageLocales]: string }?, -- Localization dictionary for name field. Values follow the same restrictions as name
@@ -1231,7 +1231,7 @@ export type ApplicationCommandObject = {
 	nsfw: boolean?, -- Indicates whether the command is age-restricted, defaults to false
 	integration_types: { IntegrationType }?, -- Installation contexts where the command is available, only for globally-scoped commands. Defaults to your app's configured contexts
 	contexts: { InteractionContextType }?, -- Interaction context(s) where the command can be used, only for globally-scoped commands. By default, all interaction context types included for new commands.
-	version: Snowflake, -- Autoincrementing version identifier updated during substantial record changes
+	version: Snowflake?, -- Autoincrementing version identifier updated during substantial record changes
 }
 
 -- https://discord.com/developers/docs/resources/audit-log#audit-log-change-object
