@@ -45,6 +45,10 @@ EventManager.Prototype.type = "EventManager"
 --[=[
 	@prop onMessage Vendor.Signal<Objects.DiscordMessage>
 	@within Objects.EventManager
+
+	Fires when a message is sent.  
+	The `message content intent` must be enabled in order to allow bots to get the message content.
+	The intent can be enabled on Discord Developer Portal.
 ]=]
 
 --[=[
