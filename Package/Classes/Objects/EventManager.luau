@@ -43,6 +43,11 @@ EventManager.Prototype.type = "EventManager"
 ]=]
 
 --[=[
+	@prop onDisconnect Vendor.Signal<{closeCode: number, shard: number}>
+	@within Objects.EventManager
+]=]
+
+--[=[
 	@prop onMessage Vendor.Signal<Objects.DiscordMessage>
 	@within Objects.EventManager
 
@@ -141,6 +146,7 @@ EventManager.Prototype.type = "EventManager"
 function EventManager.Interface.new(discordClient): EventManager
 	local self = Construct({
 		onReady = Signal.new(),
+		onDisconnect = Signal.new(),
 		onMessage = Signal.new(),
 		onMessageChanged = Signal.new(),
 		onMessageDeleted = Signal.new(),
@@ -208,6 +214,7 @@ end
 
 export type EventManager = typeof(EventManager.Prototype) & {
 	onReady: Signal.Signal<nil>,
+	onDisconnect: Signal.Signal<{ closeCode: number, shard: number }>,
 
 	onMessage: Signal.Signal<DiscordMessage.DiscordMessage>,
 	onMessageChanged: Signal.Signal<DiscordMessage.DiscordMessage>,
