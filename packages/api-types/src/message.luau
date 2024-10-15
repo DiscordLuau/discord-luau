@@ -70,6 +70,10 @@ local SelectDefaultValueType = table.freeze(reflect({
 	Channel = "channel",
 }))
 
+local PollLayoutType = table.freeze(reflect({
+	Default = 1,
+}))
+
 export type MessageType =
 	"Default"
 	| "RecipientAdd"
@@ -118,6 +122,8 @@ export type SelectDefaultValueType = "User" | "Role" | "Channel"
 
 export type TextInputStyle = "Short" | "Paragraph"
 
+export type PollLayoutType = "Default"
+
 return {
 	MessageType = MessageType,
 	MessageAcitvityType = MessageAcitvityType,
@@ -125,4 +131,5 @@ return {
 	ButtonStyle = ButtonStyle,
 	TextInputStyle = TextInputStyle,
 	SelectDefaultValueType = SelectDefaultValueType,
+	PollLayoutType = PollLayoutType,
 }

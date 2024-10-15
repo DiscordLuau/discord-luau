@@ -15,44 +15,13 @@ export type Request<DATA> = DATA
 export type CreateInteractionRequest = Request<objects.InteractionResponseObject>
 
 -- https://discord.com/developers/docs/interactions/receiving-and-responding#edit-original-interaction-response
-export type EditOriginalInteractionRequest = Request<{
-	content: string, -- the message contents (up to 2000 characters)
-	embeds: { objects.EmbedObject }, -- embedded rich content
-	allowed_mentions: objects.AllowedMentionObject, -- allowed mentions for the message
-	components: { objects.ComponentObjects }, -- the components to include with the message
-	-- files: { },
-	-- payload_json: string,
-	attachments: objects.AttachmentObject, -- attached files to keep and possible descriptions for new files
-}>
+export type EditOriginalInteractionRequest = Request<objects.Partial<objects.MessageObject>>
 
 -- https://discord.com/developers/docs/interactions/receiving-and-responding#create-followup-message
-export type CreateFollowupMessageRequest = Request<{
-	content: string, -- the message contents (up to 2000 characters)
-	username: string, -- override the default username of the webhook
-	avatar_url: string, -- override the default avatar of the webhook
-	tts: boolean, -- true if this is a TTS message
-	embeds: { objects.EmbedObject }, -- embedded rich content
-	allowed_mentions: objects.AllowedMentionObject, -- allowed mentions for the message
-	components: { objects.ComponentObjects }, -- the components to include with the message
-	-- files: { },
-	-- payload_json: string,
-	attachments: { objects.AttachmentObject }, -- attachment objects with filename and description
-	flags: number, -- message flags combined as a bitfield (only SUPPRESS_EMBEDS and SUPPRESS_NOTIFICATIONS can be set can be set)
-	thread_name: string, -- name of thread to create (requires the webhook channel to be a forum or media channel)
-	applied_tags: { objects.Snowflake }, -- array of tag ids to apply to the thread (requires the webhook channel to be a forum or media channel)
-	poll: objects.PollObject, -- discord poll
-}>
+export type CreateFollowupMessageRequest = Request<objects.Partial<objects.MessageObject>>
 
 -- https://discord.com/developers/docs/interactions/receiving-and-responding#edit-followup-message
-export type EditFollowupMessageRequest = Request<{
-	content: string, -- the message contents (up to 2000 characters)
-	embeds: { objects.EmbedObject }, -- embedded rich content
-	allowed_mentions: objects.AllowedMentionObject, -- allowed mentions for the message
-	components: { objects.ComponentObjects }, -- the components to include with the message
-	-- files: { },
-	-- payload_json: string,
-	attachments: objects.AttachmentObject, -- attached files to keep and possible descriptions for new files
-}>
+export type EditFollowupMessageRequest = Request<objects.Partial<objects.MessageObject>>
 
 -- https://discord.com/developers/docs/resources/auto-moderation#create-auto-moderation-rule
 export type CreateAutoModerationRuleRequest = Request<{
