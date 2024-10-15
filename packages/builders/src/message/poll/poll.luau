@@ -8,8 +8,8 @@ local datetime = require("@std-polyfills/datetime")
 
 local messageTypes = require("@api-types/message")
 
-local pollMediaBuilder = require("@builders/message/poll/pollMedia")
-local pollAnswerBuilder = require("@builders/message/poll/pollAnswer")
+local mediaBuilder = require("@builders/message/poll/media")
+local answerBuilder = require("@builders/message/poll/answer")
 
 local Poll = {}
 
@@ -19,7 +19,7 @@ Poll.Interface = {}
 --[[
 	Adds an answer to the poll.
 ]]
-function Poll.Prototype.addAnswer(self: Poll, answer: pollAnswerBuilder.JSON): Poll
+function Poll.Prototype.addAnswer(self: Poll, answer: answerBuilder.JSON): Poll
 	table.insert(self.answers, answer)
 
 	return self
@@ -28,7 +28,7 @@ end
 --[[
 	Sets the question for the poll.
 ]]
-function Poll.Prototype.setQuestion(self: Poll, question: pollMediaBuilder.JSON): Poll
+function Poll.Prototype.setQuestion(self: Poll, question: mediaBuilder.JSON): Poll
 	self.question = question
 
 	return self
@@ -88,8 +88,8 @@ end
 	```
 ]]
 function Poll.Interface.new(resource: {
-	question: pollMediaBuilder.JSON?,
-	answers: { pollAnswerBuilder.JSON }?,
+	question: mediaBuilder.JSON?,
+	answers: { answerBuilder.JSON }?,
 	expiry: number?,
 	allowMultiselect: boolean?,
 	layoutType: messageTypes.PollLayoutType?,
@@ -131,8 +131,8 @@ function Poll.Interface.new(resource: {
 end
 
 export type Poll = typeof(Poll.Prototype) & {
-	question: pollMediaBuilder.JSON,
-	answers: { pollAnswerBuilder.JSON },
+	question: mediaBuilder.JSON,
+	answers: { answerBuilder.JSON },
 	expiry: number,
 	allowMultiselect: boolean,
 	layoutType: messageTypes.PollLayoutType,
