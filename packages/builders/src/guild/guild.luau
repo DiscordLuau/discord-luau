@@ -215,7 +215,7 @@ function Guild.Prototype.setSafetyAlertsChannelId(self: Guild, safetyAlertsChann
 end
 
 --[[
-	Responsible for building the GuildObject JSON that can be parsed by the Discord API.
+	Responsible for building the Guild JSON that can be parsed by the Discord API.
 ]]
 function Guild.Prototype.build(self: Guild): JSON
 	return {
@@ -245,15 +245,8 @@ end
 --[[
 	Responsible for creating a new Guild.
 
-	With this builder, you can specify allow/deny permissions for either a Role or a Member.
-
 	```lua
-	local permissionOverwrite = Guild.new("role")
-		:allowPermissions(Permission.ManageMessages, Permission.ManageRoles)
-		:denyPermissions(Permission.KickMembers)
-		:build()
-
-	print(permissionOverwriteObject)
+	
 	```
 ]]
 function Guild.Interface.new(resource: {
