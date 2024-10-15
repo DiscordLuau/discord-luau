@@ -69,15 +69,8 @@ end
 --[[
 	Responsible for creating a new Overwrite.
 
-	With this builder, you can specify allow/deny permissions for either a Role or a Member.
-
 	```lua
-	local permissionOverwrite = Overwrite.new("role")
-		:allowPermissions(Permission.ManageMessages, Permission.ManageRoles)
-		:denyPermissions(Permission.KickMembers)
-		:build()
-
-	print(permissionOverwriteObject)
+	
 	```
 ]]
 function Overwrite.Interface.new(resource: {
