@@ -125,7 +125,7 @@ function Message.Prototype.sync(self: Message, messageData: apiTypes.MessageObje
 	self.call = messageData.call and call.new(messageData.call)
 
 	-- cyclic dependency, can only require during runtime.
-	self.resolved = import("@classes/resolved").new(self.state, messageData.resolved)
+	self.resolved = messageData.resolved and import("@classes/resolved").new(self.state, messageData.resolved)
 end
 
 function Message.Interface.new(state: state.State, messageData: apiTypes.MessageObject): Message

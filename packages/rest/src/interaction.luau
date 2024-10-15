@@ -19,10 +19,18 @@ function Interaction.createInteractionResponseAsync(
 	instance: request.Request,
 	interactionId: apiTypes.Snowflake,
 	interactionToken: string,
-	jsonParams: restTypes.CreateInteractionRequest
+	jsonParams: restTypes.CreateInteractionRequest,
+	urlParams: {
+		withResponse: boolean?,
+	}
 ): future.Future<restTypes.CreateInteractionResponse>
 	return future.new(function()
 		instance:assertToken()
+
+		instance:addUrlParam(
+			"with_response",
+			urlParams.withResponse and tostring(urlParams.withResponse) or (nil :: any)
+		)
 
 		instance:setMethod("POST")
 		instance:setUrl(string.format(restEndpoints.CreateInteractionResponse, interactionId, interactionToken))

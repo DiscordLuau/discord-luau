@@ -1,5 +1,6 @@
 local botObject = require("@core/bot")
 
+local messageBuilder = require("@builders/message/message")
 local intentsBuilder = require("@builders/intents")
 local interactionBuilder = require("@builders/interaction/interaction")
 
@@ -30,6 +31,25 @@ discordBot.onAllShardsReady:listen(function()
 	print(`Creating slash command...`)
 	discordBot.application:createSlashCommandAsync(interaction:build()):after(function(command)
 		print(`Created slash command:`, command)
+	end)
+
+	discordBot.onPingInteraction:listen(function(interaction)
+		interaction:pongAsync()
+	end)
+
+	discordBot.onCommandInteraction:listen(function(interaction)
+		local message = interaction
+			:messageAsync(
+				messageBuilder
+					.new({
+						content = "abc",
+					})
+					:build(),
+				true
+			)
+			:expect(`Something bad happened..`)
+
+		print(message)
 	end)
 end)
 

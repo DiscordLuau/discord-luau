@@ -4,7 +4,11 @@
 	https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-structure
 ]]
 
+local future = require("@vendor/future")
+
 local apiTypes = require("@api-types/apiTypes")
+
+local interactionRest = require("@rest/interaction")
 
 local interactionBehaviour = require("@classes/interaction/behaviour/interaction")
 
@@ -18,6 +22,26 @@ Ping.Prototype = {}
 Ping.Behaviours = {
 	interactionBehaviour,
 }
+
+--[[
+	acknowledge an interaction ping
+]]
+function Ping.Prototype.pongAsync(self: Ping): future.Future<nil>
+	local request = self.state.rest:newRequest()
+
+	return future.new(function()
+		local status, response = interactionRest
+			.createInteractionResponseAsync(request, self.id, self.token, {
+				type = 1,
+				data = {},
+			}, {
+				withResponse = false,
+			})
+			:await()
+
+		assert(status == "Fulfilled", tostring(response))
+	end)
+end
 
 function Ping.Prototype.sync(self: Ping, interactionData: apiTypes.InteractionObject)
 	for _, behaviour in Ping.Behaviours do

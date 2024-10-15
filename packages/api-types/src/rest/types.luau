@@ -1173,7 +1173,11 @@ export type GetGatewayBotResponse = Response<{
 }>
 
 -- https://discord.com/developers/docs/interactions/receiving-and-responding#create-interaction-response
-export type CreateInteractionResponse = Response<objects.MessageObject>
+export type CreateInteractionResponse = Response<{
+	resource: {
+		message: objects.MessageObject?,
+	},
+}>
 
 -- https://discord.com/developers/docs/interactions/receiving-and-responding#get-original-interaction-response
 export type GetOriginalInteractionResponse = Response<objects.MessageObject>

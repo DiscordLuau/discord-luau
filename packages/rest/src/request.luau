@@ -131,11 +131,11 @@ function Request.Prototype.executeAsync<Resolve>(self: Request): future.Future<{
 		end
 
 		if hasUrlParams then
-			baseUrl = baseUrl .. "&"
+			baseUrl = baseUrl .. "?"
 		end
 
 		for param, value in self.urlParams do
-			baseUrl = baseUrl .. `{param}={value}?`
+			baseUrl = baseUrl .. `{param}={value}&`
 		end
 
 		if hasUrlParams then
