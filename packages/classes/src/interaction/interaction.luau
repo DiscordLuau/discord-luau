@@ -300,7 +300,19 @@ end
 --[[
 	Returns a list of attachments which have been mentioned in this interaction
 ]]
-function Interaction.Prototype.getAttachments(self: Interaction) end
+function Interaction.Prototype.getAttachments(self: Interaction)
+	if self.data and self.data.resolved and self.data.resolved.attachments then
+		local attachmentArray = {}
+
+		for _, user in self.data.resolved.attachments do
+			table.insert(attachmentArray, user)
+		end
+
+		return attachmentArray
+	else
+		return {}
+	end
+end
 
 function Interaction.Prototype.sync(self: Interaction, interactionData: apiTypes.InteractionObject)
 	for _, behaviour in Interaction.Behaviours do
