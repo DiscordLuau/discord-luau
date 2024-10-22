@@ -35,12 +35,33 @@ local ApplicationCommandType = table.freeze(reflect({
 	PrimaryEntryPoiant = 4,
 }))
 
+local ComponentTypes = table.freeze(reflect({
+	ActionRow = 1,
+	Button = 2,
+	StringSelect = 3,
+	TextInput = 4,
+	UserSelect = 5,
+	RoleSelect = 6,
+	MentionableSelect = 7,
+	ChannelSelect = 8,
+}))
+
 export type InteractionType =
 	"Ping"
 	| "ApplicationCommand"
 	| "MessageComponent"
 	| "ApplicationCommandAutocomplete"
 	| "ModalSubmit"
+
+export type ComponentTypes =
+	"ActionRow"
+	| "Button"
+	| "StringSelect"
+	| "TextInput"
+	| "UserSelect"
+	| "RoleSelect"
+	| "MentionableSelect"
+	| "ChannelSelect"
 
 export type ApplicationCommandOptionType =
 	"SubCommand"
@@ -64,4 +85,5 @@ return {
 	ApplicationCommandOptionType = ApplicationCommandOptionType,
 	InteractionContextType = InteractionContextType,
 	ApplicationCommandType = ApplicationCommandType,
+	ComponentTypes = ComponentTypes,
 }

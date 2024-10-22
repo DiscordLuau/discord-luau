@@ -44,7 +44,7 @@ function Interaction.Interface.inheritProperties(class: any, interactionData: ap
 	class.id = interactionData.id
 	class.applicationId = interactionData.application_id
 	class.data = interactionData.data and data.new(class.state, interactionData.data)
-	class.guild = interactionData.guild and unavailableGuild.new(class.state, interactionData.guild.id)
+	class.guild = interactionData.guild and unavailableGuild.new(class.state, interactionData.guild.id :: string)
 	class.guildId = interactionData.guild_id
 	-- class.channel = interactionData.channel and message.new(class.state, interactionData.channel)
 	class.channelId = interactionData.channel_id

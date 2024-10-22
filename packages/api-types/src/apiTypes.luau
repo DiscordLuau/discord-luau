@@ -1155,7 +1155,13 @@ export type InteractionDataObject = {
 	resolved: ResolvedDataStructure?, -- converted users + roles + channels + attachments
 	options: { ApplicationCommandInteractionDataOptionObject }?, -- the params + values from the user
 	guild_id: Snowflake?, -- the id of the guild the command is registered to
-	target_id: Snowflake?, -- id of the user or message targeted by a user or message command
+	target_id: Snowflake?, -- id of the user or message targeted by a user or message command,
+
+	custom_id: string?, -- custom_id of the component
+	component_type: number?, -- type of the component
+	values: { SelectOptionObject }?, -- Values the user selected in a select menu component
+
+	components: { ComponentObjects }?, -- Resolved entities from selected options
 }
 
 -- https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-structure

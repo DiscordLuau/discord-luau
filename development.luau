@@ -1,6 +1,8 @@
 local botObject = require("@core/bot")
 
 local messageBuilder = require("@builders/message/message")
+local actionRowBuilder = require("@builders/message/components/actionRow")
+local buttonBuilder = require("@builders/message/components/button")
 local intentsBuilder = require("@builders/intents")
 local interactionBuilder = require("@builders/interaction/interaction")
 
@@ -37,14 +39,43 @@ discordBot.onAllShardsReady:listen(function()
 		interaction:pongAsync()
 	end)
 
-	discordBot.onCommandInteraction:listen(function(interaction)
-		local message = interaction
-			:messageAsync({
-				content = "abc",
-			}, true)
-			:expect(`Something bad happened..`)
+	discordBot.onComponentInteraction:listen(function(interaction)
+		-- warn(interaction)
 
-		print(message)
+		assert(interaction.data, `e`)
+
+		interaction:messageAsync({
+			content = `You pressed the {interaction.data.customId} button!`,
+		})
+	end)
+
+	discordBot.onCommandInteraction:listen(function(interaction)
+		local button = buttonBuilder
+			.new({
+				customId = "custom-id",
+				label = "label",
+				style = "Blurple",
+			})
+			:build()
+
+		local buttonList = actionRowBuilder
+			.new({
+				components = {
+					button,
+				},
+			})
+			:build()
+
+		local message = messageBuilder
+			.new({
+				content = "abc",
+				components = {
+					buttonList,
+				},
+			})
+			:build()
+
+		local response = interaction:messageAsync(message):expect(`Something bad happened..`)
 	end)
 end)
 
