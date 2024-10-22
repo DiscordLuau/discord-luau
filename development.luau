@@ -39,14 +39,9 @@ discordBot.onAllShardsReady:listen(function()
 
 	discordBot.onCommandInteraction:listen(function(interaction)
 		local message = interaction
-			:messageAsync(
-				messageBuilder
-					.new({
-						content = "abc",
-					})
-					:build(),
-				true
-			)
+			:messageAsync({
+				content = "abc",
+			}, true)
 			:expect(`Something bad happened..`)
 
 		print(message)

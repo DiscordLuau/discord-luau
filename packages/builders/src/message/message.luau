@@ -57,7 +57,11 @@ end
 	Adds an embed to the message.
 ]]
 function Message.Prototype.addEmbed(self: Message, embedData: embed.JSON): Message
-	table.insert(self.embeds, embedData)
+	local embeds = self.embeds or {}
+
+	table.insert(embeds, embedData)
+
+	self.embeds = embeds
 
 	return self
 end
@@ -87,7 +91,11 @@ function Message.Prototype.addComponent(
 	self: Message,
 	component: button.JSON | textInput.JSON | selectMenu.JSON | actionRow.JSON
 ): Message
-	table.insert(self.components, component)
+	local components = self.components or {}
+
+	table.insert(components, component)
+
+	self.components = components
 
 	return self
 end
@@ -96,7 +104,11 @@ end
 	Adds a sticker ID to the message.
 ]]
 function Message.Prototype.addStickerId(self: Message, stickerId: string): Message
-	table.insert(self.stickerIds, stickerId)
+	local stickerIds = self.stickerIds or {}
+
+	table.insert(stickerIds, stickerId)
+
+	self.stickerIds = stickerIds
 
 	return self
 end
@@ -105,7 +117,11 @@ end
 	Adds an attachment to the message.
 ]]
 function Message.Prototype.addAttachment(self: Message, attachmentData: attachment.JSON): Message
-	table.insert(self.attachments, attachmentData)
+	local attachments = (self.components or {}) :: { attachment.JSON }
+
+	table.insert(attachments, attachmentData)
+
+	self.attachments = attachments
 
 	return self
 end
@@ -257,16 +273,16 @@ export type Message = typeof(Message.Prototype) & {
 	content: string?,
 	nonce: string?,
 	tts: boolean?,
-	embeds: { embed.JSON },
-	allowedMentions: allowedMention.JSON,
-	messageReference: reference.JSON,
-	components: { button.JSON | textInput.JSON | selectMenu.JSON | actionRow.JSON },
-	stickerIds: { string },
+	embeds: { embed.JSON }?,
+	allowedMentions: allowedMention.JSON?,
+	messageReference: reference.JSON?,
+	components: { button.JSON | textInput.JSON | selectMenu.JSON | actionRow.JSON }?,
+	stickerIds: { string }?,
 	-- files[n]
 	-- payloadJson
-	attachments: { attachment.JSON },
-	flags: number,
-	enforceNonce: boolean,
+	attachments: { attachment.JSON }?,
+	flags: number?,
+	enforceNonce: boolean?,
 	poll: poll.JSON?,
 }
 
