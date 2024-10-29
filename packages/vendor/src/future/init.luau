@@ -47,9 +47,9 @@ end
 --[[
 	Catch any errors that occur in the future, this will only be called if the future is rejected.
 ]]
-function Future.Prototype.catch<T>(self: Future<T>, callback: (string) -> ()): Future<T>
+function Future.Prototype.catch<T>(self: Future<T>, callback: (string, string) -> ()): Future<T>
 	if self.status == "Rejected" then
-		task.spawn(callback, self.exception :: string)
+		task.spawn(callback, self.exception :: string, self.traceback :: string)
 
 		return self
 	end
@@ -126,6 +126,7 @@ function Future.Prototype.execute<T>(self: Future<T>, ...): Future<T>
 				callback(table.unpack(self._valueList))
 			end
 		end, function(exception: string)
+			self.traceback = debug.traceback(nil, 2)
 			self.exception = exception
 			self.status = "Rejected"
 
@@ -135,7 +136,7 @@ function Future.Prototype.execute<T>(self: Future<T>, ...): Future<T>
 				)
 			else
 				for _, callback in self._catchCallback do
-					task.spawn(callback, exception)
+					task.spawn(callback, self.exception :: string, self.traceback :: string)
 				end
 			end
 		end)
@@ -182,13 +183,14 @@ export type FutureStatus = "Pending" | "Fulfilled" | "Rejected"
 export type Future<T> = typeof(Future.Prototype) & {
 	_callback: (...T) -> ...any,
 
-	_catchCallback: { (string) -> () },
+	_catchCallback: { (string, string) -> () },
 	_yieldingThreads: { thread },
 	_afterCallbacks: { (...T) -> () },
 	_valueList: { T },
 
 	status: FutureStatus,
 	exception: string?,
+	traceback: string?,
 }
 
 return Future.Interface
