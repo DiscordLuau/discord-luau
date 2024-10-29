@@ -4,9 +4,11 @@ local future = require("@vendor/future")
 local logger = require("@vendor/logger")
 local emitter = require("@vendor/emitter")
 
-local gateway = require("@rest/gateway")
+local gatewayRest = require("@rest/gateway")
+local guildRest = require("@rest/guild")
 
 local gatewayTypes = require("@api-types/gateway/types")
+local restTypes = require("@api-types/rest/types")
 local apiTypes = require("@api-types/apiTypes")
 
 local receiveEvents = require("@api-types/gateway/receiveEvents")
@@ -48,11 +50,11 @@ Bot.Prototype = {}
 	This function sends a request to the Discord Gateway to retrieve information
 	about the bot, such as the recommended number of shards and session start limit.
 ]]
-function Bot.Prototype.queryGatewayInformation(self: Bot)
+function Bot.Prototype.queryGatewayInformation(self: Bot): future.Future<restTypes.GetGatewayBotResponse>
 	return future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = gateway.getGatewayBotAsync(request):await()
+		local status, response = gatewayRest.getGatewayBotAsync(request):await()
 
 		assert(status == "Fulfilled", tostring(response))
 
@@ -70,7 +72,7 @@ end
 
 	Returns a future that resolves when the connection is established.
 ]]
-function Bot.Prototype.connectAsync(self: Bot)
+function Bot.Prototype.connectAsync(self: Bot): future.Future<nil>
 	return future.new(function()
 		local status, gatewayInformation = self:queryGatewayInformation():await()
 
@@ -291,6 +293,26 @@ function Bot.Prototype.connectAsync(self: Bot)
 
 		self.state.webSocketManager:connectAsync(gatewayInformation)
 		self.state.webSocketManager.onConnected:wait()
+	end)
+end
+
+--[[
+	Returns the guild object for the given id. If with_counts is set to true, this endpoint will also return
+	approximate_member_count and approximate_presence_count for the guild.
+]]
+function Bot.Prototype.getGuildAsync(self: Bot, guildId: string, withCount: boolean?): future.Future<guild.Guild>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local status, response = guildRest
+			.getGuildAsync(request, guildId, {
+				withCounts = withCount,
+			})
+			:await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		return guild.new(self.state, response)
 	end)
 end
 
