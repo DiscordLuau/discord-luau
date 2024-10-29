@@ -251,9 +251,9 @@ end
 ]]
 function Guild.Interface.new(resource: {
 	name: string?,
-	verificationLevel: guildTypes.VerificationLevel,
-	defaultMessageNotifications: guildTypes.DefaultMessageNotification,
-	explicitContentFilter: guildTypes.ExplicitContentFilterLevel,
+	verificationLevel: guildTypes.VerificationLevel?,
+	defaultMessageNotifications: guildTypes.DefaultMessageNotification?,
+	explicitContentFilter: guildTypes.ExplicitContentFilterLevel?,
 	afkChannelId: apiTypes.Snowflake?,
 	afkTimeout: number?,
 	icon: string?,
@@ -266,14 +266,19 @@ function Guild.Interface.new(resource: {
 	rulesChannelId: apiTypes.Snowflake?,
 	publicUpdatesChannelId: apiTypes.Snowflake?,
 	preferredLocale: apiTypes.LanguageLocales?,
-	features: { apiTypes.GuildFeature },
+	features: { apiTypes.GuildFeature }?,
 	description: string?,
 	premiumProgressBarEnabled: boolean?,
 	safetyAlertsChannelId: apiTypes.Snowflake?,
 }?): Guild
-	local self = setmetatable({} :: Guild, {
-		__index = Guild.Prototype,
-	})
+	local self = setmetatable(
+		{
+			features = {},
+		} :: Guild,
+		{
+			__index = Guild.Prototype,
+		}
+	)
 
 	if resource then
 		if resource.name then
