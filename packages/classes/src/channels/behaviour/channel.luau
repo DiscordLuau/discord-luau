@@ -13,6 +13,8 @@ local ChannelBehaviour = {}
 ChannelBehaviour.Interface = {}
 ChannelBehaviour.Prototype = {}
 
+-- https://discord.com/developers/docs/resources/guild#modify-guild-channel-positions
+
 function ChannelBehaviour.Interface.inheritProperties(class: any, channelData: apiTypes.ChannelObject)
 	class.type = channelTypes.ChannelTypes[channelData.type]
 
