@@ -198,51 +198,54 @@ export type CreateGuildRequest = Request<{
 }>
 
 -- https://discord.com/developers/docs/resources/guild#modify-guild
-export type ModifyGuildRequest = Request<{
-	name: string, -- guild name
-	region: string?, -- guild voice region id (deprecated)
-	verificationn_level: objects.VerificationLevel?, -- verification level
-	default_message_notifications: objects.DefaultMessageNotification?, -- default message notification level
-	explicit_content_filter: objects.ExplicitContentFilterLevel?, -- explicit content filter level
-	afk_channel_id: objects.Snowflake?, -- id for afk channel
-	afk_timeout: number?, -- afk timeout in seconds, can be set to: 60, 300, 900, 1800, 3600
-	icon: string?, -- base64 1024x1024 png/jpeg/gif image for the guild icon (can be animated gif when the server has the ANIMATED_ICON feature)
-	owner_id: objects.Snowflake, -- user id to transfer guild ownership to (must be owner)
-	splash: string?, -- base64 16:9 png/jpeg image for the guild splash (when the server has the INVITE_SPLASH feature)
-	discovery_splash: string?, -- base64 16:9 png/jpeg image for the guild discovery splash (when the server has the DISCOVERABLE feature)
-	banner: string?, -- base64 16:9 png/jpeg image for the guild banner (when the server has the BANNER feature; can be animated gif when the server has the ANIMATED_BANNER feature)
-	system_channel_id: objects.Snowflake?, -- the id of the channel where guild notices such as welcome messages and boost events are posted
-	system_channel_flags: objects.SystemChannelFlags?, -- system channel flags
-	rules_channel_id: objects.Snowflake?, -- the id of the channel where Community guilds display rules and/or guidelines
-	public_updates_channel_id: objects.Snowflake?, -- the id of the channel where admins and moderators of Community guilds receive notices from Discord
-	preferred_locale: objects.LanguageLocales?, -- the preferred locale of a Community guild used in server discovery and notices from Discord; defaults to "en-US"
-	features: { objects.GuildFeature }?, -- enabled guild features
-	description: string?, -- the description for the guild
-	premium_progress_bar_enabled: boolean?, -- whether the guild's boost progress bar should be enabled
-	safety_alerts_channel_id: objects.Snowflake?, -- the id of the channel where admins and moderators of Community guilds receive safety alerts from Discord
-}>
+export type ModifyGuildRequest = Request<
+	objects.Partial<{
+		name: string, -- guild name
+		verification_level: objects.VerificationLevel?, -- verification level
+		default_message_notifications: objects.DefaultMessageNotification?, -- default message notification level
+		explicit_content_filter: objects.ExplicitContentFilterLevel?, -- explicit content filter level
+		afk_channel_id: objects.Snowflake?, -- id for afk channel
+		afk_timeout: number?, -- afk timeout in seconds, can be set to: 60, 300, 900, 1800, 3600
+		icon: string?, -- base64 1024x1024 png/jpeg/gif image for the guild icon (can be animated gif when the server has the ANIMATED_ICON feature)
+		owner_id: objects.Snowflake, -- user id to transfer guild ownership to (must be owner)
+		splash: string?, -- base64 16:9 png/jpeg image for the guild splash (when the server has the INVITE_SPLASH feature)
+		discovery_splash: string?, -- base64 16:9 png/jpeg image for the guild discovery splash (when the server has the DISCOVERABLE feature)
+		banner: string?, -- base64 16:9 png/jpeg image for the guild banner (when the server has the BANNER feature; can be animated gif when the server has the ANIMATED_BANNER feature)
+		system_channel_id: objects.Snowflake?, -- the id of the channel where guild notices such as welcome messages and boost events are posted
+		system_channel_flags: objects.SystemChannelFlags?, -- system channel flags
+		rules_channel_id: objects.Snowflake?, -- the id of the channel where Community guilds display rules and/or guidelines
+		public_updates_channel_id: objects.Snowflake?, -- the id of the channel where admins and moderators of Community guilds receive notices from Discord
+		preferred_locale: objects.LanguageLocales?, -- the preferred locale of a Community guild used in server discovery and notices from Discord; defaults to "en-US"
+		features: { objects.GuildFeature }?, -- enabled guild features
+		description: string?, -- the description for the guild
+		premium_progress_bar_enabled: boolean?, -- whether the guild's boost progress bar should be enabled
+		safety_alerts_channel_id: objects.Snowflake?, -- the id of the channel where admins and moderators of Community guilds receive safety alerts from Discord
+	}>
+>
 
 -- https://discord.com/developers/docs/resources/guild#create-guild-channel
-export type CreateGuildChannelRequest = Request<{
-	name: string, -- channel name (1-100 characters)
-	type: objects.ChannelType, -- the type of channel
-	topic: string?, -- channel topic (0-1024 characters)
-	bitrate: number?, -- the bitrate (in bits) of the voice or stage channel; min 8000
-	user_limit: number?, -- the user limit of the voice channel
-	rate_limit_per_user: number?, -- amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission manage_messages or manage_channel, are unaffected
-	position: number, -- sorting position of the channel (channels with the same position are sorted by id)
-	permission_overwrites: { objects.OverwriteObject }, -- the channel's permission overwrites
-	parent_id: objects.Snowflake?, -- id of the parent category for a channel
-	nsfw: boolean?, -- whether the channel is nsfw
-	rtc_region: string?, -- channel voice region id of the voice or stage channel, automatic when set to null
-	video_quality_mode: objects.VideoQualityMode?, -- the camera video quality mode of the voice channel
-	default_auto_archive_duration: number?, -- the default duration that the clients use (not the API) for newly created threads in the channel, in minutes, to automatically archive the thread after recent activity
-	default_reaction_emoji: objects.EmojiObject?, -- emoji to show in the add reaction button on a thread in a GUILD_FORUM or a GUILD_MEDIA channel
-	available_tags: { objects.ForumTagObject }?, -- set of tags that can be used in a GUILD_FORUM or a GUILD_MEDIA channel
-	default_sort_order: objects.SortOrderType?, -- the default sort order type used to order posts in GUILD_FORUM and GUILD_MEDIA channels
-	default_forum_layout: objects.ForumLayoutType?, -- the default forum layout view used to display posts in GUILD_FORUM channels
-	default_thread_rate_limit_per_user: number?, -- the initial rate_limit_per_user to set on newly created threads in a channel. this field is copied to the thread at creation time and does not live update.
-}>
+export type CreateGuildChannelRequest = Request<
+	objects.Partial<{
+		name: string, -- channel name (1-100 characters)
+		type: objects.ChannelType, -- the type of channel
+		topic: string?, -- channel topic (0-1024 characters)
+		bitrate: number?, -- the bitrate (in bits) of the voice or stage channel; min 8000
+		user_limit: number?, -- the user limit of the voice channel
+		rate_limit_per_user: number?, -- amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission manage_messages or manage_channel, are unaffected
+		position: number, -- sorting position of the channel (channels with the same position are sorted by id)
+		permission_overwrites: { objects.OverwriteObject }, -- the channel's permission overwrites
+		parent_id: objects.Snowflake?, -- id of the parent category for a channel
+		nsfw: boolean?, -- whether the channel is nsfw
+		rtc_region: string?, -- channel voice region id of the voice or stage channel, automatic when set to null
+		video_quality_mode: objects.VideoQualityMode?, -- the camera video quality mode of the voice channel
+		default_auto_archive_duration: number?, -- the default duration that the clients use (not the API) for newly created threads in the channel, in minutes, to automatically archive the thread after recent activity
+		default_reaction_emoji: objects.EmojiObject?, -- emoji to show in the add reaction button on a thread in a GUILD_FORUM or a GUILD_MEDIA channel
+		available_tags: { objects.ForumTagObject }?, -- set of tags that can be used in a GUILD_FORUM or a GUILD_MEDIA channel
+		default_sort_order: objects.SortOrderType?, -- the default sort order type used to order posts in GUILD_FORUM and GUILD_MEDIA channels
+		default_forum_layout: objects.ForumLayoutType?, -- the default forum layout view used to display posts in GUILD_FORUM channels
+		default_thread_rate_limit_per_user: number?, -- the initial rate_limit_per_user to set on newly created threads in a channel. this field is copied to the thread at creation time and does not live update.
+	}>
+>
 
 -- https://discord.com/developers/docs/resources/guild#modify-guild-channel-positions
 export type ModifyGuildChannelPositionsRequest = Request<{
