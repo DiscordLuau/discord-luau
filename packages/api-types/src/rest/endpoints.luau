@@ -265,10 +265,10 @@ local endpoints = table.freeze({
 	GetGuildMember = "/guilds/%s/members/%s",
 
 	-- https://discord.com/developers/docs/resources/guild#list-guild-members
-	ListGuildMembers = "/guilds/%s/members?limit=%s&after=%s",
+	ListGuildMembers = "/guilds/%s/members",
 
 	-- https://discord.com/developers/docs/resources/guild#search-guild-members
-	SearchGuildMembers = "/guilds/%s/members/search?query=%s&limit=%s",
+	SearchGuildMembers = "/guilds/%s/members/search",
 
 	-- https://discord.com/developers/docs/resources/guild#add-guild-member
 	AddGuildMember = "/guilds/%s/members/%s",
@@ -289,7 +289,7 @@ local endpoints = table.freeze({
 	RemoveGuildMember = "/guilds/%s/members/%s",
 
 	-- https://discord.com/developers/docs/resources/guild#get-guild-bans
-	GetGuildBans = "/guilds/%s/bans?before=%s&after=%s&limit=%s",
+	GetGuildBans = "/guilds/%s/bans",
 
 	-- https://discord.com/developers/docs/resources/guild#get-guild-ban
 	GetGuildBan = "/guilds/%s/bans/%s",
@@ -352,7 +352,7 @@ local endpoints = table.freeze({
 	GetGuildVanityURL = "/guilds/%s/vanity-url",
 
 	-- https://discord.com/developers/docs/resources/guild#get-guild-widget-image
-	GetGuildWidgetImage = "/guilds/%s/widget.png?style=%s",
+	GetGuildWidgetImage = "/guilds/%s/widget.png",
 
 	-- https://discord.com/developers/docs/resources/guild#get-guild-welcome-screen
 	GetGuildWelcomeScreen = "/guilds/%s/welcome-screen",
