@@ -104,7 +104,7 @@ end
 function Guild.deleteGuildAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake
-): future.Future<restTypes.GetGuildResponse>
+): future.Future<restTypes.DeleteGuildResponse>
 	return future.new(function()
 		instance:assertToken()
 
@@ -227,7 +227,7 @@ function Guild.listGuildMembersAsync(
 	guildId: apiTypes.Snowflake,
 	urlParams: {
 		limit: number?,
-		after: number?,
+		after: string?,
 	}
 ): future.Future<restTypes.ListGuildMembersResponse>
 	return future.new(function()
