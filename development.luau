@@ -1,10 +1,6 @@
 local botObject = require("@core/bot")
 
-local messageBuilder = require("@builders/message/message")
-local actionRowBuilder = require("@builders/message/components/actionRow")
-local buttonBuilder = require("@builders/message/components/button")
 local intentsBuilder = require("@builders/intents")
-local interactionBuilder = require("@builders/interaction/interaction")
 
 local env = require(".env")
 
@@ -20,63 +16,40 @@ local discordBot = botObject.new({
 discordBot.onAllShardsReady:listen(function()
 	assert(discordBot.application, ``)
 
-	local interaction = interactionBuilder
-		.new()
-		:setName(`interaction-name`)
-		:setDescription("An example interaction, created with the rewrite of Discord-Luau!")
-		:addContext("Guild")
-		:addContext("BotDm")
-		:addContext("PrivateChannel")
-		:addIntegrationType("GuildInstall")
-		:addIntegrationType("UserInstall")
+	-- local guild = discordBot:getGuildAsync("1273035219561091193"):expect("1")
 
-	print(`Creating slash command...`)
-	discordBot.application:createSlashCommandAsync(interaction:build()):after(function(command)
-		print(`Created slash command:`, command)
-	end)
+	-- for _, member in guild:listGuildMembersAsync(nil, 10):expect("2") do
+	-- 	print(member.user)
+	-- end
 
-	discordBot.onPingInteraction:listen(function(interaction)
-		interaction:pongAsync()
-	end)
+	-- local member = guild:getGuildMemberAsync("685566749516628033"):expect("2")
 
-	discordBot.onComponentInteraction:listen(function(interaction)
-		-- warn(interaction)
+	-- print(member)
 
-		assert(interaction.data, `e`)
+	-- local threads = guild:getThreadsAsync():catch(function(error, traceback)
+	-- 	warn(error)
+	-- 	print(traceback)
+	-- end)
 
-		interaction:messageAsync({
-			content = `You pressed the {interaction.data.customId} button!`,
-		})
-	end)
+	-- print(threads:expect(`Uh oh, but on the second one?!`))
 
-	discordBot.onCommandInteraction:listen(function(interaction)
-		local button = buttonBuilder
-			.new({
-				customId = "custom-id",
-				label = "label",
-				style = "Blurple",
-			})
-			:build()
+	-- guild
+	-- 	:modifyGuildAsync(guildBuilder
+	-- 		.new({
+	-- 			name = "Discord Luau",
+	-- 		})
+	-- 		:build())
+	-- 	:after(function()
+	-- 		print("RENAMED!")
+	-- 	end)
 
-		local buttonList = actionRowBuilder
-			.new({
-				components = {
-					button,
-				},
-			})
-			:build()
+	-- local preview = guild:fetchGuildPreviewAsync():expect(`2`)
 
-		local message = messageBuilder
-			.new({
-				content = "abc",
-				components = {
-					buttonList,
-				},
-			})
-			:build()
+	-- local guildTextChannels = guild:getTextChannelsAsync():expect(`Uh oh, but on the second one?!`)
 
-		local response = interaction:messageAsync(message):expect(`Something bad happened..`)
-	end)
+	-- for _, channel in guildTextChannels do
+	-- 	print(channel.name)
+	-- end
 end)
 
 discordBot:connectAsync():after(function()
