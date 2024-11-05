@@ -18,6 +18,16 @@ local Member = {}
 Member.Interface = {}
 Member.Prototype = {}
 
+-- https://discord.com/developers/docs/resources/guild#modify-guild-member
+-- https://discord.com/developers/docs/resources/guild#modify-current-member
+-- https://discord.com/developers/docs/resources/guild#add-guild-member-role
+-- https://discord.com/developers/docs/resources/guild#remove-guild-member-role
+
+-- https://discord.com/developers/docs/resources/voice#get-current-user-voice-state
+-- https://discord.com/developers/docs/resources/voice#get-user-voice-state
+-- https://discord.com/developers/docs/resources/voice#modify-current-user-voice-state
+-- https://discord.com/developers/docs/resources/voice#modify-user-voice-state
+
 function Member.Prototype.sync(self: Member, guildMemberData: apiTypes.GuildMemberObject)
 	self.user = guildMemberData.user and user.new(guildMemberData.user)
 

@@ -4,6 +4,9 @@ local intentsBuilder = require("@builders/intents")
 
 local env = require(".env")
 
+local PENGU_BOT_ID = "726819179054891149"
+local DISCORD_LUAU_SERVER = "1273035219561091193"
+
 local discordIntents = intentsBuilder.new()
 
 discordIntents:addIntent("Guilds")
@@ -16,40 +19,7 @@ local discordBot = botObject.new({
 discordBot.onAllShardsReady:listen(function()
 	assert(discordBot.application, ``)
 
-	-- local guild = discordBot:getGuildAsync("1273035219561091193"):expect("1")
-
-	-- for _, member in guild:listGuildMembersAsync(nil, 10):expect("2") do
-	-- 	print(member.user)
-	-- end
-
-	-- local member = guild:getGuildMemberAsync("685566749516628033"):expect("2")
-
-	-- print(member)
-
-	-- local threads = guild:getThreadsAsync():catch(function(error, traceback)
-	-- 	warn(error)
-	-- 	print(traceback)
-	-- end)
-
-	-- print(threads:expect(`Uh oh, but on the second one?!`))
-
-	-- guild
-	-- 	:modifyGuildAsync(guildBuilder
-	-- 		.new({
-	-- 			name = "Discord Luau",
-	-- 		})
-	-- 		:build())
-	-- 	:after(function()
-	-- 		print("RENAMED!")
-	-- 	end)
-
-	-- local preview = guild:fetchGuildPreviewAsync():expect(`2`)
-
-	-- local guildTextChannels = guild:getTextChannelsAsync():expect(`Uh oh, but on the second one?!`)
-
-	-- for _, channel in guildTextChannels do
-	-- 	print(channel.name)
-	-- end
+	local guild = discordBot:getGuildAsync(DISCORD_LUAU_SERVER):expect("1")
 end)
 
 discordBot:connectAsync():after(function()

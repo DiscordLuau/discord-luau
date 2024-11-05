@@ -14,6 +14,10 @@ local Role = {}
 Role.Interface = {}
 Role.Prototype = {}
 
+-- https://discord.com/developers/docs/resources/guild#modify-guild-role-positions
+-- https://discord.com/developers/docs/resources/guild#modify-guild-role
+-- https://discord.com/developers/docs/resources/guild#delete-guild-role
+
 function Role.Prototype.sync(self: Role, roleData: apiTypes.GuildRoleObject)
 	local tagArray = {}
 

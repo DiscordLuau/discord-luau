@@ -546,6 +546,26 @@ function Guild.getGuildRolesAsync(
 	end)
 end
 
+-- https://discord.com/developers/docs/resources/guild#get-guild-role
+function Guild.getGuildRoleAsync(
+	instance: request.Request,
+	guildId: apiTypes.Snowflake,
+	roleId: apiTypes.Snowflake
+): future.Future<restTypes.GetGuildRoleResponse>
+	return future.new(function()
+		instance:assertToken()
+
+		instance:setMethod("GET")
+		instance:setUrl(string.format(restEndpoints.GetGuildRole, guildId, roleId))
+
+		local status, response = instance:executeAsync():await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		return response.body
+	end)
+end
+
 -- https://discord.com/developers/docs/resources/guild#create-guild-role
 function Guild.createGuildRoleAsync(
 	instance: request.Request,
@@ -674,7 +694,7 @@ function Guild.getGuildPruneCountAsync(
 		instance:assertToken()
 
 		instance:addUrlParam("days", tostring(urlParams.days))
-		instance:addUrlParam("includeRoles", tostring(urlParams.includeRoles))
+		instance:addUrlParam("include_roles", tostring(urlParams.includeRoles))
 
 		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetGuildPruneCount, guildId))
