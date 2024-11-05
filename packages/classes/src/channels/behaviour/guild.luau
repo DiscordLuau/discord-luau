@@ -14,7 +14,8 @@ GuildBehaviour.Prototype = {}
 function GuildBehaviour.Interface.inheritProperties(class: any, channelData: apiTypes.ChannelObject)
 	local permissionOverwriteArray = {}
 
-	for _, overwriteData in channelData.permission_overwrites do
+	--fixme: requires 'next' otherwise type system borks.
+	for _, overwriteData in next, channelData.permission_overwrites or {} do
 		table.insert(permissionOverwriteArray, overwrite.new(overwriteData))
 	end
 
