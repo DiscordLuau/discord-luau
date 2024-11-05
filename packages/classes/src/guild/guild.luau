@@ -17,6 +17,9 @@ local role = require("@classes/guild/role")
 local welcomeScreen = require("@classes/guild/welcomeScreen")
 local preview = require("@classes/guild/preview")
 local member = require("@classes/guild/member")
+local ban = require("@classes/guild/ban")
+local voiceRegion = require("@classes/guild/voiceRegion")
+local invite = require("@classes/guild/invite")
 
 local guildAnnouncement = require("@classes/channels/types/guildAnnouncement")
 local guildCategory = require("@classes/channels/types/guildCategory")
@@ -36,7 +39,9 @@ local systemChannelBitflag = require("@classes/bitflags/systemChannel")
 
 local guildRest = require("@rest/guild")
 local commandsRest = require("@rest/commands")
+
 local interactionBuilder = require("@builders/interaction/interaction")
+local roleBuilder = require("@builders/guild/role")
 
 local commandObject = require("@classes/application/command/command")
 
@@ -533,6 +538,405 @@ function Guild.Prototype.listGuildMembersAsync(
 		end
 
 		return members
+	end)
+end
+
+--[[
+	Returns a list of guild member objects whose username or nickname starts with a provided string.
+]]
+function Guild.Prototype.searchGuildMembersAsync(
+	self: Guild,
+	query: string,
+	limit: number?
+): future.Future<{ member.Member }>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local status, response = guildRest
+			.searchGuildMembersAsync(request, self.id, {
+				query = query,
+				limit = limit,
+			})
+			:await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		local members = {}
+
+		for _, memberData in response do
+			table.insert(members, member.new(memberData))
+		end
+
+		return members
+	end)
+end
+
+--[[
+	Adds a user to the guild, provided you have a valid oauth2 access token for the user with the guilds.join scope.
+
+	For guilds with Membership Screening enabled, this endpoint will default to adding new members as pending in the
+	guild member object. Members that are pending will have to complete membership screening before they become full
+	members that can talk.
+]]
+function Guild.Prototype.addGuildMemberAsync(
+	self: Guild,
+	userId: apiTypes.Snowflake,
+	accessToken: string,
+
+	nickname: string?,
+	roles: { apiTypes.Snowflake }?,
+	muted: boolean?,
+	deafened: boolean?
+): future.Future<member.Member?>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local status, response = guildRest
+			.addGuildMemberAsync(request, self.id, userId, {
+				access_token = accessToken,
+				nick = nickname,
+				deaf = deafened,
+				mute = muted,
+				roles = roles,
+			})
+			:await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		if response then
+			return member.new(response)
+		end
+
+		return
+	end)
+end
+
+--[[
+	Removes a role from a guild member. Requires the MANAGE_ROLES permission.
+]]
+function Guild.Prototype.kickGuildMemberAsync(
+	self: Guild,
+	userId: apiTypes.Snowflake,
+	reason: string?
+): future.Future<nil>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local status, response = guildRest.removeGuildMemberAsync(request, self.id, userId, reason):await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		return
+	end)
+end
+
+--[[
+	Create a guild ban, and optionally delete previous messages sent by the banned user.
+]]
+function Guild.Prototype.banGuildMemberAsync(
+	self: Guild,
+	userId: apiTypes.Snowflake,
+	reason: string?,
+	deleteMessageDays: number?,
+	deleteMessageSeconds: number?
+): future.Future<nil>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		if deleteMessageSeconds then
+			assert(deleteMessageSeconds < 604800, "deleteMessageSeconds must be less than 604800")
+			assert(deleteMessageSeconds > 0, "deleteMessageSeconds must be greater than 0")
+		end
+
+		if deleteMessageDays then
+			assert(deleteMessageDays < 7, "deleteMessageDays must be less than 7")
+			assert(deleteMessageDays > 0, "deleteMessageSeconds must be greater than 0")
+		end
+
+		local status, response = guildRest
+			.createGuildBanAsync(request, self.id, userId, {
+				delete_message_days = deleteMessageDays,
+				delete_message_seconds = deleteMessageSeconds,
+			}, reason)
+			:await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		return
+	end)
+end
+
+--[[
+	Create a guild ban, and optionally delete previous messages sent by the banned user.
+]]
+function Guild.Prototype.bulkBanGuildMembersAsync(
+	self: Guild,
+	userIds: { apiTypes.Snowflake },
+	reason: string?,
+	deleteMessageSeconds: number?
+): future.Future<{ failedUsers: { apiTypes.Snowflake }, bannedUsers: { apiTypes.Snowflake } }>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		if deleteMessageSeconds then
+			assert(deleteMessageSeconds < 604800, "deleteMessageSeconds must be less than 604800")
+			assert(deleteMessageSeconds > 0, "deleteMessageSeconds must be greater than 0")
+		end
+
+		local status, response = guildRest
+			.bulkGuildBanAsync(request, self.id, {
+				user_ids = userIds,
+				delete_message_seconds = deleteMessageSeconds,
+			}, reason)
+			:await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		local returnedValue = {}
+
+		returnedValue.bannedUsers = response.banned_users
+		returnedValue.failedUsers = response.failed_users
+
+		return returnedValue
+	end)
+end
+
+--[[
+	Returns a list of ban objects for the users banned from this guild.
+]]
+function Guild.Prototype.getGuildBansAsync(
+	self: Guild,
+	limit: number?,
+	before: apiTypes.Snowflake?,
+	after: apiTypes.Snowflake?
+): future.Future<{ ban.Ban }>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local status, response = guildRest
+			.getGuildBansAsync(request, self.id, {
+				limit = limit,
+				before = before,
+				after = after,
+			})
+			:await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		local bans = {}
+
+		for _, banData in response do
+			table.insert(bans, ban.new(banData))
+		end
+
+		return bans
+	end)
+end
+
+--[[
+	Returns a ban object for the given user or a 404 not found if the ban cannot be found.
+]]
+function Guild.Prototype.getGuildBanAsync(self: Guild, userId: apiTypes.Snowflake): future.Future<ban.Ban?>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local status, response = guildRest.getGuildBanAsync(request, self.id, userId):await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		if response then
+			return ban.new(response)
+		end
+
+		return
+	end)
+end
+
+--[[
+	Returns a list of role objects for the guild.
+]]
+function Guild.Prototype.getGuildRolesAsync(self: Guild): future.Future<{ role.Role }>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local status, response = guildRest.getGuildRolesAsync(request, self.id):await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		local roles = {}
+
+		for _, roleData in next, response do
+			table.insert(roles, role.new(roleData))
+		end
+
+		return roles
+	end)
+end
+
+--[[
+	Returns a role object for the specified role.
+]]
+function Guild.Prototype.getGuildRoleAsync(self: Guild, roleId: apiTypes.Snowflake): future.Future<role.Role>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local status, response = guildRest.getGuildRoleAsync(request, self.id, roleId):await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		return role.new(response)
+	end)
+end
+
+--[[
+	Create a new role for the guild. Requires the MANAGE_ROLES permission. Returns the new role object on success
+]]
+function Guild.Prototype.createGuildRoleAsync(
+	self: Guild,
+	roleJson: roleBuilder.JSON,
+	reason: string?
+): future.Future<role.Role>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local status, response = guildRest.createGuildRoleAsync(request, self.id, roleJson, reason):await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		return role.new(response)
+	end)
+end
+
+--[[
+	Modify a guild's MFA level. Requires guild ownership. Returns the updated level on success.
+]]
+function Guild.Prototype.setGuildMFALevelAsync(
+	self: Guild,
+	mfaLevel: guildTypes.MFALevel,
+	reason: string?
+): future.Future<guildTypes.MFALevel>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local status, response = guildRest
+			.modifyGuildMFALevelAsync(request, self.id, {
+				level = guildTypes.MFALevel[mfaLevel],
+			}, reason)
+			:await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		return guildTypes.MFALevel[response]
+	end)
+end
+
+--[[
+	Returns an object with one pruned key indicating the number of members that would be removed in a prune operation.
+	Requires the MANAGE_GUILD and KICK_MEMBERS permissions.
+
+	By default, prune will not remove users with roles. You can optionally include specific roles in your prune by
+	providing the include_roles parameter. Any inactive user that has a subset of the provided role(s) will be
+	counted in the prune and users with additional roles will not.
+]]
+function Guild.Prototype.getGuildPruneCountAsync(
+	self: Guild,
+	days: number?,
+	includedRoles: { apiTypes.Snowflake }?
+): future.Future<number>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local status, response = guildRest
+			.getGuildPruneCountAsync(request, self.id, {
+				days = days or 7,
+				includeRoles = table.concat(includedRoles or {}, ","),
+			})
+			:await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		return response.pruned
+	end)
+end
+
+--[[
+	Begin a prune operation. Requires the MANAGE_GUILD and KICK_MEMBERS permissions.
+	Returns an object with one pruned key indicating the number of members that were removed in the prune operation.
+	
+	For large guilds it's recommended to set the compute_prune_count option to false, forcing pruned to null
+
+	By default, prune will not remove users with roles. You can optionally include specific roles in your prune by
+	providing the include_roles parameter. Any inactive user that has a subset of the provided role(s)
+	will be included in the prune and users with additional roles will not.
+]]
+function Guild.Prototype.beginGuildPruneAsync(
+	self: Guild,
+	days: number?,
+	returnPruneCount: boolean?,
+	includedRoles: { apiTypes.Snowflake }?,
+	reason: string?
+): future.Future<number>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local status, response = guildRest
+			.beginGuildPruneAsync(request, self.id, {
+				days = days or 7,
+				compute_prune_count = returnPruneCount or true,
+				include_ruoles = includedRoles or {},
+				reason = reason,
+			})
+			:await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		if returnPruneCount then
+			return response.pruned
+		else
+			return 0
+		end
+	end)
+end
+
+--[[
+	Returns an array of voice region objects that can be used when setting a voice or stage channel's rtc_region.
+]]
+function Guild.Prototype.getGuildVoiceRegionsAsync(self: Guild): future.Future<{ voiceRegion.VoiceRegion }>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local status, response = guildRest.getGuildVoiceRegionsAsync(request, self.id):await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		local voiceRegions = {}
+
+		for _, voiceRegionData in response do
+			table.insert(voiceRegions, voiceRegion.new(voiceRegionData))
+		end
+
+		return voiceRegions
+	end)
+end
+
+--[[
+	Returns a list of invite objects (with invite metadata) for the guild. Requires the MANAGE_GUILD permission.
+]]
+function Guild.Prototype.getGuildInvitesAsync(self: Guild): future.Future<{ invite.Invite }>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local status, response = guildRest.getGuildInvitesAsync(request, self.id):await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		local invites = {}
+
+		for _, inviteData in response do
+			table.insert(invites, invite.new(self.state, inviteData))
+		end
+
+		return invites
 	end)
 end
 
