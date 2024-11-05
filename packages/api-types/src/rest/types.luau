@@ -258,10 +258,10 @@ export type ModifyGuildChannelPositionsRequest = Request<{
 -- https://discord.com/developers/docs/resources/guild#add-guild-member
 export type AddGuildMemberRequest = Request<{
 	access_token: string, -- an oauth2 access token granted with the guilds.join to the bot's application for the user you want to add to the guild
-	nick: string, -- value to set user's nickname to
-	roles: { objects.Snowflake }, -- array of role ids the member is assigned
-	mute: boolean, -- whether the user is muted in voice channels
-	deaf: boolean, -- whether the user is deafened in voice channels
+	nick: string?, -- value to set user's nickname to
+	roles: { objects.Snowflake }?, -- array of role ids the member is assigned
+	mute: boolean?, -- whether the user is muted in voice channels
+	deaf: boolean?, -- whether the user is deafened in voice channels
 }>
 
 -- https://discord.com/developers/docs/resources/guild#modify-guild-member
@@ -289,7 +289,7 @@ export type CreateGuildBanRequest = Request<{
 -- https://discord.com/developers/docs/resources/guild#bulk-guild-ban
 export type BulkGuildBanRequest = Request<{
 	user_ids: { objects.Snowflake }, -- list of user ids to ban (max 200)
-	delete_message_seconds: number, -- number of seconds to delete messages for, between 0 and 604800 (7 days)
+	delete_message_seconds: number?, -- number of seconds to delete messages for, between 0 and 604800 (7 days)
 }>
 
 -- https://discord.com/developers/docs/resources/guild#create-guild-role
@@ -298,8 +298,8 @@ export type CreateGuildRoleRequest = Request<{
 	permissions: string, -- bitwise value of the enabled/disabled permissions
 	color: number, -- RGB color value
 	hoist: boolean, -- whether the role should be displayed separately in the sidebar
-	icon: string, -- the role's icon image (if the guild has the ROLE_ICONS feature)
-	unicode_emoji: string, -- the role's unicode emoji as a standard emoji (if the guild has the ROLE_ICONS feature)
+	icon: string?, -- the role's icon image (if the guild has the ROLE_ICONS feature)
+	unicode_emoji: string?, -- the role's unicode emoji as a standard emoji (if the guild has the ROLE_ICONS feature)
 	mentionable: boolean, -- whether the role should be mentionable
 }>
 
@@ -928,6 +928,9 @@ export type BulkGuildBanResponse = Response<{
 
 -- https://discord.com/developers/docs/resources/guild#get-guild-roles
 export type GetGuildRolesResponse = Response<{ objects.GuildRoleObject }>
+
+-- https://discord.com/developers/docs/resources/guild#get-guild-roles
+export type GetGuildRoleResponse = Response<objects.GuildRoleObject>
 
 -- https://discord.com/developers/docs/resources/guild#create-guild-role
 export type CreateGuildRoleResponse = Response<objects.GuildRoleObject>

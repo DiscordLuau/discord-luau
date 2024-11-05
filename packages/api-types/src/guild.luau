@@ -38,12 +38,45 @@ local MFALevel = table.freeze(reflect({
 	Elevated = 1,
 }))
 
+local InviteType = table.freeze(reflect({
+	Guild = 0,
+	GroupDM = 1,
+	Friend = 2,
+}))
+
+local InviteTargetType = table.freeze(reflect({
+	Stream = 1,
+	EmbeddedApplication = 2,
+}))
+
+local ScheduledEventPrivacyLevel = table.freeze(reflect({
+	GuildOnly = 2,
+}))
+
+local SchedledEventEntityType = table.freeze(reflect({
+	StageInstance = 1,
+	Voice = 2,
+	External = 3,
+}))
+
+local SchedledEventStatus = table.freeze(reflect({
+	Scheduled = 1,
+	Active = 2,
+	Completed = 3,
+	Cancelled = 4,
+}))
+
 export type VerificationLevel = "None" | "Low" | "Medium" | "High" | "VeryHigh"
 export type DefaultMessageNotification = "AllMessages" | "OnlyMentions"
 export type ExplicitContentFilterLevel = "Disabled" | "MembersWithoutRoles" | "AllMembers"
 export type NSFWLevel = "Default" | "Explicit" | "Safe" | "AgeRestricted"
 export type PremiumTier = "None" | "Tier1" | "Tier2" | "Tier3"
 export type MFALevel = "None" | "Elevated"
+export type InviteType = "Guild" | "GroupDM" | "Friend"
+export type InviteTargetType = "Stream" | "EmbeddedApplication"
+export type ScheduledEventPrivacyLevel = "GuildOnly"
+export type SchedledEventEntityType = "StageInstance" | "Voice" | "External"
+export type SchedledEventStatus = "Scheduled" | "Active" | "Completed" | "Canceled"
 
 return {
 	VerificationLevel = VerificationLevel,
@@ -52,4 +85,9 @@ return {
 	NSFWLevel = NSFWLevel,
 	PremiumTier = PremiumTier,
 	MFALevel = MFALevel,
+	InviteType = InviteType,
+	InviteTargetType = InviteTargetType,
+	ScheduledEventPrivacyLevel = ScheduledEventPrivacyLevel,
+	SchedledEventEntityType = SchedledEventEntityType,
+	SchedledEventStatus = SchedledEventStatus,
 }

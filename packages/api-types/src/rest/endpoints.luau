@@ -306,6 +306,9 @@ local endpoints = table.freeze({
 	-- https://discord.com/developers/docs/resources/guild#get-guild-roles
 	GetGuildRoles = "/guilds/%s/roles",
 
+	-- https://discord.com/developers/docs/resources/guild#get-guild-role
+	GetGuildRole = "/guilds/%s/roles/%s",
+
 	-- https://discord.com/developers/docs/resources/guild#create-guild-role
 	CreateGuildRole = "/guilds/%s/roles",
 
