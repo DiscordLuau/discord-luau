@@ -66,6 +66,28 @@ local SchedledEventStatus = table.freeze(reflect({
 	Cancelled = 4,
 }))
 
+local IntegrationType = table.freeze(reflect({
+	Twitch = "twitch",
+	YouTube = "youtube",
+	Discord = "discord",
+	GuildSubscription = "guild_subscription",
+}))
+
+local IntegrationExpireBehaviour = table.freeze(reflect({
+	RemoveRole = 0,
+	Kick = 1,
+}))
+
+local OnboardingPromptType = table.freeze(reflect({
+	MultipleChoice = "MULTIPLE_CHOICE",
+	Dropdown = "DROPDOWN",
+}))
+
+local OnboardingMode = table.freeze(reflect({
+	Default = "ONBOARDING_DEFAULT",
+	Advanced = "ONBOARDING_ADVANCED",
+}))
+
 export type VerificationLevel = "None" | "Low" | "Medium" | "High" | "VeryHigh"
 export type DefaultMessageNotification = "AllMessages" | "OnlyMentions"
 export type ExplicitContentFilterLevel = "Disabled" | "MembersWithoutRoles" | "AllMembers"
@@ -77,6 +99,10 @@ export type InviteTargetType = "Stream" | "EmbeddedApplication"
 export type ScheduledEventPrivacyLevel = "GuildOnly"
 export type SchedledEventEntityType = "StageInstance" | "Voice" | "External"
 export type SchedledEventStatus = "Scheduled" | "Active" | "Completed" | "Canceled"
+export type IntegrationType = "Twitch" | "YouTube" | "Discord" | "GuildSubscription"
+export type IntegrationExpireBehaviour = "RemoveRole" | "Kick"
+export type OnboardingPromptType = "MultipleChoice" | "Dropdown"
+export type OnboardingMode = "Default" | "Advanced"
 
 return {
 	VerificationLevel = VerificationLevel,
@@ -90,4 +116,8 @@ return {
 	ScheduledEventPrivacyLevel = ScheduledEventPrivacyLevel,
 	SchedledEventEntityType = SchedledEventEntityType,
 	SchedledEventStatus = SchedledEventStatus,
+	IntegrationType = IntegrationType,
+	IntegrationExpireBehaviour = IntegrationExpireBehaviour,
+	OnboardingPromptType = OnboardingPromptType,
+	OnboardingMode = OnboardingMode,
 }

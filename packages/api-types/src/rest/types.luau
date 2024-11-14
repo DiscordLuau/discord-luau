@@ -335,17 +335,17 @@ export type BeginGuildPruneRequest = Request<{
 
 -- https://discord.com/developers/docs/resources/guild#modify-guild-welcome-screen
 export type ModifyGuildWelcomeScreenRequest = Request<{
-	enabled: boolean, -- whether the welcome screen is enabled
+	enabled: boolean?, -- whether the welcome screen is enabled
 	welcome_channels: { objects.WelcomeScreenChannelObject }, -- channels linked in the welcome screen and their display options
-	description: string, -- the server description to show in the welcome screen
+	description: string?, -- the server description to show in the welcome screen
 }>
 
 -- https://discord.com/developers/docs/resources/guild#modify-guild-onboarding
 export type ModifyGuildOnboardingRequest = Request<{
-	prompts: { objects.OnboardingPromptObject }, -- Prompts shown during onboarding and in customize community
-	default_channel_ids: { objects.Snowflake }, -- Channel IDs that members get opted into automatically
-	enabled: boolean, -- Whether onboarding is enabled in the guild
-	mode: objects.OnboardingMode, -- Current mode of onboarding
+	prompts: { objects.OnboardingPromptObject }?, -- Prompts shown during onboarding and in customize community
+	default_channel_ids: { objects.Snowflake }?, -- Channel IDs that members get opted into automatically
+	enabled: boolean?, -- Whether onboarding is enabled in the guild
+	mode: objects.OnboardingMode?, -- Current mode of onboarding
 }>
 
 -- https://discord.com/developers/docs/resources/guild#modify-current-user-voice-state
@@ -960,7 +960,7 @@ export type GetGuildVoiceRegionsResponse = Response<{ objects.VoiceRegionObject 
 export type GetGuildInvitesResponse = Response<{ objects.InviteObject & objects.InviteMetadataObject }>
 
 -- https://discord.com/developers/docs/resources/guild#get-guild-integrations
-export type GetGuildIntegrationsResponse = Response<objects.IntegrationObject>
+export type GetGuildIntegrationsResponse = Response<{ objects.IntegrationObject }>
 
 -- https://discord.com/developers/docs/resources/guild#delete-guild-integration
 export type DeleteGuildIntegrationResponse = Response<nil>
@@ -975,7 +975,7 @@ export type ModifyGuildWidgetResponse = Response<objects.GuildWidgetSettingsObje
 export type GetGuildWidgetResponse = Response<objects.GuildWidgetObject>
 
 -- https://discord.com/developers/docs/resources/guild#get-guild-vanity-url
-export type GetGuildVanityUrlResponse = Response<objects.InviteObject>
+export type GetGuildVanityUrlResponse = Response<objects.GuildVanityUrl>
 
 -- https://discord.com/developers/docs/resources/guild#get-guild-widget-image
 export type GetGuildWidgetImageResponse = Response<string>

@@ -1,3 +1,5 @@
+local apiTypes = require("@api-types/apiTypes")
+
 local reflect = require("@utils/table/reflect")
 
 local ChannelTypes = table.freeze(reflect({
@@ -57,6 +59,44 @@ export type ForumSortOrder = "LatestActivity" | "CreationDate"
 export type ForumLayout = "NotSet" | "ListView" | "GalleryView"
 
 export type VideoQualityMode = "Auto" | "Full"
+
+export type AbstractChannel = {
+	id: apiTypes.Snowflake?,
+	type: ChannelType,
+	guild_id: apiTypes.Snowflake?,
+	position: number,
+	permission_overwrites: { apiTypes.OverwriteObject },
+	name: string,
+	topic: string?,
+	nsfw: boolean?,
+	last_message_id: apiTypes.Snowflake?,
+	bitrate: number?,
+	user_limit: number?,
+	rate_limit_per_user: number?,
+	recipients: { apiTypes.UserObject }?,
+	icon: string?,
+	owner_id: apiTypes.Snowflake?,
+	application_id: apiTypes.Snowflake?,
+	managed: boolean?,
+	parent_id: apiTypes.Snowflake?,
+	last_pin_timestamp: string?,
+	rtc_region: string?,
+	video_quality_mode: VideoQualityMode?,
+	message_count: number?,
+	member_count: number?,
+	thread_metadata: apiTypes.ThreadMetadataObject?,
+	member: apiTypes.ThreadMemberObject?,
+	default_auto_archive_duration: number?,
+	permissions: string?,
+	flags: apiTypes.ChannelFlags?,
+	total_message_sent: number?,
+	available_tags: { apiTypes.ForumTagObject }?,
+	applied_tags: { apiTypes.Snowflake }?,
+	default_reaction_emoji: apiTypes.DefaultReactionObject?,
+	default_thread_rate_limit_per_user: number?,
+	default_sort_order: apiTypes.SortOrderType?,
+	default_forum_layout: apiTypes.ForumLayoutType?,
+}
 
 return {
 	ChannelTypes = ChannelTypes,

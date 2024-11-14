@@ -448,8 +448,8 @@ export type EmojiObject = {
 
 -- https://discord.com/developers/docs/resources/guild#welcome-screen-object-welcome-screen-channel-structure
 export type WelcomeScreenChannelObject = {
-	channel_id: Snowflake, -- the channel's id
-	description: string, -- the description shown for the channel
+	channel_id: Snowflake?, -- the channel's id
+	description: string?, -- the description shown for the channel
 	emoji_id: Snowflake?, -- the emoji id, if the emoji is custom
 	emoji_name: string?, -- the emoji name if custom, the unicode character if standard, or null if no emoji is set
 }
@@ -817,7 +817,7 @@ export type IntegrationObject = {
 	synced_at: string?, -- when this integration was last synced
 	subscriber_count: number?, -- how many subscribers this integration has
 	revoked: boolean?, -- has this integration been revoked
-	application: ApplicationObject?, -- The bot/OAuth2 application for discord integrations
+	application: IntegrationApplicationObject?, -- The bot/OAuth2 application for discord integrations
 	scopes: { OAuth2Scopes }?, -- the scopes the application has been authorized for
 }
 
@@ -1321,6 +1321,12 @@ export type InviteObject = {
 	guild_scheduled_event: GuildScheduledEventObject?, -- guild scheduled event data, only included if guild_scheduled_event_id contains a valid guild scheduled event id
 }
 
+-- https://discord.com/developers/docs/resources/guild#get-guild-vanity-url
+export type GuildVanityUrl = {
+	code: string,
+	uses: number,
+}
+
 -- https://discord.com/developers/docs/resources/invite#invite-metadata-object
 export type InviteMetadataObject = {
 	uses: number, -- number of times this invite has been used
@@ -1368,7 +1374,7 @@ export type VoiceRegionObject = {
 
 -- https://discord.com/developers/docs/resources/guild#guild-widget-settings-object
 export type GuildWidgetSettingsObject = {
-	enabled: boolean, -- whether the widget is enabled
+	enabled: boolean?, -- whether the widget is enabled
 	channel_id: Snowflake?, -- the widget channel id
 }
 
@@ -1384,26 +1390,26 @@ export type GuildWidgetObject = {
 
 -- https://discord.com/developers/docs/resources/guild#guild-onboarding-object-prompt-option-structure
 export type PromptOptionObject = {
-	id: Snowflake, -- ID of the prompt option
+	id: Snowflake?, -- ID of the prompt option
 	channel_ids: { Snowflake }, -- IDs for channels a member is added to when the option is selected
 	role_ids: { Snowflake }, -- IDs for roles assigned to a member when the option is selected
-	emoji: EmojiObject?, -- Emoji of the option (see below)
-	emoji_id: Snowflake, -- Emoji ID of the option (see below)
+	emoji: EmojiObject | nil, -- Emoji of the option (see below)
+	emoji_id: Snowflake?, -- Emoji ID of the option (see below)
 	emoji_name: string?, -- Emoji name of the option (see below)
 	emoji_animated: boolean?, -- Whether the emoji is animated (see below)
-	title: string, -- Title of the option
+	title: string?, -- Title of the option
 	description: string?, -- Description of the option
 }
 
 -- https://discord.com/developers/docs/resources/guild#guild-onboarding-object-onboarding-prompt-structure
 export type OnboardingPromptObject = {
-	id: Snowflake, -- ID of the prompt
-	type: PromptTypes, -- Type of prompt
+	id: Snowflake | nil, -- ID of the prompt
+	type: PromptTypes?, -- Type of prompt
 	options: { PromptOptionObject }, -- Options available within the prompt
-	title: string, -- Title of the prompt
-	single_select: boolean, -- Indicates whether users are limited to selecting one option for the prompt
-	required: boolean, -- Indicates whether the prompt is required before a user completes the onboarding flow
-	in_onboarding: boolean, -- Indicates whether the prompt is present in the onboarding flow. If false, the prompt will only appear in the Channels & Roles tab
+	title: string?, -- Title of the prompt
+	single_select: boolean?, -- Indicates whether users are limited to selecting one option for the prompt
+	required: boolean?, -- Indicates whether the prompt is required before a user completes the onboarding flow
+	in_onboarding: boolean?, -- Indicates whether the prompt is present in the onboarding flow. If false, the prompt will only appear in the Channels & Roles tab
 }
 
 -- https://discord.com/developers/docs/resources/guild#guild-onboarding-object
@@ -1446,6 +1452,15 @@ export type StickerPackObject = {
 	cover_sticker_id: Snowflake?, -- id of a sticker in the pack which is shown as the pack's icon
 	description: string, -- description of the sticker pack
 	banner_asset_id: Snowflake?, -- id of the sticker pack's banner image
+}
+
+-- https://discord.com/developers/docs/resources/guild#integration-application-object
+export type IntegrationApplicationObject = {
+	id: Snowflake, -- the id of the app
+	name: string, -- the name of the app
+	icon: string?, -- the icon hash of the app
+	description: string, -- the description of the app
+	bot: UserObject?, -- the bot associated with this application
 }
 
 -- https://discord.com/developers/docs/resources/user#connection-object

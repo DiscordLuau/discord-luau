@@ -917,7 +917,7 @@ end
 function Guild.getGuildWelcomeScreenAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake
-): future.Future<restTypes.GetGuildWidgetImageResponse>
+): future.Future<restTypes.GetGuildWelcomeScreenResponse>
 	return future.new(function()
 		instance:assertToken()
 
@@ -963,7 +963,7 @@ function Guild.getGuildOnboardingAsync(
 	return future.new(function()
 		instance:assertToken()
 
-		instance:setMethod("PATCH")
+		instance:setMethod("GET")
 		instance:setUrl(string.format(restEndpoints.GetGuildOnboarding, guildId))
 
 		local status, response = instance:executeAsync():await()
