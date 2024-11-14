@@ -20,6 +20,11 @@ local member = require("@classes/guild/member")
 local ban = require("@classes/guild/ban")
 local voiceRegion = require("@classes/guild/voiceRegion")
 local invite = require("@classes/guild/invite")
+local integration = require("@classes/guild/integration/integration")
+local widget = require("@classes/guild/widget/widget")
+local widgetSettings = require("@classes/guild/widget/widgetSettings")
+local vanityUrl = require("@classes/guild/vanityUrl")
+local onboarding = require("@classes/guild/onboarding/onboarding")
 
 local guildAnnouncement = require("@classes/channels/types/guildAnnouncement")
 local guildCategory = require("@classes/channels/types/guildCategory")
@@ -32,6 +37,9 @@ local announcementThread = require("@classes/channels/threads/announcement")
 local privateThread = require("@classes/channels/threads/private")
 local publicThread = require("@classes/channels/threads/public")
 
+local onboardingBuilder = require("@builders/guild/onboarding/onboarding")
+local welcomeScreenBuilder = require("@builders/guild/welcomeScreen/welcomeScreen")
+local widgetSettingsBuilder = require("@builders/guild/widgetSettings")
 local guildBuilder = require("@builders/guild/guild")
 local channelBuilder = require("@builders/channel")
 
@@ -937,6 +945,205 @@ function Guild.Prototype.getGuildInvitesAsync(self: Guild): future.Future<{ invi
 		end
 
 		return invites
+	end)
+end
+
+--[[
+	Returns a list of integration objects for the guild. Requires the MANAGE_GUILD permission.
+]]
+function Guild.Prototype.getGuildIntegrationsAsync(self: Guild): future.Future<{ integration.Integration }>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local status, response = guildRest.getGuildIntegrationsAsync(request, self.id):await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		local integrations = {}
+
+		for _, integrationData in response do
+			table.insert(integrations, integration.new(integrationData))
+		end
+
+		return integrations
+	end)
+end
+
+--[[
+	Delete the attached integration object for the guild. Deletes any associated webhooks and kicks the associated
+	bot if there is one.
+	
+	Requires the MANAGE_GUILD permission.
+]]
+function Guild.Prototype.deleteGuildIntegrationAsync(self: Guild, integrationId: string): future.Future<nil>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local status, response = guildRest.deleteGuildIntegrationAsync(request, self.id, integrationId):await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		return
+	end)
+end
+
+--[[
+	Returns a guild widget settings object. Requires the MANAGE_GUILD permission.
+]]
+function Guild.Prototype.getGuildWidgetSettingsAsync(self: Guild): future.Future<widgetSettings.WidgetSettings>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local status, response = guildRest.getGuildWidgetSettingsAsync(request, self.id):await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		return widgetSettings.new(response)
+	end)
+end
+
+--[[
+	Modify a guild widget settings object for the guild. All attributes may be passed in with JSON and modified.
+	Requires the MANAGE_GUILD permission. Returns the updated guild widget settings object. 
+]]
+function Guild.Prototype.modifyGuildWidgetAsync(
+	self: Guild,
+	json: widgetSettingsBuilder.JSON,
+	reason: string?
+): future.Future<widgetSettings.WidgetSettings>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local status, response = guildRest.modifyGuildWidgetAsync(request, self.id, json, reason):await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		return widgetSettings.new(response)
+	end)
+end
+
+--[[
+	Returns the widget for the guild. Fires an Invite Create Gateway event when an invite channel is defined
+	and a new Invite is generated.
+]]
+function Guild.Prototype.getGuildWidgetAsync(self: Guild): future.Future<widget.Widget>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local status, response = guildRest.getGuildWidgetAsync(request, self.id):await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		return widget.new(response)
+	end)
+end
+
+--[[
+	Returns a partial invite object for guilds with that feature enabled. Requires the MANAGE_GUILD permission.
+	code will be null if a vanity url for the guild is not set.
+]]
+function Guild.Prototype.getGuildVanityUrlAsync(self: Guild): future.Future<vanityUrl.VanityUrl>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local status, response = guildRest.getGuildVanityURLAsync(request, self.id):await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		return vanityUrl.new(response)
+	end)
+end
+
+--[[
+	Returns a PNG image widget for the guild. Requires no permissions or authentication.
+]]
+function Guild.Prototype.getGuildWidgetImageAsync(
+	self: Guild,
+	style: "shield" | "banner1" | "banner2" | "banner3" | "banner4"
+): future.Future<string>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local status, response = guildRest
+			.getGuildWidgetImageAsync(request, self.id, {
+				style = style,
+			})
+			:await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		return response
+	end)
+end
+
+--[[
+	Returns the Welcome Screen object for the guild. If the welcome screen is not enabled.
+	
+	the MANAGE_GUILD permission is required.
+]]
+function Guild.Prototype.getGuildWelcomeScreenAsync(self: Guild): future.Future<welcomeScreen.WelcomeScreen>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local status, response = guildRest.getGuildWelcomeScreenAsync(request, self.id):await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		return welcomeScreen.new(response)
+	end)
+end
+
+--[[
+	Modify the guild's Welcome Screen. Requires the MANAGE_GUILD permission.
+]]
+function Guild.Prototype.modifyGuildWelcomeScreenAsync(
+	self: Guild,
+	json: welcomeScreenBuilder.JSON,
+	reason: string?
+): future.Future<welcomeScreen.WelcomeScreen>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local status, response = guildRest.modifyGuildWelcomeScreenAsync(request, self.id, json, reason):await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		return welcomeScreen.new(response)
+	end)
+end
+
+--[[
+	Returns the Onboarding object for the guild.
+]]
+function Guild.Prototype.getGuildOnboardingAsync(self: Guild): future.Future<onboarding.Onboarding>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local status, response = guildRest.getGuildOnboardingAsync(request, self.id):await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		return onboarding.new(response)
+	end)
+end
+
+--[[
+	Modifies the onboarding configuration of the guild. Returns a 200 with the Onboarding object for the guild.
+	Requires the MANAGE_GUILD and MANAGE_ROLES permissions.
+]]
+function Guild.Prototype.modifyGuildOnboardingAsync(
+	self: Guild,
+	json: onboardingBuilder.JSON,
+	reason: string?
+): future.Future<onboarding.Onboarding>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local status, response = guildRest.modifyGuildOnboardingAsync(request, self.id, json, reason):await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		return onboarding.new(response)
 	end)
 end
 

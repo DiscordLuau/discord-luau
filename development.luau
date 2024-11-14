@@ -1,6 +1,7 @@
 local botObject = require("@core/bot")
 
 local intentsBuilder = require("@builders/intents")
+local widgetSettings = require("@builders/guild/widgetSettings")
 
 local env = require(".env")
 
@@ -20,6 +21,8 @@ discordBot.onAllShardsReady:listen(function()
 	assert(discordBot.application, ``)
 
 	local guild = discordBot:getGuildAsync(DISCORD_LUAU_SERVER):expect("1")
+
+	print(guild:getGuildOnboardingAsync():expect("2"))
 end)
 
 discordBot:connectAsync():after(function()
