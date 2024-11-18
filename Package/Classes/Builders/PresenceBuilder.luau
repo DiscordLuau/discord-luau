@@ -15,7 +15,7 @@ local ResolvableType = require("@Enums/ResolvableType")
 	Usage:
 	```lua
 	local presence = PresenceBuilder.new()
-		:addActivity(ActivityBuilder.new():setName("Playing a game"))
+		:addActivity(ActivityBuilder.new():setActivityName("Playing a game"))
 		:setStatus(PresenceBuilder.Status.Online)
 		:setAfk(false)
 		:setSince(os.time())
