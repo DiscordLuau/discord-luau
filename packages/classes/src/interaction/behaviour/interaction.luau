@@ -48,7 +48,8 @@ function Interaction.Interface.inheritProperties(class: any, interactionData: ap
 	class.guildId = interactionData.guild_id
 	-- class.channel = interactionData.channel and message.new(class.state, interactionData.channel)
 	class.channelId = interactionData.channel_id
-	class.member = interactionData.member and member.new(interactionData.member)
+	class.member = interactionData.member
+		and member.new(class.state, interactionData.guild_id :: string, interactionData.member)
 	class.user = interactionData.user and user.new(interactionData.user)
 	class.token = interactionData.token
 	class.version = interactionData.version

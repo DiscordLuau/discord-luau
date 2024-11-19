@@ -11,6 +11,8 @@ local guildBehaviour = require("@classes/channels/behaviour/guild")
 local textBehaviour = require("@classes/channels/behaviour/text")
 local threadBehaviour = require("@classes/channels/behaviour/thread")
 
+local state = require("@classes/state")
+
 local Public = {}
 
 Public.Interface = {}
@@ -29,8 +31,13 @@ function Public.Prototype.sync(self: Public, channelData: apiTypes.ChannelObject
 	end
 end
 
-function Public.Interface.new(channelData: apiTypes.ChannelObject): Public
-	local self = setmetatable({} :: Public, { __index = Public.Prototype })
+function Public.Interface.new(state: state.State, channelData: apiTypes.ChannelObject): Public
+	local self = setmetatable(
+		{
+			state = state,
+		} :: Public,
+		{ __index = Public.Prototype }
+	)
 
 	self:sync(channelData)
 
@@ -39,7 +46,9 @@ end
 
 export type Public =
 	typeof(Public.Prototype)
-	& {}
+	& {
+		state: state.State,
+	}
 	& channelBehaviour.ChannelBehaviour
 	& textBehaviour.TextBehaviour
 	& guildBehaviour.GuildBehaviour

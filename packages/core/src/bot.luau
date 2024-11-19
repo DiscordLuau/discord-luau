@@ -127,21 +127,21 @@ function Bot.Prototype.connectAsync(self: Bot): future.Future<nil>
 				self.state.cache.channels:set(typedObject.d.id :: apiTypes.Snowflake, typedObject.d)
 
 				if typedObject.d.type == 0 then
-					self.onTextChannelCreate:invoke(guildTextChannel.new(typedObject.d))
+					self.onTextChannelCreate:invoke(guildTextChannel.new(self.state, typedObject.d))
 				elseif typedObject.d.type == 1 then
-					self.onDMChannelCreate:invoke(dmChannel.new(typedObject.d))
+					self.onDMChannelCreate:invoke(dmChannel.new(self.state, typedObject.d))
 				elseif typedObject.d.type == 2 then
-					self.onVoiceChannelCreate:invoke(guildVoiceChannel.new(typedObject.d))
+					self.onVoiceChannelCreate:invoke(guildVoiceChannel.new(self.state, typedObject.d))
 				elseif typedObject.d.type == 3 then
-					self.onGroupDMChannelCreate:invoke(groupDmChannel.new(typedObject.d))
+					self.onGroupDMChannelCreate:invoke(groupDmChannel.new(self.state, typedObject.d))
 				elseif typedObject.d.type == 4 then
-					self.onCategoryChannelCreate:invoke(guildCategoryChannel.new(typedObject.d))
+					self.onCategoryChannelCreate:invoke(guildCategoryChannel.new(self.state, typedObject.d))
 				elseif typedObject.d.type == 5 then
-					self.onAnnouncementChannelCreate:invoke(guildAnnouncementChannel.new(typedObject.d))
+					self.onAnnouncementChannelCreate:invoke(guildAnnouncementChannel.new(self.state, typedObject.d))
 				elseif typedObject.d.type == 13 then
-					self.onStageVoiceChannelCreate:invoke(guildStageVoiceChannel.new(typedObject.d))
+					self.onStageVoiceChannelCreate:invoke(guildStageVoiceChannel.new(self.state, typedObject.d))
 				elseif typedObject.d.type == 14 then
-					self.onDirectoryChannelCreate:invoke(guildDirectoryChannel.new(typedObject.d))
+					self.onDirectoryChannelCreate:invoke(guildDirectoryChannel.new(self.state, typedObject.d))
 				end
 			elseif object.event == receiveEvents["ChannelUpdate"] then
 				local typedObject = object.payload :: gatewayTypes.UpdateChannelPayload
@@ -149,41 +149,41 @@ function Bot.Prototype.connectAsync(self: Bot): future.Future<nil>
 				self.state.cache.channels:set(typedObject.d.id :: apiTypes.Snowflake, typedObject.d)
 
 				if typedObject.d.type == 0 then
-					self.onTextChannelUpdated:invoke(guildTextChannel.new(typedObject.d))
+					self.onTextChannelUpdated:invoke(guildTextChannel.new(self.state, typedObject.d))
 				elseif typedObject.d.type == 1 then
-					self.onDMChannelUpdated:invoke(dmChannel.new(typedObject.d))
+					self.onDMChannelUpdated:invoke(dmChannel.new(self.state, typedObject.d))
 				elseif typedObject.d.type == 2 then
-					self.onVoiceChannelUpdated:invoke(guildVoiceChannel.new(typedObject.d))
+					self.onVoiceChannelUpdated:invoke(guildVoiceChannel.new(self.state, typedObject.d))
 				elseif typedObject.d.type == 3 then
-					self.onGroupDMChannelUpdated:invoke(groupDmChannel.new(typedObject.d))
+					self.onGroupDMChannelUpdated:invoke(groupDmChannel.new(self.state, typedObject.d))
 				elseif typedObject.d.type == 4 then
-					self.onCategoryChannelUpdated:invoke(guildCategoryChannel.new(typedObject.d))
+					self.onCategoryChannelUpdated:invoke(guildCategoryChannel.new(self.state, typedObject.d))
 				elseif typedObject.d.type == 5 then
-					self.onAnnouncementChannelUpdated:invoke(guildAnnouncementChannel.new(typedObject.d))
+					self.onAnnouncementChannelUpdated:invoke(guildAnnouncementChannel.new(self.state, typedObject.d))
 				elseif typedObject.d.type == 13 then
-					self.onStageVoiceChannelUpdated:invoke(guildStageVoiceChannel.new(typedObject.d))
+					self.onStageVoiceChannelUpdated:invoke(guildStageVoiceChannel.new(self.state, typedObject.d))
 				elseif typedObject.d.type == 14 then
-					self.onDirectoryChannelUpdated:invoke(guildDirectoryChannel.new(typedObject.d))
+					self.onDirectoryChannelUpdated:invoke(guildDirectoryChannel.new(self.state, typedObject.d))
 				end
 			elseif object.event == receiveEvents["ChannelDelete"] then
 				local typedObject = object.payload :: gatewayTypes.DeleteChannelPayload
 
 				if typedObject.d.type == 0 then
-					self.onTextChannelDeleted:invoke(guildTextChannel.new(typedObject.d))
+					self.onTextChannelDeleted:invoke(guildTextChannel.new(self.state, typedObject.d))
 				elseif typedObject.d.type == 1 then
-					self.onDMChannelDeleted:invoke(dmChannel.new(typedObject.d))
+					self.onDMChannelDeleted:invoke(dmChannel.new(self.state, typedObject.d))
 				elseif typedObject.d.type == 2 then
-					self.onVoiceChannelDeleted:invoke(guildVoiceChannel.new(typedObject.d))
+					self.onVoiceChannelDeleted:invoke(guildVoiceChannel.new(self.state, typedObject.d))
 				elseif typedObject.d.type == 3 then
-					self.onGroupDMChannelDeleted:invoke(groupDmChannel.new(typedObject.d))
+					self.onGroupDMChannelDeleted:invoke(groupDmChannel.new(self.state, typedObject.d))
 				elseif typedObject.d.type == 4 then
-					self.onCategoryChannelDeleted:invoke(guildCategoryChannel.new(typedObject.d))
+					self.onCategoryChannelDeleted:invoke(guildCategoryChannel.new(self.state, typedObject.d))
 				elseif typedObject.d.type == 5 then
-					self.onAnnouncementChannelDeleted:invoke(guildAnnouncementChannel.new(typedObject.d))
+					self.onAnnouncementChannelDeleted:invoke(guildAnnouncementChannel.new(self.state, typedObject.d))
 				elseif typedObject.d.type == 13 then
-					self.onStageVoiceChannelDeleted:invoke(guildStageVoiceChannel.new(typedObject.d))
+					self.onStageVoiceChannelDeleted:invoke(guildStageVoiceChannel.new(self.state, typedObject.d))
 				elseif typedObject.d.type == 14 then
-					self.onDirectoryChannelDeleted:invoke(guildDirectoryChannel.new(typedObject.d))
+					self.onDirectoryChannelDeleted:invoke(guildDirectoryChannel.new(self.state, typedObject.d))
 				end
 			elseif object.event == receiveEvents["ChannelPinsUpdate"] then
 				local typedObject = object.payload :: gatewayTypes.ChannelPinsUpdatePayload
@@ -246,7 +246,7 @@ function Bot.Prototype.connectAsync(self: Bot): future.Future<nil>
 
 				self.onGuildMemberJoined:invoke({
 					guildId = typedObject.d.guild_id,
-					member = member.new(typedObject.d),
+					member = member.new(self.state, typedObject.d.guild_id, typedObject.d),
 				})
 			elseif object.event == receiveEvents["GuildMemberRemove"] then
 				local typedObject = object.payload :: gatewayTypes.GuildMemberRemovePayload

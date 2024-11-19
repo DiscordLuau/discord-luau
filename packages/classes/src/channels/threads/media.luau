@@ -12,6 +12,8 @@ local textBehaviour = require("@classes/channels/behaviour/text")
 local threadBehaviour = require("@classes/channels/behaviour/thread")
 local mediaBehaviour = require("@classes/channels/behaviour/media")
 
+local state = require("@classes/state")
+
 local Media = {}
 
 Media.Interface = {}
@@ -31,8 +33,13 @@ function Media.Prototype.sync(self: Media, channelData: apiTypes.ChannelObject)
 	end
 end
 
-function Media.Interface.new(channelData: apiTypes.ChannelObject): Media
-	local self = setmetatable({} :: Media, { __index = Media.Prototype })
+function Media.Interface.new(state: state.State, channelData: apiTypes.ChannelObject): Media
+	local self = setmetatable(
+		{
+			state = state,
+		} :: Media,
+		{ __index = Media.Prototype }
+	)
 
 	self:sync(channelData)
 
@@ -41,7 +48,9 @@ end
 
 export type Media =
 	typeof(Media.Prototype)
-	& {}
+	& {
+		state: state.State,
+	}
 	& channelBehaviour.ChannelBehaviour
 	& textBehaviour.TextBehaviour
 	& guildBehaviour.GuildBehaviour

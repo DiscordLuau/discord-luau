@@ -8,6 +8,7 @@ local apiTypes = require("@api-types/apiTypes")
 local channelTypes = require("@api-types/channel")
 
 local user = require("@classes/user")
+local state = require("@classes/state")
 
 local constructChannelFromData = require("@utils/constructChannelFromData")
 
@@ -21,7 +22,7 @@ function Widget.Prototype.sync(self: Widget, widgetData: apiTypes.GuildWidgetObj
 	local userArray = {}
 
 	for _, channelData in widgetData.channels do
-		table.insert(channelArray, constructChannelFromData(channelData) :: channelTypes.AbstractChannel)
+		table.insert(channelArray, constructChannelFromData(self.state, channelData) :: channelTypes.AbstractChannel)
 	end
 
 	for _, userData in widgetData.members do
@@ -35,8 +36,13 @@ function Widget.Prototype.sync(self: Widget, widgetData: apiTypes.GuildWidgetObj
 	self.members = userArray
 end
 
-function Widget.Interface.new(widgetData: apiTypes.GuildWidgetObject): Widget
-	local self = setmetatable({} :: Widget, { __index = Widget.Prototype })
+function Widget.Interface.new(state: state.State, widgetData: apiTypes.GuildWidgetObject): Widget
+	local self = setmetatable(
+		{
+			state = state,
+		} :: Widget,
+		{ __index = Widget.Prototype }
+	)
 
 	self:sync(widgetData)
 
@@ -44,6 +50,8 @@ function Widget.Interface.new(widgetData: apiTypes.GuildWidgetObject): Widget
 end
 
 export type Widget = typeof(Widget.Prototype) & {
+	state: state.State,
+
 	id: string,
 	name: string,
 	instantInvite: string?,

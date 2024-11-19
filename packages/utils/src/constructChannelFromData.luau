@@ -16,35 +16,38 @@ local mediaThread = require("@classes/channels/threads/media")
 local privateThread = require("@classes/channels/threads/private")
 local publicThread = require("@classes/channels/threads/public")
 
-return function<T>(channelData: apiTypes.ChannelObject): T?
+-- selene: allow(unused_variable)
+local state = require("@classes/state")
+
+return function<T>(state: state.State, channelData: apiTypes.ChannelObject): T?
 	local object: any
 
 	if channelData.type == channelTypes.ChannelTypes.GuildText then
-		object = guildText.new(channelData)
+		object = guildText.new(state, channelData)
 	elseif channelData.type == channelTypes.ChannelTypes.DM then
-		object = dmChannel.new(channelData)
+		object = dmChannel.new(state, channelData)
 	elseif channelData.type == channelTypes.ChannelTypes.GuildVoice then
-		object = guildVoice.new(channelData)
+		object = guildVoice.new(state, channelData)
 	elseif channelData.type == channelTypes.ChannelTypes.GroupDM then
-		object = groupDmChannel.new(channelData)
+		object = groupDmChannel.new(state, channelData)
 	elseif channelData.type == channelTypes.ChannelTypes.GuildCategory then
-		object = guildCategory.new(channelData)
+		object = guildCategory.new(state, channelData)
 	elseif channelData.type == channelTypes.ChannelTypes.GuildAnnouncement then
-		object = guildAnnouncement.new(channelData)
+		object = guildAnnouncement.new(state, channelData)
 	elseif channelData.type == channelTypes.ChannelTypes.AnnouncementThread then
-		object = announcementThread.new(channelData)
+		object = announcementThread.new(state, channelData)
 	elseif channelData.type == channelTypes.ChannelTypes.PublicThread then
-		object = publicThread.new(channelData)
+		object = publicThread.new(state, channelData)
 	elseif channelData.type == channelTypes.ChannelTypes.PrivateThread then
-		object = privateThread.new(channelData)
+		object = privateThread.new(state, channelData)
 	elseif channelData.type == channelTypes.ChannelTypes.GuildStageVoice then
-		object = guildStageVoice.new(channelData)
+		object = guildStageVoice.new(state, channelData)
 	elseif channelData.type == channelTypes.ChannelTypes.GuildDirectory then
-		object = guildDirectory.new(channelData)
+		object = guildDirectory.new(state, channelData)
 	elseif channelData.type == channelTypes.ChannelTypes.GuildForum then
-		object = forumThread.new(channelData)
+		object = forumThread.new(state, channelData)
 	elseif channelData.type == channelTypes.ChannelTypes.GuildMedia then
-		object = mediaThread.new(channelData)
+		object = mediaThread.new(state, channelData)
 	end
 
 	return object :: T

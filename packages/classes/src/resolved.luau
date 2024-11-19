@@ -24,7 +24,7 @@ function Resolved.Prototype.sync(self: Resolved, resolvedData: apiTypes.Resolved
 	end
 
 	for id, memberData in next, resolvedData.members or {} do
-		self.members[id] = member.new(memberData)
+		self.members[id] = member.new(self.state, "_interaction", memberData)
 	end
 
 	for id, roleData in next, resolvedData.roles or {} do

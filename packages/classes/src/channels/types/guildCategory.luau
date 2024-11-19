@@ -9,6 +9,8 @@ local apiTypes = require("@api-types/apiTypes")
 local channelBehaviour = require("@classes/channels/behaviour/channel")
 local guildBehaviour = require("@classes/channels/behaviour/guild")
 
+local state = require("@classes/state")
+
 local GuildCategory = {}
 
 GuildCategory.Interface = {}
@@ -25,18 +27,21 @@ function GuildCategory.Prototype.sync(self: GuildCategory, channelData: apiTypes
 	end
 end
 
-function GuildCategory.Interface.new(channelData: apiTypes.ChannelObject): GuildCategory
-	local self = setmetatable({} :: GuildCategory, { __index = GuildCategory.Prototype })
+function GuildCategory.Interface.new(state: state.State, channelData: apiTypes.ChannelObject): GuildCategory
+	local self = setmetatable(
+		{
+			state = state,
+		} :: GuildCategory,
+		{ __index = GuildCategory.Prototype }
+	)
 
 	self:sync(channelData)
 
 	return self
 end
 
-export type GuildCategory =
-	typeof(GuildCategory.Prototype)
-	& {}
-	& channelBehaviour.ChannelBehaviour
-	& guildBehaviour.GuildBehaviour
+export type GuildCategory = typeof(GuildCategory.Prototype) & {
+	state: state.State,
+} & channelBehaviour.ChannelBehaviour & guildBehaviour.GuildBehaviour
 
 return GuildCategory.Interface

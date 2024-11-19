@@ -92,9 +92,9 @@ function Message.Prototype.sync(self: Message, messageData: apiTypes.MessageObje
 
 	self.id = messageData.id
 	self.channelId = messageData.channel_id
-	self.author = user.new(messageData.author)
+	self.author = messageData.author and user.new(messageData.author)
 	self.content = messageData.content
-	self.timestamp = datetime.fromIsoDate(messageData.timestamp)
+	self.timestamp = messageData.timestamp and datetime.fromIsoDate(messageData.timestamp)
 	self.tts = messageData.tts
 	self.mentionEveryone = messageData.mention_everyone
 	self.mentionChannels = mentionArray
@@ -115,7 +115,7 @@ function Message.Prototype.sync(self: Message, messageData: apiTypes.MessageObje
 		and Message.Interface.new(self.state, messageData.referenced_message)
 	self.interactionMetadata = messageData.interaction_metadata
 		and interactionMetadata.new(messageData.interaction_metadata)
-	self.interaction = messageData.interaction and interaction.new(messageData.interaction)
+	self.interaction = messageData.interaction and interaction.new(self.state, messageData.interaction)
 	self.components = componentArray
 	self.stickerItems = stickerItemArray
 	self.position = messageData.position
@@ -144,14 +144,14 @@ end
 export type Message = typeof(Message.Prototype) & {
 	state: state.State,
 
-	id: apiTypes.Snowflake,
+	id: apiTypes.Snowflake?,
 	channelId: apiTypes.Snowflake?,
-	author: user.User,
-	content: string,
-	timestamp: datetime.DateTime,
+	author: user.User?,
+	content: string?,
+	timestamp: datetime.DateTime?,
 	editedTimestamp: datetime.DateTime?,
-	tts: boolean,
-	mentionEveryone: boolean,
+	tts: boolean?,
+	mentionEveryone: boolean?,
 	mentions: { user.User },
 	mentionRoles: { role.Role },
 	mentionChannels: { channelMention.ChannelMention },
@@ -159,7 +159,7 @@ export type Message = typeof(Message.Prototype) & {
 	embeds: { embed.Embed },
 	reactions: { reaction.Reaction },
 	nonce: string,
-	pinned: boolean,
+	pinned: boolean?,
 	webhookId: apiTypes.Snowflake?,
 	type: messageTypes.MessageType,
 	activity: activity.Activity?,
@@ -180,7 +180,7 @@ export type Message = typeof(Message.Prototype) & {
 	},
 	stickerItems: { stickerItem.StickerItem },
 	position: number?,
-	roleSubscriptionData: roleSubscriptionData.RoleSubscriptionData,
+	roleSubscriptionData: roleSubscriptionData.RoleSubscriptionData?,
 	resolved: {
 		state: state.State,
 

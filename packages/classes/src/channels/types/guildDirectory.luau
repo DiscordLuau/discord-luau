@@ -9,6 +9,8 @@ local apiTypes = require("@api-types/apiTypes")
 local channelBehaviour = require("@classes/channels/behaviour/channel")
 local guildBehaviour = require("@classes/channels/behaviour/guild")
 
+local state = require("@classes/state")
+
 local GuildDirectory = {}
 
 GuildDirectory.Interface = {}
@@ -25,18 +27,21 @@ function GuildDirectory.Prototype.sync(self: GuildDirectory, channelData: apiTyp
 	end
 end
 
-function GuildDirectory.Interface.new(channelData: apiTypes.ChannelObject): GuildDirectory
-	local self = setmetatable({} :: GuildDirectory, { __index = GuildDirectory.Prototype })
+function GuildDirectory.Interface.new(state: state.State, channelData: apiTypes.ChannelObject): GuildDirectory
+	local self = setmetatable(
+		{
+			state = state,
+		} :: GuildDirectory,
+		{ __index = GuildDirectory.Prototype }
+	)
 
 	self:sync(channelData)
 
 	return self
 end
 
-export type GuildDirectory =
-	typeof(GuildDirectory.Prototype)
-	& {}
-	& channelBehaviour.ChannelBehaviour
-	& guildBehaviour.GuildBehaviour
+export type GuildDirectory = typeof(GuildDirectory.Prototype) & {
+	state: state.State,
+} & channelBehaviour.ChannelBehaviour & guildBehaviour.GuildBehaviour
 
 return GuildDirectory.Interface

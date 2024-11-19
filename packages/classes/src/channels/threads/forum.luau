@@ -12,6 +12,8 @@ local textBehaviour = require("@classes/channels/behaviour/text")
 local threadBehaviour = require("@classes/channels/behaviour/thread")
 local forumBehaviour = require("@classes/channels/behaviour/forum")
 
+local state = require("@classes/state")
+
 local Forum = {}
 
 Forum.Interface = {}
@@ -31,8 +33,13 @@ function Forum.Prototype.sync(self: Forum, channelData: apiTypes.ChannelObject)
 	end
 end
 
-function Forum.Interface.new(channelData: apiTypes.ChannelObject): Forum
-	local self = setmetatable({} :: Forum, { __index = Forum.Prototype })
+function Forum.Interface.new(state: state.State, channelData: apiTypes.ChannelObject): Forum
+	local self = setmetatable(
+		{
+			state = state,
+		} :: Forum,
+		{ __index = Forum.Prototype }
+	)
 
 	self:sync(channelData)
 
@@ -41,7 +48,9 @@ end
 
 export type Forum =
 	typeof(Forum.Prototype)
-	& {}
+	& {
+		state: state.State,
+	}
 	& channelBehaviour.ChannelBehaviour
 	& textBehaviour.TextBehaviour
 	& guildBehaviour.GuildBehaviour

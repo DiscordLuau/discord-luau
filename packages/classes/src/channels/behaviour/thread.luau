@@ -14,7 +14,7 @@ ThreadBehaviour.Prototype = {}
 
 function ThreadBehaviour.Interface.inheritProperties(class: any, channelData: apiTypes.ChannelObject)
 	class.totalMessageSent = channelData.total_message_sent
-	class.member = channelData.member and threadMember.new(channelData.member)
+	class.member = channelData.member and threadMember.new(class.state, class.guildId, channelData.member)
 	class.threadMetadata = channelData.thread_metadata and threadMetadata.new(channelData.thread_metadata)
 	class.memberCount = channelData.member_count
 	class.messageCount = channelData.message_count

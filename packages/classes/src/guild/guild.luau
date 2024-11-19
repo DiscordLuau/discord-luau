@@ -241,7 +241,7 @@ function Guild.Prototype.getChannelsAsync(self: Guild): future.Future<{ type: ch
 		local channels: { unknown } = {}
 
 		for _, channelData in next, response do
-			table.insert(channels, constructChannelFromData(channelData))
+			table.insert(channels, constructChannelFromData(self.state, channelData))
 		end
 
 		return channels
@@ -392,7 +392,7 @@ function Guild.Prototype.createChannelAsync<T>(
 
 		assert(status == "Fulfilled", tostring(response))
 
-		return constructChannelFromData(response)
+		return constructChannelFromData(self.state, response)
 	end)
 end
 
@@ -416,7 +416,7 @@ function Guild.Prototype.getThreadsAsync(self: Guild): future.Future<{ type: cha
 		local channels: { unknown } = {}
 
 		for _, channelData in next, response.threads do
-			table.insert(channels, constructChannelFromData(channelData))
+			table.insert(channels, constructChannelFromData(self.state, channelData))
 		end
 
 		return channels
@@ -515,7 +515,7 @@ function Guild.Prototype.getGuildMemberAsync(self: Guild, userId: string): futur
 
 		assert(status == "Fulfilled", tostring(response))
 
-		return member.new(response)
+		return member.new(self.state, self.id, response)
 	end)
 end
 
@@ -542,7 +542,7 @@ function Guild.Prototype.listGuildMembersAsync(
 		local members = {}
 
 		for _, memberData in response do
-			table.insert(members, member.new(memberData))
+			table.insert(members, member.new(self.state, self.id, memberData))
 		end
 
 		return members
@@ -572,7 +572,7 @@ function Guild.Prototype.searchGuildMembersAsync(
 		local members = {}
 
 		for _, memberData in response do
-			table.insert(members, member.new(memberData))
+			table.insert(members, member.new(self.state, self.id, memberData))
 		end
 
 		return members
@@ -612,7 +612,7 @@ function Guild.Prototype.addGuildMemberAsync(
 		assert(status == "Fulfilled", tostring(response))
 
 		if response then
-			return member.new(response)
+			return member.new(self.state, self.id, response)
 		end
 
 		return
@@ -1034,7 +1034,7 @@ function Guild.Prototype.getGuildWidgetAsync(self: Guild): future.Future<widget.
 
 		assert(status == "Fulfilled", tostring(response))
 
-		return widget.new(response)
+		return widget.new(self.state, response)
 	end)
 end
 

@@ -33,7 +33,7 @@ Invite.Prototype = {}
 
 function Invite.Prototype.sync(self: Invite, inviteData: apiTypes.InviteObject)
 	if inviteData.channel then
-		local channel = constructChannelFromData(inviteData.channel)
+		local channel = constructChannelFromData(self.state, inviteData.channel)
 
 		self.channel = channel :: channel
 	end

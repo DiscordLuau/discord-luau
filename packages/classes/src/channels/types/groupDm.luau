@@ -10,6 +10,8 @@ local channelBehaviour = require("@classes/channels/behaviour/channel")
 local groupDMBehaviours = require("@classes/channels/behaviour/groupDM")
 local textBehaviour = require("@classes/channels/behaviour/text")
 
+local state = require("@classes/state")
+
 local GroupDM = {}
 
 GroupDM.Interface = {}
@@ -27,19 +29,21 @@ function GroupDM.Prototype.sync(self: GroupDM, channelData: apiTypes.ChannelObje
 	end
 end
 
-function GroupDM.Interface.new(channelData: apiTypes.ChannelObject): GroupDM
-	local self = setmetatable({} :: GroupDM, { __index = GroupDM.Prototype })
+function GroupDM.Interface.new(state: state.State, channelData: apiTypes.ChannelObject): GroupDM
+	local self = setmetatable(
+		{
+			state = state,
+		} :: GroupDM,
+		{ __index = GroupDM.Prototype }
+	)
 
 	self:sync(channelData)
 
 	return self
 end
 
-export type GroupDM =
-	typeof(GroupDM.Prototype)
-	& {}
-	& channelBehaviour.ChannelBehaviour
-	& groupDMBehaviours.DMBehaviour
-	& textBehaviour.TextBehaviour
+export type GroupDM = typeof(GroupDM.Prototype) & {
+	state: state.State,
+} & channelBehaviour.ChannelBehaviour & groupDMBehaviours.DMBehaviour & textBehaviour.TextBehaviour
 
 return GroupDM.Interface

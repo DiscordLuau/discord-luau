@@ -10,6 +10,8 @@ local channelBehaviour = require("@classes/channels/behaviour/channel")
 local guildBehaviour = require("@classes/channels/behaviour/guild")
 local voiceBehaviour = require("@classes/channels/behaviour/voice")
 
+local state = require("@classes/state")
+
 local GuildVoice = {}
 
 GuildVoice.Interface = {}
@@ -27,19 +29,21 @@ function GuildVoice.Prototype.sync(self: GuildVoice, channelData: apiTypes.Chann
 	end
 end
 
-function GuildVoice.Interface.new(channelData: apiTypes.ChannelObject): GuildVoice
-	local self = setmetatable({} :: GuildVoice, { __index = GuildVoice.Prototype })
+function GuildVoice.Interface.new(state: state.State, channelData: apiTypes.ChannelObject): GuildVoice
+	local self = setmetatable(
+		{
+			state = state,
+		} :: GuildVoice,
+		{ __index = GuildVoice.Prototype }
+	)
 
 	self:sync(channelData)
 
 	return self
 end
 
-export type GuildVoice =
-	typeof(GuildVoice.Prototype)
-	& {}
-	& channelBehaviour.ChannelBehaviour
-	& voiceBehaviour.VoiceBehaviour
-	& guildBehaviour.GuildBehaviour
+export type GuildVoice = typeof(GuildVoice.Prototype) & {
+	state: state.State,
+} & channelBehaviour.ChannelBehaviour & voiceBehaviour.VoiceBehaviour & guildBehaviour.GuildBehaviour
 
 return GuildVoice.Interface
