@@ -74,7 +74,7 @@ export type Resolved = typeof(Resolved.Prototype) & {
 	members: { [apiTypes.Snowflake]: member.Member },
 	roles: { [apiTypes.Snowflake]: role.Role },
 	channels: { [apiTypes.Snowflake]: channelTypes.AbstractChannel },
-	messages: { [apiTypes.Snowflake]: Message },
+	messages: { [apiTypes.Snowflake]: message.Message },
 	attachments: { [apiTypes.Snowflake]: attachment.Attachment },
 }
 

@@ -115,7 +115,7 @@ function Request.Prototype.executeAsync<Resolve>(self: Request): future.Future<{
 			assert(self.body, `Request body is not set!`)
 		end
 
-		local headerTable = {}
+		local headerTable: net.HttpHeaderMap = {}
 		local baseUrl = `https://discord.com/api/v{self.restApiVersion}{self.url}`
 		local hasUrlParams = next(self.urlParams) ~= nil
 
@@ -220,13 +220,13 @@ export type Request = typeof(Request.Prototype) & {
 	beforeHooks: {
 		(
 			self: Request,
-			{ url: string, method: string, body: string, headers: { [string]: string } }
+			{ url: string, method: string, body: string, headers: net.HttpHeaderMap }
 		) -> boolean
 	},
 	afterHooks: {
 		(
 			self: Request,
-			{ url: string, method: string, body: string, headers: { [string]: string } },
+			{ url: string, method: string, body: string, headers: net.HttpHeaderMap },
 			net.FetchResponse
 		) -> ()
 	},
