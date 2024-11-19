@@ -64,7 +64,7 @@ export type Option = typeof(Option.Prototype) & {
 	type: apiTypes.ApplicationCommandOptionType,
 	name: string,
 	nameLocalizations: { [apiTypes.LanguageLocales]: string }?,
-	description: string,
+	description: string?,
 	descriptionLocalizations: { [apiTypes.LanguageLocales]: string }?,
 	required: boolean?,
 	choices: { choice.Choice }?,

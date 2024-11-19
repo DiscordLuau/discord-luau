@@ -273,14 +273,14 @@ export type Message = typeof(Message.Prototype) & {
 	content: string?,
 	nonce: string?,
 	tts: boolean?,
-	embeds: { embed.JSON }?,
+	embeds: { embed.JSON },
 	allowedMentions: allowedMention.JSON?,
 	messageReference: reference.JSON?,
-	components: { button.JSON | textInput.JSON | selectMenu.JSON | actionRow.JSON }?,
-	stickerIds: { string }?,
+	components: { button.JSON | textInput.JSON | selectMenu.JSON | actionRow.JSON },
+	stickerIds: { string },
 	-- files[n]
 	-- payloadJson
-	attachments: { attachment.JSON }?,
+	attachments: { attachment.JSON },
 	flags: number?,
 	enforceNonce: boolean?,
 	poll: poll.JSON?,

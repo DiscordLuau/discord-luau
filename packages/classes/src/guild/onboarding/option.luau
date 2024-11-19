@@ -31,11 +31,11 @@ function Option.Interface.new(optionData: apiTypes.PromptOptionObject): Option
 end
 
 export type Option = typeof(Option.Prototype) & {
-	id: apiTypes.Snowflake,
+	id: apiTypes.Snowflake?,
 	channelIds: { apiTypes.Snowflake },
 	roleIds: { apiTypes.Snowflake },
 	emoji: emoji.Emoji?,
-	title: string,
+	title: string?,
 	description: string?,
 }
 

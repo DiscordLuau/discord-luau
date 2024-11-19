@@ -25,7 +25,7 @@ function WidgetSettings.Interface.new(widgetSettingsData: apiTypes.GuildWidgetSe
 end
 
 export type WidgetSettings = typeof(WidgetSettings.Prototype) & {
-	enabled: boolean,
+	enabled: boolean?,
 	channelId: apiTypes.Snowflake?,
 }
 

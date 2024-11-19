@@ -5,6 +5,7 @@
 ]]
 
 local apiTypes = require("@api-types/apiTypes")
+local channelTypes = require("@api-types/channel")
 
 local user = require("@classes/user")
 local member = require("@classes/guild/member")
@@ -12,6 +13,8 @@ local role = require("@classes/guild/role")
 local attachment = require("@classes/attachment")
 local message = require("@classes/message/message")
 local state = require("@classes/state")
+
+local constructChannelFromData = require("@utils/constructChannelFromData")
 
 local Resolved = {}
 
@@ -31,9 +34,9 @@ function Resolved.Prototype.sync(self: Resolved, resolvedData: apiTypes.Resolved
 		self.roles[id] = role.new(roleData)
 	end
 
-	-- for id, channelData in next, resolvedData.channels or {} do
-	-- 	self.channels[id] = channel.new(channelData)
-	-- end
+	for id, channelData in next, resolvedData.channels or {} do
+		self.channels[id] = constructChannelFromData(self.state, channelData) :: channelTypes.AbstractChannel
+	end
 
 	for id, messageData in next, resolvedData.messages or {} do
 		self.messages[id] = message.new(self.state, messageData)
@@ -52,7 +55,7 @@ function Resolved.Interface.new(state: state.State, resolvedData: apiTypes.Resol
 			users = {},
 			members = {},
 			roles = {},
-			-- channels = {},
+			channels = {},
 			messages = {},
 			attachments = {},
 		} :: Resolved,
@@ -70,7 +73,7 @@ export type Resolved = typeof(Resolved.Prototype) & {
 	users: { [apiTypes.Snowflake]: user.User },
 	members: { [apiTypes.Snowflake]: member.Member },
 	roles: { [apiTypes.Snowflake]: role.Role },
-	-- channels: { [apiTypes.Snowflake]: unknown }, -- fixme: we can't type the channels since channels require this message class.
+	channels: { [apiTypes.Snowflake]: channelTypes.AbstractChannel },
 	messages: { [apiTypes.Snowflake]: Message },
 	attachments: { [apiTypes.Snowflake]: attachment.Attachment },
 }

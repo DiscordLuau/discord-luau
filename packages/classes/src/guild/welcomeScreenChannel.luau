@@ -30,8 +30,8 @@ function WelcomeScreenChannel.Interface.new(roleTagData: apiTypes.WelcomeScreenC
 end
 
 export type WelcomeScreenChannel = typeof(WelcomeScreenChannel.Prototype) & {
-	channelId: apiTypes.Snowflake,
-	description: string,
+	channelId: apiTypes.Snowflake?,
+	description: string?,
 	emojiId: apiTypes.Snowflake?,
 	emojiName: string?,
 }

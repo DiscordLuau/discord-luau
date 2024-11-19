@@ -42,10 +42,10 @@ export type Prompt = typeof(Prompt.Prototype) & {
 	id: apiTypes.Snowflake?,
 	type: guildTypes.OnboardingPromptType,
 	options: { option.Option },
-	title: string,
-	singleSelect: boolean,
-	required: boolean,
-	inOnboarding: boolean,
+	title: string?,
+	singleSelect: boolean?,
+	required: boolean?,
+	inOnboarding: boolean?,
 }
 
 return Prompt.Interface
