@@ -270,7 +270,7 @@ export type ModifyGuildMemberRequest = Request<{
 	roles: { objects.Snowflake }?, -- array of role ids the member is assigned
 	mute: boolean?, -- whether the user is muted in voice channels. Will throw a 400 error if the user is not in a voice channel
 	deaf: boolean?, -- whether the user is deafened in voice channels. Will throw a 400 error if the user is not in a voice channel
-	channel_id: objects.Snowflake?, -- id of channel to move user to (if they are connected to voice)
+	channel_id: (objects.Snowflake | boolean)?, -- id of channel to move user to (if they are connected to voice)
 	communication_disabled_until: string?, -- when the user's timeout will expire and the user will be able to communicate in the guild again (up to 28 days in the future), set to null to remove timeout. Will throw a 403 error if the user has the ADMINISTRATOR permission or is the owner of the guild
 	flags: objects.GuildMemberFlags?, -- guild member flags
 }>
