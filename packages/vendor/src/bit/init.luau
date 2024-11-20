@@ -5,7 +5,7 @@
 
 local MAXIMUM_32BIT_VALUE = 2147483647
 
-local Bit64 = require("bit64")
+local Bit64 = require("./bit64")
 local Bit32 = bit32
 
 local Bit = {}

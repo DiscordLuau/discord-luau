@@ -1,6 +1,6 @@
 --> Task to typecheck packages using luau-lsp
 
-local task = require("task")
+local task = require("./task")
 
 task.new("luau-lsp")
 	:addArgument("analyze")
