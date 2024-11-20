@@ -1,6 +1,6 @@
 --> Task to execute StyLua for checking validity of formatting
 
-local task = require("task")
+local task = require("./task")
 
 task.new("stylua")
 	:addArgument("--check")
