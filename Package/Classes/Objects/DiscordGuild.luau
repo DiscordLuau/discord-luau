@@ -367,11 +367,11 @@ end
 --[=[
 	Fetches all channels in the guild asynchronously.
 
-	@method fetchGuildChannels
+	@method fetchGuildChannelsAsync
 	@return Vendor.Future
 	@within Objects.DiscordGuild
 ]=]
-function DiscordGuild.Prototype.fetchGuildChannels(self: DiscordGuild)
+function DiscordGuild.Prototype.fetchGuildChannelsAsync(self: DiscordGuild)
 	return Future.try(function()
 		local guildChannels = self.discordClient.discordGateway
 			:getAsync(
