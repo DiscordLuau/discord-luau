@@ -39,6 +39,15 @@ local VideoQualityMode = table.freeze(reflect({
 	Full = 2,
 }))
 
+local SelectMenuType = table.freeze(reflect({
+	String = 3,
+	Text = 4,
+	User = 5,
+	Role = 6,
+	Mentionable = 7,
+	Channel = 8,
+}))
+
 export type ChannelType =
 	"GuildText"
 	| "DM"
@@ -59,6 +68,8 @@ export type ForumSortOrder = "LatestActivity" | "CreationDate"
 export type ForumLayout = "NotSet" | "ListView" | "GalleryView"
 
 export type VideoQualityMode = "Auto" | "Full"
+
+export type SelectMenuType = "String" | "Text" | "User" | "Role" | "Mentionable" | "Channel"
 
 export type AbstractChannel = {
 	id: apiTypes.Snowflake?,
@@ -104,4 +115,5 @@ return {
 	ForumSortOrder = ForumSortOrder,
 	ForumLayout = ForumLayout,
 	VideoQualityMode = VideoQualityMode,
+	SelectMenuType = SelectMenuType,
 }

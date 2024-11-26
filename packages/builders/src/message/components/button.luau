@@ -5,6 +5,7 @@
 ]]
 
 local messageTypes = require("@api-types/message")
+local apiTypes = require("@api-types/apiTypes")
 
 local emoji = require("@builders/emoji")
 
@@ -83,6 +84,8 @@ end
 	Responsible for building the Button JSON that can be parsed by the Discord API.
 ]]
 function Button.Prototype.build(self: Button): JSON
+	assert(self.style, `Button style is required.`)
+
 	return {
 		type = 2,
 		style = messageTypes.ButtonStyle[self.style],
@@ -158,6 +161,6 @@ export type Button = typeof(Button.Prototype) & {
 	disabled: boolean?,
 }
 
-export type JSON = typeof(Button.Prototype.build(nil :: any))
+export type JSON = apiTypes.ButtonComponentObject
 
 return Button.Interface

@@ -5,6 +5,7 @@
 ]]
 
 local messageTypes = require("@api-types/message")
+local apiTypes = require("@api-types/apiTypes")
 
 local TextInput = {}
 
@@ -87,6 +88,10 @@ end
 	Responsible for building the TextInput JSON that can be parsed by the Discord API.
 ]]
 function TextInput.Prototype.build(self: TextInput): JSON
+	assert(self.customId, `TextInput.customId is required.`)
+	assert(self.style, `TextInput.style is required.`)
+	assert(self.label, `TextInput.label is required.`)
+
 	return {
 		type = 4,
 		custom_id = self.customId,
@@ -169,6 +174,6 @@ export type TextInput = typeof(TextInput.Prototype) & {
 	placeholder: string?,
 }
 
-export type JSON = typeof(TextInput.Prototype.build(nil :: any))
+export type JSON = apiTypes.TextInputComponentObject
 
 return TextInput.Interface

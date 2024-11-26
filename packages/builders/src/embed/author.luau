@@ -44,9 +44,13 @@ end
 	Responsible for building the Author JSON that can be parsed by the Discord API.
 ]]
 function Author.Prototype.build(self: Author): JSON
+	assert(self.name, `Author must have a name`)
+
 	return {
 		name = self.name,
 		url = self.url,
+		icon_url = self.iconUrl,
+		proxy_icon_url = self.proxyIconUrl,
 	}
 end
 

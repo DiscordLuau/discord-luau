@@ -17,6 +17,15 @@ SelectMenu.Interface = {}
 --[[
 	
 ]]
+function SelectMenu.Prototype.setType(self: SelectMenu, selectMenuType: channelTypes.SelectMenuType): SelectMenu
+	self.type = selectMenuType
+
+	return self
+end
+
+--[[
+	
+]]
 function SelectMenu.Prototype.setCustomId(self: SelectMenu, customId: string): SelectMenu
 	self.customId = customId
 
@@ -90,7 +99,11 @@ end
 	Responsible for building the SelectMenu JSON that can be parsed by the Discord API.
 ]]
 function SelectMenu.Prototype.build(self: SelectMenu): JSON
+	assert(self.type, "SelectMenu type is required")
+	assert(self.customId, "SelectMenu customId is required")
+
 	return {
+		type = channelTypes.SelectMenuType[self.type],
 		custom_id = self.customId,
 		options = self.options,
 		channel_types = self.channelTypes,
@@ -110,6 +123,7 @@ end
 	```
 ]]
 function SelectMenu.Interface.new(resource: {
+	type: channelTypes.SelectMenuType?,
 	customId: string?,
 	options: { option.JSON },
 	channelTypes: { channelTypes.ChannelType },
@@ -131,6 +145,10 @@ function SelectMenu.Interface.new(resource: {
 	)
 
 	if resource then
+		if resource.type then
+			self:setType(resource.type)
+		end
+
 		if resource.customId then
 			self:setCustomId(resource.customId)
 		end
@@ -174,6 +192,7 @@ function SelectMenu.Interface.new(resource: {
 end
 
 export type SelectMenu = typeof(SelectMenu.Prototype) & {
+	type: channelTypes.SelectMenuType?,
 	customId: string?,
 	options: { option.JSON },
 	channelTypes: { channelTypes.ChannelType },

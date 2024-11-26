@@ -4,7 +4,6 @@
 	https://discord.com/developers/docs/resources/guild#create-guild-role-json-params
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
 local permissionTypes = require("@api-types/permission")
 
 local bit = require("@vendor/bit")
@@ -82,13 +81,13 @@ function Role.Prototype.build(self: Role): JSON
 
 	return {
 		name = self.name,
-		permissions = tostring(bit.bor(table.unpack(permissionBits))),
+		permissions = #permissionBits == 0 and nil or tostring(bit.bor(table.unpack(permissionBits))),
 		color = self.color,
 		hoist = self.isHoisted,
 		icon = self.icon,
 		unicode_emoji = self.unicodeEmoji,
 		mentionable = self.isMentionable,
-	} :: apiTypes.GuildRoleObject
+	}
 end
 
 --[[
@@ -106,19 +105,7 @@ function Role.Interface.new(resource: {
 	roleName: string?,
 	rolePermissions: { permissionTypes.Permissions }?,
 }): Role
-	local self = setmetatable(
-		{
-			name = "",
-			permissionFlags = {},
-			color = 0xFFFFFF,
-			isHoisted = false,
-			isMentionable = true,
-
-			-- icon,
-			-- unicodeEmoji,
-		} :: Role,
-		{ __index = Role.Prototype }
-	)
+	local self = setmetatable({} :: Role, { __index = Role.Prototype })
 
 	if resource.roleName then
 		self:setName(resource.roleName)
@@ -133,13 +120,13 @@ function Role.Interface.new(resource: {
 end
 
 export type Role = typeof(Role.Prototype) & {
-	name: string,
+	name: string?,
 	permissionFlags: { permissionTypes.Permissions },
-	color: number,
-	isHoisted: boolean,
+	color: number?,
+	isHoisted: boolean?,
 	icon: string?,
 	unicodeEmoji: string?,
-	isMentionable: boolean,
+	isMentionable: boolean?,
 }
 
 export type JSON = typeof(Role.Prototype.build(nil :: any))

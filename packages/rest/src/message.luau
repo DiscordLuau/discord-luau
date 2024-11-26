@@ -196,7 +196,7 @@ function Message.getReactionsAsync(
 	urlParams: {
 		type: ("Normal" | "Burst")?,
 		after: apiTypes.Snowflake?,
-		before: number?,
+		limit: number?,
 	}
 ): future.Future<restTypes.GetReactionsResponse>
 	return future.new(function()
@@ -204,7 +204,7 @@ function Message.getReactionsAsync(
 
 		instance:addUrlParam("type", (urlParams.type and (urlParams.type == "Normal" and 0 or 1)) or (nil :: any))
 		instance:addUrlParam("after", urlParams.after and tostring(urlParams.after) or (nil :: any))
-		instance:addUrlParam("before", urlParams.before and tostring(urlParams.before) or (nil :: any))
+		instance:addUrlParam("limit", urlParams.limit and tostring(urlParams.limit) or (nil :: any))
 
 		instance:setMethod("GET")
 		instance:setUrl(
@@ -294,13 +294,15 @@ end
 function Message.deleteMessageAsync(
 	instance: request.Request,
 	channelId: string,
-	messageId: apiTypes.Snowflake
+	messageId: apiTypes.Snowflake,
+	auditLogReason: string?
 ): future.Future<restTypes.DeleteMessageResponse>
 	return future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
 		instance:setUrl(string.format(restEndpoints.DeleteMessage, channelId, messageId))
+		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
 		local status, response = instance:executeAsync():await()
 

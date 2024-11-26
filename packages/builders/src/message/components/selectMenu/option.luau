@@ -69,6 +69,10 @@ end
 	Responsible for building the SelectMenu JSON that can be parsed by the Discord API.
 ]]
 function SelectMenu.Prototype.build(self: SelectMenu): JSON
+	assert(self.label, `Label is required`)
+	assert(self.value, `Value is required`)
+	assert(self.default ~= nil, `Default is required`)
+
 	return {
 		label = self.label,
 		value = self.value,

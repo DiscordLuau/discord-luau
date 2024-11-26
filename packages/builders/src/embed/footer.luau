@@ -35,6 +35,8 @@ end
 	Responsible for building the Footer JSON that can be parsed by the Discord API.
 ]]
 function Footer.Prototype.build(self: Footer): JSON
+	assert(self.text, `Footer must have a text`)
+
 	return {
 		text = self.text,
 		icon_url = self.iconUrl,

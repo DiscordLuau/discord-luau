@@ -74,6 +74,11 @@ local PollLayoutType = table.freeze(reflect({
 	Default = 1,
 }))
 
+local ReactionType = table.freeze(reflect({
+	Normal = 0,
+	Burst = 1,
+}))
+
 export type MessageType =
 	"Default"
 	| "RecipientAdd"
@@ -124,6 +129,8 @@ export type TextInputStyle = "Short" | "Paragraph"
 
 export type PollLayoutType = "Default"
 
+export type ReactionType = "Normal" | "Burst"
+
 return {
 	MessageType = MessageType,
 	MessageAcitvityType = MessageAcitvityType,
@@ -132,4 +139,5 @@ return {
 	TextInputStyle = TextInputStyle,
 	SelectDefaultValueType = SelectDefaultValueType,
 	PollLayoutType = PollLayoutType,
+	ReactionType = ReactionType,
 }

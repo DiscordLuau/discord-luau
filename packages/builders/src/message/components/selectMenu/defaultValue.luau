@@ -33,6 +33,9 @@ end
 	Responsible for building the DefaultValue JSON that can be parsed by the Discord API.
 ]]
 function DefaultValue.Prototype.build(self: DefaultValue): JSON
+	assert(self.id, `DefaultValue id is required`)
+	assert(self.type, `DefaultValue type is required`)
+
 	return {
 		id = self.id,
 		type = self.type,

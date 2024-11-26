@@ -830,7 +830,7 @@ export type ChannelMentionObject = {
 }
 
 -- https://discord.com/developers/docs/resources/channel#attachment-object
-export type AttachmentObject = {
+export type AttachmentObject = Partial<{
 	id: Snowflake, -- attachment id
 	filename: string, -- name of file attached
 	title: string?, -- the title of the file
@@ -845,7 +845,7 @@ export type AttachmentObject = {
 	duration_secs: number?, -- the duration of the audio file (currently for voice messages)
 	waveform: string?, -- base64 encoded bytearray representing a sampled waveform (currently for voice messages)
 	flags: number, -- attachment flags combined as a bitfield
-}
+}>
 
 -- https://discord.com/developers/docs/resources/channel#embed-object-embed-footer-structure
 export type EmbedFooterObject = {
@@ -989,7 +989,7 @@ export type ActionRowComponentObject = {
 }
 
 -- https://discord.com/developers/docs/interactions/message-components#button-object
-export type ButtonComponentObject = {
+export type ButtonComponentObject = Partial<{
 	type: number, -- 2 for a button
 	style: ButtonStyle, -- A button style
 	label: string?, -- Text that appears on the button; max 80 characters
@@ -998,7 +998,7 @@ export type ButtonComponentObject = {
 	sku_id: string?, -- Identifier for a purchasable SKU, only available when using premium-style buttons
 	url: string?, --  URL for link-style buttons
 	disabled: boolean?, -- Whether the button is disabled (defaults to false)
-}
+}>
 
 -- https://discord.com/developers/docs/interactions/message-components#select-menu-object
 export type SelectMenuComponentObject = {

@@ -1,7 +1,7 @@
 --[[
 	Implementation of discords Attachment object as a Luau builder.	
 
-	https://discord.com/developers/docs/resources/Attachment#Attachment-object
+	https://discord.com/developers/docs/resources/message#attachment-object
 ]]
 
 local Attachment = {}

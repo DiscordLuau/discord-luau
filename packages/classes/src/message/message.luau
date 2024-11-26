@@ -8,6 +8,8 @@ local datetime = require("@std-polyfills/datetime")
 
 local import = require("@utils/import")
 
+local future = require("@vendor/future")
+
 local apiTypes: string = require("@api-types/apiTypes")
 local messageTypes = require("@api-types/message")
 
@@ -34,12 +36,189 @@ local selectMenuComponent = require("@classes/message/components/selectMenu/sele
 local actionRowComponent = require("@classes/message/components/actionRow")
 local buttonComponent = require("@classes/message/components/button")
 
+local emojiBuilder = require("@builders/emoji")
+local messageBuilder = require("@builders/message/message")
+
 local messageBitflag = require("@classes/bitflags/message")
+
+local messageRest = require("@rest/message")
 
 local Message = {}
 
 Message.Interface = {}
 Message.Prototype = {}
+
+--[[
+	Add a reaction to a message. Requires READ_MESSAGE_HISTORY and ADD_REACTIONS permissions.
+]]
+function Message.Prototype.addReactionAsync(self: Message, emoji: emojiBuilder.JSON): future.Future<nil>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		assert(emoji.id, `Reaction must have an id`)
+		assert(emoji.name, `Reaction must have a name`)
+
+		local status, response =
+			messageRest.createReactionAsync(request, self.channelId, self.id, emoji.id, emoji.name):await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		return
+	end)
+end
+
+--[[
+	Remove the current user's reaction from a message
+]]
+function Message.Prototype.removeOwnReactionAsync(self: Message, emoji: emojiBuilder.JSON): future.Future<nil>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		assert(emoji.id, `Reaction must have an id`)
+		assert(emoji.name, `Reaction must have a name`)
+
+		local status, response =
+			messageRest.deleteOwnReactionAsync(request, self.channelId, self.id, emoji.id, emoji.name):await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		return
+	end)
+end
+
+--[[
+	Remove another user's reaction from a message. Requires MANAGE_MESSAGES permission.
+]]
+function Message.Prototype.deleteUserReactionAsync(
+	self: Message,
+	emoji: emojiBuilder.JSON,
+	userId: apiTypes.Snowflake
+): future.Future<nil>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		assert(emoji.id, `Reaction must have an id`)
+		assert(emoji.name, `Reaction must have a name`)
+
+		local status, response =
+			messageRest.deleteUserReactionAsync(request, self.channelId, self.id, emoji.id, emoji.name, userId):await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		return
+	end)
+end
+
+--[[
+	Get a list of users that reacted with a specific emoji
+]]
+function Message.Prototype.getReactionsAsync(
+	self: Message,
+	emoji: emojiBuilder.JSON,
+	reactionType: messageTypes.ReactionType?,
+	afterUserId: apiTypes.Snowflake?,
+	limit: number?
+): future.Future<{ reaction.Reaction }>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		assert(emoji.id, `Reaction must have an id`)
+		assert(emoji.name, `Reaction must have a name`)
+
+		local status, response = messageRest
+			.getReactionsAsync(request, self.channelId, self.id, emoji.id, emoji.name, {
+				reactionType = reactionType,
+				after = afterUserId,
+				limit = limit,
+			})
+			:await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		local users = {}
+
+		for _, userData in next, response do
+			table.insert(users, user.new(userData))
+		end
+
+		return users
+	end)
+end
+
+--[[
+	Remove all reactions from a message. Requires MANAGE_MESSAGES permission.
+]]
+function Message.Prototype.deleteAllReactionsAsync(self: Message): future.Future<nil>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local status, response = messageRest.deleteAllReactionsAsync(request, self.channelId, self.id):await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		return
+	end)
+end
+
+--[[
+	Remove all reactions of a specific emoji from a message. Requires MANAGE_MESSAGES permission.
+]]
+function Message.Prototype.deleteAllReactionsForEmojiAsync(self: Message, emoji: emojiBuilder.JSON): future.Future<nil>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		assert(emoji.id, `Reaction must have an id`)
+		assert(emoji.name, `Reaction must have a name`)
+
+		local status, response =
+			messageRest.deleteAllReactionsForEmojiAsync(request, self.channelId, self.id, emoji.name, emoji.id):await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		return
+	end)
+end
+
+--[[
+	Edit a message. The current user must be the author of the message.
+]]
+function Message.Prototype.editMessageAsync(self: Message, message: messageBuilder.JSON): future.Future<Message>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local status, response = messageRest
+			.editMessageAsync(request, self.channelId, self.id, {
+				content = message.content,
+				embeds = message.embeds,
+				components = message.components,
+				allowed_mentions = message.allowed_mentions,
+				attachments = message.attachments,
+				flags = message.flags,
+			})
+			:await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		self:sync(response)
+
+		return self
+	end)
+end
+--[[
+	Delete a message. If operating on a guild channel and trying to delete a message that was not sent by the current user,
+	this endpoint requires the MANAGE_MESSAGES permission.
+]]
+function Message.Prototype.deleteMessageAsync(self: Message, reason: string): future.Future<Message>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local status, response = messageRest.deleteMessageAsync(request, self.channelId, self.id, reason):await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		return
+	end)
+end
 
 function Message.Prototype.sync(self: Message, messageData: apiTypes.MessageObject)
 	self.type = messageTypes.MessageType[messageData.type]
@@ -90,8 +269,8 @@ function Message.Prototype.sync(self: Message, messageData: apiTypes.MessageObje
 		end
 	end
 
-	self.id = messageData.id
-	self.channelId = messageData.channel_id
+	self.id = messageData.id :: string
+	self.channelId = messageData.channel_id :: string
 	self.author = messageData.author and user.new(messageData.author)
 	self.content = messageData.content
 	self.timestamp = messageData.timestamp and datetime.fromIsoDate(messageData.timestamp)
@@ -144,8 +323,8 @@ end
 export type Message = typeof(Message.Prototype) & {
 	state: state.State,
 
-	id: apiTypes.Snowflake?,
-	channelId: apiTypes.Snowflake?,
+	id: apiTypes.Snowflake,
+	channelId: apiTypes.Snowflake,
 	author: user.User?,
 	content: string?,
 	timestamp: datetime.DateTime?,

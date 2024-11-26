@@ -31,7 +31,7 @@ function Resolved.Prototype.sync(self: Resolved, resolvedData: apiTypes.Resolved
 	end
 
 	for id, roleData in next, resolvedData.roles or {} do
-		self.roles[id] = role.new(roleData)
+		self.roles[id] = role.new(self.state, "_interaction", roleData)
 	end
 
 	for id, channelData in next, resolvedData.channels or {} do

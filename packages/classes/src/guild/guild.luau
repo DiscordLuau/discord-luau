@@ -774,7 +774,7 @@ function Guild.Prototype.getGuildRolesAsync(self: Guild): future.Future<{ role.R
 		local roles = {}
 
 		for _, roleData in next, response do
-			table.insert(roles, role.new(roleData))
+			table.insert(roles, role.new(self.state, self.id, roleData))
 		end
 
 		return roles
@@ -792,7 +792,7 @@ function Guild.Prototype.getGuildRoleAsync(self: Guild, roleId: apiTypes.Snowfla
 
 		assert(status == "Fulfilled", tostring(response))
 
-		return role.new(response)
+		return role.new(self.state, self.id, response)
 	end)
 end
 
@@ -811,7 +811,7 @@ function Guild.Prototype.createGuildRoleAsync(
 
 		assert(status == "Fulfilled", tostring(response))
 
-		return role.new(response)
+		return role.new(self.state, self.id, response)
 	end)
 end
 
@@ -1157,7 +1157,7 @@ function Guild.Prototype.sync(self: Guild, guildData: apiTypes.GuildObject)
 	end
 
 	for _, roleData in next, guildData.roles or {} do
-		table.insert(rolesArray, role.new(roleData))
+		table.insert(rolesArray, role.new(self.state, self.id, roleData))
 	end
 
 	for _, stickerData in next, guildData.stickers or {} do

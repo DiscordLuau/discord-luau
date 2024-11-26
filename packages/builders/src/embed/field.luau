@@ -43,6 +43,9 @@ end
 	Responsible for building the Field JSON that can be parsed by the Discord API.
 ]]
 function Field.Prototype.build(self: Field): JSON
+	assert(self.name, `Field must have a name`)
+	assert(self.value, `Field must have a value`)
+
 	return {
 		name = self.name,
 		value = self.value,

@@ -160,7 +160,7 @@ function Embed.Prototype.build(self: Embed): JSON
 		type = embedTypes.EmbedType[self.type],
 		description = self.description,
 		url = self.url,
-		timestamp = self.timestamp,
+		timestamp = tostring(self.timestamp),
 		color = self.color,
 		footer = self.footer,
 		image = self.image,
