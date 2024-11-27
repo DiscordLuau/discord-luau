@@ -336,6 +336,27 @@ function Channel.Prototype.setDefaultThreadRateLimitPerUser(self: Channel, threa
 end
 
 --[[
+	Sets the channel flags using a bitfield value.
+
+	The flags control various channel settings and behaviors.
+]]
+function Channel.Prototype.setFlags(self: Channel, bitflags: number): Channel
+	self.flags = bitflags
+
+	return self
+end
+
+--[[
+	Sets the channel icon using the provided icon data.
+
+	The icon data should be a base64 encoded image string.
+]]
+function Channel.Prototype.setIcon(self: Channel, iconData: string): Channel
+	self.icon = iconData
+
+	return self
+end
+--[[
 	Responsible for buillding the channel object that the Discord API can understand.
 ]]
 function Channel.Prototype.build(self: Channel): JSON
@@ -345,7 +366,10 @@ function Channel.Prototype.build(self: Channel): JSON
 		name = self.name,
 		type = GUILD_CHANNEL_TYPE_MAP[self.type],
 		position = self.position,
-		permission_overwrites = self.permissionOverwrites,
+		permission_overwrites = #self.permissionOverwrites > 0 and self.permissionOverwrites or nil,
+
+		flags = self.flags,
+		icon = self.icon,
 
 		topic = self.topic,
 		bitrate = self.bitrate,
@@ -402,10 +426,14 @@ end
 export type Channel = typeof(Channel.Prototype) & {
 	id: apiTypes.Snowflake?,
 
-	name: string,
+	name: string?,
 	type: channelTypes.ChannelType,
-	position: number,
 	permissionOverwrites: { apiTypes.OverwriteObject },
+	position: number?,
+
+	-- DM
+	icon: string?,
+	flags: number?,
 
 	-- TEXT
 	topic: string?,
