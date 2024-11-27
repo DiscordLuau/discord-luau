@@ -2,15 +2,150 @@
 	Thread Behaviour, responsible for implementing the various properties, and methods for a generic thread channels.
 ]]
 
+local future = require("@vendor/future")
+
 local apiTypes = require("@api-types/apiTypes")
+
+local channelRest = require("@rest/channel")
 
 local threadMember = require("@classes/threadMember")
 local threadMetadata = require("@classes/channels/threadMetadata")
+local state = require("@classes/state")
 
 local ThreadBehaviour = {}
 
 ThreadBehaviour.Interface = {}
 ThreadBehaviour.Prototype = {}
+
+--[[
+	Adds the current user to a thread. Also requires the thread is not archived. 
+]]
+function ThreadBehaviour.Prototype.joinThreadAsync<T>(self: Channel<T>): future.Future<nil>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local status, response = channelRest.joinThreadAsync(request, self.id):await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		return
+	end)
+end
+
+--[[
+	Adds another member to a thread. Requires the ability to send messages in the thread. Also requires the thread is not archived. 
+]]
+function ThreadBehaviour.Prototype.addMemberToThreadAsync<T>(self: Channel<T>, userId: string): future.Future<nil>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local status, response = channelRest.addThreadMemberAsync(request, self.id, userId):await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		return
+	end)
+end
+
+--[[
+	Removes the current user from a thread.
+]]
+function ThreadBehaviour.Prototype.leaveThreadAsync<T>(self: Channel<T>): future.Future<nil>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local status, response = channelRest.leaveThreadAsync(request, self.id):await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		return
+	end)
+end
+
+--[[
+	Removes another member from a thread. Requires the ability to manage threads.
+]]
+function ThreadBehaviour.Prototype.removeMemberAsync<T>(self: Channel<T>, userId: string): future.Future<nil>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local status, response = channelRest.removeThreadMemberAsync(request, self.id, userId):await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		return
+	end)
+end
+
+--[[
+	Removes another member from a thread. Requires the ability to manage threads.
+]]
+function ThreadBehaviour.Prototype.removeMemberAsync<T>(self: Channel<T>, userId: string): future.Future<nil>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local status, response = channelRest.removeThreadMemberAsync(request, self.id, userId):await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		return
+	end)
+end
+
+--[[
+	Gets a thread member by their user ID. Can optionally include the member object.
+]]
+function ThreadBehaviour.Prototype.getMemberAsync<T>(
+	self: Channel<T>,
+	userId: string,
+	withMember: boolean?
+): future.Future<threadMember.ThreadMember>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local status, response = channelRest
+			.getThreadMemberAsync(request, self.id, userId, {
+				withMember = withMember,
+			})
+			:await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		return threadMember.new(self.state, self.guildId, response)
+	end)
+end
+
+--[[
+	Lists all members in a thread. Can optionally include member objects and use pagination.
+]]
+function ThreadBehaviour.Prototype.listMembersAsync<T>(
+	self: Channel<T>,
+	withMember: boolean?,
+	after: string?,
+	limit: number?
+): future.Future<threadMember.ThreadMember>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local status, response = channelRest
+			.listThreadMembersAsync(request, self.id, {
+				withMember = withMember,
+				after = after,
+				limit = limit,
+			})
+			:await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		local threadMembers = {}
+
+		for _, memberData in response do
+			table.insert(threadMembers, threadMember.new(self.state, self.guildId, memberData))
+		end
+
+		return threadMembers
+	end)
+end
 
 function ThreadBehaviour.Interface.inheritProperties(class: any, channelData: apiTypes.ChannelObject)
 	class.totalMessageSent = channelData.total_message_sent
@@ -27,6 +162,14 @@ function ThreadBehaviour.Interface.inheritMethods(class: any)
 		class[key] = value
 	end
 end
+
+type Channel<T> = T & ThreadBehaviour & {
+	state: state.State,
+	id: string,
+	guildId: string,
+
+	sync: (...any) -> (),
+}
 
 export type ThreadBehaviourMethods = typeof(ThreadBehaviour.Prototype)
 export type ThreadBehaviourProperties = {
