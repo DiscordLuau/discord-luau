@@ -62,23 +62,23 @@ export type EditCurrentApplicationRequest = Request<{
 
 -- https://discord.com/developers/docs/resources/channel#modify-channel
 export type ModifyChannelRequest = Request<{
-	name: string, -- 1-100 character channel name
+	name: string?, -- 1-100 character channel name
 	type: objects.ChannelType, -- the type of channel; only conversion between text and announcement is supported and only in guilds with the "NEWS" feature
-	icon: string, -- (if a group DM, the base64 encoded icon for the group DM)
+	icon: string?, -- (if a group DM, the base64 encoded icon for the group DM)
 	position: number?, -- the position of the channel in the left-hand listing (channels with the same position are sorted by id)
 	topic: string?, -- 0-1024 character channel topic (0-4096 characters for GUILD_FORUM and GUILD_MEDIA channels)
 	nsfw: boolean?, -- whether the channel is nsfw
 	rate_limit_per_user: number?, -- amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission manage_messages or manage_channel, are unaffected
 	bitrate: number?, -- the bitrate (in bits) of the voice or stage channel; min 8000
 	user_limit: number?, -- the user limit of the voice or stage channel, max 99 for voice channels and 10,000 for stage channels (0 refers to no limit)
-	permission_overwrites: { [objects.Snowflake]: objects.OverwriteObject }?, -- channel or category-specific permissions
+	permission_overwrites: { objects.OverwriteObject }?, -- channel or category-specific permissions
 	parent_id: objects.Snowflake?, -- id of the new parent category for a channel
 	rtc_region: string?, -- channel voice region id, automatic when set to null
 	video_quality_mode: objects.VideoQualityMode, -- the camera video quality mode of the voice channel
 	default_auto_archive_duration: number?, -- the default duration that the clients use (not the API) for newly created threads in the channel, in minutes, to automatically archive the thread after recent activity
 	flags: number?, -- channel flags combined as a bitfield. Currently only REQUIRE_TAG (1 << 4) is supported by GUILD_FORUM and GUILD_MEDIA channels. HIDE_MEDIA_DOWNLOAD_OPTIONS (1 << 15) is supported only by GUILD_MEDIA channels
 	available_tags: { objects.ForumTagObject }?, -- the set of tags that can be used in a GUILD_FORUM or a GUILD_MEDIA channel; limited to 20
-	default_reaction_emoji: objects.EmojiObject?, -- the emoji to show in the add reaction button on a thread in a GUILD_FORUM or a GUILD_MEDIA channel
+	default_reaction_emoji: objects.DefaultReactionObject?, -- the emoji to show in the add reaction button on a thread in a GUILD_FORUM or a GUILD_MEDIA channel
 	default_thread_rate_limit_per_user: number?, -- the initial rate_limit_per_user to set on newly created threads in a channel. this field is copied to the thread at creation time and does not live update.
 	default_sort_order: objects.SortOrderType?, -- the default sort order type used to order posts in GUILD_FORUM and GUILD_MEDIA channels
 	default_forum_layout: objects.ForumLayoutType?, -- the default forum layout type used to display posts in GUILD_FORUM channels
@@ -90,7 +90,7 @@ export type CreateMessageRequest = Request<{
 	nonce: (string | number)?, -- Can be used to verify a message was sent (up to 25 characters). Value will appear in the Message Create event.
 	tts: boolean?, -- true if this is a TTS message
 	embeds: { objects.EmbedObject }?, -- Up to 10 rich embeds (up to 6000 characters)
-	allowed_mentions: { objects.AllowedMentionObject }?, -- Allowed mentions for the message
+	allowed_mentions: objects.AllowedMentionObject?, -- Allowed mentions for the message
 	message_reference: objects.MessageReferenceObject?, -- Include to make your message a reply or a forward
 	components: { objects.ComponentObjects }?, -- Components to include with the message
 	sticker_ids: { objects.Snowflake }?, -- IDs of up to 3 stickers in the server to send in the message
@@ -98,7 +98,7 @@ export type CreateMessageRequest = Request<{
 	-- payload_json: string,
 	attachments: { objects.AttachmentObject }?, -- Attachment objects with filename and description. See Uploading Files
 	flags: number?, -- Message flags combined as a bitfield (only SUPPRESS_EMBEDS and SUPPRESS_NOTIFICATIONS can be set)
-	enforce_nonse: boolean?, -- If true and nonce is present, it will be checked for uniqueness in the past few minutes. If another message was created by the same author with the same nonce, that message will be returned and no new message will be created.
+	enforce_nonce: boolean?, -- If true and nonce is present, it will be checked for uniqueness in the past few minutes. If another message was created by the same author with the same nonce, that message will be returned and no new message will be created.
 	poll: objects.PollObject?, -- The discord poll object
 }>
 
@@ -116,12 +116,12 @@ export type EditMessageRequest = Request<{
 
 -- https://discord.com/developers/docs/resources/channel#create-channel-invite
 export type CreateChannelInviteRequest = Request<{
-	max_age: number, -- duration of invite in seconds before expiry, or 0 for never. between 0 and 604800 (7 days)
-	max_uses: number, -- max number of uses or 0 for unlimited. between 0 and 100
-	temporary: boolean, -- whether this invite only grants temporary membership
-	unique: boolean, -- if true, don't try to reuse a similar invite (useful for creating many unique one time use invites)
-	target_type: objects.InviteTargetTypes, -- the type of target for this voice channel invite
-	target_user_id: objects.Snowflake, -- the id of the user whose stream to display for this invite, required if target_type is 1, the user must be streaming in the channel
+	max_age: number?, -- duration of invite in seconds before expiry, or 0 for never. between 0 and 604800 (7 days)
+	max_uses: number?, -- max number of uses or 0 for unlimited. between 0 and 100
+	temporary: boolean?, -- whether this invite only grants temporary membership
+	unique: boolean?, -- if true, don't try to reuse a similar invite (useful for creating many unique one time use invites)
+	target_type: objects.InviteTargetTypes?, -- the type of target for this voice channel invite
+	target_user_id: objects.Snowflake?, -- the id of the user whose stream to display for this invite, required if target_type is 1, the user must be streaming in the channel
 	target_application_id: objects.Snowflake?, -- the id of the embedded application to open for this invite, required if target_type is 2, the application must have the EMBEDDED flag
 }>
 
@@ -294,13 +294,13 @@ export type BulkGuildBanRequest = Request<{
 
 -- https://discord.com/developers/docs/resources/guild#create-guild-role
 export type CreateGuildRoleRequest = Request<{
-	name: string, -- name of the role, max 100 characters
-	permissions: string, -- bitwise value of the enabled/disabled permissions
-	color: number, -- RGB color value
-	hoist: boolean, -- whether the role should be displayed separately in the sidebar
+	name: string?, -- name of the role, max 100 characters
+	permissions: string?, -- bitwise value of the enabled/disabled permissions
+	color: number?, -- RGB color value
+	hoist: boolean?, -- whether the role should be displayed separately in the sidebar
 	icon: string?, -- the role's icon image (if the guild has the ROLE_ICONS feature)
 	unicode_emoji: string?, -- the role's unicode emoji as a standard emoji (if the guild has the ROLE_ICONS feature)
-	mentionable: boolean, -- whether the role should be mentionable
+	mentionable: boolean?, -- whether the role should be mentionable
 }>
 
 -- https://discord.com/developers/docs/resources/guild#modify-guild-role-positions
@@ -311,13 +311,13 @@ export type ModifyGuildRolePositionsRequest = Request<{
 
 -- https://discord.com/developers/docs/resources/guild#modify-guild-role
 export type ModifyGuildRoleRequest = Request<{
-	name: string, -- name of the role, max 100 characters
-	permissions: string, -- bitwise value of the enabled/disabled permissions
-	color: number, -- RGB color value
-	hoist: boolean, -- whether the role should be displayed separately in the sidebar
-	icon: string, -- the role's icon image (if the guild has the ROLE_ICONS feature)
-	unicode_emoji: string, -- the role's unicode emoji as a standard emoji (if the guild has the ROLE_ICONS feature)
-	mentionabl: boolean, -- whether the role should be mentionable
+	name: string?, -- name of the role, max 100 characters
+	permissions: string?, -- bitwise value of the enabled/disabled permissions
+	color: number?, -- RGB color value
+	hoist: boolean?, -- whether the role should be displayed separately in the sidebar
+	icon: string?, -- the role's icon image (if the guild has the ROLE_ICONS feature)
+	unicode_emoji: string?, -- the role's unicode emoji as a standard emoji (if the guild has the ROLE_ICONS feature)
+	mentionable: boolean?, -- whether the role should be mentionable
 }>
 
 -- https://discord.com/developers/docs/resources/guild#modify-guild-mfa-level

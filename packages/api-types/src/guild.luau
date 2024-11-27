@@ -88,6 +88,11 @@ local OnboardingMode = table.freeze(reflect({
 	Advanced = "ONBOARDING_ADVANCED",
 }))
 
+local OverwriteType = table.freeze(reflect({
+	Role = 0,
+	Member = 1,
+}))
+
 export type VerificationLevel = "None" | "Low" | "Medium" | "High" | "VeryHigh"
 export type DefaultMessageNotification = "AllMessages" | "OnlyMentions"
 export type ExplicitContentFilterLevel = "Disabled" | "MembersWithoutRoles" | "AllMembers"
@@ -103,6 +108,7 @@ export type IntegrationType = "Twitch" | "YouTube" | "Discord" | "GuildSubscript
 export type IntegrationExpireBehaviour = "RemoveRole" | "Kick"
 export type OnboardingPromptType = "MultipleChoice" | "Dropdown"
 export type OnboardingMode = "Default" | "Advanced"
+export type OverwriteType = "Role" | "Member"
 
 return {
 	VerificationLevel = VerificationLevel,
@@ -120,4 +126,5 @@ return {
 	IntegrationExpireBehaviour = IntegrationExpireBehaviour,
 	OnboardingPromptType = OnboardingPromptType,
 	OnboardingMode = OnboardingMode,
+	OverwriteType = OverwriteType,
 }

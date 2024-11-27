@@ -899,13 +899,13 @@ export type EmbedVideoObject = {
 	width: number?, -- width of video
 }
 
--- https://discord.com/developers/docs/resources/channel#embed-object
+-- https://discord.com/developers/docs/resources/message#embed-object
 export type EmbedObject = {
 	title: string?, -- title of embed
-	type: EmbedType, -- type of embed (always "rich" for webhook embeds)
+	type: EmbedType?, -- type of embed (always "rich" for webhook embeds)
 	description: string?, -- description of embed
 	url: string?, -- url of embed
-	timestamp: string, -- timestamp of embed content
+	timestamp: string?, -- timestamp of embed content
 	color: number?, -- color code of the embed
 	footer: EmbedFooterObject?, -- footer information
 	image: EmbedImageObject?, -- image information
@@ -1051,7 +1051,7 @@ export type RoleSubscriptionDataObject = {
 -- https://discord.com/developers/docs/resources/poll#poll-media-object-poll-media-object-structure
 export type PollMediaObject = {
 	text: string?, -- The text of the field
-	emoji: EmojiObject?, -- The emoji of the field
+	emoji: Partial<EmojiObject>?, -- The emoji of the field
 }
 
 -- https://discord.com/developers/docs/resources/poll#poll-answer-object-poll-answer-object-structure
@@ -1077,10 +1077,12 @@ export type PollResultObject = {
 export type PollObject = {
 	question: PollMediaObject, -- The question of the poll. Only text is supported.
 	answers: { PollAnswerObject }, -- Each of the answers available in the poll.
-	expiry: string, -- The time when the poll ends.
-	allow_multiselect: boolean, -- Whether a user can select multiple answers
+	expiry: string?, -- The time when the poll ends.
+
+	--fixme: for some reason luau's type system doesn't like this being a `boolean`????
+	allow_multiselect: true | false, -- Whether a user can select multiple answers
 	layout_type: PollLayoutType, -- The layout type of the poll
-	results: PollResultObject, -- The results of the poll
+	results: PollResultObject?, -- The results of the poll
 }
 
 -- https://discord.com/developers/docs/resources/channel#message-call-object
