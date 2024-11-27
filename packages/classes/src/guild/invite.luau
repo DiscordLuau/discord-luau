@@ -8,15 +8,9 @@ local datetime = require("@std-polyfills/datetime")
 
 local apiTypes = require("@api-types/apiTypes")
 local guildTypes = require("@api-types/guild")
+local channelTypes = require("@api-types/channel")
 
 local unavailableGuild = require("@classes/guild/unavailableGuild")
-
-local guildAnnouncement = require("@classes/channels/types/guildAnnouncement")
-local guildCategory = require("@classes/channels/types/guildCategory")
-local guildDirectory = require("@classes/channels/types/guildDirectory")
-local guildStageVoice = require("@classes/channels/types/guildStageVoice")
-local guildText = require("@classes/channels/types/guildText")
-local guildVoice = require("@classes/channels/types/guildVoice")
 
 local user = require("@classes/user")
 local application = require("@classes/application/application")
@@ -24,7 +18,7 @@ local scheduledEvent = require("@classes/guild/scheduledEvent")
 
 local state = require("@classes/state")
 
-local constructChannelFromData = require("@utils/constructChannelFromData")
+local import = require("@utils/import")
 
 local Invite = {}
 
@@ -33,9 +27,9 @@ Invite.Prototype = {}
 
 function Invite.Prototype.sync(self: Invite, inviteData: apiTypes.InviteObject)
 	if inviteData.channel then
-		local channel = constructChannelFromData(self.state, inviteData.channel)
+		local channel = import("@utils/constructChannelFromData")(self.state, inviteData.channel)
 
-		self.channel = channel :: channel
+		self.channel = channel :: channelTypes.AbstractChannel
 	end
 
 	self.type = guildTypes.InviteType[inviteData.type]
@@ -63,21 +57,13 @@ function Invite.Interface.new(state: state.State, inviteData: apiTypes.InviteObj
 	return self
 end
 
-type channel =
-	guildAnnouncement.GuildAnnouncement
-	| guildCategory.GuildCategory
-	| guildDirectory.GuildDirectory
-	| guildStageVoice.GuildStageVoice
-	| guildText.GuildText
-	| guildVoice.GuildVoice
-
 export type Invite = typeof(Invite.Prototype) & {
 	state: state.State,
 
 	type: guildTypes.InviteType,
 	code: string,
 	guild: unavailableGuild.UnavailableGuild?,
-	channel: channel,
+	channel: channelTypes.AbstractChannel,
 	inviter: user.User?,
 	targetType: guildTypes.InviteTargetType?,
 	targetUser: user.User?,
