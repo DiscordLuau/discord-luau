@@ -43,6 +43,8 @@ local messageBitflag = require("@classes/bitflags/message")
 
 local messageRest = require("@rest/message")
 
+-- https://discord.com/developers/docs/resources/channel#start-thread-from-message
+
 local Message = {}
 
 Message.Interface = {}
