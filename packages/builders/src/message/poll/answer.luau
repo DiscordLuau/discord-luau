@@ -33,6 +33,9 @@ end
 	Responsible for building the PollAnswer JSON that can be parsed by the Discord API.
 ]]
 function PollAnswer.Prototype.build(self: PollAnswer): JSON
+	assert(self.answerId, "answerId must be set")
+	assert(self.pollMedia, "pollMedia must be set")
+
 	return {
 		answer_id = self.answerId,
 		poll_media = self.pollMedia,

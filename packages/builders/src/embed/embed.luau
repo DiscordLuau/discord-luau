@@ -155,6 +155,8 @@ end
 	Responsible for building the Embed JSON that can be parsed by the Discord API.
 ]]
 function Embed.Prototype.build(self: Embed): JSON
+	assert(self.type, `Embed type must be set before building!`)
+
 	return {
 		title = self.title,
 		type = embedTypes.EmbedType[self.type],
