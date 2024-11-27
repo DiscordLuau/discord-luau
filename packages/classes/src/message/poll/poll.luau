@@ -28,10 +28,10 @@ function Poll.Prototype.sync(self: Poll, pollData: apiTypes.PollObject)
 	self.answers = answerArray
 
 	self.question = mediaObject.new(pollData.question)
-	self.expiry = datetime.fromIsoDate(pollData.expiry)
+	self.expiry = pollData.expiry and datetime.fromIsoDate(pollData.expiry)
 	self.allowMultiselect = pollData.allow_multiselect
 	self.layoutType = (pollData.layout_type == 1 and "Default") :: pollTypes.PollLayoutType
-	self.results = results.new(pollData.results)
+	self.results = pollData.results and results.new(pollData.results)
 end
 
 function Poll.Interface.new(pollData: apiTypes.PollObject): Poll
@@ -45,7 +45,7 @@ end
 export type Poll = typeof(Poll.Prototype) & {
 	question: mediaObject.MediaObject,
 	answers: { answer.Answer },
-	expiry: datetime.DateTime,
+	expiry: datetime.DateTime?,
 	allowMultiselect: boolean,
 	layoutType: pollTypes.PollLayoutType,
 	results: results.Results?,
