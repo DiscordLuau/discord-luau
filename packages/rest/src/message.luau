@@ -316,7 +316,8 @@ end
 function Message.bulkDeleteMessagesAsync(
 	instance: request.Request,
 	channelId: string,
-	jsonParams: restTypes.BulkDeleteMessagesRequest
+	jsonParams: restTypes.BulkDeleteMessagesRequest,
+	auditLogReason: string?
 ): future.Future<restTypes.BulkDeleteMessageResponse>
 	return future.new(function()
 		instance:assertToken()
@@ -324,6 +325,7 @@ function Message.bulkDeleteMessagesAsync(
 		instance:setMethod("DELETE")
 		instance:setUrl(string.format(restEndpoints.BulkDeleteMessages, channelId))
 		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
 		local status, response = instance:executeAsync():await()
 
