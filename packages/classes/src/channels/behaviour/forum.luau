@@ -2,16 +2,51 @@
 	Forum Behaviour, responsible for implementing the various properties, and methods for a forum thread channel.
 ]]
 
+local future = require("@vendor/future")
+
 local apiTypes = require("@api-types/apiTypes")
 local channelTypes = require("@api-types/channel")
 
+local channelRest = require("@rest/channel")
+
 local forumTag = require("@classes/channels/forumTag")
 local defaultReaction = require("@classes/channels/defaultReaction")
+local state = require("@classes/state")
+
+local forumMediaBuilder = require("@builders/thread/forumMedia")
 
 local ForumBehaviour = {}
 
 ForumBehaviour.Interface = {}
 ForumBehaviour.Prototype = {}
+
+--[[
+ 	Creates a new forum post (thread) in the channel. Returns the ID of the created thread.
+ 	
+ 	Example usage:
+ 	
+ 	local builder = forumMediaBuilder.new()
+ 		:setName("My Thread")
+ 		:setContent("First post!")
+ 	
+ 	channel:createPostAsync(builder:build()):await()
+]]
+function ForumBehaviour.Prototype.createPostAsync<T>(
+	self: Channel<T>,
+	post: forumMediaBuilder.JSON,
+	reason: string?
+): future.Future<string>
+	return future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local status, response =
+			channelRest.startThreadInForumOrMediaChannelAsync(request, self.id, post, reason):await()
+
+		assert(status == "Fulfilled", tostring(response))
+
+		return response.id
+	end)
+end
 
 function ForumBehaviour.Interface.inheritProperties(class: any, channelData: apiTypes.ChannelObject)
 	local forumTagArray = {}
@@ -36,6 +71,13 @@ function ForumBehaviour.Interface.inheritMethods(class: any)
 		class[key] = value
 	end
 end
+
+type Channel<T> = T & ForumBehaviour & {
+	state: state.State,
+	id: string,
+
+	sync: (...any) -> (),
+}
 
 export type ForumBehaviourMethods = typeof(ForumBehaviour.Prototype)
 export type ForumBehaviourProperties = {
