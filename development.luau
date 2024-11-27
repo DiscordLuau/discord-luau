@@ -7,6 +7,7 @@ local widgetSettings = require("@builders/guild/widgetSettings")
 local env = require(".env")
 
 local PENGU_BOT_ID = "726819179054891149"
+local DISCORD_LUAU_GENERAL_ID = "1273035768700338278"
 local DISCORD_LUAU_SERVER = "1273035219561091193"
 
 local discordIntents = intentsBuilder.new()
@@ -22,12 +23,11 @@ discordBot.onAllShardsReady:listen(function()
 	assert(discordBot.application, ``)
 
 	local guild = discordBot:getGuildAsync(DISCORD_LUAU_SERVER):expect("1")
-	local member = guild:getGuildMemberAsync("726819179054891149"):expect("2")
-	local roles = guild:getGuildRolesAsync():expect("e")
+	local textChannel = discordBot:getTextChannelAsync(DISCORD_LUAU_GENERAL_ID):expect("2")
 
-	-- print(roles)
-
-	member:kickAsync("lolol")
+	textChannel:createMessageAsync({
+		content = "Hello, world!",
+	})
 end)
 
 discordBot:connectAsync():after(function()
