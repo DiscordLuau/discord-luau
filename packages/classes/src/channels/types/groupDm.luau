@@ -44,6 +44,6 @@ end
 
 export type GroupDM = typeof(GroupDM.Prototype) & {
 	state: state.State,
-} & channelBehaviour.ChannelBehaviour & groupDMBehaviours.DMBehaviour & textBehaviour.TextBehaviour
+} & channelBehaviour.ChannelBehaviour & groupDMBehaviours.GroupDMBehaviour & textBehaviour.TextBehaviour
 
 return GroupDM.Interface

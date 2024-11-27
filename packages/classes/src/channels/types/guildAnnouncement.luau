@@ -4,6 +4,9 @@
 	https://discord.com/developers/docs/resources/channel#channel-object
 ]]
 
+-- https://discord.com/developers/docs/resources/message#crosspost-message
+-- https://discord.com/developers/docs/resources/channel#follow-announcement-channel
+
 local apiTypes = require("@api-types/apiTypes")
 
 local channelBehaviour = require("@classes/channels/behaviour/channel")
