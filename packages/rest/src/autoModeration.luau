@@ -1,10 +1,9 @@
-local serde = require("@std-polyfills/serde")
-local request = require("@rest/request")
-local future = require("@vendor/future")
+local stdPolyfills = require("../lune_packages/std_polyfills")
 
-local restTypes = require("@api-types/rest/types")
-local restEndpoints = require("@api-types/rest/endpoints")
-local apiTypes = require("@api-types/apiTypes")
+local async = require("../lune_packages/async")
+local apiTypes = require("../lune_packages/api_types")
+
+local request = require("./request")
 
 --[[
 	HTTP Rest API implementation for the following Resource:
@@ -17,14 +16,14 @@ local AutoModeration = {}
 function AutoModeration.listAutoModerationRulesForGuildAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake
-): future.Future<
-	restTypes.ListAutoModerationRulesForGuildResponse
+): async.Async<
+	apiTypes.ListAutoModerationRulesForGuildResponse
 >
-	return future.new(function()
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.ListAutoModerationRulesForGuild, guildId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.ListAutoModerationRulesForGuild, guildId))
 
 		local status, response = instance:executeAsync():await()
 
@@ -39,12 +38,12 @@ function AutoModeration.getAutoModerationRulesForGuildAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	autoModerationRuleId: apiTypes.Snowflake
-): future.Future<restTypes.GetAutoModerationRuleResponse>
-	return future.new(function()
+): async.Async<apiTypes.GetAutoModerationRuleResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetAutoModerationRule, guildId, autoModerationRuleId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetAutoModerationRule, guildId, autoModerationRuleId))
 
 		local status, response = instance:executeAsync():await()
 
@@ -58,15 +57,15 @@ end
 function AutoModeration.createAutoModerationRuleAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
-	jsonParams: restTypes.CreateAutoModerationRuleRequest,
+	jsonParams: apiTypes.CreateAutoModerationRuleRequest,
 	auditLogReason: string?
-): future.Future<apiTypes.AutomoderationRuleObject>
-	return future.new(function()
+): async.Async<apiTypes.AutomoderationRuleObject>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("POST")
-		instance:setUrl(string.format(restEndpoints.CreateAutoModerationRule, guildId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.CreateAutoModerationRule, guildId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
 		local status, response = instance:executeAsync():await()
@@ -82,15 +81,15 @@ function AutoModeration.modifyAutoModerationRuleAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	autoModerationRuleId: apiTypes.Snowflake,
-	jsonParams: restTypes.CreateAutoModerationRuleRequest,
+	jsonParams: apiTypes.CreateAutoModerationRuleRequest,
 	auditLogReason: string?
-): future.Future<apiTypes.AutomoderationRuleObject>
-	return future.new(function()
+): async.Async<apiTypes.AutomoderationRuleObject>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PATCH")
-		instance:setUrl(string.format(restEndpoints.ModifyAutoModerationRule, guildId, autoModerationRuleId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.ModifyAutoModerationRule, guildId, autoModerationRuleId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
 		local status, response = instance:executeAsync():await()
@@ -107,12 +106,12 @@ function AutoModeration.deleteAutoModerationRuleAsync(
 	guildId: apiTypes.Snowflake,
 	autoModerationRuleId: apiTypes.Snowflake,
 	auditLogReason: string?
-): future.Future<apiTypes.AutomoderationRuleObject>
-	return future.new(function()
+): async.Async<apiTypes.AutomoderationRuleObject>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PATCH")
-		instance:setUrl(string.format(restEndpoints.DeleteAutoModerationRule, guildId, autoModerationRuleId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.DeleteAutoModerationRule, guildId, autoModerationRuleId))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
 		instance:executeAsync():await()

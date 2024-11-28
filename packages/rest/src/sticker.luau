@@ -1,11 +1,9 @@
-local serde = require("@std-polyfills/serde")
+local stdPolyfills = require("../lune_packages/std_polyfills")
 
-local request = require("@rest/request")
-local future = require("@vendor/future")
+local async = require("../lune_packages/async")
+local apiTypes = require("../lune_packages/api_types")
 
-local restTypes = require("@api-types/rest/types")
-local apiTypes = require("@api-types/apiTypes")
-local restEndpoints = require("@api-types/rest/endpoints")
+local request = require("./request")
 
 --[[
 	HTTP Rest API implementation for the following Resource:
@@ -18,12 +16,12 @@ local Sticker = {}
 function Sticker.getStickerAsync(
 	instance: request.Request,
 	stickerId: apiTypes.Snowflake
-): future.Future<restTypes.GetStickerResponse>
-	return future.new(function()
+): async.Async<apiTypes.GetStickerResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetSticker, stickerId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetSticker, stickerId))
 
 		local status, response = instance:executeAsync():await()
 
@@ -34,12 +32,12 @@ function Sticker.getStickerAsync(
 end
 
 -- https://discord.com/developers/docs/resources/sticker#list-sticker-packs
-function Sticker.listStickerPacksAsync(instance: request.Request): future.Future<restTypes.ListStickerPacksResponse>
-	return future.new(function()
+function Sticker.listStickerPacksAsync(instance: request.Request): async.Async<apiTypes.ListStickerPacksResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(restEndpoints.ListStickerPacks)
+		instance:setUrl(apiTypes.rest.endpoints.ListStickerPacks)
 
 		local status, response = instance:executeAsync():await()
 
@@ -53,12 +51,12 @@ end
 function Sticker.listGuildStickersAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake
-): future.Future<restTypes.ListGuildStickersResponse>
-	return future.new(function()
+): async.Async<apiTypes.ListGuildStickersResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.ListGuildStickers, guildId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.ListGuildStickers, guildId))
 
 		local status, response = instance:executeAsync():await()
 
@@ -73,12 +71,12 @@ function Sticker.getGuildStickerAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	stickerId: apiTypes.Snowflake
-): future.Future<restTypes.GetGuildStickerResponse>
-	return future.new(function()
+): async.Async<apiTypes.GetGuildStickerResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetGuildSticker, guildId, stickerId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetGuildSticker, guildId, stickerId))
 
 		local status, response = instance:executeAsync():await()
 
@@ -92,15 +90,15 @@ end
 function Sticker.createGuildStickerAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
-	jsonParams: restTypes.CreateGuildStickerRequest,
+	jsonParams: apiTypes.CreateGuildStickerRequest,
 	auditLogReason: string?
-): future.Future<restTypes.GetGuildStickerResponse>
-	return future.new(function()
+): async.Async<apiTypes.GetGuildStickerResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("POST")
-		instance:setUrl(string.format(restEndpoints.CreateGuildSticker, guildId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.CreateGuildSticker, guildId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
 		local status, response = instance:executeAsync():await()
@@ -116,15 +114,15 @@ function Sticker.modifyGuildStickerAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	stickerId: apiTypes.Snowflake,
-	jsonParams: restTypes.ModifyGuildStickerRequest,
+	jsonParams: apiTypes.ModifyGuildStickerRequest,
 	auditLogReason: string?
-): future.Future<restTypes.ModifyGuildStickerResponse>
-	return future.new(function()
+): async.Async<apiTypes.ModifyGuildStickerResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PATCH")
-		instance:setUrl(string.format(restEndpoints.ModifyGuildSticker, guildId, stickerId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.ModifyGuildSticker, guildId, stickerId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
 		local status, response = instance:executeAsync():await()
@@ -141,12 +139,12 @@ function Sticker.deleteGuildStickerAsync(
 	guildId: apiTypes.Snowflake,
 	stickerId: apiTypes.Snowflake,
 	auditLogReason: string?
-): future.Future<restTypes.DeleteGuildStickerResponse>
-	return future.new(function()
+): async.Async<apiTypes.DeleteGuildStickerResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
-		instance:setUrl(string.format(restEndpoints.DeleteGuildSticker, guildId, stickerId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.DeleteGuildSticker, guildId, stickerId))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
 		local status, response = instance:executeAsync():await()

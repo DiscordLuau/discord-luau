@@ -4,20 +4,15 @@
 	https://discord.com/developers/docs/resources/guild#guild-member-object
 ]]
 
-local datetime = require("@std-polyfills/datetime")
+local apiTypes = require("../../lune_packages/api_types")
+local rest = require("../../lune_packages/rest")
+local async = require("../../lune_packages/async")
+local state = require("../../lune_packages/state")
+local stdPolyfills = require("../../lune_packages/std_polyfills")
 
-local apiTypes = require("@api-types/apiTypes")
-
-local future = require("@vendor/future")
-
-local state = require("@classes/state")
-
-local guildMemberBitflag = require("@classes/bitflags/guildMember")
-
-local guildRest = require("@rest/guild")
-
-local user = require("@classes/user")
-local avatarDecoration = require("@classes/avatarDecoration")
+local user = require("../user")
+local avatarDecoration = require("../avatarDecoration")
+local guildMemberBitflag = require("../bitflags/guildMember")
 
 local Member = {}
 
@@ -32,8 +27,8 @@ function Member.Prototype.banAsync(
 	reason: string?,
 	deleteMessageDays: number?,
 	deleteMessageSeconds: number?
-): future.Future<nil>
-	return future.new(function()
+): async.Async<nil>
+	return async.new(function()
 		local request = self.state.rest:newRequest()
 
 		assert(self.user, "user not found!")
@@ -48,7 +43,7 @@ function Member.Prototype.banAsync(
 			assert(deleteMessageDays > 0, "deleteMessageSeconds must be greater than 0")
 		end
 
-		local status, response = guildRest
+		local status, response = rest.guild
 			.createGuildBanAsync(request, self.guildId, self.user.id, {
 				delete_message_days = deleteMessageDays,
 				delete_message_seconds = deleteMessageSeconds,
@@ -64,13 +59,13 @@ end
 --[[
 	Removes a role from a guild member. Requires the MANAGE_ROLES permission.
 ]]
-function Member.Prototype.kickAsync(self: Member, reason: string?): future.Future<nil>
-	return future.new(function()
+function Member.Prototype.kickAsync(self: Member, reason: string?): async.Async<nil>
+	return async.new(function()
 		local request = self.state.rest:newRequest()
 
 		assert(self.user, "user not found!")
 
-		local status, response = guildRest.removeGuildMemberAsync(request, self.guildId, self.user.id, reason):await()
+		local status, response = rest.guild.removeGuildMemberAsync(request, self.guildId, self.user.id, reason):await()
 
 		assert(status == "Fulfilled", tostring(response))
 
@@ -93,13 +88,13 @@ function Member.Prototype.modifyAsync(
 		communicationDisabledUntil: string?,
 	},
 	reason: string?
-): future.Future<Member>
-	return future.new(function()
+): async.Async<Member>
+	return async.new(function()
 		local request = self.state.rest:newRequest()
 
 		assert(self.user, "user not found!")
 
-		local status, response = guildRest
+		local status, response = rest.guild
 			.modifyGuildMemberAsync(request, self.guildId, self.user.id, {
 				nick = data.nickname,
 				roles = data.roles,
@@ -121,8 +116,8 @@ end
 --[[
 	will mute the user in voice channels the user is in. Returns the updated Member.
 ]]
-function Member.Prototype.muteAsync(self: Member, reason: string?): future.Future<Member>
-	return future.new(function()
+function Member.Prototype.muteAsync(self: Member, reason: string?): async.Async<Member>
+	return async.new(function()
 		return self:modifyAsync({
 			muted = true,
 		}, reason)
@@ -132,8 +127,8 @@ end
 --[[
 	will unmute the user in voice channels the user is in. Returns the updated Member.
 ]]
-function Member.Prototype.unmuteAsync(self: Member, reason: string?): future.Future<Member>
-	return future.new(function()
+function Member.Prototype.unmuteAsync(self: Member, reason: string?): async.Async<Member>
+	return async.new(function()
 		return self:modifyAsync({
 			muted = false,
 		}, reason)
@@ -143,8 +138,8 @@ end
 --[[
 	will deafen the user in voice channels the user is in. Returns the updated Member.
 ]]
-function Member.Prototype.deafenAsync(self: Member, reason: string?): future.Future<Member>
-	return future.new(function()
+function Member.Prototype.deafenAsync(self: Member, reason: string?): async.Async<Member>
+	return async.new(function()
 		return self:modifyAsync({
 			deaf = true,
 		}, reason)
@@ -154,8 +149,8 @@ end
 --[[
 	will undeafen the user in voice channels the user is in. Returns the updated Member.
 ]]
-function Member.Prototype.undeafenAsync(self: Member, reason: string?): future.Future<Member>
-	return future.new(function()
+function Member.Prototype.undeafenAsync(self: Member, reason: string?): async.Async<Member>
+	return async.new(function()
 		return self:modifyAsync({
 			deaf = false,
 		}, reason)
@@ -165,8 +160,8 @@ end
 --[[
 	will set the nickname of the user. Returns the updated Member.
 ]]
-function Member.Prototype.setNicknameAsync(self: Member, nickname: string, reason: string?): future.Future<Member>
-	return future.new(function()
+function Member.Prototype.setNicknameAsync(self: Member, nickname: string, reason: string?): async.Async<Member>
+	return async.new(function()
 		return self:modifyAsync({
 			nickname = nickname,
 		}, reason)
@@ -180,8 +175,8 @@ function Member.Prototype.setRolesAsync(
 	self: Member,
 	roles: { apiTypes.Snowflake },
 	reason: string?
-): future.Future<Member>
-	return future.new(function()
+): async.Async<Member>
+	return async.new(function()
 		return self:modifyAsync({
 			roles = roles,
 		}, reason)
@@ -195,8 +190,8 @@ function Member.Prototype.moveVoiceChannelAsync(
 	self: Member,
 	channelId: apiTypes.Snowflake,
 	reason: string?
-): future.Future<Member>
-	return future.new(function()
+): async.Async<Member>
+	return async.new(function()
 		return self:modifyAsync({
 			channelId = channelId,
 		}, reason)
@@ -206,8 +201,8 @@ end
 --[[
 	will disconnect the user from voice channels the user is in. Returns the updated Member.
 ]]
-function Member.Prototype.disconnectFromVoiceChannelAsync(self: Member, reason: string?): future.Future<Member>
-	return future.new(function()
+function Member.Prototype.disconnectFromVoiceChannelAsync(self: Member, reason: string?): async.Async<Member>
+	return async.new(function()
 		return self:modifyAsync({
 			channelId = false,
 		}, reason)
@@ -219,10 +214,10 @@ end
 ]]
 function Member.Prototype.disableAsync(
 	self: Member,
-	disabledUntil: datetime.DateTime,
+	disabledUntil: stdPolyfills.DateTime,
 	reason: string?
-): future.Future<Member>
-	return future.new(function()
+): async.Async<Member>
+	return async.new(function()
 		return self:modifyAsync({
 			communicationDisabledUntil = disabledUntil:toIsoDate(),
 		}, reason)
@@ -232,15 +227,15 @@ end
 --[[
 	Add a role to a guild member.
 ]]
-function Member.Prototype.addRoleAsync(self: Member, roleId: apiTypes.Snowflake, reason: string?): future.Future<nil>
-	return future.new(function()
-		return future.new(function()
+function Member.Prototype.addRoleAsync(self: Member, roleId: apiTypes.Snowflake, reason: string?): async.Async<nil>
+	return async.new(function()
+		return async.new(function()
 			local request = self.state.rest:newRequest()
 
 			assert(self.user, "user not found!")
 
 			local status, response =
-				guildRest.addGuildMemberRoleAsync(request, self.guildId, self.user.id, roleId, reason):await()
+				rest.guild.addGuildMemberRoleAsync(request, self.guildId, self.user.id, roleId, reason):await()
 
 			assert(status == "Fulfilled", tostring(response))
 
@@ -252,15 +247,15 @@ end
 --[[
 	Remove a role from a guild member.
 ]]
-function Member.Prototype.removeRoleAsync(self: Member, roleId: apiTypes.Snowflake, reason: string?): future.Future<nil>
-	return future.new(function()
-		return future.new(function()
+function Member.Prototype.removeRoleAsync(self: Member, roleId: apiTypes.Snowflake, reason: string?): async.Async<nil>
+	return async.new(function()
+		return async.new(function()
 			local request = self.state.rest:newRequest()
 
 			assert(self.user, "user not found!")
 
 			local status, response =
-				guildRest.removeGuildMemberRoleAsync(request, self.guildId, self.user.id, roleId, reason):await()
+				rest.guild.removeGuildMemberRoleAsync(request, self.guildId, self.user.id, roleId, reason):await()
 
 			assert(status == "Fulfilled", tostring(response))
 
@@ -273,7 +268,7 @@ function Member.Prototype.sync(self: Member, guildMemberData: apiTypes.GuildMemb
 	self.user = guildMemberData.user and user.new(guildMemberData.user)
 
 	self.communicationDisabledUntil = guildMemberData.communication_disabled_until
-		and datetime.fromIsoDate(guildMemberData.communication_disabled_until)
+		and stdPolyfills.datetime.fromIsoDate(guildMemberData.communication_disabled_until)
 
 	self.avatarDecorationData = guildMemberData.avatar_decoration_data
 		and avatarDecoration.new(
@@ -283,8 +278,9 @@ function Member.Prototype.sync(self: Member, guildMemberData: apiTypes.GuildMemb
 
 	self.flags = guildMemberData.flags and guildMemberBitflag.new(guildMemberData.flags)
 
-	self.joinedAt = datetime.fromIsoDate(guildMemberData.joined_at)
-	self.premiumSince = guildMemberData.premium_since and datetime.fromIsoDate(guildMemberData.premium_since)
+	self.joinedAt = stdPolyfills.datetime.fromIsoDate(guildMemberData.joined_at)
+	self.premiumSince = guildMemberData.premium_since
+		and stdPolyfills.datetime.fromIsoDate(guildMemberData.premium_since)
 
 	self.nick = guildMemberData.nick
 	self.avatar = guildMemberData.avatar
@@ -321,14 +317,14 @@ export type Member = typeof(Member.Prototype) & {
 	nick: string?,
 	avatar: string?,
 	roles: { apiTypes.Snowflake },
-	joinedAt: datetime.DateTime,
-	premiumSince: datetime.DateTime?,
+	joinedAt: stdPolyfills.DateTime,
+	premiumSince: stdPolyfills.DateTime?,
 	deaf: boolean,
 	mute: boolean,
 	flags: guildMemberBitflag.GuildMemberBitflag,
 	pending: boolean?,
 	permissions: string?,
-	communicationDisabledUntil: datetime.DateTime?,
+	communicationDisabledUntil: stdPolyfills.DateTime?,
 	avatarDecorationData: avatarDecoration.AvatarDecoration?,
 }
 

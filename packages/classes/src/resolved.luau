@@ -4,17 +4,17 @@
 	https://discord.com/developers/docs/resources/message#attachment-object
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
-local channelTypes = require("@api-types/channel")
+local apiTypes = require("../lune_packages/api_types")
 
-local user = require("@classes/user")
-local member = require("@classes/guild/member")
-local role = require("@classes/guild/role")
-local attachment = require("@classes/attachment")
-local message = require("@classes/message/message")
-local state = require("@classes/state")
+local state = require("../lune_packages/state")
 
-local constructChannelFromData = require("@utils/constructChannelFromData")
+local user = require("./user")
+local member = require("./guild/member")
+local role = require("./guild/role")
+local attachment = require("./attachment")
+local message = require("./message/message")
+
+local constructChannelFromData = require("./channels/construct")
 
 local Resolved = {}
 
@@ -35,7 +35,7 @@ function Resolved.Prototype.sync(self: Resolved, resolvedData: apiTypes.Resolved
 	end
 
 	for id, channelData in next, resolvedData.channels or {} do
-		self.channels[id] = constructChannelFromData(self.state, channelData) :: channelTypes.AbstractChannel
+		self.channels[id] = constructChannelFromData(self.state, channelData) :: apiTypes.AbstractChannel
 	end
 
 	for id, messageData in next, resolvedData.messages or {} do
@@ -73,7 +73,7 @@ export type Resolved = typeof(Resolved.Prototype) & {
 	users: { [apiTypes.Snowflake]: user.User },
 	members: { [apiTypes.Snowflake]: member.Member },
 	roles: { [apiTypes.Snowflake]: role.Role },
-	channels: { [apiTypes.Snowflake]: channelTypes.AbstractChannel },
+	channels: { [apiTypes.Snowflake]: apiTypes.AbstractChannel },
 	messages: { [apiTypes.Snowflake]: message.Message },
 	attachments: { [apiTypes.Snowflake]: attachment.Attachment },
 }

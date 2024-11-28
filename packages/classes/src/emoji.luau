@@ -4,9 +4,9 @@
 	https://discord.com/developers/docs/resources/emoji#emoji-resource
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
+local apiTypes = require("../lune_packages/api_types")
 
-local user = require("@classes/user")
+local user = require("./user")
 
 local Emoji = {}
 

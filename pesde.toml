@@ -1,0 +1,18 @@
+name = "discord_luau/root"
+version = "0.0.0"
+private = true
+license = "MIT"
+repository = "https://github.com/DiscordLuau/discord-luau"
+authors = ["Jack<https://github.com/4x8Matrix>", "Erica<https://github.com/CompeyDev>"]
+description = "A Discord API Wrapper for Luau"
+
+workspace_members = ["packages/*"]
+
+[target]
+environment = "lune"
+
+[indices]
+default = "https://github.com/daimond113/pesde-index"
+
+[dev_dependencies]
+frktest = { name = "itsfrank/frktest", version = "^0.0.2", target = "lune" }

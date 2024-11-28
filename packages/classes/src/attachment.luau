@@ -4,9 +4,9 @@
 	https://discord.com/developers/docs/resources/message#attachment-object
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
+local apiTypes = require("../lune_packages/api_types")
 
-local attachmentBitflag = require("@classes/bitflags/attachment")
+local attachmentBitflag = require("./bitflags/attachment")
 
 local Attachment = {}
 

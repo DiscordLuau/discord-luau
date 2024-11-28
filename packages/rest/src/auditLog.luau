@@ -1,9 +1,7 @@
-local request = require("@rest/request")
-local future = require("@vendor/future")
+local async = require("../lune_packages/async")
+local apiTypes = require("../lune_packages/api_types")
 
-local restTypes = require("@api-types/rest/types")
-local apiTypes = require("@api-types/apiTypes")
-local restEndpoints = require("@api-types/rest/endpoints")
+local request = require("./request")
 
 local ACTION_TYPE_MAPPING = table.freeze({
 	GuildUpdate = 1,
@@ -82,8 +80,8 @@ function AuditLog.getGuildAuditLogAsync(
 		limit: number?,
 		actionType: ActionType,
 	}
-): future.Future<restTypes.GetGuildAuditLogResponse>
-	return future.new(function()
+): async.Async<apiTypes.GetGuildAuditLogResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:addUrlParam("user_id", urlParams.userId :: string)
@@ -96,7 +94,7 @@ function AuditLog.getGuildAuditLogAsync(
 		)
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetGuildAuditLog, guildId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetGuildAuditLog, guildId))
 
 		local status, response = instance:executeAsync():await()
 

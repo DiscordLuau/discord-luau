@@ -4,7 +4,7 @@
 	https://discord.com/developers/docs/resources/channel#start-thread-without-message-json-params
 ]]
 
-local messageParams = require("@builders/thread/messageParams")
+local messageParams = require("./messageParams")
 
 local ForumMediaThread = {}
 

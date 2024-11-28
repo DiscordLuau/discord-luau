@@ -1,9 +1,7 @@
-local request = require("@rest/request")
-local future = require("@vendor/future")
+local async = require("../lune_packages/async")
+local apiTypes = require("../lune_packages/api_types")
 
-local restTypes = require("@api-types/rest/types")
-local apiTypes = require("@api-types/apiTypes")
-local restEndpoints = require("@api-types/rest/endpoints")
+local request = require("./request")
 
 --[[
 	HTTP Rest API implementation for the following Resource:
@@ -16,14 +14,16 @@ local ApplicationRoleConnectionMetadata = {}
 function ApplicationRoleConnectionMetadata.getApplicationRoleConnectionMetadataRecordsAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake
-): future.Future<
-	restTypes.GetCurrentApplicationResponse
+): async.Async<
+	apiTypes.GetCurrentApplicationResponse
 >
-	return future.new(function()
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetApplicationRoleConnectionMetadataRecords, applicationId))
+		instance:setUrl(
+			string.format(apiTypes.rest.endpoints.GetApplicationRoleConnectionMetadataRecords, applicationId)
+		)
 
 		local status, response = instance:executeAsync():await()
 
@@ -37,14 +37,16 @@ end
 function ApplicationRoleConnectionMetadata.updateApplicationRoleConnectionMetadataRecordsAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake
-): future.Future<
-	restTypes.UpdateApplicationRoleConnectionMetadataRecordsResponse
+): async.Async<
+	apiTypes.UpdateApplicationRoleConnectionMetadataRecordsResponse
 >
-	return future.new(function()
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PUT")
-		instance:setUrl(string.format(restEndpoints.UpdateApplicationRoleConnectionMetadataRecords, applicationId))
+		instance:setUrl(
+			string.format(apiTypes.rest.endpoints.UpdateApplicationRoleConnectionMetadataRecords, applicationId)
+		)
 
 		local status, response = instance:executeAsync():await()
 

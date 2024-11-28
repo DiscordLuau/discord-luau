@@ -4,9 +4,9 @@
 	https://discord.com/developers/docs/topics/gateway#list-of-intents
 ]]
 
-local intents = require("@api-types/gateway/intents")
+local apiTypes = require("../lune_packages/api_types")
 
-local bit = require("@vendor/bit")
+local bit = require("../luau_packages/bit")
 
 local Intents = {}
 
@@ -16,8 +16,8 @@ Intents.Interface = {}
 --[[
 	Sets either the id of a guilds custom emoji, or a unicode character of an emoji.
 ]]
-function Intents.Prototype.addIntent(self: Intents, intent: intents.Intent): Intents
-	assert(intents[intent], `Invalid intent: {intent}`)
+function Intents.Prototype.addIntent(self: Intents, intent: apiTypes.Intent): Intents
+	assert(apiTypes.gateway.intents[intent], `Invalid intent: {intent}`)
 	assert(table.find(self.intents, intent) == nil, `Intent {intent} already set`)
 
 	table.insert(self.intents, intent)
@@ -32,7 +32,7 @@ function Intents.Prototype.build(self: Intents): number
 	local intentsValue = 0
 
 	for _, intentEnum in self.intents do
-		local intentDisposition = intents[intentEnum]
+		local intentDisposition = apiTypes.gateway.intents[intentEnum]
 
 		assert(intentDisposition, `Unexpected intent '{intentEnum}'`)
 
@@ -64,7 +64,7 @@ function Intents.Interface.new(intents: {}?): Intents
 end
 
 export type Intents = typeof(Intents.Prototype) & {
-	intents: { intents.Intent },
+	intents: { apiTypes.Intent },
 }
 
 return Intents.Interface

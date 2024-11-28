@@ -4,7 +4,7 @@
 	https://discord.com/developers/docs/resources/emoji#emoji-object
 ]]
 
-local validateKebabCase = require("@utils/validateKebabCase")
+local utilities = require("../lune_packages/utilities")
 
 local Emoji = {}
 
@@ -24,7 +24,7 @@ end
 	Set the name of the emoji to use.
 ]]
 function Emoji.Prototype.setName(self: Emoji, emojiName: string): Emoji
-	assert(validateKebabCase(emojiName), `Emoji names are Kebab case!`)
+	assert(utilities.validateKebabCase(emojiName), `Emoji names are Kebab case!`)
 
 	self.emojiName = emojiName
 

@@ -4,10 +4,9 @@
 	https://discord.com/developers/docs/resources/user#user-object
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
-local userTypes = require("@api-types/user")
+local apiTypes = require("../lune_packages/api_types")
 
-local avatarDecoration = require("@classes/avatarDecoration")
+local avatarDecoration = require("./avatarDecoration")
 
 local User = {}
 
@@ -16,7 +15,7 @@ User.Prototype = {}
 
 function User.Prototype.sync(self: User, userData: apiTypes.UserObject)
 	self.username = userData.username
-	self.premiumType = userTypes.NitroType[userData.premium_type]
+	self.premiumType = apiTypes.user.NitroType[userData.premium_type]
 	self.discriminator = userData.discriminator
 	self.globalName = userData.global_name
 	self.avatar = userData.avatar
@@ -65,7 +64,7 @@ export type User = typeof(User.Prototype) & {
 	verified: boolean?,
 	email: string?,
 	flags: number?,
-	premiumType: userTypes.NitroType?,
+	premiumType: apiTypes.NitroType?,
 	publicFlags: number?,
 	avatarDecorationData: avatarDecoration.AvatarDecoration?,
 }

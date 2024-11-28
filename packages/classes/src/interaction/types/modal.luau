@@ -4,12 +4,11 @@
 	https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-structure
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
-
-local interactionBehaviour = require("@classes/interaction/behaviour/interaction")
-
 -- selene: allow(unused_variable)
-local state = require("@classes/state")
+local state = require("../../../lune_packages/state")
+local apiTypes = require("../../../lune_packages/api_types")
+
+local interactionBehaviour = require("../behaviour/interaction")
 
 local Modal = {}
 

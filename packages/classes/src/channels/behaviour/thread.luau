@@ -2,15 +2,13 @@
 	Thread Behaviour, responsible for implementing the various properties, and methods for a generic thread channels.
 ]]
 
-local future = require("@vendor/future")
+local apiTypes = require("../../../lune_packages/api_types")
+local async = require("../../../lune_packages/async")
+local rest = require("../../../lune_packages/rest")
+local state = require("../../../lune_packages/state")
 
-local apiTypes = require("@api-types/apiTypes")
-
-local channelRest = require("@rest/channel")
-
-local threadMember = require("@classes/threadMember")
-local threadMetadata = require("@classes/channels/threadMetadata")
-local state = require("@classes/state")
+local threadMember = require("../../threadMember")
+local threadMetadata = require("../../channels/threadMetadata")
 
 local ThreadBehaviour = {}
 
@@ -20,11 +18,11 @@ ThreadBehaviour.Prototype = {}
 --[[
 	Adds the current user to a thread. Also requires the thread is not archived. 
 ]]
-function ThreadBehaviour.Prototype.joinThreadAsync<T>(self: Channel<T>): future.Future<nil>
-	return future.new(function()
+function ThreadBehaviour.Prototype.joinThreadAsync<T>(self: Channel<T>): async.Async<nil>
+	return async.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = channelRest.joinThreadAsync(request, self.id):await()
+		local status, response = rest.channel.joinThreadAsync(request, self.id):await()
 
 		assert(status == "Fulfilled", tostring(response))
 
@@ -35,11 +33,11 @@ end
 --[[
 	Adds another member to a thread. Requires the ability to send messages in the thread. Also requires the thread is not archived. 
 ]]
-function ThreadBehaviour.Prototype.addMemberToThreadAsync<T>(self: Channel<T>, userId: string): future.Future<nil>
-	return future.new(function()
+function ThreadBehaviour.Prototype.addMemberToThreadAsync<T>(self: Channel<T>, userId: string): async.Async<nil>
+	return async.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = channelRest.addThreadMemberAsync(request, self.id, userId):await()
+		local status, response = rest.channel.addThreadMemberAsync(request, self.id, userId):await()
 
 		assert(status == "Fulfilled", tostring(response))
 
@@ -50,11 +48,11 @@ end
 --[[
 	Removes the current user from a thread.
 ]]
-function ThreadBehaviour.Prototype.leaveThreadAsync<T>(self: Channel<T>): future.Future<nil>
-	return future.new(function()
+function ThreadBehaviour.Prototype.leaveThreadAsync<T>(self: Channel<T>): async.Async<nil>
+	return async.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = channelRest.leaveThreadAsync(request, self.id):await()
+		local status, response = rest.channel.leaveThreadAsync(request, self.id):await()
 
 		assert(status == "Fulfilled", tostring(response))
 
@@ -65,11 +63,11 @@ end
 --[[
 	Removes another member from a thread. Requires the ability to manage threads.
 ]]
-function ThreadBehaviour.Prototype.removeMemberAsync<T>(self: Channel<T>, userId: string): future.Future<nil>
-	return future.new(function()
+function ThreadBehaviour.Prototype.removeMemberAsync<T>(self: Channel<T>, userId: string): async.Async<nil>
+	return async.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = channelRest.removeThreadMemberAsync(request, self.id, userId):await()
+		local status, response = rest.channel.removeThreadMemberAsync(request, self.id, userId):await()
 
 		assert(status == "Fulfilled", tostring(response))
 
@@ -80,11 +78,11 @@ end
 --[[
 	Removes another member from a thread. Requires the ability to manage threads.
 ]]
-function ThreadBehaviour.Prototype.removeMemberAsync<T>(self: Channel<T>, userId: string): future.Future<nil>
-	return future.new(function()
+function ThreadBehaviour.Prototype.removeMemberAsync<T>(self: Channel<T>, userId: string): async.Async<nil>
+	return async.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = channelRest.removeThreadMemberAsync(request, self.id, userId):await()
+		local status, response = rest.channel.removeThreadMemberAsync(request, self.id, userId):await()
 
 		assert(status == "Fulfilled", tostring(response))
 
@@ -99,11 +97,11 @@ function ThreadBehaviour.Prototype.getMemberAsync<T>(
 	self: Channel<T>,
 	userId: string,
 	withMember: boolean?
-): future.Future<threadMember.ThreadMember>
-	return future.new(function()
+): async.Async<threadMember.ThreadMember>
+	return async.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = channelRest
+		local status, response = rest.channel
 			.getThreadMemberAsync(request, self.id, userId, {
 				withMember = withMember,
 			})
@@ -123,11 +121,11 @@ function ThreadBehaviour.Prototype.listMembersAsync<T>(
 	withMember: boolean?,
 	after: string?,
 	limit: number?
-): future.Future<threadMember.ThreadMember>
-	return future.new(function()
+): async.Async<threadMember.ThreadMember>
+	return async.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = channelRest
+		local status, response = rest.channel
 			.listThreadMembersAsync(request, self.id, {
 				withMember = withMember,
 				after = after,

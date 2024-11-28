@@ -2,7 +2,7 @@
 	Mapping out all discord recieve/send payloads that can be consumed by the Discord v10 API.
 ]]
 
-local objects = require("@api-types/apiTypes")
+local objects = require("../apiTypes")
 
 -- [[ Base ]] --
 export type Payload<DATA> = {

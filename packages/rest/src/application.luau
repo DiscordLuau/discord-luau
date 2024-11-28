@@ -1,11 +1,9 @@
-local serde = require("@std-polyfills/serde")
+local stdPolyfills = require("../lune_packages/std_polyfills")
 
-local request = require("@rest/request")
-local future = require("@vendor/future")
+local async = require("../lune_packages/async")
+local apiTypes = require("../lune_packages/api_types")
 
-local restTypes = require("@api-types/rest/types")
-local apiTypes = require("@api-types/apiTypes")
-local restEndpoints = require("@api-types/rest/endpoints")
+local request = require("./request")
 
 --[[
 	HTTP Rest API implementation for the following Resource:
@@ -18,12 +16,12 @@ local Application = {}
 function Application.getCurrentApplicationAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake
-): future.Future<restTypes.GetCurrentApplicationResponse>
-	return future.new(function()
+): async.Async<apiTypes.GetCurrentApplicationResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetCurrentApplication, applicationId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetCurrentApplication, applicationId))
 
 		local status, response = instance:executeAsync():await()
 
@@ -37,14 +35,14 @@ end
 function Application.editCurrentApplicationAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
-	jsonParams: restTypes.EditCurrentApplicationRequest
-): future.Future<nil>
-	return future.new(function()
+	jsonParams: apiTypes.EditCurrentApplicationRequest
+): async.Async<nil>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PATCH")
-		instance:setUrl(string.format(restEndpoints.EditCurrentApplication, applicationId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.EditCurrentApplication, applicationId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
 		instance:executeAsync():await()
 	end)

@@ -1,0 +1,15 @@
+name = "discord_luau/std_polyfills"
+version = "0.1.0"
+description = "Discord-Luau Polyfills - polyfills for stdlib functions."
+license = "MIT"
+authors = ["AsyncMatrix<https://github.com/4x8Matrix>"]
+repository = "https://github.com/DiscordLuau/discord-luau"
+
+includes = ["src/**", "pesde.toml"]
+
+[target]
+environment = "lune"
+lib = "src/init.luau"
+
+[indices]
+default = "https://github.com/daimond113/pesde-index"

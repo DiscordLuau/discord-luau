@@ -4,8 +4,7 @@
 	https://discord.com/developers/docs/resources/message#message-object-message-activity-structure
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
-local messageTypes = require("@api-types/message")
+local apiTypes = require("../../lune_packages/api_types")
 
 local Activity = {}
 
@@ -13,7 +12,7 @@ Activity.Interface = {}
 Activity.Prototype = {}
 
 function Activity.Prototype.sync(self: Activity, activityData: apiTypes.MessageActivityObject)
-	self.type = messageTypes.MessageAcitvityType[activityData.type]
+	self.type = apiTypes.message.MessageAcitvityType[activityData.type]
 	self.partyId = activityData.party_id
 end
 
@@ -26,7 +25,7 @@ function Activity.Interface.new(activityData: apiTypes.MessageActivityObject): A
 end
 
 export type Activity = typeof(Activity.Prototype) & {
-	type: messageTypes.MessageAcitvityType,
+	type: apiTypes.MessageAcitvityType,
 	partyId: string?,
 }
 

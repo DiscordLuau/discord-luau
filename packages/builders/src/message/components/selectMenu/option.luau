@@ -4,7 +4,7 @@
 	https://discord.com/developers/docs/interactions/message-components#SelectMenus
 ]]
 
-local emoji = require("@builders/emoji")
+local emoji = require("../../../emoji")
 
 local SelectMenu = {}
 

@@ -1,9 +1,7 @@
-local request = require("@rest/request")
-local future = require("@vendor/future")
+local async = require("../lune_packages/async")
+local apiTypes = require("../lune_packages/api_types")
 
-local restTypes = require("@api-types/rest/types")
-local apiTypes = require("@api-types/apiTypes")
-local restEndpoints = require("@api-types/rest/endpoints")
+local request = require("./request")
 
 --[[
 	HTTP Rest API implementation for the following Resource:
@@ -21,8 +19,8 @@ function Invite.getInviteAsync(
 		withExpiration: boolean?,
 		guildScheduledEventId: apiTypes.Snowflake?,
 	}
-): future.Future<restTypes.GetInviteResponse>
-	return future.new(function()
+): async.Async<apiTypes.GetInviteResponse>
+	return async.new(function()
 		instance:addUrlParam("with_counts", urlParams.withCounts and tostring(urlParams.withCounts) or (nil :: any))
 		instance:addUrlParam(
 			"with_expiration",
@@ -34,7 +32,7 @@ function Invite.getInviteAsync(
 		)
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetInvite, inviteCode))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetInvite, inviteCode))
 
 		local status, response = instance:executeAsync():await()
 
@@ -49,12 +47,12 @@ function Invite.deleteInviteAsync(
 	instance: request.Request,
 	inviteCode: string,
 	auditLogReason: string?
-): future.Future<restTypes.GetInviteResponse>
-	return future.new(function()
+): async.Async<apiTypes.GetInviteResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
-		instance:setUrl(string.format(restEndpoints.DeleteInvite, inviteCode))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.DeleteInvite, inviteCode))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
 		local status, response = instance:executeAsync():await()

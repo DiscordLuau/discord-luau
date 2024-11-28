@@ -1,11 +1,9 @@
-local serde = require("@std-polyfills/serde")
+local stdPolyfills = require("../lune_packages/std_polyfills")
 
-local request = require("@rest/request")
-local future = require("@vendor/future")
+local async = require("../lune_packages/async")
+local apiTypes = require("../lune_packages/api_types")
 
-local restTypes = require("@api-types/rest/types")
-local apiTypes = require("@api-types/apiTypes")
-local restEndpoints = require("@api-types/rest/endpoints")
+local request = require("./request")
 
 --[[
 	HTTP Rest API implementation for the following Resource:
@@ -18,15 +16,15 @@ local Webhook = {}
 function Webhook.createWebhookAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
-	jsonParams: restTypes.CreateWebhookRequest,
+	jsonParams: apiTypes.CreateWebhookRequest,
 	auditLogReason: string?
-): future.Future<restTypes.CreateWebhookResponse>
-	return future.new(function()
+): async.Async<apiTypes.CreateWebhookResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("POST")
-		instance:setUrl(string.format(restEndpoints.CreateWebhook, channelId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.CreateWebhook, channelId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
 		local status, response = instance:executeAsync():await()
@@ -41,12 +39,12 @@ end
 function Webhook.getChannelWebhooksAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake
-): future.Future<restTypes.GetChannelWebhooksResponse>
-	return future.new(function()
+): async.Async<apiTypes.GetChannelWebhooksResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetChannelWebhooks, channelId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetChannelWebhooks, channelId))
 
 		local status, response = instance:executeAsync():await()
 
@@ -60,12 +58,12 @@ end
 function Webhook.getGuildWebhooksAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake
-): future.Future<restTypes.GetGuildWebhooksResponse>
-	return future.new(function()
+): async.Async<apiTypes.GetGuildWebhooksResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetGuildWebhooks, guildId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetGuildWebhooks, guildId))
 
 		local status, response = instance:executeAsync():await()
 
@@ -79,12 +77,12 @@ end
 function Webhook.getWebhookAsync(
 	instance: request.Request,
 	webhookId: apiTypes.Snowflake
-): future.Future<restTypes.GetWebhookResponse>
-	return future.new(function()
+): async.Async<apiTypes.GetWebhookResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetWebhook, webhookId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetWebhook, webhookId))
 
 		local status, response = instance:executeAsync():await()
 
@@ -99,12 +97,12 @@ function Webhook.getWebhookWithTokenAsync(
 	instance: request.Request,
 	webhookId: apiTypes.Snowflake,
 	webhookToken: string
-): future.Future<restTypes.GetWebhookWithTokenResponse>
-	return future.new(function()
+): async.Async<apiTypes.GetWebhookWithTokenResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetWebhookWithToken, webhookId, webhookToken))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetWebhookWithToken, webhookId, webhookToken))
 
 		local status, response = instance:executeAsync():await()
 
@@ -118,15 +116,15 @@ end
 function Webhook.modifyWebhookAsync(
 	instance: request.Request,
 	webhookId: apiTypes.Snowflake,
-	jsonParams: restTypes.ModifyWebhookRequest,
+	jsonParams: apiTypes.ModifyWebhookRequest,
 	auditLogReason: string?
-): future.Future<restTypes.GetWebhookWithTokenResponse>
-	return future.new(function()
+): async.Async<apiTypes.GetWebhookWithTokenResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PATCH")
-		instance:setUrl(string.format(restEndpoints.ModifyWebhook, webhookId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.ModifyWebhook, webhookId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
 		local status, response = instance:executeAsync():await()
@@ -142,15 +140,15 @@ function Webhook.modifyWebhookWithTokenAsync(
 	instance: request.Request,
 	webhookId: apiTypes.Snowflake,
 	webhookToken: string,
-	jsonParams: restTypes.ModifyWebhookRequest,
+	jsonParams: apiTypes.ModifyWebhookRequest,
 	auditLogReason: string?
-): future.Future<restTypes.ModifyWebhookRequest>
-	return future.new(function()
+): async.Async<apiTypes.ModifyWebhookRequest>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PATCH")
-		instance:setUrl(string.format(restEndpoints.ModifyWebhookWithToken, webhookId, webhookToken))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.ModifyWebhookWithToken, webhookId, webhookToken))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
 		local status, response = instance:executeAsync():await()
@@ -166,12 +164,12 @@ function Webhook.deleteWebhookAsync(
 	instance: request.Request,
 	webhookId: apiTypes.Snowflake,
 	auditLogReason: string?
-): future.Future<restTypes.DeleteWebhookResponse>
-	return future.new(function()
+): async.Async<apiTypes.DeleteWebhookResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
-		instance:setUrl(string.format(restEndpoints.DeleteWebhook, webhookId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.DeleteWebhook, webhookId))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
 		local status, response = instance:executeAsync():await()
@@ -188,12 +186,12 @@ function Webhook.deleteWebhookWithTokenAsync(
 	webhookId: apiTypes.Snowflake,
 	webhookToken: string,
 	auditLogReason: string?
-): future.Future<restTypes.DeleteWebhookResponse>
-	return future.new(function()
+): async.Async<apiTypes.DeleteWebhookResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
-		instance:setUrl(string.format(restEndpoints.DeleteWebhookWithToken, webhookId, webhookToken))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.DeleteWebhookWithToken, webhookId, webhookToken))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
 		local status, response = instance:executeAsync():await()
@@ -209,21 +207,21 @@ function Webhook.executeWebhookAsync(
 	instance: request.Request,
 	webhookId: apiTypes.Snowflake,
 	webhookToken: string,
-	jsonParams: restTypes.ExecuteWebhookRequest,
+	jsonParams: apiTypes.ExecuteWebhookRequest,
 	urlParams: {
 		wait: boolean?,
 		threadId: apiTypes.Snowflake?,
 	}
-): future.Future<restTypes.ExecuteWebhookResponse>
-	return future.new(function()
+): async.Async<apiTypes.ExecuteWebhookResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:addUrlParam("wait", urlParams.wait and tostring(urlParams.wait) or (nil :: any))
 		instance:addUrlParam("thread_id", urlParams.threadId and tostring(urlParams.threadId) or (nil :: any))
 
 		instance:setMethod("POST")
-		instance:setUrl(string.format(restEndpoints.ExecuteWebhook, webhookId, webhookToken))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.ExecuteWebhook, webhookId, webhookToken))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
 		local status, response = instance:executeAsync():await()
 
@@ -242,14 +240,14 @@ function Webhook.getWebhookMessageAsync(
 	urlParams: {
 		threadId: apiTypes.Snowflake?,
 	}
-): future.Future<restTypes.GetWebhookMessageResponse>
-	return future.new(function()
+): async.Async<apiTypes.GetWebhookMessageResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:addUrlParam("thread_id", urlParams.threadId and tostring(urlParams.threadId) or (nil :: any))
 
 		instance:setMethod("POST")
-		instance:setUrl(string.format(restEndpoints.GetWebhookMessage, webhookId, webhookToken, messageId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetWebhookMessage, webhookId, webhookToken, messageId))
 
 		local status, response = instance:executeAsync():await()
 
@@ -265,19 +263,19 @@ function Webhook.editWebhookMessageAsync(
 	webhookId: apiTypes.Snowflake,
 	webhookToken: string,
 	messageId: apiTypes.Snowflake,
-	jsonParams: restTypes.EditWebhookMessageRequest,
+	jsonParams: apiTypes.EditWebhookMessageRequest,
 	urlParams: {
 		threadId: apiTypes.Snowflake?,
 	}
-): future.Future<restTypes.EditWebhookMessageResponse>
-	return future.new(function()
+): async.Async<apiTypes.EditWebhookMessageResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:addUrlParam("thread_id", urlParams.threadId and tostring(urlParams.threadId) or (nil :: any))
 
 		instance:setMethod("PATCH")
-		instance:setUrl(string.format(restEndpoints.EditWebhookMessage, webhookId, webhookToken, messageId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.EditWebhookMessage, webhookId, webhookToken, messageId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
 		local status, response = instance:executeAsync():await()
 
@@ -296,14 +294,14 @@ function Webhook.deleteWebhookMessageAsync(
 	urlParams: {
 		threadId: apiTypes.Snowflake?,
 	}
-): future.Future<restTypes.DeleteWebhookMessageResponse>
-	return future.new(function()
+): async.Async<apiTypes.DeleteWebhookMessageResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:addUrlParam("thread_id", urlParams.threadId and tostring(urlParams.threadId) or (nil :: any))
 
 		instance:setMethod("DELETE")
-		instance:setUrl(string.format(restEndpoints.EditWebhookMessage, webhookId, webhookToken, messageId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.EditWebhookMessage, webhookId, webhookToken, messageId))
 
 		local status, response = instance:executeAsync():await()
 

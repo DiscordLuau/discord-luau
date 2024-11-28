@@ -1,0 +1,15 @@
+name = "discord_luau/utilities"
+version = "0.1.0"
+description = "Discord Luau Utilities - a variety of utilities functions"
+license = "MIT"
+authors = ["AsyncMatrix<https://github.com/4x8Matrix>"]
+repository = "https://github.com/DiscordLuau/discord-luau"
+
+includes = ["src/**", "pesde.toml"]
+
+[target]
+environment = "lune"
+lib = "src/init.luau"
+
+[indices]
+default = "https://github.com/daimond113/pesde-index"

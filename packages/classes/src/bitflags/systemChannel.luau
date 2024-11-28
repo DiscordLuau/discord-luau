@@ -4,7 +4,7 @@
 	https://discord.com/developers/docs/resources/guild#guild-object-system-channel-flags
 ]]
 
-local bit = require("@vendor/bit")
+local bit = require("../../luau_packages/bit")
 
 local SystemChannelBitflag = {}
 

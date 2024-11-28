@@ -4,8 +4,7 @@
 	https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-type
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
-local interactionTypes = require("@api-types/interaction")
+local apiTypes = require("../../lune_packages/api_types")
 
 local DataOption = {}
 
@@ -18,7 +17,7 @@ function DataOption.Prototype.sync<T>(
 )
 	local optionArray = {}
 
-	self.type = interactionTypes.ApplicationCommandOptionType[optionData.type]
+	self.type = apiTypes.application.ApplicationCommandOptionType[optionData.type]
 
 	for _, option in next, optionData.options or {} do
 		table.insert(optionArray, DataOption.Interface.new(option))
@@ -41,7 +40,7 @@ end
 
 export type DataOption<T> = typeof(DataOption.Prototype) & {
 	name: string,
-	type: interactionTypes.ApplicationCommandOptionType,
+	type: apiTypes.ApplicationCommandOptionType,
 	value: T?,
 	options: { DataOption<T> }?,
 	focused: boolean?,

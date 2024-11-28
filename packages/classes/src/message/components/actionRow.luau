@@ -4,11 +4,11 @@
 	https://discord.com/developers/docs/resources/message#message-object-message-activity-structure
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
+local apiTypes = require("../../../lune_packages/api_types")
 
-local button = require("@classes/message/components/button")
-local textInput = require("@classes/message/components/textInput")
-local selectMenu = require("@classes/message/components/selectMenu/selectMenu")
+local button = require("./button")
+local textInput = require("./textInput")
+local selectMenu = require("./selectMenu/selectMenu")
 
 local ActionRow = {}
 

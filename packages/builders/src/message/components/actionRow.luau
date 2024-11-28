@@ -4,9 +4,9 @@
 	https://discord.com/developers/docs/interactions/message-components#action-rows
 ]]
 
-local button = require("@builders/message/components/button")
-local textInput = require("@builders/message/components/textInput")
-local selectMenu = require("@builders/message/components/selectMenu/selectMenu")
+local button = require("./button")
+local textInput = require("./textInput")
+local selectMenu = require("./selectMenu/selectMenu")
 
 local ActionRow = {}
 

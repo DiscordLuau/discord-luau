@@ -1,1 +1,5 @@
 .env.luau
+pesde.lock
+lune_packages
+luau_packages
+bundled.luau

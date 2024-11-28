@@ -4,8 +4,7 @@
 	https://discord.com/developers/docs/resources/message#message-reference-structure
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
-local messageTypes = require("@api-types/message")
+local apiTypes = require("../../lune_packages/api_types")
 
 local Reference = {}
 
@@ -15,7 +14,7 @@ Reference.Interface = {}
 --[[
 	type of reference.
 ]]
-function Reference.Prototype.setType(self: Reference, type: messageTypes.MessageReferenceType): Reference
+function Reference.Prototype.setType(self: Reference, type: apiTypes.MessageReferenceType): Reference
 	self.type = type
 
 	return self
@@ -62,7 +61,7 @@ end
 ]]
 function Reference.Prototype.build(self: Reference): JSON
 	return {
-		type = messageTypes.MessageType[self.type],
+		type = apiTypes.channel.MessageType[self.type],
 		message_id = self.messageId,
 		channel_id = self.channelId,
 		guild_id = self.guildId,
@@ -78,7 +77,7 @@ end
 	```
 ]]
 function Reference.Interface.new(resource: {
-	type: messageTypes.MessageReferenceType?,
+	type: apiTypes.MessageReferenceType?,
 	messageId: string?,
 	channelId: string?,
 	guildId: string?,
@@ -114,7 +113,7 @@ function Reference.Interface.new(resource: {
 end
 
 export type Reference = typeof(Reference.Prototype) & {
-	type: messageTypes.MessageReferenceType?,
+	type: apiTypes.MessageReferenceType?,
 	messageId: apiTypes.Snowflake?,
 	channelId: apiTypes.Snowflake?,
 	guildId: apiTypes.Snowflake?,

@@ -4,18 +4,18 @@
 	https://discord.com/developers/docs/resources/message#message-object
 ]]
 
-local embed = require("@builders/embed/embed")
-local allowedMention = require("@builders/message/allowedMention")
-local reference = require("@builders/message/reference")
+local embed = require("../embed/embed")
+local allowedMention = require("./allowedMention")
+local reference = require("./reference")
 
-local poll = require("@builders/message/poll/poll")
+local poll = require("./poll/poll")
 
-local button = require("@builders/message/components/button")
-local textInput = require("@builders/message/components/textInput")
-local selectMenu = require("@builders/message/components/selectMenu/selectMenu")
-local actionRow = require("@builders/message/components/actionRow")
+local button = require("./components/button")
+local textInput = require("./components/textInput")
+local selectMenu = require("./components/selectMenu/selectMenu")
+local actionRow = require("./components/actionRow")
 
-local attachment = require("@builders/attachment")
+local attachment = require("../attachment")
 
 local Message = {}
 

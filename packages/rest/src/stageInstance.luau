@@ -1,11 +1,9 @@
-local serde = require("@std-polyfills/serde")
+local stdPolyfills = require("../lune_packages/std_polyfills")
 
-local request = require("@rest/request")
-local future = require("@vendor/future")
+local async = require("../lune_packages/async")
+local apiTypes = require("../lune_packages/api_types")
 
-local restTypes = require("@api-types/rest/types")
-local apiTypes = require("@api-types/apiTypes")
-local restEndpoints = require("@api-types/rest/endpoints")
+local request = require("./request")
 
 --[[
 	HTTP Rest API implementation for the following Resource:
@@ -17,15 +15,15 @@ local StageInstance = {}
 -- https://discord.com/developers/docs/resources/stage-instance#create-stage-instance
 function StageInstance.createStageInstanceAsync(
 	instance: request.Request,
-	jsonParams: restTypes.CreateStageInstanceRequest,
+	jsonParams: apiTypes.CreateStageInstanceRequest,
 	auditLogReason: string?
-): future.Future<restTypes.CreateStageInstanceResponse>
-	return future.new(function()
+): async.Async<apiTypes.CreateStageInstanceResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("POST")
-		instance:setUrl(restEndpoints.CreateStageInstance)
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(apiTypes.rest.endpoints.CreateStageInstance)
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
 		local status, response = instance:executeAsync():await()
@@ -40,12 +38,12 @@ end
 function StageInstance.getStageInstanceAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake
-): future.Future<restTypes.GetStageInstanceResponse>
-	return future.new(function()
+): async.Async<apiTypes.GetStageInstanceResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetStageInstance, channelId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetStageInstance, channelId))
 
 		local status, response = instance:executeAsync():await()
 
@@ -59,15 +57,15 @@ end
 function StageInstance.modifyStageInstanceAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
-	jsonParams: restTypes.ModifyStageInstanceRequest,
+	jsonParams: apiTypes.ModifyStageInstanceRequest,
 	auditLogReason: string?
-): future.Future<restTypes.ModifyStageInstanceResponse>
-	return future.new(function()
+): async.Async<apiTypes.ModifyStageInstanceResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PATCH")
-		instance:setUrl(string.format(restEndpoints.ModifyStageInstance, channelId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.ModifyStageInstance, channelId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
 		local status, response = instance:executeAsync():await()
@@ -82,12 +80,12 @@ end
 function StageInstance.deleteStageInstanceAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake
-): future.Future<restTypes.DeleteStageInstanceResponse>
-	return future.new(function()
+): async.Async<apiTypes.DeleteStageInstanceResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
-		instance:setUrl(string.format(restEndpoints.DeleteStageInstance, channelId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.DeleteStageInstance, channelId))
 
 		local status, response = instance:executeAsync():await()
 

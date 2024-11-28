@@ -4,9 +4,9 @@
 	https://discord.com/developers/docs/resources/guild#welcome-screen-object
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
+local apiTypes = require("../../lune_packages/api_types")
 
-local welcomeScreenChannel = require("@classes/guild/welcomeScreenChannel")
+local welcomeScreenChannel = require("./welcomeScreenChannel")
 
 local WelcomeScreen = {}
 

@@ -4,7 +4,7 @@
 	https://discord.com/developers/docs/interactions/message-components#select-menu-object-select-default-value-structure
 ]]
 
-local messageTypes = require("@api-types/message")
+local apiTypes = require("../../../../lune_packages/api_types")
 
 local DefaultValue = {}
 
@@ -23,7 +23,7 @@ end
 --[[
 	
 ]]
-function DefaultValue.Prototype.setType(self: DefaultValue, type: messageTypes.SelectDefaultValueType): DefaultValue
+function DefaultValue.Prototype.setType(self: DefaultValue, type: apiTypes.SelectDefaultValueType): DefaultValue
 	self.type = type
 
 	return self
@@ -51,7 +51,7 @@ end
 ]]
 function DefaultValue.Interface.new(resource: {
 	id: string,
-	type: messageTypes.SelectDefaultValueType,
+	type: apiTypes.SelectDefaultValueType,
 }?): DefaultValue
 	local self = setmetatable({} :: DefaultValue, {
 		__index = DefaultValue.Prototype,
@@ -72,7 +72,7 @@ end
 
 export type DefaultValue = typeof(DefaultValue.Prototype) & {
 	id: string,
-	type: messageTypes.SelectDefaultValueType,
+	type: apiTypes.SelectDefaultValueType,
 }
 
 export type JSON = typeof(DefaultValue.Prototype.build(nil :: any))

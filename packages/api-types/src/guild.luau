@@ -1,6 +1,6 @@
-local reflect = require("@utils/table/reflect")
+local utilitues = require("../lune_packages/utilities")
 
-local VerificationLevel = table.freeze(reflect({
+local VerificationLevel = table.freeze(utilitues.table.reflect({
 	None = 0,
 	Low = 1,
 	Medium = 2,
@@ -8,87 +8,87 @@ local VerificationLevel = table.freeze(reflect({
 	VeryHigh = 4,
 }))
 
-local DefaultMessageNotification = table.freeze(reflect({
+local DefaultMessageNotification = table.freeze(utilitues.table.reflect({
 	AllMessages = 0,
 	OnlyMentions = 1,
 }))
 
-local ExplicitContentFilterLevel = table.freeze(reflect({
+local ExplicitContentFilterLevel = table.freeze(utilitues.table.reflect({
 	Disabled = 0,
 	MembersWithoutRoles = 1,
 	AllMembers = 2,
 }))
 
-local NSFWLevel = table.freeze(reflect({
+local NSFWLevel = table.freeze(utilitues.table.reflect({
 	Default = 0,
 	Explicit = 1,
 	Safe = 2,
 	AgeRestricted = 3,
 }))
 
-local PremiumTier = table.freeze(reflect({
+local PremiumTier = table.freeze(utilitues.table.reflect({
 	None = 0,
 	Tier1 = 1,
 	Tier2 = 2,
 	Tier3 = 3,
 }))
 
-local MFALevel = table.freeze(reflect({
+local MFALevel = table.freeze(utilitues.table.reflect({
 	None = 0,
 	Elevated = 1,
 }))
 
-local InviteType = table.freeze(reflect({
+local InviteType = table.freeze(utilitues.table.reflect({
 	Guild = 0,
 	GroupDM = 1,
 	Friend = 2,
 }))
 
-local InviteTargetType = table.freeze(reflect({
+local InviteTargetType = table.freeze(utilitues.table.reflect({
 	Stream = 1,
 	EmbeddedApplication = 2,
 }))
 
-local ScheduledEventPrivacyLevel = table.freeze(reflect({
+local ScheduledEventPrivacyLevel = table.freeze(utilitues.table.reflect({
 	GuildOnly = 2,
 }))
 
-local SchedledEventEntityType = table.freeze(reflect({
+local SchedledEventEntityType = table.freeze(utilitues.table.reflect({
 	StageInstance = 1,
 	Voice = 2,
 	External = 3,
 }))
 
-local SchedledEventStatus = table.freeze(reflect({
+local SchedledEventStatus = table.freeze(utilitues.table.reflect({
 	Scheduled = 1,
 	Active = 2,
 	Completed = 3,
 	Cancelled = 4,
 }))
 
-local IntegrationType = table.freeze(reflect({
+local IntegrationType = table.freeze(utilitues.table.reflect({
 	Twitch = "twitch",
 	YouTube = "youtube",
 	Discord = "discord",
 	GuildSubscription = "guild_subscription",
 }))
 
-local IntegrationExpireBehaviour = table.freeze(reflect({
+local IntegrationExpireBehaviour = table.freeze(utilitues.table.reflect({
 	RemoveRole = 0,
 	Kick = 1,
 }))
 
-local OnboardingPromptType = table.freeze(reflect({
+local OnboardingPromptType = table.freeze(utilitues.table.reflect({
 	MultipleChoice = "MULTIPLE_CHOICE",
 	Dropdown = "DROPDOWN",
 }))
 
-local OnboardingMode = table.freeze(reflect({
+local OnboardingMode = table.freeze(utilitues.table.reflect({
 	Default = "ONBOARDING_DEFAULT",
 	Advanced = "ONBOARDING_ADVANCED",
 }))
 
-local OverwriteType = table.freeze(reflect({
+local OverwriteType = table.freeze(utilitues.table.reflect({
 	Role = 0,
 	Member = 1,
 }))

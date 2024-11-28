@@ -4,7 +4,7 @@
 	packages/classes/src/message/poll/results.luau
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
+local apiTypes = require("../../../lune_packages/api_types")
 
 local AnswerCount = {}
 

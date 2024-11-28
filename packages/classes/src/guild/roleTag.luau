@@ -4,7 +4,7 @@
 	https://discord.com/developers/docs/topics/permissions#role-object-role-tags-structure
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
+local apiTypes = require("../../lune_packages/api_types")
 
 local RoleTag = {}
 

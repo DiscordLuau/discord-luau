@@ -4,7 +4,7 @@
 	https://discord.com/developers/docs/resources/poll#poll-media-object-poll-media-object-structure
 ]]
 
-local emojiBuilder = require("@builders/emoji")
+local emojiBuilder = require("../../emoji")
 
 local PollMedia = {}
 

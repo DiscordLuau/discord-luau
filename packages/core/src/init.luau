@@ -1,4 +1,4 @@
-local bot = require("@core/bot")
+local bot = require("./bot")
 
 local DiscordLuau = {}
 

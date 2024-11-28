@@ -1,11 +1,9 @@
-local serde = require("@std-polyfills/serde")
+local stdPolyfills = require("../lune_packages/std_polyfills")
 
-local request = require("@rest/request")
-local future = require("@vendor/future")
+local async = require("../lune_packages/async")
+local apiTypes = require("../lune_packages/api_types")
 
-local restTypes = require("@api-types/rest/types")
-local apiTypes = require("@api-types/apiTypes")
-local restEndpoints = require("@api-types/rest/endpoints")
+local request = require("./request")
 
 --[[
 	HTTP Rest API implementation for the following Resource:
@@ -15,12 +13,12 @@ local restEndpoints = require("@api-types/rest/endpoints")
 local Voice = {}
 
 -- https://discord.com/developers/docs/resources/voice#list-voice-regions
-function Voice.listVoiceRegionsAsync(instance: request.Request): future.Future<restTypes.ListVoiceRegionsResponse>
-	return future.new(function()
+function Voice.listVoiceRegionsAsync(instance: request.Request): async.Async<apiTypes.ListVoiceRegionsResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(restEndpoints.ListVoiceRegions)
+		instance:setUrl(apiTypes.rest.endpoints.ListVoiceRegions)
 
 		local status, response = instance:executeAsync():await()
 
@@ -34,12 +32,12 @@ end
 function Voice.getCurrentUserVoiceStateAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake
-): future.Future<restTypes.GetCurrentUserVoiceStateResponse>
-	return future.new(function()
+): async.Async<apiTypes.GetCurrentUserVoiceStateResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetCurrentUserVoiceState, guildId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetCurrentUserVoiceState, guildId))
 
 		local status, response = instance:executeAsync():await()
 
@@ -54,12 +52,12 @@ function Voice.getUserVoiceStateAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	userId: apiTypes.Snowflake
-): future.Future<restTypes.GetUserVoiceStateResponse>
-	return future.new(function()
+): async.Async<apiTypes.GetUserVoiceStateResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetUserVoiceState, guildId, userId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetUserVoiceState, guildId, userId))
 
 		local status, response = instance:executeAsync():await()
 
@@ -73,14 +71,14 @@ end
 function Voice.modifyCurrentUserVoiceStateAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
-	jsonParams: restTypes.ModifyCurrentUserVoiceStateRequest
-): future.Future<restTypes.ModifyCurrentUserVoiceStateResponse>
-	return future.new(function()
+	jsonParams: apiTypes.ModifyCurrentUserVoiceStateRequest
+): async.Async<apiTypes.ModifyCurrentUserVoiceStateResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PATCH")
-		instance:setUrl(string.format(restEndpoints.ModifyCurrentUserVoiceState, guildId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.ModifyCurrentUserVoiceState, guildId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
 		local status, response = instance:executeAsync():await()
 
@@ -95,14 +93,14 @@ function Voice.modifyUserVoiceStateAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	userId: apiTypes.Snowflake,
-	jsonParams: restTypes.ModifyUserVoiceStateRequest
-): future.Future<restTypes.ModifyUserVoiceStateResponse>
-	return future.new(function()
+	jsonParams: apiTypes.ModifyUserVoiceStateRequest
+): async.Async<apiTypes.ModifyUserVoiceStateResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PATCH")
-		instance:setUrl(string.format(restEndpoints.ModifyUserVoiceState, guildId, userId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.ModifyUserVoiceState, guildId, userId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
 		local status, response = instance:executeAsync():await()
 

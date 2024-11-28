@@ -4,18 +4,17 @@
 	https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-data
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
-local interactionTypes = require("@api-types/interaction")
+local apiTypes = require("../../lune_packages/api_types")
 
-local resolved = require("@classes/resolved")
-local state = require("@classes/state")
+local state = require("../../lune_packages/state")
 
-local button = require("@classes/message/components/button")
-local textInput = require("@classes/message/components/textInput")
-local selectMenu = require("@classes/message/components/selectMenu/selectMenu")
-local actionRow = require("@classes/message/components/actionRow")
+local button = require("../message/components/button")
+local textInput = require("../message/components/textInput")
+local selectMenu = require("../message/components/selectMenu/selectMenu")
+local actionRow = require("../message/components/actionRow")
 
-local dataOption = require("@classes/interaction/dataOption")
+local dataOption = require("./dataOption")
+local resolved = require("../resolved")
 
 local Data = {}
 
@@ -52,7 +51,7 @@ function Data.Prototype.sync(self: Data, dataObject: apiTypes.InteractionDataObj
 		end
 	end
 
-	self.type = interactionTypes.InteractionType[dataObject.type]
+	self.type = apiTypes.interaction.InteractionType[dataObject.type]
 
 	self.id = dataObject.id
 	self.name = dataObject.name
@@ -61,7 +60,7 @@ function Data.Prototype.sync(self: Data, dataObject: apiTypes.InteractionDataObj
 	self.guildId = dataObject.guild_id
 	self.targetId = dataObject.target_id
 	self.customId = dataObject.custom_id
-	self.componentType = interactionTypes.ComponentTypes[dataObject.component_type]
+	self.componentType = apiTypes.interaction.ComponentTypes[dataObject.component_type]
 	self.components = componentsArray
 end
 
@@ -84,13 +83,13 @@ export type Data = typeof(Data.Prototype) & {
 
 	id: apiTypes.Snowflake,
 	name: string,
-	type: interactionTypes.InteractionType,
+	type: apiTypes.InteractionType,
 	resolved: resolved.Resolved?,
 	options: { dataOption.DataOption<unknown> },
 	guildId: apiTypes.Snowflake?,
 	targetId: apiTypes.Snowflake?,
 	customId: string?,
-	componentType: interactionTypes.ComponentTypes?,
+	componentType: apiTypes.ComponentTypes?,
 	components: { button.Button | textInput.TextInput | selectMenu.SelectMenu | actionRow.ActionRow }?,
 }
 

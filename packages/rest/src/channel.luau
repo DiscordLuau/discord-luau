@@ -1,11 +1,9 @@
-local serde = require("@std-polyfills/serde")
+local stdPolyfills = require("../lune_packages/std_polyfills")
 
-local request = require("@rest/request")
-local future = require("@vendor/future")
+local async = require("../lune_packages/async")
+local apiTypes = require("../lune_packages/api_types")
 
-local restTypes = require("@api-types/rest/types")
-local apiTypes = require("@api-types/apiTypes")
-local restEndpoints = require("@api-types/rest/endpoints")
+local request = require("./request")
 
 --[[
 	HTTP Rest API implementation for the following Resource:
@@ -18,12 +16,12 @@ local Channel = {}
 function Channel.getChannelAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake
-): future.Future<restTypes.GetChannelResponse>
-	return future.new(function()
+): async.Async<apiTypes.GetChannelResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetChannel, channelId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetChannel, channelId))
 
 		local status, response = instance:executeAsync():await()
 
@@ -37,15 +35,15 @@ end
 function Channel.modifyChannelAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
-	jsonParams: restTypes.ModifyChannelRequest,
+	jsonParams: apiTypes.ModifyChannelRequest,
 	auditLogReason: string?
-): future.Future<restTypes.ModifyChannelResponse>
-	return future.new(function()
+): async.Async<apiTypes.ModifyChannelResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PATCH")
-		instance:setUrl(string.format(restEndpoints.ModifyChannel, channelId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.ModifyChannel, channelId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
 		local status, response = instance:executeAsync():await()
@@ -61,12 +59,12 @@ function Channel.deleteOrCloseChannelAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
 	auditLogReason: string?
-): future.Future<restTypes.DeleteCloseChannelResponse>
-	return future.new(function()
+): async.Async<apiTypes.DeleteCloseChannelResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
-		instance:setUrl(string.format(restEndpoints.DeleteOrCloseChannel, channelId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.DeleteOrCloseChannel, channelId))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
 		local status, response = instance:executeAsync():await()
@@ -82,15 +80,15 @@ function Channel.editChannelPermissionsAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
 	overwriteId: apiTypes.Snowflake,
-	jsonParams: restTypes.EditChannelPermissionsRequest,
+	jsonParams: apiTypes.EditChannelPermissionsRequest,
 	auditLogReason: string?
-): future.Future<restTypes.EditChannelPermissionsResponse>
-	return future.new(function()
+): async.Async<apiTypes.EditChannelPermissionsResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PUT")
-		instance:setUrl(string.format(restEndpoints.EditChannelPermissions, channelId, overwriteId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.EditChannelPermissions, channelId, overwriteId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
 		local status, response = instance:executeAsync():await()
@@ -105,12 +103,12 @@ end
 function Channel.getChannelInvitesAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake
-): future.Future<restTypes.GetChannelInvitesResponse>
-	return future.new(function()
+): async.Async<apiTypes.GetChannelInvitesResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetChannelInvites, channelId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetChannelInvites, channelId))
 
 		local status, response = instance:executeAsync():await()
 
@@ -124,15 +122,15 @@ end
 function Channel.createChannelInviteAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
-	jsonParams: restTypes.CreateChannelInviteRequest,
+	jsonParams: apiTypes.CreateChannelInviteRequest,
 	auditLogReason: string?
-): future.Future<restTypes.CreateChannelInviteResponse>
-	return future.new(function()
+): async.Async<apiTypes.CreateChannelInviteResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("POST")
-		instance:setUrl(string.format(restEndpoints.CreateChannelInvite, channelId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.CreateChannelInvite, channelId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
 		local status, response = instance:executeAsync():await()
@@ -149,12 +147,12 @@ function Channel.deleteChannelPermissionAsync(
 	channelId: apiTypes.Snowflake,
 	overwriteId: apiTypes.Snowflake,
 	auditLogReason: string?
-): future.Future<restTypes.DeleteChannelPermissionResponse>
-	return future.new(function()
+): async.Async<apiTypes.DeleteChannelPermissionResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
-		instance:setUrl(string.format(restEndpoints.DeleteChannelPermission, channelId, overwriteId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.DeleteChannelPermission, channelId, overwriteId))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
 		local status, response = instance:executeAsync():await()
@@ -169,15 +167,15 @@ end
 function Channel.followAnnouncementChannelAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
-	jsonParams: restTypes.FollowAnnouncementChannelRequest,
+	jsonParams: apiTypes.FollowAnnouncementChannelRequest,
 	auditLogReason: string?
-): future.Future<restTypes.FollowAnnouncementChannelResponse>
-	return future.new(function()
+): async.Async<apiTypes.FollowAnnouncementChannelResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("POST")
-		instance:setUrl(string.format(restEndpoints.FollowAnnouncementChannel, channelId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.FollowAnnouncementChannel, channelId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
 		local status, response = instance:executeAsync():await()
@@ -192,12 +190,12 @@ end
 function Channel.triggerTypingIndicatorAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake
-): future.Future<restTypes.TriggerTypingIndicatorResponse>
-	return future.new(function()
+): async.Async<apiTypes.TriggerTypingIndicatorResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("POST")
-		instance:setUrl(string.format(restEndpoints.TriggerTypingChannel, channelId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.TriggerTypingChannel, channelId))
 
 		local status, response = instance:executeAsync():await()
 
@@ -211,12 +209,12 @@ end
 function Channel.getPinnedMessagesAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake
-): future.Future<restTypes.GetPinnedMessagesResponse>
-	return future.new(function()
+): async.Async<apiTypes.GetPinnedMessagesResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetPinnedMessages, channelId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetPinnedMessages, channelId))
 
 		local status, response = instance:executeAsync():await()
 
@@ -232,12 +230,12 @@ function Channel.pinMessageAsync(
 	channelId: apiTypes.Snowflake,
 	messageId: apiTypes.Snowflake,
 	auditLogReason: string?
-): future.Future<restTypes.PinMessageResponse>
-	return future.new(function()
+): async.Async<apiTypes.PinMessageResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PUT")
-		instance:setUrl(string.format(restEndpoints.PinMessage, channelId, messageId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.PinMessage, channelId, messageId))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
 		local status, response = instance:executeAsync():await()
@@ -254,12 +252,12 @@ function Channel.unpinMessageAsync(
 	channelId: apiTypes.Snowflake,
 	messageId: apiTypes.Snowflake,
 	auditLogReason: string?
-): future.Future<restTypes.UnpinMessageResponse>
-	return future.new(function()
+): async.Async<apiTypes.UnpinMessageResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
-		instance:setUrl(string.format(restEndpoints.UnpinMessage, channelId, messageId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.UnpinMessage, channelId, messageId))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
 		local status, response = instance:executeAsync():await()
@@ -275,14 +273,14 @@ function Channel.groupDMAddRecipientAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
 	userId: apiTypes.Snowflake,
-	jsonParams: restTypes.GroupDMAddRecipientRequest
-): future.Future<restTypes.GroupDMAddRecipientResponse>
-	return future.new(function()
+	jsonParams: apiTypes.GroupDMAddRecipientRequest
+): async.Async<apiTypes.GroupDMAddRecipientResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PUT")
-		instance:setUrl(string.format(restEndpoints.GroupDMAddRecipient, channelId, userId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GroupDMAddRecipient, channelId, userId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
 		local status, response = instance:executeAsync():await()
 
@@ -297,12 +295,12 @@ function Channel.groupDMRemoveRecipientAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
 	userId: apiTypes.Snowflake
-): future.Future<restTypes.GroupDMRemoveRecipientResponse>
-	return future.new(function()
+): async.Async<apiTypes.GroupDMRemoveRecipientResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
-		instance:setUrl(string.format(restEndpoints.GroupDMRemoveRecipient, channelId, userId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GroupDMRemoveRecipient, channelId, userId))
 
 		local status, response = instance:executeAsync():await()
 
@@ -317,15 +315,15 @@ function Channel.startThreadFromMessageAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
 	messageId: apiTypes.Snowflake,
-	jsonParams: restTypes.StartThreadFromMessageRequest,
+	jsonParams: apiTypes.StartThreadFromMessageRequest,
 	auditLogReason: string?
-): future.Future<restTypes.StartThreadFromMessageResponse>
-	return future.new(function()
+): async.Async<apiTypes.StartThreadFromMessageResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("POST")
-		instance:setUrl(string.format(restEndpoints.StartThreadFromMessage, channelId, messageId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.StartThreadFromMessage, channelId, messageId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
 		local status, response = instance:executeAsync():await()
@@ -340,15 +338,15 @@ end
 function Channel.startThreadWithoutMessageAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
-	jsonParams: restTypes.StartThreadWithoutMessageRequest,
+	jsonParams: apiTypes.StartThreadWithoutMessageRequest,
 	auditLogReason: string?
-): future.Future<restTypes.StartThreadWithoutMessageResponse>
-	return future.new(function()
+): async.Async<apiTypes.StartThreadWithoutMessageResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("POST")
-		instance:setUrl(string.format(restEndpoints.StartThreadWithoutMessage, channelId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.StartThreadWithoutMessage, channelId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
 		local status, response = instance:executeAsync():await()
@@ -363,17 +361,15 @@ end
 function Channel.startThreadInForumOrMediaChannelAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
-	jsonParams: restTypes.StartThreadInForumOrMediaChannelRequest,
+	jsonParams: apiTypes.StartThreadInForumOrMediaChannelRequest,
 	auditLogReason: string?
-): future.Future<
-	restTypes.StartThreadInForumOrMediaChannelResponse
->
-	return future.new(function()
+): async.Async<apiTypes.StartThreadInForumOrMediaChannelResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("POST")
-		instance:setUrl(string.format(restEndpoints.StartThreadInForumOrMediaChannel, channelId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.StartThreadInForumOrMediaChannel, channelId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
 		local status, response = instance:executeAsync():await()
@@ -388,12 +384,12 @@ end
 function Channel.joinThreadAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake
-): future.Future<restTypes.JoinThreadResponse>
-	return future.new(function()
+): async.Async<apiTypes.JoinThreadResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PUT")
-		instance:setUrl(string.format(restEndpoints.JoinThread, channelId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.JoinThread, channelId))
 
 		local status, response = instance:executeAsync():await()
 
@@ -408,12 +404,12 @@ function Channel.addThreadMemberAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
 	userId: apiTypes.Snowflake
-): future.Future<restTypes.AddThreadMemberResponse>
-	return future.new(function()
+): async.Async<apiTypes.AddThreadMemberResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PUT")
-		instance:setUrl(string.format(restEndpoints.AddThreadMember, channelId, userId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.AddThreadMember, channelId, userId))
 
 		local status, response = instance:executeAsync():await()
 
@@ -427,12 +423,12 @@ end
 function Channel.leaveThreadAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake
-): future.Future<restTypes.LeaveThreadResponse>
-	return future.new(function()
+): async.Async<apiTypes.LeaveThreadResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
-		instance:setUrl(string.format(restEndpoints.LeaveThread, channelId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.LeaveThread, channelId))
 
 		local status, response = instance:executeAsync():await()
 
@@ -447,12 +443,12 @@ function Channel.removeThreadMemberAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
 	userId: apiTypes.Snowflake
-): future.Future<restTypes.RemoveThreadMemberResponse>
-	return future.new(function()
+): async.Async<apiTypes.RemoveThreadMemberResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
-		instance:setUrl(string.format(restEndpoints.RemoveThreadMember, channelId, userId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.RemoveThreadMember, channelId, userId))
 
 		local status, response = instance:executeAsync():await()
 
@@ -470,14 +466,14 @@ function Channel.getThreadMemberAsync(
 	urlParams: {
 		withMember: boolean?,
 	}
-): future.Future<restTypes.GetThreadMemberResponse>
-	return future.new(function()
+): async.Async<apiTypes.GetThreadMemberResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:addUrlParam("with_member", urlParams.withMember and tostring(urlParams.withMember) or (nil :: any))
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetThreadMember, channelId, userId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetThreadMember, channelId, userId))
 
 		local status, response = instance:executeAsync():await()
 
@@ -496,8 +492,8 @@ function Channel.listThreadMembersAsync(
 		after: apiTypes.Snowflake?,
 		limit: number?,
 	}
-): future.Future<restTypes.ListThreadMembersResponse>
-	return future.new(function()
+): async.Async<apiTypes.ListThreadMembersResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:addUrlParam("with_member", urlParams.withMember and tostring(urlParams.withMember) or (nil :: any))
@@ -505,7 +501,7 @@ function Channel.listThreadMembersAsync(
 		instance:addUrlParam("limit", urlParams.limit and tostring(urlParams.limit) or (nil :: any))
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.ListThreadMembers, channelId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.ListThreadMembers, channelId))
 
 		local status, response = instance:executeAsync():await()
 
@@ -523,15 +519,15 @@ function Channel.listPublicArchivedThreadsAsync(
 		before: string?,
 		limit: number?,
 	}
-): future.Future<restTypes.ListPublicArchivedThreadsResponse>
-	return future.new(function()
+): async.Async<apiTypes.ListPublicArchivedThreadsResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:addUrlParam("limit", urlParams.limit and tostring(urlParams.limit) or (nil :: any))
 		instance:addUrlParam("before", urlParams.before or (nil :: any))
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.ListPublicArchivedThreads, channelId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.ListPublicArchivedThreads, channelId))
 
 		local status, response = instance:executeAsync():await()
 
@@ -549,15 +545,15 @@ function Channel.listPrivateArchivedThreadsAsync(
 		before: string?,
 		limit: number?,
 	}
-): future.Future<restTypes.ListPrivateArchivedThreadsResponse>
-	return future.new(function()
+): async.Async<apiTypes.ListPrivateArchivedThreadsResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:addUrlParam("limit", urlParams.limit and tostring(urlParams.limit) or (nil :: any))
 		instance:addUrlParam("before", urlParams.before or (nil :: any))
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.ListPrivateArchivedThreads, channelId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.ListPrivateArchivedThreads, channelId))
 
 		local status, response = instance:executeAsync():await()
 
@@ -575,15 +571,15 @@ function Channel.listJoinedPrivateArchivedThreadsAsync(
 		before: string?,
 		limit: number?,
 	}
-): future.Future<restTypes.ListPrivateArchivedThreadsResponse>
-	return future.new(function()
+): async.Async<apiTypes.ListPrivateArchivedThreadsResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:addUrlParam("limit", urlParams.limit and tostring(urlParams.limit) or (nil :: any))
 		instance:addUrlParam("before", urlParams.before or (nil :: any))
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.ListJoinedPrivateArchivedThreads, channelId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.ListJoinedPrivateArchivedThreads, channelId))
 
 		local status, response = instance:executeAsync():await()
 

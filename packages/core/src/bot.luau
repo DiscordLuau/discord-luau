@@ -1,44 +1,11 @@
-local datetime = require("@std-polyfills/datetime")
-
-local future = require("@vendor/future")
-local logger = require("@vendor/logger")
-local emitter = require("@vendor/emitter")
-
-local gatewayRest = require("@rest/gateway")
-local guildRest = require("@rest/guild")
-local channelRest = require("@rest/channel")
-
-local gatewayTypes = require("@api-types/gateway/types")
-local restTypes = require("@api-types/rest/types")
-local apiTypes = require("@api-types/apiTypes")
-
-local receiveEvents = require("@api-types/gateway/receiveEvents")
-
-local application = require("@classes/application/application")
-local guild = require("@classes/guild/guild")
-local unavailableGuild = require("@classes/guild/unavailableGuild")
-local user = require("@classes/user")
-local member = require("@classes/guild/member")
-local message = require("@classes/message/message")
-
-local autocompleteInteraction = require("@classes/interaction/types/autocomplete")
-local commandInteraction = require("@classes/interaction/types/command")
-local componentInteraction = require("@classes/interaction/types/component")
-local modalInteraction = require("@classes/interaction/types/modal")
-local pingInteraction = require("@classes/interaction/types/ping")
-
-local dmChannel = require("@classes/channels/types/dm")
-local groupDmChannel = require("@classes/channels/types/groupDm")
-local guildAnnouncementChannel = require("@classes/channels/types/guildAnnouncement")
-local guildCategoryChannel = require("@classes/channels/types/guildCategory")
-local guildDirectoryChannel = require("@classes/channels/types/guildDirectory")
-local guildStageVoiceChannel = require("@classes/channels/types/guildStageVoice")
-local guildTextChannel = require("@classes/channels/types/guildText")
-local guildVoiceChannel = require("@classes/channels/types/guildVoice")
-
-local constructChannelFromData = require("@utils/constructChannelFromData")
-
-local state = require("@classes/state")
+local async = require("../lune_packages/async")
+local stdPolyfills = require("../lune_packages/std_polyfills")
+local apiTypes = require("../lune_packages/api_types")
+local state = require("../lune_packages/state")
+local rest = require("../lune_packages/rest")
+local logger = require("../lune_packages/logger")
+local emitter = require("../luau_packages/emitter")
+local classes = require("../lune_packages/classes")
 
 local DISCORD_VERSION = 10
 
@@ -55,11 +22,11 @@ Bot.Prototype = {}
 	This function sends a request to the Discord Gateway to retrieve information
 	about the bot, such as the recommended number of shards and session start limit.
 ]]
-function Bot.Prototype.queryGatewayInformation(self: Bot): future.Future<restTypes.GetGatewayBotResponse>
-	return future.new(function()
+function Bot.Prototype.queryGatewayInformation(self: Bot): async.Async<apiTypes.GetGatewayBotResponse>
+	return async.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = gatewayRest.getGatewayBotAsync(request):await()
+		local status, response = rest.gateway.getGatewayBotAsync(request):await()
 
 		assert(status == "Fulfilled", tostring(response))
 
@@ -75,17 +42,17 @@ end
 	2. Asserts that the query was successful
 	3. Connects to the WebSocket using the obtained gateway information
 
-	Returns a future that resolves when the connection is established.
+	Returns a async that resolves when the connection is established.
 ]]
-function Bot.Prototype.connectAsync(self: Bot): future.Future<nil>
-	return future.new(function()
+function Bot.Prototype.connectAsync(self: Bot): async.Async<nil>
+	return async.new(function()
 		local status, gatewayInformation = self:queryGatewayInformation():await()
 
 		assert(status == "Fulfilled", gatewayInformation)
 
 		self.state.webSocketManager.onAllShardsReady:listen(function(data)
-			local application = application.new(self.state, data.payload.d.application)
-			local user = user.new(data.payload.d.user)
+			local application = classes.application.application.new(self.state, data.payload.d.application)
+			local user = classes.user.new(data.payload.d.user)
 
 			self.application = application
 			self.user = user
@@ -97,199 +64,230 @@ function Bot.Prototype.connectAsync(self: Bot): future.Future<nil>
 
 		self.state.webSocketManager.onDispatch:listen(function(object: {
 			shardId: number,
-			event: receiveEvents.ReceiveEvent,
-			payload: gatewayTypes.Payload<unknown>,
+			event: apiTypes.ReceiveEvent,
+			payload: apiTypes.Payload<unknown>,
 		})
-			if object.event == receiveEvents["Ready"] then
+			if object.event == apiTypes.gateway.receiveEvents["Ready"] then
 				self.onReady:invoke(object.shardId)
-			elseif object.event == receiveEvents["MessageCreate"] then
-				local typedObject = object.payload :: gatewayTypes.MessageCreatePayload
+			elseif object.event == apiTypes.gateway.receiveEvents["MessageCreate"] then
+				local typedObject = object.payload :: apiTypes.MessageCreatePayload
 
-				self.onMessage:invoke(message.new(self.state, typedObject.d))
-			elseif object.event == receiveEvents["MessageUpdate"] then
-				local typedObject = object.payload :: gatewayTypes.MessageUpdatePayload
+				self.onMessage:invoke(classes.message.message.new(self.state, typedObject.d))
+			elseif object.event == apiTypes.gateway.receiveEvents["MessageUpdate"] then
+				local typedObject = object.payload :: apiTypes.MessageUpdatePayload
 
-				self.onMessageChanged:invoke(message.new(self.state, typedObject.d))
-			elseif object.event == receiveEvents["MessageDelete"] then
-				local typedObject = object.payload :: gatewayTypes.MessageDeletePayload
+				self.onMessageChanged:invoke(classes.message.message.new(self.state, typedObject.d))
+			elseif object.event == apiTypes.gateway.receiveEvents["MessageDelete"] then
+				local typedObject = object.payload :: apiTypes.MessageDeletePayload
 
 				self.onMessageDeleted:invoke({
 					messageId = typedObject.d.id,
 					channelId = typedObject.d.channel_id,
 					guildId = typedObject.d.guild_id,
 				})
-			elseif object.event == receiveEvents["MessageDeleteBulk"] then
-				local typedObject = object.payload :: gatewayTypes.MessageDeleteBulkPayload
+			elseif object.event == apiTypes.gateway.receiveEvents["MessageDeleteBulk"] then
+				local typedObject = object.payload :: apiTypes.MessageDeleteBulkPayload
 
 				self.onMessageBulkDeleted:invoke({
 					channelId = typedObject.d.channel_id,
 					guildId = typedObject.d.guild_id,
 					ids = typedObject.d.ids,
 				})
-			elseif object.event == receiveEvents["ChannelCreate"] then
-				local typedObject = object.payload :: gatewayTypes.CreateChannelPayload
+			elseif object.event == apiTypes.gateway.receiveEvents["ChannelCreate"] then
+				local typedObject = object.payload :: apiTypes.CreateChannelPayload
 
 				self.state.cache.channels:set(typedObject.d.id :: apiTypes.Snowflake, typedObject.d)
 
 				if typedObject.d.type == 0 then
-					self.onTextChannelCreate:invoke(guildTextChannel.new(self.state, typedObject.d))
+					self.onTextChannelCreate:invoke(classes.channels.types.guildText.new(self.state, typedObject.d))
 				elseif typedObject.d.type == 1 then
-					self.onDMChannelCreate:invoke(dmChannel.new(self.state, typedObject.d))
+					self.onDMChannelCreate:invoke(classes.channels.types.dm.new(self.state, typedObject.d))
 				elseif typedObject.d.type == 2 then
-					self.onVoiceChannelCreate:invoke(guildVoiceChannel.new(self.state, typedObject.d))
+					self.onVoiceChannelCreate:invoke(classes.channels.types.guildVoice.new(self.state, typedObject.d))
 				elseif typedObject.d.type == 3 then
-					self.onGroupDMChannelCreate:invoke(groupDmChannel.new(self.state, typedObject.d))
+					self.onGroupDMChannelCreate:invoke(classes.channels.types.groupDm.new(self.state, typedObject.d))
 				elseif typedObject.d.type == 4 then
-					self.onCategoryChannelCreate:invoke(guildCategoryChannel.new(self.state, typedObject.d))
+					self.onCategoryChannelCreate:invoke(
+						classes.channels.types.guildCategory.new(self.state, typedObject.d)
+					)
 				elseif typedObject.d.type == 5 then
-					self.onAnnouncementChannelCreate:invoke(guildAnnouncementChannel.new(self.state, typedObject.d))
+					self.onAnnouncementChannelCreate:invoke(
+						classes.channels.types.guildAnnouncement.new(self.state, typedObject.d)
+					)
 				elseif typedObject.d.type == 13 then
-					self.onStageVoiceChannelCreate:invoke(guildStageVoiceChannel.new(self.state, typedObject.d))
+					self.onStageVoiceChannelCreate:invoke(
+						classes.channels.types.guildStageVoice.new(self.state, typedObject.d)
+					)
 				elseif typedObject.d.type == 14 then
-					self.onDirectoryChannelCreate:invoke(guildDirectoryChannel.new(self.state, typedObject.d))
+					self.onDirectoryChannelCreate:invoke(
+						classes.channels.types.guildDirectory.new(self.state, typedObject.d)
+					)
 				end
-			elseif object.event == receiveEvents["ChannelUpdate"] then
-				local typedObject = object.payload :: gatewayTypes.UpdateChannelPayload
+			elseif object.event == apiTypes.gateway.receiveEvents["ChannelUpdate"] then
+				local typedObject = object.payload :: apiTypes.UpdateChannelPayload
 
 				self.state.cache.channels:set(typedObject.d.id :: apiTypes.Snowflake, typedObject.d)
 
 				if typedObject.d.type == 0 then
-					self.onTextChannelUpdated:invoke(guildTextChannel.new(self.state, typedObject.d))
+					self.onTextChannelUpdated:invoke(classes.channels.types.guildText.new(self.state, typedObject.d))
 				elseif typedObject.d.type == 1 then
-					self.onDMChannelUpdated:invoke(dmChannel.new(self.state, typedObject.d))
+					self.onDMChannelUpdated:invoke(classes.channels.types.dm.new(self.state, typedObject.d))
 				elseif typedObject.d.type == 2 then
-					self.onVoiceChannelUpdated:invoke(guildVoiceChannel.new(self.state, typedObject.d))
+					self.onVoiceChannelUpdated:invoke(classes.channels.types.guildVoice.new(self.state, typedObject.d))
 				elseif typedObject.d.type == 3 then
-					self.onGroupDMChannelUpdated:invoke(groupDmChannel.new(self.state, typedObject.d))
+					self.onGroupDMChannelUpdated:invoke(classes.channels.types.groupDm.new(self.state, typedObject.d))
 				elseif typedObject.d.type == 4 then
-					self.onCategoryChannelUpdated:invoke(guildCategoryChannel.new(self.state, typedObject.d))
+					self.onCategoryChannelUpdated:invoke(
+						classes.channels.types.guildCategory.new(self.state, typedObject.d)
+					)
 				elseif typedObject.d.type == 5 then
-					self.onAnnouncementChannelUpdated:invoke(guildAnnouncementChannel.new(self.state, typedObject.d))
+					self.onAnnouncementChannelUpdated:invoke(
+						classes.channels.types.guildAnnouncement.new(self.state, typedObject.d)
+					)
 				elseif typedObject.d.type == 13 then
-					self.onStageVoiceChannelUpdated:invoke(guildStageVoiceChannel.new(self.state, typedObject.d))
+					self.onStageVoiceChannelUpdated:invoke(
+						classes.channels.types.guildStageVoice.new(self.state, typedObject.d)
+					)
 				elseif typedObject.d.type == 14 then
-					self.onDirectoryChannelUpdated:invoke(guildDirectoryChannel.new(self.state, typedObject.d))
+					self.onDirectoryChannelUpdated:invoke(
+						classes.channels.types.guildDirectory.new(self.state, typedObject.d)
+					)
 				end
-			elseif object.event == receiveEvents["ChannelDelete"] then
-				local typedObject = object.payload :: gatewayTypes.DeleteChannelPayload
+			elseif object.event == apiTypes.gateway.receiveEvents["ChannelDelete"] then
+				local typedObject = object.payload :: apiTypes.DeleteChannelPayload
 
 				if typedObject.d.type == 0 then
-					self.onTextChannelDeleted:invoke(guildTextChannel.new(self.state, typedObject.d))
+					self.onTextChannelDeleted:invoke(classes.channels.types.guildText.new(self.state, typedObject.d))
 				elseif typedObject.d.type == 1 then
-					self.onDMChannelDeleted:invoke(dmChannel.new(self.state, typedObject.d))
+					self.onDMChannelDeleted:invoke(classes.channels.types.dm.new(self.state, typedObject.d))
 				elseif typedObject.d.type == 2 then
-					self.onVoiceChannelDeleted:invoke(guildVoiceChannel.new(self.state, typedObject.d))
+					self.onVoiceChannelDeleted:invoke(classes.channels.types.guildVoice.new(self.state, typedObject.d))
 				elseif typedObject.d.type == 3 then
-					self.onGroupDMChannelDeleted:invoke(groupDmChannel.new(self.state, typedObject.d))
+					self.onGroupDMChannelDeleted:invoke(classes.channels.types.groupDm.new(self.state, typedObject.d))
 				elseif typedObject.d.type == 4 then
-					self.onCategoryChannelDeleted:invoke(guildCategoryChannel.new(self.state, typedObject.d))
+					self.onCategoryChannelDeleted:invoke(
+						classes.channels.types.guildCategory.new(self.state, typedObject.d)
+					)
 				elseif typedObject.d.type == 5 then
-					self.onAnnouncementChannelDeleted:invoke(guildAnnouncementChannel.new(self.state, typedObject.d))
+					self.onAnnouncementChannelDeleted:invoke(
+						classes.channels.types.guildAnnouncement.new(self.state, typedObject.d)
+					)
 				elseif typedObject.d.type == 13 then
-					self.onStageVoiceChannelDeleted:invoke(guildStageVoiceChannel.new(self.state, typedObject.d))
+					self.onStageVoiceChannelDeleted:invoke(
+						classes.channels.types.guildStageVoice.new(self.state, typedObject.d)
+					)
 				elseif typedObject.d.type == 14 then
-					self.onDirectoryChannelDeleted:invoke(guildDirectoryChannel.new(self.state, typedObject.d))
+					self.onDirectoryChannelDeleted:invoke(
+						classes.channels.types.guildDirectory.new(self.state, typedObject.d)
+					)
 				end
-			elseif object.event == receiveEvents["ChannelPinsUpdate"] then
-				local typedObject = object.payload :: gatewayTypes.ChannelPinsUpdatePayload
+			elseif object.event == apiTypes.gateway.receiveEvents["ChannelPinsUpdate"] then
+				local typedObject = object.payload :: apiTypes.ChannelPinsUpdatePayload
 
 				self.onChannelPinsUpdate:invoke({
 					channelId = typedObject.d.channel_id,
 					guildId = typedObject.d.guild_id,
 					lastPinTimestamp = typedObject.d.last_pin_timestamp
-						and datetime.fromIsoDate(typedObject.d.last_pin_timestamp),
+						and stdPolyfills.datetime.fromIsoDate(typedObject.d.last_pin_timestamp),
 				})
-			elseif object.event == receiveEvents["UserUpdate"] then
-				local typedObject = object.payload :: gatewayTypes.UserUpdatePayload
+			elseif object.event == apiTypes.gateway.receiveEvents["UserUpdate"] then
+				local typedObject = object.payload :: apiTypes.UserUpdatePayload
 
 				self.state.cache.users:set(typedObject.d.id :: apiTypes.Snowflake, typedObject.d)
 
-				self.onUserUpdated:invoke(user.new(typedObject.d))
-			elseif object.event == receiveEvents["GuildCreate"] then
-				local typedObject = object.payload :: gatewayTypes.GuildCreatePayload
+				self.onUserUpdated:invoke(classes.user.new(typedObject.d))
+			elseif object.event == apiTypes.gateway.receiveEvents["GuildCreate"] then
+				local typedObject = object.payload :: apiTypes.GuildCreatePayload
 
 				if typedObject.d.unavailable then
-					self.onGuildCreate:invoke(unavailableGuild.new(self.state, typedObject.d.id :: string))
+					self.onGuildCreate:invoke(
+						classes.guild.unavailableGuild.new(self.state, typedObject.d.id :: string)
+					)
 				else
 					-- fixme: using 'any' below because otherwise typedObject.d doesn't work with apiTypes.GuildObject?
 					local guildData = typedObject.d :: any
 
 					self.state.cache.guilds:set(typedObject.d.id :: apiTypes.Snowflake, guildData)
 
-					self.onGuildCreate:invoke(guild.new(self.state, guildData))
+					self.onGuildCreate:invoke(classes.guild.guild.new(self.state, guildData))
 				end
-			elseif object.event == receiveEvents["GuildUpdate"] then
-				local typedObject = object.payload :: gatewayTypes.GuildUpdatePayload
+			elseif object.event == apiTypes.gateway.receiveEvents["GuildUpdate"] then
+				local typedObject = object.payload :: apiTypes.GuildUpdatePayload
 
 				self.state.cache.guilds:set(typedObject.d.id :: apiTypes.Snowflake, typedObject.d)
 
-				self.onGuildUpdate:invoke(guild.new(self.state, typedObject.d))
-			elseif object.event == receiveEvents["GuildDelete"] then
-				local typedObject = object.payload :: gatewayTypes.GuildDeletePayload
+				self.onGuildUpdate:invoke(classes.guild.guild.new(self.state, typedObject.d))
+			elseif object.event == apiTypes.gateway.receiveEvents["GuildDelete"] then
+				local typedObject = object.payload :: apiTypes.GuildDeletePayload
 
-				self.onGuildDelete:invoke(unavailableGuild.new(self.state, typedObject.d.id))
-			elseif object.event == receiveEvents["GuildBanAdd"] then
-				local typedObject = object.payload :: gatewayTypes.GuildBanAddPayload
+				self.onGuildDelete:invoke(classes.guild.unavailableGuild.new(self.state, typedObject.d.id))
+			elseif object.event == apiTypes.gateway.receiveEvents["GuildBanAdd"] then
+				local typedObject = object.payload :: apiTypes.GuildBanAddPayload
 
 				self.state.cache.users:set(typedObject.d.user.id :: apiTypes.Snowflake, typedObject.d.user)
 
 				self.onGuildMemberBanned:invoke({
 					guildId = typedObject.d.guild_id,
-					user = user.new(typedObject.d.user),
+					user = classes.user.new(typedObject.d.user),
 				})
-			elseif object.event == receiveEvents["GuildBanRemove"] then
-				local typedObject = object.payload :: gatewayTypes.GuildBanRemovePayload
+			elseif object.event == apiTypes.gateway.receiveEvents["GuildBanRemove"] then
+				local typedObject = object.payload :: apiTypes.GuildBanRemovePayload
 
 				self.state.cache.users:set(typedObject.d.user.id :: apiTypes.Snowflake, typedObject.d.user)
 
 				self.onGuildMemberUnbanned:invoke({
 					guildId = typedObject.d.guild_id,
-					user = user.new(typedObject.d.user),
+					user = classes.user.new(typedObject.d.user),
 				})
-			elseif object.event == receiveEvents["GuildMemberAdd"] then
-				local typedObject = object.payload :: gatewayTypes.GuildMemberAddPayload
+			elseif object.event == apiTypes.gateway.receiveEvents["GuildMemberAdd"] then
+				local typedObject = object.payload :: apiTypes.GuildMemberAddPayload
 
 				self.onGuildMemberJoined:invoke({
 					guildId = typedObject.d.guild_id,
-					member = member.new(self.state, typedObject.d.guild_id, typedObject.d),
+					member = classes.guild.member.new(self.state, typedObject.d.guild_id, typedObject.d),
 				})
-			elseif object.event == receiveEvents["GuildMemberRemove"] then
-				local typedObject = object.payload :: gatewayTypes.GuildMemberRemovePayload
+			elseif object.event == apiTypes.gateway.receiveEvents["GuildMemberRemove"] then
+				local typedObject = object.payload :: apiTypes.GuildMemberRemovePayload
 
 				self.onGuildMemberLeft:invoke({
 					guildId = typedObject.d.guild_id,
-					user = user.new(typedObject.d.user),
+					user = classes.user.new(typedObject.d.user),
 				})
-			elseif object.event == receiveEvents["GuildMemberUpdate"] then
-				local typedObject = object.payload :: gatewayTypes.GuildMemberUpdatePayload
+			elseif object.event == apiTypes.gateway.receiveEvents["GuildMemberUpdate"] then
+				local typedObject = object.payload :: apiTypes.GuildMemberUpdatePayload
 
 				self.onGuildMemberUpdated:invoke({
 					guildId = typedObject.d.guild_id,
 					roles = typedObject.d.roles,
-					user = user.new(typedObject.d.user),
+					user = classes.user.new(typedObject.d.user),
 					nick = typedObject.d.nick,
 					avatar = typedObject.d.avatar,
-					joinedAt = typedObject.d.joined_at and datetime.fromIsoDate(typedObject.d.joined_at),
-					premiumSince = typedObject.d.premium_since and datetime.fromIsoDate(typedObject.d.premium_since),
+					joinedAt = typedObject.d.joined_at and stdPolyfills.datetime.fromIsoDate(typedObject.d.joined_at),
+					premiumSince = typedObject.d.premium_since
+						and stdPolyfills.datetime.fromIsoDate(typedObject.d.premium_since),
 					deaf = typedObject.d.deaf,
 					mute = typedObject.d.mute,
 					pending = typedObject.d.pending,
 					communicationDisabledUntil = typedObject.d.communication_disabled_until
-						and datetime.fromIsoDate(typedObject.d.communication_disabled_until),
+						and stdPolyfills.datetime.fromIsoDate(typedObject.d.communication_disabled_until),
 				})
-			elseif object.event == receiveEvents["InteractionCreate"] then
-				local typedObject = object.payload :: gatewayTypes.InteractionCreatePayload
+			elseif object.event == apiTypes.gateway.receiveEvents["InteractionCreate"] then
+				local typedObject = object.payload :: apiTypes.InteractionCreatePayload
 
 				if typedObject.d.type == 1 then
-					self.onPingInteraction:invoke(pingInteraction.new(self.state, typedObject.d))
+					self.onPingInteraction:invoke(classes.interaction.types.ping.new(self.state, typedObject.d))
 				elseif typedObject.d.type == 2 then
-					self.onCommandInteraction:invoke(commandInteraction.new(self.state, typedObject.d))
+					self.onCommandInteraction:invoke(classes.interaction.types.command.new(self.state, typedObject.d))
 				elseif typedObject.d.type == 3 then
-					self.onComponentInteraction:invoke(componentInteraction.new(self.state, typedObject.d))
+					self.onComponentInteraction:invoke(
+						classes.interaction.types.component.new(self.state, typedObject.d)
+					)
 				elseif typedObject.d.type == 4 then
-					self.onAutocompleteInteraction:invoke(autocompleteInteraction.new(self.state, typedObject.d))
+					self.onAutocompleteInteraction:invoke(
+						classes.interaction.types.autocomplete.new(self.state, typedObject.d)
+					)
 				elseif typedObject.d.type == 5 then
-					self.onModalInteraction:invoke(modalInteraction.new(self.state, typedObject.d))
+					self.onModalInteraction:invoke(classes.interaction.types.modal.new(self.state, typedObject.d))
 				else
 					error(`Unknown interaction type: {typedObject.d.type}`)
 				end
@@ -302,14 +300,14 @@ function Bot.Prototype.connectAsync(self: Bot): future.Future<nil>
 end
 
 --[[
-	Returns the guild object for the given id. If with_counts is set to true, this endpoint will also return
-	approximate_member_count and approximate_presence_count for the guild.
+	Returns the classes.guild object for the given id. If with_counts is set to true, this endpoint will also return
+	approximate_member_count and approximate_presence_count for the classes.guild.
 ]]
-function Bot.Prototype.getGuildAsync(self: Bot, guildId: string, withCount: boolean?): future.Future<guild.Guild>
-	return future.new(function()
+function Bot.Prototype.getGuildAsync(self: Bot, guildId: string, withCount: boolean?): async.Async<classes.Guild>
+	return async.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = guildRest
+		local status, response = rest.guild
 			.getGuildAsync(request, guildId, {
 				withCounts = withCount,
 			})
@@ -317,7 +315,7 @@ function Bot.Prototype.getGuildAsync(self: Bot, guildId: string, withCount: bool
 
 		assert(status == "Fulfilled", tostring(response))
 
-		return guild.new(self.state, response)
+		return classes.guild.guild.new(self.state, response)
 	end)
 end
 
@@ -327,15 +325,15 @@ end
 	This function sends a request to the Discord API to retrieve information about a channel.
 	The channel type is determined by the generic type parameter T.
 ]]
-function Bot.Prototype.getChannelAsync<T>(self: Bot, channelId: string): future.Future<T>
-	return future.new(function()
+function Bot.Prototype.getChannelAsync<T>(self: Bot, channelId: string): async.Async<T>
+	return async.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = channelRest.getChannelAsync(request, channelId):await()
+		local status, response = rest.channel.getChannelAsync(request, channelId):await()
 
 		assert(status == "Fulfilled", tostring(response))
 
-		return constructChannelFromData(self.state, response)
+		return classes.channels.construct(self.state, response)
 	end)
 end
 
@@ -344,11 +342,11 @@ end
 
 	This function sends a request to the Discord API to retrieve information about a DM channel.
 ]]
-function Bot.Prototype.getDMChannelAsync(self: Bot, channelId: string): future.Future<dmChannel.DM>
-	return future.new(function()
+function Bot.Prototype.getDMChannelAsync(self: Bot, channelId: string): async.Async<classes.DM>
+	return async.new(function()
 		local _, channel = self:getChannelAsync(channelId):await()
 
-		return channel :: dmChannel.DM
+		return channel :: classes.DM
 	end)
 end
 
@@ -357,11 +355,11 @@ end
 
 	This function sends a request to the Discord API to retrieve information about a Group DM channel.
 ]]
-function Bot.Prototype.getGroupDMChannelAsync(self: Bot, channelId: string): future.Future<groupDmChannel.GroupDM>
-	return future.new(function()
+function Bot.Prototype.getGroupDMChannelAsync(self: Bot, channelId: string): async.Async<classes.GroupDM>
+	return async.new(function()
 		local _, channel = self:getChannelAsync(channelId):await()
 
-		return channel :: groupDmChannel.GroupDM
+		return channel :: classes.GroupDM
 	end)
 end
 
@@ -370,14 +368,11 @@ end
 
 	This function sends a request to the Discord API to retrieve information about an announcement channel.
 ]]
-function Bot.Prototype.getAnnouncementChannelAsync(
-	self: Bot,
-	channelId: string
-): future.Future<guildAnnouncementChannel.GuildAnnouncement>
-	return future.new(function()
+function Bot.Prototype.getAnnouncementChannelAsync(self: Bot, channelId: string): async.Async<classes.GuildAnnouncement>
+	return async.new(function()
 		local _, channel = self:getChannelAsync(channelId):await()
 
-		return channel :: guildAnnouncementChannel.GuildAnnouncement
+		return channel :: classes.GuildAnnouncement
 	end)
 end
 
@@ -386,14 +381,11 @@ end
 
 	This function sends a request to the Discord API to retrieve information about a category channel.
 ]]
-function Bot.Prototype.getCategoryChannelAsync(
-	self: Bot,
-	channelId: string
-): future.Future<guildCategoryChannel.GuildCategory>
-	return future.new(function()
+function Bot.Prototype.getCategoryChannelAsync(self: Bot, channelId: string): async.Async<classes.GuildCategory>
+	return async.new(function()
 		local _, channel = self:getChannelAsync(channelId):await()
 
-		return channel :: guildCategoryChannel.GuildCategory
+		return channel :: classes.GuildCategory
 	end)
 end
 
@@ -402,14 +394,11 @@ end
 
 	This function sends a request to the Discord API to retrieve information about a directory channel.
 ]]
-function Bot.Prototype.getDirectoryChannelAsync(
-	self: Bot,
-	channelId: string
-): future.Future<guildDirectoryChannel.GuildDirectory>
-	return future.new(function()
+function Bot.Prototype.getDirectoryChannelAsync(self: Bot, channelId: string): async.Async<classes.GuildDirectory>
+	return async.new(function()
 		local _, channel = self:getChannelAsync(channelId):await()
 
-		return channel :: guildDirectoryChannel.GuildDirectory
+		return channel :: classes.GuildDirectory
 	end)
 end
 
@@ -418,14 +407,11 @@ end
 
 	This function sends a request to the Discord API to retrieve information about a stage voice channel.
 ]]
-function Bot.Prototype.getStageVCChannelAsync(
-	self: Bot,
-	channelId: string
-): future.Future<guildStageVoiceChannel.GuildStageVoice>
-	return future.new(function()
+function Bot.Prototype.getStageVCChannelAsync(self: Bot, channelId: string): async.Async<classes.GuildStageVoice>
+	return async.new(function()
 		local _, channel = self:getChannelAsync(channelId):await()
 
-		return channel :: guildStageVoiceChannel.GuildStageVoice
+		return channel :: classes.GuildStageVoice
 	end)
 end
 
@@ -434,11 +420,11 @@ end
 
 	This function sends a request to the Discord API to retrieve information about a text channel.
 ]]
-function Bot.Prototype.getTextChannelAsync(self: Bot, channelId: string): future.Future<guildTextChannel.GuildText>
-	return future.new(function()
+function Bot.Prototype.getTextChannelAsync(self: Bot, channelId: string): async.Async<classes.GuildText>
+	return async.new(function()
 		local _, channel = self:getChannelAsync(channelId):await()
 
-		return channel :: guildTextChannel.GuildText
+		return channel :: classes.GuildText
 	end)
 end
 
@@ -447,11 +433,11 @@ end
 
 	This function sends a request to the Discord API to retrieve information about a voice channel.
 ]]
-function Bot.Prototype.getVoiceChannelAsync(self: Bot, channelId: string): future.Future<guildVoiceChannel.GuildVoice>
-	return future.new(function()
+function Bot.Prototype.getVoiceChannelAsync(self: Bot, channelId: string): async.Async<classes.GuildVoice>
+	return async.new(function()
 		local _, channel = self:getChannelAsync(channelId):await()
 
-		return channel :: guildVoiceChannel.GuildVoice
+		return channel :: classes.GuildVoice
 	end)
 end
 
@@ -461,7 +447,7 @@ function Bot.Interface.new(options: {
 })
 	local self = setmetatable(
 		{
-			state = state.new(options.token, options.intents, DISCORD_VERSION),
+			state = state.state.new(options.token, options.intents, DISCORD_VERSION),
 			logger = logger.new("Bot"),
 
 			onReady = emitter.new(),
@@ -530,75 +516,75 @@ export type Bot =
 		state: state.State,
 		logger: logger.Logger,
 
-		application: application.Application?,
-		user: user.User?,
+		application: classes.Application?,
+		user: classes.User?,
 
 		onReady: emitter.Emitter<number>,
 		onAllShardsReady: emitter.Emitter<()>,
 
-		onMessage: emitter.Emitter<message.Message>,
-		onMessageChanged: emitter.Emitter<message.Message>,
+		onMessage: emitter.Emitter<classes.Message>,
+		onMessageChanged: emitter.Emitter<classes.Message>,
 		onMessageDeleted: emitter.Emitter<{ messageId: apiTypes.Snowflake, channelId: apiTypes.Snowflake, guildId: apiTypes.Snowflake }>,
 		onMessageBulkDeleted: emitter.Emitter<{ channelId: string, guildId: string, ids: { string } }>,
 
-		onGroupDMChannelCreate: emitter.Emitter<groupDmChannel.GroupDM>,
-		onCategoryChannelCreate: emitter.Emitter<guildCategoryChannel.GuildCategory>,
-		onAnnouncementChannelCreate: emitter.Emitter<guildAnnouncementChannel.GuildAnnouncement>,
-		onDirectoryChannelCreate: emitter.Emitter<guildDirectoryChannel.GuildDirectory>,
-		onDMChannelCreate: emitter.Emitter<dmChannel.DM>,
-		onTextChannelCreate: emitter.Emitter<guildTextChannel.GuildText>,
-		onVoiceChannelCreate: emitter.Emitter<guildVoiceChannel.GuildVoice>,
-		onStageVoiceChannelCreate: emitter.Emitter<guildStageVoiceChannel.GuildStageVoice>,
+		onGroupDMChannelCreate: emitter.Emitter<classes.GroupDM>,
+		onCategoryChannelCreate: emitter.Emitter<classes.GuildCategory>,
+		onAnnouncementChannelCreate: emitter.Emitter<classes.GuildAnnouncement>,
+		onDirectoryChannelCreate: emitter.Emitter<classes.GuildDirectory>,
+		onDMChannelCreate: emitter.Emitter<classes.DM>,
+		onTextChannelCreate: emitter.Emitter<classes.GuildText>,
+		onVoiceChannelCreate: emitter.Emitter<classes.GuildVoice>,
+		onStageVoiceChannelCreate: emitter.Emitter<classes.GuildStageVoice>,
 
-		onGroupDMChannelUpdated: emitter.Emitter<groupDmChannel.GroupDM>,
-		onCategoryChannelUpdated: emitter.Emitter<guildCategoryChannel.GuildCategory>,
-		onAnnouncementChannelUpdated: emitter.Emitter<guildAnnouncementChannel.GuildAnnouncement>,
-		onDirectoryChannelUpdated: emitter.Emitter<guildDirectoryChannel.GuildDirectory>,
-		onDMChannelUpdated: emitter.Emitter<dmChannel.DM>,
-		onTextChannelUpdated: emitter.Emitter<guildTextChannel.GuildText>,
-		onVoiceChannelUpdated: emitter.Emitter<guildVoiceChannel.GuildVoice>,
-		onStageVoiceChannelUpdated: emitter.Emitter<guildStageVoiceChannel.GuildStageVoice>,
+		onGroupDMChannelUpdated: emitter.Emitter<classes.GroupDM>,
+		onCategoryChannelUpdated: emitter.Emitter<classes.GuildCategory>,
+		onAnnouncementChannelUpdated: emitter.Emitter<classes.GuildAnnouncement>,
+		onDirectoryChannelUpdated: emitter.Emitter<classes.GuildDirectory>,
+		onDMChannelUpdated: emitter.Emitter<classes.DM>,
+		onTextChannelUpdated: emitter.Emitter<classes.GuildText>,
+		onVoiceChannelUpdated: emitter.Emitter<classes.GuildVoice>,
+		onStageVoiceChannelUpdated: emitter.Emitter<classes.GuildStageVoice>,
 
-		onGroupDMChannelDeleted: emitter.Emitter<groupDmChannel.GroupDM>,
-		onCategoryChannelDeleted: emitter.Emitter<guildCategoryChannel.GuildCategory>,
-		onAnnouncementChannelDeleted: emitter.Emitter<guildAnnouncementChannel.GuildAnnouncement>,
-		onDirectoryChannelDeleted: emitter.Emitter<guildDirectoryChannel.GuildDirectory>,
-		onDMChannelDeleted: emitter.Emitter<dmChannel.DM>,
-		onTextChannelDeleted: emitter.Emitter<guildTextChannel.GuildText>,
-		onVoiceChannelDeleted: emitter.Emitter<guildVoiceChannel.GuildVoice>,
-		onStageVoiceChannelDeleted: emitter.Emitter<guildStageVoiceChannel.GuildStageVoice>,
+		onGroupDMChannelDeleted: emitter.Emitter<classes.GroupDM>,
+		onCategoryChannelDeleted: emitter.Emitter<classes.GuildCategory>,
+		onAnnouncementChannelDeleted: emitter.Emitter<classes.GuildAnnouncement>,
+		onDirectoryChannelDeleted: emitter.Emitter<classes.GuildDirectory>,
+		onDMChannelDeleted: emitter.Emitter<classes.DM>,
+		onTextChannelDeleted: emitter.Emitter<classes.GuildText>,
+		onVoiceChannelDeleted: emitter.Emitter<classes.GuildVoice>,
+		onStageVoiceChannelDeleted: emitter.Emitter<classes.GuildStageVoice>,
 
-		onUserUpdated: emitter.Emitter<user.User>,
-		onChannelPinsUpdate: emitter.Emitter<{ guildId: string, channelId: string, lastPinTimestamp: datetime.DateTime? }>,
+		onUserUpdated: emitter.Emitter<classes.User>,
+		onChannelPinsUpdate: emitter.Emitter<{ guildId: string, channelId: string, lastPinTimestamp: stdPolyfills.DateTime? }>,
 
-		onGuildCreate: emitter.Emitter<unavailableGuild.UnavailableGuild | guild.Guild>,
-		onGuildUpdate: emitter.Emitter<guild.Guild>,
-		onGuildDelete: emitter.Emitter<unavailableGuild.UnavailableGuild>,
+		onGuildCreate: emitter.Emitter<classes.UnavailableGuild | classes.Guild>,
+		onGuildUpdate: emitter.Emitter<classes.Guild>,
+		onGuildDelete: emitter.Emitter<classes.UnavailableGuild>,
 
-		onGuildMemberBanned: emitter.Emitter<{ guildId: string, user: user.User }>,
-		onGuildMemberUnbanned: emitter.Emitter<{ guildId: string, user: user.User }>,
-		onGuildMemberJoined: emitter.Emitter<member.Member & { guildId: string }>,
-		onGuildMemberLeft: emitter.Emitter<{ guildId: string, user: user.User }>,
+		onGuildMemberBanned: emitter.Emitter<{ guildId: string, user: classes.User }>,
+		onGuildMemberUnbanned: emitter.Emitter<{ guildId: string, user: classes.User }>,
+		onGuildMemberJoined: emitter.Emitter<classes.GuildMember & { guildId: string }>,
+		onGuildMemberLeft: emitter.Emitter<{ guildId: string, user: classes.User }>,
 
 		onGuildMemberUpdated: emitter.Emitter<{
 			guildId: string,
 			roles: { string },
-			user: user.User,
+			user: classes.User,
 			nick: string?,
 			avatar: string,
-			joinedAt: datetime.DateTime,
-			premiumSince: datetime.DateTime,
+			joinedAt: stdPolyfills.DateTime,
+			premiumSince: stdPolyfills.DateTime,
 			deaf: boolean?,
 			mute: boolean?,
 			pending: boolean?,
-			communicationDisabledUntil: datetime.DateTime?,
+			communicationDisabledUntil: stdPolyfills.DateTime?,
 		}>,
 
-		onPingInteraction: emitter.Emitter<pingInteraction.Ping>,
-		onCommandInteraction: emitter.Emitter<commandInteraction.Command>,
-		onComponentInteraction: emitter.Emitter<componentInteraction.Component>,
-		onAutocompleteInteraction: emitter.Emitter<autocompleteInteraction.Autocomplete>,
-		onModalInteraction: emitter.Emitter<modalInteraction.Modal>,
+		onPingInteraction: emitter.Emitter<classes.Ping>,
+		onCommandInteraction: emitter.Emitter<classes.Command>,
+		onComponentInteraction: emitter.Emitter<classes.Component>,
+		onAutocompleteInteraction: emitter.Emitter<classes.Autocomplete>,
+		onModalInteraction: emitter.Emitter<classes.Modal>,
 	}
 
 return Bot.Interface

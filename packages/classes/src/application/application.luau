@@ -4,23 +4,18 @@
 	https://discord.com/developers/docs/resources/application#application-object
 ]]
 
-local future = require("@vendor/future")
+local apiTypes = require("../../lune_packages/api_types")
+local state = require("../../lune_packages/state")
+local rest = require("../../lune_packages/rest")
+local builders = require("../../lune_packages/builders")
+local async = require("../../lune_packages/async")
 
-local apiTypes = require("@api-types/apiTypes")
-local applicationTypes = require("@api-types/application")
-
-local user = require("@classes/user")
-local unavailableGuild = require("@classes/guild/unavailableGuild")
-local team = require("@classes/application/team/team")
-local state = require("@classes/state")
-local installParams = require("@classes/application/installParams")
-
-local commandsRest = require("@rest/commands")
-local interactionBuilder = require("@builders/interaction/interaction")
-
-local commandObject = require("@classes/application/command/command")
-
-local applicationBitflags = require("@classes/bitflags/application")
+local user = require("../user")
+local applicationBitflags = require("../bitflags/application")
+local team = require("./team/team")
+local unavailableGuild = require("../guild/unavailableGuild")
+local installParams = require("./installParams")
+local commandObject = require("./command/command")
 
 local Application = {}
 
@@ -35,13 +30,13 @@ Application.Prototype = {}
 ]]
 function Application.Prototype.createSlashCommandAsync(
 	self: Application,
-	slashCommand: interactionBuilder.JSON
-): future.Future<commandObject.Command>
-	return future.new(function()
+	slashCommand: builders.interactionJSON
+): async.Async<commandObject.Command>
+	return async.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response =
-			commandsRest.createGlobalApplicationCommandAsync(request, self.id, slashCommand):await()
+			rest.commands.createGlobalApplicationCommandAsync(request, self.id, slashCommand):await()
 
 		assert(status == "Fulfilled", tostring(response))
 
@@ -55,12 +50,12 @@ end
 function Application.Prototype.deleteSlashCommandAsync(
 	self: Application,
 	slashCommandId: apiTypes.Snowflake
-): future.Future<nil>
-	return future.new(function()
+): async.Async<nil>
+	return async.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response =
-			commandsRest.deleteGlobalApplicationCommandAsync(request, self.id, slashCommandId):await()
+			rest.commands.deleteGlobalApplicationCommandAsync(request, self.id, slashCommandId):await()
 
 		assert(status == "Fulfilled", tostring(response))
 	end)
@@ -72,13 +67,13 @@ end
 function Application.Prototype.editSlashCommandAsync(
 	self: Application,
 	slashCommandId: apiTypes.Snowflake,
-	slashCommand: interactionBuilder.JSON
-): future.Future<commandObject.Command>
-	return future.new(function()
+	slashCommand: builders.interactionJSON
+): async.Async<commandObject.Command>
+	return async.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response =
-			commandsRest.editGlobalApplicationCommandAsync(request, self.id, slashCommandId, slashCommand):await()
+			rest.commands.editGlobalApplicationCommandAsync(request, self.id, slashCommandId, slashCommand):await()
 
 		assert(status == "Fulfilled", tostring(response))
 
@@ -92,11 +87,11 @@ end
 function Application.Prototype.getSlashCommandsAsync(
 	self: Application,
 	withLocalizations: boolean?
-): future.Future<{ commandObject.Command }>
-	return future.new(function()
+): async.Async<{ commandObject.Command }>
+	return async.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = commandsRest
+		local status, response = rest.commands
 			.getGlobalApplicationCommandsAsync(request, self.id, {
 				withLocalizations = withLocalizations,
 			})
@@ -119,13 +114,13 @@ end
 ]]
 function Application.Prototype.overwriteSlashCommandsAsync(
 	self: Application,
-	slashCommands: { interactionBuilder.JSON }
-): future.Future<{ commandObject.Command }>
-	return future.new(function()
+	slashCommands: { builders.interactionJSON }
+): async.Async<{ commandObject.Command }>
+	return async.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response =
-			commandsRest.bulkOverwriteGlobalApplicationCommandsAsync(request, self.id, slashCommands):await()
+			rest.commands.bulkOverwriteGlobalApplicationCommandsAsync(request, self.id, slashCommands):await()
 
 		assert(status == "Fulfilled", tostring(response))
 
@@ -219,7 +214,7 @@ export type Application = typeof(Application.Prototype) & {
 	approximateUserInstallCount: number?,
 	redirectUris: { string }?,
 	installParams: installParams.InstallParams?,
-	integrationTypesConfig: { [applicationTypes.IntegrationTypesConfig]: boolean }?,
+	integrationTypesConfig: { [apiTypes.IntegrationTypesConfig]: boolean }?,
 	customInstallUrl: string?,
 }
 

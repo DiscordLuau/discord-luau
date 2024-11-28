@@ -2,16 +2,13 @@
 	Group DM Behaviour, responsible for implementing the various properties, and methods for a group DM.
 ]]
 
-local future = require("@vendor/future")
+local apiTypes = require("../../../lune_packages/api_types")
+local async = require("../../../lune_packages/async")
+local rest = require("../../../lune_packages/rest")
+local state = require("../../../lune_packages/state")
+local builders = require("../../../lune_packages/builders")
 
-local apiTypes = require("@api-types/apiTypes")
-
-local channelRest = require("@rest/channel")
-
-local user = require("@classes/user")
-local state = require("@classes/state")
-
-local channelBuilder = require("@builders/channel")
+local user = require("../../user")
 
 local GroupDMBehaviour = {}
 
@@ -26,11 +23,11 @@ function GroupDMBehaviour.Prototype.addRecipient<T>(
 	accessToken: string,
 	userId: string,
 	nickname: string
-): future.Future<nil>
-	return future.new(function()
+): async.Async<nil>
+	return async.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = channelRest
+		local status, response = rest.channel
 			.groupDMAddRecipientAsync(request, self.id, userId, {
 				access_token = accessToken,
 				nick = nickname,
@@ -46,11 +43,11 @@ end
 --[[
 	Removes a recipient from a Group DM.
 ]]
-function GroupDMBehaviour.Prototype.removeRecipient<T>(self: Channel<T>, userId: string): future.Future<nil>
-	return future.new(function()
+function GroupDMBehaviour.Prototype.removeRecipient<T>(self: Channel<T>, userId: string): async.Async<nil>
+	return async.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = channelRest.groupDMRemoveRecipientAsync(request, self.id, userId):await()
+		local status, response = rest.channel.groupDMRemoveRecipientAsync(request, self.id, userId):await()
 
 		assert(status == "Fulfilled", tostring(response))
 
@@ -61,7 +58,7 @@ end
 --[[
 	Sets the name of the Group DM channel.
 ]]
-function GroupDMBehaviour.Prototype.setNameAsync<T>(self: Channel<T>, groupName: string): future.Future<Channel<T>>
+function GroupDMBehaviour.Prototype.setNameAsync<T>(self: Channel<T>, groupName: string): async.Async<Channel<T>>
 	return self:modifyAsync({
 		name = groupName,
 	})
@@ -70,7 +67,7 @@ end
 --[[
 	Sets the icon of the Group DM channel using base64 encoded image data.
 ]]
-function GroupDMBehaviour.Prototype.setIconAsync<T>(self: Channel<T>, iconData: string): future.Future<Channel<T>>
+function GroupDMBehaviour.Prototype.setIconAsync<T>(self: Channel<T>, iconData: string): async.Async<Channel<T>>
 	return self:modifyAsync({
 		name = self.name,
 		icon = iconData,
@@ -102,7 +99,7 @@ type Channel<T> = T & GroupDMBehaviour & {
 	id: string,
 	name: string,
 
-	modifyAsync: (self: Channel<T>, json: channelBuilder.JSON, reason: string?) -> future.Future<Channel<T>>,
+	modifyAsync: (self: Channel<T>, json: builders.channelJSON, reason: string?) -> async.Async<Channel<T>>,
 
 	sync: (...any) -> (),
 }

@@ -4,7 +4,7 @@
 	https://discord.com/developers/docs/resources/guild#modify-guild-welcome-screen-json-params
 ]]
 
-local WelcomeScreenChannel = require("@builders/guild/welcomeScreen/channel")
+local WelcomeScreenChannel = require("./channel")
 
 local WelcomeScreen = {}
 

@@ -1,11 +1,9 @@
-local serde = require("@std-polyfills/serde")
+local stdPolyfills = require("../lune_packages/std_polyfills")
 
-local request = require("@rest/request")
-local future = require("@vendor/future")
+local async = require("../lune_packages/async")
+local apiTypes = require("../lune_packages/api_types")
 
-local restTypes = require("@api-types/rest/types")
-local apiTypes = require("@api-types/apiTypes")
-local restEndpoints = require("@api-types/rest/endpoints")
+local request = require("./request")
 
 --[[
 	HTTP Rest API implementation for the following Resource:
@@ -15,12 +13,12 @@ local restEndpoints = require("@api-types/rest/endpoints")
 local User = {}
 
 -- https://discord.com/developers/docs/resources/user#get-current-user
-function User.getCurrentUserAsync(instance: request.Request): future.Future<restTypes.GetCurrentUserResponse>
-	return future.new(function()
+function User.getCurrentUserAsync(instance: request.Request): async.Async<apiTypes.GetCurrentUserResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(restEndpoints.GetCurrentUser)
+		instance:setUrl(apiTypes.rest.endpoints.GetCurrentUser)
 
 		local status, response = instance:executeAsync():await()
 
@@ -31,15 +29,12 @@ function User.getCurrentUserAsync(instance: request.Request): future.Future<rest
 end
 
 -- https://discord.com/developers/docs/resources/user#get-user
-function User.getUserAsync(
-	instance: request.Request,
-	userId: apiTypes.Snowflake
-): future.Future<restTypes.GetUserResponse>
-	return future.new(function()
+function User.getUserAsync(instance: request.Request, userId: apiTypes.Snowflake): async.Async<apiTypes.GetUserResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetUser, userId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetUser, userId))
 
 		local status, response = instance:executeAsync():await()
 
@@ -52,14 +47,14 @@ end
 -- https://discord.com/developers/docs/resources/user#modify-current-user
 function User.modifyCurrentUserAsync(
 	instance: request.Request,
-	jsonParams: restTypes.ModifyCurrentUserRequest
-): future.Future<restTypes.ModifyCurrentUserResponse>
-	return future.new(function()
+	jsonParams: apiTypes.ModifyCurrentUserRequest
+): async.Async<apiTypes.ModifyCurrentUserResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PATCH")
-		instance:setUrl(restEndpoints.ModifyCurrentUser)
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(apiTypes.rest.endpoints.ModifyCurrentUser)
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
 		local status, response = instance:executeAsync():await()
 
@@ -72,14 +67,14 @@ end
 -- https://discord.com/developers/docs/resources/user#modify-current-user
 function User.modifyCurrentUserAsync(
 	instance: request.Request,
-	jsonParams: restTypes.ModifyCurrentUserRequest
-): future.Future<restTypes.ModifyCurrentUserResponse>
-	return future.new(function()
+	jsonParams: apiTypes.ModifyCurrentUserRequest
+): async.Async<apiTypes.ModifyCurrentUserResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PATCH")
-		instance:setUrl(restEndpoints.ModifyCurrentUser)
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(apiTypes.rest.endpoints.ModifyCurrentUser)
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
 		local status, response = instance:executeAsync():await()
 
@@ -98,8 +93,8 @@ function User.getCurrentUserGuildsAsync(
 		limit: number?,
 		withCounts: boolean?,
 	}
-): future.Future<restTypes.GetCurrentUserGuildsResponse>
-	return future.new(function()
+): async.Async<apiTypes.GetCurrentUserGuildsResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:addUrlParam("before", urlParams.before and tostring(urlParams.before) or (nil :: any))
@@ -108,7 +103,7 @@ function User.getCurrentUserGuildsAsync(
 		instance:addUrlParam("with_counts", urlParams.withCounts and tostring(urlParams.withCounts) or (nil :: any))
 
 		instance:setMethod("GET")
-		instance:setUrl(restEndpoints.GetCurrentUserGuilds)
+		instance:setUrl(apiTypes.rest.endpoints.GetCurrentUserGuilds)
 
 		local status, response = instance:executeAsync():await()
 
@@ -122,12 +117,12 @@ end
 function User.getCurrentUserGuildMember(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake
-): future.Future<restTypes.GetCurrentUserGuildMemberResponse>
-	return future.new(function()
+): async.Async<apiTypes.GetCurrentUserGuildMemberResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetCurrentUserGuilds, guildId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetCurrentUserGuilds, guildId))
 
 		local status, response = instance:executeAsync():await()
 
@@ -141,12 +136,12 @@ end
 function User.leaveGuildAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake
-): future.Future<restTypes.LeaveGuildResponse>
-	return future.new(function()
+): async.Async<apiTypes.LeaveGuildResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
-		instance:setUrl(string.format(restEndpoints.GetCurrentUserGuilds, guildId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetCurrentUserGuilds, guildId))
 
 		local status, response = instance:executeAsync():await()
 
@@ -159,14 +154,14 @@ end
 -- https://discord.com/developers/docs/resources/user#create-dm
 function User.createDMAsync(
 	instance: request.Request,
-	jsonParams: restTypes.CreateDMRequest
-): future.Future<restTypes.CreateDMResponse>
-	return future.new(function()
+	jsonParams: apiTypes.CreateDMRequest
+): async.Async<apiTypes.CreateDMResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("POST")
-		instance:setUrl(restEndpoints.CreateDM)
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(apiTypes.rest.endpoints.CreateDM)
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
 		local status, response = instance:executeAsync():await()
 
@@ -179,14 +174,14 @@ end
 -- https://discord.com/developers/docs/resources/user#create-group-dm
 function User.createGroupDMAsync(
 	instance: request.Request,
-	jsonParams: restTypes.CreateGroupDMRequest
-): future.Future<restTypes.CreateGroupDMResponse>
-	return future.new(function()
+	jsonParams: apiTypes.CreateGroupDMRequest
+): async.Async<apiTypes.CreateGroupDMResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("POST")
-		instance:setUrl(restEndpoints.CreateGroupDM)
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(apiTypes.rest.endpoints.CreateGroupDM)
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
 		local status, response = instance:executeAsync():await()
 
@@ -199,12 +194,12 @@ end
 -- https://discord.com/developers/docs/resources/user#get-current-user-connections
 function User.getCurrentUserConnectionsAsync(
 	instance: request.Request
-): future.Future<restTypes.GetCurrentUserConnectionResponse>
-	return future.new(function()
+): async.Async<apiTypes.GetCurrentUserConnectionResponse>
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(restEndpoints.GetCurrentUserConnections)
+		instance:setUrl(apiTypes.rest.endpoints.GetCurrentUserConnections)
 
 		local status, response = instance:executeAsync():await()
 
@@ -218,14 +213,14 @@ end
 function User.getCurrentUserApplicationRoleConnectionAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake
-): future.Future<
-	restTypes.GetCurrentUserApplicationRoleConnectionResponse
+): async.Async<
+	apiTypes.GetCurrentUserApplicationRoleConnectionResponse
 >
-	return future.new(function()
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetCurrentUserApplicationRolConnections, applicationId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetCurrentUserApplicationRolConnections, applicationId))
 
 		local status, response = instance:executeAsync():await()
 
@@ -239,16 +234,18 @@ end
 function User.updateCurrentUserApplicationRoleConnectionAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
-	jsonParams: restTypes.UpdateCurrentUserApplicationRoleConnectionRequest
-): future.Future<
-	restTypes.UpdateCurrentUserApplicationRoleConnectionResponse
+	jsonParams: apiTypes.UpdateCurrentUserApplicationRoleConnectionRequest
+): async.Async<
+	apiTypes.UpdateCurrentUserApplicationRoleConnectionResponse
 >
-	return future.new(function()
+	return async.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PUT")
-		instance:setUrl(string.format(restEndpoints.UpdateCurrentUserApplicationRoleConnection, applicationId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(
+			string.format(apiTypes.rest.endpoints.UpdateCurrentUserApplicationRoleConnection, applicationId)
+		)
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
 		local status, response = instance:executeAsync():await()
 

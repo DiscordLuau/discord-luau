@@ -4,9 +4,8 @@
 	https://discord.com/developers/docs/resources/guild#unavailable-guild-object
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
-
-local state = require("@classes/state")
+local apiTypes = require("../../lune_packages/api_types")
+local state = require("../../lune_packages/state")
 
 local UnavailableGuild = {}
 

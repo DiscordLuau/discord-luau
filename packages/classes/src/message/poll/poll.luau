@@ -4,14 +4,13 @@
 	https://discord.com/developers/docs/resources/poll#poll-object
 ]]
 
-local datetime = require("@std-polyfills/datetime")
+local stdPolyfills = require("../../../lune_packages/std_polyfills")
 
-local apiTypes = require("@api-types/apiTypes")
-local pollTypes = require("@api-types/poll")
+local apiTypes = require("../../../lune_packages/api_types")
 
-local answer = require("@classes/message/poll/answer")
-local mediaObject = require("@classes/message/poll/mediaObject")
-local results = require("@classes/message/poll/results")
+local answer = require("./answer")
+local mediaObject = require("./mediaObject")
+local results = require("./results")
 
 local Poll = {}
 
@@ -28,9 +27,9 @@ function Poll.Prototype.sync(self: Poll, pollData: apiTypes.PollObject)
 	self.answers = answerArray
 
 	self.question = mediaObject.new(pollData.question)
-	self.expiry = pollData.expiry and datetime.fromIsoDate(pollData.expiry)
+	self.expiry = pollData.expiry and stdPolyfills.datetime.fromIsoDate(pollData.expiry)
 	self.allowMultiselect = pollData.allow_multiselect
-	self.layoutType = (pollData.layout_type == 1 and "Default") :: pollTypes.PollLayoutType
+	self.layoutType = (pollData.layout_type == 1 and "Default") :: apiTypes.PollLayoutType
 	self.results = pollData.results and results.new(pollData.results)
 end
 
@@ -45,9 +44,9 @@ end
 export type Poll = typeof(Poll.Prototype) & {
 	question: mediaObject.MediaObject,
 	answers: { answer.Answer },
-	expiry: datetime.DateTime?,
+	expiry: stdPolyfills.DateTime?,
 	allowMultiselect: boolean,
-	layoutType: pollTypes.PollLayoutType,
+	layoutType: apiTypes.PollLayoutType,
 	results: results.Results?,
 }
 

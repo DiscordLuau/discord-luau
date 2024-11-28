@@ -2,18 +2,16 @@
 	Voice Behaviour, responsible for implementing the various properties, and methods for a voice-able channels.
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
-local applicationTypes = require("@api-types/application")
-local interactionTypes = require("@api-types/interaction")
+local apiTypes = require("../../../lune_packages/api_types")
+local state = require("../../../lune_packages/state")
 
-local data = require("@classes/interaction/data")
-local unavailableGuild = require("@classes/guild/unavailableGuild")
-local member = require("@classes/guild/member")
-local user = require("@classes/user")
-local message = require("@classes/message/message")
-local permission = require("@classes/permission")
-local entitlement = require("@classes/entitlement")
-local state = require("@classes/state")
+local data = require("../data")
+local unavailableGuild = require("../../guild/unavailableGuild")
+local member = require("../../guild/member")
+local user = require("../../user")
+local message = require("../../message/message")
+local permission = require("../../permission")
+local entitlement = require("../../entitlement")
 
 local Interaction = {}
 
@@ -38,8 +36,8 @@ function Interaction.Interface.inheritProperties(class: any, interactionData: ap
 		end
 	end
 
-	class.type = interactionTypes.InteractionType[interactionData.type]
-	class.context = interactionTypes.InteractionContextType[interactionData.context]
+	class.type = apiTypes.interaction.InteractionType[interactionData.type]
+	class.context = apiTypes.interaction.InteractionContextType[interactionData.context]
 
 	class.id = interactionData.id
 	class.applicationId = interactionData.application_id
@@ -73,7 +71,7 @@ export type InteractionProperties = {
 
 	id: apiTypes.Snowflake,
 	applicationId: apiTypes.Snowflake,
-	type: interactionTypes.InteractionType,
+	type: apiTypes.InteractionType,
 	data: data.Data?,
 	guild: unavailableGuild.UnavailableGuild?,
 	guildId: apiTypes.Snowflake?,
@@ -89,9 +87,9 @@ export type InteractionProperties = {
 	guildLocale: apiTypes.LanguageLocales?,
 	entitlements: { entitlement.Entitlement },
 	authorizingIntegrationOwners: {
-		[applicationTypes.IntegrationTypesConfig]: apiTypes.Snowflake,
+		[apiTypes.IntegrationTypesConfig]: apiTypes.Snowflake,
 	},
-	context: interactionTypes.InteractionContextType?,
+	context: apiTypes.InteractionContextType?,
 }
 
 export type Interaction = InteractionMethods & InteractionProperties

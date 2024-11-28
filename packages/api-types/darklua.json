@@ -1,0 +1,14 @@
+{
+	"generator": "retain_lines",
+	"bundle": {
+		"require_mode": {
+			"name": "path",
+			"module_folder_name": "init",
+			"sources": {}
+		},
+		"modules_identifier": "__DARKLUA_BUNDLE_MODULES",
+		"excludes": [
+			"@lune/**"
+		]
+	}
+}

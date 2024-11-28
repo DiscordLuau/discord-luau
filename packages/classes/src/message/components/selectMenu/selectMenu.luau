@@ -4,11 +4,10 @@
 	https://discord.com/developers/docs/interactions/message-components#select-menu-object-select-menu-structure
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
-local channelTypes = require("@api-types/channel")
+local apiTypes = require("../../../../lune_packages/api_types")
 
-local option = require("@classes/message/components/selectMenu/option")
-local defaultValue = require("@classes/message/components/selectMenu/defaultValue")
+local option = require("./option")
+local defaultValue = require("./defaultValue")
 
 local SelectMenu = {}
 
@@ -18,7 +17,7 @@ SelectMenu.Prototype = {}
 function SelectMenu.Prototype.sync(self: SelectMenu, selectMenuData: apiTypes.SelectMenuComponentObject)
 	local optionArray = {}
 	local defaultValues = {}
-	local channelTypesArray: { channelTypes.ChannelType } = {}
+	local apiTypesArray: { apiTypes.ChannelType } = {}
 
 	for _, optionData in next, selectMenuData.options or {} do
 		table.insert(optionArray, option.new(optionData))
@@ -29,13 +28,13 @@ function SelectMenu.Prototype.sync(self: SelectMenu, selectMenuData: apiTypes.Se
 	end
 
 	for _, channelType in next, selectMenuData.channel_types or {} do
-		table.insert(channelTypesArray, channelTypes.ChannelTypes[channelType])
+		table.insert(apiTypesArray, apiTypes.channel.ApiTypes[channelType])
 	end
 
 	self.type = selectMenuData.type
 	self.customId = selectMenuData.custom_id
 	self.options = optionArray
-	self.channelTypes = channelTypesArray
+	self.apiTypes = apiTypesArray
 	self.placeholder = selectMenuData.placeholder
 	self.defaultValues = defaultValues
 	self.minValues = selectMenuData.min_values
@@ -55,7 +54,7 @@ export type SelectMenu = typeof(SelectMenu.Prototype) & {
 	type: number,
 	customId: string,
 	options: { option.Option }?,
-	channelTypes: { channelTypes.ChannelType }?,
+	apiTypes: { apiTypes.ChannelType }?,
 	placeholder: string?,
 	defaultValues: { defaultValue.DefaultValue }?,
 	minValues: number?,

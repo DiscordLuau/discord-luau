@@ -4,7 +4,7 @@
 	https://discord.com/developers/docs/resources/channel#create-channel-invite-json-params
 ]]
 
-local guildTypes = require("@api-types/guild")
+local apiTypes = require("../lune_packages/api_types")
 
 local Invite = {}
 
@@ -61,8 +61,8 @@ end
 	Sets the type of target for this invite.
 	Used for stream and embedded application invites.
 ]]
-function Invite.Prototype.setTargetType(self: Invite, targetType: guildTypes.InviteTargetType): Invite
-	assert(guildTypes.InviteTargetType[self.targetType], "Invalid target type")
+function Invite.Prototype.setTargetType(self: Invite, targetType: apiTypes.InviteTargetType): Invite
+	assert(apiTypes.guild.InviteTargetType[self.targetType], "Invalid target type")
 
 	self.targetType = targetType
 
@@ -98,7 +98,7 @@ function Invite.Prototype.build(self: Invite): JSON
 		max_uses = self.maxUses,
 		temporary = self.temporary,
 		unique = self.unique,
-		target_type = guildTypes.InviteTargetType[self.targetType],
+		target_type = apiTypes.guild.InviteTargetType[self.targetType],
 		target_user_id = self.targetUserId,
 		target_application_id = self.targetApplicationId,
 	}
@@ -116,7 +116,7 @@ function Invite.Interface.new(resource: {
 	maxUses: number?,
 	temporary: boolean?,
 	unique: boolean?,
-	targetType: guildTypes.InviteTargetType?,
+	targetType: apiTypes.InviteTargetType?,
 	targetUserId: string?,
 	targetApplicationId: string?,
 }?): Invite
@@ -162,7 +162,7 @@ export type Invite = typeof(Invite.Prototype) & {
 	maxUses: number?,
 	temporary: boolean?,
 	unique: boolean?,
-	targetType: guildTypes.InviteTargetType?,
+	targetType: apiTypes.InviteTargetType?,
 	targetUserId: string?,
 	targetApplicationId: string?,
 }

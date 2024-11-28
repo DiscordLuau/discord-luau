@@ -4,7 +4,7 @@
 	https://discord.com/developers/docs/resources/message#message-object-message-flags
 ]]
 
-local bit = require("@vendor/bit")
+local bit = require("../../luau_packages/bit")
 
 local MessageBitflag = {}
 

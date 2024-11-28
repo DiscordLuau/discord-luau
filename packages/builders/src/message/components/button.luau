@@ -4,10 +4,9 @@
 	https://discord.com/developers/docs/interactions/message-components#buttons
 ]]
 
-local messageTypes = require("@api-types/message")
-local apiTypes = require("@api-types/apiTypes")
+local apiTypes = require("../../../lune_packages/api_types")
 
-local emoji = require("@builders/emoji")
+local emoji = require("../../emoji")
 
 local Button = {}
 
@@ -17,7 +16,7 @@ Button.Interface = {}
 --[[
 	
 ]]
-function Button.Prototype.setStyle(self: Button, buttonStyle: messageTypes.ButtonStyle): Button
+function Button.Prototype.setStyle(self: Button, buttonStyle: apiTypes.ButtonStyle): Button
 	self.style = buttonStyle
 
 	return self
@@ -88,7 +87,7 @@ function Button.Prototype.build(self: Button): JSON
 
 	return {
 		type = 2,
-		style = messageTypes.ButtonStyle[self.style],
+		style = apiTypes.channel.ButtonStyle[self.style],
 		label = self.label,
 		emoji = self.emoji,
 		custom_id = self.customId,
@@ -106,7 +105,7 @@ end
 	```
 ]]
 function Button.Interface.new(resource: {
-	style: messageTypes.ButtonStyle,
+	style: apiTypes.ButtonStyle,
 	label: string?,
 	emoji: emoji.JSON?,
 	customId: string?,
@@ -152,7 +151,7 @@ function Button.Interface.new(resource: {
 end
 
 export type Button = typeof(Button.Prototype) & {
-	style: messageTypes.ButtonStyle,
+	style: apiTypes.ButtonStyle,
 	label: string?,
 	emoji: emoji.JSON?,
 	customId: string?,

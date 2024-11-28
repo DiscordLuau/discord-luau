@@ -4,16 +4,13 @@
 	https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-structure
 ]]
 
-local future = require("@vendor/future")
-
-local apiTypes = require("@api-types/apiTypes")
-
-local interactionRest = require("@rest/interaction")
-
-local interactionBehaviour = require("@classes/interaction/behaviour/interaction")
-
 -- selene: allow(unused_variable)
-local state = require("@classes/state")
+local state = require("../../../lune_packages/state")
+local apiTypes = require("../../../lune_packages/api_types")
+local rest = require("../../../lune_packages/rest")
+local async = require("../../../lune_packages/async")
+
+local interactionBehaviour = require("../behaviour/interaction")
 
 local Ping = {}
 
@@ -26,11 +23,11 @@ Ping.Behaviours = {
 --[[
 	acknowledge an interaction ping
 ]]
-function Ping.Prototype.pongAsync(self: Ping): future.Future<nil>
+function Ping.Prototype.pongAsync(self: Ping): async.Async<nil>
 	local request = self.state.rest:newRequest()
 
-	return future.new(function()
-		local status, response = interactionRest
+	return async.new(function()
+		local status, response = rest.interaction
 			.createInteractionResponseAsync(request, self.id, self.token, {
 				type = 1,
 				data = {},

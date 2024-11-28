@@ -4,9 +4,9 @@
 	https://discord.com/developers/docs/resources/guild#guild-onboarding-object-onboarding-prompt-structure
 ]]
 
-local guildTypes = require("@api-types/guild")
+local apiTypes = require("../../../lune_packages/api_types")
 
-local option = require("@builders/guild/onboarding/option")
+local option = require("./option")
 
 local Prompt = {}
 
@@ -25,7 +25,7 @@ end
 --[[
 	Set the type of prompt.
 ]]
-function Prompt.Prototype.setType(self: Prompt, type: guildTypes.OnboardingPromptType): Prompt
+function Prompt.Prototype.setType(self: Prompt, type: apiTypes.OnboardingPromptType): Prompt
 	self.type = type
 
 	return self
@@ -63,7 +63,7 @@ end
 ]]
 function Prompt.Prototype.build(self: Prompt): JSON
 	return {
-		type = guildTypes.OnboardingPromptType[self.type],
+		type = apiTypes.guild.OnboardingPromptType[self.type],
 		options = self.options,
 		title = self.title,
 		single_select = self.singleSelect,
@@ -82,7 +82,7 @@ end
 	```
 ]]
 function Prompt.Interface.new(resource: {
-	type: guildTypes.OnboardingPromptType?,
+	type: apiTypes.OnboardingPromptType?,
 	options: { option.JSON }?,
 	title: string?,
 	singleSelect: boolean?,
@@ -125,7 +125,7 @@ function Prompt.Interface.new(resource: {
 end
 
 export type Prompt = typeof(Prompt.Prototype) & {
-	type: guildTypes.OnboardingPromptType,
+	type: apiTypes.OnboardingPromptType,
 	options: { option.JSON },
 	title: string,
 	singleSelect: boolean,

@@ -4,9 +4,9 @@
 	https://discord.com/developers/docs/resources/guild#guild-onboarding-object-option-option-structure
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
+local apiTypes = require("../../../lune_packages/api_types")
 
-local emoji = require("@classes/emoji")
+local emoji = require("../../emoji")
 
 local Option = {}
 

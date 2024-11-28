@@ -4,11 +4,9 @@
 	https://discord.com/developers/docs/resources/message#message-interaction-metadata-object-message-interaction-metadata-structure
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
-local applicationTypes = require("@api-types/application")
-local interactionTypes = require("@api-types/interaction")
+local apiTypes = require("../../lune_packages/api_types")
 
-local user = require("@classes/user")
+local user = require("../user")
 
 local IneractionMetadata = {}
 
@@ -31,7 +29,7 @@ function IneractionMetadata.Prototype.sync(
 		end
 	end
 
-	self.type = interactionTypes.InteractionType[interactionData.type]
+	self.type = apiTypes.interaction.InteractionType[interactionData.type]
 
 	self.user = user.new(interactionData.user)
 
@@ -53,10 +51,10 @@ end
 
 export type IneractionMetadata = typeof(IneractionMetadata.Prototype) & {
 	id: apiTypes.Snowflake,
-	type: interactionTypes.InteractionType,
+	type: apiTypes.InteractionType,
 	user: user.User,
 	authorizingIntegrationOwners: {
-		[applicationTypes.IntegrationTypesConfig]: apiTypes.Snowflake,
+		[apiTypes.IntegrationTypesConfig]: apiTypes.Snowflake,
 	},
 	originalResponseMessageId: apiTypes.Snowflake?,
 	interactedMessageId: apiTypes.Snowflake?,
