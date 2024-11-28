@@ -42,6 +42,8 @@ jobs:
           cache: true
       - name: Setup lune typedefs
         run: lune setup
+      - name: Install dependencies
+        run: pesde install
       - name: Typecheck
         run: lune run analyze
   test:
@@ -56,5 +58,7 @@ jobs:
         uses: CompeyDev/setup-rokit@v0.1.0
         with:
           cache: true
+      - name: Install dependencies
+        run: pesde install
       - name: Run unit-tests
         run: lune run test
