@@ -2,7 +2,7 @@ name = "discord_luau/builders"
 version = "0.1.0"
 description = "Discord-Luau Builders - Builders used to generate payloads that the discord API can parse."
 license = "MIT"
-authors = ["AsyncMatrix<https://github.com/4x8Matrix>"]
+authors = ["AsyncMatrix <catbob614@gmail.com>"]
 repository = "https://github.com/DiscordLuau/discord-luau"
 
 includes = ["src/**", "pesde.toml"]
