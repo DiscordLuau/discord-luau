@@ -2,7 +2,7 @@ name = "discord_luau/buffer"
 version = "0.1.0"
 description = "Discord-Luau Buffer - Used to temporarily storing encoded data."
 license = "MIT"
-authors = ["AsyncMatrix<https://github.com/4x8Matrix>"]
+authors = ["AsyncMatrix <catbob614@gmail.com>"]
 repository = "https://github.com/DiscordLuau/discord-luau"
 
 includes = ["src/**", "pesde.toml"]
