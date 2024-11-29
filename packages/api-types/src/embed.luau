@@ -1,6 +1,6 @@
-local utilitues = require("../lune_packages/utilities")
+local utilities = require("../lune_packages/utilities")
 
-local EmbedType = table.freeze(utilitues.table.reflect({
+local EmbedType = table.freeze(utilities.table.reflect({
 	Rich = "rich",
 	Image = "image",
 	Video = "video",

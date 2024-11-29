@@ -1,8 +1,8 @@
-local utilitues = require("../lune_packages/utilities")
+local utilities = require("../lune_packages/utilities")
 
 local apiTypes = require("./apiTypes")
 
-local ChannelTypes = table.freeze(utilitues.table.reflect({
+local ChannelTypes = table.freeze(utilities.table.reflect({
 	GuildText = 0,
 	DM = 1,
 	GuildVoice = 2,
@@ -18,28 +18,28 @@ local ChannelTypes = table.freeze(utilitues.table.reflect({
 	GuildMedia = 16,
 }))
 
-local MediaSortOrder = table.freeze(utilitues.table.reflect({
+local MediaSortOrder = table.freeze(utilities.table.reflect({
 	LatestActivity = 0,
 	CreationDate = 1,
 }))
 
-local ForumSortOrder = table.freeze(utilitues.table.reflect({
+local ForumSortOrder = table.freeze(utilities.table.reflect({
 	LatestActivity = 0,
 	CreationDate = 1,
 }))
 
-local ForumLayout = table.freeze(utilitues.table.reflect({
+local ForumLayout = table.freeze(utilities.table.reflect({
 	NotSet = 0,
 	ListView = 1,
 	GalleryView = 2,
 }))
 
-local VideoQualityMode = table.freeze(utilitues.table.reflect({
+local VideoQualityMode = table.freeze(utilities.table.reflect({
 	Auto = 1,
 	Full = 2,
 }))
 
-local SelectMenuType = table.freeze(utilitues.table.reflect({
+local SelectMenuType = table.freeze(utilities.table.reflect({
 	String = 3,
 	Text = 4,
 	User = 5,

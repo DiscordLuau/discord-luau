@@ -1,6 +1,6 @@
-local utilitues = require("../lune_packages/utilities")
+local utilities = require("../lune_packages/utilities")
 
-local NitroType = table.freeze(utilitues.table.reflect({
+local NitroType = table.freeze(utilities.table.reflect({
 	None = 0,
 	NitroClassic = 1,
 	Nitro = 2,

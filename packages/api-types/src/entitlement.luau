@@ -1,6 +1,6 @@
-local utilitues = require("../lune_packages/utilities")
+local utilities = require("../lune_packages/utilities")
 
-local EntitlementType = table.freeze(utilitues.table.reflect({
+local EntitlementType = table.freeze(utilities.table.reflect({
 	Purchase = 1,
 	PremiumSubscription = 2,
 	DeveloperGift = 3,

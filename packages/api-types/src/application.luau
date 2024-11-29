@@ -1,11 +1,11 @@
-local utilitues = require("../lune_packages/utilities")
+local utilities = require("../lune_packages/utilities")
 
-local MembershipState = table.freeze(utilitues.table.reflect({
+local MembershipState = table.freeze(utilities.table.reflect({
 	Invited = 1,
 	Accepted = 2,
 }))
 
-local IntegrationTypesConfig = table.freeze(utilitues.table.reflect({
+local IntegrationTypesConfig = table.freeze(utilities.table.reflect({
 	GuildInstall = 0,
 	UserInstall = 1,
 }))

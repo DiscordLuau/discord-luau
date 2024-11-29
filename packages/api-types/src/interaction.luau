@@ -1,6 +1,6 @@
-local utilitues = require("../lune_packages/utilities")
+local utilities = require("../lune_packages/utilities")
 
-local InteractionType = table.freeze(utilitues.table.reflect({
+local InteractionType = table.freeze(utilities.table.reflect({
 	Ping = 1,
 	ApplicationCommand = 2,
 	MessageComponent = 3,
@@ -8,7 +8,7 @@ local InteractionType = table.freeze(utilitues.table.reflect({
 	ModalSubmit = 5,
 }))
 
-local ApplicationCommandOptionType = table.freeze(utilitues.table.reflect({
+local ApplicationCommandOptionType = table.freeze(utilities.table.reflect({
 	SubCommand = 1,
 	SubCommandGroup = 2,
 	String = 3,
@@ -22,20 +22,20 @@ local ApplicationCommandOptionType = table.freeze(utilitues.table.reflect({
 	Attachment = 11,
 }))
 
-local InteractionContextType = table.freeze(utilitues.table.reflect({
+local InteractionContextType = table.freeze(utilities.table.reflect({
 	Guild = 0,
 	BotDm = 1,
 	PrivateChannel = 2,
 }))
 
-local ApplicationCommandType = table.freeze(utilitues.table.reflect({
+local ApplicationCommandType = table.freeze(utilities.table.reflect({
 	ChatInput = 1,
 	User = 2,
 	Message = 3,
 	PrimaryEntryPoiant = 4,
 }))
 
-local ComponentTypes = table.freeze(utilitues.table.reflect({
+local ComponentTypes = table.freeze(utilities.table.reflect({
 	ActionRow = 1,
 	Button = 2,
 	StringSelect = 3,
