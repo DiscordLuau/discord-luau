@@ -22,29 +22,53 @@ return function<T>(state: state.State, channelData: apiTypes.ChannelObject): T?
 
 	if channelData.type == apiTypes.channel.ChannelTypes.GuildText then
 		object = guildText.new(state, channelData)
-	elseif channelData.type == apiTypes.channel.ChannelTypes.DM then
+	end
+
+	if channelData.type == apiTypes.channel.ChannelTypes.DM then
 		object = dmChannel.new(state, channelData)
-	elseif channelData.type == apiTypes.channel.ChannelTypes.GuildVoice then
+	end
+
+	if channelData.type == apiTypes.channel.ChannelTypes.GuildVoice then
 		object = guildVoice.new(state, channelData)
-	elseif channelData.type == apiTypes.channel.ChannelTypes.GroupDM then
+	end
+
+	if channelData.type == apiTypes.channel.ChannelTypes.GroupDM then
 		object = groupDmChannel.new(state, channelData)
-	elseif channelData.type == apiTypes.channel.ChannelTypes.GuildCategory then
+	end
+
+	if channelData.type == apiTypes.channel.ChannelTypes.GuildCategory then
 		object = guildCategory.new(state, channelData)
-	elseif channelData.type == apiTypes.channel.ChannelTypes.GuildAnnouncement then
+	end
+
+	if channelData.type == apiTypes.channel.ChannelTypes.GuildAnnouncement then
 		object = guildAnnouncement.new(state, channelData)
-	elseif channelData.type == apiTypes.channel.ChannelTypes.AnnouncementThread then
+	end
+
+	if channelData.type == apiTypes.channel.ChannelTypes.AnnouncementThread then
 		object = announcementThread.new(state, channelData)
-	elseif channelData.type == apiTypes.channel.ChannelTypes.PublicThread then
+	end
+
+	if channelData.type == apiTypes.channel.ChannelTypes.PublicThread then
 		object = publicThread.new(state, channelData)
-	elseif channelData.type == apiTypes.channel.ChannelTypes.PrivateThread then
+	end
+
+	if channelData.type == apiTypes.channel.ChannelTypes.PrivateThread then
 		object = privateThread.new(state, channelData)
-	elseif channelData.type == apiTypes.channel.ChannelTypes.GuildStageVoice then
+	end
+
+	if channelData.type == apiTypes.channel.ChannelTypes.GuildStageVoice then
 		object = guildStageVoice.new(state, channelData)
-	elseif channelData.type == apiTypes.channel.ChannelTypes.GuildDirectory then
+	end
+
+	if channelData.type == apiTypes.channel.ChannelTypes.GuildDirectory then
 		object = guildDirectory.new(state, channelData)
-	elseif channelData.type == apiTypes.channel.ChannelTypes.GuildForum then
+	end
+
+	if channelData.type == apiTypes.channel.ChannelTypes.GuildForum then
 		object = forumThread.new(state, channelData)
-	elseif channelData.type == apiTypes.channel.ChannelTypes.GuildMedia then
+	end
+
+	if channelData.type == apiTypes.channel.ChannelTypes.GuildMedia then
 		object = mediaThread.new(state, channelData)
 	end
 

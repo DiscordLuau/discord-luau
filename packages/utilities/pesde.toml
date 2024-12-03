@@ -4,8 +4,9 @@ description = "Discord Luau Utilities - a variety of utilities functions"
 license = "MIT"
 authors = ["AsyncMatrix<https://github.com/4x8Matrix>"]
 repository = "https://github.com/DiscordLuau/discord-luau"
+pesde_version = "0.5.0-rc.13"
 
-includes = ["src/**", "pesde.toml"]
+includes = ["src/**", "pesde.toml", "LICENSE"]
 
 [target]
 environment = "lune"
