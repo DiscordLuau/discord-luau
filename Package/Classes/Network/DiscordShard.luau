@@ -50,9 +50,7 @@ function DiscordShard.Prototype.observeWebsocketErrors(self: DiscordShard)
 			elseif closeCode == WebsocketCloseCodes.DecodeError then
 				self:reconnectAsync()
 			elseif closeCode == WebsocketCloseCodes.NotAuthenticated then
-				self.reporter:error(
-					`Something has gone terribly wrong with Discord-Luau.. please create an issue! [{closeCode}]`
-				)
+				self:reconnectAsync()
 			elseif closeCode == WebsocketCloseCodes.AuthenticationFailed then
 				self.reporter:warn(`Failed to authenticate with the Discord API, is your token correct?`)
 			elseif closeCode == WebsocketCloseCodes.AlreadyAuthenticated then
