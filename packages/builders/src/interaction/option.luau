@@ -8,7 +8,7 @@ local apiTypes = require("../../lune_packages/api_types")
 
 local interactionChoice = require("./choice")
 
-local utilities = require("../../lune_packages/utilities")
+local util = require("../../lune_packages/util")
 
 local Option = {}
 
@@ -31,7 +31,7 @@ function Option.Prototype.setName(self: Option, name: string): Option
 	assert(#name <= 32, "name must be less than 32 characters")
 	assert(#name >= 1, "name must be at least 1 character")
 
-	assert(utilities.validateKebabCase(name), `name must be kebab case`)
+	assert(util.validateKebabCase(name), `name must be kebab case`)
 
 	self.name = name
 
@@ -49,7 +49,7 @@ function Option.Prototype.setNameLocalization(
 	assert(#name <= 32, "name must be less than 32 characters")
 	assert(#name >= 1, "name must be at least 1 character")
 
-	assert(utilities.validateKebabCase(name), `name must be kebab case`)
+	assert(util.validateKebabCase(name), `name must be kebab case`)
 
 	self.nameLocalizations[localization] = name
 

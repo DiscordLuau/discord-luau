@@ -1,6 +1,6 @@
 local stdPolyfills = require("../lune_packages/std_polyfills")
 
-local async = require("../lune_packages/async")
+local future = require("../luau_packages/future")
 local apiTypes = require("../lune_packages/api_types")
 
 local request = require("./request")
@@ -17,8 +17,8 @@ function StageInstance.createStageInstanceAsync(
 	instance: request.Request,
 	jsonParams: apiTypes.CreateStageInstanceRequest,
 	auditLogReason: string?
-): async.Async<apiTypes.CreateStageInstanceResponse>
-	return async.new(function()
+): future.Future<string, apiTypes.CreateStageInstanceResponse>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("POST")
@@ -26,11 +26,11 @@ function StageInstance.createStageInstanceAsync(
 		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -38,18 +38,18 @@ end
 function StageInstance.getStageInstanceAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake
-): async.Async<apiTypes.GetStageInstanceResponse>
-	return async.new(function()
+): future.Future<string, apiTypes.GetStageInstanceResponse>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
 		instance:setUrl(string.format(apiTypes.rest.endpoints.GetStageInstance, channelId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -59,8 +59,8 @@ function StageInstance.modifyStageInstanceAsync(
 	channelId: apiTypes.Snowflake,
 	jsonParams: apiTypes.ModifyStageInstanceRequest,
 	auditLogReason: string?
-): async.Async<apiTypes.ModifyStageInstanceResponse>
-	return async.new(function()
+): future.Future<string, apiTypes.ModifyStageInstanceResponse>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PATCH")
@@ -68,11 +68,11 @@ function StageInstance.modifyStageInstanceAsync(
 		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -80,18 +80,18 @@ end
 function StageInstance.deleteStageInstanceAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake
-): async.Async<apiTypes.DeleteStageInstanceResponse>
-	return async.new(function()
+): future.Future<string, apiTypes.DeleteStageInstanceResponse>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
 		instance:setUrl(string.format(apiTypes.rest.endpoints.DeleteStageInstance, channelId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 

@@ -1,8 +1,8 @@
-local utilities = require("../lune_packages/utilities")
+local util = require("../lune_packages/util")
 
 local bit = require("../luau_packages/bit")
 
-local Permissions = table.freeze(utilities.table.reflect({
+local Permissions = table.freeze(util.table.reflect({
 	CreateInstantInvite = bit.lshift(1, 0),
 	KickMembers = bit.lshift(1, 1),
 	BanMembers = bit.lshift(1, 2),

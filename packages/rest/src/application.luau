@@ -1,6 +1,6 @@
 local stdPolyfills = require("../lune_packages/std_polyfills")
 
-local async = require("../lune_packages/async")
+local future = require("../luau_packages/future")
 local apiTypes = require("../lune_packages/api_types")
 
 local request = require("./request")
@@ -16,18 +16,18 @@ local Application = {}
 function Application.getCurrentApplicationAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake
-): async.Async<apiTypes.GetCurrentApplicationResponse>
-	return async.new(function()
+): future.Future<string, apiTypes.GetCurrentApplicationResponse>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
 		instance:setUrl(string.format(apiTypes.rest.endpoints.GetCurrentApplication, applicationId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -36,8 +36,8 @@ function Application.editCurrentApplicationAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	jsonParams: apiTypes.EditCurrentApplicationRequest
-): async.Async<nil>
-	return async.new(function()
+): future.Future<string, nil>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PATCH")

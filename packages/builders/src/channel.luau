@@ -6,7 +6,7 @@
 
 local apiTypes = require("../lune_packages/api_types")
 
-local utilities = require("../lune_packages/utilities")
+local util = require("../lune_packages/util")
 
 local GUILD_CHANNEL_TYPE_MAP = {
 	["GuildText"] = 0,
@@ -52,7 +52,7 @@ function Channel.Prototype.setName(self: Channel, tagName: string): Channel
 	assert(#tagName <= 100, `Channel name must be less than 100 characters.`)
 	assert(#tagName > 1, `Channel name must be more than 1 characters.`)
 
-	assert(utilities.validateKebabCase(tagName), `Channel name must be kebab-case.`)
+	assert(util.validateKebabCase(tagName), `Channel name must be kebab-case.`)
 
 	self.name = tagName
 

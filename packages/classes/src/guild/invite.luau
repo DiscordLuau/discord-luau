@@ -8,7 +8,7 @@ local apiTypes = require("../../lune_packages/api_types")
 local state = require("../../lune_packages/state")
 local stdPolyfills = require("../../lune_packages/std_polyfills")
 
-local utilities = require("../../lune_packages/utilities")
+local util = require("../../lune_packages/util")
 
 local unavailableGuild = require("./unavailableGuild")
 local scheduledEvent = require("./scheduledEvent")
@@ -23,7 +23,7 @@ Invite.Prototype = {}
 
 function Invite.Prototype.sync(self: Invite, inviteData: apiTypes.InviteObject)
 	if inviteData.channel then
-		local channel = utilities.import("@classes/channels/construct")(self.state, inviteData.channel)
+		local channel = util.import("@classes/channels/construct")(self.state, inviteData.channel)
 
 		self.channel = channel :: apiTypes.AbstractChannel
 	end

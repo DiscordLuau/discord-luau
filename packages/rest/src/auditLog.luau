@@ -1,4 +1,4 @@
-local async = require("../lune_packages/async")
+local future = require("../luau_packages/future")
 local apiTypes = require("../lune_packages/api_types")
 
 local request = require("./request")
@@ -80,8 +80,8 @@ function AuditLog.getGuildAuditLogAsync(
 		limit: number?,
 		actionType: ActionType,
 	}
-): async.Async<apiTypes.GetGuildAuditLogResponse>
-	return async.new(function()
+): future.Future<string, apiTypes.GetGuildAuditLogResponse>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:addUrlParam("user_id", urlParams.userId :: string)
@@ -96,11 +96,11 @@ function AuditLog.getGuildAuditLogAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(apiTypes.rest.endpoints.GetGuildAuditLog, guildId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 

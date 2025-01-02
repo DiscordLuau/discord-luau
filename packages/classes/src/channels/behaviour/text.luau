@@ -4,7 +4,7 @@
 
 local apiTypes = require("../../../lune_packages/api_types")
 local stdPolyfills = require("../../../lune_packages/std_polyfills")
-local async = require("../../../lune_packages/async")
+local future = require("../../../luau_packages/future")
 local rest = require("../../../lune_packages/rest")
 local state = require("../../../lune_packages/state")
 local builders = require("../../../lune_packages/builders")
@@ -24,8 +24,8 @@ function TextBehaviour.Prototype.bulkDeleteMessagesAsync<T>(
 	self: Channel<T>,
 	messageIds: { string },
 	reason: string?
-): async.Async<nil>
-	return async.new(function()
+): future.Future<string, nil>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response = rest.message
@@ -49,8 +49,8 @@ function TextBehaviour.Prototype.getMessagesAsync<T>(
 	before: apiTypes.Snowflake?,
 	after: apiTypes.Snowflake?,
 	limit: number?
-): async.Async<{ message.Message }>
-	return async.new(function()
+): future.Future<string, { message.Message }>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response = rest.message
@@ -80,8 +80,8 @@ end
 function TextBehaviour.Prototype.getMessageAsync<T>(
 	self: Channel<T>,
 	messageId: apiTypes.Snowflake
-): async.Async<message.Message>
-	return async.new(function()
+): future.Future<string, message.Message>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response = rest.message.getChannelMessageAsync(request, self.id, messageId):await()
@@ -98,8 +98,8 @@ end
 function TextBehaviour.Prototype.createMessageAsync<T>(
 	self: Channel<T>,
 	json: builders.messageJSON
-): async.Async<message.Message>
-	return async.new(function()
+): future.Future<string, message.Message>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response = rest.message.createMessageAsync(request, self.id, json):await()
@@ -113,8 +113,8 @@ end
 --[[
 	Gets all pinned messages in the channel. Returns an array of message objects.
 ]]
-function TextBehaviour.Prototype.getPinnedMessagesAsync<T>(self: Channel<T>): async.Async<{ message.Message }>
-	return async.new(function()
+function TextBehaviour.Prototype.getPinnedMessagesAsync<T>(self: Channel<T>): future.Future<string, { message.Message }>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response = rest.channel.getPinnedMessagesAsync(request, self.id):await()
@@ -134,8 +134,8 @@ end
 --[[
 	Pins a message in the channel.
 ]]
-function TextBehaviour.Prototype.pinMessageAsync<T>(self: Channel<T>, messageId: string): async.Async<nil>
-	return async.new(function()
+function TextBehaviour.Prototype.pinMessageAsync<T>(self: Channel<T>, messageId: string): future.Future<string, nil>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response = rest.channel.pinMessageAsync(request, self.id, messageId):await()
@@ -153,8 +153,8 @@ function TextBehaviour.Prototype.unpinMessageAsync<T>(
 	self: Channel<T>,
 	messageId: string,
 	reason: string?
-): async.Async<nil>
-	return async.new(function()
+): future.Future<string, nil>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response = rest.channel.unpinMessageAsync(request, self.id, messageId, reason):await()
@@ -168,8 +168,11 @@ end
 --[[
 	Starts a new thread in the channel without an associated message. Returns the thread ID.
 ]]
-function TextBehaviour.Prototype.startThread<T>(self: Channel<T>, json: builders.noMessageThreadJSON): async.Async<string>
-	return async.new(function()
+function TextBehaviour.Prototype.startThread<T>(
+	self: Channel<T>,
+	json: builders.noMessageThreadJSON
+): future.Future<string, string>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response = rest.channel.startThreadWithoutMessageAsync(request, self.id, json):await()

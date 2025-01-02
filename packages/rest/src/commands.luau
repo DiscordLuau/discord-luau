@@ -1,4 +1,4 @@
-local async = require("../lune_packages/async")
+local future = require("../luau_packages/future")
 local apiTypes = require("../lune_packages/api_types")
 
 local request = require("./request")
@@ -17,8 +17,11 @@ function Commands.getGlobalApplicationCommandsAsync(
 	urlParams: {
 		withLocalizations: boolean?,
 	}
-): async.Async<apiTypes.GetGlobalApplicationCommandsResponse>
-	return async.new(function()
+): future.Future<
+	string,
+	apiTypes.GetGlobalApplicationCommandsResponse
+>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:addUrlParam("with_localizations", urlParams.withLocalizations and "true" or (nil :: any))
@@ -26,11 +29,11 @@ function Commands.getGlobalApplicationCommandsAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(apiTypes.rest.endpoints.GetGlobalApplicationCommands, applicationId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -39,19 +42,22 @@ function Commands.createGlobalApplicationCommandAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	jsonParams: apiTypes.CreateGlobalApplicationCommandRequest
-): async.Async<apiTypes.CreateGlobalApplicationCommandResponse>
-	return async.new(function()
+): future.Future<
+	string,
+	apiTypes.CreateGlobalApplicationCommandResponse
+>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("POST")
 		instance:setUrl(string.format(apiTypes.rest.endpoints.CreateGlobalApplicationCommand, applicationId))
 		instance:setBody(apiTypes.rest.endpoints.encode("json", jsonParams, true))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -60,18 +66,18 @@ function Commands.getGlobalApplicationCommandAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	commandId: apiTypes.Snowflake
-): async.Async<apiTypes.GetGlobalApplicationCommandResponse>
-	return async.new(function()
+): future.Future<string, apiTypes.GetGlobalApplicationCommandResponse>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
 		instance:setUrl(string.format(apiTypes.rest.endpoints.GetGlobalApplicationCommand, applicationId, commandId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -81,19 +87,22 @@ function Commands.editGlobalApplicationCommandAsync(
 	applicationId: apiTypes.Snowflake,
 	commandId: apiTypes.Snowflake,
 	jsonParams: apiTypes.EditGlobalApplicationCommandRequest
-): async.Async<apiTypes.EditGlobalApplicationCommandResponse>
-	return async.new(function()
+): future.Future<
+	string,
+	apiTypes.EditGlobalApplicationCommandResponse
+>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PATCH")
 		instance:setUrl(string.format(apiTypes.rest.endpoints.EditGlobalApplicationCommand, applicationId, commandId))
 		instance:setBody(apiTypes.rest.endpoints.encode("json", jsonParams, true))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -102,18 +111,21 @@ function Commands.deleteGlobalApplicationCommandAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	commandId: apiTypes.Snowflake
-): async.Async<apiTypes.DeleteGlobalApplicationCommandResponse>
-	return async.new(function()
+): future.Future<
+	string,
+	apiTypes.DeleteGlobalApplicationCommandResponse
+>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
 		instance:setUrl(string.format(apiTypes.rest.endpoints.DeleteGlobalApplicationCommand, applicationId, commandId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -122,21 +134,22 @@ function Commands.bulkOverwriteGlobalApplicationCommandsAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	jsonParams: apiTypes.BulkOverwriteGlobalApplicationCommandsRequest
-): async.Async<
+): future.Future<
+	string,
 	apiTypes.BulkOverwriteGlobalApplicationCommandsResponse
 >
-	return async.new(function()
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PUT")
 		instance:setUrl(string.format(apiTypes.rest.endpoints.BulkOverwriteGlobalApplicationCommands, applicationId))
 		instance:setBody(apiTypes.rest.endpoints.encode("json", jsonParams, true))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -148,8 +161,8 @@ function Commands.getGuildApplicationCommandsAsync(
 	urlParams: {
 		withLocalizations: boolean?,
 	}
-): async.Async<apiTypes.GetGuildApplicationCommandsResponse>
-	return async.new(function()
+): future.Future<string, apiTypes.GetGuildApplicationCommandsResponse>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:addUrlParam("with_localizations", urlParams.withLocalizations and "true" or (nil :: any))
@@ -157,11 +170,11 @@ function Commands.getGuildApplicationCommandsAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(apiTypes.rest.endpoints.GetGuildApplicationCommands, applicationId, guildId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -171,19 +184,22 @@ function Commands.createGuildApplicationCommandAsync(
 	applicationId: apiTypes.Snowflake,
 	guildId: apiTypes.Snowflake,
 	jsonParams: apiTypes.CreateGuildApplicationCommandRequest
-): async.Async<apiTypes.CreateGuildApplicationCommandResponse>
-	return async.new(function()
+): future.Future<
+	string,
+	apiTypes.CreateGuildApplicationCommandResponse
+>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("POST")
 		instance:setUrl(string.format(apiTypes.rest.endpoints.CreateGuildApplicationCommand, applicationId, guildId))
 		instance:setBody(apiTypes.rest.endpoints.encode("json", jsonParams, true))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -193,8 +209,8 @@ function Commands.getGuildApplicationCommandAsync(
 	applicationId: apiTypes.Snowflake,
 	guildId: apiTypes.Snowflake,
 	commandId: apiTypes.Snowflake
-): async.Async<apiTypes.GetGuildApplicationCommandResponse>
-	return async.new(function()
+): future.Future<string, apiTypes.GetGuildApplicationCommandResponse>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
@@ -202,11 +218,11 @@ function Commands.getGuildApplicationCommandAsync(
 			string.format(apiTypes.rest.endpoints.GetGuildApplicationCommand, applicationId, guildId, commandId)
 		)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -217,8 +233,8 @@ function Commands.editGuildApplicationCommandAsync(
 	guildId: apiTypes.Snowflake,
 	commandId: apiTypes.Snowflake,
 	jsonParams: apiTypes.EditGuildApplicationCommandRequest
-): async.Async<apiTypes.EditGuildApplicationCommandResponse>
-	return async.new(function()
+): future.Future<string, apiTypes.EditGuildApplicationCommandResponse>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PATCH")
@@ -227,11 +243,11 @@ function Commands.editGuildApplicationCommandAsync(
 		)
 		instance:setBody(apiTypes.rest.endpoints.encode("json", jsonParams, true))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -241,8 +257,11 @@ function Commands.deleteGuildApplicationCommandAsync(
 	applicationId: apiTypes.Snowflake,
 	guildId: apiTypes.Snowflake,
 	commandId: apiTypes.Snowflake
-): async.Async<apiTypes.DeleteGuildApplicationCommandResponse>
-	return async.new(function()
+): future.Future<
+	string,
+	apiTypes.DeleteGuildApplicationCommandResponse
+>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
@@ -250,11 +269,11 @@ function Commands.deleteGuildApplicationCommandAsync(
 			string.format(apiTypes.rest.endpoints.DeleteGuildApplicationCommand, applicationId, guildId, commandId)
 		)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -264,10 +283,11 @@ function Commands.bulkOverwriteGuildApplicationCommandsAsync(
 	applicationId: apiTypes.Snowflake,
 	guildId: apiTypes.Snowflake,
 	jsonParams: apiTypes.BulkOverwriteGuildApplicationCommandsRequest
-): async.Async<
+): future.Future<
+	string,
 	apiTypes.BulkOverwriteGuildApplicationCommandsResponse
 >
-	return async.new(function()
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PUT")
@@ -276,11 +296,11 @@ function Commands.bulkOverwriteGuildApplicationCommandsAsync(
 		)
 		instance:setBody(apiTypes.rest.endpoints.encode("json", jsonParams, true))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -289,10 +309,11 @@ function Commands.getGuildApplicationCommandPermissionsAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	guildId: apiTypes.Snowflake
-): async.Async<
+): future.Future<
+	string,
 	apiTypes.GetGuildApplicationCommandPermissionsResponse
 >
-	return async.new(function()
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
@@ -300,11 +321,11 @@ function Commands.getGuildApplicationCommandPermissionsAsync(
 			string.format(apiTypes.rest.endpoints.GetGuildApplicationCommandPermissions, applicationId, guildId)
 		)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -314,8 +335,11 @@ function Commands.getApplicationCommandPermissionsAsync(
 	applicationId: apiTypes.Snowflake,
 	guildId: apiTypes.Snowflake,
 	commandId: apiTypes.Snowflake
-): async.Async<apiTypes.GetApplicationCommandPermissionsResponse>
-	return async.new(function()
+): future.Future<
+	string,
+	apiTypes.GetApplicationCommandPermissionsResponse
+>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
@@ -323,11 +347,11 @@ function Commands.getApplicationCommandPermissionsAsync(
 			string.format(apiTypes.rest.endpoints.GetApplicationCommandPermissions, applicationId, guildId, commandId)
 		)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -338,10 +362,11 @@ function Commands.editApplicationCommandPermissionsAsync(
 	guildId: apiTypes.Snowflake,
 	commandId: apiTypes.Snowflake,
 	jsonParams: apiTypes.EditApplicationCommandPermissionsRequest
-): async.Async<
+): future.Future<
+	string,
 	apiTypes.EditApplicationCommandPermissionsResponse
 >
-	return async.new(function()
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PUT")
@@ -350,11 +375,11 @@ function Commands.editApplicationCommandPermissionsAsync(
 		)
 		instance:setBody(apiTypes.rest.endpoints.encode("json", jsonParams, true))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 

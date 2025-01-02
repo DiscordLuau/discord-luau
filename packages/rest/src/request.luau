@@ -1,6 +1,6 @@
 local stdPolyfills = require("../lune_packages/std_polyfills")
 
-local async = require("../lune_packages/async")
+local future = require("../luau_packages/future")
 
 --[[
 	Request is a class that represents a single HTTP request. The idea behind this class is to provide
@@ -105,8 +105,13 @@ end
 		- headers: A table of headers returned from the request.
 		- body: The body of the request, decoded from the response.
 ]]
-function Request.Prototype.executeAsync<Resolve>(self: Request): async.Async<{ headers: { [string]: string }, body: Resolve }>
-	return async.new(function()
+function Request.Prototype.executeAsync<Resolve>(
+	self: Request
+): future.Future<
+	string,
+	{ headers: { [string]: string }, body: Resolve }
+>
+	return future.Future.new(function()
 		assert(self.method, `Request method is not set!`)
 		assert(self.url, `Request URL is not set!`)
 		assert(self.headers, `Request headers are not set!`)

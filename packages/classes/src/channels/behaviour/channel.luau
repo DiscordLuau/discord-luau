@@ -4,7 +4,7 @@
 ]]
 
 local apiTypes = require("../../../lune_packages/api_types")
-local async = require("../../../lune_packages/async")
+local future = require("../../../luau_packages/future")
 local rest = require("../../../lune_packages/rest")
 local state = require("../../../lune_packages/state")
 local builders = require("../../../lune_packages/builders")
@@ -21,8 +21,8 @@ ChannelBehaviour.Prototype = {}
 	if the channel is a thread. Deleting a category does not delete its child channels; they will have their parent_id
 	removed and a Channel Update Gateway event will fire for each of them.
 ]]
-function ChannelBehaviour.Prototype.deleteChannelAsync<T>(self: Channel<T>): async.Async<T>
-	return async.new(function()
+function ChannelBehaviour.Prototype.deleteChannelAsync<T>(self: Channel<T>): future.Future<string, T>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response = rest.channel.deleteOrCloseChannelAsync(request, self.id):await()
@@ -31,7 +31,7 @@ function ChannelBehaviour.Prototype.deleteChannelAsync<T>(self: Channel<T>): asy
 
 		self:sync(response)
 
-		return self
+		return self :: T
 	end)
 end
 
@@ -41,8 +41,8 @@ end
 	Generally bots should not use this route. However, if a bot is responding to a command and expects the computation to
 	take a few seconds, this endpoint may be called to let the user know that the bot is processing their message.
 ]]
-function ChannelBehaviour.Prototype.triggerTypingIndicatorAsync<T>(self: Channel<T>): async.Async<nil>
-	return async.new(function()
+function ChannelBehaviour.Prototype.triggerTypingIndicatorAsync<T>(self: Channel<T>): future.Future<string, nil>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response = rest.channel.triggerTypingIndicatorAsync(request, self.id):await()
@@ -60,8 +60,8 @@ function ChannelBehaviour.Prototype.modifyAsync<T>(
 	self: Channel<T>,
 	json: builders.channelJSON,
 	reason: string?
-): async.Async<Channel<T>>
-	return async.new(function()
+): future.Future<string, Channel<T>>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response = rest.channel.modifyChannelAsync(request, self.id, json, reason):await()

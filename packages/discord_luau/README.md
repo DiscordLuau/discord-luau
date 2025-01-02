@@ -4,36 +4,40 @@
 	</p>
 </div>
 
-## DiscordLuau - Emitter
+## DiscordLuau
 
-DicordLuau - Emitter provides a simple event emitter for DiscordLuau, it's a simple way to listen and emit events.
+the DiscordLuau package represents the core of the Discord Luau Library. It serves as the primary interface for developers to build their own Discord bots and applications.
 
 ### Installation
 
-To use DiscordLuau Emitter, add it to your project using the pesde package manager:
+To use DiscordLuau, add it to your project using the pesde package manager:
 
 ```bash
-pesde add discord_luau/emitter
+pesde add discord_luau/discord_luau
 ```
 
 ### Getting Started
 
 1. Require the library in your project:
 ```luau
-local Emitter = require("./lune_packages/emitter")
+local DiscordLuau = require("./lune_packages/discord_luau")
 ```
 
-2. Use the provided library to create a valid discord class:
+2. Use the provided luau library:
 ```luau
-local event = Emitter.new()
+local discordBot = discordLuau.Bot.new({
+	intents = builders.intents.new({ "Guilds" }):build(),
+	token = env.DISCORD_BOT_TOKEN,
+})
 
-event:listenOnce(function()
-	doSomething()
+discordBot.onAllShardsReady:listen(function()
+	print("we're up and running!")
 end)
 
-...
+discordBot:connectAsync():after(function()
+	print("Connected to Discord!")
+end)
 
-event:invoke()
 ```
 
 ### Contributing

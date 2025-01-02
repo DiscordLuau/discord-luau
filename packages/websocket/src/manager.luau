@@ -1,7 +1,7 @@
 local stdPolyfills = require("../lune_packages/std_polyfills")
 
 local emitter = require("../luau_packages/emitter")
-local async = require("../lune_packages/async")
+local future = require("../luau_packages/future")
 local logger = require("../lune_packages/logger")
 
 local apiTypes = require("../lune_packages/api_types")
@@ -16,8 +16,11 @@ local Manager = {}
 Manager.Interface = {}
 Manager.Prototype = {}
 
-function Manager.Prototype.connectAsync(self: Manager, gatewayInformation: apiTypes.GetGatewayBotResponse)
-	return async.new(function()
+function Manager.Prototype.connectAsync(
+	self: Manager,
+	gatewayInformation: apiTypes.GetGatewayBotResponse
+): future.Future<nil>
+	return future.Future.new(function()
 		local maxConcurrency = gatewayInformation.session_start_limit.max_concurrency
 
 		local websocketUrl = gatewayInformation.url

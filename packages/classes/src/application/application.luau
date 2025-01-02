@@ -8,7 +8,7 @@ local apiTypes = require("../../lune_packages/api_types")
 local state = require("../../lune_packages/state")
 local rest = require("../../lune_packages/rest")
 local builders = require("../../lune_packages/builders")
-local async = require("../../lune_packages/async")
+local future = require("../../luau_packages/future")
 
 local user = require("../user")
 local applicationBitflags = require("../bitflags/application")
@@ -31,8 +31,8 @@ Application.Prototype = {}
 function Application.Prototype.createSlashCommandAsync(
 	self: Application,
 	slashCommand: builders.interactionJSON
-): async.Async<commandObject.Command>
-	return async.new(function()
+): future.Future<string, commandObject.Command>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response =
@@ -50,8 +50,8 @@ end
 function Application.Prototype.deleteSlashCommandAsync(
 	self: Application,
 	slashCommandId: apiTypes.Snowflake
-): async.Async<nil>
-	return async.new(function()
+): future.Future<string, nil>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response =
@@ -68,8 +68,8 @@ function Application.Prototype.editSlashCommandAsync(
 	self: Application,
 	slashCommandId: apiTypes.Snowflake,
 	slashCommand: builders.interactionJSON
-): async.Async<commandObject.Command>
-	return async.new(function()
+): future.Future<string, commandObject.Command>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response =
@@ -87,8 +87,8 @@ end
 function Application.Prototype.getSlashCommandsAsync(
 	self: Application,
 	withLocalizations: boolean?
-): async.Async<{ commandObject.Command }>
-	return async.new(function()
+): future.Future<string, { commandObject.Command }>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response = rest.commands
@@ -115,8 +115,8 @@ end
 function Application.Prototype.overwriteSlashCommandsAsync(
 	self: Application,
 	slashCommands: { builders.interactionJSON }
-): async.Async<{ commandObject.Command }>
-	return async.new(function()
+): future.Future<string, { commandObject.Command }>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response =

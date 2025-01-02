@@ -3,7 +3,7 @@
 ]]
 
 local apiTypes = require("../../../lune_packages/api_types")
-local async = require("../../../lune_packages/async")
+local future = require("../../../luau_packages/future")
 local rest = require("../../../lune_packages/rest")
 local state = require("../../../lune_packages/state")
 
@@ -18,8 +18,8 @@ ThreadBehaviour.Prototype = {}
 --[[
 	Adds the current user to a thread. Also requires the thread is not archived. 
 ]]
-function ThreadBehaviour.Prototype.joinThreadAsync<T>(self: Channel<T>): async.Async<nil>
-	return async.new(function()
+function ThreadBehaviour.Prototype.joinThreadAsync<T>(self: Channel<T>): future.Future<string, nil>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response = rest.channel.joinThreadAsync(request, self.id):await()
@@ -33,8 +33,8 @@ end
 --[[
 	Adds another member to a thread. Requires the ability to send messages in the thread. Also requires the thread is not archived. 
 ]]
-function ThreadBehaviour.Prototype.addMemberToThreadAsync<T>(self: Channel<T>, userId: string): async.Async<nil>
-	return async.new(function()
+function ThreadBehaviour.Prototype.addMemberToThreadAsync<T>(self: Channel<T>, userId: string): future.Future<string, nil>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response = rest.channel.addThreadMemberAsync(request, self.id, userId):await()
@@ -48,8 +48,8 @@ end
 --[[
 	Removes the current user from a thread.
 ]]
-function ThreadBehaviour.Prototype.leaveThreadAsync<T>(self: Channel<T>): async.Async<nil>
-	return async.new(function()
+function ThreadBehaviour.Prototype.leaveThreadAsync<T>(self: Channel<T>): future.Future<string, nil>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response = rest.channel.leaveThreadAsync(request, self.id):await()
@@ -63,8 +63,8 @@ end
 --[[
 	Removes another member from a thread. Requires the ability to manage threads.
 ]]
-function ThreadBehaviour.Prototype.removeMemberAsync<T>(self: Channel<T>, userId: string): async.Async<nil>
-	return async.new(function()
+function ThreadBehaviour.Prototype.removeMemberAsync<T>(self: Channel<T>, userId: string): future.Future<string, nil>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response = rest.channel.removeThreadMemberAsync(request, self.id, userId):await()
@@ -78,8 +78,8 @@ end
 --[[
 	Removes another member from a thread. Requires the ability to manage threads.
 ]]
-function ThreadBehaviour.Prototype.removeMemberAsync<T>(self: Channel<T>, userId: string): async.Async<nil>
-	return async.new(function()
+function ThreadBehaviour.Prototype.removeMemberAsync<T>(self: Channel<T>, userId: string): future.Future<string, nil>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response = rest.channel.removeThreadMemberAsync(request, self.id, userId):await()
@@ -97,8 +97,8 @@ function ThreadBehaviour.Prototype.getMemberAsync<T>(
 	self: Channel<T>,
 	userId: string,
 	withMember: boolean?
-): async.Async<threadMember.ThreadMember>
-	return async.new(function()
+): future.Future<string, threadMember.ThreadMember>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response = rest.channel
@@ -121,8 +121,8 @@ function ThreadBehaviour.Prototype.listMembersAsync<T>(
 	withMember: boolean?,
 	after: string?,
 	limit: number?
-): async.Async<threadMember.ThreadMember>
-	return async.new(function()
+): future.Future<string, threadMember.ThreadMember>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response = rest.channel

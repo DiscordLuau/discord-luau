@@ -1,4 +1,4 @@
-local async = require("../lune_packages/async")
+local future = require("../luau_packages/future")
 local apiTypes = require("../lune_packages/api_types")
 
 local request = require("./request")
@@ -19,8 +19,8 @@ function Invite.getInviteAsync(
 		withExpiration: boolean?,
 		guildScheduledEventId: apiTypes.Snowflake?,
 	}
-): async.Async<apiTypes.GetInviteResponse>
-	return async.new(function()
+): future.Future<string, apiTypes.GetInviteResponse>
+	return future.Future.new(function()
 		instance:addUrlParam("with_counts", urlParams.withCounts and tostring(urlParams.withCounts) or (nil :: any))
 		instance:addUrlParam(
 			"with_expiration",
@@ -34,11 +34,11 @@ function Invite.getInviteAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(apiTypes.rest.endpoints.GetInvite, inviteCode))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -47,19 +47,19 @@ function Invite.deleteInviteAsync(
 	instance: request.Request,
 	inviteCode: string,
 	auditLogReason: string?
-): async.Async<apiTypes.GetInviteResponse>
-	return async.new(function()
+): future.Future<string, apiTypes.GetInviteResponse>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
 		instance:setUrl(string.format(apiTypes.rest.endpoints.DeleteInvite, inviteCode))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 

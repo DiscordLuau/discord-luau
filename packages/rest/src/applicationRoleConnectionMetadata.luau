@@ -1,4 +1,4 @@
-local async = require("../lune_packages/async")
+local future = require("../luau_packages/future")
 local apiTypes = require("../lune_packages/api_types")
 
 local request = require("./request")
@@ -14,10 +14,11 @@ local ApplicationRoleConnectionMetadata = {}
 function ApplicationRoleConnectionMetadata.getApplicationRoleConnectionMetadataRecordsAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake
-): async.Async<
+): future.Future<
+	string,
 	apiTypes.GetCurrentApplicationResponse
 >
-	return async.new(function()
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
@@ -25,11 +26,11 @@ function ApplicationRoleConnectionMetadata.getApplicationRoleConnectionMetadataR
 			string.format(apiTypes.rest.endpoints.GetApplicationRoleConnectionMetadataRecords, applicationId)
 		)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -37,10 +38,11 @@ end
 function ApplicationRoleConnectionMetadata.updateApplicationRoleConnectionMetadataRecordsAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake
-): async.Async<
+): future.Future<
+	string,
 	apiTypes.UpdateApplicationRoleConnectionMetadataRecordsResponse
 >
-	return async.new(function()
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PUT")
@@ -48,11 +50,11 @@ function ApplicationRoleConnectionMetadata.updateApplicationRoleConnectionMetada
 			string.format(apiTypes.rest.endpoints.UpdateApplicationRoleConnectionMetadataRecords, applicationId)
 		)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 

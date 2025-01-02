@@ -3,7 +3,7 @@
 ]]
 
 local apiTypes = require("../../../lune_packages/api_types")
-local async = require("../../../lune_packages/async")
+local future = require("../../../luau_packages/future")
 local rest = require("../../../lune_packages/rest")
 local state = require("../../../lune_packages/state")
 local builders = require("../../../lune_packages/builders")
@@ -31,8 +31,8 @@ function MediaBehaviour.Prototype.createPostAsync<T>(
 	self: Channel<T>,
 	post: builders.forumMediaJSON,
 	reason: string?
-): async.Async<string>
-	return async.new(function()
+): future.Future<string, string>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response =

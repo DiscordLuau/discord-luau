@@ -7,8 +7,8 @@
 local stdPolyfills = require("../../lune_packages/std_polyfills")
 
 local apiTypes = require("../../lune_packages/api_types")
-local async = require("../../lune_packages/async")
-local utilities = require("../../lune_packages/utilities")
+local future = require("../../luau_packages/future")
+local util = require("../../lune_packages/util")
 local builders = require("../../lune_packages/builders")
 local state = require("../../lune_packages/state")
 local rest = require("../../lune_packages/rest")
@@ -46,8 +46,8 @@ Message.Prototype = {}
 --[[
 	Add a reaction to a message. Requires READ_MESSAGE_HISTORY and ADD_REACTIONS permissions.
 ]]
-function Message.Prototype.addReactionAsync(self: Message, emoji: builders.emojiJSON): async.Async<nil>
-	return async.new(function()
+function Message.Prototype.addReactionAsync(self: Message, emoji: builders.emojiJSON): future.Future<string, nil>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		assert(emoji.id, `Reaction must have an id`)
@@ -65,8 +65,8 @@ end
 --[[
 	Remove the current user's reaction from a message
 ]]
-function Message.Prototype.removeOwnReactionAsync(self: Message, emoji: builders.emojiJSON): async.Async<nil>
-	return async.new(function()
+function Message.Prototype.removeOwnReactionAsync(self: Message, emoji: builders.emojiJSON): future.Future<string, nil>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		assert(emoji.id, `Reaction must have an id`)
@@ -88,8 +88,8 @@ function Message.Prototype.deleteUserReactionAsync(
 	self: Message,
 	emoji: builders.emojiJSON,
 	userId: apiTypes.Snowflake
-): async.Async<nil>
-	return async.new(function()
+): future.Future<string, nil>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		assert(emoji.id, `Reaction must have an id`)
@@ -113,8 +113,8 @@ function Message.Prototype.getReactionsAsync(
 	reactionType: apiTypes.ReactionType?,
 	afterUserId: apiTypes.Snowflake?,
 	limit: number?
-): async.Async<{ reaction.Reaction }>
-	return async.new(function()
+): future.Future<string, { reaction.Reaction }>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		assert(emoji.id, `Reaction must have an id`)
@@ -143,8 +143,8 @@ end
 --[[
 	Remove all reactions from a message. Requires MANAGE_MESSAGES permission.
 ]]
-function Message.Prototype.deleteAllReactionsAsync(self: Message): async.Async<nil>
-	return async.new(function()
+function Message.Prototype.deleteAllReactionsAsync(self: Message): future.Future<string, nil>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response = rest.message.deleteAllReactionsAsync(request, self.channelId, self.id):await()
@@ -158,8 +158,11 @@ end
 --[[
 	Remove all reactions of a specific emoji from a message. Requires MANAGE_MESSAGES permission.
 ]]
-function Message.Prototype.deleteAllReactionsForEmojiAsync(self: Message, emoji: builders.emojiJSON): async.Async<nil>
-	return async.new(function()
+function Message.Prototype.deleteAllReactionsForEmojiAsync(
+	self: Message,
+	emoji: builders.emojiJSON
+): future.Future<string, nil>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		assert(emoji.id, `Reaction must have an id`)
@@ -177,8 +180,11 @@ end
 --[[
 	Edit a message. The current user must be the author of the message.
 ]]
-function Message.Prototype.editMessageAsync(self: Message, message: builders.messageJSON): async.Async<Message>
-	return async.new(function()
+function Message.Prototype.editMessageAsync(
+	self: Message,
+	message: builders.messageJSON
+): future.Future<string, Message>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response = rest.message
@@ -203,8 +209,8 @@ end
 	Delete a message. If operating on a guild channel and trying to delete a message that was not sent by the current user,
 	this endpoint requires the MANAGE_MESSAGES permission.
 ]]
-function Message.Prototype.deleteMessageAsync(self: Message, reason: string): async.Async<Message>
-	return async.new(function()
+function Message.Prototype.deleteMessageAsync(self: Message, reason: string): future.Future<string, Message>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response = rest.message.deleteMessageAsync(request, self.channelId, self.id, reason):await()
@@ -299,7 +305,7 @@ function Message.Prototype.sync(self: Message, messageData: apiTypes.MessageObje
 	self.call = messageData.call and call.new(messageData.call)
 
 	-- cyclic dependency, can only require during runtime.
-	self.resolved = messageData.resolved and utilities.import("@classes/resolved").new(self.state, messageData.resolved)
+	self.resolved = messageData.resolved and util.import("@classes/resolved").new(self.state, messageData.resolved)
 end
 
 function Message.Interface.new(state: state.State, messageData: apiTypes.MessageObject): Message

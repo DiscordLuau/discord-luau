@@ -8,7 +8,7 @@
 local state = require("../../../lune_packages/state")
 local apiTypes = require("../../../lune_packages/api_types")
 local rest = require("../../../lune_packages/rest")
-local async = require("../../../lune_packages/async")
+local future = require("../../../luau_packages/future")
 
 local interactionBehaviour = require("../behaviour/interaction")
 
@@ -23,10 +23,10 @@ Ping.Behaviours = {
 --[[
 	acknowledge an interaction ping
 ]]
-function Ping.Prototype.pongAsync(self: Ping): async.Async<nil>
+function Ping.Prototype.pongAsync(self: Ping): future.Future<string, nil>
 	local request = self.state.rest:newRequest()
 
-	return async.new(function()
+	return future.Future.new(function()
 		local status, response = rest.interaction
 			.createInteractionResponseAsync(request, self.id, self.token, {
 				type = 1,

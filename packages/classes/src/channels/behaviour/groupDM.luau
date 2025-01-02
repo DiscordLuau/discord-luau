@@ -3,7 +3,7 @@
 ]]
 
 local apiTypes = require("../../../lune_packages/api_types")
-local async = require("../../../lune_packages/async")
+local future = require("../../../luau_packages/future")
 local rest = require("../../../lune_packages/rest")
 local state = require("../../../lune_packages/state")
 local builders = require("../../../lune_packages/builders")
@@ -23,8 +23,8 @@ function GroupDMBehaviour.Prototype.addRecipient<T>(
 	accessToken: string,
 	userId: string,
 	nickname: string
-): async.Async<nil>
-	return async.new(function()
+): future.Future<string, ()>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response = rest.channel
@@ -43,8 +43,8 @@ end
 --[[
 	Removes a recipient from a Group DM.
 ]]
-function GroupDMBehaviour.Prototype.removeRecipient<T>(self: Channel<T>, userId: string): async.Async<nil>
-	return async.new(function()
+function GroupDMBehaviour.Prototype.removeRecipient<T>(self: Channel<T>, userId: string): future.Future<string, ()>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response = rest.channel.groupDMRemoveRecipientAsync(request, self.id, userId):await()
@@ -58,7 +58,7 @@ end
 --[[
 	Sets the name of the Group DM channel.
 ]]
-function GroupDMBehaviour.Prototype.setNameAsync<T>(self: Channel<T>, groupName: string): async.Async<Channel<T>>
+function GroupDMBehaviour.Prototype.setNameAsync<T>(self: Channel<T>, groupName: string): future.Future<string, Channel<T>>
 	return self:modifyAsync({
 		name = groupName,
 	})
@@ -67,12 +67,13 @@ end
 --[[
 	Sets the icon of the Group DM channel using base64 encoded image data.
 ]]
-function GroupDMBehaviour.Prototype.setIconAsync<T>(self: Channel<T>, iconData: string): async.Async<Channel<T>>
+function GroupDMBehaviour.Prototype.setIconAsync<T>(self: Channel<T>, iconData: string): future.Future<string, Channel<T>>
 	return self:modifyAsync({
 		name = self.name,
 		icon = iconData,
 	})
 end
+
 function GroupDMBehaviour.Interface.inheritProperties(class: any, channelData: apiTypes.ChannelObject)
 	local recipientArray = {}
 
@@ -99,7 +100,7 @@ type Channel<T> = T & GroupDMBehaviour & {
 	id: string,
 	name: string,
 
-	modifyAsync: (self: Channel<T>, json: builders.channelJSON, reason: string?) -> async.Async<Channel<T>>,
+	modifyAsync: any,
 
 	sync: (...any) -> (),
 }

@@ -1,6 +1,6 @@
 local stdPolyfills = require("../lune_packages/std_polyfills")
 
-local async = require("../lune_packages/async")
+local future = require("../luau_packages/future")
 local apiTypes = require("../lune_packages/api_types")
 
 local request = require("./request")
@@ -22,8 +22,8 @@ function Message.getChannelMessagesAsync(
 		after: apiTypes.Snowflake?,
 		limit: number?,
 	}
-): async.Async<apiTypes.GetChannelMessagesResponse>
-	return async.new(function()
+): future.Future<string, apiTypes.GetChannelMessagesResponse>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:addUrlParam("around", urlParams.around and tostring(urlParams.around) or (nil :: any))
@@ -34,11 +34,11 @@ function Message.getChannelMessagesAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(apiTypes.rest.endpoints.GetChannelMessages, channelId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -47,18 +47,18 @@ function Message.getChannelMessageAsync(
 	instance: request.Request,
 	channelId: string,
 	messageId: apiTypes.Snowflake
-): async.Async<apiTypes.GetChannelMessageResponse>
-	return async.new(function()
+): future.Future<string, apiTypes.GetChannelMessageResponse>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
 		instance:setUrl(string.format(apiTypes.rest.endpoints.GetChannelMessage, channelId, messageId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -67,19 +67,19 @@ function Message.createMessageAsync(
 	instance: request.Request,
 	channelId: string,
 	jsonParams: apiTypes.CreateMessageRequest
-): async.Async<apiTypes.CreateMessageResponse>
-	return async.new(function()
+): future.Future<string, apiTypes.CreateMessageResponse>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("POST")
 		instance:setUrl(string.format(apiTypes.rest.endpoints.CreateMessage, channelId))
 		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -88,19 +88,19 @@ function Message.crosspostMessageAsync(
 	instance: request.Request,
 	channelId: string,
 	jsonParams: apiTypes.CrosspostMessageRequest
-): async.Async<apiTypes.CrosspostMessageResponse>
-	return async.new(function()
+): future.Future<string, apiTypes.CrosspostMessageResponse>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("POST")
 		instance:setUrl(string.format(apiTypes.rest.endpoints.CrosspostMessage, channelId))
 		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -111,8 +111,8 @@ function Message.createReactionAsync(
 	messageId: apiTypes.Snowflake,
 	emojiId: apiTypes.Snowflake,
 	emojiName: string
-): async.Async<apiTypes.CreateReactionResponse>
-	return async.new(function()
+): future.Future<string, apiTypes.CreateReactionResponse>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PUT")
@@ -125,11 +125,11 @@ function Message.createReactionAsync(
 			)
 		)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -140,8 +140,8 @@ function Message.deleteOwnReactionAsync(
 	messageId: apiTypes.Snowflake,
 	emojiId: apiTypes.Snowflake,
 	emojiName: string
-): async.Async<apiTypes.DeleteOwnReactionResponse>
-	return async.new(function()
+): future.Future<string, apiTypes.DeleteOwnReactionResponse>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
@@ -154,11 +154,11 @@ function Message.deleteOwnReactionAsync(
 			)
 		)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -170,8 +170,8 @@ function Message.deleteUserReactionAsync(
 	emojiId: apiTypes.Snowflake,
 	emojiName: string,
 	userId: apiTypes.Snowflake
-): async.Async<apiTypes.DeleteUserReactionResponse>
-	return async.new(function()
+): future.Future<string, apiTypes.DeleteUserReactionResponse>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
@@ -185,11 +185,11 @@ function Message.deleteUserReactionAsync(
 			)
 		)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -205,8 +205,8 @@ function Message.getReactionsAsync(
 		after: apiTypes.Snowflake?,
 		limit: number?,
 	}
-): async.Async<apiTypes.GetReactionsResponse>
-	return async.new(function()
+): future.Future<string, apiTypes.GetReactionsResponse>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:addUrlParam("type", (urlParams.type and (urlParams.type == "Normal" and 0 or 1)) or (nil :: any))
@@ -223,11 +223,11 @@ function Message.getReactionsAsync(
 			)
 		)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -236,18 +236,18 @@ function Message.deleteAllReactionsAsync(
 	instance: request.Request,
 	channelId: string,
 	messageId: apiTypes.Snowflake
-): async.Async<apiTypes.DeleteAllReactionsResponse>
-	return async.new(function()
+): future.Future<string, apiTypes.DeleteAllReactionsResponse>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
 		instance:setUrl(string.format(apiTypes.rest.endpoints.DeleteAllReactions, channelId, messageId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -258,8 +258,8 @@ function Message.deleteAllReactionsForEmojiAsync(
 	messageId: apiTypes.Snowflake,
 	emojiId: apiTypes.Snowflake,
 	emojiName: string
-): async.Async<apiTypes.DeleteAllReactionsForEmojiResponse>
-	return async.new(function()
+): future.Future<string, apiTypes.DeleteAllReactionsForEmojiResponse>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
@@ -272,11 +272,11 @@ function Message.deleteAllReactionsForEmojiAsync(
 			)
 		)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -286,19 +286,19 @@ function Message.editMessageAsync(
 	channelId: string,
 	messageId: apiTypes.Snowflake,
 	jsonParams: apiTypes.EditMessageRequest
-): async.Async<apiTypes.EditMessageResponse>
-	return async.new(function()
+): future.Future<string, apiTypes.EditMessageResponse>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PATCH")
 		instance:setUrl(string.format(apiTypes.rest.endpoints.EditMessage, channelId, messageId))
 		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -308,19 +308,19 @@ function Message.deleteMessageAsync(
 	channelId: string,
 	messageId: apiTypes.Snowflake,
 	auditLogReason: string?
-): async.Async<apiTypes.DeleteMessageResponse>
-	return async.new(function()
+): future.Future<string, apiTypes.DeleteMessageResponse>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
 		instance:setUrl(string.format(apiTypes.rest.endpoints.DeleteMessage, channelId, messageId))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -330,8 +330,8 @@ function Message.bulkDeleteMessagesAsync(
 	channelId: string,
 	jsonParams: apiTypes.BulkDeleteMessagesRequest,
 	auditLogReason: string?
-): async.Async<apiTypes.BulkDeleteMessageResponse>
-	return async.new(function()
+): future.Future<string, apiTypes.BulkDeleteMessageResponse>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
@@ -339,11 +339,11 @@ function Message.bulkDeleteMessagesAsync(
 		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 

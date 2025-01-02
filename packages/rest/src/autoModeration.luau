@@ -1,6 +1,6 @@
 local stdPolyfills = require("../lune_packages/std_polyfills")
 
-local async = require("../lune_packages/async")
+local future = require("../luau_packages/future")
 local apiTypes = require("../lune_packages/api_types")
 
 local request = require("./request")
@@ -16,20 +16,21 @@ local AutoModeration = {}
 function AutoModeration.listAutoModerationRulesForGuildAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake
-): async.Async<
+): future.Future<
+	string,
 	apiTypes.ListAutoModerationRulesForGuildResponse
 >
-	return async.new(function()
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
 		instance:setUrl(string.format(apiTypes.rest.endpoints.ListAutoModerationRulesForGuild, guildId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -38,18 +39,21 @@ function AutoModeration.getAutoModerationRulesForGuildAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	autoModerationRuleId: apiTypes.Snowflake
-): async.Async<apiTypes.GetAutoModerationRuleResponse>
-	return async.new(function()
+): future.Future<
+	string,
+	apiTypes.GetAutoModerationRuleResponse
+>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
 		instance:setUrl(string.format(apiTypes.rest.endpoints.GetAutoModerationRule, guildId, autoModerationRuleId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -59,8 +63,8 @@ function AutoModeration.createAutoModerationRuleAsync(
 	guildId: apiTypes.Snowflake,
 	jsonParams: apiTypes.CreateAutoModerationRuleRequest,
 	auditLogReason: string?
-): async.Async<apiTypes.AutomoderationRuleObject>
-	return async.new(function()
+): future.Future<string, apiTypes.AutomoderationRuleObject>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("POST")
@@ -68,11 +72,11 @@ function AutoModeration.createAutoModerationRuleAsync(
 		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -83,8 +87,8 @@ function AutoModeration.modifyAutoModerationRuleAsync(
 	autoModerationRuleId: apiTypes.Snowflake,
 	jsonParams: apiTypes.CreateAutoModerationRuleRequest,
 	auditLogReason: string?
-): async.Async<apiTypes.AutomoderationRuleObject>
-	return async.new(function()
+): future.Future<string, apiTypes.AutomoderationRuleObject>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PATCH")
@@ -92,11 +96,11 @@ function AutoModeration.modifyAutoModerationRuleAsync(
 		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -106,15 +110,19 @@ function AutoModeration.deleteAutoModerationRuleAsync(
 	guildId: apiTypes.Snowflake,
 	autoModerationRuleId: apiTypes.Snowflake,
 	auditLogReason: string?
-): async.Async<apiTypes.AutomoderationRuleObject>
-	return async.new(function()
+): future.Future<string, apiTypes.AutomoderationRuleObject>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PATCH")
 		instance:setUrl(string.format(apiTypes.rest.endpoints.DeleteAutoModerationRule, guildId, autoModerationRuleId))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		instance:executeAsync():await()
+		local response = instance:executeAsync():await()
+
+		assert(response:isOk(), response:unwrapErr())
+
+		return response:unwrapOk().body
 	end)
 end
 

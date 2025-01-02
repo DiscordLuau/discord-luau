@@ -1,4 +1,4 @@
-local async = require("../lune_packages/async")
+local future = require("../luau_packages/future")
 local apiTypes = require("../lune_packages/api_types")
 
 local request = require("./request")
@@ -11,32 +11,32 @@ local request = require("./request")
 local Gateway = {}
 
 -- https://discord.com/developers/docs/topics/gateway#get-gateway
-function Gateway.getGatewayAsync(instance: request.Request): async.Async<apiTypes.GetGatewayResponse>
-	return async.new(function()
+function Gateway.getGatewayAsync(instance: request.Request): future.Future<string, apiTypes.GetGatewayResponse>
+	return future.Future.new(function()
 		instance:setMethod("GET")
 		instance:setUrl(apiTypes.rest.endpoints.GetGateway)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
 -- https://discord.com/developers/docs/topics/gateway#get-gateway-bot
-function Gateway.getGatewayBotAsync(instance: request.Request): async.Async<apiTypes.GetGatewayBotResponse>
-	return async.new(function()
+function Gateway.getGatewayBotAsync(instance: request.Request): future.Future<string, apiTypes.GetGatewayBotResponse>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
 		instance:setUrl(apiTypes.rest.endpoints.GetGatewayBot)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 

@@ -6,7 +6,8 @@
   "luau-lsp.inlayHints.parameterTypes": true,
   "luau-lsp.inlayHints.typeHintMaxLength": 50,
   "luau-lsp.require.mode": "relativeToFile",
-  "luau-lsp.require.directoryAliases": {
-    "@lune/": "~/.lune/.typedefs/0.8.8/"
-  }
+  // "luau-lsp.fflags.override": {
+  //   "LuauTarjanChildLimit": "0",
+  //   "LuauTypeInferIterationLimit": "0",
+  // }
 }

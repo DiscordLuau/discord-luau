@@ -1,6 +1,6 @@
-local utilities = require("../lune_packages/utilities")
+local util = require("../lune_packages/util")
 
-local MessageType = table.freeze(utilities.table.reflect({
+local MessageType = table.freeze(util.table.reflect({
 	Default = 0,
 	RecipientAdd = 1,
 	RecipientRemove = 2,
@@ -40,41 +40,41 @@ local MessageType = table.freeze(utilities.table.reflect({
 	PollResult = 46,
 }))
 
-local MessageAcitvityType = table.freeze(utilities.table.reflect({
+local MessageAcitvityType = table.freeze(util.table.reflect({
 	Join = 1,
 	Spectate = 2,
 	Listen = 3,
 	JoinRequest = 5,
 }))
 
-local MessageReferenceType = table.freeze(utilities.table.reflect({
+local MessageReferenceType = table.freeze(util.table.reflect({
 	Default = 0,
 	Forward = 1,
 }))
 
-local ButtonStyle = table.freeze(utilities.table.reflect({
+local ButtonStyle = table.freeze(util.table.reflect({
 	Blurple = 1,
 	Grey = 2,
 	Green = 3,
 	Red = 4,
 }))
 
-local TextInputStyle = table.freeze(utilities.table.reflect({
+local TextInputStyle = table.freeze(util.table.reflect({
 	Short = 1,
 	Paragraph = 2,
 }))
 
-local SelectDefaultValueType = table.freeze(utilities.table.reflect({
+local SelectDefaultValueType = table.freeze(util.table.reflect({
 	Role = "role",
 	User = "user",
 	Channel = "channel",
 }))
 
-local PollLayoutType = table.freeze(utilities.table.reflect({
+local PollLayoutType = table.freeze(util.table.reflect({
 	Default = 1,
 }))
 
-local ReactionType = table.freeze(utilities.table.reflect({
+local ReactionType = table.freeze(util.table.reflect({
 	Normal = 0,
 	Burst = 1,
 }))

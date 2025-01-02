@@ -1,6 +1,6 @@
 local stdPolyfills = require("../lune_packages/std_polyfills")
 
-local async = require("../lune_packages/async")
+local future = require("../luau_packages/future")
 local apiTypes = require("../lune_packages/api_types")
 
 local request = require("./request")
@@ -16,18 +16,18 @@ local Emoji = {}
 function Emoji.listGuildEmojisAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake
-): async.Async<apiTypes.ListGuildEmojisResponse>
-	return async.new(function()
+): future.Future<string, apiTypes.ListGuildEmojisResponse>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
 		instance:setUrl(string.format(apiTypes.rest.endpoints.ListGuildEmojis, guildId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -36,18 +36,18 @@ function Emoji.getGuildEmojisAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	emojId: apiTypes.Snowflake
-): async.Async<apiTypes.GetGuildEmojiResponse>
-	return async.new(function()
+): future.Future<string, apiTypes.GetGuildEmojiResponse>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
 		instance:setUrl(string.format(apiTypes.rest.endpoints.GetGuildEmoji, guildId, emojId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -57,8 +57,8 @@ function Emoji.createGuildEmojiAsync(
 	guildId: apiTypes.Snowflake,
 	jsonParams: apiTypes.CreateGuildEmojiRequest,
 	auditLogReason: string?
-): async.Async<apiTypes.CreateGuildEmojiResponse>
-	return async.new(function()
+): future.Future<string, apiTypes.CreateGuildEmojiResponse>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("POST")
@@ -66,11 +66,11 @@ function Emoji.createGuildEmojiAsync(
 		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -81,8 +81,8 @@ function Emoji.modifyGuildEmojiAsync(
 	emojId: apiTypes.Snowflake,
 	jsonParams: apiTypes.ModifyGuildEmojiRequest,
 	auditLogReason: string?
-): async.Async<apiTypes.ModifyGuildEmojiResponse>
-	return async.new(function()
+): future.Future<string, apiTypes.ModifyGuildEmojiResponse>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PATCH")
@@ -90,11 +90,11 @@ function Emoji.modifyGuildEmojiAsync(
 		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -104,19 +104,19 @@ function Emoji.deleteGuildEmojiAsync(
 	guildId: apiTypes.Snowflake,
 	emojId: apiTypes.Snowflake,
 	auditLogReason: string?
-): async.Async<apiTypes.DeleteGuildEmojiResponse>
-	return async.new(function()
+): future.Future<string, apiTypes.DeleteGuildEmojiResponse>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
 		instance:setUrl(string.format(apiTypes.rest.endpoints.DeleteGuildEmoji, guildId, emojId))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 

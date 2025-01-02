@@ -1,10 +1,10 @@
 name = "discord_luau/snowflake"
-version = "0.1.0"
+version = "0.0.1"
 description = "Discord-Luau Snowflake - library enabling developers to query information on snowflake ids"
 license = "MIT"
 authors = ["AsyncMatrix<https://github.com/4x8Matrix>"]
 repository = "https://github.com/DiscordLuau/discord-luau"
-pesde_version = "0.5.0-rc.13"
+pesde_version = "0.5.2"
 
 includes = ["src/**", "pesde.toml", "LICENSE"]
 

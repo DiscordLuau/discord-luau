@@ -7,7 +7,7 @@
 -- selene: allow(unused_variable)
 local state = require("../../../lune_packages/state")
 local apiTypes = require("../../../lune_packages/api_types")
-local async = require("../../../lune_packages/async")
+local future = require("../../../luau_packages/future")
 local builders = require("../../../lune_packages/builders")
 local rest = require("../../../lune_packages/rest")
 
@@ -26,10 +26,10 @@ Command.Behaviours = {
 --[[
 	acknowledge an interaction and edit a response later, the user sees a loading state
 ]]
-function Command.Prototype.deferAsync(self: Command): async.Async<nil>
+function Command.Prototype.deferAsync(self: Command): future.Future<string, nil>
 	local request = self.state.rest:newRequest()
 
-	return async.new(function()
+	return future.Future.new(function()
 		local status, response = rest.interaction
 			.createInteractionResponseAsync(request, self.id, self.token, {
 				type = 5,
@@ -52,10 +52,10 @@ function Command.Prototype.messageAsync(
 	self: Command,
 	messageJSON: builders.messageJSON,
 	responseMessage: boolean?
-): async.Async<message.Message?>
+): future.Future<string, message.Message?>
 	local request = self.state.rest:newRequest()
 
-	return async.new(function()
+	return future.Future.new(function()
 		local status, response = rest.interaction
 			.createInteractionResponseAsync(request, self.id, self.token, {
 				type = self.isDeferred and 5 or 4,
@@ -76,10 +76,10 @@ end
 --[[
 	get the response created by this interaction
 ]]
-function Command.Prototype.getResponseAsync(self: Command, threadId: string?): async.Async<message.Message>
+function Command.Prototype.getResponseAsync(self: Command, threadId: string?): future.Future<string, message.Message>
 	local request = self.state.rest:newRequest()
 
-	return async.new(function()
+	return future.Future.new(function()
 		local status, response = rest.interaction
 			.getOriginalInteractionResponseAsync(request, self.id, self.token, {
 				threadId = threadId,
@@ -99,10 +99,10 @@ function Command.Prototype.editResponseAsync(
 	self: Command,
 	messageJSON: builders.messageJSON,
 	threadId: string?
-): async.Async<message.Message>
+): future.Future<string, message.Message>
 	local request = self.state.rest:newRequest()
 
-	return async.new(function()
+	return future.Future.new(function()
 		local status, response = rest.interaction
 			.editOriginalInteractionResponseAsync(request, self.id, self.token, messageJSON, {
 				threadId = threadId,
@@ -118,10 +118,10 @@ end
 --[[
 	delete the original response made by this interaction
 ]]
-function Command.Prototype.deleteResponseAsync(self: Command): async.Async<nil>
+function Command.Prototype.deleteResponseAsync(self: Command): future.Future<string, nil>
 	local request = self.state.rest:newRequest()
 
-	return async.new(function()
+	return future.Future.new(function()
 		local status, response =
 			rest.interaction.deleteOriginalInteractionResponseAsync(request, self.id, self.token):await()
 
@@ -140,7 +140,7 @@ function Command.Prototype.createFollowupResponseAsync(
 )
 	local request = self.state.rest:newRequest()
 
-	return async.new(function()
+	return future.Future.new(function()
 		local status, response = rest.interaction
 			.createFollowupMessageAsync(request, self.id, self.token, messageJSON, {
 				wait = true,
@@ -160,7 +160,7 @@ end
 function Command.Prototype.getFollowupResponseAsync(self: Command, messageId: string, threadId: string?)
 	local request = self.state.rest:newRequest()
 
-	return async.new(function()
+	return future.Future.new(function()
 		local status, response = rest.interaction
 			.getFollowupMessageAsync(request, self.id, self.token, messageId, {
 				threadId = threadId,
@@ -184,7 +184,7 @@ function Command.Prototype.editFollowupResponseAsync(
 )
 	local request = self.state.rest:newRequest()
 
-	return async.new(function()
+	return future.Future.new(function()
 		local status, response = rest.interaction
 			.editFollowupMessageAsync(request, self.id, self.token, messageId, messageJSON, {
 				threadId = threadId,
@@ -200,10 +200,10 @@ end
 --[[
 	delete the followup response created by this interaction
 ]]
-function Command.Prototype.deleteFollowupResponseAsync(self: Command, messageId: string): async.Async<nil>
+function Command.Prototype.deleteFollowupResponseAsync(self: Command, messageId: string): future.Future<string, nil>
 	local request = self.state.rest:newRequest()
 
-	return async.new(function()
+	return future.Future.new(function()
 		local status, response =
 			rest.interaction.deleteFollowupMessageAsync(request, self.id, self.token, messageId):await()
 

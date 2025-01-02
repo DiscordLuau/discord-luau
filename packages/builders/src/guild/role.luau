@@ -5,7 +5,7 @@
 ]]
 
 local apiTypes = require("../../lune_packages/api_types")
-local utilities = require("../../lune_packages/utilities")
+local util = require("../../lune_packages/util")
 
 local bit = require("../../luau_packages/bit")
 
@@ -21,7 +21,7 @@ function Role.Prototype.setName(self: Role, roleName: string): Role
 	assert(#roleName <= 100, `Role name must be less than 100 characters.`)
 	assert(#roleName > 1, `Role name must be more than 1 characters.`)
 
-	assert(utilities.validateKebabCase(roleName), `Tag name must be kebab-case.`)
+	assert(util.validateKebabCase(roleName), `Tag name must be kebab-case.`)
 
 	self.name = roleName
 

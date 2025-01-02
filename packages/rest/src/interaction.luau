@@ -1,6 +1,6 @@
 local stdPolyfills = require("../lune_packages/std_polyfills")
 
-local async = require("../lune_packages/async")
+local future = require("../luau_packages/future")
 local apiTypes = require("../lune_packages/api_types")
 
 local request = require("./request")
@@ -21,8 +21,8 @@ function Interaction.createInteractionResponseAsync(
 	urlParams: {
 		withResponse: boolean?,
 	}
-): async.Async<apiTypes.CreateInteractionResponse>
-	return async.new(function()
+): future.Future<string, apiTypes.CreateInteractionResponse>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:addUrlParam(
@@ -36,11 +36,11 @@ function Interaction.createInteractionResponseAsync(
 		)
 		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -52,8 +52,8 @@ function Interaction.getOriginalInteractionResponseAsync(
 	urlParams: {
 		threadId: apiTypes.Snowflake?,
 	}
-): async.Async<apiTypes.GetOriginalInteractionResponse>
-	return async.new(function()
+): future.Future<string, apiTypes.GetOriginalInteractionResponse>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:addUrlParam("thread_id", urlParams.threadId and tostring(urlParams.threadId) or (nil :: any))
@@ -63,11 +63,11 @@ function Interaction.getOriginalInteractionResponseAsync(
 			string.format(apiTypes.rest.endpoints.GetOriginalInteractionResponse, applicationId, interactionToken)
 		)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -80,8 +80,11 @@ function Interaction.editOriginalInteractionResponseAsync(
 	urlParams: {
 		threadId: apiTypes.Snowflake?,
 	}
-): async.Async<apiTypes.EditOriginalInteractionResponse>
-	return async.new(function()
+): future.Future<
+	string,
+	apiTypes.EditOriginalInteractionResponse
+>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:addUrlParam("thread_id", urlParams.threadId and tostring(urlParams.threadId) or (nil :: any))
@@ -92,11 +95,11 @@ function Interaction.editOriginalInteractionResponseAsync(
 		)
 		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -105,8 +108,11 @@ function Interaction.deleteOriginalInteractionResponseAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	interactionToken: string
-): async.Async<apiTypes.DeleteOriginalInteractionResponse>
-	return async.new(function()
+): future.Future<
+	string,
+	apiTypes.DeleteOriginalInteractionResponse
+>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
@@ -114,11 +120,11 @@ function Interaction.deleteOriginalInteractionResponseAsync(
 			string.format(apiTypes.rest.endpoints.DeleteOriginalInteractionResponse, applicationId, interactionToken)
 		)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -132,8 +138,8 @@ function Interaction.createFollowupMessageAsync(
 		wait: boolean?,
 		threadId: apiTypes.Snowflake?,
 	}
-): async.Async<apiTypes.CreateFollowupMessageResponse>
-	return async.new(function()
+): future.Future<string, apiTypes.CreateFollowupMessageResponse>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:addUrlParam("wait", urlParams.wait and tostring(urlParams.wait) or (nil :: any))
@@ -143,11 +149,11 @@ function Interaction.createFollowupMessageAsync(
 		instance:setUrl(string.format(apiTypes.rest.endpoints.CreateFollowupMessage, applicationId, interactionToken))
 		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -160,8 +166,8 @@ function Interaction.getFollowupMessageAsync(
 	urlParams: {
 		threadId: apiTypes.Snowflake?,
 	}
-): async.Async<apiTypes.GetFollowupMessageResponse>
-	return async.new(function()
+): future.Future<string, apiTypes.GetFollowupMessageResponse>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:addUrlParam("thread_id", urlParams.threadId and tostring(urlParams.threadId) or (nil :: any))
@@ -171,11 +177,11 @@ function Interaction.getFollowupMessageAsync(
 			string.format(apiTypes.rest.endpoints.GetFollowupMessage, applicationId, interactionToken, messageId)
 		)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -189,8 +195,8 @@ function Interaction.editFollowupMessageAsync(
 	urlParams: {
 		threadId: apiTypes.Snowflake?,
 	}
-): async.Async<apiTypes.EditFollowupMessageResponse>
-	return async.new(function()
+): future.Future<string, apiTypes.EditFollowupMessageResponse>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:addUrlParam("thread_id", urlParams.threadId and tostring(urlParams.threadId) or (nil :: any))
@@ -201,11 +207,11 @@ function Interaction.editFollowupMessageAsync(
 		)
 		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -215,8 +221,8 @@ function Interaction.deleteFollowupMessageAsync(
 	applicationId: apiTypes.Snowflake,
 	interactionToken: string,
 	messageId: apiTypes.Snowflake
-): async.Async<apiTypes.DeleteFollowupMessageResponse>
-	return async.new(function()
+): future.Future<string, apiTypes.DeleteFollowupMessageResponse>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
@@ -224,11 +230,11 @@ function Interaction.deleteFollowupMessageAsync(
 			string.format(apiTypes.rest.endpoints.DeleteFollowupMessage, applicationId, interactionToken, messageId)
 		)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 

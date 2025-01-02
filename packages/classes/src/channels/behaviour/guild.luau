@@ -4,7 +4,7 @@
 
 local apiTypes = require("../../../lune_packages/api_types")
 local stdPolyfills = require("../../../lune_packages/std_polyfills")
-local async = require("../../../lune_packages/async")
+local future = require("../../../luau_packages/future")
 local rest = require("../../../lune_packages/rest")
 local state = require("../../../lune_packages/state")
 local builders = require("../../../lune_packages/builders")
@@ -21,8 +21,8 @@ GuildBehaviour.Prototype = {}
 --[[
 	Sets the position of the channel in the guild's channel list.
 ]]
-function GuildBehaviour.Prototype.setPositionAsync<T>(self: Channel<T>, position: number): async.Async<nil>
-	return async.new(function()
+function GuildBehaviour.Prototype.setPositionAsync<T>(self: Channel<T>, position: number): future.Future<string, nil>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response = rest.guild
@@ -45,8 +45,8 @@ function GuildBehaviour.Prototype.setParentAsync<T>(
 	self: Channel<T>,
 	parentId: string,
 	syncPermissions: boolean?
-): async.Async<nil>
-	return async.new(function()
+): future.Future<string, nil>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response = rest.guild
@@ -72,8 +72,8 @@ function GuildBehaviour.Prototype.setPermissionsAsync<T>(
 	overwriteId: string,
 	allowedPermissions: builders.permissionJSON,
 	denyPermissions: builders.permissionJSON
-): async.Async<nil>
-	return async.new(function()
+): future.Future<string, nil>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response = rest.guild
@@ -99,8 +99,8 @@ function GuildBehaviour.Prototype.deletePermissionAsync<T>(
 	type: apiTypes.OverwriteType,
 	overwriteId: string,
 	reason: string?
-): async.Async<nil>
-	return async.new(function()
+): future.Future<string, nil>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response =
@@ -115,8 +115,8 @@ end
 --[[
 	Gets a list of all invites for the channel.
 ]]
-function GuildBehaviour.Prototype.getInvitesAsync<T>(self: Channel<T>): async.Async<{ invite.Invite }>
-	return async.new(function()
+function GuildBehaviour.Prototype.getInvitesAsync<T>(self: Channel<T>): future.Future<string, { invite.Invite }>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response = rest.channel.getChannelInvitesAsync(request, self.id):await()
@@ -140,8 +140,8 @@ function GuildBehaviour.Prototype.createInviteAsync<T>(
 	self: Channel<T>,
 	json: builders.inviteJSON,
 	reason: string?
-): async.Async<invite.Invite>
-	return async.new(function()
+): future.Future<string, invite.Invite>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response = rest.channel.createChannelInviteAsync(request, self.id, json, reason):await()
@@ -159,8 +159,8 @@ function GuildBehaviour.Prototype.listPublicArchivedThreadsAsync<T>(
 	self: Channel<T>,
 	before: stdPolyfills.DateTime?,
 	limit: number?
-): async.Async<string>
-	return async.new(function()
+): future.Future<string, string>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response = rest.channel
@@ -199,8 +199,8 @@ function GuildBehaviour.Prototype.listPrivateArchivedThreadsAsync<T>(
 	self: Channel<T>,
 	before: stdPolyfills.DateTime?,
 	limit: number?
-): async.Async<string>
-	return async.new(function()
+): future.Future<string, string>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response = rest.channel
@@ -239,8 +239,8 @@ function GuildBehaviour.Prototype.listJoinedPrivateArchivedThreadsAsync<T>(
 	self: Channel<T>,
 	before: stdPolyfills.DateTime?,
 	limit: number?
-): async.Async<string>
-	return async.new(function()
+): future.Future<string, string>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response = rest.channel
@@ -275,7 +275,7 @@ end
 --[[
 	Sets the name of the channel.
 ]]
-function GuildBehaviour.Prototype.setNameAsync<T>(self: Channel<T>, groupName: string): async.Async<Channel<T>>
+function GuildBehaviour.Prototype.setNameAsync<T>(self: Channel<T>, groupName: string): future.Future<string, Channel<T>>
 	return self:modifyAsync({
 		name = groupName,
 	})
@@ -311,7 +311,7 @@ type Channel<T> = T & GuildBehaviour & {
 	state: state.State,
 	id: string,
 
-	modifyAsync: (self: Channel<T>, json: builders.channelJSON, reason: string?) -> async.Async<Channel<T>>,
+	modifyAsync: any,
 
 	sync: (...any) -> (),
 }

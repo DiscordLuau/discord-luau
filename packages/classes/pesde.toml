@@ -1,10 +1,10 @@
 name = "discord_luau/classes"
-version = "0.1.0"
+version = "0.0.1"
 description = "Discord-Luau Classes - Objects that wrap around various discord API structures."
 license = "MIT"
 authors = ["AsyncMatrix <catbob614@gmail.com>"]
 repository = "https://github.com/DiscordLuau/discord-luau"
-pesde_version = "0.5.0-rc.13"
+pesde_version = "0.5.2"
 
 includes = ["src/**", "pesde.toml", "LICENSE"]
 
@@ -18,9 +18,9 @@ default = "https://github.com/daimond113/pesde-index"
 [dependencies]
 std_polyfills = { workspace = "discord_luau/std_polyfills" }
 api_types = { workspace = "discord_luau/api_types" }
-utilities = { workspace = "discord_luau/utilities" }
+util = { workspace = "discord_luau/util" }
 state = { workspace = "discord_luau/state" }
-async = { workspace = "discord_luau/async" }
+future = { name = "yetanotherclown/luau_futures", target = "luau", version = "2.0.0-beta.3" }
 builders = { workspace = "discord_luau/builders" }
 rest = { workspace = "discord_luau/rest" }
 bit = { workspace = "discord_luau/bit", target = "luau" }

@@ -1,4 +1,4 @@
-local async = require("../lune_packages/async")
+local future = require("../luau_packages/future")
 local apiTypes = require("../lune_packages/api_types")
 
 local request = require("./request")
@@ -20,8 +20,8 @@ function Poll.getAnswerVotersAsync(
 		after: number?,
 		limit: number?,
 	}
-): async.Async<apiTypes.GetAnswerVotersResponse>
-	return async.new(function()
+): future.Future<string, apiTypes.GetAnswerVotersResponse>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:addUrlParam("after", urlParams.after and tostring(urlParams.after) or (nil :: any))
@@ -30,11 +30,11 @@ function Poll.getAnswerVotersAsync(
 		instance:setMethod("GET")
 		instance:setUrl(string.format(apiTypes.rest.endpoints.GetAnswerVoters, channelId, messageId, answerId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 
@@ -43,18 +43,18 @@ function Poll.endPollAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
 	messageId: apiTypes.Snowflake
-): async.Async<apiTypes.EndPollResponse>
-	return async.new(function()
+): future.Future<string, apiTypes.EndPollResponse>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("POST")
 		instance:setUrl(string.format(apiTypes.rest.endpoints.EndPoll, channelId, messageId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.body
+		return response:unwrapOk().body
 	end)
 end
 

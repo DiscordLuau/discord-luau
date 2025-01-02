@@ -6,7 +6,7 @@
 
 local apiTypes = require("../../lune_packages/api_types")
 local rest = require("../../lune_packages/rest")
-local async = require("../../lune_packages/async")
+local future = require("../../luau_packages/future")
 local state = require("../../lune_packages/state")
 local stdPolyfills = require("../../lune_packages/std_polyfills")
 
@@ -27,8 +27,8 @@ function Member.Prototype.banAsync(
 	reason: string?,
 	deleteMessageDays: number?,
 	deleteMessageSeconds: number?
-): async.Async<nil>
-	return async.new(function()
+): future.Future<string, nil>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		assert(self.user, "user not found!")
@@ -59,8 +59,8 @@ end
 --[[
 	Removes a role from a guild member. Requires the MANAGE_ROLES permission.
 ]]
-function Member.Prototype.kickAsync(self: Member, reason: string?): async.Async<nil>
-	return async.new(function()
+function Member.Prototype.kickAsync(self: Member, reason: string?): future.Future<string, nil>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		assert(self.user, "user not found!")
@@ -88,8 +88,8 @@ function Member.Prototype.modifyAsync(
 		communicationDisabledUntil: string?,
 	},
 	reason: string?
-): async.Async<Member>
-	return async.new(function()
+): future.Future<string, Member>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		assert(self.user, "user not found!")
@@ -116,8 +116,8 @@ end
 --[[
 	will mute the user in voice channels the user is in. Returns the updated Member.
 ]]
-function Member.Prototype.muteAsync(self: Member, reason: string?): async.Async<Member>
-	return async.new(function()
+function Member.Prototype.muteAsync(self: Member, reason: string?): future.Future<string, Member>
+	return future.Future.new(function()
 		return self:modifyAsync({
 			muted = true,
 		}, reason)
@@ -127,8 +127,8 @@ end
 --[[
 	will unmute the user in voice channels the user is in. Returns the updated Member.
 ]]
-function Member.Prototype.unmuteAsync(self: Member, reason: string?): async.Async<Member>
-	return async.new(function()
+function Member.Prototype.unmuteAsync(self: Member, reason: string?): future.Future<string, Member>
+	return future.Future.new(function()
 		return self:modifyAsync({
 			muted = false,
 		}, reason)
@@ -138,8 +138,8 @@ end
 --[[
 	will deafen the user in voice channels the user is in. Returns the updated Member.
 ]]
-function Member.Prototype.deafenAsync(self: Member, reason: string?): async.Async<Member>
-	return async.new(function()
+function Member.Prototype.deafenAsync(self: Member, reason: string?): future.Future<string, Member>
+	return future.Future.new(function()
 		return self:modifyAsync({
 			deaf = true,
 		}, reason)
@@ -149,8 +149,8 @@ end
 --[[
 	will undeafen the user in voice channels the user is in. Returns the updated Member.
 ]]
-function Member.Prototype.undeafenAsync(self: Member, reason: string?): async.Async<Member>
-	return async.new(function()
+function Member.Prototype.undeafenAsync(self: Member, reason: string?): future.Future<string, Member>
+	return future.Future.new(function()
 		return self:modifyAsync({
 			deaf = false,
 		}, reason)
@@ -160,8 +160,12 @@ end
 --[[
 	will set the nickname of the user. Returns the updated Member.
 ]]
-function Member.Prototype.setNicknameAsync(self: Member, nickname: string, reason: string?): async.Async<Member>
-	return async.new(function()
+function Member.Prototype.setNicknameAsync(
+	self: Member,
+	nickname: string,
+	reason: string?
+): future.Future<string, Member>
+	return future.Future.new(function()
 		return self:modifyAsync({
 			nickname = nickname,
 		}, reason)
@@ -175,8 +179,8 @@ function Member.Prototype.setRolesAsync(
 	self: Member,
 	roles: { apiTypes.Snowflake },
 	reason: string?
-): async.Async<Member>
-	return async.new(function()
+): future.Future<string, Member>
+	return future.Future.new(function()
 		return self:modifyAsync({
 			roles = roles,
 		}, reason)
@@ -190,8 +194,8 @@ function Member.Prototype.moveVoiceChannelAsync(
 	self: Member,
 	channelId: apiTypes.Snowflake,
 	reason: string?
-): async.Async<Member>
-	return async.new(function()
+): future.Future<string, Member>
+	return future.Future.new(function()
 		return self:modifyAsync({
 			channelId = channelId,
 		}, reason)
@@ -201,8 +205,8 @@ end
 --[[
 	will disconnect the user from voice channels the user is in. Returns the updated Member.
 ]]
-function Member.Prototype.disconnectFromVoiceChannelAsync(self: Member, reason: string?): async.Async<Member>
-	return async.new(function()
+function Member.Prototype.disconnectFromVoiceChannelAsync(self: Member, reason: string?): future.Future<string, Member>
+	return future.Future.new(function()
 		return self:modifyAsync({
 			channelId = false,
 		}, reason)
@@ -216,8 +220,8 @@ function Member.Prototype.disableAsync(
 	self: Member,
 	disabledUntil: stdPolyfills.DateTime,
 	reason: string?
-): async.Async<Member>
-	return async.new(function()
+): future.Future<string, Member>
+	return future.Future.new(function()
 		return self:modifyAsync({
 			communicationDisabledUntil = disabledUntil:toIsoDate(),
 		}, reason)
@@ -227,9 +231,13 @@ end
 --[[
 	Add a role to a guild member.
 ]]
-function Member.Prototype.addRoleAsync(self: Member, roleId: apiTypes.Snowflake, reason: string?): async.Async<nil>
-	return async.new(function()
-		return async.new(function()
+function Member.Prototype.addRoleAsync(
+	self: Member,
+	roleId: apiTypes.Snowflake,
+	reason: string?
+): future.Future<string, nil>
+	return future.Future.new(function()
+		return future.Future.new(function()
 			local request = self.state.rest:newRequest()
 
 			assert(self.user, "user not found!")
@@ -247,9 +255,13 @@ end
 --[[
 	Remove a role from a guild member.
 ]]
-function Member.Prototype.removeRoleAsync(self: Member, roleId: apiTypes.Snowflake, reason: string?): async.Async<nil>
-	return async.new(function()
-		return async.new(function()
+function Member.Prototype.removeRoleAsync(
+	self: Member,
+	roleId: apiTypes.Snowflake,
+	reason: string?
+): future.Future<string, nil>
+	return future.Future.new(function()
+		return future.Future.new(function()
 			local request = self.state.rest:newRequest()
 
 			assert(self.user, "user not found!")

@@ -2,7 +2,7 @@ local stdPolyfills = require("../lune_packages/std_polyfills")
 
 local buffer = require("../luau_packages/buffer")
 local emitter = require("../luau_packages/emitter")
-local async = require("../lune_packages/async")
+local future = require("../luau_packages/future")
 local logger = require("../lune_packages/logger")
 
 local apiTypes = require("../lune_packages/api_types")
@@ -89,8 +89,8 @@ end
 --[[
 	Sends a heartbeat to the Discord Gateway API.
 ]]
-function Shard.Prototype.heartbeatAsync(self: Shard, requested: boolean?): async.Async<nil>
-	return async.new(function()
+function Shard.Prototype.heartbeatAsync(self: Shard, requested: boolean?): future.Future<string, nil>
+	return future.Future.new(function()
 		if not self.heartbeatAcknowledged and not requested then
 			self.logger:warn(`Shard '{self.shardId}' discord WebSocket state has become Zombified, reconnecting...`)
 
@@ -112,8 +112,8 @@ end
 --[[
 	Identifies the current shard with the Discord Gateway.
 ]]
-function Shard.Prototype.identifyAsync(self: Shard): async.Async<nil>
-	return async.new(function()
+function Shard.Prototype.identifyAsync(self: Shard): future.Future<string, nil>
+	return future.Future.new(function()
 		self.logger:debug(`Shard '{self.shardId}' sending identify request`)
 
 		self:sendAsync(stdPolyfills.net.jsonEncode({
@@ -143,8 +143,8 @@ end
 	Optionally, a WebSocket close code can be provided, websocket close code spec can be found here:
 	https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent/code
 ]]
-function Shard.Prototype.disconnectAsync(self: Shard, code: number?): async.Async<nil>
-	return async.new(function()
+function Shard.Prototype.disconnectAsync(self: Shard, code: number?): future.Future<string, nil>
+	return future.Future.new(function()
 		self.logger:debug(`Shard '{self.shardId}' requesting disconnect: {code or 0}`)
 
 		self.onSocketDisconnected:invoke(code)
@@ -173,8 +173,8 @@ end
 	Also responsible for spawning the thread that will be responsible for
 	receiving messages from the socket.
 ]]
-function Shard.Prototype.connectAsync(self: Shard, socketUrl: string, socketVersion: number): async.Async<nil>
-	return async.new(function()
+function Shard.Prototype.connectAsync(self: Shard, socketUrl: string, socketVersion: number): future.Future<string, nil>
+	return future.Future.new(function()
 		assert(not self.socketActive, `Shard '{self.shardId}' already connected to a socket.`)
 
 		self.logger:debug(`Shard '{self.shardId}' connecting to: {`{socketUrl}/?v={socketVersion}`}`)
@@ -239,25 +239,36 @@ end
 	Resumes a shard session if for some reason the session has either become
 	zombified, or the session has been invalidated by Discord.
 ]]
-function Shard.Prototype.resumeAsync(self: Shard): async.Async<nil>
-	return async.new(function()
+function Shard.Prototype.resumeAsync(self: Shard): future.Future<string, nil>
+	return future.Future.new(function()
 		self:connectAsync(self.sessionGateway :: string, self.socketVersion :: number)
-			:after(function()
-				self.logger:debug(`Shard '{self.shardId}' attempting to resume..`)
+			:andThen(function(response)
+				return future.Future.new(function()
+					if response:isOk() then
+						self.logger:debug(`Shard '{self.shardId}' attempting to resume..`)
 
-				self:sendAsync(stdPolyfills.net.jsonEncode({
-					["op"] = apiTypes.gateway.opcodes.Resume,
-					["d"] = {
-						["token"] = self.token,
-						["session_id"] = self.sessionId,
-						["seq"] = self.lastSequence,
-					},
-				}, true)):after(function()
-					self.logger:debug(`Shard '{self.shardId}' has resumed!`)
+						self:sendAsync(stdPolyfills.net.jsonEncode({
+							["op"] = apiTypes.gateway.opcodes.Resume,
+							["d"] = {
+								["token"] = self.token,
+								["session_id"] = self.sessionId,
+								["seq"] = self.lastSequence,
+							},
+						}, true)):andThen(function(response)
+							return future.Future.new(function()
+								if response:isOk() then
+									self.logger:debug(`Shard '{self.shardId}' has resumed!`)
+								else
+									self.logger:critical(
+										`Shard '{self.shardId}' failed to resume session: {response:unwrapErr()}`
+									)
+								end
+							end)
+						end)
+					else
+						self.logger:critical(`Shard '{self.shardId}' failed to resume session: {response:unwrapErr()}`)
+					end
 				end)
-			end)
-			:catch(function(exception)
-				self.logger:critical(`Shard '{self.shardId}' failed to resume session: {exception}`)
 			end)
 			:await()
 	end)
@@ -267,20 +278,32 @@ end
 	Closes the websocket connection and reconnects the shard.
 	This is not a re-instantiation of the shard, but a re-connection of the shard.
 ]]
-function Shard.Prototype.reconnectAsync(self: Shard): async.Async<nil>
-	return async.new(function()
+function Shard.Prototype.reconnectAsync(self: Shard): future.Future<string, nil>
+	return future.Future.new(function()
 		if self.sessionGateway then
 			self.logger:debug(`Shard '{self.shardId}' reconnection requested, reconnecting..`)
 
 			self:disconnectAsync(1012)
-				:after(function()
-					stdPolyfills.task.wait(math.random())
+				:andThen(function(response)
+					return future.Future.new(function()
+						if response:isOk() then
+							stdPolyfills.task.wait(math.random())
 
-					self:resumeAsync()
-						:after(function()
-							self.logger:debug(`Shard '{self.shardId}' reconnection successful`)
-						end)
-						:await()
+							local response = self:resumeAsync():await()
+
+							if response:isOk() then
+								self.logger:debug(`Shard '{self.shardId}' reconnection successful`)
+							else
+								self.logger:critical(
+									`Shard '{self.shardId}' failed to reconnect session: {response:unwrapErr()}`
+								)
+							end
+						else
+							self.logger:critical(
+								`Shard '{self.shardId}' failed to reconnect session: {response:unwrapErr()}`
+							)
+						end
+					end)
 				end)
 				:await()
 		else
@@ -296,10 +319,10 @@ end
 
 	NOTE: Messages are expected to be JSON encoded strings.
 ]]
-function Shard.Prototype.sendAsync(self: Shard, data: string): async.Async<nil>
+function Shard.Prototype.sendAsync(self: Shard, data: string): future.Future<string, nil>
 	local debugTraceback = debug.traceback()
 
-	return async.new(function()
+	return future.Future.new(function()
 		assert(self.socketActive and self.socketInstance, `Shard '{self.shardId}' not connected to a socket.`)
 
 		self.logger:debug(`Shard '{self.shardId}' sending message of length: {string.len(data)}`)
@@ -326,27 +349,27 @@ end
 	Any events between the initial disconnection and reconnection will not be recovered. If this is
 	what you intend to do, use `Shard:reconnectAsync` instead.
 ]]
-function Shard.Prototype.reinstantiateAsync(self: Shard): async.Async<nil>
-	return async.new(function()
+function Shard.Prototype.reinstantiateAsync(self: Shard): future.Future<string, nil>
+	return future.Future.new(function()
 		self.logger:debug(`Shard '{self.shardId}' re-instantiation requested..`)
 
-		self:disconnectAsync(1012)
-			:after(function()
+		self:disconnectAsync(1012):andThen(function()
+			return future.Future.new(function()
 				stdPolyfills.task.wait(math.random())
 
-				self:connectAsync(self.socketUrl :: string, self.socketVersion :: number)
-					:after(function()
-						self.logger:warn(
-							`Shard '{self.shardId}' re-instantiation successful, shard {self.shardId} has recovered.`
-						)
-					end)
-					:catch(function(exception1)
-						self.logger:emergency(
-							`Shard '{self.shardId}' exception during re-instantiation, shard {self.shardId} is now dead! \n{exception1}`
-						)
-					end)
+				local response = self:connectAsync(self.socketUrl :: string, self.socketVersion :: number):await()
+
+				if response:isOk() then
+					self.logger:warn(
+						`Shard '{self.shardId}' re-instantiation successful, shard {self.shardId} has recovered.`
+					)
+				else
+					self.logger:emergency(
+						`Shard '{self.shardId}' exception during re-instantiation, shard {self.shardId} is now dead! \n{response:unwrapErr()}`
+					)
+				end
 			end)
-			:await()
+		end)
 	end)
 end
 
@@ -364,15 +387,15 @@ function Shard.Prototype.heartbeatIn(self: Shard, milliseconds: number): ()
 	self.heartbeatThread = stdPolyfills.task.delay(milliseconds / 1000, function()
 		self.heartbeatThread = nil
 
-		self:heartbeatAsync()
-			:after(function()
-				self:heartbeatIn(milliseconds)
-			end)
-			:catch(function(exception)
-				self:disconnectAsync(1011):after(function()
-					self.logger:critical(`Shard '{self.shardId}' exception during heartbeat: {exception}`)
-				end)
-			end)
+		self:heartbeatAsync():andThen(function()
+			local response = self:heartbeatIn(milliseconds)
+
+			if not response:isOk() then
+				self.logger:critical(`Shard '{self.shardId}' exception during heartbeat: {response:unwrapErr()}`)
+
+				self:disconnectAsync(1011):poll()
+			end
+		end)
 	end)
 end
 
@@ -469,15 +492,13 @@ function Shard.Interface.new(settings: {
 
 			stdPolyfills.task.wait(math.random())
 
-			self:heartbeatAsync(true)
-				:after(function()
-					self:heartbeatIn(self.heartbeatInterval :: number)
-				end)
-				:catch(function(exception)
-					self:disconnectAsync(1011):after(function()
-						self.logger:critical(`Exception during initial heartbeat: {exception}`)
-					end)
-				end)
+			self:heartbeatAsync(true):andThen(function(response)
+				if not response:isOk() then
+					self.logger:critical(`Exception during initial heartbeat: {response:unwrapErr()}`)
+
+					self:disconnectAsync(1011):poll()
+				end
+			end)
 		elseif payload.op == apiTypes.gateway.opcodes.HeartbeatACK then
 			-- https://discord.com/developers/docs/topics/gateway#heartbeat-interval
 

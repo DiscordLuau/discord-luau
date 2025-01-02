@@ -1,4 +1,4 @@
-local async = require("../lune_packages/async")
+local future = require("../luau_packages/future")
 local stdPolyfills = require("../lune_packages/std_polyfills")
 local apiTypes = require("../lune_packages/api_types")
 local state = require("../lune_packages/state")
@@ -22,8 +22,8 @@ Bot.Prototype = {}
 	This function sends a request to the Discord Gateway to retrieve information
 	about the bot, such as the recommended number of shards and session start limit.
 ]]
-function Bot.Prototype.queryGatewayInformation(self: Bot): async.Async<apiTypes.GetGatewayBotResponse>
-	return async.new(function()
+function Bot.Prototype.queryGatewayInformation(self: Bot): future.Future<string, apiTypes.GetGatewayBotResponse>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response = rest.gateway.getGatewayBotAsync(request):await()
@@ -44,8 +44,8 @@ end
 
 	Returns a async that resolves when the connection is established.
 ]]
-function Bot.Prototype.connectAsync(self: Bot): async.Async<nil>
-	return async.new(function()
+function Bot.Prototype.connectAsync(self: Bot): future.Future<string, nil>
+	return future.Future.new(function()
 		local status, gatewayInformation = self:queryGatewayInformation():await()
 
 		assert(status == "Fulfilled", gatewayInformation)
@@ -303,8 +303,12 @@ end
 	Returns the classes.guild object for the given id. If with_counts is set to true, this endpoint will also return
 	approximate_member_count and approximate_presence_count for the classes.guild.
 ]]
-function Bot.Prototype.getGuildAsync(self: Bot, guildId: string, withCount: boolean?): async.Async<classes.Guild>
-	return async.new(function()
+function Bot.Prototype.getGuildAsync(
+	self: Bot,
+	guildId: string,
+	withCount: boolean?
+): future.Future<string, classes.Guild>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response = rest.guild
@@ -325,8 +329,8 @@ end
 	This function sends a request to the Discord API to retrieve information about a channel.
 	The channel type is determined by the generic type parameter T.
 ]]
-function Bot.Prototype.getChannelAsync<T>(self: Bot, channelId: string): async.Async<T>
-	return async.new(function()
+function Bot.Prototype.getChannelAsync<T>(self: Bot, channelId: string): future.Future<string, T>
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local status, response = rest.channel.getChannelAsync(request, channelId):await()
@@ -342,9 +346,9 @@ end
 
 	This function sends a request to the Discord API to retrieve information about a DM channel.
 ]]
-function Bot.Prototype.getDMChannelAsync(self: Bot, channelId: string): async.Async<classes.DM>
-	return async.new(function()
-		local _, channel = self:getChannelAsync(channelId):await()
+function Bot.Prototype.getDMChannelAsync(self: Bot, channelId: string): future.Future<string, classes.DM>
+	return future.Future.new(function()
+		local channel = self:getChannelAsync(channelId):await():unwrapOk()
 
 		return channel :: classes.DM
 	end)
@@ -355,9 +359,9 @@ end
 
 	This function sends a request to the Discord API to retrieve information about a Group DM channel.
 ]]
-function Bot.Prototype.getGroupDMChannelAsync(self: Bot, channelId: string): async.Async<classes.GroupDM>
-	return async.new(function()
-		local _, channel = self:getChannelAsync(channelId):await()
+function Bot.Prototype.getGroupDMChannelAsync(self: Bot, channelId: string): future.Future<string, classes.GroupDM>
+	return future.Future.new(function()
+		local channel = self:getChannelAsync(channelId):await():unwrapOk()
 
 		return channel :: classes.GroupDM
 	end)
@@ -368,9 +372,12 @@ end
 
 	This function sends a request to the Discord API to retrieve information about an announcement channel.
 ]]
-function Bot.Prototype.getAnnouncementChannelAsync(self: Bot, channelId: string): async.Async<classes.GuildAnnouncement>
-	return async.new(function()
-		local _, channel = self:getChannelAsync(channelId):await()
+function Bot.Prototype.getAnnouncementChannelAsync(
+	self: Bot,
+	channelId: string
+): future.Future<string, classes.GuildAnnouncement>
+	return future.Future.new(function()
+		local channel = self:getChannelAsync(channelId):await():unwrapOk()
 
 		return channel :: classes.GuildAnnouncement
 	end)
@@ -381,9 +388,12 @@ end
 
 	This function sends a request to the Discord API to retrieve information about a category channel.
 ]]
-function Bot.Prototype.getCategoryChannelAsync(self: Bot, channelId: string): async.Async<classes.GuildCategory>
-	return async.new(function()
-		local _, channel = self:getChannelAsync(channelId):await()
+function Bot.Prototype.getCategoryChannelAsync(
+	self: Bot,
+	channelId: string
+): future.Future<string, classes.GuildCategory>
+	return future.Future.new(function()
+		local channel = self:getChannelAsync(channelId):await():unwrapOk()
 
 		return channel :: classes.GuildCategory
 	end)
@@ -394,9 +404,12 @@ end
 
 	This function sends a request to the Discord API to retrieve information about a directory channel.
 ]]
-function Bot.Prototype.getDirectoryChannelAsync(self: Bot, channelId: string): async.Async<classes.GuildDirectory>
-	return async.new(function()
-		local _, channel = self:getChannelAsync(channelId):await()
+function Bot.Prototype.getDirectoryChannelAsync(
+	self: Bot,
+	channelId: string
+): future.Future<string, classes.GuildDirectory>
+	return future.Future.new(function()
+		local channel = self:getChannelAsync(channelId):await():unwrapOk()
 
 		return channel :: classes.GuildDirectory
 	end)
@@ -407,9 +420,12 @@ end
 
 	This function sends a request to the Discord API to retrieve information about a stage voice channel.
 ]]
-function Bot.Prototype.getStageVCChannelAsync(self: Bot, channelId: string): async.Async<classes.GuildStageVoice>
-	return async.new(function()
-		local _, channel = self:getChannelAsync(channelId):await()
+function Bot.Prototype.getStageVCChannelAsync(
+	self: Bot,
+	channelId: string
+): future.Future<string, classes.GuildStageVoice>
+	return future.Future.new(function()
+		local channel = self:getChannelAsync(channelId):await():unwrapOk()
 
 		return channel :: classes.GuildStageVoice
 	end)
@@ -420,9 +436,9 @@ end
 
 	This function sends a request to the Discord API to retrieve information about a text channel.
 ]]
-function Bot.Prototype.getTextChannelAsync(self: Bot, channelId: string): async.Async<classes.GuildText>
-	return async.new(function()
-		local _, channel = self:getChannelAsync(channelId):await()
+function Bot.Prototype.getTextChannelAsync(self: Bot, channelId: string): future.Future<string, classes.GuildText>
+	return future.Future.new(function()
+		local channel = self:getChannelAsync(channelId):await():unwrapOk()
 
 		return channel :: classes.GuildText
 	end)
@@ -433,9 +449,9 @@ end
 
 	This function sends a request to the Discord API to retrieve information about a voice channel.
 ]]
-function Bot.Prototype.getVoiceChannelAsync(self: Bot, channelId: string): async.Async<classes.GuildVoice>
-	return async.new(function()
-		local _, channel = self:getChannelAsync(channelId):await()
+function Bot.Prototype.getVoiceChannelAsync(self: Bot, channelId: string): future.Future<string, classes.GuildVoice>
+	return future.Future.new(function()
+		local channel = self:getChannelAsync(channelId):await():unwrapOk()
 
 		return channel :: classes.GuildVoice
 	end)
