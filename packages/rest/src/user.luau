@@ -13,7 +13,7 @@ local request = require("./request")
 local User = {}
 
 -- https://discord.com/developers/docs/resources/user#get-current-user
-function User.getCurrentUserAsync(instance: request.Request): future.Future<string, apiTypes.GetCurrentUserResponse>
+function User.getCurrentUserAsync(instance: request.Request)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -29,10 +29,7 @@ function User.getCurrentUserAsync(instance: request.Request): future.Future<stri
 end
 
 -- https://discord.com/developers/docs/resources/user#get-user
-function User.getUserAsync(
-	instance: request.Request,
-	userId: apiTypes.Snowflake
-): future.Future<string, apiTypes.GetUserResponse>
+function User.getUserAsync(instance: request.Request, userId: apiTypes.Snowflake)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -48,10 +45,7 @@ function User.getUserAsync(
 end
 
 -- https://discord.com/developers/docs/resources/user#modify-current-user
-function User.modifyCurrentUserAsync(
-	instance: request.Request,
-	jsonParams: apiTypes.ModifyCurrentUserRequest
-): future.Future<string, apiTypes.ModifyCurrentUserResponse>
+function User.modifyCurrentUserAsync(instance: request.Request, jsonParams: apiTypes.ModifyCurrentUserRequest)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -68,10 +62,7 @@ function User.modifyCurrentUserAsync(
 end
 
 -- https://discord.com/developers/docs/resources/user#modify-current-user
-function User.modifyCurrentUserAsync(
-	instance: request.Request,
-	jsonParams: apiTypes.ModifyCurrentUserRequest
-): future.Future<string, apiTypes.ModifyCurrentUserResponse>
+function User.modifyCurrentUserAsync(instance: request.Request, jsonParams: apiTypes.ModifyCurrentUserRequest)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -96,7 +87,7 @@ function User.getCurrentUserGuildsAsync(
 		limit: number?,
 		withCounts: boolean?,
 	}
-): future.Future<string, apiTypes.GetCurrentUserGuildsResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -117,10 +108,7 @@ function User.getCurrentUserGuildsAsync(
 end
 
 -- https://discord.com/developers/docs/resources/user#get-current-user-guild-member
-function User.getCurrentUserGuildMember(
-	instance: request.Request,
-	guildId: apiTypes.Snowflake
-): future.Future<string, apiTypes.GetCurrentUserGuildMemberResponse>
+function User.getCurrentUserGuildMember(instance: request.Request, guildId: apiTypes.Snowflake)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -136,10 +124,7 @@ function User.getCurrentUserGuildMember(
 end
 
 -- https://discord.com/developers/docs/resources/user#leave-guild
-function User.leaveGuildAsync(
-	instance: request.Request,
-	guildId: apiTypes.Snowflake
-): future.Future<string, apiTypes.LeaveGuildResponse>
+function User.leaveGuildAsync(instance: request.Request, guildId: apiTypes.Snowflake)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -155,10 +140,7 @@ function User.leaveGuildAsync(
 end
 
 -- https://discord.com/developers/docs/resources/user#create-dm
-function User.createDMAsync(
-	instance: request.Request,
-	jsonParams: apiTypes.CreateDMRequest
-): future.Future<string, apiTypes.CreateDMResponse>
+function User.createDMAsync(instance: request.Request, jsonParams: apiTypes.CreateDMRequest)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -175,10 +157,7 @@ function User.createDMAsync(
 end
 
 -- https://discord.com/developers/docs/resources/user#create-group-dm
-function User.createGroupDMAsync(
-	instance: request.Request,
-	jsonParams: apiTypes.CreateGroupDMRequest
-): future.Future<string, apiTypes.CreateGroupDMResponse>
+function User.createGroupDMAsync(instance: request.Request, jsonParams: apiTypes.CreateGroupDMRequest)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -195,9 +174,7 @@ function User.createGroupDMAsync(
 end
 
 -- https://discord.com/developers/docs/resources/user#get-current-user-connections
-function User.getCurrentUserConnectionsAsync(
-	instance: request.Request
-): future.Future<string, apiTypes.GetCurrentUserConnectionResponse>
+function User.getCurrentUserConnectionsAsync(instance: request.Request)
 	return future.Future.new(function()
 		instance:assertToken()
 

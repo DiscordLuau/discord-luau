@@ -21,7 +21,7 @@ function Interaction.createInteractionResponseAsync(
 	urlParams: {
 		withResponse: boolean?,
 	}
-): future.Future<string, apiTypes.CreateInteractionResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -52,7 +52,7 @@ function Interaction.getOriginalInteractionResponseAsync(
 	urlParams: {
 		threadId: apiTypes.Snowflake?,
 	}
-): future.Future<string, apiTypes.GetOriginalInteractionResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -138,7 +138,7 @@ function Interaction.createFollowupMessageAsync(
 		wait: boolean?,
 		threadId: apiTypes.Snowflake?,
 	}
-): future.Future<string, apiTypes.CreateFollowupMessageResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -166,7 +166,7 @@ function Interaction.getFollowupMessageAsync(
 	urlParams: {
 		threadId: apiTypes.Snowflake?,
 	}
-): future.Future<string, apiTypes.GetFollowupMessageResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -195,7 +195,7 @@ function Interaction.editFollowupMessageAsync(
 	urlParams: {
 		threadId: apiTypes.Snowflake?,
 	}
-): future.Future<string, apiTypes.EditFollowupMessageResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -221,7 +221,7 @@ function Interaction.deleteFollowupMessageAsync(
 	applicationId: apiTypes.Snowflake,
 	interactionToken: string,
 	messageId: apiTypes.Snowflake
-): future.Future<string, apiTypes.DeleteFollowupMessageResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 

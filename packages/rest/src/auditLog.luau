@@ -80,7 +80,7 @@ function AuditLog.getGuildAuditLogAsync(
 		limit: number?,
 		actionType: ActionType,
 	}
-): future.Future<string, apiTypes.GetGuildAuditLogResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 

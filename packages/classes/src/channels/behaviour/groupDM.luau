@@ -23,18 +23,18 @@ function GroupDMBehaviour.Prototype.addRecipient<T>(
 	accessToken: string,
 	userId: string,
 	nickname: string
-): future.Future<string, ()>
+)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = rest.channel
+		local response = rest.channel
 			.groupDMAddRecipientAsync(request, self.id, userId, {
 				access_token = accessToken,
 				nick = nickname,
 			})
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
 		return nil
 	end)
@@ -43,13 +43,13 @@ end
 --[[
 	Removes a recipient from a Group DM.
 ]]
-function GroupDMBehaviour.Prototype.removeRecipient<T>(self: Channel<T>, userId: string): future.Future<string, ()>
+function GroupDMBehaviour.Prototype.removeRecipient<T>(self: Channel<T>, userId: string)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = rest.channel.groupDMRemoveRecipientAsync(request, self.id, userId):await()
+		local response = rest.channel.groupDMRemoveRecipientAsync(request, self.id, userId):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
 		return nil
 	end)
@@ -58,7 +58,7 @@ end
 --[[
 	Sets the name of the Group DM channel.
 ]]
-function GroupDMBehaviour.Prototype.setNameAsync<T>(self: Channel<T>, groupName: string): future.Future<string, Channel<T>>
+function GroupDMBehaviour.Prototype.setNameAsync<T>(self: Channel<T>, groupName: string)
 	return self:modifyAsync({
 		name = groupName,
 	})
@@ -67,7 +67,7 @@ end
 --[[
 	Sets the icon of the Group DM channel using base64 encoded image data.
 ]]
-function GroupDMBehaviour.Prototype.setIconAsync<T>(self: Channel<T>, iconData: string): future.Future<string, Channel<T>>
+function GroupDMBehaviour.Prototype.setIconAsync<T>(self: Channel<T>, iconData: string)
 	return self:modifyAsync({
 		name = self.name,
 		icon = iconData,

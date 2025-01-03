@@ -63,7 +63,7 @@ function AutoModeration.createAutoModerationRuleAsync(
 	guildId: apiTypes.Snowflake,
 	jsonParams: apiTypes.CreateAutoModerationRuleRequest,
 	auditLogReason: string?
-): future.Future<string, apiTypes.AutomoderationRuleObject>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -87,7 +87,7 @@ function AutoModeration.modifyAutoModerationRuleAsync(
 	autoModerationRuleId: apiTypes.Snowflake,
 	jsonParams: apiTypes.CreateAutoModerationRuleRequest,
 	auditLogReason: string?
-): future.Future<string, apiTypes.AutomoderationRuleObject>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -110,7 +110,7 @@ function AutoModeration.deleteAutoModerationRuleAsync(
 	guildId: apiTypes.Snowflake,
 	autoModerationRuleId: apiTypes.Snowflake,
 	auditLogReason: string?
-): future.Future<string, apiTypes.AutomoderationRuleObject>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 

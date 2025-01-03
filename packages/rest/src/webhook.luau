@@ -18,7 +18,7 @@ function Webhook.createWebhookAsync(
 	channelId: apiTypes.Snowflake,
 	jsonParams: apiTypes.CreateWebhookRequest,
 	auditLogReason: string?
-): future.Future<string, apiTypes.CreateWebhookResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -36,10 +36,7 @@ function Webhook.createWebhookAsync(
 end
 
 -- https://discord.com/developers/docs/resources/webhook#get-channel-webhooks
-function Webhook.getChannelWebhooksAsync(
-	instance: request.Request,
-	channelId: apiTypes.Snowflake
-): future.Future<string, apiTypes.GetChannelWebhooksResponse>
+function Webhook.getChannelWebhooksAsync(instance: request.Request, channelId: apiTypes.Snowflake)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -55,10 +52,7 @@ function Webhook.getChannelWebhooksAsync(
 end
 
 -- https://discord.com/developers/docs/resources/webhook#get-guild-webhooks
-function Webhook.getGuildWebhooksAsync(
-	instance: request.Request,
-	guildId: apiTypes.Snowflake
-): future.Future<string, apiTypes.GetGuildWebhooksResponse>
+function Webhook.getGuildWebhooksAsync(instance: request.Request, guildId: apiTypes.Snowflake)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -74,10 +68,7 @@ function Webhook.getGuildWebhooksAsync(
 end
 
 -- https://discord.com/developers/docs/resources/webhook#get-webhook
-function Webhook.getWebhookAsync(
-	instance: request.Request,
-	webhookId: apiTypes.Snowflake
-): future.Future<string, apiTypes.GetWebhookResponse>
+function Webhook.getWebhookAsync(instance: request.Request, webhookId: apiTypes.Snowflake)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -97,7 +88,7 @@ function Webhook.getWebhookWithTokenAsync(
 	instance: request.Request,
 	webhookId: apiTypes.Snowflake,
 	webhookToken: string
-): future.Future<string, apiTypes.GetWebhookWithTokenResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -118,7 +109,7 @@ function Webhook.modifyWebhookAsync(
 	webhookId: apiTypes.Snowflake,
 	jsonParams: apiTypes.ModifyWebhookRequest,
 	auditLogReason: string?
-): future.Future<string, apiTypes.GetWebhookWithTokenResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -142,7 +133,7 @@ function Webhook.modifyWebhookWithTokenAsync(
 	webhookToken: string,
 	jsonParams: apiTypes.ModifyWebhookRequest,
 	auditLogReason: string?
-): future.Future<string, apiTypes.ModifyWebhookRequest>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -160,11 +151,7 @@ function Webhook.modifyWebhookWithTokenAsync(
 end
 
 -- https://discord.com/developers/docs/resources/webhook#delete-webhook
-function Webhook.deleteWebhookAsync(
-	instance: request.Request,
-	webhookId: apiTypes.Snowflake,
-	auditLogReason: string?
-): future.Future<string, apiTypes.DeleteWebhookResponse>
+function Webhook.deleteWebhookAsync(instance: request.Request, webhookId: apiTypes.Snowflake, auditLogReason: string?)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -186,7 +173,7 @@ function Webhook.deleteWebhookWithTokenAsync(
 	webhookId: apiTypes.Snowflake,
 	webhookToken: string,
 	auditLogReason: string?
-): future.Future<string, apiTypes.DeleteWebhookResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -212,7 +199,7 @@ function Webhook.executeWebhookAsync(
 		wait: boolean?,
 		threadId: apiTypes.Snowflake?,
 	}
-): future.Future<string, apiTypes.ExecuteWebhookResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -240,7 +227,7 @@ function Webhook.getWebhookMessageAsync(
 	urlParams: {
 		threadId: apiTypes.Snowflake?,
 	}
-): future.Future<string, apiTypes.GetWebhookMessageResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -267,7 +254,7 @@ function Webhook.editWebhookMessageAsync(
 	urlParams: {
 		threadId: apiTypes.Snowflake?,
 	}
-): future.Future<string, apiTypes.EditWebhookMessageResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -294,7 +281,7 @@ function Webhook.deleteWebhookMessageAsync(
 	urlParams: {
 		threadId: apiTypes.Snowflake?,
 	}
-): future.Future<string, apiTypes.DeleteWebhookMessageResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 

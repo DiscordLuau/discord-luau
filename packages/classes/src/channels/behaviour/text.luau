@@ -20,23 +20,19 @@ TextBehaviour.Prototype = {}
 	Delete multiple messages in a single request. This endpoint can only be used on guild channels and requires the
 	MANAGE_MESSAGES permission.
 ]]
-function TextBehaviour.Prototype.bulkDeleteMessagesAsync<T>(
-	self: Channel<T>,
-	messageIds: { string },
-	reason: string?
-): future.Future<string, nil>
+function TextBehaviour.Prototype.bulkDeleteMessagesAsync<T>(self: Channel<T>, messageIds: { string }, reason: string?)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = rest.message
+		local response = rest.message
 			.bulkDeleteMessagesAsync(request, self.id, {
 				messages = messageIds,
 			}, reason)
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return
+		return nil
 	end)
 end
 
@@ -49,11 +45,11 @@ function TextBehaviour.Prototype.getMessagesAsync<T>(
 	before: apiTypes.Snowflake?,
 	after: apiTypes.Snowflake?,
 	limit: number?
-): future.Future<string, { message.Message }>
+)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = rest.message
+		local response = rest.message
 			.getChannelMessagesAsync(request, self.id, {
 				around = around,
 				before = before,
@@ -62,11 +58,11 @@ function TextBehaviour.Prototype.getMessagesAsync<T>(
 			})
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
 		local messages = {}
 
-		for _, messageData in response do
+		for _, messageData in response:unwrapOk() do
 			table.insert(messages, message.new(self.state, messageData))
 		end
 
@@ -77,53 +73,47 @@ end
 --[[
 	Gets a specific message from a channel using its ID. Returns a message object.
 ]]
-function TextBehaviour.Prototype.getMessageAsync<T>(
-	self: Channel<T>,
-	messageId: apiTypes.Snowflake
-): future.Future<string, message.Message>
+function TextBehaviour.Prototype.getMessageAsync<T>(self: Channel<T>, messageId: apiTypes.Snowflake)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = rest.message.getChannelMessageAsync(request, self.id, messageId):await()
+		local response = rest.message.getChannelMessageAsync(request, self.id, messageId):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return message.new(self.state, response)
+		return message.new(self.state, response:unwrapOk())
 	end)
 end
 
 --[[
 	Creates a new message in the channel. Returns the created message object.
 ]]
-function TextBehaviour.Prototype.createMessageAsync<T>(
-	self: Channel<T>,
-	json: builders.messageJSON
-): future.Future<string, message.Message>
+function TextBehaviour.Prototype.createMessageAsync<T>(self: Channel<T>, json: builders.messageJSON)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = rest.message.createMessageAsync(request, self.id, json):await()
+		local response = rest.message.createMessageAsync(request, self.id, json):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return message.new(self.state, response)
+		return message.new(self.state, response:unwrapOk())
 	end)
 end
 
 --[[
 	Gets all pinned messages in the channel. Returns an array of message objects.
 ]]
-function TextBehaviour.Prototype.getPinnedMessagesAsync<T>(self: Channel<T>): future.Future<string, { message.Message }>
+function TextBehaviour.Prototype.getPinnedMessagesAsync<T>(self: Channel<T>)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = rest.channel.getPinnedMessagesAsync(request, self.id):await()
+		local response = rest.channel.getPinnedMessagesAsync(request, self.id):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
 		local messages = {}
 
-		for _, messageData in response do
+		for _, messageData in response:unwrapOk() do
 			table.insert(messages, message.new(self.state, messageData))
 		end
 
@@ -134,13 +124,13 @@ end
 --[[
 	Pins a message in the channel.
 ]]
-function TextBehaviour.Prototype.pinMessageAsync<T>(self: Channel<T>, messageId: string): future.Future<string, nil>
+function TextBehaviour.Prototype.pinMessageAsync<T>(self: Channel<T>, messageId: string)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = rest.channel.pinMessageAsync(request, self.id, messageId):await()
+		local response = rest.channel.pinMessageAsync(request, self.id, messageId):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
 		return nil
 	end)
@@ -149,17 +139,13 @@ end
 --[[
 	Unpins a message from the channel.
 ]]
-function TextBehaviour.Prototype.unpinMessageAsync<T>(
-	self: Channel<T>,
-	messageId: string,
-	reason: string?
-): future.Future<string, nil>
+function TextBehaviour.Prototype.unpinMessageAsync<T>(self: Channel<T>, messageId: string, reason: string?)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = rest.channel.unpinMessageAsync(request, self.id, messageId, reason):await()
+		local response = rest.channel.unpinMessageAsync(request, self.id, messageId, reason):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
 		return nil
 	end)
@@ -168,16 +154,13 @@ end
 --[[
 	Starts a new thread in the channel without an associated message. Returns the thread ID.
 ]]
-function TextBehaviour.Prototype.startThread<T>(
-	self: Channel<T>,
-	json: builders.noMessageThreadJSON
-): future.Future<string, string>
+function TextBehaviour.Prototype.startThread<T>(self: Channel<T>, json: builders.noMessageThreadJSON)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = rest.channel.startThreadWithoutMessageAsync(request, self.id, json):await()
+		local response = rest.channel.startThreadWithoutMessageAsync(request, self.id, json):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
 		return response.id
 	end)

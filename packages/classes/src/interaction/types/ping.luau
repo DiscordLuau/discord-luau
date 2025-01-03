@@ -23,11 +23,11 @@ Ping.Behaviours = {
 --[[
 	acknowledge an interaction ping
 ]]
-function Ping.Prototype.pongAsync(self: Ping): future.Future<string, nil>
+function Ping.Prototype.pongAsync(self: Ping)
 	local request = self.state.rest:newRequest()
 
 	return future.Future.new(function()
-		local status, response = rest.interaction
+		local response = rest.interaction
 			.createInteractionResponseAsync(request, self.id, self.token, {
 				type = 1,
 				data = {},
@@ -36,7 +36,9 @@ function Ping.Prototype.pongAsync(self: Ping): future.Future<string, nil>
 			})
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
+
+		return nil
 	end)
 end
 

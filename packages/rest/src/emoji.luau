@@ -13,10 +13,7 @@ local request = require("./request")
 local Emoji = {}
 
 -- https://discord.com/developers/docs/resources/emoji#list-guild-emojis
-function Emoji.listGuildEmojisAsync(
-	instance: request.Request,
-	guildId: apiTypes.Snowflake
-): future.Future<string, apiTypes.ListGuildEmojisResponse>
+function Emoji.listGuildEmojisAsync(instance: request.Request, guildId: apiTypes.Snowflake)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -32,11 +29,7 @@ function Emoji.listGuildEmojisAsync(
 end
 
 -- https://discord.com/developers/docs/resources/emoji#get-guild-emoji
-function Emoji.getGuildEmojisAsync(
-	instance: request.Request,
-	guildId: apiTypes.Snowflake,
-	emojId: apiTypes.Snowflake
-): future.Future<string, apiTypes.GetGuildEmojiResponse>
+function Emoji.getGuildEmojisAsync(instance: request.Request, guildId: apiTypes.Snowflake, emojId: apiTypes.Snowflake)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -57,7 +50,7 @@ function Emoji.createGuildEmojiAsync(
 	guildId: apiTypes.Snowflake,
 	jsonParams: apiTypes.CreateGuildEmojiRequest,
 	auditLogReason: string?
-): future.Future<string, apiTypes.CreateGuildEmojiResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -81,7 +74,7 @@ function Emoji.modifyGuildEmojiAsync(
 	emojId: apiTypes.Snowflake,
 	jsonParams: apiTypes.ModifyGuildEmojiRequest,
 	auditLogReason: string?
-): future.Future<string, apiTypes.ModifyGuildEmojiResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -104,7 +97,7 @@ function Emoji.deleteGuildEmojiAsync(
 	guildId: apiTypes.Snowflake,
 	emojId: apiTypes.Snowflake,
 	auditLogReason: string?
-): future.Future<string, apiTypes.DeleteGuildEmojiResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 

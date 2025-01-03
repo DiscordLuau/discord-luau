@@ -18,98 +18,94 @@ ThreadBehaviour.Prototype = {}
 --[[
 	Adds the current user to a thread. Also requires the thread is not archived. 
 ]]
-function ThreadBehaviour.Prototype.joinThreadAsync<T>(self: Channel<T>): future.Future<string, nil>
+function ThreadBehaviour.Prototype.joinThreadAsync<T>(self: Channel<T>)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = rest.channel.joinThreadAsync(request, self.id):await()
+		local response = rest.channel.joinThreadAsync(request, self.id):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return
+		return nil
 	end)
 end
 
 --[[
 	Adds another member to a thread. Requires the ability to send messages in the thread. Also requires the thread is not archived. 
 ]]
-function ThreadBehaviour.Prototype.addMemberToThreadAsync<T>(self: Channel<T>, userId: string): future.Future<string, nil>
+function ThreadBehaviour.Prototype.addMemberToThreadAsync<T>(self: Channel<T>, userId: string)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = rest.channel.addThreadMemberAsync(request, self.id, userId):await()
+		local response = rest.channel.addThreadMemberAsync(request, self.id, userId):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return
+		return nil
 	end)
 end
 
 --[[
 	Removes the current user from a thread.
 ]]
-function ThreadBehaviour.Prototype.leaveThreadAsync<T>(self: Channel<T>): future.Future<string, nil>
+function ThreadBehaviour.Prototype.leaveThreadAsync<T>(self: Channel<T>)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = rest.channel.leaveThreadAsync(request, self.id):await()
+		local response = rest.channel.leaveThreadAsync(request, self.id):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return
+		return nil
 	end)
 end
 
 --[[
 	Removes another member from a thread. Requires the ability to manage threads.
 ]]
-function ThreadBehaviour.Prototype.removeMemberAsync<T>(self: Channel<T>, userId: string): future.Future<string, nil>
+function ThreadBehaviour.Prototype.removeMemberAsync<T>(self: Channel<T>, userId: string)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = rest.channel.removeThreadMemberAsync(request, self.id, userId):await()
+		local response = rest.channel.removeThreadMemberAsync(request, self.id, userId):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return
+		return nil
 	end)
 end
 
 --[[
 	Removes another member from a thread. Requires the ability to manage threads.
 ]]
-function ThreadBehaviour.Prototype.removeMemberAsync<T>(self: Channel<T>, userId: string): future.Future<string, nil>
+function ThreadBehaviour.Prototype.removeMemberAsync<T>(self: Channel<T>, userId: string)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = rest.channel.removeThreadMemberAsync(request, self.id, userId):await()
+		local response = rest.channel.removeThreadMemberAsync(request, self.id, userId):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return
+		return nil
 	end)
 end
 
 --[[
 	Gets a thread member by their user ID. Can optionally include the member object.
 ]]
-function ThreadBehaviour.Prototype.getMemberAsync<T>(
-	self: Channel<T>,
-	userId: string,
-	withMember: boolean?
-): future.Future<string, threadMember.ThreadMember>
+function ThreadBehaviour.Prototype.getMemberAsync<T>(self: Channel<T>, userId: string, withMember: boolean?)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = rest.channel
+		local response = rest.channel
 			.getThreadMemberAsync(request, self.id, userId, {
 				withMember = withMember,
 			})
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return threadMember.new(self.state, self.guildId, response)
+		return threadMember.new(self.state, self.guildId, response:unwrapOk())
 	end)
 end
 
@@ -121,11 +117,11 @@ function ThreadBehaviour.Prototype.listMembersAsync<T>(
 	withMember: boolean?,
 	after: string?,
 	limit: number?
-): future.Future<string, threadMember.ThreadMember>
+)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = rest.channel
+		local response = rest.channel
 			.listThreadMembersAsync(request, self.id, {
 				withMember = withMember,
 				after = after,
@@ -133,7 +129,7 @@ function ThreadBehaviour.Prototype.listMembersAsync<T>(
 			})
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
 		local threadMembers = {}
 

@@ -11,7 +11,7 @@ local request = require("./request")
 local Gateway = {}
 
 -- https://discord.com/developers/docs/topics/gateway#get-gateway
-function Gateway.getGatewayAsync(instance: request.Request): future.Future<string, apiTypes.GetGatewayResponse>
+function Gateway.getGatewayAsync(instance: request.Request)
 	return future.Future.new(function()
 		instance:setMethod("GET")
 		instance:setUrl(apiTypes.rest.endpoints.GetGateway)
@@ -25,7 +25,7 @@ function Gateway.getGatewayAsync(instance: request.Request): future.Future<strin
 end
 
 -- https://discord.com/developers/docs/topics/gateway#get-gateway-bot
-function Gateway.getGatewayBotAsync(instance: request.Request): future.Future<string, apiTypes.GetGatewayBotResponse>
+function Gateway.getGatewayBotAsync(instance: request.Request)
 	return future.Future.new(function()
 		instance:assertToken()
 

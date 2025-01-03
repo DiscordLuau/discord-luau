@@ -105,12 +105,7 @@ end
 		- headers: A table of headers returned from the request.
 		- body: The body of the request, decoded from the response.
 ]]
-function Request.Prototype.executeAsync<Resolve>(
-	self: Request
-): future.Future<
-	string,
-	{ headers: { [string]: string }, body: Resolve }
->
+function Request.Prototype.executeAsync<Resolve>(self: Request)
 	return future.Future.new(function()
 		assert(self.method, `Request method is not set!`)
 		assert(self.url, `Request URL is not set!`)

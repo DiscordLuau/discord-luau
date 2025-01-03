@@ -27,20 +27,15 @@ ForumBehaviour.Prototype = {}
  	
  	channel:createPostAsync(builder:build()):await()
 ]]
-function ForumBehaviour.Prototype.createPostAsync<T>(
-	self: Channel<T>,
-	post: builders.forumMediaJSON,
-	reason: string?
-): future.Future<string, string>
+function ForumBehaviour.Prototype.createPostAsync<T>(self: Channel<T>, post: builders.forumMediaJSON, reason: string?)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response =
-			rest.channel.startThreadInForumOrMediaChannelAsync(request, self.id, post, reason):await()
+		local response = rest.channel.startThreadInForumOrMediaChannelAsync(request, self.id, post, reason):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response.id
+		return response:unwrapOk().id
 	end)
 end
 

@@ -25,11 +25,11 @@ Component.Behaviours = {
 --[[
 	acknowledge an interaction and edit a response later, the user sees a loading state
 ]]
-function Component.Prototype.deferAsync(self: Component): future.Future<string, nil>
+function Component.Prototype.deferAsync(self: Component)
 	local request = self.state.rest:newRequest()
 
 	return future.Future.new(function()
-		local status, response = rest.interaction
+		local response = rest.interaction
 			.createInteractionResponseAsync(request, self.id, self.token, {
 				type = 5,
 				data = {},
@@ -40,22 +40,20 @@ function Component.Prototype.deferAsync(self: Component): future.Future<string, 
 
 		self.isDeferred = true
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
+
+		return nil
 	end)
 end
 
 --[[
 	respond to this interaction with a message
 ]]
-function Component.Prototype.messageAsync(
-	self: Component,
-	messageJSON: builders.messageJSON,
-	responseMessage: boolean?
-): future.Future<string, message.Message?>
+function Component.Prototype.messageAsync(self: Component, messageJSON: builders.messageJSON, responseMessage: boolean?)
 	local request = self.state.rest:newRequest()
 
 	return future.Future.new(function()
-		local status, response = rest.interaction
+		local response = rest.interaction
 			.createInteractionResponseAsync(request, self.id, self.token, {
 				type = self.isDeferred and 5 or 4,
 				data = messageJSON,
@@ -64,10 +62,12 @@ function Component.Prototype.messageAsync(
 			})
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		if responseMessage and response.resource.message then
-			return message.new(self.state, response.resource.message)
+		local data = response:unwrapOk()
+
+		if responseMessage and data.resource.message then
+			return message.new(self.state, data.resource.message)
 		end
 	end)
 end
@@ -75,59 +75,53 @@ end
 --[[
 	get the response created by this interaction
 ]]
-function Component.Prototype.getResponseAsync(
-	self: Component,
-	threadId: string?
-): future.Future<string, message.Message>
+function Component.Prototype.getResponseAsync(self: Component, threadId: string?)
 	local request = self.state.rest:newRequest()
 
 	return future.Future.new(function()
-		local status, response = rest.interaction
+		local response = rest.interaction
 			.getOriginalInteractionResponseAsync(request, self.id, self.token, {
 				threadId = threadId,
 			})
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return message.new(self.state, response)
+		return message.new(self.state, response:unwrapOk())
 	end)
 end
 
 --[[
 	edit the response made by this interaction
 ]]
-function Component.Prototype.editResponseAsync(
-	self: Component,
-	messageJSON: builders.messageJSON,
-	threadId: string?
-): future.Future<string, message.Message>
+function Component.Prototype.editResponseAsync(self: Component, messageJSON: builders.messageJSON, threadId: string?)
 	local request = self.state.rest:newRequest()
 
 	return future.Future.new(function()
-		local status, response = rest.interaction
+		local response = rest.interaction
 			.editOriginalInteractionResponseAsync(request, self.id, self.token, messageJSON, {
 				threadId = threadId,
 			})
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return message.new(self.state, response)
+		return message.new(self.state, response:unwrapOk())
 	end)
 end
 
 --[[
 	delete the original response made by this interaction
 ]]
-function Component.Prototype.deleteResponseAsync(self: Component): future.Future<string, nil>
+function Component.Prototype.deleteResponseAsync(self: Component)
 	local request = self.state.rest:newRequest()
 
 	return future.Future.new(function()
-		local status, response =
-			rest.interaction.deleteOriginalInteractionResponseAsync(request, self.id, self.token):await()
+		local response = rest.interaction.deleteOriginalInteractionResponseAsync(request, self.id, self.token):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
+
+		return nil
 	end)
 end
 
@@ -143,16 +137,16 @@ function Component.Prototype.createFollowupResponseAsync(
 	local request = self.state.rest:newRequest()
 
 	return future.Future.new(function()
-		local status, response = rest.interaction
+		local response = rest.interaction
 			.createFollowupMessageAsync(request, self.id, self.token, messageJSON, {
 				wait = true,
 				threadId = threadId,
 			})
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return message.new(self.state, response)
+		return message.new(self.state, response:unwrapOk())
 	end)
 end
 
@@ -163,15 +157,15 @@ function Component.Prototype.getFollowupResponseAsync(self: Component, messageId
 	local request = self.state.rest:newRequest()
 
 	return future.Future.new(function()
-		local status, response = rest.interaction
+		local response = rest.interaction
 			.getFollowupMessageAsync(request, self.id, self.token, messageId, {
 				threadId = threadId,
 			})
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return message.new(self.state, response)
+		return message.new(self.state, response:unwrapOk())
 	end)
 end
 
@@ -187,29 +181,30 @@ function Component.Prototype.editFollowupResponseAsync(
 	local request = self.state.rest:newRequest()
 
 	return future.Future.new(function()
-		local status, response = rest.interaction
+		local response = rest.interaction
 			.editFollowupMessageAsync(request, self.id, self.token, messageId, messageJSON, {
 				threadId = threadId,
 			})
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return message.new(self.state, response)
+		return message.new(self.state, response:unwrapOk())
 	end)
 end
 
 --[[
 	delete the followup response created by this interaction
 ]]
-function Component.Prototype.deleteFollowupResponseAsync(self: Component, messageId: string): future.Future<string, nil>
+function Component.Prototype.deleteFollowupResponseAsync(self: Component, messageId: string)
 	local request = self.state.rest:newRequest()
 
 	return future.Future.new(function()
-		local status, response =
-			rest.interaction.deleteFollowupMessageAsync(request, self.id, self.token, messageId):await()
+		local response = rest.interaction.deleteFollowupMessageAsync(request, self.id, self.token, messageId):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
+
+		return nil
 	end)
 end
 

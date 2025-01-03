@@ -20,7 +20,7 @@ function Poll.getAnswerVotersAsync(
 		after: number?,
 		limit: number?,
 	}
-): future.Future<string, apiTypes.GetAnswerVotersResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -39,11 +39,7 @@ function Poll.getAnswerVotersAsync(
 end
 
 -- https://discord.com/developers/docs/resources/poll#end-poll
-function Poll.endPollAsync(
-	instance: request.Request,
-	channelId: apiTypes.Snowflake,
-	messageId: apiTypes.Snowflake
-): future.Future<string, apiTypes.EndPollResponse>
+function Poll.endPollAsync(instance: request.Request, channelId: apiTypes.Snowflake, messageId: apiTypes.Snowflake)
 	return future.Future.new(function()
 		instance:assertToken()
 

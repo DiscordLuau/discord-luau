@@ -19,7 +19,7 @@ function Invite.getInviteAsync(
 		withExpiration: boolean?,
 		guildScheduledEventId: apiTypes.Snowflake?,
 	}
-): future.Future<string, apiTypes.GetInviteResponse>
+)
 	return future.Future.new(function()
 		instance:addUrlParam("with_counts", urlParams.withCounts and tostring(urlParams.withCounts) or (nil :: any))
 		instance:addUrlParam(
@@ -43,11 +43,7 @@ function Invite.getInviteAsync(
 end
 
 -- https://discord.com/developers/docs/resources/invite#delete-invite
-function Invite.deleteInviteAsync(
-	instance: request.Request,
-	inviteCode: string,
-	auditLogReason: string?
-): future.Future<string, apiTypes.GetInviteResponse>
+function Invite.deleteInviteAsync(instance: request.Request, inviteCode: string, auditLogReason: string?)
 	return future.Future.new(function()
 		instance:assertToken()
 

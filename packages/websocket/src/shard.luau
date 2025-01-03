@@ -89,7 +89,7 @@ end
 --[[
 	Sends a heartbeat to the Discord Gateway API.
 ]]
-function Shard.Prototype.heartbeatAsync(self: Shard, requested: boolean?): future.Future<string, nil>
+function Shard.Prototype.heartbeatAsync(self: Shard, requested: boolean?)
 	return future.Future.new(function()
 		if not self.heartbeatAcknowledged and not requested then
 			self.logger:warn(`Shard '{self.shardId}' discord WebSocket state has become Zombified, reconnecting...`)
@@ -112,7 +112,7 @@ end
 --[[
 	Identifies the current shard with the Discord Gateway.
 ]]
-function Shard.Prototype.identifyAsync(self: Shard): future.Future<string, nil>
+function Shard.Prototype.identifyAsync(self: Shard)
 	return future.Future.new(function()
 		self.logger:debug(`Shard '{self.shardId}' sending identify request`)
 
@@ -143,7 +143,7 @@ end
 	Optionally, a WebSocket close code can be provided, websocket close code spec can be found here:
 	https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent/code
 ]]
-function Shard.Prototype.disconnectAsync(self: Shard, code: number?): future.Future<string, nil>
+function Shard.Prototype.disconnectAsync(self: Shard, code: number?)
 	return future.Future.new(function()
 		self.logger:debug(`Shard '{self.shardId}' requesting disconnect: {code or 0}`)
 
@@ -173,7 +173,7 @@ end
 	Also responsible for spawning the thread that will be responsible for
 	receiving messages from the socket.
 ]]
-function Shard.Prototype.connectAsync(self: Shard, socketUrl: string, socketVersion: number): future.Future<string, nil>
+function Shard.Prototype.connectAsync(self: Shard, socketUrl: string, socketVersion: number)
 	return future.Future.new(function()
 		assert(not self.socketActive, `Shard '{self.shardId}' already connected to a socket.`)
 
@@ -239,7 +239,7 @@ end
 	Resumes a shard session if for some reason the session has either become
 	zombified, or the session has been invalidated by Discord.
 ]]
-function Shard.Prototype.resumeAsync(self: Shard): future.Future<string, nil>
+function Shard.Prototype.resumeAsync(self: Shard)
 	return future.Future.new(function()
 		self:connectAsync(self.sessionGateway :: string, self.socketVersion :: number)
 			:andThen(function(response)
@@ -278,7 +278,7 @@ end
 	Closes the websocket connection and reconnects the shard.
 	This is not a re-instantiation of the shard, but a re-connection of the shard.
 ]]
-function Shard.Prototype.reconnectAsync(self: Shard): future.Future<string, nil>
+function Shard.Prototype.reconnectAsync(self: Shard)
 	return future.Future.new(function()
 		if self.sessionGateway then
 			self.logger:debug(`Shard '{self.shardId}' reconnection requested, reconnecting..`)
@@ -319,7 +319,7 @@ end
 
 	NOTE: Messages are expected to be JSON encoded strings.
 ]]
-function Shard.Prototype.sendAsync(self: Shard, data: string): future.Future<string, nil>
+function Shard.Prototype.sendAsync(self: Shard, data: string)
 	local debugTraceback = debug.traceback()
 
 	return future.Future.new(function()
@@ -349,7 +349,7 @@ end
 	Any events between the initial disconnection and reconnection will not be recovered. If this is
 	what you intend to do, use `Shard:reconnectAsync` instead.
 ]]
-function Shard.Prototype.reinstantiateAsync(self: Shard): future.Future<string, nil>
+function Shard.Prototype.reinstantiateAsync(self: Shard)
 	return future.Future.new(function()
 		self.logger:debug(`Shard '{self.shardId}' re-instantiation requested..`)
 

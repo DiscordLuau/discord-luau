@@ -22,30 +22,30 @@ Role.Prototype = {}
 --[[
 	Delete a guild role. Requires the MANAGE_ROLES permission. 
 ]]
-function Role.Prototype.deleteAsync(self: Role, reason: string?): future.Future<string, nil>
+function Role.Prototype.deleteAsync(self: Role, reason: string?)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = rest.guild.deleteGuildRoleAsync(request, self.guildId, self.id, reason):await()
+		local response = rest.guild.deleteGuildRoleAsync(request, self.guildId, self.id, reason):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return
+		return nil
 	end)
 end
 
 --[[
 	Modify a guild role. Requires the MANAGE_ROLES permission. Returns the updated role on success.
 ]]
-function Role.Prototype.modifyAsync(self: Role, json: builders.roleJSON, reason: string?): future.Future<string, Role>
+function Role.Prototype.modifyAsync(self: Role, json: builders.roleJSON, reason: string?)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = rest.guild.modifyGuildRoleAsync(request, self.guildId, self.id, json, reason):await()
+		local response = rest.guild.modifyGuildRoleAsync(request, self.guildId, self.id, json, reason):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		self:sync(response)
+		self:sync(response:unwrapOk())
 
 		return self
 	end)
@@ -54,26 +54,22 @@ end
 --[[
 	Modify the positions of a set of role objects for the guild. Requires the MANAGE_ROLES permission. 
 ]]
-function Role.Prototype.modifyPositionAsync(
-	self: Role,
-	position: number,
-	reason: string?
-): future.Future<string, { Role }>
+function Role.Prototype.modifyPositionAsync(self: Role, position: number, reason: string?)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = rest.guild
+		local response = rest.guild
 			.modifyGuildRolePositionsAsync(request, self.guildId, {
 				id = self.id,
 				position = position,
 			}, reason)
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
 		local guildRoles = {}
 
-		for _, roleData in response do
+		for _, roleData in response:unwrapOk() do
 			table.insert(guildRoles, Role.Interface.new(self.state, self.guildId, roleData))
 		end
 
@@ -84,7 +80,7 @@ end
 --[[
 	Sets the name of the role.
 ]]
-function Role.Prototype.setNameAsync(self: Role, name: string, reason: string?): future.Future<string, Role>
+function Role.Prototype.setNameAsync(self: Role, name: string, reason: string?)
 	return self:modifyAsync({
 		name = name,
 	}, reason)
@@ -93,11 +89,7 @@ end
 --[[
 	Adds a permission to the role's current permission set.
 ]]
-function Role.Prototype.addPermissionAsync(
-	self: Role,
-	permission: apiTypes.Permissions,
-	reason: string?
-): future.Future<string, Role>
+function Role.Prototype.addPermissionAsync(self: Role, permission: apiTypes.Permissions, reason: string?)
 	local permissionBuilder = builders.permission.fromPermissions(self.permissions:toList())
 
 	permissionBuilder:addPermission(permission)
@@ -110,11 +102,7 @@ end
 --[[
 	Removes a permission from the role's current permission set.
 ]]
-function Role.Prototype.removePermissionAsync(
-	self: Role,
-	permission: apiTypes.Permissions,
-	reason: string?
-): future.Future<string, Role>
+function Role.Prototype.removePermissionAsync(self: Role, permission: apiTypes.Permissions, reason: string?)
 	local permissionBuilder = builders.permission.fromPermissions(self.permissions:toList())
 
 	permissionBuilder:removePermission(permission)
@@ -127,7 +115,7 @@ end
 --[[
 	Sets the color of the role.
 ]]
-function Role.Prototype.setColorAsync(self: Role, color: number, reason: string?): future.Future<string, Role>
+function Role.Prototype.setColorAsync(self: Role, color: number, reason: string?)
 	return self:modifyAsync({
 		color = color,
 	}, reason)
@@ -136,7 +124,7 @@ end
 --[[
 	Sets whether the role should be displayed separately in the member list.
 ]]
-function Role.Prototype.setHoistedAsync(self: Role, hoisted: boolean, reason: string?): future.Future<string, Role>
+function Role.Prototype.setHoistedAsync(self: Role, hoisted: boolean, reason: string?)
 	return self:modifyAsync({
 		hoist = hoisted,
 	}, reason)
@@ -145,7 +133,7 @@ end
 --[[
 	Sets the icon image for the role.
 ]]
-function Role.Prototype.setIconAsync(self: Role, iconData: string, reason: string?): future.Future<string, Role>
+function Role.Prototype.setIconAsync(self: Role, iconData: string, reason: string?)
 	return self:modifyAsync({
 		icon = iconData,
 	}, reason)
@@ -154,7 +142,7 @@ end
 --[[
 	Sets the unicode emoji for the role.
 ]]
-function Role.Prototype.setEmojiAsync(self: Role, emoji: string, reason: string?): future.Future<string, Role>
+function Role.Prototype.setEmojiAsync(self: Role, emoji: string, reason: string?)
 	return self:modifyAsync({
 		emoji = emoji,
 	}, reason)
@@ -163,15 +151,12 @@ end
 --[[
 	Sets the role to be mentionable through the @ mention.
 ]]
-function Role.Prototype.setMentionableAsync(
-	self: Role,
-	mentionable: boolean,
-	reason: string?
-): future.Future<string, Role>
+function Role.Prototype.setMentionableAsync(self: Role, mentionable: boolean, reason: string?)
 	return self:modifyAsync({
 		mentionable = mentionable,
 	}, reason)
 end
+
 function Role.Prototype.sync(self: Role, roleData: apiTypes.GuildRoleObject)
 	local tagArray = {}
 

@@ -21,18 +21,18 @@ GuildBehaviour.Prototype = {}
 --[[
 	Sets the position of the channel in the guild's channel list.
 ]]
-function GuildBehaviour.Prototype.setPositionAsync<T>(self: Channel<T>, position: number): future.Future<string, nil>
+function GuildBehaviour.Prototype.setPositionAsync<T>(self: Channel<T>, position: number)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = rest.guild
+		local response = rest.guild
 			.modifyGuildChannelPositionsAsync(request, self.guildId, {
 				id = self.id,
 				position = position,
 			})
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
 		return nil
 	end)
@@ -41,15 +41,11 @@ end
 --[[
 	Sets the parent category of the channel and optionally syncs permissions with the parent.
 ]]
-function GuildBehaviour.Prototype.setParentAsync<T>(
-	self: Channel<T>,
-	parentId: string,
-	syncPermissions: boolean?
-): future.Future<string, nil>
+function GuildBehaviour.Prototype.setParentAsync<T>(self: Channel<T>, parentId: string, syncPermissions: boolean?)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = rest.guild
+		local response = rest.guild
 			.modifyGuildChannelPositionsAsync(request, self.guildId, {
 				id = self.id,
 				lock_permissions = syncPermissions,
@@ -57,7 +53,7 @@ function GuildBehaviour.Prototype.setParentAsync<T>(
 			})
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
 		return nil
 	end)
@@ -72,11 +68,11 @@ function GuildBehaviour.Prototype.setPermissionsAsync<T>(
 	overwriteId: string,
 	allowedPermissions: builders.permissionJSON,
 	denyPermissions: builders.permissionJSON
-): future.Future<string, nil>
+)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = rest.guild
+		local response = rest.guild
 			.modifyGuildChannelPositionsAsync(request, self.guildId, {
 				type = apiTypes.guild.OverwriteType[type],
 				id = overwriteId,
@@ -85,7 +81,7 @@ function GuildBehaviour.Prototype.setPermissionsAsync<T>(
 			})
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
 		return nil
 	end)
@@ -99,14 +95,13 @@ function GuildBehaviour.Prototype.deletePermissionAsync<T>(
 	type: apiTypes.OverwriteType,
 	overwriteId: string,
 	reason: string?
-): future.Future<string, nil>
+)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response =
-			rest.channel.deleteChannelPermissionAsync(request, self.guildId, overwriteId, reason):await()
+		local response = rest.channel.deleteChannelPermissionAsync(request, self.guildId, overwriteId, reason):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
 		return nil
 	end)
@@ -115,17 +110,17 @@ end
 --[[
 	Gets a list of all invites for the channel.
 ]]
-function GuildBehaviour.Prototype.getInvitesAsync<T>(self: Channel<T>): future.Future<string, { invite.Invite }>
+function GuildBehaviour.Prototype.getInvitesAsync<T>(self: Channel<T>)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = rest.channel.getChannelInvitesAsync(request, self.id):await()
+		local response = rest.channel.getChannelInvitesAsync(request, self.id):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
 		local invites = {}
 
-		for _, inviteData in response do
+		for _, inviteData in response:unwrapOk() do
 			table.insert(invites, invite.new(self.state, inviteData))
 		end
 
@@ -136,19 +131,15 @@ end
 --[[
 	Creates a new invite for the channel.
 ]]
-function GuildBehaviour.Prototype.createInviteAsync<T>(
-	self: Channel<T>,
-	json: builders.inviteJSON,
-	reason: string?
-): future.Future<string, invite.Invite>
+function GuildBehaviour.Prototype.createInviteAsync<T>(self: Channel<T>, json: builders.inviteJSON, reason: string?)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = rest.channel.createChannelInviteAsync(request, self.id, json, reason):await()
+		local response = rest.channel.createChannelInviteAsync(request, self.id, json, reason):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return invite.new(self.state, response)
+		return invite.new(self.state, response:unwrapOk())
 	end)
 end
 
@@ -159,30 +150,31 @@ function GuildBehaviour.Prototype.listPublicArchivedThreadsAsync<T>(
 	self: Channel<T>,
 	before: stdPolyfills.DateTime?,
 	limit: number?
-): future.Future<string, string>
+)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = rest.channel
+		local response = rest.channel
 			.listPublicArchivedThreadsAsync(request, self.id, {
 				before = before and before:toIsoDate() or nil,
 				limit = limit,
 			})
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
+		local data = response:unwrapOk()
 		local returnedValue = {
 			threads = {},
 			members = {},
-			hasMore = response.has_more,
+			hasMore = data.has_more,
 		}
 
-		for _, threadData in next, response.threads do
+		for _, threadData in next, data.threads do
 			table.insert(returnedValue.threads, threadData.id)
 		end
 
-		for _, threadMemberData in next, response.members do
+		for _, threadMemberData in next, data.members do
 			local member = threadMember.new(self.state, self.guildId, threadMemberData)
 
 			table.insert(returnedValue.members, member)
@@ -199,30 +191,31 @@ function GuildBehaviour.Prototype.listPrivateArchivedThreadsAsync<T>(
 	self: Channel<T>,
 	before: stdPolyfills.DateTime?,
 	limit: number?
-): future.Future<string, string>
+)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = rest.channel
+		local response = rest.channel
 			.listPrivateArchivedThreadsAsync(request, self.id, {
 				before = before and before:toIsoDate() or nil,
 				limit = limit,
 			})
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
+		local data = response:unwrapOk()
 		local returnedValue = {
 			threads = {},
 			members = {},
-			hasMore = response.has_more,
+			hasMore = data.has_more,
 		}
 
-		for _, threadData in next, response.threads do
+		for _, threadData in next, data.threads do
 			table.insert(returnedValue.threads, threadData.id)
 		end
 
-		for _, threadMemberData in next, response.members do
+		for _, threadMemberData in next, data.members do
 			local member = threadMember.new(self.state, self.guildId, threadMemberData)
 
 			table.insert(returnedValue.members, member)
@@ -239,30 +232,31 @@ function GuildBehaviour.Prototype.listJoinedPrivateArchivedThreadsAsync<T>(
 	self: Channel<T>,
 	before: stdPolyfills.DateTime?,
 	limit: number?
-): future.Future<string, string>
+)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = rest.channel
+		local response = rest.channel
 			.listJoinedPrivateArchivedThreadsAsync(request, self.id, {
 				before = before and before:toIsoDate() or nil,
 				limit = limit,
 			})
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
+		local data = response:unwrapOk()
 		local returnedValue = {
 			threads = {},
 			members = {},
-			hasMore = response.has_more,
+			hasMore = data.has_more,
 		}
 
-		for _, threadData in next, response.threads do
+		for _, threadData in next, data.threads do
 			table.insert(returnedValue.threads, threadData.id)
 		end
 
-		for _, threadMemberData in next, response.members do
+		for _, threadMemberData in next, data.members do
 			local member = threadMember.new(self.state, self.guildId, threadMemberData)
 
 			table.insert(returnedValue.members, member)
@@ -275,7 +269,7 @@ end
 --[[
 	Sets the name of the channel.
 ]]
-function GuildBehaviour.Prototype.setNameAsync<T>(self: Channel<T>, groupName: string): future.Future<string, Channel<T>>
+function GuildBehaviour.Prototype.setNameAsync<T>(self: Channel<T>, groupName: string)
 	return self:modifyAsync({
 		name = groupName,
 	})

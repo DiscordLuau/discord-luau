@@ -28,36 +28,28 @@ Application.Prototype = {}
 
 	For testing/building commands, it's advised you use guild commands, which do not suffer the same constraints.
 ]]
-function Application.Prototype.createSlashCommandAsync(
-	self: Application,
-	slashCommand: builders.interactionJSON
-): future.Future<string, commandObject.Command>
+function Application.Prototype.createSlashCommandAsync(self: Application, slashCommand: builders.interactionJSON)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response =
-			rest.commands.createGlobalApplicationCommandAsync(request, self.id, slashCommand):await()
+		local response = rest.commands.createGlobalApplicationCommandAsync(request, self.id, slashCommand):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return commandObject.new(response)
+		return commandObject.new(response:unwrapOk())
 	end)
 end
 
 --[[
 	Delete an existing global application command.
 ]]
-function Application.Prototype.deleteSlashCommandAsync(
-	self: Application,
-	slashCommandId: apiTypes.Snowflake
-): future.Future<string, nil>
+function Application.Prototype.deleteSlashCommandAsync(self: Application, slashCommandId: apiTypes.Snowflake)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response =
-			rest.commands.deleteGlobalApplicationCommandAsync(request, self.id, slashCommandId):await()
+		local response = rest.commands.deleteGlobalApplicationCommandAsync(request, self.id, slashCommandId):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 	end)
 end
 
@@ -68,40 +60,37 @@ function Application.Prototype.editSlashCommandAsync(
 	self: Application,
 	slashCommandId: apiTypes.Snowflake,
 	slashCommand: builders.interactionJSON
-): future.Future<string, commandObject.Command>
+)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response =
+		local response =
 			rest.commands.editGlobalApplicationCommandAsync(request, self.id, slashCommandId, slashCommand):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return commandObject.new(response)
+		return commandObject.new(response:unwrapOk())
 	end)
 end
 
 --[[
 	Get a list of global application commands.
 ]]
-function Application.Prototype.getSlashCommandsAsync(
-	self: Application,
-	withLocalizations: boolean?
-): future.Future<string, { commandObject.Command }>
+function Application.Prototype.getSlashCommandsAsync(self: Application, withLocalizations: boolean?)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = rest.commands
+		local response = rest.commands
 			.getGlobalApplicationCommandsAsync(request, self.id, {
 				withLocalizations = withLocalizations,
 			})
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
 		local commands = {}
 
-		for _, commandData in response do
+		for _, commandData in response:unwrapOk() do
 			table.insert(commands, commandObject.new(commandData))
 		end
 
@@ -115,18 +104,18 @@ end
 function Application.Prototype.overwriteSlashCommandsAsync(
 	self: Application,
 	slashCommands: { builders.interactionJSON }
-): future.Future<string, { commandObject.Command }>
+)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response =
+		local response =
 			rest.commands.bulkOverwriteGlobalApplicationCommandsAsync(request, self.id, slashCommands):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
 		local commands = {}
 
-		for _, commandData in response do
+		for _, commandData in response:unwrapOk() do
 			table.insert(commands, commandObject.new(commandData))
 		end
 

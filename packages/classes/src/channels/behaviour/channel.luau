@@ -21,15 +21,15 @@ ChannelBehaviour.Prototype = {}
 	if the channel is a thread. Deleting a category does not delete its child channels; they will have their parent_id
 	removed and a Channel Update Gateway event will fire for each of them.
 ]]
-function ChannelBehaviour.Prototype.deleteChannelAsync<T>(self: Channel<T>): future.Future<string, T>
+function ChannelBehaviour.Prototype.deleteChannelAsync<T>(self: Channel<T>)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = rest.channel.deleteOrCloseChannelAsync(request, self.id):await()
+		local response = rest.channel.deleteOrCloseChannelAsync(request, self.id):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		self:sync(response)
+		self:sync(response:unwrapOk())
 
 		return self :: T
 	end)
@@ -41,13 +41,13 @@ end
 	Generally bots should not use this route. However, if a bot is responding to a command and expects the computation to
 	take a few seconds, this endpoint may be called to let the user know that the bot is processing their message.
 ]]
-function ChannelBehaviour.Prototype.triggerTypingIndicatorAsync<T>(self: Channel<T>): future.Future<string, nil>
+function ChannelBehaviour.Prototype.triggerTypingIndicatorAsync<T>(self: Channel<T>)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = rest.channel.triggerTypingIndicatorAsync(request, self.id):await()
+		local response = rest.channel.triggerTypingIndicatorAsync(request, self.id):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
 		return nil
 	end)
@@ -56,19 +56,15 @@ end
 --[[
 	Lists all private archived threads that the current user has joined. Returns thread and member information.
 ]]
-function ChannelBehaviour.Prototype.modifyAsync<T>(
-	self: Channel<T>,
-	json: builders.channelJSON,
-	reason: string?
-): future.Future<string, Channel<T>>
+function ChannelBehaviour.Prototype.modifyAsync<T>(self: Channel<T>, json: builders.channelJSON, reason: string?)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = rest.channel.modifyChannelAsync(request, self.id, json, reason):await()
+		local response = rest.channel.modifyChannelAsync(request, self.id, json, reason):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		self:sync(response)
+		self:sync(response:unwrapOk())
 
 		return self
 	end)

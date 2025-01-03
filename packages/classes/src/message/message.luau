@@ -46,61 +46,57 @@ Message.Prototype = {}
 --[[
 	Add a reaction to a message. Requires READ_MESSAGE_HISTORY and ADD_REACTIONS permissions.
 ]]
-function Message.Prototype.addReactionAsync(self: Message, emoji: builders.emojiJSON): future.Future<string, nil>
+function Message.Prototype.addReactionAsync(self: Message, emoji: builders.emojiJSON)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		assert(emoji.id, `Reaction must have an id`)
 		assert(emoji.name, `Reaction must have a name`)
 
-		local status, response =
+		local response =
 			rest.message.createReactionAsync(request, self.channelId, self.id, emoji.id, emoji.name):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return
+		return nil
 	end)
 end
 
 --[[
 	Remove the current user's reaction from a message
 ]]
-function Message.Prototype.removeOwnReactionAsync(self: Message, emoji: builders.emojiJSON): future.Future<string, nil>
+function Message.Prototype.removeOwnReactionAsync(self: Message, emoji: builders.emojiJSON)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		assert(emoji.id, `Reaction must have an id`)
 		assert(emoji.name, `Reaction must have a name`)
 
-		local status, response =
+		local response =
 			rest.message.deleteOwnReactionAsync(request, self.channelId, self.id, emoji.id, emoji.name):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return
+		return nil
 	end)
 end
 
 --[[
 	Remove another user's reaction from a message. Requires MANAGE_MESSAGES permission.
 ]]
-function Message.Prototype.deleteUserReactionAsync(
-	self: Message,
-	emoji: builders.emojiJSON,
-	userId: apiTypes.Snowflake
-): future.Future<string, nil>
+function Message.Prototype.deleteUserReactionAsync(self: Message, emoji: builders.emojiJSON, userId: apiTypes.Snowflake)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		assert(emoji.id, `Reaction must have an id`)
 		assert(emoji.name, `Reaction must have a name`)
 
-		local status, response =
+		local response =
 			rest.message.deleteUserReactionAsync(request, self.channelId, self.id, emoji.id, emoji.name, userId):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return
+		return nil
 	end)
 end
 
@@ -113,14 +109,14 @@ function Message.Prototype.getReactionsAsync(
 	reactionType: apiTypes.ReactionType?,
 	afterUserId: apiTypes.Snowflake?,
 	limit: number?
-): future.Future<string, { reaction.Reaction }>
+)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		assert(emoji.id, `Reaction must have an id`)
 		assert(emoji.name, `Reaction must have a name`)
 
-		local status, response = rest.message
+		local response = rest.message
 			.getReactionsAsync(request, self.channelId, self.id, emoji.id, emoji.name, {
 				reactionType = reactionType,
 				after = afterUserId,
@@ -128,11 +124,11 @@ function Message.Prototype.getReactionsAsync(
 			})
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
 		local users = {}
 
-		for _, userData in next, response do
+		for _, userData in next, response:unwrapOk() do
 			table.insert(users, user.new(userData))
 		end
 
@@ -143,51 +139,45 @@ end
 --[[
 	Remove all reactions from a message. Requires MANAGE_MESSAGES permission.
 ]]
-function Message.Prototype.deleteAllReactionsAsync(self: Message): future.Future<string, nil>
+function Message.Prototype.deleteAllReactionsAsync(self: Message)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = rest.message.deleteAllReactionsAsync(request, self.channelId, self.id):await()
+		local response = rest.message.deleteAllReactionsAsync(request, self.channelId, self.id):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return
+		return nil
 	end)
 end
 
 --[[
 	Remove all reactions of a specific emoji from a message. Requires MANAGE_MESSAGES permission.
 ]]
-function Message.Prototype.deleteAllReactionsForEmojiAsync(
-	self: Message,
-	emoji: builders.emojiJSON
-): future.Future<string, nil>
+function Message.Prototype.deleteAllReactionsForEmojiAsync(self: Message, emoji: builders.emojiJSON)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		assert(emoji.id, `Reaction must have an id`)
 		assert(emoji.name, `Reaction must have a name`)
 
-		local status, response =
+		local response =
 			rest.message.deleteAllReactionsForEmojiAsync(request, self.channelId, self.id, emoji.name, emoji.id):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return
+		return nil
 	end)
 end
 
 --[[
 	Edit a message. The current user must be the author of the message.
 ]]
-function Message.Prototype.editMessageAsync(
-	self: Message,
-	message: builders.messageJSON
-): future.Future<string, Message>
+function Message.Prototype.editMessageAsync(self: Message, message: builders.messageJSON)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = rest.message
+		local response = rest.message
 			.editMessageAsync(request, self.channelId, self.id, {
 				content = message.content,
 				embeds = message.embeds,
@@ -198,9 +188,9 @@ function Message.Prototype.editMessageAsync(
 			})
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		self:sync(response)
+		self:sync(response:unwrapOk())
 
 		return self
 	end)
@@ -209,15 +199,15 @@ end
 	Delete a message. If operating on a guild channel and trying to delete a message that was not sent by the current user,
 	this endpoint requires the MANAGE_MESSAGES permission.
 ]]
-function Message.Prototype.deleteMessageAsync(self: Message, reason: string): future.Future<string, Message>
+function Message.Prototype.deleteMessageAsync(self: Message, reason: string)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = rest.message.deleteMessageAsync(request, self.channelId, self.id, reason):await()
+		local response = rest.message.deleteMessageAsync(request, self.channelId, self.id, reason):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return
+		return nil
 	end)
 end
 

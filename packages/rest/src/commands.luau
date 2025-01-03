@@ -17,10 +17,7 @@ function Commands.getGlobalApplicationCommandsAsync(
 	urlParams: {
 		withLocalizations: boolean?,
 	}
-): future.Future<
-	string,
-	apiTypes.GetGlobalApplicationCommandsResponse
->
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -42,10 +39,7 @@ function Commands.createGlobalApplicationCommandAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	jsonParams: apiTypes.CreateGlobalApplicationCommandRequest
-): future.Future<
-	string,
-	apiTypes.CreateGlobalApplicationCommandResponse
->
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -66,7 +60,7 @@ function Commands.getGlobalApplicationCommandAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	commandId: apiTypes.Snowflake
-): future.Future<string, apiTypes.GetGlobalApplicationCommandResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -87,10 +81,7 @@ function Commands.editGlobalApplicationCommandAsync(
 	applicationId: apiTypes.Snowflake,
 	commandId: apiTypes.Snowflake,
 	jsonParams: apiTypes.EditGlobalApplicationCommandRequest
-): future.Future<
-	string,
-	apiTypes.EditGlobalApplicationCommandResponse
->
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -111,10 +102,7 @@ function Commands.deleteGlobalApplicationCommandAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	commandId: apiTypes.Snowflake
-): future.Future<
-	string,
-	apiTypes.DeleteGlobalApplicationCommandResponse
->
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -134,10 +122,7 @@ function Commands.bulkOverwriteGlobalApplicationCommandsAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	jsonParams: apiTypes.BulkOverwriteGlobalApplicationCommandsRequest
-): future.Future<
-	string,
-	apiTypes.BulkOverwriteGlobalApplicationCommandsResponse
->
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -161,7 +146,7 @@ function Commands.getGuildApplicationCommandsAsync(
 	urlParams: {
 		withLocalizations: boolean?,
 	}
-): future.Future<string, apiTypes.GetGuildApplicationCommandsResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -184,10 +169,7 @@ function Commands.createGuildApplicationCommandAsync(
 	applicationId: apiTypes.Snowflake,
 	guildId: apiTypes.Snowflake,
 	jsonParams: apiTypes.CreateGuildApplicationCommandRequest
-): future.Future<
-	string,
-	apiTypes.CreateGuildApplicationCommandResponse
->
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -209,7 +191,7 @@ function Commands.getGuildApplicationCommandAsync(
 	applicationId: apiTypes.Snowflake,
 	guildId: apiTypes.Snowflake,
 	commandId: apiTypes.Snowflake
-): future.Future<string, apiTypes.GetGuildApplicationCommandResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -233,7 +215,7 @@ function Commands.editGuildApplicationCommandAsync(
 	guildId: apiTypes.Snowflake,
 	commandId: apiTypes.Snowflake,
 	jsonParams: apiTypes.EditGuildApplicationCommandRequest
-): future.Future<string, apiTypes.EditGuildApplicationCommandResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -257,10 +239,7 @@ function Commands.deleteGuildApplicationCommandAsync(
 	applicationId: apiTypes.Snowflake,
 	guildId: apiTypes.Snowflake,
 	commandId: apiTypes.Snowflake
-): future.Future<
-	string,
-	apiTypes.DeleteGuildApplicationCommandResponse
->
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -283,10 +262,7 @@ function Commands.bulkOverwriteGuildApplicationCommandsAsync(
 	applicationId: apiTypes.Snowflake,
 	guildId: apiTypes.Snowflake,
 	jsonParams: apiTypes.BulkOverwriteGuildApplicationCommandsRequest
-): future.Future<
-	string,
-	apiTypes.BulkOverwriteGuildApplicationCommandsResponse
->
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -309,10 +285,7 @@ function Commands.getGuildApplicationCommandPermissionsAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	guildId: apiTypes.Snowflake
-): future.Future<
-	string,
-	apiTypes.GetGuildApplicationCommandPermissionsResponse
->
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -335,10 +308,7 @@ function Commands.getApplicationCommandPermissionsAsync(
 	applicationId: apiTypes.Snowflake,
 	guildId: apiTypes.Snowflake,
 	commandId: apiTypes.Snowflake
-): future.Future<
-	string,
-	apiTypes.GetApplicationCommandPermissionsResponse
->
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -362,10 +332,7 @@ function Commands.editApplicationCommandPermissionsAsync(
 	guildId: apiTypes.Snowflake,
 	commandId: apiTypes.Snowflake,
 	jsonParams: apiTypes.EditApplicationCommandPermissionsRequest
-): future.Future<
-	string,
-	apiTypes.EditApplicationCommandPermissionsResponse
->
+)
 	return future.Future.new(function()
 		instance:assertToken()
 

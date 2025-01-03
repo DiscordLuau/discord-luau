@@ -22,16 +22,16 @@ Bot.Prototype = {}
 	This function sends a request to the Discord Gateway to retrieve information
 	about the bot, such as the recommended number of shards and session start limit.
 ]]
-function Bot.Prototype.queryGatewayInformation(self: Bot): future.Future<string, apiTypes.GetGatewayBotResponse>
+function Bot.Prototype.queryGatewayInformation(self: Bot)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = rest.gateway.getGatewayBotAsync(request):await()
+		local response = rest.gateway.getGatewayBotAsync(request):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return response
-	end)
+		return response:unwrapOk()
+	end) :: any
 end
 
 --[[
@@ -44,11 +44,11 @@ end
 
 	Returns a async that resolves when the connection is established.
 ]]
-function Bot.Prototype.connectAsync(self: Bot): future.Future<string, nil>
+function Bot.Prototype.connectAsync(self: Bot)
 	return future.Future.new(function()
-		local status, gatewayInformation = self:queryGatewayInformation():await()
+		local gatewayInformation = self:queryGatewayInformation():await()
 
-		assert(status == "Fulfilled", gatewayInformation)
+		assert(gatewayInformation:isOk(), gatewayInformation:unwrapErr())
 
 		self.state.webSocketManager.onAllShardsReady:listen(function(data)
 			local application = classes.application.application.new(self.state, data.payload.d.application)
@@ -294,33 +294,29 @@ function Bot.Prototype.connectAsync(self: Bot): future.Future<string, nil>
 			end
 		end)
 
-		self.state.webSocketManager:connectAsync(gatewayInformation)
+		self.state.webSocketManager:connectAsync(gatewayInformation:unwrapOk())
 		self.state.webSocketManager.onConnected:wait()
-	end)
+	end) :: any
 end
 
 --[[
 	Returns the classes.guild object for the given id. If with_counts is set to true, this endpoint will also return
 	approximate_member_count and approximate_presence_count for the classes.guild.
 ]]
-function Bot.Prototype.getGuildAsync(
-	self: Bot,
-	guildId: string,
-	withCount: boolean?
-): future.Future<string, classes.Guild>
+function Bot.Prototype.getGuildAsync(self: Bot, guildId: string, withCount: boolean?)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = rest.guild
+		local response = rest.guild
 			.getGuildAsync(request, guildId, {
 				withCounts = withCount,
 			})
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return classes.guild.guild.new(self.state, response)
-	end)
+		return classes.guild.guild.new(self.state, response:unwrapOk())
+	end) :: any
 end
 
 --[[
@@ -329,16 +325,16 @@ end
 	This function sends a request to the Discord API to retrieve information about a channel.
 	The channel type is determined by the generic type parameter T.
 ]]
-function Bot.Prototype.getChannelAsync<T>(self: Bot, channelId: string): future.Future<string, T>
+function Bot.Prototype.getChannelAsync<T>(self: Bot, channelId: string)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = rest.channel.getChannelAsync(request, channelId):await()
+		local response = rest.channel.getChannelAsync(request, channelId):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), response:unwrapErr())
 
-		return classes.channels.construct(self.state, response)
-	end)
+		return classes.channels.construct(self.state, response:unwrapOk())
+	end) :: any
 end
 
 --[[
@@ -346,12 +342,12 @@ end
 
 	This function sends a request to the Discord API to retrieve information about a DM channel.
 ]]
-function Bot.Prototype.getDMChannelAsync(self: Bot, channelId: string): future.Future<string, classes.DM>
+function Bot.Prototype.getDMChannelAsync(self: Bot, channelId: string)
 	return future.Future.new(function()
 		local channel = self:getChannelAsync(channelId):await():unwrapOk()
 
 		return channel :: classes.DM
-	end)
+	end) :: any
 end
 
 --[[
@@ -359,7 +355,7 @@ end
 
 	This function sends a request to the Discord API to retrieve information about a Group DM channel.
 ]]
-function Bot.Prototype.getGroupDMChannelAsync(self: Bot, channelId: string): future.Future<string, classes.GroupDM>
+function Bot.Prototype.getGroupDMChannelAsync(self: Bot, channelId: string)
 	return future.Future.new(function()
 		local channel = self:getChannelAsync(channelId):await():unwrapOk()
 
@@ -372,15 +368,12 @@ end
 
 	This function sends a request to the Discord API to retrieve information about an announcement channel.
 ]]
-function Bot.Prototype.getAnnouncementChannelAsync(
-	self: Bot,
-	channelId: string
-): future.Future<string, classes.GuildAnnouncement>
+function Bot.Prototype.getAnnouncementChannelAsync(self: Bot, channelId: string)
 	return future.Future.new(function()
 		local channel = self:getChannelAsync(channelId):await():unwrapOk()
 
 		return channel :: classes.GuildAnnouncement
-	end)
+	end) :: any
 end
 
 --[[
@@ -388,15 +381,12 @@ end
 
 	This function sends a request to the Discord API to retrieve information about a category channel.
 ]]
-function Bot.Prototype.getCategoryChannelAsync(
-	self: Bot,
-	channelId: string
-): future.Future<string, classes.GuildCategory>
+function Bot.Prototype.getCategoryChannelAsync(self: Bot, channelId: string)
 	return future.Future.new(function()
 		local channel = self:getChannelAsync(channelId):await():unwrapOk()
 
 		return channel :: classes.GuildCategory
-	end)
+	end) :: any
 end
 
 --[[
@@ -404,15 +394,12 @@ end
 
 	This function sends a request to the Discord API to retrieve information about a directory channel.
 ]]
-function Bot.Prototype.getDirectoryChannelAsync(
-	self: Bot,
-	channelId: string
-): future.Future<string, classes.GuildDirectory>
+function Bot.Prototype.getDirectoryChannelAsync(self: Bot, channelId: string)
 	return future.Future.new(function()
 		local channel = self:getChannelAsync(channelId):await():unwrapOk()
 
 		return channel :: classes.GuildDirectory
-	end)
+	end) :: any
 end
 
 --[[
@@ -420,15 +407,12 @@ end
 
 	This function sends a request to the Discord API to retrieve information about a stage voice channel.
 ]]
-function Bot.Prototype.getStageVCChannelAsync(
-	self: Bot,
-	channelId: string
-): future.Future<string, classes.GuildStageVoice>
+function Bot.Prototype.getStageVCChannelAsync(self: Bot, channelId: string)
 	return future.Future.new(function()
 		local channel = self:getChannelAsync(channelId):await():unwrapOk()
 
 		return channel :: classes.GuildStageVoice
-	end)
+	end) :: any
 end
 
 --[[
@@ -436,12 +420,12 @@ end
 
 	This function sends a request to the Discord API to retrieve information about a text channel.
 ]]
-function Bot.Prototype.getTextChannelAsync(self: Bot, channelId: string): future.Future<string, classes.GuildText>
+function Bot.Prototype.getTextChannelAsync(self: Bot, channelId: string)
 	return future.Future.new(function()
 		local channel = self:getChannelAsync(channelId):await():unwrapOk()
 
 		return channel :: classes.GuildText
-	end)
+	end) :: any
 end
 
 --[[
@@ -449,12 +433,12 @@ end
 
 	This function sends a request to the Discord API to retrieve information about a voice channel.
 ]]
-function Bot.Prototype.getVoiceChannelAsync(self: Bot, channelId: string): future.Future<string, classes.GuildVoice>
+function Bot.Prototype.getVoiceChannelAsync(self: Bot, channelId: string)
 	return future.Future.new(function()
 		local channel = self:getChannelAsync(channelId):await():unwrapOk()
 
 		return channel :: classes.GuildVoice
-	end)
+	end) :: any
 end
 
 function Bot.Interface.new(options: {

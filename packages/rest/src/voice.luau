@@ -13,9 +13,7 @@ local request = require("./request")
 local Voice = {}
 
 -- https://discord.com/developers/docs/resources/voice#list-voice-regions
-function Voice.listVoiceRegionsAsync(
-	instance: request.Request
-): future.Future<string, apiTypes.ListVoiceRegionsResponse>
+function Voice.listVoiceRegionsAsync(instance: request.Request)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -31,10 +29,7 @@ function Voice.listVoiceRegionsAsync(
 end
 
 -- https://discord.com/developers/docs/resources/voice#get-current-user-voice-state
-function Voice.getCurrentUserVoiceStateAsync(
-	instance: request.Request,
-	guildId: apiTypes.Snowflake
-): future.Future<string, apiTypes.GetCurrentUserVoiceStateResponse>
+function Voice.getCurrentUserVoiceStateAsync(instance: request.Request, guildId: apiTypes.Snowflake)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -54,7 +49,7 @@ function Voice.getUserVoiceStateAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	userId: apiTypes.Snowflake
-): future.Future<string, apiTypes.GetUserVoiceStateResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -74,7 +69,7 @@ function Voice.modifyCurrentUserVoiceStateAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	jsonParams: apiTypes.ModifyCurrentUserVoiceStateRequest
-): future.Future<string, apiTypes.ModifyCurrentUserVoiceStateResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -96,7 +91,7 @@ function Voice.modifyUserVoiceStateAsync(
 	guildId: apiTypes.Snowflake,
 	userId: apiTypes.Snowflake,
 	jsonParams: apiTypes.ModifyUserVoiceStateRequest
-): future.Future<string, apiTypes.ModifyUserVoiceStateResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 

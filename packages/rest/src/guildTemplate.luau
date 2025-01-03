@@ -13,10 +13,7 @@ local request = require("./request")
 local GuildTemplate = {}
 
 -- https://discord.com/developers/docs/resources/guild-template#get-guild-template
-function GuildTemplate.getGuildTemplateAsync(
-	instance: request.Request,
-	templateCode: string
-): future.Future<string, apiTypes.GetGuildTemplateResponse>
+function GuildTemplate.getGuildTemplateAsync(instance: request.Request, templateCode: string)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -56,10 +53,7 @@ function GuildTemplate.createGuildFromGuildTemplateAsync(
 end
 
 -- https://discord.com/developers/docs/resources/guild-template#get-guild-templates
-function GuildTemplate.getGuildTemplatesAsync(
-	instance: request.Request,
-	guildId: apiTypes.Snowflake
-): future.Future<string, apiTypes.GetGuildTemplatesResponse>
+function GuildTemplate.getGuildTemplatesAsync(instance: request.Request, guildId: apiTypes.Snowflake)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -79,7 +73,7 @@ function GuildTemplate.createGuildTemplateAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	jsonParams: apiTypes.CreateGuildTemplateRequest
-): future.Future<string, apiTypes.CreateGuildTemplateResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -100,7 +94,7 @@ function GuildTemplate.syncGuildTemplateAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	templateCode: string
-): future.Future<string, apiTypes.SyncGuildTemplateResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -121,7 +115,7 @@ function GuildTemplate.modifyGuildTemplateAsync(
 	guildId: apiTypes.Snowflake,
 	templateCode: string,
 	jsonParams: apiTypes.ModifyGuildTemplateRequest
-): future.Future<string, apiTypes.ModifyGuildTemplateResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -142,7 +136,7 @@ function GuildTemplate.deleteGuildTemplateAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	templateCode: string
-): future.Future<string, apiTypes.ModifyGuildTemplateResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 

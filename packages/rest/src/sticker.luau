@@ -13,10 +13,7 @@ local request = require("./request")
 local Sticker = {}
 
 -- https://discord.com/developers/docs/resources/sticker#get-sticker
-function Sticker.getStickerAsync(
-	instance: request.Request,
-	stickerId: apiTypes.Snowflake
-): future.Future<string, apiTypes.GetStickerResponse>
+function Sticker.getStickerAsync(instance: request.Request, stickerId: apiTypes.Snowflake)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -32,9 +29,7 @@ function Sticker.getStickerAsync(
 end
 
 -- https://discord.com/developers/docs/resources/sticker#list-sticker-packs
-function Sticker.listStickerPacksAsync(
-	instance: request.Request
-): future.Future<string, apiTypes.ListStickerPacksResponse>
+function Sticker.listStickerPacksAsync(instance: request.Request)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -50,10 +45,7 @@ function Sticker.listStickerPacksAsync(
 end
 
 -- https://discord.com/developers/docs/resources/sticker#list-guild-stickers
-function Sticker.listGuildStickersAsync(
-	instance: request.Request,
-	guildId: apiTypes.Snowflake
-): future.Future<string, apiTypes.ListGuildStickersResponse>
+function Sticker.listGuildStickersAsync(instance: request.Request, guildId: apiTypes.Snowflake)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -73,7 +65,7 @@ function Sticker.getGuildStickerAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	stickerId: apiTypes.Snowflake
-): future.Future<string, apiTypes.GetGuildStickerResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -94,7 +86,7 @@ function Sticker.createGuildStickerAsync(
 	guildId: apiTypes.Snowflake,
 	jsonParams: apiTypes.CreateGuildStickerRequest,
 	auditLogReason: string?
-): future.Future<string, apiTypes.GetGuildStickerResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -118,7 +110,7 @@ function Sticker.modifyGuildStickerAsync(
 	stickerId: apiTypes.Snowflake,
 	jsonParams: apiTypes.ModifyGuildStickerRequest,
 	auditLogReason: string?
-): future.Future<string, apiTypes.ModifyGuildStickerResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -141,7 +133,7 @@ function Sticker.deleteGuildStickerAsync(
 	guildId: apiTypes.Snowflake,
 	stickerId: apiTypes.Snowflake,
 	auditLogReason: string?
-): future.Future<string, apiTypes.DeleteGuildStickerResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 

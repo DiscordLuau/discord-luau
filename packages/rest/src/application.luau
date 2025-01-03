@@ -13,10 +13,7 @@ local request = require("./request")
 local Application = {}
 
 -- https://discord.com/developers/docs/resources/application#get-current-application
-function Application.getCurrentApplicationAsync(
-	instance: request.Request,
-	applicationId: apiTypes.Snowflake
-): future.Future<string, apiTypes.GetCurrentApplicationResponse>
+function Application.getCurrentApplicationAsync(instance: request.Request, applicationId: apiTypes.Snowflake)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -36,7 +33,7 @@ function Application.editCurrentApplicationAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	jsonParams: apiTypes.EditCurrentApplicationRequest
-): future.Future<string, nil>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 

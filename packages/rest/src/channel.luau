@@ -13,10 +13,7 @@ local request = require("./request")
 local Channel = {}
 
 -- https://discord.com/developers/docs/resources/channel#get-channel
-function Channel.getChannelAsync(
-	instance: request.Request,
-	channelId: apiTypes.Snowflake
-): future.Future<string, apiTypes.GetChannelResponse>
+function Channel.getChannelAsync(instance: request.Request, channelId: apiTypes.Snowflake)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -37,7 +34,7 @@ function Channel.modifyChannelAsync(
 	channelId: apiTypes.Snowflake,
 	jsonParams: apiTypes.ModifyChannelRequest,
 	auditLogReason: string?
-): future.Future<string, apiTypes.ModifyChannelResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -59,7 +56,7 @@ function Channel.deleteOrCloseChannelAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
 	auditLogReason: string?
-): future.Future<string, apiTypes.DeleteCloseChannelResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -82,7 +79,7 @@ function Channel.editChannelPermissionsAsync(
 	overwriteId: apiTypes.Snowflake,
 	jsonParams: apiTypes.EditChannelPermissionsRequest,
 	auditLogReason: string?
-): future.Future<string, apiTypes.EditChannelPermissionsResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -100,10 +97,7 @@ function Channel.editChannelPermissionsAsync(
 end
 
 -- https://discord.com/developers/docs/resources/channel#get-channel-invites
-function Channel.getChannelInvitesAsync(
-	instance: request.Request,
-	channelId: apiTypes.Snowflake
-): future.Future<string, apiTypes.GetChannelInvitesResponse>
+function Channel.getChannelInvitesAsync(instance: request.Request, channelId: apiTypes.Snowflake)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -124,7 +118,7 @@ function Channel.createChannelInviteAsync(
 	channelId: apiTypes.Snowflake,
 	jsonParams: apiTypes.CreateChannelInviteRequest,
 	auditLogReason: string?
-): future.Future<string, apiTypes.CreateChannelInviteResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -147,7 +141,7 @@ function Channel.deleteChannelPermissionAsync(
 	channelId: apiTypes.Snowflake,
 	overwriteId: apiTypes.Snowflake,
 	auditLogReason: string?
-): future.Future<string, apiTypes.DeleteChannelPermissionResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -169,7 +163,7 @@ function Channel.followAnnouncementChannelAsync(
 	channelId: apiTypes.Snowflake,
 	jsonParams: apiTypes.FollowAnnouncementChannelRequest,
 	auditLogReason: string?
-): future.Future<string, apiTypes.FollowAnnouncementChannelResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -187,10 +181,7 @@ function Channel.followAnnouncementChannelAsync(
 end
 
 -- https://discord.com/developers/docs/resources/channel#trigger-typing-indicator
-function Channel.triggerTypingIndicatorAsync(
-	instance: request.Request,
-	channelId: apiTypes.Snowflake
-): future.Future<string, apiTypes.TriggerTypingIndicatorResponse>
+function Channel.triggerTypingIndicatorAsync(instance: request.Request, channelId: apiTypes.Snowflake)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -206,10 +197,7 @@ function Channel.triggerTypingIndicatorAsync(
 end
 
 -- https://discord.com/developers/docs/resources/channel#get-pinned-messages
-function Channel.getPinnedMessagesAsync(
-	instance: request.Request,
-	channelId: apiTypes.Snowflake
-): future.Future<string, apiTypes.GetPinnedMessagesResponse>
+function Channel.getPinnedMessagesAsync(instance: request.Request, channelId: apiTypes.Snowflake)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -230,7 +218,7 @@ function Channel.pinMessageAsync(
 	channelId: apiTypes.Snowflake,
 	messageId: apiTypes.Snowflake,
 	auditLogReason: string?
-): future.Future<string, apiTypes.PinMessageResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -252,7 +240,7 @@ function Channel.unpinMessageAsync(
 	channelId: apiTypes.Snowflake,
 	messageId: apiTypes.Snowflake,
 	auditLogReason: string?
-): future.Future<string, apiTypes.UnpinMessageResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -274,7 +262,7 @@ function Channel.groupDMAddRecipientAsync(
 	channelId: apiTypes.Snowflake,
 	userId: apiTypes.Snowflake,
 	jsonParams: apiTypes.GroupDMAddRecipientRequest
-): future.Future<string, apiTypes.GroupDMAddRecipientResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -295,7 +283,7 @@ function Channel.groupDMRemoveRecipientAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
 	userId: apiTypes.Snowflake
-): future.Future<string, apiTypes.GroupDMRemoveRecipientResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -317,7 +305,7 @@ function Channel.startThreadFromMessageAsync(
 	messageId: apiTypes.Snowflake,
 	jsonParams: apiTypes.StartThreadFromMessageRequest,
 	auditLogReason: string?
-): future.Future<string, apiTypes.StartThreadFromMessageResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -340,7 +328,7 @@ function Channel.startThreadWithoutMessageAsync(
 	channelId: apiTypes.Snowflake,
 	jsonParams: apiTypes.StartThreadWithoutMessageRequest,
 	auditLogReason: string?
-): future.Future<string, apiTypes.StartThreadWithoutMessageResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -363,10 +351,7 @@ function Channel.startThreadInForumOrMediaChannelAsync(
 	channelId: apiTypes.Snowflake,
 	jsonParams: apiTypes.StartThreadInForumOrMediaChannelRequest,
 	auditLogReason: string?
-): future.Future<
-	string,
-	apiTypes.StartThreadInForumOrMediaChannelResponse
->
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -384,10 +369,7 @@ function Channel.startThreadInForumOrMediaChannelAsync(
 end
 
 -- https://discord.com/developers/docs/resources/channel#join-thread
-function Channel.joinThreadAsync(
-	instance: request.Request,
-	channelId: apiTypes.Snowflake
-): future.Future<string, apiTypes.JoinThreadResponse>
+function Channel.joinThreadAsync(instance: request.Request, channelId: apiTypes.Snowflake)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -407,7 +389,7 @@ function Channel.addThreadMemberAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
 	userId: apiTypes.Snowflake
-): future.Future<string, apiTypes.AddThreadMemberResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -423,10 +405,7 @@ function Channel.addThreadMemberAsync(
 end
 
 -- https://discord.com/developers/docs/resources/channel#leave-thread
-function Channel.leaveThreadAsync(
-	instance: request.Request,
-	channelId: apiTypes.Snowflake
-): future.Future<string, apiTypes.LeaveThreadResponse>
+function Channel.leaveThreadAsync(instance: request.Request, channelId: apiTypes.Snowflake)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -446,7 +425,7 @@ function Channel.removeThreadMemberAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
 	userId: apiTypes.Snowflake
-): future.Future<string, apiTypes.RemoveThreadMemberResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -469,7 +448,7 @@ function Channel.getThreadMemberAsync(
 	urlParams: {
 		withMember: boolean?,
 	}
-): future.Future<string, apiTypes.GetThreadMemberResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -495,7 +474,7 @@ function Channel.listThreadMembersAsync(
 		after: apiTypes.Snowflake?,
 		limit: number?,
 	}
-): future.Future<string, apiTypes.ListThreadMembersResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -522,7 +501,7 @@ function Channel.listPublicArchivedThreadsAsync(
 		before: string?,
 		limit: number?,
 	}
-): future.Future<string, apiTypes.ListPublicArchivedThreadsResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -548,7 +527,7 @@ function Channel.listPrivateArchivedThreadsAsync(
 		before: string?,
 		limit: number?,
 	}
-): future.Future<string, apiTypes.ListPrivateArchivedThreadsResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -562,7 +541,7 @@ function Channel.listPrivateArchivedThreadsAsync(
 
 		assert(response:isOk(), response:unwrapErr())
 
-		return response:unwrapOk().body
+		return response:unwrapOk().body :: apiTypes.ListPrivateArchivedThreadsResponse
 	end)
 end
 
@@ -574,10 +553,7 @@ function Channel.listJoinedPrivateArchivedThreadsAsync(
 		before: string?,
 		limit: number?,
 	}
-): future.Future<
-	string,
-	apiTypes.ListPrivateArchivedThreadsResponse
->
+)
 	return future.Future.new(function()
 		instance:assertToken()
 

@@ -17,7 +17,7 @@ function StageInstance.createStageInstanceAsync(
 	instance: request.Request,
 	jsonParams: apiTypes.CreateStageInstanceRequest,
 	auditLogReason: string?
-): future.Future<string, apiTypes.CreateStageInstanceResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -35,10 +35,7 @@ function StageInstance.createStageInstanceAsync(
 end
 
 -- https://discord.com/developers/docs/resources/stage-instance#get-stage-instance
-function StageInstance.getStageInstanceAsync(
-	instance: request.Request,
-	channelId: apiTypes.Snowflake
-): future.Future<string, apiTypes.GetStageInstanceResponse>
+function StageInstance.getStageInstanceAsync(instance: request.Request, channelId: apiTypes.Snowflake)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -59,7 +56,7 @@ function StageInstance.modifyStageInstanceAsync(
 	channelId: apiTypes.Snowflake,
 	jsonParams: apiTypes.ModifyStageInstanceRequest,
 	auditLogReason: string?
-): future.Future<string, apiTypes.ModifyStageInstanceResponse>
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -77,10 +74,7 @@ function StageInstance.modifyStageInstanceAsync(
 end
 
 -- https://discord.com/developers/docs/resources/stage-instance#delete-stage-instance
-function StageInstance.deleteStageInstanceAsync(
-	instance: request.Request,
-	channelId: apiTypes.Snowflake
-): future.Future<string, apiTypes.DeleteStageInstanceResponse>
+function StageInstance.deleteStageInstanceAsync(instance: request.Request, channelId: apiTypes.Snowflake)
 	return future.Future.new(function()
 		instance:assertToken()
 
