@@ -25,7 +25,7 @@ function Application.getCurrentApplicationAsync(instance: request.Request, appli
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetCurrentApplicationResponse>
 end
 
 -- https://discord.com/developers/docs/resources/application#edit-current-application
@@ -42,7 +42,7 @@ function Application.editCurrentApplicationAsync(
 		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
 		instance:executeAsync():await()
-	end)
+	end) :: future.FutureLike<string, apiTypes.EditCurrentApplicationResponse>
 end
 
 return Application

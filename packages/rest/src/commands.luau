@@ -31,7 +31,7 @@ function Commands.getGlobalApplicationCommandsAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetGlobalApplicationCommandsResponse>
 end
 
 -- https://discord.com/developers/docs/interactions/application-commands#create-global-application-command
@@ -52,7 +52,7 @@ function Commands.createGlobalApplicationCommandAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.CreateGlobalApplicationCommandResponse>
 end
 
 -- https://discord.com/developers/docs/interactions/application-commands#get-global-application-command
@@ -72,7 +72,7 @@ function Commands.getGlobalApplicationCommandAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetGlobalApplicationCommandResponse>
 end
 
 -- https://discord.com/developers/docs/interactions/application-commands#edit-global-application-command
@@ -94,7 +94,7 @@ function Commands.editGlobalApplicationCommandAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.EditGlobalApplicationCommandResponse>
 end
 
 -- https://discord.com/developers/docs/interactions/application-commands#delete-global-application-command
@@ -114,7 +114,7 @@ function Commands.deleteGlobalApplicationCommandAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.DeleteGlobalApplicationCommandResponse>
 end
 
 -- https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-global-application-commands
@@ -123,19 +123,23 @@ function Commands.bulkOverwriteGlobalApplicationCommandsAsync(
 	applicationId: apiTypes.Snowflake,
 	jsonParams: apiTypes.BulkOverwriteGlobalApplicationCommandsRequest
 )
-	return future.Future.new(function()
-		instance:assertToken()
+	return future.Future.new(
+			function()
+				instance:assertToken()
 
-		instance:setMethod("PUT")
-		instance:setUrl(string.format(apiTypes.rest.endpoints.BulkOverwriteGlobalApplicationCommands, applicationId))
-		instance:setBody(apiTypes.rest.endpoints.encode("json", jsonParams, true))
+				instance:setMethod("PUT")
+				instance:setUrl(
+					string.format(apiTypes.rest.endpoints.BulkOverwriteGlobalApplicationCommands, applicationId)
+				)
+				instance:setBody(apiTypes.rest.endpoints.encode("json", jsonParams, true))
 
-		local response = instance:executeAsync():await()
+				local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+				assert(response:isOk(), response:unwrapErr())
 
-		return response:unwrapOk().body
-	end)
+				return response:unwrapOk().body
+			end
+		) :: future.FutureLike<string, apiTypes.BulkOverwriteGlobalApplicationCommandsResponse>
 end
 
 -- https://discord.com/developers/docs/interactions/application-commands#get-guild-application-commands
@@ -160,7 +164,7 @@ function Commands.getGuildApplicationCommandsAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetGuildApplicationCommandsResponse>
 end
 
 -- https://discord.com/developers/docs/interactions/application-commands#create-guild-application-command
@@ -182,7 +186,7 @@ function Commands.createGuildApplicationCommandAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.CreateGuildApplicationCommandResponse>
 end
 
 -- https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command
@@ -205,7 +209,7 @@ function Commands.getGuildApplicationCommandAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetGuildApplicationCommandResponse>
 end
 
 -- https://discord.com/developers/docs/interactions/application-commands#edit-guild-application-command
@@ -230,7 +234,7 @@ function Commands.editGuildApplicationCommandAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.EditGuildApplicationCommandResponse>
 end
 
 -- https://discord.com/developers/docs/interactions/application-commands#delete-guild-application-command
@@ -253,7 +257,7 @@ function Commands.deleteGuildApplicationCommandAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.DeleteGuildApplicationCommandResponse_>
 end
 
 -- https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-guild-application-commands
@@ -263,21 +267,23 @@ function Commands.bulkOverwriteGuildApplicationCommandsAsync(
 	guildId: apiTypes.Snowflake,
 	jsonParams: apiTypes.BulkOverwriteGuildApplicationCommandsRequest
 )
-	return future.Future.new(function()
-		instance:assertToken()
+	return future.Future.new(
+			function()
+				instance:assertToken()
 
-		instance:setMethod("PUT")
-		instance:setUrl(
-			string.format(apiTypes.rest.endpoints.BulkOverwriteGuildApplicationCommands, applicationId, guildId)
-		)
-		instance:setBody(apiTypes.rest.endpoints.encode("json", jsonParams, true))
+				instance:setMethod("PUT")
+				instance:setUrl(
+					string.format(apiTypes.rest.endpoints.BulkOverwriteGuildApplicationCommands, applicationId, guildId)
+				)
+				instance:setBody(apiTypes.rest.endpoints.encode("json", jsonParams, true))
 
-		local response = instance:executeAsync():await()
+				local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+				assert(response:isOk(), response:unwrapErr())
 
-		return response:unwrapOk().body
-	end)
+				return response:unwrapOk().body
+			end
+		) :: future.FutureLike<string, apiTypes.BulkOverwriteGlobalApplicationCommandsResponse>
 end
 
 -- https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command-permissions
@@ -286,20 +292,22 @@ function Commands.getGuildApplicationCommandPermissionsAsync(
 	applicationId: apiTypes.Snowflake,
 	guildId: apiTypes.Snowflake
 )
-	return future.Future.new(function()
-		instance:assertToken()
+	return future.Future.new(
+			function()
+				instance:assertToken()
 
-		instance:setMethod("GET")
-		instance:setUrl(
-			string.format(apiTypes.rest.endpoints.GetGuildApplicationCommandPermissions, applicationId, guildId)
-		)
+				instance:setMethod("GET")
+				instance:setUrl(
+					string.format(apiTypes.rest.endpoints.GetGuildApplicationCommandPermissions, applicationId, guildId)
+				)
 
-		local response = instance:executeAsync():await()
+				local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+				assert(response:isOk(), response:unwrapErr())
 
-		return response:unwrapOk().body
-	end)
+				return response:unwrapOk().body
+			end
+		) :: future.FutureLike<string, apiTypes.GetGuildApplicationCommandPermissionsResponse>
 end
 
 -- https://discord.com/developers/docs/interactions/application-commands#get-application-command-permissions
@@ -309,20 +317,27 @@ function Commands.getApplicationCommandPermissionsAsync(
 	guildId: apiTypes.Snowflake,
 	commandId: apiTypes.Snowflake
 )
-	return future.Future.new(function()
-		instance:assertToken()
+	return future.Future.new(
+			function()
+				instance:assertToken()
 
-		instance:setMethod("GET")
-		instance:setUrl(
-			string.format(apiTypes.rest.endpoints.GetApplicationCommandPermissions, applicationId, guildId, commandId)
-		)
+				instance:setMethod("GET")
+				instance:setUrl(
+					string.format(
+						apiTypes.rest.endpoints.GetApplicationCommandPermissions,
+						applicationId,
+						guildId,
+						commandId
+					)
+				)
 
-		local response = instance:executeAsync():await()
+				local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+				assert(response:isOk(), response:unwrapErr())
 
-		return response:unwrapOk().body
-	end)
+				return response:unwrapOk().body
+			end
+		) :: future.FutureLike<string, apiTypes.GetApplicationCommandPermissionsResponse>
 end
 
 -- https://discord.com/developers/docs/interactions/application-commands#edit-application-command-permissions
@@ -333,21 +348,28 @@ function Commands.editApplicationCommandPermissionsAsync(
 	commandId: apiTypes.Snowflake,
 	jsonParams: apiTypes.EditApplicationCommandPermissionsRequest
 )
-	return future.Future.new(function()
-		instance:assertToken()
+	return future.Future.new(
+			function()
+				instance:assertToken()
 
-		instance:setMethod("PUT")
-		instance:setUrl(
-			string.format(apiTypes.rest.endpoints.EditApplicationCommandPermissions, applicationId, guildId, commandId)
-		)
-		instance:setBody(apiTypes.rest.endpoints.encode("json", jsonParams, true))
+				instance:setMethod("PUT")
+				instance:setUrl(
+					string.format(
+						apiTypes.rest.endpoints.EditApplicationCommandPermissions,
+						applicationId,
+						guildId,
+						commandId
+					)
+				)
+				instance:setBody(apiTypes.rest.endpoints.encode("json", jsonParams, true))
 
-		local response = instance:executeAsync():await()
+				local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+				assert(response:isOk(), response:unwrapErr())
 
-		return response:unwrapOk().body
-	end)
+				return response:unwrapOk().body
+			end
+		) :: future.FutureLike<string, apiTypes.EditApplicationCommandPermissionsResponse>
 end
 
 return Commands

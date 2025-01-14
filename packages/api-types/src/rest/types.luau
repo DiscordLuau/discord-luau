@@ -5,7 +5,7 @@
 local objects = require("../apiTypes")
 
 -- [[ Base ]] --
-
+export type TEST_TYPE = objects.Partial<number>
 export type Response<DATA> = DATA
 export type Request<DATA> = DATA
 

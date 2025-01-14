@@ -101,7 +101,7 @@ function AuditLog.getGuildAuditLogAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetGuildAuditLogResponse>
 end
 
 export type ActionType =

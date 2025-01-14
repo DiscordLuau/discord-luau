@@ -35,7 +35,7 @@ function Poll.getAnswerVotersAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetAnswerVotersResponse>
 end
 
 -- https://discord.com/developers/docs/resources/poll#end-poll
@@ -51,7 +51,7 @@ function Poll.endPollAsync(instance: request.Request, channelId: apiTypes.Snowfl
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.EndPollResponse>
 end
 
 return Poll

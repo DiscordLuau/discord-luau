@@ -25,7 +25,7 @@ function User.getCurrentUserAsync(instance: request.Request)
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetCurrentUserResponse>
 end
 
 -- https://discord.com/developers/docs/resources/user#get-user
@@ -41,7 +41,7 @@ function User.getUserAsync(instance: request.Request, userId: apiTypes.Snowflake
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetUserResponse>
 end
 
 -- https://discord.com/developers/docs/resources/user#modify-current-user
@@ -58,24 +58,7 @@ function User.modifyCurrentUserAsync(instance: request.Request, jsonParams: apiT
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
-end
-
--- https://discord.com/developers/docs/resources/user#modify-current-user
-function User.modifyCurrentUserAsync(instance: request.Request, jsonParams: apiTypes.ModifyCurrentUserRequest)
-	return future.Future.new(function()
-		instance:assertToken()
-
-		instance:setMethod("PATCH")
-		instance:setUrl(apiTypes.rest.endpoints.ModifyCurrentUser)
-		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
-
-		local response = instance:executeAsync():await()
-
-		assert(response:isOk(), response:unwrapErr())
-
-		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.ModifyCurrentUserResponse>
 end
 
 -- https://discord.com/developers/docs/resources/user#get-current-user-guilds
@@ -104,7 +87,7 @@ function User.getCurrentUserGuildsAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetCurrentUserGuildsResponse>
 end
 
 -- https://discord.com/developers/docs/resources/user#get-current-user-guild-member
@@ -120,7 +103,7 @@ function User.getCurrentUserGuildMember(instance: request.Request, guildId: apiT
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetCurrentUserGuildMemberResponse>
 end
 
 -- https://discord.com/developers/docs/resources/user#leave-guild
@@ -136,7 +119,7 @@ function User.leaveGuildAsync(instance: request.Request, guildId: apiTypes.Snowf
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.LeaveGuildResponse>
 end
 
 -- https://discord.com/developers/docs/resources/user#create-dm
@@ -153,7 +136,7 @@ function User.createDMAsync(instance: request.Request, jsonParams: apiTypes.Crea
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.CreateDMResponse>
 end
 
 -- https://discord.com/developers/docs/resources/user#create-group-dm
@@ -170,7 +153,7 @@ function User.createGroupDMAsync(instance: request.Request, jsonParams: apiTypes
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.CreateGroupDMResponse>
 end
 
 -- https://discord.com/developers/docs/resources/user#get-current-user-connections
@@ -186,29 +169,27 @@ function User.getCurrentUserConnectionsAsync(instance: request.Request)
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetCurrentUserConnectionResponse>
 end
 
 -- https://discord.com/developers/docs/resources/user#get-current-user-application-role-connection
-function User.getCurrentUserApplicationRoleConnectionAsync(
-	instance: request.Request,
-	applicationId: apiTypes.Snowflake
-): future.Future<
-	string,
-	apiTypes.GetCurrentUserApplicationRoleConnectionResponse
->
-	return future.Future.new(function()
-		instance:assertToken()
+function User.getCurrentUserApplicationRoleConnectionAsync(instance: request.Request, applicationId: apiTypes.Snowflake)
+	return future.Future.new(
+			function()
+				instance:assertToken()
 
-		instance:setMethod("GET")
-		instance:setUrl(string.format(apiTypes.rest.endpoints.GetCurrentUserApplicationRolConnections, applicationId))
+				instance:setMethod("GET")
+				instance:setUrl(
+					string.format(apiTypes.rest.endpoints.GetCurrentUserApplicationRolConnections, applicationId)
+				)
 
-		local response = instance:executeAsync():await()
+				local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+				assert(response:isOk(), response:unwrapErr())
 
-		return response:unwrapOk().body
-	end)
+				return response:unwrapOk().body
+			end
+		) :: future.FutureLike<string, apiTypes.GetCurrentUserApplicationRoleConnectionResponse>
 end
 
 -- https://discord.com/developers/docs/resources/user#update-current-user-application-role-connection
@@ -216,25 +197,24 @@ function User.updateCurrentUserApplicationRoleConnectionAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	jsonParams: apiTypes.UpdateCurrentUserApplicationRoleConnectionRequest
-): future.Future<
-	string,
-	apiTypes.UpdateCurrentUserApplicationRoleConnectionResponse
->
-	return future.Future.new(function()
-		instance:assertToken()
+)
+	return future.Future.new(
+			function()
+				instance:assertToken()
 
-		instance:setMethod("PUT")
-		instance:setUrl(
-			string.format(apiTypes.rest.endpoints.UpdateCurrentUserApplicationRoleConnection, applicationId)
-		)
-		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
+				instance:setMethod("PUT")
+				instance:setUrl(
+					string.format(apiTypes.rest.endpoints.UpdateCurrentUserApplicationRoleConnection, applicationId)
+				)
+				instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
-		local response = instance:executeAsync():await()
+				local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+				assert(response:isOk(), response:unwrapErr())
 
-		return response:unwrapOk().body
-	end)
+				return response:unwrapOk().body
+			end
+		) :: future.FutureLike<string, apiTypes.UpdateCurrentUserApplicationRoleConnectionResponse>
 end
 
 return User

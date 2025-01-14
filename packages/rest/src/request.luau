@@ -187,7 +187,7 @@ function Request.Prototype.executeAsync<Resolve>(self: Request)
 
 		return {
 			headers = request.headers,
-			body = decodeSuccess and decodedBody or request.body,
+			body = (decodeSuccess and decodedBody or request.body) :: Resolve,
 		}
 	end)
 end

@@ -32,7 +32,7 @@ function Webhook.createWebhookAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.CreateWebhookResponse>
 end
 
 -- https://discord.com/developers/docs/resources/webhook#get-channel-webhooks
@@ -48,7 +48,7 @@ function Webhook.getChannelWebhooksAsync(instance: request.Request, channelId: a
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetChannelWebhooksResponse>
 end
 
 -- https://discord.com/developers/docs/resources/webhook#get-guild-webhooks
@@ -64,7 +64,7 @@ function Webhook.getGuildWebhooksAsync(instance: request.Request, guildId: apiTy
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetGuildWebhooksResponse>
 end
 
 -- https://discord.com/developers/docs/resources/webhook#get-webhook
@@ -80,7 +80,7 @@ function Webhook.getWebhookAsync(instance: request.Request, webhookId: apiTypes.
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetWebhookResponse>
 end
 
 -- https://discord.com/developers/docs/resources/webhook#get-webhook-with-token
@@ -100,7 +100,7 @@ function Webhook.getWebhookWithTokenAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetWebhookWithTokenResponse>
 end
 
 -- https://discord.com/developers/docs/resources/webhook#modify-webhook
@@ -123,7 +123,7 @@ function Webhook.modifyWebhookAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.ModifyWebhookResponse>
 end
 
 -- https://discord.com/developers/docs/resources/webhook#modify-webhook-with-token
@@ -147,7 +147,7 @@ function Webhook.modifyWebhookWithTokenAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.ModifyWebhookWithTokenResponse>
 end
 
 -- https://discord.com/developers/docs/resources/webhook#delete-webhook
@@ -164,7 +164,7 @@ function Webhook.deleteWebhookAsync(instance: request.Request, webhookId: apiTyp
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.DeleteWebhookResponse>
 end
 
 -- https://discord.com/developers/docs/resources/webhook#delete-webhook-with-token
@@ -186,7 +186,7 @@ function Webhook.deleteWebhookWithTokenAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.DeleteWebhookWitHTokenResponse>
 end
 
 -- https://discord.com/developers/docs/resources/webhook#execute-webhook
@@ -215,7 +215,7 @@ function Webhook.executeWebhookAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.ExecuteWebhookResponse>
 end
 
 -- https://discord.com/developers/docs/resources/webhook#get-webhook-message
@@ -241,7 +241,7 @@ function Webhook.getWebhookMessageAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetWebhookMessageResponse>
 end
 
 -- https://discord.com/developers/docs/resources/webhook#edit-webhook-message
@@ -269,7 +269,7 @@ function Webhook.editWebhookMessageAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.EditWebhookMessageResponse>
 end
 
 -- https://discord.com/developers/docs/resources/webhook#delete-webhook-message
@@ -295,7 +295,7 @@ function Webhook.deleteWebhookMessageAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.DeleteWebhookMessageResponse>
 end
 
 return Webhook

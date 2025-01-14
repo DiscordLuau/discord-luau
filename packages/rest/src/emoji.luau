@@ -25,11 +25,11 @@ function Emoji.listGuildEmojisAsync(instance: request.Request, guildId: apiTypes
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.ListGuildEmojisResponse>
 end
 
 -- https://discord.com/developers/docs/resources/emoji#get-guild-emoji
-function Emoji.getGuildEmojisAsync(instance: request.Request, guildId: apiTypes.Snowflake, emojId: apiTypes.Snowflake)
+function Emoji.getGuildEmojiAsync(instance: request.Request, guildId: apiTypes.Snowflake, emojId: apiTypes.Snowflake)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -41,7 +41,7 @@ function Emoji.getGuildEmojisAsync(instance: request.Request, guildId: apiTypes.
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetGuildEmojiResponse>
 end
 
 -- https://discord.com/developers/docs/resources/emoji#create-guild-emoji
@@ -64,7 +64,7 @@ function Emoji.createGuildEmojiAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.CreateGuildEmojiResponse>
 end
 
 -- https://discord.com/developers/docs/resources/emoji#modify-guild-emoji
@@ -88,7 +88,7 @@ function Emoji.modifyGuildEmojiAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.ModifyGuildEmojiResponse>
 end
 
 -- https://discord.com/developers/docs/resources/emoji#delete-guild-emoji
@@ -110,7 +110,7 @@ function Emoji.deleteGuildEmojiAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.DeleteGuildEmojiResponse>
 end
 
 return Emoji

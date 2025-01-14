@@ -24,8 +24,10 @@ function Sticker.getStickerAsync(instance: request.Request, stickerId: apiTypes.
 
 		assert(response:isOk(), response:unwrapErr())
 
-		return response:unwrapOk().body
-	end)
+		local object: apiTypes.GetStickerResponse = response:unwrapOk().body
+
+		return object
+	end) :: future.FutureLike<string, apiTypes.GetStickerResponse>
 end
 
 -- https://discord.com/developers/docs/resources/sticker#list-sticker-packs
@@ -41,7 +43,7 @@ function Sticker.listStickerPacksAsync(instance: request.Request)
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.ListStickerPacksResponse>
 end
 
 -- https://discord.com/developers/docs/resources/sticker#list-guild-stickers
@@ -57,7 +59,7 @@ function Sticker.listGuildStickersAsync(instance: request.Request, guildId: apiT
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.ListGuildStickersResponse>
 end
 
 -- https://discord.com/developers/docs/resources/sticker#get-guild-sticker
@@ -77,7 +79,7 @@ function Sticker.getGuildStickerAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetGuildStickerResponse>
 end
 
 -- https://discord.com/developers/docs/resources/sticker#create-guild-sticker
@@ -100,7 +102,7 @@ function Sticker.createGuildStickerAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.CreateGuildStickerResponse>
 end
 
 -- https://discord.com/developers/docs/resources/sticker#modify-guild-sticker
@@ -124,7 +126,7 @@ function Sticker.modifyGuildStickerAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.ModifyGuildStickerResponse>
 end
 
 -- https://discord.com/developers/docs/resources/sticker#delete-guild-sticker
@@ -146,7 +148,7 @@ function Sticker.deleteGuildStickerAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.DeleteGuildStickerResponse>
 end
 
 return Sticker

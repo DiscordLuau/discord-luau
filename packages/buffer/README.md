@@ -25,7 +25,7 @@ local Buffer = require("./luau_packages/buffer")
 
 2. Use the provided library to store/flush binary data:
 ```luau
-local zlibBuffer = buffer.new(),
+local zlibBuffer = Buffer.new()
 
 zlibBuffer:write(xyz)
 

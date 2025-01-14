@@ -39,7 +39,7 @@ function Invite.getInviteAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetInviteResponse>
 end
 
 -- https://discord.com/developers/docs/resources/invite#delete-invite
@@ -56,7 +56,7 @@ function Invite.deleteInviteAsync(instance: request.Request, inviteCode: string,
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.DeleteInviteResponse>
 end
 
 return Invite

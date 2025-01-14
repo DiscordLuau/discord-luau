@@ -19,10 +19,7 @@ function GuildScheduledEvent.listScheduledEventsForGuildAsync(
 	urlParams: {
 		withUserCount: boolean?,
 	}
-): future.Future<
-	string,
-	apiTypes.ListScheduledEventsForGuildResponse
->
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -39,7 +36,7 @@ function GuildScheduledEvent.listScheduledEventsForGuildAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.ListScheduledEventsForGuildResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild-scheduled-event#create-guild-scheduled-event
@@ -48,10 +45,7 @@ function GuildScheduledEvent.createGuildScheduledEvent(
 	guildId: apiTypes.Snowflake,
 	jsonParams: apiTypes.CreateGuildScheduledEventRequest,
 	auditLogReason: string?
-): future.Future<
-	string,
-	apiTypes.CreateGuildScheduledEventResponse
->
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -65,7 +59,7 @@ function GuildScheduledEvent.createGuildScheduledEvent(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.CreateGuildScheduledEventResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild-scheduled-event#get-guild-scheduled-event
@@ -76,10 +70,7 @@ function GuildScheduledEvent.getScheduledEventsForGuildAsync(
 	urlParams: {
 		withUserCount: boolean?,
 	}
-): future.Future<
-	string,
-	apiTypes.GetGuildScheduledEventResponse
->
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -96,7 +87,7 @@ function GuildScheduledEvent.getScheduledEventsForGuildAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetGuildScheduledEventResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild-scheduled-event#modify-guild-scheduled-event
@@ -106,10 +97,7 @@ function GuildScheduledEvent.modifyGuildScheduledEvent(
 	scheduledEventId: apiTypes.Snowflake,
 	jsonParams: apiTypes.ModifyGuildScheduledEventRequest,
 	auditLogReason: string?
-): future.Future<
-	string,
-	apiTypes.ModifyGuildScheduledEventResponse
->
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -123,7 +111,7 @@ function GuildScheduledEvent.modifyGuildScheduledEvent(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.ModifyGuildScheduledEventResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild-scheduled-event#delete-guild-scheduled-event
@@ -131,10 +119,7 @@ function GuildScheduledEvent.deleteGuildScheduledEvent(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	scheduledEventId: apiTypes.Snowflake
-): future.Future<
-	string,
-	apiTypes.DeleteGuildScheduledEventResponse
->
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -146,7 +131,7 @@ function GuildScheduledEvent.deleteGuildScheduledEvent(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.DeleteGuildScheduledEventResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild-scheduled-event#get-guild-scheduled-event-users
@@ -154,10 +139,7 @@ function GuildScheduledEvent.getGuildScheduledEventUsers(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	scheduledEventId: apiTypes.Snowflake
-): future.Future<
-	string,
-	apiTypes.GetGuildScheduledEventUsersResponse
->
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -169,7 +151,7 @@ function GuildScheduledEvent.getGuildScheduledEventUsers(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetGuildScheduledEventUsersResponse>
 end
 
 return GuildScheduledEvent

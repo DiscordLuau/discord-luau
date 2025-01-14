@@ -2,7 +2,7 @@
 
 local task = require("../../../.lune/task")
 
-task.new("darklua")
+task.new("/mnt/device-volume/Projects/discord-luau/darklua")
 	:addArgument("process")
 	:addArgument("src/init.luau")
 	:addArgument("bundled.luau")

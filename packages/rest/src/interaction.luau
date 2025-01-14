@@ -41,7 +41,7 @@ function Interaction.createInteractionResponseAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.CreateInteractionResponse>
 end
 
 -- https://discord.com/developers/docs/interactions/receiving-and-responding#get-original-interaction-response
@@ -68,7 +68,7 @@ function Interaction.getOriginalInteractionResponseAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetOriginalInteractionResponse>
 end
 
 -- https://discord.com/developers/docs/interactions/receiving-and-responding#edit-original-interaction-response
@@ -80,10 +80,7 @@ function Interaction.editOriginalInteractionResponseAsync(
 	urlParams: {
 		threadId: apiTypes.Snowflake?,
 	}
-): future.Future<
-	string,
-	apiTypes.EditOriginalInteractionResponse
->
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -100,7 +97,7 @@ function Interaction.editOriginalInteractionResponseAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.EditOriginalInteractionResponse>
 end
 
 -- https://discord.com/developers/docs/interactions/receiving-and-responding#delete-original-interaction-response
@@ -108,10 +105,7 @@ function Interaction.deleteOriginalInteractionResponseAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	interactionToken: string
-): future.Future<
-	string,
-	apiTypes.DeleteOriginalInteractionResponse
->
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -125,7 +119,7 @@ function Interaction.deleteOriginalInteractionResponseAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.DeleteOriginalInteractionResponse>
 end
 
 -- https://discord.com/developers/docs/interactions/receiving-and-responding#create-followup-message
@@ -154,7 +148,7 @@ function Interaction.createFollowupMessageAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.CreateFollowupMessageResponse>
 end
 
 -- https://discord.com/developers/docs/interactions/receiving-and-responding#get-followup-message
@@ -182,7 +176,7 @@ function Interaction.getFollowupMessageAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetFollowupMessageResponse>
 end
 
 -- https://discord.com/developers/docs/interactions/receiving-and-responding#edit-followup-message
@@ -212,7 +206,7 @@ function Interaction.editFollowupMessageAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.EditFollowupMessageResponse>
 end
 
 -- https://discord.com/developers/docs/interactions/receiving-and-responding#delete-followup-message
@@ -235,7 +229,7 @@ function Interaction.deleteFollowupMessageAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.DeleteFollowupMessageResponse>
 end
 
 return Interaction

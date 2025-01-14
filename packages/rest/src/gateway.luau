@@ -21,7 +21,7 @@ function Gateway.getGatewayAsync(instance: request.Request)
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetGatewayResponse>
 end
 
 -- https://discord.com/developers/docs/topics/gateway#get-gateway-bot
@@ -37,7 +37,7 @@ function Gateway.getGatewayBotAsync(instance: request.Request)
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetGatewayBotResponse>
 end
 
 return Gateway

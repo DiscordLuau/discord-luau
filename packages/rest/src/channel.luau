@@ -25,7 +25,7 @@ function Channel.getChannelAsync(instance: request.Request, channelId: apiTypes.
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetChannelResponse>
 end
 
 -- https://discord.com/developers/docs/resources/channel#modify-channel
@@ -48,7 +48,7 @@ function Channel.modifyChannelAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.ModifyChannelResponse>
 end
 
 -- https://discord.com/developers/docs/resources/channel#deleteclose-channel
@@ -69,7 +69,7 @@ function Channel.deleteOrCloseChannelAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.DeleteCloseChannelResponse>
 end
 
 -- https://discord.com/developers/docs/resources/channel#edit-channel-permissions
@@ -93,7 +93,7 @@ function Channel.editChannelPermissionsAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.EditChannelPermissionsResponse>
 end
 
 -- https://discord.com/developers/docs/resources/channel#get-channel-invites
@@ -109,7 +109,7 @@ function Channel.getChannelInvitesAsync(instance: request.Request, channelId: ap
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetChannelInvitesResponse>
 end
 
 -- https://discord.com/developers/docs/resources/channel#create-channel-invite
@@ -132,7 +132,7 @@ function Channel.createChannelInviteAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.CreateChannelInviteResponse>
 end
 
 -- https://discord.com/developers/docs/resources/channel#delete-channel-permission
@@ -154,7 +154,7 @@ function Channel.deleteChannelPermissionAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.DeleteChannelPermissionResponse>
 end
 
 -- https://discord.com/developers/docs/resources/channel#follow-announcement-channel
@@ -177,7 +177,7 @@ function Channel.followAnnouncementChannelAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.FollowAnnouncementChannelResponse>
 end
 
 -- https://discord.com/developers/docs/resources/channel#trigger-typing-indicator
@@ -193,7 +193,7 @@ function Channel.triggerTypingIndicatorAsync(instance: request.Request, channelI
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.TriggerTypingIndicatorResponse>
 end
 
 -- https://discord.com/developers/docs/resources/channel#get-pinned-messages
@@ -209,7 +209,7 @@ function Channel.getPinnedMessagesAsync(instance: request.Request, channelId: ap
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetPinnedMessagesResponse>
 end
 
 -- https://discord.com/developers/docs/resources/channel#pin-message
@@ -231,7 +231,7 @@ function Channel.pinMessageAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.PinMessageResponse>
 end
 
 -- https://discord.com/developers/docs/resources/channel#unpin-message
@@ -253,7 +253,7 @@ function Channel.unpinMessageAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.UnpinMessageResponse>
 end
 
 -- https://discord.com/developers/docs/resources/channel#group-dm-add-recipient
@@ -275,7 +275,7 @@ function Channel.groupDMAddRecipientAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GroupDMAddRecipientResponse>
 end
 
 -- https://discord.com/developers/docs/resources/channel#group-dm-remove-recipient
@@ -295,7 +295,7 @@ function Channel.groupDMRemoveRecipientAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GroupDMRemoveRecipientResponse>
 end
 
 -- https://discord.com/developers/docs/resources/channel#start-thread-from-message
@@ -319,14 +319,14 @@ function Channel.startThreadFromMessageAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.StartThreadFromMessageResponse>
 end
 
 -- https://discord.com/developers/docs/resources/channel#start-thread-without-message
 function Channel.startThreadWithoutMessageAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
-	jsonParams: apiTypes.StartThreadWithoutMessageRequest,
+	jsonParams: apiTypes.StartThreadWithoutMessageRequest_,
 	auditLogReason: string?
 )
 	return future.Future.new(function()
@@ -342,7 +342,7 @@ function Channel.startThreadWithoutMessageAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.StartThreadWithoutMessageResponse>
 end
 
 -- https://discord.com/developers/docs/resources/channel#start-thread-in-forum-or-media-channel
@@ -352,20 +352,22 @@ function Channel.startThreadInForumOrMediaChannelAsync(
 	jsonParams: apiTypes.StartThreadInForumOrMediaChannelRequest,
 	auditLogReason: string?
 )
-	return future.Future.new(function()
-		instance:assertToken()
+	return future.Future.new(
+			function()
+				instance:assertToken()
 
-		instance:setMethod("POST")
-		instance:setUrl(string.format(apiTypes.rest.endpoints.StartThreadInForumOrMediaChannel, channelId))
-		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
-		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
+				instance:setMethod("POST")
+				instance:setUrl(string.format(apiTypes.rest.endpoints.StartThreadInForumOrMediaChannel, channelId))
+				instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
+				instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local response = instance:executeAsync():await()
+				local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+				assert(response:isOk(), response:unwrapErr())
 
-		return response:unwrapOk().body
-	end)
+				return response:unwrapOk().body
+			end
+		) :: future.FutureLike<string, apiTypes.StartThreadInForumOrMediaChannelResponse>
 end
 
 -- https://discord.com/developers/docs/resources/channel#join-thread
@@ -381,7 +383,7 @@ function Channel.joinThreadAsync(instance: request.Request, channelId: apiTypes.
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.JoinThreadResponse>
 end
 
 -- https://discord.com/developers/docs/resources/channel#add-thread-member
@@ -401,7 +403,7 @@ function Channel.addThreadMemberAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.AddThreadMemberResponse>
 end
 
 -- https://discord.com/developers/docs/resources/channel#leave-thread
@@ -417,7 +419,7 @@ function Channel.leaveThreadAsync(instance: request.Request, channelId: apiTypes
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.LeaveThreadResponse>
 end
 
 -- https://discord.com/developers/docs/resources/channel#remove-thread-member
@@ -437,7 +439,7 @@ function Channel.removeThreadMemberAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.RemoveThreadMemberResponse>
 end
 
 -- https://discord.com/developers/docs/resources/channel#get-thread-member
@@ -462,7 +464,7 @@ function Channel.getThreadMemberAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetThreadMemberResponse>
 end
 
 -- https://discord.com/developers/docs/resources/channel#list-thread-members
@@ -490,7 +492,7 @@ function Channel.listThreadMembersAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.ListThreadMembersResponse>
 end
 
 -- https://discord.com/developers/docs/resources/channel#list-public-archived-threads
@@ -516,7 +518,7 @@ function Channel.listPublicArchivedThreadsAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.ListPublicArchivedThreadsResponse>
 end
 
 -- https://discord.com/developers/docs/resources/channel#list-private-archived-threads
@@ -541,8 +543,8 @@ function Channel.listPrivateArchivedThreadsAsync(
 
 		assert(response:isOk(), response:unwrapErr())
 
-		return response:unwrapOk().body :: apiTypes.ListPrivateArchivedThreadsResponse
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.ListPrivateArchivedThreadsResponse>
 end
 
 -- https://discord.com/developers/docs/resources/channel#list-joined-private-archived-threads
@@ -554,21 +556,23 @@ function Channel.listJoinedPrivateArchivedThreadsAsync(
 		limit: number?,
 	}
 )
-	return future.Future.new(function()
-		instance:assertToken()
+	return future.Future.new(
+			function()
+				instance:assertToken()
 
-		instance:addUrlParam("limit", urlParams.limit and tostring(urlParams.limit) or (nil :: any))
-		instance:addUrlParam("before", urlParams.before or (nil :: any))
+				instance:addUrlParam("limit", urlParams.limit and tostring(urlParams.limit) or (nil :: any))
+				instance:addUrlParam("before", urlParams.before or (nil :: any))
 
-		instance:setMethod("GET")
-		instance:setUrl(string.format(apiTypes.rest.endpoints.ListJoinedPrivateArchivedThreads, channelId))
+				instance:setMethod("GET")
+				instance:setUrl(string.format(apiTypes.rest.endpoints.ListJoinedPrivateArchivedThreads, channelId))
 
-		local response = instance:executeAsync():await()
+				local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+				assert(response:isOk(), response:unwrapErr())
 
-		return response:unwrapOk().body
-	end)
+				return response:unwrapOk().body
+			end
+		) :: future.FutureLike<string, apiTypes.ListJoinedPrivateArchivedThreadsResponse>
 end
 
 return Channel

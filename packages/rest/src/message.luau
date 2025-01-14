@@ -39,7 +39,7 @@ function Message.getChannelMessagesAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetChannelMessagesResponse>
 end
 
 -- https://discord.com/developers/docs/resources/message#get-channel-message
@@ -55,7 +55,7 @@ function Message.getChannelMessageAsync(instance: request.Request, channelId: st
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetChannelMessageResponse>
 end
 
 -- https://discord.com/developers/docs/resources/message#create-message
@@ -76,7 +76,7 @@ function Message.createMessageAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.CreateMessageResponse>
 end
 
 -- https://discord.com/developers/docs/resources/message#crosspost-message
@@ -97,7 +97,7 @@ function Message.crosspostMessageAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.CrosspostMessageResponse>
 end
 
 -- https://discord.com/developers/docs/resources/message#create-reaction
@@ -126,7 +126,7 @@ function Message.createReactionAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.CreateReactionResponse>
 end
 
 -- https://discord.com/developers/docs/resources/message#delete-own-reaction
@@ -155,7 +155,7 @@ function Message.deleteOwnReactionAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.DeleteOwnReactionResponse>
 end
 
 -- https://discord.com/developers/docs/resources/message#delete-user-reaction
@@ -186,7 +186,7 @@ function Message.deleteUserReactionAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.DeleteUserReactionResponse>
 end
 
 -- https://discord.com/developers/docs/resources/message#get-reactions
@@ -224,7 +224,7 @@ function Message.getReactionsAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetReactionsResponse>
 end
 
 -- https://discord.com/developers/docs/resources/message#delete-all-reactions
@@ -240,7 +240,7 @@ function Message.deleteAllReactionsAsync(instance: request.Request, channelId: s
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.DeleteAllReactionsResponse>
 end
 
 -- https://discord.com/developers/docs/resources/message#delete-all-reactions-for-emoji
@@ -269,7 +269,7 @@ function Message.deleteAllReactionsForEmojiAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.DeleteAllReactionsForEmojiResponse>
 end
 
 -- https://discord.com/developers/docs/resources/message#edit-message
@@ -291,7 +291,7 @@ function Message.editMessageAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.EditMessageResponse>
 end
 
 -- https://discord.com/developers/docs/resources/message#delete-message
@@ -313,7 +313,7 @@ function Message.deleteMessageAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.DeleteMessageResponse>
 end
 
 -- https://discord.com/developers/docs/resources/message#bulk-delete-messages
@@ -336,7 +336,7 @@ function Message.bulkDeleteMessagesAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.BulkDeleteMessageResponse>
 end
 
 return Message

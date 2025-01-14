@@ -25,7 +25,7 @@ function Voice.listVoiceRegionsAsync(instance: request.Request)
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.ListVoiceRegionsResponse>
 end
 
 -- https://discord.com/developers/docs/resources/voice#get-current-user-voice-state
@@ -41,7 +41,7 @@ function Voice.getCurrentUserVoiceStateAsync(instance: request.Request, guildId:
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetCurrentUserVoiceStateResponse>
 end
 
 -- https://discord.com/developers/docs/resources/voice#get-user-voice-state
@@ -61,7 +61,7 @@ function Voice.getUserVoiceStateAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetUserVoiceStateResponse>
 end
 
 -- https://discord.com/developers/docs/resources/voice#modify-current-user-voice-state
@@ -82,7 +82,7 @@ function Voice.modifyCurrentUserVoiceStateAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.ModifyCurrentUserVoiceStateResponse>
 end
 
 -- https://discord.com/developers/docs/resources/voice#modify-user-voice-state
@@ -104,7 +104,7 @@ function Voice.modifyUserVoiceStateAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.ModifyUserVoiceStateResponse>
 end
 
 return Voice

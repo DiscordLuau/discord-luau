@@ -25,7 +25,7 @@ function GuildTemplate.getGuildTemplateAsync(instance: request.Request, template
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetGuildTemplateResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild-template#create-guild-from-guild-template
@@ -49,7 +49,7 @@ function GuildTemplate.createGuildFromGuildTemplateAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.CreateGuildFromGuildTemplateResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild-template#get-guild-templates
@@ -65,7 +65,7 @@ function GuildTemplate.getGuildTemplatesAsync(instance: request.Request, guildId
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetGuildTemplatesResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild-template#create-guild-template
@@ -86,7 +86,7 @@ function GuildTemplate.createGuildTemplateAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.CreateGuildTemplateResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild-template#sync-guild-template
@@ -106,7 +106,7 @@ function GuildTemplate.syncGuildTemplateAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.SyncGuildTemplateResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild-template#modify-guild-template
@@ -128,7 +128,7 @@ function GuildTemplate.modifyGuildTemplateAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.ModifyGuildTemplateResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild-template#delete-guild-template
@@ -148,7 +148,7 @@ function GuildTemplate.deleteGuildTemplateAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.DeleteGuildTemplateResponse>
 end
 
 return GuildTemplate

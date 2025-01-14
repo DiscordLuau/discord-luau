@@ -26,7 +26,7 @@ function Guild.createGuildAsync(instance: request.Request, jsonParams: apiTypes.
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.CreateGuildResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#get-guild
@@ -50,7 +50,7 @@ function Guild.getGuildAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetGuildResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#get-guild-preview
@@ -66,7 +66,7 @@ function Guild.getGuildPreviewAsync(instance: request.Request, guildId: apiTypes
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetGuildPreviewResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#modify-guild
@@ -89,7 +89,7 @@ function Guild.modifyGuildAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.ModifyGuildResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#delete-guild
@@ -105,7 +105,7 @@ function Guild.deleteGuildAsync(instance: request.Request, guildId: apiTypes.Sno
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.DeleteGuildResponse_>
 end
 
 -- https://discord.com/developers/docs/resources/guild#get-guild-channels
@@ -121,7 +121,7 @@ function Guild.getGuildChannelsAsync(instance: request.Request, guildId: apiType
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetGuildChannelsResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#create-guild-channel
@@ -144,7 +144,7 @@ function Guild.createGuildChannelAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.CreateGuildChannelResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#modify-guild-channel-positions
@@ -165,7 +165,7 @@ function Guild.modifyGuildChannelPositionsAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.ModifyGuildChannelPositionsResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#list-active-guild-threads
@@ -181,7 +181,7 @@ function Guild.listActiveGuildThreadsAsync(instance: request.Request, guildId: a
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.ListActiveGuildThreadsResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#get-guild-member
@@ -197,7 +197,7 @@ function Guild.getGuildMemberAsync(instance: request.Request, guildId: apiTypes.
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetGuildMemberResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#list-guild-members
@@ -223,7 +223,7 @@ function Guild.listGuildMembersAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.ListGuildMembersResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#search-guild-members
@@ -249,7 +249,7 @@ function Guild.searchGuildMembersAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.SearchGuildMembersResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#add-guild-member
@@ -271,7 +271,7 @@ function Guild.addGuildMemberAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.AddGuildMemberResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#modify-guild-member
@@ -295,7 +295,7 @@ function Guild.modifyGuildMemberAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.ModifyGuildMemberResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#modify-current-member
@@ -318,7 +318,7 @@ function Guild.modifyCurrentMemberAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.ModifyCurrentMemberResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#add-guild-member-role
@@ -341,7 +341,7 @@ function Guild.addGuildMemberRoleAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.AddGuildMemberRoleResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#remove-guild-member-role
@@ -364,7 +364,7 @@ function Guild.removeGuildMemberRoleAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.RemoveGuildMemberRoleResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#remove-guild-member
@@ -386,7 +386,7 @@ function Guild.removeGuildMemberAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.RemoveGuildMemberResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#get-guild-bans
@@ -414,7 +414,7 @@ function Guild.getGuildBansAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetGuildBansResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#get-guild-ban
@@ -430,7 +430,7 @@ function Guild.getGuildBanAsync(instance: request.Request, guildId: apiTypes.Sno
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetGuildBanResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#create-guild-ban
@@ -454,7 +454,7 @@ function Guild.createGuildBanAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.CreateGuildBanResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#remove-guild-ban
@@ -476,7 +476,7 @@ function Guild.removeGuildBanAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.RemoveGuildBanResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#bulk-guild-ban
@@ -499,7 +499,7 @@ function Guild.bulkGuildBanAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.BulkGuildBanResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#get-guild-roles
@@ -515,7 +515,7 @@ function Guild.getGuildRolesAsync(instance: request.Request, guildId: apiTypes.S
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetGuildRolesResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#get-guild-role
@@ -531,7 +531,7 @@ function Guild.getGuildRoleAsync(instance: request.Request, guildId: apiTypes.Sn
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetGuildRoleResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#create-guild-role
@@ -554,7 +554,7 @@ function Guild.createGuildRoleAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.CreateGuildRoleResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#modify-guild-role-positions
@@ -577,7 +577,7 @@ function Guild.modifyGuildRolePositionsAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.ModifyGuildRolePositionsResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#modify-guild-role
@@ -601,7 +601,7 @@ function Guild.modifyGuildRoleAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.ModifyGuildRoleResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#modify-guild-mfa-level
@@ -624,7 +624,7 @@ function Guild.modifyGuildMFALevelAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.ModifyGuildMFALevelResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#delete-guild-role
@@ -646,7 +646,7 @@ function Guild.deleteGuildRoleAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.DeleteGuildRoleResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#get-guild-prune-count
@@ -672,7 +672,7 @@ function Guild.getGuildPruneCountAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetGuildPruneCountResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#begin-guild-prune
@@ -695,7 +695,7 @@ function Guild.beginGuildPruneAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.BeginGuildPruneResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#get-guild-voice-regions
@@ -711,7 +711,7 @@ function Guild.getGuildVoiceRegionsAsync(instance: request.Request, guildId: api
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetGuildVoiceRegionsResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#get-guild-invites
@@ -727,7 +727,7 @@ function Guild.getGuildInvitesAsync(instance: request.Request, guildId: apiTypes
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetGuildInvitesResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#get-guild-integrations
@@ -743,7 +743,7 @@ function Guild.getGuildIntegrationsAsync(instance: request.Request, guildId: api
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetGuildIntegrationsResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#delete-guild-integration
@@ -765,7 +765,7 @@ function Guild.deleteGuildIntegrationAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.DeleteGuildIntegrationResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#get-guild-widget-settings
@@ -781,7 +781,7 @@ function Guild.getGuildWidgetSettingsAsync(instance: request.Request, guildId: a
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetGuildWidgetSettingsResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#modify-guild-widget
@@ -804,7 +804,7 @@ function Guild.modifyGuildWidgetAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.ModifyGuildWidgetResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#get-guild-widget
@@ -820,7 +820,7 @@ function Guild.getGuildWidgetAsync(instance: request.Request, guildId: apiTypes.
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetGuildWidgetResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#get-guild-vanity-url
@@ -836,7 +836,7 @@ function Guild.getGuildVanityURLAsync(instance: request.Request, guildId: apiTyp
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetGuildVanityUrlResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#get-guild-widget-image
@@ -860,7 +860,7 @@ function Guild.getGuildWidgetImageAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetGuildWidgetImageResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#get-guild-welcome-screen
@@ -876,7 +876,7 @@ function Guild.getGuildWelcomeScreenAsync(instance: request.Request, guildId: ap
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetGuildWelcomeScreenResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#modify-guild-welcome-screen
@@ -899,7 +899,7 @@ function Guild.modifyGuildWelcomeScreenAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.ModifyGuildWelcomeScreenResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#get-guild-onboarding
@@ -915,7 +915,7 @@ function Guild.getGuildOnboardingAsync(instance: request.Request, guildId: apiTy
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetGuildOnboardingResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#modify-guild-onboarding
@@ -938,7 +938,7 @@ function Guild.modifyGuildOnboardingAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.ModifyGuildOnboardingResponse>
 end
 
 return Guild

@@ -294,7 +294,7 @@ function Bot.Prototype.connectAsync(self: Bot)
 			end
 		end)
 
-		self.state.webSocketManager:connectAsync(gatewayInformation:unwrapOk())
+		self.state.webSocketManager:connectAsync(gatewayInformation:unwrapOk()):poll()
 		self.state.webSocketManager.onConnected:wait()
 	end) :: any
 end
@@ -360,7 +360,7 @@ function Bot.Prototype.getGroupDMChannelAsync(self: Bot, channelId: string)
 		local channel = self:getChannelAsync(channelId):await():unwrapOk()
 
 		return channel :: classes.GroupDM
-	end)
+	end) :: any
 end
 
 --[[

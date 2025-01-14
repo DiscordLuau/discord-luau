@@ -31,7 +31,7 @@ function StageInstance.createStageInstanceAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.CreateStageInstanceResponse>
 end
 
 -- https://discord.com/developers/docs/resources/stage-instance#get-stage-instance
@@ -47,7 +47,7 @@ function StageInstance.getStageInstanceAsync(instance: request.Request, channelI
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetStageInstanceResponse>
 end
 
 -- https://discord.com/developers/docs/resources/stage-instance#modify-stage-instance
@@ -70,7 +70,7 @@ function StageInstance.modifyStageInstanceAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.ModifyStageInstanceResponse>
 end
 
 -- https://discord.com/developers/docs/resources/stage-instance#delete-stage-instance
@@ -86,7 +86,7 @@ function StageInstance.deleteStageInstanceAsync(instance: request.Request, chann
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.DeleteStageInstanceResponse_>
 end
 
 return StageInstance

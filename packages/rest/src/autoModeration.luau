@@ -13,25 +13,21 @@ local request = require("./request")
 local AutoModeration = {}
 
 -- https://discord.com/developers/docs/resources/auto-moderation#list-auto-moderation-rules-for-guild
-function AutoModeration.listAutoModerationRulesForGuildAsync(
-	instance: request.Request,
-	guildId: apiTypes.Snowflake
-): future.Future<
-	string,
-	apiTypes.ListAutoModerationRulesForGuildResponse
->
-	return future.Future.new(function()
-		instance:assertToken()
+function AutoModeration.listAutoModerationRulesForGuildAsync(instance: request.Request, guildId: apiTypes.Snowflake)
+	return future.Future.new(
+			function()
+				instance:assertToken()
 
-		instance:setMethod("GET")
-		instance:setUrl(string.format(apiTypes.rest.endpoints.ListAutoModerationRulesForGuild, guildId))
+				instance:setMethod("GET")
+				instance:setUrl(string.format(apiTypes.rest.endpoints.ListAutoModerationRulesForGuild, guildId))
 
-		local response = instance:executeAsync():await()
+				local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+				assert(response:isOk(), response:unwrapErr())
 
-		return response:unwrapOk().body
-	end)
+				return response:unwrapOk().body
+			end
+		) :: future.FutureLike<string, apiTypes.ListAutoModerationRulesForGuildResponse>
 end
 
 -- https://discord.com/developers/docs/resources/auto-moderation#get-auto-moderation-rule
@@ -39,10 +35,7 @@ function AutoModeration.getAutoModerationRulesForGuildAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	autoModerationRuleId: apiTypes.Snowflake
-): future.Future<
-	string,
-	apiTypes.GetAutoModerationRuleResponse
->
+)
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -54,7 +47,7 @@ function AutoModeration.getAutoModerationRulesForGuildAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.GetAutoModerationRuleResponse>
 end
 
 -- https://discord.com/developers/docs/resources/auto-moderation#create-auto-moderation-rule
@@ -77,7 +70,7 @@ function AutoModeration.createAutoModerationRuleAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.CreateAutoModerationRuleResponse>
 end
 
 -- https://discord.com/developers/docs/resources/auto-moderation#modify-auto-moderation-rule
@@ -101,7 +94,7 @@ function AutoModeration.modifyAutoModerationRuleAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.ModifyAutoModerationRuleResponse>
 end
 
 -- https://discord.com/developers/docs/resources/auto-moderation#delete-auto-moderation-rule
@@ -123,7 +116,7 @@ function AutoModeration.deleteAutoModerationRuleAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().body
-	end)
+	end) :: future.FutureLike<string, apiTypes.DeleteAutoModerationRuleResponse>
 end
 
 return AutoModeration

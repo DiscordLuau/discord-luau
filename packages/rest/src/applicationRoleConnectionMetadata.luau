@@ -14,48 +14,46 @@ local ApplicationRoleConnectionMetadata = {}
 function ApplicationRoleConnectionMetadata.getApplicationRoleConnectionMetadataRecordsAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake
-): future.Future<
-	string,
-	apiTypes.GetCurrentApplicationResponse
->
-	return future.Future.new(function()
-		instance:assertToken()
+)
+	return future.Future.new(
+			function()
+				instance:assertToken()
 
-		instance:setMethod("GET")
-		instance:setUrl(
-			string.format(apiTypes.rest.endpoints.GetApplicationRoleConnectionMetadataRecords, applicationId)
-		)
+				instance:setMethod("GET")
+				instance:setUrl(
+					string.format(apiTypes.rest.endpoints.GetApplicationRoleConnectionMetadataRecords, applicationId)
+				)
 
-		local response = instance:executeAsync():await()
+				local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+				assert(response:isOk(), response:unwrapErr())
 
-		return response:unwrapOk().body
-	end)
+				return response:unwrapOk().body
+			end
+		) :: future.FutureLike<string, apiTypes.GetApplicationRoleConnectionMetadataRecordsResponse>
 end
 
 -- https://discord.com/developers/docs/resources/application-role-connection-metadata#update-application-role-connection-metadata-records
 function ApplicationRoleConnectionMetadata.updateApplicationRoleConnectionMetadataRecordsAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake
-): future.Future<
-	string,
-	apiTypes.UpdateApplicationRoleConnectionMetadataRecordsResponse
->
-	return future.Future.new(function()
-		instance:assertToken()
+)
+	return future.Future.new(
+			function()
+				instance:assertToken()
 
-		instance:setMethod("PUT")
-		instance:setUrl(
-			string.format(apiTypes.rest.endpoints.UpdateApplicationRoleConnectionMetadataRecords, applicationId)
-		)
+				instance:setMethod("PUT")
+				instance:setUrl(
+					string.format(apiTypes.rest.endpoints.UpdateApplicationRoleConnectionMetadataRecords, applicationId)
+				)
 
-		local response = instance:executeAsync():await()
+				local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+				assert(response:isOk(), response:unwrapErr())
 
-		return response:unwrapOk().body
-	end)
+				return response:unwrapOk().body
+			end
+		) :: future.FutureLike<string, apiTypes.UpdateApplicationRoleConnectionMetadataRecordsResponse>
 end
 
 return ApplicationRoleConnectionMetadata
