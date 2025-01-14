@@ -1,117 +1,96 @@
 --[[
-	An 64-bit library to provide 64-bit binary operation in luau, ideally luau would expose some sort of bit64 lib,
-	but they don't, so this is the un-optimised, awkward approach!
+    An optimized 64-bit library to provide 64-bit binary operations in Luau
+    using 32-bit operations and `bit32` for improved performance.
 ]]
 local Bit64 = {}
 
 --[[
-	Converts a number to a binary string.
+	Splits a 64-bit integer into high and low 32-bit integers
 ]]
-local function toBinary(number: number): string
-	local binary = select(
-		1,
-		string.gsub(string.format("%o", number), ".", function(x)
-			return ({
-				"000",
-				"001",
-				"010",
-				"011",
-				"100",
-				"101",
-				"110",
-				"111",
-			})[tonumber(x) :: number + 1]
-		end)
-	)
+local function split64(value: number): (number, number)
+	local low = bit32.band(value, 0xFFFFFFFF)
+	local high = math.floor(value / 4294967296)
 
-	binary = `{string.rep("0", math.max(64 - #binary, 0))}{binary}`
-
-	return binary
+	return low, high
 end
 
 --[[
-	Converts a binary string to a number.
+	Combines high and low 32-bit integers into a 64-bit integer
 ]]
-local function toNumber(binary: string): number
-	return tonumber(binary, 2) :: number
+local function combine64(low: number, high: number): number
+	return (high * 4294967296) + low
 end
 
 --[[
-	Binary NOT operation for 64 bit ints
+	Binary NOT operation
 ]]
-function Bit64.bnot(value: number)
-	local binary = toBinary(value)
+function Bit64.bnot(value: number): number
+	local low, high = split64(value)
+	local newLow = bit32.bnot(low)
+	local newHigh = bit32.bnot(high)
 
-	binary = string.gsub(binary, ".", function(x)
-		if x == "0" then
-			return "1"
-		else
-			return "0"
-		end
-	end)
-
-	return toNumber(binary)
+	return combine64(newLow, newHigh)
 end
 
 --[[
-	Binary OR operation for 64 bit ints
+	Binary OR operation
 ]]
-function Bit64.bor(value0: number, value1: number)
-	local binary0 = toBinary(value0)
-	local binary1 = toBinary(value1)
+function Bit64.bor(value0: number, value1: number): number
+	local low0, high0 = split64(value0)
+	local low1, high1 = split64(value1)
+	local newLow = bit32.bor(low0, low1)
+	local newHigh = bit32.bor(high0, high1)
 
-	local outputBinary = ``
+	return combine64(newLow, newHigh)
+end
 
-	for index = 1, #binary0 do
-		local binary0Bit = tonumber(string.sub(binary0, index, index)) :: number
-		local binary1Bit = tonumber(string.sub(binary1, index, index)) :: number
+--[[
+	Binary AND operation
+]]
+function Bit64.band(value0: number, value1: number): number
+	local low0, high0 = split64(value0)
+	local low1, high1 = split64(value1)
+	local newLow = bit32.band(low0, low1)
+	local newHigh = bit32.band(high0, high1)
 
-		if binary0Bit + binary1Bit > 0 then
-			outputBinary ..= "1"
-		else
-			outputBinary ..= "0"
-		end
+	return combine64(newLow, newHigh)
+end
+
+--[[
+	Binary SHIFT operation
+]]
+function Bit64.shift(value: number, displacement: number): number
+	if displacement == 0 then
+		return value
 	end
 
-	return toNumber(outputBinary)
-end
+	local low, high = split64(value)
 
---[[
-	Binary AND operation for 64 bit ints
-]]
-function Bit64.band(value0: number, value1: number)
-	local binary0 = toBinary(value0)
-	local binary1 = toBinary(value1)
-
-	local outputBinary = ``
-
-	for index = 1, #binary0 do
-		local binary0Bit = tonumber(string.sub(binary0, index, index)) :: number
-		local binary1Bit = tonumber(string.sub(binary1, index, index)) :: number
-
-		outputBinary ..= tostring(binary0Bit * binary1Bit)
-	end
-
-	return toNumber(outputBinary)
-end
-
---[[
-	Binary SHIFT operation for 64 bit ints, disposition is the number of bits to shift by, can support negative values
-]]
-function Bit64.shift(value: number, disposition: number)
-	local binary = toBinary(value)
-
-	if disposition > 0 then
-		binary = string.sub(binary, 0, #binary - disposition)
-		binary = `{string.rep("0", disposition)}{binary}`
+	if displacement > 0 then
+		-- Left shift
+		if displacement >= 32 then
+			high = bit32.lshift(low, displacement - 32)
+			low = 0
+		else
+			high = bit32.bor(bit32.lshift(high, displacement), bit32.rshift(low, 32 - displacement))
+			low = bit32.lshift(low, displacement)
+		end
 	else
-		disposition = math.abs(disposition)
-
-		binary = string.sub(binary, -(#binary - disposition))
-		binary = `{binary}{string.rep("0", disposition)}`
+		-- Right shift
+		displacement = -displacement
+		if displacement >= 32 then
+			low = bit32.rshift(high, displacement - 32)
+			high = 0
+		else
+			low = bit32.bor(bit32.rshift(low, displacement), bit32.lshift(high, 32 - displacement))
+			high = bit32.rshift(high, displacement)
+		end
 	end
 
-	return toNumber(binary)
+	low = bit32.band(low, 0xFFFFFFFF)
+	high = bit32.band(high, 0xFFFFFFFF)
+
+	return combine64(low, high)
 end
 
 return Bit64
