@@ -4,7 +4,8 @@
 	</p>
 </div>
 
-## DiscordLuau - WebSocket
+## [DiscordLuau - WebSocket](https://pesde.dev/packages/discord_luau/websocket
+)
 
 DiscordLuau - WebSocket provides bindings for the Discord WebSocket API. This package is responsible for providing the core functionality for the DiscordLuau client.
 
@@ -36,13 +37,9 @@ manager:connectAsync()
 ```
 
 ### Contributing
-We welcome contributions! If you find an issue or have ideas for improvement:
 
-1. Fork the repository.
-2. Create a new branch for your feature or fix.
-3. Submit a pull request.
-
-Please ensure your contributions align with our contribution guidelines.
+See the [Contributing Guide](CONTRIBUTING) for more information on how to contribute to this project.
 
 ### License
-This project is licensed under the MIT License. Feel free to use it in your projects.
+
+See the [LICENSE](LICENSE) file for more information.

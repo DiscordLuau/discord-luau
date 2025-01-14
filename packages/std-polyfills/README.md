@@ -4,7 +4,7 @@
 	</p>
 </div>
 
-## DiscordLuau - Std Polyfills
+## [DiscordLuau - Std Polyfills](https://pesde.dev/packages/discord_luau/std_polyfills)
 
 DiscordLuau - Std Polyfills provides polyfills for the standard library. When transitioning Discord-Luau to a new Luau runtime, ensure the standard library is fully polyfilled.
 

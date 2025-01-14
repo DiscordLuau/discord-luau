@@ -4,7 +4,7 @@
 	</p>
 </div>
 
-## DiscordLuau - Stream
+## [DiscordLuau - Stream](https://pesde.dev/packages/discord_luau/stream)
 
 DiscordLuau - Stream, otherwise known as a string stream, is a way to navigate through a string - this is often useful for parsing data such as FormData.
 

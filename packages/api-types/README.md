@@ -4,7 +4,7 @@
 	</p>
 </div>
 
-## DiscordLuau - Types
+## [DiscordLuau - Types](https://pesde.dev/packages/discord_luau/api_types)
 
 DiscordLuau - Types is a comprehensive library providing Luau types for all Discord v10 APIs. It is designed to help developers effectively type HTTP and WebSocket requests they receive from the Discord API, enabling better code clarity, safety, and development efficiency.
 

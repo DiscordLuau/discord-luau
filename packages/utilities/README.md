@@ -4,7 +4,7 @@
 	</p>
 </div>
 
-## DiscordLuau - Util
+## [DiscordLuau - Util](https://pesde.dev/packages/discord_luau/util)
 
 DiscordLuau - Util provides basic functionality for discord-luau, for example - validating the validity of a string to make sure it's kebab case.
 

@@ -4,7 +4,7 @@
 	</p>
 </div>
 
-## DiscordLuau - Builders
+## [DiscordLuau - Builders](https://pesde.dev/packages/discord_luau/builders)
 
 DiscordLuau - Builders is a package that provides a collection of builders designed to create and modify objects compatible with the Discord API.
 

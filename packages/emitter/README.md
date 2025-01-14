@@ -4,7 +4,7 @@
 	</p>
 </div>
 
-## DiscordLuau - Emitter
+## [DiscordLuau - Emitter](https://pesde.dev/packages/discord_luau/emitter)
 
 DicordLuau - Emitter provides a simple event emitter for DiscordLuau, it's a simple way to listen and emit events.
 

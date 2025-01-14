@@ -4,7 +4,7 @@
 	</p>
 </div>
 
-## DiscordLuau
+## [DiscordLuau](https://pesde.dev/packages/discord_luau/discord_luau)
 
 the DiscordLuau package represents the core of the Discord Luau Library. It serves as the primary interface for developers to build their own Discord bots and applications.
 

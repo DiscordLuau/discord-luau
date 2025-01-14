@@ -4,7 +4,7 @@
 	</p>
 </div>
 
-## DiscordLuau - Logger
+## [DiscordLuau - Logger](https://pesde.dev/packages/discord_luau/logger)
 
 DiscordLuau - Logger provides a simple class for logging messages to the console. It takes advantage of ASCII colors to make the output more readable.
 

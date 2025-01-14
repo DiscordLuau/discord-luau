@@ -4,7 +4,7 @@
 	</p>
 </div>
 
-## DiscordLuau - Buffer
+## [DiscordLuau - Buffer](https://pesde.dev/packages/discord_luau/buffer)
 
 DiscordLuau - Buffer, not to be confused with the luau buffer datatype, is a library that helps us temporary buffer binary data, this is required as discord may send up parts of a chunk - and not the entire chunk, so we need to buffer the data until we have the entire chunk.
 

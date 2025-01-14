@@ -4,7 +4,7 @@
 	</p>
 </div>
 
-## DiscordLuau - Snowflake
+## [DiscordLuau - Snowflake](https://pesde.dev/packages/discord_luau/snowflake)
 
 DiscordLuau - Snowflake provides a way to parse Disord snowflakes into their respective components.
 

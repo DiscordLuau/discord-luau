@@ -4,7 +4,7 @@
 	</p>
 </div>
 
-## DiscordLuau - Bit
+## [DiscordLuau - Bit](https://pesde.dev/packages/discord_luau/bit)
 
 DiscordLuau - Bit is a library that extends Luau with 64-bit operations. By default, Luau supports only 32-bit operations, but tasks such as calculating permissions and processing snowflakes require 64-bit capabilities.
 

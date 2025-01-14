@@ -4,7 +4,7 @@
 	</p>
 </div>
 
-## DiscordLuau - Secret
+## [DiscordLuau - Secret](https://pesde.dev/packages/discord_luau/secret)
 
 DiscordLuau - Secret provides a way to display secrets in the console, in the event you accidently print them. This is used when handling any discord bot tokens in order to make sure they are not leaked.
 

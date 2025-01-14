@@ -4,7 +4,7 @@
 	</p>
 </div>
 
-## DiscordLuau - State
+## [DiscordLuau - State](https://pesde.dev/packages/discord_luau/state)
 
 DiscordLuau - State provides a single source of truth for your discord bots state, generally shared between the REST and Gateway libraries.
 

@@ -4,7 +4,7 @@
 	</p>
 </div>
 
-## DiscordLuau - REST
+## [DiscordLuau - REST](https://pesde.dev/packages/discord_luau/rest)
 
 DiscordLuau - REST provides typed functions for interacting with the Discord REST API, allowing you to easily fetch and manipulate data from Discord.
 

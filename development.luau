@@ -1,7 +1,7 @@
 local env = require(".env")
 
-local discordLuau = require("packages/discord_luau/src")
-local builders = require("packages/builders/src")
+local discordLuau = require("./packages/discord_luau/src")
+local builders = require("./packages/builders/src")
 
 local discordBot = discordLuau.Bot.new({
 	token = env.DISCORD_BOT_TOKEN,

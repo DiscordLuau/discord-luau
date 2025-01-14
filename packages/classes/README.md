@@ -4,7 +4,7 @@
 	</p>
 </div>
 
-## DiscordLuau - Classes
+## [DiscordLuau - Classes](https://pesde.dev/packages/discord_luau/classes)
 
 DiscordLuau - Classes provide a collection of classes designed to interact with the Discord API. For example, if you want to interact with a Discord message, the Discord Message Class offers all the methods and properties needed to seamlessly work with a Discord message.
 

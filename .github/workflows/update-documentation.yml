@@ -1,0 +1,23 @@
+name: Update Documentation
+
+on:
+  workflow_dispatch:
+
+  push:
+    branches:
+      - Master
+
+permissions:
+  contents: write
+
+jobs:
+  update-documentation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dcumentation Dispatch
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.PAT }}
+          repository: DiscordLuau/docs
+          event-type: update-ref
+          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
