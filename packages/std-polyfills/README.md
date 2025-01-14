@@ -31,13 +31,8 @@ local DateTime = Std.datetime.now()
 ```
 
 ### Contributing
-We welcome contributions! If you find an issue or have ideas for improvement:
 
-1. Fork the repository.
-2. Create a new branch for your feature or fix.
-3. Submit a pull request.
-
-Please ensure your contributions align with our contribution guidelines.
+See the [Contributing Guide](CONTRIBUTING) for more information on how to contribute to this project.
 
 ### License
 This project is licensed under the MIT License. Feel free to use it in your projects.

@@ -5,6 +5,14 @@ When contributing to this repository, please first discuss the change you wish t
 Please note we have a [code of conduct](CODE_OF_CONDUCT.md), please follow it in all your interactions with the project.
 
 ## Development environment setup
+1. Git clone the projects repository *(`git clone https://github.com/DiscordLuau/discord-luau.git`)*
+2. Install all dependencies *(`pesde install`)*
+	i. in the event pesde errors, try running pesde a second time.
+3. Use `Lune` to start the `development.luau` script
+	i. `lune run development`
+
+## Code Style Guide
+We've generally adopted a mix of Lunes lua styleguide, as well as Pesdes lua styleguides, these styleguides aren't written down anywhere in detail, but generally lean towards how one of the two projects write their code. *(Lean towards Lune, and where thats not possible - pesde.)*
 
 
 ## Issues and feature requests
