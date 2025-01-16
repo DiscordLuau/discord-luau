@@ -35,7 +35,7 @@ function GuildBehaviour.Prototype.setPositionAsync<T>(self: Channel<T>, position
 		assert(response:isOk(), response:unwrapErr())
 
 		return nil
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -56,7 +56,7 @@ function GuildBehaviour.Prototype.setParentAsync<T>(self: Channel<T>, parentId: 
 		assert(response:isOk(), response:unwrapErr())
 
 		return nil
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -84,7 +84,7 @@ function GuildBehaviour.Prototype.setPermissionsAsync<T>(
 		assert(response:isOk(), response:unwrapErr())
 
 		return nil
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -104,7 +104,7 @@ function GuildBehaviour.Prototype.deletePermissionAsync<T>(
 		assert(response:isOk(), response:unwrapErr())
 
 		return nil
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -125,7 +125,7 @@ function GuildBehaviour.Prototype.getInvitesAsync<T>(self: Channel<T>)
 		end
 
 		return invites
-	end)
+	end) :: future.FutureLike<string, { invite.Invite }>
 end
 
 --[[
@@ -140,7 +140,7 @@ function GuildBehaviour.Prototype.createInviteAsync<T>(self: Channel<T>, json: b
 		assert(response:isOk(), response:unwrapErr())
 
 		return invite.new(self.state, response:unwrapOk())
-	end)
+	end) :: future.FutureLike<string, invite.Invite>
 end
 
 --[[
@@ -181,7 +181,11 @@ function GuildBehaviour.Prototype.listPublicArchivedThreadsAsync<T>(
 		end
 
 		return returnedValue
-	end)
+	end) :: future.FutureLike<string, {
+		threads: { apiTypes.Snowflake },
+		members: { threadMember.ThreadMember },
+		hasMore: boolean,
+	}>
 end
 
 --[[
@@ -222,7 +226,11 @@ function GuildBehaviour.Prototype.listPrivateArchivedThreadsAsync<T>(
 		end
 
 		return returnedValue
-	end)
+	end) :: future.FutureLike<string, {
+		threads: { apiTypes.Snowflake },
+		members: { threadMember.ThreadMember },
+		hasMore: boolean,
+	}>
 end
 
 --[[
@@ -263,7 +271,11 @@ function GuildBehaviour.Prototype.listJoinedPrivateArchivedThreadsAsync<T>(
 		end
 
 		return returnedValue
-	end)
+	end) :: future.FutureLike<string, {
+		threads: { apiTypes.Snowflake },
+		members: { threadMember.ThreadMember },
+		hasMore: boolean,
+	}>
 end
 
 --[[
@@ -272,7 +284,7 @@ end
 function GuildBehaviour.Prototype.setNameAsync<T>(self: Channel<T>, groupName: string)
 	return self:modifyAsync({
 		name = groupName,
-	})
+	}) :: future.FutureLike<string, Channel<T>>
 end
 
 function GuildBehaviour.Interface.inheritProperties(class: any, channelData: apiTypes.ChannelObject)

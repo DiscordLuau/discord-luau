@@ -60,7 +60,7 @@ function Guild.Prototype.createSlashCommandAsync(self: Guild, slashCommand: buil
 		assert(response:isOk(), response:unwrapErr())
 
 		return commandObject.new(response:unwrapOk())
-	end)
+	end) :: future.FutureLike<string, commandObject.Command>
 end
 
 --[[
@@ -77,7 +77,7 @@ function Guild.Prototype.deleteSlashCommandAsync(self: Guild, slashCommandId: ap
 		assert(response:isOk(), response:unwrapErr())
 
 		return nil
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -98,7 +98,7 @@ function Guild.Prototype.editSlashCommandAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return commandObject.new(response:unwrapOk())
-	end)
+	end) :: future.FutureLike<string, commandObject.Command>
 end
 
 --[[
@@ -123,7 +123,7 @@ function Guild.Prototype.getSlashCommandsAsync(self: Guild, withLocalizations: b
 		end
 
 		return commands
-	end)
+	end) :: future.FutureLike<string, { commandObject.Command }>
 end
 
 --[[
@@ -148,7 +148,7 @@ function Guild.Prototype.overwriteSlashCommandsAsync(self: Guild, slashCommands:
 		end
 
 		return commands
-	end)
+	end) :: future.FutureLike<string, { commandObject.Command }>
 end
 
 --[[
@@ -165,7 +165,7 @@ function Guild.Prototype.fetchGuildPreviewAsync(self: Guild)
 		assert(response:isOk(), response:unwrapErr())
 
 		return preview.new(response:unwrapOk())
-	end)
+	end) :: future.FutureLike<string, preview.Preview>
 end
 
 --[[
@@ -184,7 +184,7 @@ function Guild.Prototype.modifyGuildAsync(self: Guild, json: builders.guildJSON,
 		self:sync(response:unwrapOk())
 
 		return self
-	end)
+	end) :: future.FutureLike<string, Guild>
 end
 
 --[[
@@ -200,7 +200,7 @@ function Guild.Prototype.deleteGuildAsync(self: Guild)
 		assert(response:isOk(), response:unwrapErr())
 
 		return nil
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -226,7 +226,7 @@ function Guild.Prototype.getChannelsAsync(self: Guild)
 		end
 
 		return channels
-	end)
+	end) :: future.FutureLike<string, { apiTypes.AbstractChannel }>
 end
 
 --[[
@@ -244,14 +244,14 @@ function Guild.Prototype.getTextChannelsAsync(self: Guild)
 					continue
 				end
 
-				table.insert(resolvedChannels, channel :: guildText.GuildText)
+				table.insert(resolvedChannels, channel :: any)
 			end
 
 			return resolvedChannels
 		else
 			error(channels:unwrapErr())
 		end
-	end)
+	end) :: future.FutureLike<string, { guildText.GuildText }>
 end
 
 --[[
@@ -269,14 +269,14 @@ function Guild.Prototype.getVoiceChannelsAsync(self: Guild)
 					continue
 				end
 
-				table.insert(resolvedChannels, channel :: guildText.GuildText)
+				table.insert(resolvedChannels, channel :: any)
 			end
 
 			return resolvedChannels
 		else
 			error(channels:unwrapErr())
 		end
-	end)
+	end) :: future.FutureLike<string, { guildVoice.GuildVoice }>
 end
 
 --[[
@@ -294,14 +294,14 @@ function Guild.Prototype.getCategoryChannelsAsync(self: Guild)
 					continue
 				end
 
-				table.insert(resolvedChannels, channel :: guildText.GuildText)
+				table.insert(resolvedChannels, channel :: any)
 			end
 
 			return resolvedChannels
 		else
 			error(channels:unwrapErr())
 		end
-	end)
+	end) :: future.FutureLike<string, { guildCategory.GuildCategory }>
 end
 
 --[[
@@ -319,14 +319,14 @@ function Guild.Prototype.getAnnouncementChannelsAsync(self: Guild)
 					continue
 				end
 
-				table.insert(resolvedChannels, channel :: guildText.GuildText)
+				table.insert(resolvedChannels, channel :: any)
 			end
 
 			return resolvedChannels
 		else
 			error(channels:unwrapErr())
 		end
-	end)
+	end) :: future.FutureLike<string, { guildAnnouncement.GuildAnnouncement }>
 end
 
 --[[
@@ -344,14 +344,14 @@ function Guild.Prototype.getStageVoiceChannelsAsync(self: Guild)
 					continue
 				end
 
-				table.insert(resolvedChannels, channel :: guildText.GuildText)
+				table.insert(resolvedChannels, channel :: any)
 			end
 
 			return resolvedChannels
 		else
 			error(channels:unwrapErr())
 		end
-	end)
+	end) :: future.FutureLike<string, { guildStageVoice.GuildStageVoice }>
 end
 
 --[[
@@ -369,14 +369,14 @@ function Guild.Prototype.getDirectoryChannelsAsync(self: Guild)
 					continue
 				end
 
-				table.insert(resolvedChannels, channel :: guildText.GuildText)
+				table.insert(resolvedChannels, channel :: any)
 			end
 
 			return resolvedChannels
 		else
 			error(channels:unwrapErr())
 		end
-	end)
+	end) :: future.FutureLike<string, { guildDirectory.GuildDirectory }>
 end
 
 --[[
@@ -398,7 +398,7 @@ function Guild.Prototype.createChannelAsync<T>(self: Guild, json: builders.chann
 		assert(response:isOk(), response:unwrapErr())
 
 		return constructChannelFromData(self.state, response:unwrapOk())
-	end)
+	end) :: future.FutureLike<string, { apiTypes.AbstractChannel }>
 end
 
 --[[
@@ -420,12 +420,12 @@ function Guild.Prototype.getThreadsAsync(self: Guild)
 
 		local channels: { unknown } = {}
 
-		for _, channelData in next, response.threads do
+		for _, channelData in next, response:unwrapOk().threads do
 			table.insert(channels, constructChannelFromData(self.state, channelData))
 		end
 
 		return channels
-	end)
+	end) :: future.FutureLike<string, { publicThread.Public | privateThread.Private }>
 end
 
 --[[
@@ -443,14 +443,14 @@ function Guild.Prototype.getAnnouncementThreadsAsync(self: Guild)
 					continue
 				end
 
-				table.insert(resolvedChannels, channel :: guildText.GuildText)
+				table.insert(resolvedChannels, channel :: any)
 			end
 
 			return resolvedChannels
 		else
 			error(channels:unwrapErr())
 		end
-	end)
+	end) :: future.FutureLike<string, { announcementThread.Announcement }>
 end
 
 --[[
@@ -468,14 +468,14 @@ function Guild.Prototype.getPublicThreadsAsync(self: Guild)
 					continue
 				end
 
-				table.insert(resolvedChannels, channel :: guildText.GuildText)
+				table.insert(resolvedChannels, channel :: any)
 			end
 
 			return resolvedChannels
 		else
 			error(channels:unwrapErr())
 		end
-	end)
+	end) :: future.FutureLike<string, { publicThread.Public }>
 end
 
 --[[
@@ -493,14 +493,14 @@ function Guild.Prototype.getPrivateThreadsAsync(self: Guild)
 					continue
 				end
 
-				table.insert(resolvedChannels, channel :: guildText.GuildText)
+				table.insert(resolvedChannels, channel :: any)
 			end
 
 			return resolvedChannels
 		else
 			error(channels:unwrapErr())
 		end
-	end)
+	end) :: future.FutureLike<string, { privateThread.Private }>
 end
 
 --[[
@@ -516,7 +516,7 @@ function Guild.Prototype.getGuildMemberAsync(self: Guild, userId: string)
 		assert(response:isOk(), response:unwrapErr())
 
 		return member.new(self.state, self.id, response:unwrapOk())
-	end)
+	end) :: future.FutureLike<string, member.Member>
 end
 
 --[[
@@ -542,7 +542,7 @@ function Guild.Prototype.listGuildMembersAsync(self: Guild, lastSnowflake: strin
 		end
 
 		return members
-	end)
+	end) :: future.FutureLike<string, { member.Member }>
 end
 
 --[[
@@ -568,7 +568,7 @@ function Guild.Prototype.searchGuildMembersAsync(self: Guild, query: string, lim
 		end
 
 		return members
-	end)
+	end) :: future.FutureLike<string, { member.Member }>
 end
 
 --[[
@@ -606,10 +606,10 @@ function Guild.Prototype.addGuildMemberAsync(
 
 		if data then
 			return member.new(self.state, self.id, data)
+		else
+			return nil :: any
 		end
-
-		return
-	end)
+	end) :: future.FutureLike<string, member.Member?>
 end
 
 --[[
@@ -624,7 +624,7 @@ function Guild.Prototype.kickGuildMemberAsync(self: Guild, userId: apiTypes.Snow
 		assert(response:isOk(), response:unwrapErr())
 
 		return nil
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -660,7 +660,7 @@ function Guild.Prototype.banGuildMemberAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return nil
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -675,31 +675,33 @@ function Guild.Prototype.bulkBanGuildMembersAsync(
 	string,
 	{ failedUsers: { apiTypes.Snowflake }, bannedUsers: { apiTypes.Snowflake } }
 >
-	return future.Future.new(function()
-		local request = self.state.rest:newRequest()
+	return future.Future.new(
+			function()
+				local request = self.state.rest:newRequest()
 
-		if deleteMessageSeconds then
-			assert(deleteMessageSeconds < 604800, "deleteMessageSeconds must be less than 604800")
-			assert(deleteMessageSeconds > 0, "deleteMessageSeconds must be greater than 0")
-		end
+				if deleteMessageSeconds then
+					assert(deleteMessageSeconds < 604800, "deleteMessageSeconds must be less than 604800")
+					assert(deleteMessageSeconds > 0, "deleteMessageSeconds must be greater than 0")
+				end
 
-		local response = rest.guild
-			.bulkGuildBanAsync(request, self.id, {
-				user_ids = userIds,
-				delete_message_seconds = deleteMessageSeconds,
-			}, reason)
-			:await()
+				local response = rest.guild
+					.bulkGuildBanAsync(request, self.id, {
+						user_ids = userIds,
+						delete_message_seconds = deleteMessageSeconds,
+					}, reason)
+					:await()
 
-		assert(response:isOk(), response:unwrapErr())
+				assert(response:isOk(), response:unwrapErr())
 
-		local data = response:unwrapOk()
-		local returnedValue = {}
+				local data = response:unwrapOk()
+				local returnedValue = {}
 
-		returnedValue.bannedUsers = data.banned_users
-		returnedValue.failedUsers = data.failed_users
+				returnedValue.bannedUsers = data.banned_users
+				returnedValue.failedUsers = data.failed_users
 
-		return returnedValue
-	end)
+				return returnedValue
+			end
+		) :: future.FutureLike<string, { bannedUsers: { apiTypes.Snowflake }, failedUsers: { apiTypes.Snowflake } }>
 end
 
 --[[
@@ -731,7 +733,7 @@ function Guild.Prototype.getGuildBansAsync(
 		end
 
 		return bans
-	end)
+	end) :: future.FutureLike<string, { ban.Ban }>
 end
 
 --[[
@@ -749,10 +751,10 @@ function Guild.Prototype.getGuildBanAsync(self: Guild, userId: apiTypes.Snowflak
 
 		if data then
 			return ban.new(data)
+		else
+			return nil :: any
 		end
-
-		return nil
-	end)
+	end) :: future.FutureLike<string, ban.Ban?>
 end
 
 --[[
@@ -773,7 +775,7 @@ function Guild.Prototype.getGuildRolesAsync(self: Guild)
 		end
 
 		return roles
-	end)
+	end) :: future.FutureLike<string, { role.Role }>
 end
 
 --[[
@@ -788,7 +790,7 @@ function Guild.Prototype.getGuildRoleAsync(self: Guild, roleId: apiTypes.Snowfla
 		assert(response:isOk(), response:unwrapErr())
 
 		return role.new(self.state, self.id, response:unwrapOk())
-	end)
+	end) :: future.FutureLike<string, role.Role>
 end
 
 --[[
@@ -803,7 +805,7 @@ function Guild.Prototype.createGuildRoleAsync(self: Guild, roleJson: builders.ro
 		assert(response:isOk(), response:unwrapErr())
 
 		return role.new(self.state, self.id, response:unwrapOk())
-	end)
+	end) :: future.FutureLike<string, role.Role>
 end
 
 --[[
@@ -822,7 +824,7 @@ function Guild.Prototype.setGuildMFALevelAsync(self: Guild, mfaLevel: apiTypes.M
 		assert(response:isOk(), response:unwrapErr())
 
 		return apiTypes.guild.MFALevel[response:unwrapOk()]
-	end)
+	end) :: future.FutureLike<string, apiTypes.MFALevel>
 end
 
 --[[
@@ -847,7 +849,7 @@ function Guild.Prototype.getGuildPruneCountAsync(self: Guild, days: number?, inc
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().pruned
-	end)
+	end) :: future.FutureLike<string, number>
 end
 
 --[[
@@ -886,7 +888,7 @@ function Guild.Prototype.beginGuildPruneAsync(
 		else
 			return 0
 		end
-	end)
+	end) :: future.FutureLike<string, number>
 end
 
 --[[
@@ -907,7 +909,7 @@ function Guild.Prototype.getGuildVoiceRegionsAsync(self: Guild)
 		end
 
 		return voiceRegions
-	end)
+	end) :: future.FutureLike<string, { voiceRegion.VoiceRegion }>
 end
 
 --[[
@@ -928,7 +930,7 @@ function Guild.Prototype.getGuildInvitesAsync(self: Guild)
 		end
 
 		return invites
-	end)
+	end) :: future.FutureLike<string, { invite.Invite }>
 end
 
 --[[
@@ -949,7 +951,7 @@ function Guild.Prototype.getGuildIntegrationsAsync(self: Guild)
 		end
 
 		return integrations
-	end)
+	end) :: future.FutureLike<string, { integration.Integration }>
 end
 
 --[[
@@ -967,7 +969,7 @@ function Guild.Prototype.deleteGuildIntegrationAsync(self: Guild, integrationId:
 		assert(response:isOk(), response:unwrapErr())
 
 		return nil
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -982,7 +984,7 @@ function Guild.Prototype.getGuildWidgetSettingsAsync(self: Guild)
 		assert(response:isOk(), response:unwrapErr())
 
 		return widgetSettings.new(response:unwrapOk())
-	end)
+	end) :: future.FutureLike<string, widgetSettings.WidgetSettings>
 end
 
 --[[
@@ -997,8 +999,8 @@ function Guild.Prototype.modifyGuildWidgetAsync(self: Guild, json: builders.widg
 
 		assert(response:isOk(), response:unwrapErr())
 
-		return widgetSettings.new(response:unwarpOk())
-	end)
+		return widgetSettings.new(response:unwrapOk())
+	end) :: future.FutureLike<string, widgetSettings.WidgetSettings>
 end
 
 --[[
@@ -1014,7 +1016,7 @@ function Guild.Prototype.getGuildWidgetAsync(self: Guild)
 		assert(response:isOk(), response:unwrapErr())
 
 		return widget.new(self.state, response:unwrapOk())
-	end)
+	end) :: future.FutureLike<string, widget.Widget>
 end
 
 --[[
@@ -1030,7 +1032,7 @@ function Guild.Prototype.getGuildVanityUrlAsync(self: Guild)
 		assert(response:isOk(), response:unwrapErr())
 
 		return vanityUrl.new(response:unwrapOk())
-	end)
+	end) :: future.FutureLike<string, vanityUrl.VanityUrl>
 end
 
 --[[
@@ -1052,7 +1054,7 @@ function Guild.Prototype.getGuildWidgetImageAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk()
-	end)
+	end) :: future.FutureLike<string, string>
 end
 
 --[[
@@ -1069,7 +1071,7 @@ function Guild.Prototype.getGuildWelcomeScreenAsync(self: Guild)
 		assert(response:isOk(), response:unwrapErr())
 
 		return welcomeScreen.new(response:unwrapOk())
-	end)
+	end) :: future.FutureLike<string, welcomeScreen.WelcomeScreen>
 end
 
 --[[
@@ -1084,7 +1086,7 @@ function Guild.Prototype.modifyGuildWelcomeScreenAsync(self: Guild, json: builde
 		assert(response:isOk(), response:unwrapErr())
 
 		return welcomeScreen.new(response:unwrapOk())
-	end)
+	end) :: future.FutureLike<string, welcomeScreen.WelcomeScreen>
 end
 
 --[[
@@ -1099,7 +1101,7 @@ function Guild.Prototype.getGuildOnboardingAsync(self: Guild)
 		assert(response:isOk(), response:unwrapErr())
 
 		return onboarding.new(response:unwrapOk())
-	end)
+	end) :: future.FutureLike<string, onboarding.Onboarding>
 end
 
 --[[
@@ -1115,7 +1117,7 @@ function Guild.Prototype.modifyGuildOnboardingAsync(self: Guild, json: builders.
 		assert(response:isOk(), response:unwrapErr())
 
 		return onboarding.new(response:unwrapOk())
-	end)
+	end) :: future.FutureLike<string, onboarding.Onboarding>
 end
 
 function Guild.Prototype.sync(self: Guild, guildData: apiTypes.GuildObject)

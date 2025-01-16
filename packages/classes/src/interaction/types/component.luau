@@ -43,7 +43,7 @@ function Component.Prototype.deferAsync(self: Component)
 		assert(response:isOk(), response:unwrapErr())
 
 		return nil
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -68,8 +68,10 @@ function Component.Prototype.messageAsync(self: Component, messageJSON: builders
 
 		if responseMessage and data.resource.message then
 			return message.new(self.state, data.resource.message)
+		else
+			return nil :: any
 		end
-	end)
+	end) :: future.FutureLike<string, message.Message?>
 end
 
 --[[
@@ -88,7 +90,7 @@ function Component.Prototype.getResponseAsync(self: Component, threadId: string?
 		assert(response:isOk(), response:unwrapErr())
 
 		return message.new(self.state, response:unwrapOk())
-	end)
+	end) :: future.FutureLike<string, message.Message>
 end
 
 --[[
@@ -107,7 +109,7 @@ function Component.Prototype.editResponseAsync(self: Component, messageJSON: bui
 		assert(response:isOk(), response:unwrapErr())
 
 		return message.new(self.state, response:unwrapOk())
-	end)
+	end) :: future.FutureLike<string, message.Message>
 end
 
 --[[
@@ -122,7 +124,7 @@ function Component.Prototype.deleteResponseAsync(self: Component)
 		assert(response:isOk(), response:unwrapErr())
 
 		return nil
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -147,7 +149,7 @@ function Component.Prototype.createFollowupResponseAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return message.new(self.state, response:unwrapOk())
-	end)
+	end) :: future.FutureLike<string, message.Message>
 end
 
 --[[
@@ -166,7 +168,7 @@ function Component.Prototype.getFollowupResponseAsync(self: Component, messageId
 		assert(response:isOk(), response:unwrapErr())
 
 		return message.new(self.state, response:unwrapOk())
-	end)
+	end) :: future.FutureLike<string, message.Message>
 end
 
 --[[
@@ -190,7 +192,7 @@ function Component.Prototype.editFollowupResponseAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return message.new(self.state, response:unwrapOk())
-	end)
+	end) :: future.FutureLike<string, message.Message>
 end
 
 --[[
@@ -205,7 +207,7 @@ function Component.Prototype.deleteFollowupResponseAsync(self: Component, messag
 		assert(response:isOk(), response:unwrapErr())
 
 		return nil
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 function Component.Prototype.sync(self: Component, interactionData: apiTypes.InteractionObject)

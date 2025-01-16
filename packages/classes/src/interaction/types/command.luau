@@ -44,7 +44,7 @@ function Command.Prototype.deferAsync(self: Command)
 		assert(response:isOk(), response:unwrapErr())
 
 		return nil
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -69,8 +69,10 @@ function Command.Prototype.messageAsync(self: Command, messageJSON: builders.mes
 
 		if responseMessage and data.resource.message then
 			return message.new(self.state, data.resource.message)
+		else
+			return nil :: any
 		end
-	end)
+	end) :: future.FutureLike<string, message.Message?>
 end
 
 --[[
@@ -89,7 +91,7 @@ function Command.Prototype.getResponseAsync(self: Command, threadId: string?)
 		assert(response:isOk(), response:unwrapErr())
 
 		return message.new(self.state, response:unwrapOk())
-	end)
+	end) :: future.FutureLike<string, message.Message>
 end
 
 --[[
@@ -108,7 +110,7 @@ function Command.Prototype.editResponseAsync(self: Command, messageJSON: builder
 		assert(response:isOk(), response:unwrapErr())
 
 		return message.new(self.state, response:unwrapOk())
-	end)
+	end) :: future.FutureLike<string, message.Message>
 end
 
 --[[
@@ -123,7 +125,7 @@ function Command.Prototype.deleteResponseAsync(self: Command)
 		assert(response:isOk(), response:unwrapErr())
 
 		return nil
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -148,7 +150,7 @@ function Command.Prototype.createFollowupResponseAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return message.new(self.state, response:unwrapOk())
-	end)
+	end) :: future.FutureLike<string, message.Message>
 end
 
 --[[
@@ -167,7 +169,7 @@ function Command.Prototype.getFollowupResponseAsync(self: Command, messageId: st
 		assert(response:isOk(), response:unwrapErr())
 
 		return message.new(self.state, response:unwrapOk())
-	end)
+	end) :: future.FutureLike<string, message.Message>
 end
 
 --[[
@@ -191,7 +193,7 @@ function Command.Prototype.editFollowupResponseAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return message.new(self.state, response:unwrapOk())
-	end)
+	end) :: future.FutureLike<string, message.Message>
 end
 
 --[[
@@ -206,7 +208,7 @@ function Command.Prototype.deleteFollowupResponseAsync(self: Command, messageId:
 		assert(response:isOk(), response:unwrapErr())
 
 		return nil
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[

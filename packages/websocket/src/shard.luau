@@ -150,7 +150,13 @@ function Shard.Prototype.disconnectAsync(self: Shard, code: number?)
 		self.onSocketDisconnected:invoke(code)
 
 		if self.socketInstance then
-			self.socketInstance.close(code)
+			xpcall(function()
+				self.socketInstance.close(code)
+			end, function(errorMessage)
+				self.logger:debug(
+					`Error during socketInstance.close, assuming socket has been closed: {tostring(errorMessage)}`
+				)
+			end)
 		end
 
 		if self.socketThread then

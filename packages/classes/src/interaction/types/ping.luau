@@ -39,7 +39,7 @@ function Ping.Prototype.pongAsync(self: Ping)
 		assert(response:isOk(), response:unwrapErr())
 
 		return nil
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 function Ping.Prototype.sync(self: Ping, interactionData: apiTypes.InteractionObject)

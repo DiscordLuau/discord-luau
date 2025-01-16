@@ -31,8 +31,8 @@ function ChannelBehaviour.Prototype.deleteChannelAsync<T>(self: Channel<T>)
 
 		self:sync(response:unwrapOk())
 
-		return self :: T
-	end)
+		return self
+	end) :: future.FutureLike<string, Channel<T>>
 end
 
 --[[
@@ -50,7 +50,7 @@ function ChannelBehaviour.Prototype.triggerTypingIndicatorAsync<T>(self: Channel
 		assert(response:isOk(), response:unwrapErr())
 
 		return nil
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -67,7 +67,7 @@ function ChannelBehaviour.Prototype.modifyAsync<T>(self: Channel<T>, json: build
 		self:sync(response:unwrapOk())
 
 		return self
-	end)
+	end) :: future.FutureLike<string, Channel<T>>
 end
 
 function ChannelBehaviour.Interface.inheritProperties(class: any, channelData: apiTypes.ChannelObject)

@@ -59,7 +59,7 @@ function Message.Prototype.addReactionAsync(self: Message, emoji: builders.emoji
 		assert(response:isOk(), response:unwrapErr())
 
 		return nil
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -78,7 +78,7 @@ function Message.Prototype.removeOwnReactionAsync(self: Message, emoji: builders
 		assert(response:isOk(), response:unwrapErr())
 
 		return nil
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -97,7 +97,7 @@ function Message.Prototype.deleteUserReactionAsync(self: Message, emoji: builder
 		assert(response:isOk(), response:unwrapErr())
 
 		return nil
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -133,7 +133,7 @@ function Message.Prototype.getReactionsAsync(
 		end
 
 		return users
-	end)
+	end) :: future.FutureLike<string, user.User>
 end
 
 --[[
@@ -148,7 +148,7 @@ function Message.Prototype.deleteAllReactionsAsync(self: Message)
 		assert(response:isOk(), response:unwrapErr())
 
 		return nil
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -167,7 +167,7 @@ function Message.Prototype.deleteAllReactionsForEmojiAsync(self: Message, emoji:
 		assert(response:isOk(), response:unwrapErr())
 
 		return nil
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -193,7 +193,7 @@ function Message.Prototype.editMessageAsync(self: Message, message: builders.mes
 		self:sync(response:unwrapOk())
 
 		return self
-	end)
+	end) :: future.FutureLike<string, Message>
 end
 --[[
 	Delete a message. If operating on a guild channel and trying to delete a message that was not sent by the current user,
@@ -208,7 +208,7 @@ function Message.Prototype.deleteMessageAsync(self: Message, reason: string)
 		assert(response:isOk(), response:unwrapErr())
 
 		return nil
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 function Message.Prototype.sync(self: Message, messageData: apiTypes.MessageObject)

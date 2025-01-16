@@ -53,7 +53,7 @@ function Member.Prototype.banAsync(
 		assert(response:isOk(), response:unwrapErr())
 
 		return nil
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -70,7 +70,7 @@ function Member.Prototype.kickAsync(self: Member, reason: string?)
 		assert(response:isOk(), response:unwrapErr())
 
 		return nil
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -110,106 +110,88 @@ function Member.Prototype.modifyAsync(
 		self:sync(response:unwrapOk())
 
 		return self
-	end)
+	end) :: future.FutureLike<string, Member>
 end
 
 --[[
 	will mute the user in voice channels the user is in. Returns the updated Member.
 ]]
 function Member.Prototype.muteAsync(self: Member, reason: string?)
-	return future.Future.new(function()
-		return self:modifyAsync({
-			muted = true,
-		}, reason)
-	end)
+	return self:modifyAsync({
+		muted = true,
+	}, reason)
 end
 
 --[[
 	will unmute the user in voice channels the user is in. Returns the updated Member.
 ]]
 function Member.Prototype.unmuteAsync(self: Member, reason: string?)
-	return future.Future.new(function()
-		return self:modifyAsync({
-			muted = false,
-		}, reason)
-	end)
+	return self:modifyAsync({
+		muted = false,
+	}, reason)
 end
 
 --[[
 	will deafen the user in voice channels the user is in. Returns the updated Member.
 ]]
 function Member.Prototype.deafenAsync(self: Member, reason: string?)
-	return future.Future.new(function()
-		return self:modifyAsync({
-			deaf = true,
-		}, reason)
-	end)
+	return self:modifyAsync({
+		deaf = true,
+	}, reason)
 end
 
 --[[
 	will undeafen the user in voice channels the user is in. Returns the updated Member.
 ]]
 function Member.Prototype.undeafenAsync(self: Member, reason: string?)
-	return future.Future.new(function()
-		return self:modifyAsync({
-			deaf = false,
-		}, reason)
-	end)
+	return self:modifyAsync({
+		deaf = false,
+	}, reason)
 end
 
 --[[
 	will set the nickname of the user. Returns the updated Member.
 ]]
 function Member.Prototype.setNicknameAsync(self: Member, nickname: string, reason: string?)
-	return future.Future.new(function()
-		return self:modifyAsync({
-			nickname = nickname,
-		}, reason)
-	end)
+	return self:modifyAsync({
+		nickname = nickname,
+	}, reason)
 end
 
 --[[
 	will set all roles that the user has in this guild. Returns the updated Member.
 ]]
 function Member.Prototype.setRolesAsync(self: Member, roles: { apiTypes.Snowflake }, reason: string?)
-	return future.Future.new(function()
-		return self:modifyAsync({
-			roles = roles,
-		}, reason)
-	end)
+	return self:modifyAsync({
+		roles = roles,
+	}, reason)
 end
 
 --[[
 	will move the user between different voice channels. Returns the updated Member.
 ]]
 function Member.Prototype.moveVoiceChannelAsync(self: Member, channelId: apiTypes.Snowflake, reason: string?)
-	return future.Future.new(function()
-		return self:modifyAsync({
-			channelId = channelId,
-		}, reason)
-	end)
+	return self:modifyAsync({
+		channelId = channelId,
+	}, reason)
 end
 
 --[[
 	will disconnect the user from voice channels the user is in. Returns the updated Member.
 ]]
 function Member.Prototype.disconnectFromVoiceChannelAsync(self: Member, reason: string?)
-	return future.Future.new(function()
-		return self:modifyAsync({
-			channelId = false,
-		}, reason)
-	end)
+	return self:modifyAsync({
+		channelId = false,
+	}, reason)
 end
 
 --[[
 	Disables the users communication up to a specific time. Returns the updated Member.
 ]]
 function Member.Prototype.disableAsync(self: Member, disabledUntil: stdPolyfills.DateTime, reason: string?)
-	return future.Future.new(function()
-		return self:modifyAsync({
-			communicationDisabledUntil = disabledUntil:toIsoDate(),
-		}, reason)
-	end)
+	return self:modifyAsync({
+		communicationDisabledUntil = disabledUntil:toIsoDate(),
+	}, reason)
 end
 
 --[[

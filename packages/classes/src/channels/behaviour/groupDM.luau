@@ -6,7 +6,6 @@ local apiTypes = require("../../../lune_packages/api_types")
 local future = require("../../../luau_packages/future")
 local rest = require("../../../lune_packages/rest")
 local state = require("../../../lune_packages/state")
-local builders = require("../../../lune_packages/builders")
 
 local user = require("../../user")
 
@@ -37,7 +36,7 @@ function GroupDMBehaviour.Prototype.addRecipient<T>(
 		assert(response:isOk(), response:unwrapErr())
 
 		return nil
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -52,7 +51,7 @@ function GroupDMBehaviour.Prototype.removeRecipient<T>(self: Channel<T>, userId:
 		assert(response:isOk(), response:unwrapErr())
 
 		return nil
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -61,7 +60,7 @@ end
 function GroupDMBehaviour.Prototype.setNameAsync<T>(self: Channel<T>, groupName: string)
 	return self:modifyAsync({
 		name = groupName,
-	})
+	}) :: future.FutureLike<string, Channel<T>>
 end
 
 --[[
@@ -71,7 +70,7 @@ function GroupDMBehaviour.Prototype.setIconAsync<T>(self: Channel<T>, iconData: 
 	return self:modifyAsync({
 		name = self.name,
 		icon = iconData,
-	})
+	}) :: future.FutureLike<string, Channel<T>>
 end
 
 function GroupDMBehaviour.Interface.inheritProperties(class: any, channelData: apiTypes.ChannelObject)

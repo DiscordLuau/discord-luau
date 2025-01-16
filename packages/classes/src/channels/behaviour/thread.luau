@@ -27,7 +27,7 @@ function ThreadBehaviour.Prototype.joinThreadAsync<T>(self: Channel<T>)
 		assert(response:isOk(), response:unwrapErr())
 
 		return nil
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -42,7 +42,7 @@ function ThreadBehaviour.Prototype.addMemberToThreadAsync<T>(self: Channel<T>, u
 		assert(response:isOk(), response:unwrapErr())
 
 		return nil
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -57,7 +57,7 @@ function ThreadBehaviour.Prototype.leaveThreadAsync<T>(self: Channel<T>)
 		assert(response:isOk(), response:unwrapErr())
 
 		return nil
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -72,7 +72,7 @@ function ThreadBehaviour.Prototype.removeMemberAsync<T>(self: Channel<T>, userId
 		assert(response:isOk(), response:unwrapErr())
 
 		return nil
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -87,7 +87,7 @@ function ThreadBehaviour.Prototype.removeMemberAsync<T>(self: Channel<T>, userId
 		assert(response:isOk(), response:unwrapErr())
 
 		return nil
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -106,7 +106,7 @@ function ThreadBehaviour.Prototype.getMemberAsync<T>(self: Channel<T>, userId: s
 		assert(response:isOk(), response:unwrapErr())
 
 		return threadMember.new(self.state, self.guildId, response:unwrapOk())
-	end)
+	end) :: future.FutureLike<string, threadMember.ThreadMember>
 end
 
 --[[
@@ -133,12 +133,12 @@ function ThreadBehaviour.Prototype.listMembersAsync<T>(
 
 		local threadMembers = {}
 
-		for _, memberData in response do
+		for _, memberData in response:unwrapOk() do
 			table.insert(threadMembers, threadMember.new(self.state, self.guildId, memberData))
 		end
 
 		return threadMembers
-	end)
+	end) :: future.FutureLike<string, { threadMember.ThreadMember }>
 end
 
 function ThreadBehaviour.Interface.inheritProperties(class: any, channelData: apiTypes.ChannelObject)

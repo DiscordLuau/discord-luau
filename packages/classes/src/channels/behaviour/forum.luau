@@ -36,7 +36,7 @@ function ForumBehaviour.Prototype.createPostAsync<T>(self: Channel<T>, post: bui
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk().id
-	end)
+	end) :: future.FutureLike<string, apiTypes.Snowflake>
 end
 
 function ForumBehaviour.Interface.inheritProperties(class: any, channelData: apiTypes.ChannelObject)

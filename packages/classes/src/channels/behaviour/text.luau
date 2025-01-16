@@ -33,7 +33,7 @@ function TextBehaviour.Prototype.bulkDeleteMessagesAsync<T>(self: Channel<T>, me
 		assert(response:isOk(), response:unwrapErr())
 
 		return nil
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -67,7 +67,7 @@ function TextBehaviour.Prototype.getMessagesAsync<T>(
 		end
 
 		return messages
-	end)
+	end) :: future.FutureLike<string, { message.Message }>
 end
 
 --[[
@@ -82,7 +82,7 @@ function TextBehaviour.Prototype.getMessageAsync<T>(self: Channel<T>, messageId:
 		assert(response:isOk(), response:unwrapErr())
 
 		return message.new(self.state, response:unwrapOk())
-	end)
+	end) :: future.FutureLike<string, message.Message>
 end
 
 --[[
@@ -97,7 +97,7 @@ function TextBehaviour.Prototype.createMessageAsync<T>(self: Channel<T>, json: b
 		assert(response:isOk(), response:unwrapErr())
 
 		return message.new(self.state, response:unwrapOk())
-	end)
+	end) :: future.FutureLike<string, message.Message>
 end
 
 --[[
@@ -118,7 +118,7 @@ function TextBehaviour.Prototype.getPinnedMessagesAsync<T>(self: Channel<T>)
 		end
 
 		return messages
-	end)
+	end) :: future.FutureLike<string, { message.Message }>
 end
 
 --[[
@@ -133,7 +133,7 @@ function TextBehaviour.Prototype.pinMessageAsync<T>(self: Channel<T>, messageId:
 		assert(response:isOk(), response:unwrapErr())
 
 		return nil
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -148,7 +148,7 @@ function TextBehaviour.Prototype.unpinMessageAsync<T>(self: Channel<T>, messageI
 		assert(response:isOk(), response:unwrapErr())
 
 		return nil
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -162,8 +162,8 @@ function TextBehaviour.Prototype.startThread<T>(self: Channel<T>, json: builders
 
 		assert(response:isOk(), response:unwrapErr())
 
-		return response.id
-	end)
+		return response:unwrapOk().id
+	end) :: future.FutureLike<string, apiTypes.Snowflake>
 end
 
 function TextBehaviour.Interface.inheritProperties(class: any, channelData: apiTypes.ChannelObject)

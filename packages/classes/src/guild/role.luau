@@ -31,7 +31,7 @@ function Role.Prototype.deleteAsync(self: Role, reason: string?)
 		assert(response:isOk(), response:unwrapErr())
 
 		return nil
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -48,7 +48,7 @@ function Role.Prototype.modifyAsync(self: Role, json: builders.roleJSON, reason:
 		self:sync(response:unwrapOk())
 
 		return self
-	end)
+	end) :: future.FutureLike<string, Role>
 end
 
 --[[
@@ -74,7 +74,7 @@ function Role.Prototype.modifyPositionAsync(self: Role, position: number, reason
 		end
 
 		return guildRoles
-	end)
+	end) :: future.FutureLike<string, { Role }>
 end
 
 --[[
