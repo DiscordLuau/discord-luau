@@ -15,9 +15,4 @@ discordBot.onAllShardsReady:listen(function()
 end)
 
 print(`Connecting to Discord...`)
-discordBot
-	:connectAsync()
-	:after(function()
-		print("Connected to Discord!")
-	end)
-	:poll()
+discordBot:connectAsync():await()

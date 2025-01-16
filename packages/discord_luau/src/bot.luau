@@ -31,7 +31,7 @@ function Bot.Prototype.queryGatewayInformation(self: Bot)
 		assert(response:isOk(), response:unwrapErr())
 
 		return response:unwrapOk()
-	end) :: any
+	end) :: future.FutureLike<string, apiTypes.GetGatewayBotResponse>
 end
 
 --[[
@@ -296,7 +296,9 @@ function Bot.Prototype.connectAsync(self: Bot)
 
 		self.state.webSocketManager:connectAsync(gatewayInformation:unwrapOk()):poll()
 		self.state.webSocketManager.onConnected:wait()
-	end) :: any
+
+		return nil
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -316,7 +318,7 @@ function Bot.Prototype.getGuildAsync(self: Bot, guildId: string, withCount: bool
 		assert(response:isOk(), response:unwrapErr())
 
 		return classes.guild.guild.new(self.state, response:unwrapOk())
-	end) :: any
+	end) :: future.FutureLike<string, classes.Guild>
 end
 
 --[[
@@ -334,7 +336,7 @@ function Bot.Prototype.getChannelAsync<T>(self: Bot, channelId: string)
 		assert(response:isOk(), response:unwrapErr())
 
 		return classes.channels.construct(self.state, response:unwrapOk())
-	end) :: any
+	end) :: future.FutureLike<string, classes.Channel>
 end
 
 --[[
@@ -346,8 +348,8 @@ function Bot.Prototype.getDMChannelAsync(self: Bot, channelId: string)
 	return future.Future.new(function()
 		local channel = self:getChannelAsync(channelId):await():unwrapOk()
 
-		return channel :: classes.DM
-	end) :: any
+		return channel
+	end) :: future.FutureLike<string, classes.DM>
 end
 
 --[[
@@ -359,8 +361,8 @@ function Bot.Prototype.getGroupDMChannelAsync(self: Bot, channelId: string)
 	return future.Future.new(function()
 		local channel = self:getChannelAsync(channelId):await():unwrapOk()
 
-		return channel :: classes.GroupDM
-	end) :: any
+		return channel
+	end) :: future.FutureLike<string, classes.GroupDM>
 end
 
 --[[
@@ -372,8 +374,8 @@ function Bot.Prototype.getAnnouncementChannelAsync(self: Bot, channelId: string)
 	return future.Future.new(function()
 		local channel = self:getChannelAsync(channelId):await():unwrapOk()
 
-		return channel :: classes.GuildAnnouncement
-	end) :: any
+		return channel
+	end) :: future.FutureLike<string, classes.GuildAnnouncement>
 end
 
 --[[
@@ -385,8 +387,8 @@ function Bot.Prototype.getCategoryChannelAsync(self: Bot, channelId: string)
 	return future.Future.new(function()
 		local channel = self:getChannelAsync(channelId):await():unwrapOk()
 
-		return channel :: classes.GuildCategory
-	end) :: any
+		return channel
+	end) :: future.FutureLike<string, classes.GuildCategory>
 end
 
 --[[
@@ -398,8 +400,8 @@ function Bot.Prototype.getDirectoryChannelAsync(self: Bot, channelId: string)
 	return future.Future.new(function()
 		local channel = self:getChannelAsync(channelId):await():unwrapOk()
 
-		return channel :: classes.GuildDirectory
-	end) :: any
+		return channel
+	end) :: future.FutureLike<string, classes.GuildDirectory>
 end
 
 --[[
@@ -411,8 +413,8 @@ function Bot.Prototype.getStageVCChannelAsync(self: Bot, channelId: string)
 	return future.Future.new(function()
 		local channel = self:getChannelAsync(channelId):await():unwrapOk()
 
-		return channel :: classes.GuildStageVoice
-	end) :: any
+		return channel
+	end) :: future.FutureLike<string, classes.GuildStageVoice>
 end
 
 --[[
@@ -424,8 +426,8 @@ function Bot.Prototype.getTextChannelAsync(self: Bot, channelId: string)
 	return future.Future.new(function()
 		local channel = self:getChannelAsync(channelId):await():unwrapOk()
 
-		return channel :: classes.GuildText
-	end) :: any
+		return channel
+	end) :: future.FutureLike<string, classes.GuildText>
 end
 
 --[[
@@ -437,8 +439,8 @@ function Bot.Prototype.getVoiceChannelAsync(self: Bot, channelId: string)
 	return future.Future.new(function()
 		local channel = self:getChannelAsync(channelId):await():unwrapOk()
 
-		return channel :: classes.GuildVoice
-	end) :: any
+		return channel
+	end) :: future.FutureLike<string, classes.GuildVoice>
 end
 
 function Bot.Interface.new(options: {
