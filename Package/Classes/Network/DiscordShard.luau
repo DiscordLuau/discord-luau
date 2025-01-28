@@ -267,7 +267,7 @@ function DiscordShard.Prototype.identifyAsync(self: DiscordShard)
 						["browser"] = LIBRARY_IDENTIFIER,
 						["device"] = LIBRARY_IDENTIFIER,
 					},
-					["compress"] = true,
+					["compress"] = false,
 					["large_threshold"] = 250,
 					["shard"] = {
 						self.shardId,
