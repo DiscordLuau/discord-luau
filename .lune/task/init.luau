@@ -21,6 +21,15 @@ function Task.Prototype.addArgument(self: Task, argument: string): Task
 end
 
 --[[
+	Responsible for setting the current working directory for this task
+]]
+function Task.Prototype.setcwd(self: Task, cwd: string): Task
+	self.cwd = cwd
+
+	return self
+end
+
+--[[
 	Responsible for executing the task.
 
 	Inherits the standard IO of the process.
@@ -28,6 +37,7 @@ end
 function Task.Prototype.execute(self: Task): process.SpawnResult
 	local spawnResult = process.spawn(self.executable, self.arguments, {
 		stdio = "forward",
+		cwd = self.cwd,
 	})
 
 	if not spawnResult.ok then
@@ -59,6 +69,7 @@ end
 
 export type Task = typeof(Task.Prototype) & {
 	executable: string,
+	cwd: string?,
 	arguments: { string },
 }
 

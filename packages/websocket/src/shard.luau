@@ -7,8 +7,6 @@ local logger = require("../lune_packages/logger")
 
 local apiTypes = require("../lune_packages/api_types")
 
--- selene: allow(bad_string_escape)
-local ZLIB_HEADER = "\120\156\141\84"
 local LIBRARY_IDENTIFIER = "DiscordLuau"
 
 --[[
@@ -59,19 +57,11 @@ function Shard.Prototype._handleMessage(self: Shard, message: string): ()
 	else
 		self.zlibBuffer:write(message)
 
-		if string.len(message) < 4 or string.sub(message, 1, 4) ~= ZLIB_HEADER then
-			self.logger:debug(`Shard '{self.shardId}' received partial message: #{string.len(message)}`)
-
-			return
-		end
-
-		self.logger:debug(`Shard '{self.shardId}' received complete message: #{string.len(message)}, decompressing...`)
-
-		local compressedData: string = self.zlibBuffer:flush()
-		local success0, response0 = pcall(stdPolyfills.serde.decompress, "zlib" :: any, compressedData)
+		local success0, response0 = pcall(stdPolyfills.serde.decompress, "zlib" :: any, self.zlibBuffer.data)
 
 		if success0 then
 			self.logger:debug(`Shard '{self.shardId}' decompressed Shard message: #{string.len(response0)}`)
+			self.zlibBuffer:flush()
 
 			local success1, response1 = pcall(stdPolyfills.serde.decode, "json" :: any, response0)
 
@@ -81,7 +71,7 @@ function Shard.Prototype._handleMessage(self: Shard, message: string): ()
 				self.logger:error(`Shard '{self.shardId}' failed to decode Shard JSON message: {response1}`)
 			end
 		else
-			self.logger:error(`Shard '{self.shardId}' failed to decompress Shard ZLIB message: {response0}`)
+			self.logger:debug(`Shard '{self.shardId}' received complete message: #{string.len(message)}, decompressing...`)
 		end
 	end
 end
