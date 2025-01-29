@@ -8,6 +8,6 @@
   "luau-lsp.require.mode": "relativeToFile",
   "luau-lsp.fflags.override": {
     "LuauTarjanChildLimit": "0",
-    "LuauTypeInferIterationLimit": "0",
+    "LuauTypeInferIterationLimit": "0"
   }
 }
