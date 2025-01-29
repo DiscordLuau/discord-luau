@@ -30,7 +30,7 @@ function GuildBehaviour.Prototype.setPositionAsync<T>(self: Channel<T>, position
 				{
 					id = self.id,
 					position = position,
-				}
+				},
 			})
 			:await()
 
@@ -53,7 +53,7 @@ function GuildBehaviour.Prototype.setParentAsync<T>(self: Channel<T>, parentId: 
 					id = self.id,
 					lock_permissions = syncPermissions,
 					parent_id = parentId,
-				}
+				},
 			})
 			:await()
 
@@ -77,7 +77,8 @@ function GuildBehaviour.Prototype.setPermissionsAsync<T>(
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local response = rest.channel.editChannelPermissionsAsync(request, self.id, overwriteId, {
+		local response = rest.channel
+			.editChannelPermissionsAsync(request, self.id, overwriteId, {
 				type = apiTypes.guild.OverwriteType[type],
 				allow = allowedPermissions,
 				deny = denyPermissions,

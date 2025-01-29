@@ -248,14 +248,16 @@ export type CreateGuildChannelRequest = Request<
 >
 
 -- https://discord.com/developers/docs/resources/guild#modify-guild-channel-positions
-export type ModifyGuildChannelPositionsRequest = Request<{
+export type ModifyGuildChannelPositionsRequest = Request<
 	{
-		id: objects.Snowflake, -- channel id
-		position: number?, -- sorting position of the channel (channels with the same position are sorted by id)
-		lock_permissions: boolean?, -- syncs the permission overwrites with the new parent, if moving to a new category
-		parent_id: objects.Snowflake?, -- the new parent ID for the channel that is moved
+		{
+			id: objects.Snowflake, -- channel id
+			position: number?, -- sorting position of the channel (channels with the same position are sorted by id)
+			lock_permissions: boolean?, -- syncs the permission overwrites with the new parent, if moving to a new category
+			parent_id: objects.Snowflake?, -- the new parent ID for the channel that is moved
+		}
 	}
-}>
+>
 
 -- https://discord.com/developers/docs/resources/guild#add-guild-member
 export type AddGuildMemberRequest = Request<{

@@ -71,7 +71,9 @@ function Shard.Prototype._handleMessage(self: Shard, message: string): ()
 				self.logger:error(`Shard '{self.shardId}' failed to decode Shard JSON message: {response1}`)
 			end
 		else
-			self.logger:debug(`Shard '{self.shardId}' received complete message: #{string.len(message)}, decompressing...`)
+			self.logger:debug(
+				`Shard '{self.shardId}' received complete message: #{string.len(message)}, decompressing...`
+			)
 		end
 	end
 end
