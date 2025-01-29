@@ -96,7 +96,7 @@ function Shard.Prototype.heartbeatAsync(self: Shard, requested: boolean?)
 			["op"] = apiTypes.gateway.opcodes.Heartbeat,
 			["d"] = self.lastSequence or false,
 		}, true)):await()
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -124,7 +124,7 @@ function Shard.Prototype.identifyAsync(self: Shard)
 				},
 			},
 		}, true)):await()
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -157,7 +157,7 @@ function Shard.Prototype.disconnectAsync(self: Shard, code: number?)
 		self.socketInstance = nil
 
 		self.logger:debug(`Shard '{self.shardId}' disconnected.`)
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -228,7 +228,7 @@ function Shard.Prototype.connectAsync(self: Shard, socketUrl: string, socketVers
 			self.socketThread = nil
 			self.logger:debug(`Shard '{self.shardId}' socket has disconnected, receive thread stopped.`)
 		end)
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -260,16 +260,16 @@ function Shard.Prototype.resumeAsync(self: Shard)
 											`Shard '{self.shardId}' failed to resume session: {response:unwrapErr()}`
 										)
 									end
-								end)
+								end) :: future.FutureLike<string, nil>
 							end)
 							:poll()
 					else
 						self.logger:critical(`Shard '{self.shardId}' failed to resume session: {response:unwrapErr()}`)
 					end
-				end)
+				end) :: future.FutureLike<string, nil>
 			end)
 			:await()
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -301,7 +301,7 @@ function Shard.Prototype.reconnectAsync(self: Shard)
 								`Shard '{self.shardId}' failed to reconnect session: {response:unwrapErr()}`
 							)
 						end
-					end)
+					end) :: future.FutureLike<string, nil>
 				end)
 				:await()
 		else
@@ -309,7 +309,7 @@ function Shard.Prototype.reconnectAsync(self: Shard)
 
 			self:reinstantiateAsync():await()
 		end
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -335,7 +335,7 @@ function Shard.Prototype.sendAsync(self: Shard, data: string)
 
 			self.onSocketDisconnected:invoke(self.socketInstance.closeCode)
 		end
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -367,10 +367,10 @@ function Shard.Prototype.reinstantiateAsync(self: Shard)
 							`Shard '{self.shardId}' exception during re-instantiation, shard {self.shardId} is now dead! \n{response:unwrapErr()}`
 						)
 					end
-				end)
+				end) :: future.FutureLike<string, nil>
 			end)
 			:poll()
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -391,7 +391,7 @@ function Shard.Prototype.heartbeatIn(self: Shard, milliseconds: number): ()
 			:andThen(function()
 				return future.Future.new(function()
 					self:heartbeatIn(milliseconds)
-				end)
+				end) :: future.FutureLike<string, nil>
 			end)
 			:poll()
 	end)
@@ -473,7 +473,7 @@ function Shard.Interface.new(settings: {
 							)
 
 							self:reinstantiateAsync():poll()
-						end)
+						end) :: future.FutureLike<string, nil>
 					end)
 					:poll()
 			else
@@ -502,7 +502,7 @@ function Shard.Interface.new(settings: {
 
 							self:disconnectAsync(1011):poll()
 						end
-					end)
+					end) :: future.FutureLike<string, nil>
 				end)
 				:poll()
 		elseif payload.op == apiTypes.gateway.opcodes.HeartbeatACK then
@@ -530,7 +530,7 @@ function Shard.Interface.new(settings: {
 									`Shard '{self.shardId}' exception during initial identify: {result:unwrapErr()}`
 								)
 							end
-						end)
+						end) :: future.FutureLike<string, nil>
 					end)
 					:poll()
 			end

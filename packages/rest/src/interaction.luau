@@ -38,7 +38,7 @@ function Interaction.createInteractionResponseAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.CreateInteractionResponse>
@@ -65,7 +65,7 @@ function Interaction.getOriginalInteractionResponseAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetOriginalInteractionResponse>
@@ -94,7 +94,7 @@ function Interaction.editOriginalInteractionResponseAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.EditOriginalInteractionResponse>
@@ -116,7 +116,7 @@ function Interaction.deleteOriginalInteractionResponseAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.DeleteOriginalInteractionResponse>
@@ -145,7 +145,7 @@ function Interaction.createFollowupMessageAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.CreateFollowupMessageResponse>
@@ -173,7 +173,7 @@ function Interaction.getFollowupMessageAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetFollowupMessageResponse>
@@ -203,7 +203,7 @@ function Interaction.editFollowupMessageAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.EditFollowupMessageResponse>
@@ -226,7 +226,7 @@ function Interaction.deleteFollowupMessageAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.DeleteFollowupMessageResponse>

@@ -32,7 +32,7 @@ function Poll.getAnswerVotersAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetAnswerVotersResponse>
@@ -48,7 +48,7 @@ function Poll.endPollAsync(instance: request.Request, channelId: apiTypes.Snowfl
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.EndPollResponse>

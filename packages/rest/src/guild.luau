@@ -23,7 +23,7 @@ function Guild.createGuildAsync(instance: request.Request, jsonParams: apiTypes.
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.CreateGuildResponse>
@@ -47,7 +47,7 @@ function Guild.getGuildAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetGuildResponse>
@@ -63,7 +63,7 @@ function Guild.getGuildPreviewAsync(instance: request.Request, guildId: apiTypes
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetGuildPreviewResponse>
@@ -86,7 +86,7 @@ function Guild.modifyGuildAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.ModifyGuildResponse>
@@ -102,7 +102,7 @@ function Guild.deleteGuildAsync(instance: request.Request, guildId: apiTypes.Sno
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.DeleteGuildResponse_>
@@ -118,7 +118,7 @@ function Guild.getGuildChannelsAsync(instance: request.Request, guildId: apiType
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetGuildChannelsResponse>
@@ -141,7 +141,7 @@ function Guild.createGuildChannelAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.CreateGuildChannelResponse>
@@ -162,7 +162,7 @@ function Guild.modifyGuildChannelPositionsAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.ModifyGuildChannelPositionsResponse>
@@ -178,7 +178,7 @@ function Guild.listActiveGuildThreadsAsync(instance: request.Request, guildId: a
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.ListActiveGuildThreadsResponse>
@@ -194,7 +194,7 @@ function Guild.getGuildMemberAsync(instance: request.Request, guildId: apiTypes.
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetGuildMemberResponse>
@@ -220,7 +220,7 @@ function Guild.listGuildMembersAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.ListGuildMembersResponse>
@@ -246,7 +246,7 @@ function Guild.searchGuildMembersAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.SearchGuildMembersResponse>
@@ -268,7 +268,7 @@ function Guild.addGuildMemberAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.AddGuildMemberResponse>
@@ -292,7 +292,7 @@ function Guild.modifyGuildMemberAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.ModifyGuildMemberResponse>
@@ -315,7 +315,7 @@ function Guild.modifyCurrentMemberAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.ModifyCurrentMemberResponse>
@@ -338,7 +338,7 @@ function Guild.addGuildMemberRoleAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.AddGuildMemberRoleResponse>
@@ -361,7 +361,7 @@ function Guild.removeGuildMemberRoleAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.RemoveGuildMemberRoleResponse>
@@ -383,7 +383,7 @@ function Guild.removeGuildMemberAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.RemoveGuildMemberResponse>
@@ -411,7 +411,7 @@ function Guild.getGuildBansAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetGuildBansResponse>
@@ -427,7 +427,7 @@ function Guild.getGuildBanAsync(instance: request.Request, guildId: apiTypes.Sno
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetGuildBanResponse>
@@ -451,7 +451,7 @@ function Guild.createGuildBanAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.CreateGuildBanResponse>
@@ -473,7 +473,7 @@ function Guild.removeGuildBanAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.RemoveGuildBanResponse>
@@ -496,7 +496,7 @@ function Guild.bulkGuildBanAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.BulkGuildBanResponse>
@@ -512,7 +512,7 @@ function Guild.getGuildRolesAsync(instance: request.Request, guildId: apiTypes.S
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetGuildRolesResponse>
@@ -528,7 +528,7 @@ function Guild.getGuildRoleAsync(instance: request.Request, guildId: apiTypes.Sn
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetGuildRoleResponse>
@@ -551,7 +551,7 @@ function Guild.createGuildRoleAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.CreateGuildRoleResponse>
@@ -574,7 +574,7 @@ function Guild.modifyGuildRolePositionsAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.ModifyGuildRolePositionsResponse>
@@ -598,7 +598,7 @@ function Guild.modifyGuildRoleAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.ModifyGuildRoleResponse>
@@ -621,7 +621,7 @@ function Guild.modifyGuildMFALevelAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.ModifyGuildMFALevelResponse>
@@ -637,13 +637,13 @@ function Guild.deleteGuildRoleAsync(
 	return future.Future.new(function()
 		instance:assertToken()
 
-		instance:setMethod("POST")
+		instance:setMethod("DELETE")
 		instance:setUrl(string.format(apiTypes.rest.endpoints.DeleteGuildRole, guildId, roleId))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.DeleteGuildRoleResponse>
@@ -669,7 +669,7 @@ function Guild.getGuildPruneCountAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetGuildPruneCountResponse>
@@ -692,7 +692,7 @@ function Guild.beginGuildPruneAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.BeginGuildPruneResponse>
@@ -708,7 +708,7 @@ function Guild.getGuildVoiceRegionsAsync(instance: request.Request, guildId: api
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetGuildVoiceRegionsResponse>
@@ -724,7 +724,7 @@ function Guild.getGuildInvitesAsync(instance: request.Request, guildId: apiTypes
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetGuildInvitesResponse>
@@ -740,7 +740,7 @@ function Guild.getGuildIntegrationsAsync(instance: request.Request, guildId: api
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetGuildIntegrationsResponse>
@@ -762,7 +762,7 @@ function Guild.deleteGuildIntegrationAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.DeleteGuildIntegrationResponse>
@@ -778,7 +778,7 @@ function Guild.getGuildWidgetSettingsAsync(instance: request.Request, guildId: a
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetGuildWidgetSettingsResponse>
@@ -801,7 +801,7 @@ function Guild.modifyGuildWidgetAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.ModifyGuildWidgetResponse>
@@ -817,7 +817,7 @@ function Guild.getGuildWidgetAsync(instance: request.Request, guildId: apiTypes.
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetGuildWidgetResponse>
@@ -833,7 +833,7 @@ function Guild.getGuildVanityURLAsync(instance: request.Request, guildId: apiTyp
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetGuildVanityUrlResponse>
@@ -857,7 +857,7 @@ function Guild.getGuildWidgetImageAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetGuildWidgetImageResponse>
@@ -873,7 +873,7 @@ function Guild.getGuildWelcomeScreenAsync(instance: request.Request, guildId: ap
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetGuildWelcomeScreenResponse>
@@ -896,7 +896,7 @@ function Guild.modifyGuildWelcomeScreenAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.ModifyGuildWelcomeScreenResponse>
@@ -912,7 +912,7 @@ function Guild.getGuildOnboardingAsync(instance: request.Request, guildId: apiTy
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetGuildOnboardingResponse>
@@ -935,7 +935,7 @@ function Guild.modifyGuildOnboardingAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.ModifyGuildOnboardingResponse>

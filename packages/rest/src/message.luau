@@ -36,7 +36,7 @@ function Message.getChannelMessagesAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetChannelMessagesResponse>
@@ -52,7 +52,7 @@ function Message.getChannelMessageAsync(instance: request.Request, channelId: st
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetChannelMessageResponse>
@@ -73,7 +73,7 @@ function Message.createMessageAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.CreateMessageResponse>
@@ -94,7 +94,7 @@ function Message.crosspostMessageAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.CrosspostMessageResponse>
@@ -105,8 +105,7 @@ function Message.createReactionAsync(
 	instance: request.Request,
 	channelId: string,
 	messageId: apiTypes.Snowflake,
-	emojiId: apiTypes.Snowflake,
-	emojiName: string
+	emoji: string
 )
 	return future.Future.new(function()
 		instance:assertToken()
@@ -117,13 +116,13 @@ function Message.createReactionAsync(
 				apiTypes.rest.endpoints.CreateReaction,
 				channelId,
 				messageId,
-				stdPolyfills.net.urlEncode(`{emojiName}:{emojiId}`)
+				stdPolyfills.net.urlEncode(emoji)
 			)
 		)
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.CreateReactionResponse>
@@ -134,8 +133,7 @@ function Message.deleteOwnReactionAsync(
 	instance: request.Request,
 	channelId: string,
 	messageId: apiTypes.Snowflake,
-	emojiId: apiTypes.Snowflake,
-	emojiName: string
+	emoji: string
 )
 	return future.Future.new(function()
 		instance:assertToken()
@@ -146,13 +144,13 @@ function Message.deleteOwnReactionAsync(
 				apiTypes.rest.endpoints.DeleteOwnReaction,
 				channelId,
 				messageId,
-				stdPolyfills.net.urlEncode(`{emojiName}:{emojiId}`)
+				stdPolyfills.net.urlEncode(emoji)
 			)
 		)
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.DeleteOwnReactionResponse>
@@ -163,8 +161,7 @@ function Message.deleteUserReactionAsync(
 	instance: request.Request,
 	channelId: string,
 	messageId: apiTypes.Snowflake,
-	emojiId: apiTypes.Snowflake,
-	emojiName: string,
+	emoji: string,
 	userId: apiTypes.Snowflake
 )
 	return future.Future.new(function()
@@ -176,14 +173,14 @@ function Message.deleteUserReactionAsync(
 				apiTypes.rest.endpoints.DeleteUserReaction,
 				channelId,
 				messageId,
-				stdPolyfills.net.urlEncode(`{emojiName}:{emojiId}`),
+				stdPolyfills.net.urlEncode(emoji),
 				userId
 			)
 		)
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.DeleteUserReactionResponse>
@@ -194,8 +191,7 @@ function Message.getReactionsAsync(
 	instance: request.Request,
 	channelId: string,
 	messageId: apiTypes.Snowflake,
-	emojiId: apiTypes.Snowflake,
-	emojiName: string,
+	emoji: string,
 	urlParams: {
 		type: ("Normal" | "Burst")?,
 		after: apiTypes.Snowflake?,
@@ -211,17 +207,12 @@ function Message.getReactionsAsync(
 
 		instance:setMethod("GET")
 		instance:setUrl(
-			string.format(
-				apiTypes.rest.endpoints.GetReactions,
-				channelId,
-				messageId,
-				stdPolyfills.net.urlEncode(`{emojiName}:{emojiId}`)
-			)
+			string.format(apiTypes.rest.endpoints.GetReactions, channelId, messageId, stdPolyfills.net.urlEncode(emoji))
 		)
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetReactionsResponse>
@@ -237,7 +228,7 @@ function Message.deleteAllReactionsAsync(instance: request.Request, channelId: s
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.DeleteAllReactionsResponse>
@@ -248,8 +239,7 @@ function Message.deleteAllReactionsForEmojiAsync(
 	instance: request.Request,
 	channelId: string,
 	messageId: apiTypes.Snowflake,
-	emojiId: apiTypes.Snowflake,
-	emojiName: string
+	emoji: string
 )
 	return future.Future.new(function()
 		instance:assertToken()
@@ -260,13 +250,13 @@ function Message.deleteAllReactionsForEmojiAsync(
 				apiTypes.rest.endpoints.DeleteAllReactions,
 				channelId,
 				messageId,
-				stdPolyfills.net.urlEncode(`{emojiName}:{emojiId}`)
+				stdPolyfills.net.urlEncode(emoji)
 			)
 		)
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.DeleteAllReactionsForEmojiResponse>
@@ -288,7 +278,7 @@ function Message.editMessageAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.EditMessageResponse>
@@ -310,7 +300,7 @@ function Message.deleteMessageAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.DeleteMessageResponse>
@@ -326,14 +316,14 @@ function Message.bulkDeleteMessagesAsync(
 	return future.Future.new(function()
 		instance:assertToken()
 
-		instance:setMethod("DELETE")
+		instance:setMethod("POST")
 		instance:setUrl(string.format(apiTypes.rest.endpoints.BulkDeleteMessages, channelId))
 		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.BulkDeleteMessageResponse>

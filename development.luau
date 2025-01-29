@@ -10,9 +10,20 @@ local discordBot = discordLuau.Bot.new({
 
 -- discordBot:getGuildAsync(guildId)
 
+discordBot.onMessage:listen(function() end)
+
 discordBot.onAllShardsReady:listen(function()
-	print("we're up and running!")
+	xpcall(function()
+		local guild = discordBot:getGuildAsync("1273035219561091193"):await():unwrapOk()
+		local threads = guild:getThreadsAsync():await():unwrapOk()
+		local thread = threads[1]
+
+		local result = thread:unpinMessageAsync("1333953461628436611"):await():unwrapOk()
+
+		print("request sent:", result)
+	end, function(e)
+		print(e)
+	end)
 end)
 
-print(`Connecting to Discord...`)
 discordBot:connectAsync():await()

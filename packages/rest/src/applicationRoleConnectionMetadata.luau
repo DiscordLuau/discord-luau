@@ -26,7 +26,7 @@ function ApplicationRoleConnectionMetadata.getApplicationRoleConnectionMetadataR
 
 				local response = instance:executeAsync():await()
 
-				assert(response:isOk(), response:unwrapErr())
+				assert(response:isOk(), tostring(response:unwrapErr()))
 
 				return response:unwrapOk().body
 			end
@@ -49,7 +49,7 @@ function ApplicationRoleConnectionMetadata.updateApplicationRoleConnectionMetada
 
 				local response = instance:executeAsync():await()
 
-				assert(response:isOk(), response:unwrapErr())
+				assert(response:isOk(), tostring(response:unwrapErr()))
 
 				return response:unwrapOk().body
 			end

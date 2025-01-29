@@ -28,7 +28,7 @@ function Role.Prototype.deleteAsync(self: Role, reason: string?)
 
 		local response = rest.guild.deleteGuildRoleAsync(request, self.guildId, self.id, reason):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -43,7 +43,7 @@ function Role.Prototype.modifyAsync(self: Role, json: builders.roleJSON, reason:
 
 		local response = rest.guild.modifyGuildRoleAsync(request, self.guildId, self.id, json, reason):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		self:sync(response:unwrapOk())
 
@@ -65,7 +65,7 @@ function Role.Prototype.modifyPositionAsync(self: Role, position: number, reason
 			}, reason)
 			:await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local guildRoles = {}
 

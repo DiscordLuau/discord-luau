@@ -28,7 +28,7 @@ function Commands.getGlobalApplicationCommandsAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetGlobalApplicationCommandsResponse>
@@ -49,7 +49,7 @@ function Commands.createGlobalApplicationCommandAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.CreateGlobalApplicationCommandResponse>
@@ -69,7 +69,7 @@ function Commands.getGlobalApplicationCommandAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetGlobalApplicationCommandResponse>
@@ -91,7 +91,7 @@ function Commands.editGlobalApplicationCommandAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.EditGlobalApplicationCommandResponse>
@@ -111,7 +111,7 @@ function Commands.deleteGlobalApplicationCommandAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.DeleteGlobalApplicationCommandResponse>
@@ -135,7 +135,7 @@ function Commands.bulkOverwriteGlobalApplicationCommandsAsync(
 
 				local response = instance:executeAsync():await()
 
-				assert(response:isOk(), response:unwrapErr())
+				assert(response:isOk(), tostring(response:unwrapErr()))
 
 				return response:unwrapOk().body
 			end
@@ -161,7 +161,7 @@ function Commands.getGuildApplicationCommandsAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetGuildApplicationCommandsResponse>
@@ -183,7 +183,7 @@ function Commands.createGuildApplicationCommandAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.CreateGuildApplicationCommandResponse>
@@ -206,7 +206,7 @@ function Commands.getGuildApplicationCommandAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetGuildApplicationCommandResponse>
@@ -231,7 +231,7 @@ function Commands.editGuildApplicationCommandAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.EditGuildApplicationCommandResponse>
@@ -254,7 +254,7 @@ function Commands.deleteGuildApplicationCommandAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.DeleteGuildApplicationCommandResponse_>
@@ -279,7 +279,7 @@ function Commands.bulkOverwriteGuildApplicationCommandsAsync(
 
 				local response = instance:executeAsync():await()
 
-				assert(response:isOk(), response:unwrapErr())
+				assert(response:isOk(), tostring(response:unwrapErr()))
 
 				return response:unwrapOk().body
 			end
@@ -303,7 +303,7 @@ function Commands.getGuildApplicationCommandPermissionsAsync(
 
 				local response = instance:executeAsync():await()
 
-				assert(response:isOk(), response:unwrapErr())
+				assert(response:isOk(), tostring(response:unwrapErr()))
 
 				return response:unwrapOk().body
 			end
@@ -333,7 +333,7 @@ function Commands.getApplicationCommandPermissionsAsync(
 
 				local response = instance:executeAsync():await()
 
-				assert(response:isOk(), response:unwrapErr())
+				assert(response:isOk(), tostring(response:unwrapErr()))
 
 				return response:unwrapOk().body
 			end
@@ -365,7 +365,7 @@ function Commands.editApplicationCommandPermissionsAsync(
 
 				local response = instance:executeAsync():await()
 
-				assert(response:isOk(), response:unwrapErr())
+				assert(response:isOk(), tostring(response:unwrapErr()))
 
 				return response:unwrapOk().body
 			end

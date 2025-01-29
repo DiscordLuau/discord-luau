@@ -22,7 +22,7 @@ function Channel.getChannelAsync(instance: request.Request, channelId: apiTypes.
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetChannelResponse>
@@ -45,7 +45,7 @@ function Channel.modifyChannelAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.ModifyChannelResponse>
@@ -66,7 +66,7 @@ function Channel.deleteOrCloseChannelAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.DeleteCloseChannelResponse>
@@ -90,7 +90,7 @@ function Channel.editChannelPermissionsAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.EditChannelPermissionsResponse>
@@ -106,7 +106,7 @@ function Channel.getChannelInvitesAsync(instance: request.Request, channelId: ap
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetChannelInvitesResponse>
@@ -129,7 +129,7 @@ function Channel.createChannelInviteAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.CreateChannelInviteResponse>
@@ -151,7 +151,7 @@ function Channel.deleteChannelPermissionAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.DeleteChannelPermissionResponse>
@@ -174,7 +174,7 @@ function Channel.followAnnouncementChannelAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.FollowAnnouncementChannelResponse>
@@ -190,7 +190,7 @@ function Channel.triggerTypingIndicatorAsync(instance: request.Request, channelI
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.TriggerTypingIndicatorResponse>
@@ -206,7 +206,7 @@ function Channel.getPinnedMessagesAsync(instance: request.Request, channelId: ap
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetPinnedMessagesResponse>
@@ -228,7 +228,7 @@ function Channel.pinMessageAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.PinMessageResponse>
@@ -250,7 +250,7 @@ function Channel.unpinMessageAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.UnpinMessageResponse>
@@ -272,7 +272,7 @@ function Channel.groupDMAddRecipientAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GroupDMAddRecipientResponse>
@@ -292,7 +292,7 @@ function Channel.groupDMRemoveRecipientAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GroupDMRemoveRecipientResponse>
@@ -316,7 +316,7 @@ function Channel.startThreadFromMessageAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.StartThreadFromMessageResponse>
@@ -339,7 +339,7 @@ function Channel.startThreadWithoutMessageAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.StartThreadWithoutMessageResponse>
@@ -363,7 +363,7 @@ function Channel.startThreadInForumOrMediaChannelAsync(
 
 				local response = instance:executeAsync():await()
 
-				assert(response:isOk(), response:unwrapErr())
+				assert(response:isOk(), tostring(response:unwrapErr()))
 
 				return response:unwrapOk().body
 			end
@@ -380,7 +380,7 @@ function Channel.joinThreadAsync(instance: request.Request, channelId: apiTypes.
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.JoinThreadResponse>
@@ -400,7 +400,7 @@ function Channel.addThreadMemberAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.AddThreadMemberResponse>
@@ -416,7 +416,7 @@ function Channel.leaveThreadAsync(instance: request.Request, channelId: apiTypes
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.LeaveThreadResponse>
@@ -436,7 +436,7 @@ function Channel.removeThreadMemberAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.RemoveThreadMemberResponse>
@@ -461,7 +461,7 @@ function Channel.getThreadMemberAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetThreadMemberResponse>
@@ -489,7 +489,7 @@ function Channel.listThreadMembersAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.ListThreadMembersResponse>
@@ -515,7 +515,7 @@ function Channel.listPublicArchivedThreadsAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.ListPublicArchivedThreadsResponse>
@@ -541,7 +541,7 @@ function Channel.listPrivateArchivedThreadsAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.ListPrivateArchivedThreadsResponse>
@@ -568,7 +568,7 @@ function Channel.listJoinedPrivateArchivedThreadsAsync(
 
 				local response = instance:executeAsync():await()
 
-				assert(response:isOk(), response:unwrapErr())
+				assert(response:isOk(), tostring(response:unwrapErr()))
 
 				return response:unwrapOk().body
 			end

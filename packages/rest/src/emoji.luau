@@ -22,7 +22,7 @@ function Emoji.listGuildEmojisAsync(instance: request.Request, guildId: apiTypes
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.ListGuildEmojisResponse>
@@ -38,7 +38,7 @@ function Emoji.getGuildEmojiAsync(instance: request.Request, guildId: apiTypes.S
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetGuildEmojiResponse>
@@ -61,7 +61,7 @@ function Emoji.createGuildEmojiAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.CreateGuildEmojiResponse>
@@ -85,7 +85,7 @@ function Emoji.modifyGuildEmojiAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.ModifyGuildEmojiResponse>
@@ -107,7 +107,7 @@ function Emoji.deleteGuildEmojiAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.DeleteGuildEmojiResponse>

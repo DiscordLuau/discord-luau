@@ -28,7 +28,7 @@ function StageInstance.createStageInstanceAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.CreateStageInstanceResponse>
@@ -44,7 +44,7 @@ function StageInstance.getStageInstanceAsync(instance: request.Request, channelI
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetStageInstanceResponse>
@@ -67,7 +67,7 @@ function StageInstance.modifyStageInstanceAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.ModifyStageInstanceResponse>
@@ -83,7 +83,7 @@ function StageInstance.deleteStageInstanceAsync(instance: request.Request, chann
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.DeleteStageInstanceResponse_>

@@ -22,7 +22,7 @@ function Sticker.getStickerAsync(instance: request.Request, stickerId: apiTypes.
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local object: apiTypes.GetStickerResponse = response:unwrapOk().body
 
@@ -40,7 +40,7 @@ function Sticker.listStickerPacksAsync(instance: request.Request)
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.ListStickerPacksResponse>
@@ -56,7 +56,7 @@ function Sticker.listGuildStickersAsync(instance: request.Request, guildId: apiT
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.ListGuildStickersResponse>
@@ -76,7 +76,7 @@ function Sticker.getGuildStickerAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetGuildStickerResponse>
@@ -99,7 +99,7 @@ function Sticker.createGuildStickerAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.CreateGuildStickerResponse>
@@ -123,7 +123,7 @@ function Sticker.modifyGuildStickerAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.ModifyGuildStickerResponse>
@@ -145,7 +145,7 @@ function Sticker.deleteGuildStickerAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.DeleteGuildStickerResponse>

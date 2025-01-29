@@ -57,7 +57,7 @@ function Guild.Prototype.createSlashCommandAsync(self: Guild, slashCommand: buil
 			.createGuildApplicationCommandAsync(request, self.state.applicationId, self.id, slashCommand)
 			:await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return commandObject.new(response:unwrapOk())
 	end) :: future.FutureLike<string, commandObject.Command>
@@ -74,7 +74,7 @@ function Guild.Prototype.deleteSlashCommandAsync(self: Guild, slashCommandId: ap
 			.deleteGuildApplicationCommandAsync(request, self.state.applicationId, self.id, slashCommandId)
 			:await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -95,7 +95,7 @@ function Guild.Prototype.editSlashCommandAsync(
 			.editGuildApplicationCommandAsync(request, self.state.applicationId, self.id, slashCommandId, slashCommand)
 			:await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return commandObject.new(response:unwrapOk())
 	end) :: future.FutureLike<string, commandObject.Command>
@@ -114,7 +114,7 @@ function Guild.Prototype.getSlashCommandsAsync(self: Guild, withLocalizations: b
 			})
 			:await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local commands = {}
 
@@ -139,7 +139,7 @@ function Guild.Prototype.overwriteSlashCommandsAsync(self: Guild, slashCommands:
 			.bulkOverwriteGuildApplicationCommandsAsync(request, self.state.applicationId, self.id, slashCommands :: any)
 			:await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local commands = {}
 
@@ -162,7 +162,7 @@ function Guild.Prototype.fetchGuildPreviewAsync(self: Guild)
 		-- fixme: casted this as any, the command object itself has extra fields as required by the other APIs
 		local response = rest.guild.getGuildPreviewAsync(request, self.id):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return preview.new(response:unwrapOk())
 	end) :: future.FutureLike<string, preview.Preview>
@@ -179,7 +179,7 @@ function Guild.Prototype.modifyGuildAsync(self: Guild, json: builders.guildJSON,
 		-- fixme: casted this as any, the command object itself has extra fields as required by the other APIs
 		local response = rest.guild.modifyGuildAsync(request, self.id, json, reason):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		self:sync(response:unwrapOk())
 
@@ -197,7 +197,7 @@ function Guild.Prototype.deleteGuildAsync(self: Guild)
 
 		local response = rest.guild.deleteGuildAsync(request, self.id):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -217,7 +217,7 @@ function Guild.Prototype.getChannelsAsync(self: Guild)
 
 		local response = rest.guild.getGuildChannelsAsync(request, self.id):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local channels: { unknown } = {}
 
@@ -225,7 +225,7 @@ function Guild.Prototype.getChannelsAsync(self: Guild)
 			table.insert(channels, constructChannelFromData(self.state, channelData))
 		end
 
-		return channels
+		return channels :: any
 	end) :: future.FutureLike<string, { apiTypes.AbstractChannel }>
 end
 
@@ -272,7 +272,7 @@ function Guild.Prototype.getVoiceChannelsAsync(self: Guild)
 				table.insert(resolvedChannels, channel :: any)
 			end
 
-			return resolvedChannels
+			return resolvedChannels :: any
 		else
 			error(channels:unwrapErr())
 		end
@@ -297,7 +297,7 @@ function Guild.Prototype.getCategoryChannelsAsync(self: Guild)
 				table.insert(resolvedChannels, channel :: any)
 			end
 
-			return resolvedChannels
+			return resolvedChannels :: any
 		else
 			error(channels:unwrapErr())
 		end
@@ -347,7 +347,7 @@ function Guild.Prototype.getStageVoiceChannelsAsync(self: Guild)
 				table.insert(resolvedChannels, channel :: any)
 			end
 
-			return resolvedChannels
+			return resolvedChannels :: any
 		else
 			error(channels:unwrapErr())
 		end
@@ -372,7 +372,7 @@ function Guild.Prototype.getDirectoryChannelsAsync(self: Guild)
 				table.insert(resolvedChannels, channel :: any)
 			end
 
-			return resolvedChannels
+			return resolvedChannels :: any
 		else
 			error(channels:unwrapErr())
 		end
@@ -395,9 +395,9 @@ function Guild.Prototype.createChannelAsync<T>(self: Guild, json: builders.chann
 
 		local response = rest.guild.createGuildChannelAsync(request, self.id, json, reason):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return constructChannelFromData(self.state, response:unwrapOk())
+		return constructChannelFromData(self.state, response:unwrapOk()) :: any
 	end) :: future.FutureLike<string, { apiTypes.AbstractChannel }>
 end
 
@@ -416,7 +416,7 @@ function Guild.Prototype.getThreadsAsync(self: Guild)
 
 		local response = rest.guild.listActiveGuildThreadsAsync(request, self.id):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local channels: { unknown } = {}
 
@@ -424,7 +424,7 @@ function Guild.Prototype.getThreadsAsync(self: Guild)
 			table.insert(channels, constructChannelFromData(self.state, channelData))
 		end
 
-		return channels
+		return channels :: any
 	end) :: future.FutureLike<string, { publicThread.Public | privateThread.Private }>
 end
 
@@ -446,7 +446,7 @@ function Guild.Prototype.getAnnouncementThreadsAsync(self: Guild)
 				table.insert(resolvedChannels, channel :: any)
 			end
 
-			return resolvedChannels
+			return resolvedChannels :: any
 		else
 			error(channels:unwrapErr())
 		end
@@ -471,7 +471,7 @@ function Guild.Prototype.getPublicThreadsAsync(self: Guild)
 				table.insert(resolvedChannels, channel :: any)
 			end
 
-			return resolvedChannels
+			return resolvedChannels :: any
 		else
 			error(channels:unwrapErr())
 		end
@@ -496,7 +496,7 @@ function Guild.Prototype.getPrivateThreadsAsync(self: Guild)
 				table.insert(resolvedChannels, channel :: any)
 			end
 
-			return resolvedChannels
+			return resolvedChannels :: any
 		else
 			error(channels:unwrapErr())
 		end
@@ -513,7 +513,7 @@ function Guild.Prototype.getGuildMemberAsync(self: Guild, userId: string)
 		-- fixme: casted this as any, the command object itself has extra fields as required by the other APIs
 		local response = rest.guild.getGuildMemberAsync(request, self.id, userId):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return member.new(self.state, self.id, response:unwrapOk())
 	end) :: future.FutureLike<string, member.Member>
@@ -533,7 +533,7 @@ function Guild.Prototype.listGuildMembersAsync(self: Guild, lastSnowflake: strin
 			})
 			:await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local members = {}
 
@@ -559,7 +559,7 @@ function Guild.Prototype.searchGuildMembersAsync(self: Guild, query: string, lim
 			})
 			:await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local members = {}
 
@@ -600,12 +600,12 @@ function Guild.Prototype.addGuildMemberAsync(
 			})
 			:await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local data = response:unwrapOk()
 
 		if data then
-			return member.new(self.state, self.id, data)
+			return member.new(self.state, self.id, data) :: any
 		else
 			return nil :: any
 		end
@@ -621,7 +621,7 @@ function Guild.Prototype.kickGuildMemberAsync(self: Guild, userId: apiTypes.Snow
 
 		local response = rest.guild.removeGuildMemberAsync(request, self.id, userId, reason):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -657,7 +657,7 @@ function Guild.Prototype.banGuildMemberAsync(
 			}, reason)
 			:await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -691,7 +691,7 @@ function Guild.Prototype.bulkBanGuildMembersAsync(
 					}, reason)
 					:await()
 
-				assert(response:isOk(), response:unwrapErr())
+				assert(response:isOk(), tostring(response:unwrapErr()))
 
 				local data = response:unwrapOk()
 				local returnedValue = {}
@@ -724,7 +724,7 @@ function Guild.Prototype.getGuildBansAsync(
 			})
 			:await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local bans = {}
 
@@ -745,12 +745,12 @@ function Guild.Prototype.getGuildBanAsync(self: Guild, userId: apiTypes.Snowflak
 
 		local response = rest.guild.getGuildBanAsync(request, self.id, userId):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local data = response:unwrapOk()
 
 		if data then
-			return ban.new(data)
+			return ban.new(data) :: any
 		else
 			return nil :: any
 		end
@@ -766,7 +766,7 @@ function Guild.Prototype.getGuildRolesAsync(self: Guild)
 
 		local response = rest.guild.getGuildRolesAsync(request, self.id):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local roles = {}
 
@@ -787,7 +787,7 @@ function Guild.Prototype.getGuildRoleAsync(self: Guild, roleId: apiTypes.Snowfla
 
 		local response = rest.guild.getGuildRoleAsync(request, self.id, roleId):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return role.new(self.state, self.id, response:unwrapOk())
 	end) :: future.FutureLike<string, role.Role>
@@ -802,7 +802,7 @@ function Guild.Prototype.createGuildRoleAsync(self: Guild, roleJson: builders.ro
 
 		local response = rest.guild.createGuildRoleAsync(request, self.id, roleJson, reason):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return role.new(self.state, self.id, response:unwrapOk())
 	end) :: future.FutureLike<string, role.Role>
@@ -821,7 +821,7 @@ function Guild.Prototype.setGuildMFALevelAsync(self: Guild, mfaLevel: apiTypes.M
 			}, reason)
 			:await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return apiTypes.guild.MFALevel[response:unwrapOk()]
 	end) :: future.FutureLike<string, apiTypes.MFALevel>
@@ -846,7 +846,7 @@ function Guild.Prototype.getGuildPruneCountAsync(self: Guild, days: number?, inc
 			})
 			:await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().pruned
 	end) :: future.FutureLike<string, number>
@@ -881,7 +881,7 @@ function Guild.Prototype.beginGuildPruneAsync(
 			})
 			:await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		if returnPruneCount then
 			return response:unwrapOk().pruned
@@ -900,7 +900,7 @@ function Guild.Prototype.getGuildVoiceRegionsAsync(self: Guild)
 
 		local response = rest.guild.getGuildVoiceRegionsAsync(request, self.id):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local voiceRegions = {}
 
@@ -921,7 +921,7 @@ function Guild.Prototype.getGuildInvitesAsync(self: Guild)
 
 		local response = rest.guild.getGuildInvitesAsync(request, self.id):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local invites = {}
 
@@ -942,7 +942,7 @@ function Guild.Prototype.getGuildIntegrationsAsync(self: Guild)
 
 		local response = rest.guild.getGuildIntegrationsAsync(request, self.id):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local integrations = {}
 
@@ -966,7 +966,7 @@ function Guild.Prototype.deleteGuildIntegrationAsync(self: Guild, integrationId:
 
 		local response = rest.guild.deleteGuildIntegrationAsync(request, self.id, integrationId):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -981,7 +981,7 @@ function Guild.Prototype.getGuildWidgetSettingsAsync(self: Guild)
 
 		local response = rest.guild.getGuildWidgetSettingsAsync(request, self.id):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return widgetSettings.new(response:unwrapOk())
 	end) :: future.FutureLike<string, widgetSettings.WidgetSettings>
@@ -997,7 +997,7 @@ function Guild.Prototype.modifyGuildWidgetAsync(self: Guild, json: builders.widg
 
 		local response = rest.guild.modifyGuildWidgetAsync(request, self.id, json, reason):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return widgetSettings.new(response:unwrapOk())
 	end) :: future.FutureLike<string, widgetSettings.WidgetSettings>
@@ -1013,7 +1013,7 @@ function Guild.Prototype.getGuildWidgetAsync(self: Guild)
 
 		local response = rest.guild.getGuildWidgetAsync(request, self.id):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return widget.new(self.state, response:unwrapOk())
 	end) :: future.FutureLike<string, widget.Widget>
@@ -1029,7 +1029,7 @@ function Guild.Prototype.getGuildVanityUrlAsync(self: Guild)
 
 		local response = rest.guild.getGuildVanityURLAsync(request, self.id):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return vanityUrl.new(response:unwrapOk())
 	end) :: future.FutureLike<string, vanityUrl.VanityUrl>
@@ -1051,7 +1051,7 @@ function Guild.Prototype.getGuildWidgetImageAsync(
 			})
 			:await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk()
 	end) :: future.FutureLike<string, string>
@@ -1068,7 +1068,7 @@ function Guild.Prototype.getGuildWelcomeScreenAsync(self: Guild)
 
 		local response = rest.guild.getGuildWelcomeScreenAsync(request, self.id):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return welcomeScreen.new(response:unwrapOk())
 	end) :: future.FutureLike<string, welcomeScreen.WelcomeScreen>
@@ -1083,7 +1083,7 @@ function Guild.Prototype.modifyGuildWelcomeScreenAsync(self: Guild, json: builde
 
 		local response = rest.guild.modifyGuildWelcomeScreenAsync(request, self.id, json, reason):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return welcomeScreen.new(response:unwrapOk())
 	end) :: future.FutureLike<string, welcomeScreen.WelcomeScreen>
@@ -1098,7 +1098,7 @@ function Guild.Prototype.getGuildOnboardingAsync(self: Guild)
 
 		local response = rest.guild.getGuildOnboardingAsync(request, self.id):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return onboarding.new(response:unwrapOk())
 	end) :: future.FutureLike<string, onboarding.Onboarding>
@@ -1114,7 +1114,7 @@ function Guild.Prototype.modifyGuildOnboardingAsync(self: Guild, json: builders.
 
 		local response = rest.guild.modifyGuildOnboardingAsync(request, self.id, json, reason):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return onboarding.new(response:unwrapOk())
 	end) :: future.FutureLike<string, onboarding.Onboarding>

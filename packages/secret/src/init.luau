@@ -41,9 +41,9 @@ function Secret.Interface.new<T>(value: T): Secret<T>
 
 				if typeOfValue == "string" then
 					local value = (_self.value :: any) :: string
-					local sizeTohide = #value / 3
+					local sizeTohide = #value / 2
 
-					return `Secret({string.sub(value, 1, #value - sizeTohide)}{string.rep("#", sizeTohide)})`
+					return `Secret({string.sub(value, 1, #value - sizeTohide)}{string.rep("-", sizeTohide)})`
 				else
 					return `Secret({typeOfValue})`
 				end

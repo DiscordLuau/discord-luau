@@ -46,17 +46,21 @@ Message.Prototype = {}
 --[[
 	Add a reaction to a message. Requires READ_MESSAGE_HISTORY and ADD_REACTIONS permissions.
 ]]
-function Message.Prototype.addReactionAsync(self: Message, emoji: builders.emojiJSON)
+function Message.Prototype.addReactionAsync(self: Message, emoji: builders.emojiJSON | string)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
+		local emojiObject = emoji :: string
 
-		assert(emoji.id, `Reaction must have an id`)
-		assert(emoji.name, `Reaction must have a name`)
+		if type(emoji) == "table" then
+			assert(emoji.id, `Reaction must have an id`)
+			assert(emoji.name, `Reaction must have a name`)
 
-		local response =
-			rest.message.createReactionAsync(request, self.channelId, self.id, emoji.id, emoji.name):await()
+			emojiObject = `{emoji.name}:{emoji.id}`
+		end
 
-		assert(response:isOk(), response:unwrapErr())
+		local response = rest.message.createReactionAsync(request, self.channelId, self.id, emojiObject):await()
+
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -65,17 +69,21 @@ end
 --[[
 	Remove the current user's reaction from a message
 ]]
-function Message.Prototype.removeOwnReactionAsync(self: Message, emoji: builders.emojiJSON)
+function Message.Prototype.removeOwnReactionAsync(self: Message, emoji: builders.emojiJSON | string)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
+		local emojiObject = emoji :: string
 
-		assert(emoji.id, `Reaction must have an id`)
-		assert(emoji.name, `Reaction must have a name`)
+		if type(emoji) == "table" then
+			assert(emoji.id, `Reaction must have an id`)
+			assert(emoji.name, `Reaction must have a name`)
 
-		local response =
-			rest.message.deleteOwnReactionAsync(request, self.channelId, self.id, emoji.id, emoji.name):await()
+			emojiObject = `{emoji.name}:{emoji.id}`
+		end
 
-		assert(response:isOk(), response:unwrapErr())
+		local response = rest.message.deleteOwnReactionAsync(request, self.channelId, self.id, emojiObject):await()
+
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -84,17 +92,26 @@ end
 --[[
 	Remove another user's reaction from a message. Requires MANAGE_MESSAGES permission.
 ]]
-function Message.Prototype.deleteUserReactionAsync(self: Message, emoji: builders.emojiJSON, userId: apiTypes.Snowflake)
+function Message.Prototype.deleteUserReactionAsync(
+	self: Message,
+	emoji: builders.emojiJSON | string,
+	userId: apiTypes.Snowflake
+)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
+		local emojiObject = emoji :: string
 
-		assert(emoji.id, `Reaction must have an id`)
-		assert(emoji.name, `Reaction must have a name`)
+		if type(emoji) == "table" then
+			assert(emoji.id, `Reaction must have an id`)
+			assert(emoji.name, `Reaction must have a name`)
+
+			emojiObject = `{emoji.name}:{emoji.id}`
+		end
 
 		local response =
-			rest.message.deleteUserReactionAsync(request, self.channelId, self.id, emoji.id, emoji.name, userId):await()
+			rest.message.deleteUserReactionAsync(request, self.channelId, self.id, emojiObject, userId):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -105,26 +122,31 @@ end
 ]]
 function Message.Prototype.getReactionsAsync(
 	self: Message,
-	emoji: builders.emojiJSON,
+	emoji: builders.emojiJSON | string,
 	reactionType: apiTypes.ReactionType?,
 	afterUserId: apiTypes.Snowflake?,
 	limit: number?
 )
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
+		local emojiObject = emoji :: string
 
-		assert(emoji.id, `Reaction must have an id`)
-		assert(emoji.name, `Reaction must have a name`)
+		if type(emoji) == "table" then
+			assert(emoji.id, `Reaction must have an id`)
+			assert(emoji.name, `Reaction must have a name`)
+
+			emojiObject = `{emoji.name}:{emoji.id}`
+		end
 
 		local response = rest.message
-			.getReactionsAsync(request, self.channelId, self.id, emoji.id, emoji.name, {
+			.getReactionsAsync(request, self.channelId, self.id, emojiObject, {
 				reactionType = reactionType,
 				after = afterUserId,
 				limit = limit,
 			})
 			:await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local users = {}
 
@@ -132,7 +154,7 @@ function Message.Prototype.getReactionsAsync(
 			table.insert(users, user.new(userData))
 		end
 
-		return users
+		return users :: any
 	end) :: future.FutureLike<string, user.User>
 end
 
@@ -145,7 +167,7 @@ function Message.Prototype.deleteAllReactionsAsync(self: Message)
 
 		local response = rest.message.deleteAllReactionsAsync(request, self.channelId, self.id):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -154,17 +176,22 @@ end
 --[[
 	Remove all reactions of a specific emoji from a message. Requires MANAGE_MESSAGES permission.
 ]]
-function Message.Prototype.deleteAllReactionsForEmojiAsync(self: Message, emoji: builders.emojiJSON)
+function Message.Prototype.deleteAllReactionsForEmojiAsync(self: Message, emoji: builders.emojiJSON | string)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
+		local emojiObject = emoji :: string
 
-		assert(emoji.id, `Reaction must have an id`)
-		assert(emoji.name, `Reaction must have a name`)
+		if type(emoji) == "table" then
+			assert(emoji.id, `Reaction must have an id`)
+			assert(emoji.name, `Reaction must have a name`)
+
+			emojiObject = `{emoji.name}:{emoji.id}`
+		end
 
 		local response =
-			rest.message.deleteAllReactionsForEmojiAsync(request, self.channelId, self.id, emoji.name, emoji.id):await()
+			rest.message.deleteAllReactionsForEmojiAsync(request, self.channelId, self.id, emojiObject):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -188,24 +215,25 @@ function Message.Prototype.editMessageAsync(self: Message, message: builders.mes
 			})
 			:await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		self:sync(response:unwrapOk())
 
 		return self
 	end) :: future.FutureLike<string, Message>
 end
+
 --[[
 	Delete a message. If operating on a guild channel and trying to delete a message that was not sent by the current user,
 	this endpoint requires the MANAGE_MESSAGES permission.
 ]]
-function Message.Prototype.deleteMessageAsync(self: Message, reason: string)
+function Message.Prototype.deleteMessageAsync(self: Message, reason: string?)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local response = rest.message.deleteMessageAsync(request, self.channelId, self.id, reason):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return nil
 	end) :: future.FutureLike<string, nil>

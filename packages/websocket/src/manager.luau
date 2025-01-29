@@ -19,7 +19,7 @@ Manager.Prototype = {}
 function Manager.Prototype.connectAsync(
 	self: Manager,
 	gatewayInformation: apiTypes.GetGatewayBotResponse
-): future.Future<nil>
+): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local maxConcurrency = gatewayInformation.session_start_limit.max_concurrency
 

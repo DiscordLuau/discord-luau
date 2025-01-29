@@ -18,7 +18,7 @@ function Gateway.getGatewayAsync(instance: request.Request)
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetGatewayResponse>
@@ -34,7 +34,7 @@ function Gateway.getGatewayBotAsync(instance: request.Request)
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetGatewayBotResponse>

@@ -40,7 +40,7 @@ function Component.Prototype.deferAsync(self: Component)
 
 		self.isDeferred = true
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -62,7 +62,7 @@ function Component.Prototype.messageAsync(self: Component, messageJSON: builders
 			})
 			:await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local data = response:unwrapOk()
 
@@ -87,7 +87,7 @@ function Component.Prototype.getResponseAsync(self: Component, threadId: string?
 			})
 			:await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return message.new(self.state, response:unwrapOk())
 	end) :: future.FutureLike<string, message.Message>
@@ -106,7 +106,7 @@ function Component.Prototype.editResponseAsync(self: Component, messageJSON: bui
 			})
 			:await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return message.new(self.state, response:unwrapOk())
 	end) :: future.FutureLike<string, message.Message>
@@ -121,7 +121,7 @@ function Component.Prototype.deleteResponseAsync(self: Component)
 	return future.Future.new(function()
 		local response = rest.interaction.deleteOriginalInteractionResponseAsync(request, self.id, self.token):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -146,7 +146,7 @@ function Component.Prototype.createFollowupResponseAsync(
 			})
 			:await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return message.new(self.state, response:unwrapOk())
 	end) :: future.FutureLike<string, message.Message>
@@ -165,7 +165,7 @@ function Component.Prototype.getFollowupResponseAsync(self: Component, messageId
 			})
 			:await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return message.new(self.state, response:unwrapOk())
 	end) :: future.FutureLike<string, message.Message>
@@ -189,7 +189,7 @@ function Component.Prototype.editFollowupResponseAsync(
 			})
 			:await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return message.new(self.state, response:unwrapOk())
 	end) :: future.FutureLike<string, message.Message>
@@ -204,7 +204,7 @@ function Component.Prototype.deleteFollowupResponseAsync(self: Component, messag
 	return future.Future.new(function()
 		local response = rest.interaction.deleteFollowupMessageAsync(request, self.id, self.token, messageId):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return nil
 	end) :: future.FutureLike<string, nil>

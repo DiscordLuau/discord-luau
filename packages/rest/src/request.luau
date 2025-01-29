@@ -111,10 +111,6 @@ function Request.Prototype.executeAsync<Resolve>(self: Request)
 		assert(self.url, `Request URL is not set!`)
 		assert(self.headers, `Request headers are not set!`)
 
-		if self.method == "POST" then
-			assert(self.body, `Request body is not set!`)
-		end
-
 		local headerTable: stdPolyfills.HttpHeaderMap = {}
 		local baseUrl = `https://discord.com/api/v{self.restApiVersion}{self.url}`
 		local hasUrlParams = next(self.urlParams) ~= nil

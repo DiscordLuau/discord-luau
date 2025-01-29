@@ -27,12 +27,14 @@ function GuildBehaviour.Prototype.setPositionAsync<T>(self: Channel<T>, position
 
 		local response = rest.guild
 			.modifyGuildChannelPositionsAsync(request, self.guildId, {
-				id = self.id,
-				position = position,
+				{
+					id = self.id,
+					position = position,
+				}
 			})
 			:await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -47,13 +49,15 @@ function GuildBehaviour.Prototype.setParentAsync<T>(self: Channel<T>, parentId: 
 
 		local response = rest.guild
 			.modifyGuildChannelPositionsAsync(request, self.guildId, {
-				id = self.id,
-				lock_permissions = syncPermissions,
-				parent_id = parentId,
+				{
+					id = self.id,
+					lock_permissions = syncPermissions,
+					parent_id = parentId,
+				}
 			})
 			:await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -74,14 +78,16 @@ function GuildBehaviour.Prototype.setPermissionsAsync<T>(
 
 		local response = rest.guild
 			.modifyGuildChannelPositionsAsync(request, self.guildId, {
-				type = apiTypes.guild.OverwriteType[type],
-				id = overwriteId,
-				allow = allowedPermissions,
-				deny = denyPermissions,
+				{
+					type = apiTypes.guild.OverwriteType[type],
+					id = overwriteId,
+					allow = allowedPermissions,
+					deny = denyPermissions,
+				}
 			})
 			:await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -101,7 +107,7 @@ function GuildBehaviour.Prototype.deletePermissionAsync<T>(
 
 		local response = rest.channel.deleteChannelPermissionAsync(request, self.guildId, overwriteId, reason):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -116,7 +122,7 @@ function GuildBehaviour.Prototype.getInvitesAsync<T>(self: Channel<T>)
 
 		local response = rest.channel.getChannelInvitesAsync(request, self.id):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local invites = {}
 
@@ -137,7 +143,7 @@ function GuildBehaviour.Prototype.createInviteAsync<T>(self: Channel<T>, json: b
 
 		local response = rest.channel.createChannelInviteAsync(request, self.id, json, reason):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return invite.new(self.state, response:unwrapOk())
 	end) :: future.FutureLike<string, invite.Invite>
@@ -161,7 +167,7 @@ function GuildBehaviour.Prototype.listPublicArchivedThreadsAsync<T>(
 			})
 			:await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local data = response:unwrapOk()
 		local returnedValue = {
@@ -180,7 +186,7 @@ function GuildBehaviour.Prototype.listPublicArchivedThreadsAsync<T>(
 			table.insert(returnedValue.members, member)
 		end
 
-		return returnedValue
+		return returnedValue :: any
 	end) :: future.FutureLike<string, {
 		threads: { apiTypes.Snowflake },
 		members: { threadMember.ThreadMember },
@@ -206,7 +212,7 @@ function GuildBehaviour.Prototype.listPrivateArchivedThreadsAsync<T>(
 			})
 			:await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local data = response:unwrapOk()
 		local returnedValue = {
@@ -225,7 +231,7 @@ function GuildBehaviour.Prototype.listPrivateArchivedThreadsAsync<T>(
 			table.insert(returnedValue.members, member)
 		end
 
-		return returnedValue
+		return returnedValue :: any
 	end) :: future.FutureLike<string, {
 		threads: { apiTypes.Snowflake },
 		members: { threadMember.ThreadMember },
@@ -251,7 +257,7 @@ function GuildBehaviour.Prototype.listJoinedPrivateArchivedThreadsAsync<T>(
 			})
 			:await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local data = response:unwrapOk()
 		local returnedValue = {
@@ -270,7 +276,7 @@ function GuildBehaviour.Prototype.listJoinedPrivateArchivedThreadsAsync<T>(
 			table.insert(returnedValue.members, member)
 		end
 
-		return returnedValue
+		return returnedValue :: any
 	end) :: future.FutureLike<string, {
 		threads: { apiTypes.Snowflake },
 		members: { threadMember.ThreadMember },

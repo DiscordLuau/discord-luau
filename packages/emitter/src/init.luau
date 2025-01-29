@@ -20,7 +20,12 @@ function Emitter.Prototype.listen<T...>(self: Emitter<T...>, callback: (T...) ->
 		end
 	end)
 
-	coroutine.resume(thread)
+	local status, response = coroutine.resume(thread)
+
+	if not status then
+		warn(response)
+		print(debug.traceback(thread))
+	end
 
 	table.insert(self._connectedThreads, thread)
 

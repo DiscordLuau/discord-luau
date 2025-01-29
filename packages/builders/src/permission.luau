@@ -51,11 +51,11 @@ function Permission.Prototype.build(self: Permission): JSON
 	local bitflag = self.bitflag
 
 	for _, permission in self.addedPermissions do
-		bitflag = bit.bor(bitflag, apiTypes[permission])
+		bitflag = bit.bor(bitflag, apiTypes.permission.Permissions[permission])
 	end
 
 	for _, permission in self.removedPermissions do
-		bitflag = bit.band(bitflag, bit.bnot(apiTypes[permission]))
+		bitflag = bit.band(bitflag, bit.bnot(apiTypes.permission.Permissions[permission]))
 	end
 
 	return tostring(bitflag)
@@ -97,7 +97,7 @@ function Permission.Interface.fromPermissions(permissions: { apiTypes.Permission
 	local bitflag = 0
 
 	for _, permission in permissions do
-		bitflag = bit.bor(bitflag, apiTypes[permission])
+		bitflag = bit.bor(bitflag, apiTypes.permission.Permissions[permission])
 	end
 
 	return Permission.Interface.new({

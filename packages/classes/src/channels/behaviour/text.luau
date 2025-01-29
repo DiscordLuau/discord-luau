@@ -30,7 +30,7 @@ function TextBehaviour.Prototype.bulkDeleteMessagesAsync<T>(self: Channel<T>, me
 			}, reason)
 			:await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -58,7 +58,7 @@ function TextBehaviour.Prototype.getMessagesAsync<T>(
 			})
 			:await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local messages = {}
 
@@ -79,7 +79,7 @@ function TextBehaviour.Prototype.getMessageAsync<T>(self: Channel<T>, messageId:
 
 		local response = rest.message.getChannelMessageAsync(request, self.id, messageId):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return message.new(self.state, response:unwrapOk())
 	end) :: future.FutureLike<string, message.Message>
@@ -94,7 +94,7 @@ function TextBehaviour.Prototype.createMessageAsync<T>(self: Channel<T>, json: b
 
 		local response = rest.message.createMessageAsync(request, self.id, json):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return message.new(self.state, response:unwrapOk())
 	end) :: future.FutureLike<string, message.Message>
@@ -109,7 +109,7 @@ function TextBehaviour.Prototype.getPinnedMessagesAsync<T>(self: Channel<T>)
 
 		local response = rest.channel.getPinnedMessagesAsync(request, self.id):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local messages = {}
 
@@ -130,7 +130,7 @@ function TextBehaviour.Prototype.pinMessageAsync<T>(self: Channel<T>, messageId:
 
 		local response = rest.channel.pinMessageAsync(request, self.id, messageId):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -145,7 +145,7 @@ function TextBehaviour.Prototype.unpinMessageAsync<T>(self: Channel<T>, messageI
 
 		local response = rest.channel.unpinMessageAsync(request, self.id, messageId, reason):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -160,9 +160,9 @@ function TextBehaviour.Prototype.startThread<T>(self: Channel<T>, json: builders
 
 		local response = rest.channel.startThreadWithoutMessageAsync(request, self.id, json):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response:unwrapOk().id
+		return response:unwrapOk().id :: any
 	end) :: future.FutureLike<string, apiTypes.Snowflake>
 end
 

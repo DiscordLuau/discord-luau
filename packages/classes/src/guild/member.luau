@@ -50,7 +50,7 @@ function Member.Prototype.banAsync(
 			}, reason)
 			:await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -67,7 +67,7 @@ function Member.Prototype.kickAsync(self: Member, reason: string?)
 
 		local response = rest.guild.removeGuildMemberAsync(request, self.guildId, self.user.id, reason):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -105,7 +105,7 @@ function Member.Prototype.modifyAsync(
 			}, reason)
 			:await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		self:sync(response:unwrapOk())
 
@@ -199,19 +199,16 @@ end
 ]]
 function Member.Prototype.addRoleAsync(self: Member, roleId: apiTypes.Snowflake, reason: string?)
 	return future.Future.new(function()
-		return future.Future.new(function()
-			local request = self.state.rest:newRequest()
+		local request = self.state.rest:newRequest()
 
-			assert(self.user, "user not found!")
+		assert(self.user, "user not found!")
 
-			local response =
-				rest.guild.addGuildMemberRoleAsync(request, self.guildId, self.user.id, roleId, reason):await()
+		local response = rest.guild.addGuildMemberRoleAsync(request, self.guildId, self.user.id, roleId, reason):await()
 
-			assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-			return nil
-		end)
-	end)
+		return nil
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -219,19 +216,17 @@ end
 ]]
 function Member.Prototype.removeRoleAsync(self: Member, roleId: apiTypes.Snowflake, reason: string?)
 	return future.Future.new(function()
-		return future.Future.new(function()
-			local request = self.state.rest:newRequest()
+		local request = self.state.rest:newRequest()
 
-			assert(self.user, "user not found!")
+		assert(self.user, "user not found!")
 
-			local response =
-				rest.guild.removeGuildMemberRoleAsync(request, self.guildId, self.user.id, roleId, reason):await()
+		local response =
+			rest.guild.removeGuildMemberRoleAsync(request, self.guildId, self.user.id, roleId, reason):await()
 
-			assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-			return nil
-		end)
-	end)
+		return nil
+	end) :: future.FutureLike<string, nil>
 end
 
 function Member.Prototype.sync(self: Member, guildMemberData: apiTypes.GuildMemberObject)

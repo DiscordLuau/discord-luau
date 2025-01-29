@@ -33,7 +33,7 @@ function GroupDMBehaviour.Prototype.addRecipient<T>(
 			})
 			:await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -48,7 +48,7 @@ function GroupDMBehaviour.Prototype.removeRecipient<T>(self: Channel<T>, userId:
 
 		local response = rest.channel.groupDMRemoveRecipientAsync(request, self.id, userId):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return nil
 	end) :: future.FutureLike<string, nil>

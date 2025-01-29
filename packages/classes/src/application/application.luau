@@ -34,7 +34,7 @@ function Application.Prototype.createSlashCommandAsync(self: Application, slashC
 
 		local response = rest.commands.createGlobalApplicationCommandAsync(request, self.id, slashCommand):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return commandObject.new(response:unwrapOk())
 	end) :: future.FutureLike<string, commandObject.Command>
@@ -49,7 +49,7 @@ function Application.Prototype.deleteSlashCommandAsync(self: Application, slashC
 
 		local response = rest.commands.deleteGlobalApplicationCommandAsync(request, self.id, slashCommandId):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -69,7 +69,7 @@ function Application.Prototype.editSlashCommandAsync(
 		local response =
 			rest.commands.editGlobalApplicationCommandAsync(request, self.id, slashCommandId, slashCommand):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return commandObject.new(response:unwrapOk())
 	end) :: future.FutureLike<string, commandObject.Command>
@@ -88,7 +88,7 @@ function Application.Prototype.getSlashCommandsAsync(self: Application, withLoca
 			})
 			:await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local commands = {}
 
@@ -113,7 +113,7 @@ function Application.Prototype.overwriteSlashCommandsAsync(
 		local response =
 			rest.commands.bulkOverwriteGlobalApplicationCommandsAsync(request, self.id, slashCommands):await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local commands = {}
 

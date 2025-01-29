@@ -22,7 +22,7 @@ function User.getCurrentUserAsync(instance: request.Request)
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetCurrentUserResponse>
@@ -38,7 +38,7 @@ function User.getUserAsync(instance: request.Request, userId: apiTypes.Snowflake
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetUserResponse>
@@ -55,7 +55,7 @@ function User.modifyCurrentUserAsync(instance: request.Request, jsonParams: apiT
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.ModifyCurrentUserResponse>
@@ -84,7 +84,7 @@ function User.getCurrentUserGuildsAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetCurrentUserGuildsResponse>
@@ -100,7 +100,7 @@ function User.getCurrentUserGuildMember(instance: request.Request, guildId: apiT
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetCurrentUserGuildMemberResponse>
@@ -116,7 +116,7 @@ function User.leaveGuildAsync(instance: request.Request, guildId: apiTypes.Snowf
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.LeaveGuildResponse>
@@ -133,7 +133,7 @@ function User.createDMAsync(instance: request.Request, jsonParams: apiTypes.Crea
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.CreateDMResponse>
@@ -150,7 +150,7 @@ function User.createGroupDMAsync(instance: request.Request, jsonParams: apiTypes
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.CreateGroupDMResponse>
@@ -166,7 +166,7 @@ function User.getCurrentUserConnectionsAsync(instance: request.Request)
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetCurrentUserConnectionResponse>
@@ -185,7 +185,7 @@ function User.getCurrentUserApplicationRoleConnectionAsync(instance: request.Req
 
 				local response = instance:executeAsync():await()
 
-				assert(response:isOk(), response:unwrapErr())
+				assert(response:isOk(), tostring(response:unwrapErr()))
 
 				return response:unwrapOk().body
 			end
@@ -210,7 +210,7 @@ function User.updateCurrentUserApplicationRoleConnectionAsync(
 
 				local response = instance:executeAsync():await()
 
-				assert(response:isOk(), response:unwrapErr())
+				assert(response:isOk(), tostring(response:unwrapErr()))
 
 				return response:unwrapOk().body
 			end

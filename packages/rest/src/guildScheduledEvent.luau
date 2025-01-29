@@ -33,7 +33,7 @@ function GuildScheduledEvent.listScheduledEventsForGuildAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.ListScheduledEventsForGuildResponse>
@@ -56,7 +56,7 @@ function GuildScheduledEvent.createGuildScheduledEvent(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.CreateGuildScheduledEventResponse>
@@ -84,7 +84,7 @@ function GuildScheduledEvent.getScheduledEventsForGuildAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetGuildScheduledEventResponse>
@@ -108,7 +108,7 @@ function GuildScheduledEvent.modifyGuildScheduledEvent(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.ModifyGuildScheduledEventResponse>
@@ -128,7 +128,7 @@ function GuildScheduledEvent.deleteGuildScheduledEvent(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.DeleteGuildScheduledEventResponse>
@@ -148,7 +148,7 @@ function GuildScheduledEvent.getGuildScheduledEventUsers(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), response:unwrapErr())
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetGuildScheduledEventUsersResponse>
