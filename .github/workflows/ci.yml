@@ -43,6 +43,8 @@ jobs:
           cache: true
       - name: Setup lune typedefs
         run: lune setup
+      - name: Bundle api-types
+        run: lune run bundle
       - name: Install dependencies
         run: pesde install
       - name: Typecheck
@@ -61,6 +63,8 @@ jobs:
         uses: CompeyDev/setup-rokit@v0.1.0
         with:
           cache: true
+      - name: Bundle api-types
+        run: lune run bundle
       - name: Install dependencies
         run: pesde install
       - name: Run unit-tests
