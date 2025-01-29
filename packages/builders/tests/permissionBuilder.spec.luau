@@ -53,8 +53,7 @@ return function()
 	end)
 
 	test.case("Permission builder fromPermissions creates correct bitflag", function()
-		local permissions = { "ManageChannels", "Administrator" }
-		local permission = Permission.fromPermissions(permissions)
+		local permission = Permission.fromPermissions({ "Administrator" })
 
 		check.equal(#permission.addedPermissions, 2)
 

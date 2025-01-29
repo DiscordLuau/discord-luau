@@ -1,0 +1,1 @@
+declare function warn<T...>(...: T...)

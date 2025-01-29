@@ -67,7 +67,7 @@ function Component.Prototype.messageAsync(self: Component, messageJSON: builders
 		local data = response:unwrapOk()
 
 		if responseMessage and data.resource.message then
-			return message.new(self.state, data.resource.message)
+			return message.new(self.state, data.resource.message) :: any
 		else
 			return nil :: any
 		end
