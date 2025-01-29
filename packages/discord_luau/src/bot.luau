@@ -335,7 +335,7 @@ function Bot.Prototype.getChannelAsync<T>(self: Bot, channelId: string)
 
 		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return classes.channels.construct(self.state, response:unwrapOk())
+		return classes.channels.construct(self.state, response:unwrapOk()) :: any
 	end) :: future.FutureLike<string, classes.Channel>
 end
 
@@ -428,6 +428,32 @@ function Bot.Prototype.getTextChannelAsync(self: Bot, channelId: string)
 
 		return channel :: any
 	end) :: future.FutureLike<string, classes.GuildText>
+end
+
+--[[
+	Returns a text channel object for the given channel ID.
+
+	This function sends a request to the Discord API to retrieve information about a text channel.
+]]
+function Bot.Prototype.getForumChannelAsync(self: Bot, channelId: string)
+	return future.Future.new(function()
+		local channel = self:getChannelAsync(channelId):await():unwrapOk()
+
+		return channel :: any
+	end) :: future.FutureLike<string, classes.ThreadForum>
+end
+
+--[[
+	Returns a text channel object for the given channel ID.
+
+	This function sends a request to the Discord API to retrieve information about a text channel.
+]]
+function Bot.Prototype.getMediaChannelAsync(self: Bot, channelId: string)
+	return future.Future.new(function()
+		local channel = self:getChannelAsync(channelId):await():unwrapOk()
+
+		return channel :: any
+	end) :: future.FutureLike<string, classes.ThreadMedia>
 end
 
 --[[

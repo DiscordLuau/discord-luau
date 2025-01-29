@@ -14,11 +14,16 @@ discordBot.onMessage:listen(function() end)
 
 discordBot.onAllShardsReady:listen(function()
 	xpcall(function()
-		local guild = discordBot:getGuildAsync("1273035219561091193"):await():unwrapOk()
-		local threads = guild:getThreadsAsync():await():unwrapOk()
-		local thread = threads[1]
+		local channel = discordBot:getForumChannelAsync("1334296315038929009"):await():unwrapOk()
 
-		local result = thread:unpinMessageAsync("1333953461628436611"):await():unwrapOk()
+		local result = channel
+			:createPostAsync({
+				message = {
+					content = "hi guys",
+				},
+				name = "test post",
+			})
+			:await()
 
 		print("request sent:", result)
 	end, function(e)

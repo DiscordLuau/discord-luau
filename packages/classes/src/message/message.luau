@@ -8,7 +8,6 @@ local stdPolyfills = require("../../lune_packages/std_polyfills")
 
 local apiTypes = require("../../lune_packages/api_types")
 local future = require("../../luau_packages/future")
-local util = require("../../lune_packages/util")
 local builders = require("../../lune_packages/builders")
 local state = require("../../lune_packages/state")
 local rest = require("../../lune_packages/rest")
@@ -35,6 +34,8 @@ local textInputComponent = require("./components/textInput")
 local selectMenuComponent = require("./components/selectMenu/selectMenu")
 local actionRowComponent = require("./components/actionRow")
 local buttonComponent = require("./components/button")
+
+local _require = require :: any
 
 -- https://discord.com/developers/docs/resources/channel#start-thread-from-message
 
@@ -323,7 +324,7 @@ function Message.Prototype.sync(self: Message, messageData: apiTypes.MessageObje
 	self.call = messageData.call and call.new(messageData.call)
 
 	-- cyclic dependency, can only require during runtime.
-	self.resolved = messageData.resolved and util.import("@classes/resolved").new(self.state, messageData.resolved)
+	self.resolved = messageData.resolved and _require("../resolved").new(self.state, messageData.resolved)
 end
 
 function Message.Interface.new(state: state.State, messageData: apiTypes.MessageObject): Message

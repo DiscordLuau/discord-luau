@@ -71,20 +71,17 @@ function GuildBehaviour.Prototype.setPermissionsAsync<T>(
 	type: apiTypes.OverwriteType,
 	overwriteId: string,
 	allowedPermissions: builders.permissionJSON,
-	denyPermissions: builders.permissionJSON
+	denyPermissions: builders.permissionJSON,
+	auditLogReason: string?
 )
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local response = rest.guild
-			.modifyGuildChannelPositionsAsync(request, self.guildId, {
-				{
-					type = apiTypes.guild.OverwriteType[type],
-					id = overwriteId,
-					allow = allowedPermissions,
-					deny = denyPermissions,
-				}
-			})
+		local response = rest.channel.editChannelPermissionsAsync(request, self.id, overwriteId, {
+				type = apiTypes.guild.OverwriteType[type],
+				allow = allowedPermissions,
+				deny = denyPermissions,
+			}, auditLogReason)
 			:await()
 
 		assert(response:isOk(), tostring(response:unwrapErr()))

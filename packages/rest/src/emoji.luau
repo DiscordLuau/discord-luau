@@ -55,7 +55,7 @@ function Emoji.createGuildEmojiAsync(
 		instance:assertToken()
 
 		instance:setMethod("POST")
-		instance:setUrl(string.format(apiTypes.rest.endpoints.GetGuildEmoji, guildId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.CreateGuildEmoji, guildId))
 		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 

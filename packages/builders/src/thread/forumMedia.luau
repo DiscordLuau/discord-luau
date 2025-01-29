@@ -83,7 +83,7 @@ function ForumMediaThread.Prototype.build(self: ForumMediaThread): JSON
 		auto_archive_duration = self.autoArchiveDuration,
 		rate_limit_per_user = self.rateLimitPerUser,
 		message = self.message,
-		applied_tags = self.appliedTags,
+		applied_tags = self.appliedTags :: { string }?,
 	}
 end
 

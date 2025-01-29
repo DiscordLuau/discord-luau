@@ -164,7 +164,7 @@ export type StartThreadInForumOrMediaChannelRequest = Request<{
 	rate_limit_per_user: number?, -- amount of seconds a user has to wait before sending another message (0-21600)
 	--files: { },
 	-- payload_json: string,
-	applied_tags: { objects.Snowflake }, -- the IDs of the set of tags that have been applied to a thread in a GUILD_FORUM or a GUILD_MEDIA channel
+	applied_tags: { objects.Snowflake }?, -- the IDs of the set of tags that have been applied to a thread in a GUILD_FORUM or a GUILD_MEDIA channel
 	message: objects.ForumAndMediaThreadMessageObject?, -- contents of the first message in the forum/media thread
 }>
 

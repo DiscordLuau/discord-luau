@@ -109,11 +109,11 @@ end
 function MessageParams.Prototype.build(self: MessageParams): JSON
 	return {
 		content = self.content,
-		embeds = self.embeds,
+		embeds = self.embeds :: { embed.JSON }?,
 		allowed_mentions = self.allowedMentions,
-		components = self.components,
-		sticker_ids = self.stickerIds,
-		attachments = self.attachments,
+		components = self.components :: { button.JSON | textInput.JSON | selectMenu.JSON | actionRow.JSON }?,
+		sticker_ids = self.stickerIds :: { string }?,
+		attachments = self.attachments :: { attachment.JSON }?,
 		flags = self.flags,
 	}
 end

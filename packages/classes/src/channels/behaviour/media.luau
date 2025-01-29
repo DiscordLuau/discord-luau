@@ -35,7 +35,7 @@ function MediaBehaviour.Prototype.createPostAsync<T>(self: Channel<T>, post: bui
 
 		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response:unwrapOk().id
+		return response:unwrapOk().id :: any
 	end) :: future.FutureLike<string, apiTypes.Snowflake>
 end
 
