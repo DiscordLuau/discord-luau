@@ -75,6 +75,7 @@ function Permission.Interface.new(resource: {
 		{
 			addedPermissions = {},
 			removedPermissions = {},
+			bitflag = 0,
 		} :: Permission,
 		{
 			__index = Permission.Prototype,

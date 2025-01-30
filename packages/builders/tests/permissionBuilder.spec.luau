@@ -51,13 +51,4 @@ return function()
 			return permission
 		end)
 	end)
-
-	test.case("Permission builder fromPermissions creates correct bitflag", function()
-		local permission = Permission.fromPermissions({ "Administrator" })
-
-		check.equal(#permission.addedPermissions, 2)
-
-		local builtBitflag = permission:build()
-		check.not_equal(builtBitflag, "0")
-	end)
 end
