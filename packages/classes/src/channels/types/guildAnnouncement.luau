@@ -4,11 +4,10 @@
 	https://discord.com/developers/docs/resources/channel#channel-object
 ]]
 
--- https://discord.com/developers/docs/resources/message#crosspost-message
--- https://discord.com/developers/docs/resources/channel#follow-announcement-channel
-
 local apiTypes = require("../../../lune_packages/api_types")
 local state = require("../../../lune_packages/state")
+local future = require("../../../luau_packages/future")
+local rest = require("../../../lune_packages/rest")
 
 local channelBehaviour = require("../behaviour/channel")
 local guildBehaviour = require("../behaviour/guild")
@@ -23,6 +22,43 @@ GuildAnnouncement.Behaviours = {
 	guildBehaviour,
 	textBehaviour,
 }
+
+--[[
+	Crosspost a message in an Announcement Channel to following channels. This endpoint requires the SEND_MESSAGES
+	permission, if the current user sent the message, or additionally the MANAGE_MESSAGES permission, for all
+	other messages, to be present for the current user.
+]]
+function GuildAnnouncement.Prototype.crosspostAsync(self: GuildAnnouncement, messageId: string)
+	return future.Future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local response = rest.message.crosspostMessageAsync(request, self.id, messageId):await()
+
+		assert(response:isOk(), tostring(response:unwrapErr()))
+
+		return response:unwrapOk().id :: any
+	end) :: future.FutureLike<string, string>
+end
+
+--[[
+	Follow an Announcement Channel to send messages to a target channel. Requires the MANAGE_WEBHOOKS permission
+	in the target channel. 
+]]
+function GuildAnnouncement.Prototype.followAsync(self: GuildAnnouncement, targetChannelId: string)
+	return future.Future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local response = rest.channel
+			.followAnnouncementChannelAsync(request, self.id, {
+				webhook_channel_id = targetChannelId,
+			})
+			:await()
+
+		assert(response:isOk(), tostring(response:unwrapErr()))
+
+		return response:unwrapOk().webhook_id
+	end) :: future.FutureLike<string, string>
+end
 
 function GuildAnnouncement.Prototype.sync(self: GuildAnnouncement, channelData: apiTypes.ChannelObject)
 	for _, behaviour in GuildAnnouncement.Behaviours do

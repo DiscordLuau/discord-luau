@@ -80,17 +80,12 @@ function Message.createMessageAsync(
 end
 
 -- https://discord.com/developers/docs/resources/message#crosspost-message
-function Message.crosspostMessageAsync(
-	instance: request.Request,
-	channelId: string,
-	jsonParams: apiTypes.CrosspostMessageRequest
-)
+function Message.crosspostMessageAsync(instance: request.Request, channelId: string, messageId: string)
 	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("POST")
-		instance:setUrl(string.format(apiTypes.rest.endpoints.CrosspostMessage, channelId))
-		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.CrosspostMessage, channelId, messageId))
 
 		local response = instance:executeAsync():await()
 

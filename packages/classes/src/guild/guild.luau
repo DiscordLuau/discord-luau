@@ -322,7 +322,7 @@ function Guild.Prototype.getAnnouncementChannelsAsync(self: Guild)
 				table.insert(resolvedChannels, channel :: any)
 			end
 
-			return resolvedChannels
+			return resolvedChannels :: any
 		else
 			error(channels:unwrapErr())
 		end
@@ -729,7 +729,7 @@ function Guild.Prototype.getGuildBansAsync(
 		local bans = {}
 
 		for _, banData in response:unwrapOk() do
-			table.insert(bans, ban.new(banData))
+			table.insert(bans, ban.new(self.state, self.id, banData))
 		end
 
 		return bans
@@ -750,7 +750,7 @@ function Guild.Prototype.getGuildBanAsync(self: Guild, userId: apiTypes.Snowflak
 		local data = response:unwrapOk()
 
 		if data then
-			return ban.new(data) :: any
+			return ban.new(self.state, self.id, data) :: any
 		else
 			return nil :: any
 		end

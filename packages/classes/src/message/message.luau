@@ -37,12 +37,37 @@ local buttonComponent = require("./components/button")
 
 local _require = require :: any
 
--- https://discord.com/developers/docs/resources/channel#start-thread-from-message
-
 local Message = {}
 
 Message.Interface = {}
 Message.Prototype = {}
+
+--[[
+	Creates a new thread from an existing message.
+]]
+function Message.Prototype.startThreadAsync(
+	self: Message,
+	threadName: string,
+	autoArchiveDuration: number,
+	rateLimitPerUser: number?
+)
+	return future.Future.new(function()
+		local request = self.state.rest:newRequest()
+
+		assert(#threadName > 0, `threadName needs to be above 0.`)
+		assert(#threadName <= 100, `threadName shouldn't be above 100`)
+
+		local response = rest.channel
+			.startThreadFromMessageAsync(request, self.channelId, self.id, {
+				name = threadName,
+				auto_archive_duration = autoArchiveDuration,
+				rate_limit_per_user = rateLimitPerUser,
+			})
+			:await()
+
+		return response:unwrapOk() :: any
+	end) :: future.FutureLike<string, apiTypes.AbstractChannel>
+end
 
 --[[
 	Add a reaction to a message. Requires READ_MESSAGE_HISTORY and ADD_REACTIONS permissions.
