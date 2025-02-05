@@ -43,7 +43,7 @@ function Sticker.listStickerPacksAsync(instance: request.Request)
 		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
-	end) :: future.FutureLike<string, apiTypes.ListStickerPacksResponse>
+	end) :: future.FutureLike<string, apiTypes.ListStickerPacksResponse_>
 end
 
 -- https://discord.com/developers/docs/resources/sticker#list-guild-stickers

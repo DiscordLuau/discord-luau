@@ -326,7 +326,7 @@ end
 function Channel.startThreadWithoutMessageAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
-	jsonParams: apiTypes.StartThreadWithoutMessageRequest_,
+	jsonParams: apiTypes.StartThreadWithoutMessageRequest,
 	auditLogReason: string?
 )
 	return future.Future.new(function()
@@ -349,7 +349,7 @@ end
 function Channel.startThreadInForumOrMediaChannelAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
-	jsonParams: apiTypes.StartThreadInForumOrMediaChannelRequest,
+	jsonParams: apiTypes.StartThreadInForumOrMediaChannelRequest_,
 	auditLogReason: string?
 )
 	return future.Future.new(

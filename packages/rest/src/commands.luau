@@ -257,7 +257,7 @@ function Commands.deleteGuildApplicationCommandAsync(
 		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
-	end) :: future.FutureLike<string, apiTypes.DeleteGuildApplicationCommandResponse_>
+	end) :: future.FutureLike<string, apiTypes.DeleteGuildApplicationCommandResponse>
 end
 
 -- https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-guild-application-commands
@@ -307,7 +307,7 @@ function Commands.getGuildApplicationCommandPermissionsAsync(
 
 				return response:unwrapOk().body
 			end
-		) :: future.FutureLike<string, apiTypes.GetGuildApplicationCommandPermissionsResponse>
+		) :: future.FutureLike<string, apiTypes.GetGuildApplicationCommandPermissionsResponse_>
 end
 
 -- https://discord.com/developers/docs/interactions/application-commands#get-application-command-permissions
