@@ -3,7 +3,7 @@ version = "0.0.1"
 description = "Discord-Luau Types - API Types for the Discord API."
 license = "MIT"
 authors = ["AsyncMatrix <catbob614@gmail.com>"]
-repository = "https://github.com/DiscordLuau/discord-luau"
+repository = "https://github.com/DiscordLuau/discord-luau/tree/Master/packages/api-types"
 pesde_version = "0.5.2"
 
 includes = ["src/**", "pesde.toml", "LICENSE"]

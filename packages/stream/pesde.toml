@@ -3,7 +3,7 @@ version = "0.0.1"
 description = "Discord-Luau Stream - stream implementation used to navigate through strings."
 license = "MIT"
 authors = ["AsyncMatrix<https://github.com/4x8Matrix>"]
-repository = "https://github.com/DiscordLuau/discord-luau"
+repository = "https://github.com/DiscordLuau/discord-luau/tree/Master/packages/stream"
 pesde_version = "0.5.2"
 
 includes = ["src/**", "pesde.toml", "LICENSE"]
