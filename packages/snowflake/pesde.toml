@@ -6,7 +6,7 @@ authors = ["Async Matrix <hi@asyncmatrix.dev>"]
 repository = "https://github.com/DiscordLuau/discord-luau/tree/Master/packages/snowflake"
 pesde_version = "0.5.2"
 
-includes = ["src/**", "pesde.toml", "LICENSE"]
+includes = ["src/**/*", "pesde.toml", "LICENSE"]
 
 [target]
 environment = "lune"
