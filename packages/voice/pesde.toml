@@ -2,7 +2,7 @@ name = "discord_luau/voice"
 version = "0.0.1"
 description = "Discord Luau Voice - Implementation of the voice protocol for discord."
 license = "MIT"
-authors = ["AsyncMatrix <catbob614@gmail.com>"]
+authors = ["Async Matrix <hi@asyncmatrix.dev>"]
 repository = "https://github.com/DiscordLuau/discord-luau/tree/Master/packages/voice"
 pesde_version = "0.5.2"
 

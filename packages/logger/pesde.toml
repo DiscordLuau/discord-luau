@@ -2,7 +2,7 @@ name = "discord_luau/logger"
 version = "0.0.1"
 description = "Discord-Luau Logger - Logging implementation for Discord-Luau"
 license = "MIT"
-authors = ["AsyncMatrix<https://github.com/4x8Matrix>"]
+authors = ["Async Matrix <hi@asyncmatrix.dev>"]
 repository = "https://github.com/DiscordLuau/discord-luau/tree/Master/packages/logger"
 pesde_version = "0.5.2"
 

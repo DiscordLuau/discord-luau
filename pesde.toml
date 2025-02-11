@@ -5,8 +5,8 @@ license = "MIT"
 repository = "https://github.com/DiscordLuau/discord-luau"
 description = "A Discord API Wrapper for Luau"
 authors = [
-	"Jack<https://github.com/4x8Matrix>",
-	"Erica<https://github.com/CompeyDev>",
+	"Async Matrix <hi@asyncmatrix.dev>",
+	"Erica Marigold <hi@devcomp.xyz>",
 ]
 
 workspace_members = ["packages/*"]

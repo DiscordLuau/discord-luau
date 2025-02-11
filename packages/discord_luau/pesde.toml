@@ -2,7 +2,7 @@ name = "discord_luau/discord_luau"
 version = "0.0.1"
 description = "Discord-Luau - The entrypoint for the Discord Luau library."
 license = "MIT"
-authors = ["AsyncMatrix<https://github.com/4x8Matrix>"]
+authors = ["Async Matrix <hi@asyncmatrix.dev>"]
 repository = "https://github.com/DiscordLuau/discord-luau/tree/Master/packages/discord_luau"
 pesde_version = "0.5.2"
 

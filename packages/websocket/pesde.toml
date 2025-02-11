@@ -2,7 +2,7 @@ name = "discord_luau/websocket"
 version = "0.0.1"
 description = "Discord Luau Websocket - Implementation of the websocket for discord."
 license = "MIT"
-authors = ["AsyncMatrix <catbob614@gmail.com>"]
+authors = ["Async Matrix <hi@asyncmatrix.dev>"]
 repository = "https://github.com/DiscordLuau/discord-luau/tree/Master/packages/websocket"
 pesde_version = "0.5.2"
 
