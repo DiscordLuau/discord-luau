@@ -15,7 +15,7 @@ workspace_members = ["packages/*"]
 environment = "lune"
 
 [indices]
-default = "https://github.com/daimond113/pesde-index"
+default = "https://github.com/pesde-pkg/index"
 
 [dev_dependencies]
 frktest = { name = "itsfrank/frktest", version = "^0.0.2", target = "lune" }

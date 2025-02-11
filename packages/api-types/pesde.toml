@@ -13,7 +13,7 @@ environment = "lune"
 lib = "bundled.luau"
 
 [indices]
-default = "https://github.com/daimond113/pesde-index"
+default = "https://github.com/pesde-pkg/index"
 
 [dependencies]
 util = { workspace = "discord_luau/util" }

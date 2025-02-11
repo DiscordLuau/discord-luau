@@ -9,7 +9,7 @@ pesde_version = "0.5.2"
 includes = ["src/**", "pesde.toml", "LICENSE"]
 
 [indices]
-default = "https://github.com/daimond113/pesde-index"
+default = "https://github.com/pesde-pkg/index"
 
 [target]
 environment = "luau"
