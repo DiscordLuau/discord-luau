@@ -1,32 +1,43 @@
 ---
-name: Feature Request
-about: Suggest an idea for this project
-title: "feat: "
-labels: "enhancement"
-assignees: ""
+name: "✨ Feature Request"
+about: "Suggest an idea or improvement for discord-luau"
+title: "[Feature]: "
+labels: ["enhancement"]
+assignees: ["4x8Matrix"]
 ---
 
 # Feature Request
 
-**Describe the Feature Request**
+## Description
+**What feature would you like to see?**  
+<!-- Provide a clear and concise description of your feature request. If it's related to a problem, explain the problem as well. -->
 
-<!-- A clear and concise description of what the feature request is. Please include if your feature request is related to a problem. -->
+## Preferred Solution
+**How should this feature work?**  
+<!-- Describe the ideal implementation of the feature. -->
 
-**Describe Preferred Solution**
+## Alternatives Considered
+**Are there any alternative solutions?**  
+<!-- List alternative approaches you have considered and why they may or may not be suitable. -->
 
-<!-- A clear and concise description of what you want to happen. -->
+## Code Example
+**If applicable, provide a code snippet to illustrate your request.**  
+<!-- Code snippets or links to relevant implementations can be included here. -->
 
-**Describe Alternatives**
+```luau
+-- insert example code here
+```
 
-<!-- A clear and concise description of any alternative solutions or features you've considered. -->
+## Additional Context
+**Any other relevant details?**  
+<!-- Related issues, use cases, screenshots, Stack Overflow/forum links, OS details if applicable, etc. -->
 
-**Related Code**
+## Contribution
+**Would you be willing to submit a PR if the feature request is approved?**  
+Yes / No _(Help can be provided if needed)_
 
-<!-- If you are able to illustrate the bug or feature request with an example, please provide it here. -->
+---
 
-**Additional Context**
-
-<!-- List any other information that is relevant to your issue. Stack traces, related issues, suggestions on how to add, use case, Stack Overflow links, forum links, screenshots, OS if applicable, etc. -->
-
-**If the feature request is approved, would you be willing to submit a PR?**
-Yes / No _(Help can be provided if you need assistance submitting a PR)_
+*Before submitting, please ensure:*
+- [ ] This feature has not already been requested.
+- [ ] Your request is well-explained and justified.

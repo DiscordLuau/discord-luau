@@ -1,37 +1,55 @@
 ---
-name: Bug Report
-about: Create a report to help Amazing GitHub Template to improve
-title: "bug: "
-labels: "bug"
-assignees: ""
+name: "Bug Report"
+about: "Report a bug in discord-luau"
+title: "[Bug]: "
+labels: ["bug"]
+assignees: ["4x8Matrix"]
 ---
 
 # Bug Report
 
-**Amazing GitHub Template version:**
+## Description
+**Describe the issue in a clear and concise manner.**  
+<!-- A short summary of what the bug is. -->
 
-<!-- Please specify commit or tag version. -->
-
-**Current behavior:**
-
+## Current Behavior
+**What is happening?**  
 <!-- Describe how the bug manifests. -->
 
-**Expected behavior:**
+## Expected Behavior
+**What should happen instead?**  
+<!-- Describe what the expected behavior would be. -->
 
-<!-- Describe what the behavior would be without the bug. -->
+## Steps to Reproduce
+**How can this bug be reproduced?**  
+<!-- Provide step-by-step instructions to reproduce the issue. -->
 
-**Steps to reproduce:**
+1. 
+2. 
+3. 
 
-<!--  Please explain the steps required to duplicate the issue, especially if you are able to provide a sample application. -->
+## Code Example
+**Provide a minimal, complete, and verifiable example.**  
+<!-- If applicable, include code snippets or a link to a minimal reproduction. -->
 
-**Related code:**
-
-<!-- If you are able to illustrate the bug or feature request with an example, please provide it here. -->
-
+```luau
+-- insert short code snippet here
 ```
-insert short code snippets here
-```
 
-**Other information:**
+## Environment
+<!-- Fill in as many details as possible. -->
+- **OS:** (e.g., Windows 10, macOS 13, Ubuntu 22.04)
+- **Runtime:** (e.g., lune, zune, etc)
+- **Runtime Version:** (e.g., latest, specific version)
+- **discord-luau Version:** (e.g., 1.2.3)
 
-<!-- List any other information that is relevant to your issue. Related issues, suggestions on how to fix, Stack Overflow links, forum links, etc. -->
+## Additional Context
+**Any other relevant information?**  
+<!-- Related issues, suggestions, possible solutions, external links, etc. -->
+
+---
+
+💡 *Before submitting, please ensure:*
+- [ ] The issue is not already reported.
+- [ ] You have provided all necessary details.
+- [ ] Your code snippet is minimal and reproducible.
