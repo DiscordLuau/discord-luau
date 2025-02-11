@@ -9,6 +9,16 @@
 
 local stdPolyfills = require("../lune_packages/std_polyfills")
 
+local DIM = "\27\91\50\109"
+local BOLD = "\27\91\49\109"
+
+local RESET = "\27\91\48\109"
+
+local CYAN = "\27\91\51\54\109"
+local BLUE = "\27\91\51\52\109"
+local YELLOW = "\27\91\51\51\109"
+local RED = "\27\91\51\49\109"
+
 local LOGGER_LOG_LEVELS = table.freeze({
 	"Debug",
 	"Info",
@@ -21,14 +31,14 @@ local LOGGER_LOG_LEVELS = table.freeze({
 })
 
 local LOGGER_LOG_FORMATS = table.freeze({
-	["Debug"] = `{stdPolyfills.stdio.style("dim")}{stdPolyfills.stdio.color("reset")}[%s][DEBUG]: %s`,
-	["Info"] = `{stdPolyfills.stdio.color("cyan")}[%s][INFO]: %s`,
-	["Notice"] = `{stdPolyfills.stdio.color("blue")}[%s][NOTICE]: %s`,
-	["Warn"] = `{stdPolyfills.stdio.color("yellow")}[%s][WARN]: %s`,
-	["Error"] = `{stdPolyfills.stdio.color("red")}[%s][ERROR]: %s`,
-	["Critical"] = `{stdPolyfills.stdio.color("red")}[%s][CRITICAL]: %s`,
-	["Alert"] = `{stdPolyfills.stdio.style("bold")}{stdPolyfills.stdio.color("red")}[%s][DEBUG]: %s`,
-	["Emergency"] = `{stdPolyfills.stdio.style("bold")}{stdPolyfills.stdio.color("red")}[%s][DEBUG]: %s`,
+	["Debug"] = `{DIM}{RESET}[%s][DEBUG]: %s`,
+	["Info"] = `{CYAN}[%s][INFO]: %s`,
+	["Notice"] = `{BLUE}[%s][NOTICE]: %s`,
+	["Warn"] = `{YELLOW}[%s][WARN]: %s`,
+	["Error"] = `{RED}[%s][ERROR]: %s`,
+	["Critical"] = `{RED}[%s][CRITICAL]: %s`,
+	["Alert"] = `{BOLD}{RED}[%s][DEBUG]: %s`,
+	["Emergency"] = `{BOLD}{RED}[%s][DEBUG]: %s`,
 })
 
 local Logger = {}
@@ -42,8 +52,9 @@ Logger.Interface = {}
 local function parseVaradic(args: { any }): string
 	local source = ""
 
+	-- TODO: write a prettifier.
 	for index, object in args do
-		source ..= `{index ~= 1 and ", " or ""}{stdPolyfills.stdio.format(object)}`
+		source ..= `{index ~= 1 and ", " or ""}{tostring(object)}`
 	end
 
 	return source
@@ -85,11 +96,7 @@ function Logger.Interface.new(name: string, logLevel: LogLevel?): Logger
 
 			local logMessage = parseVaradic({ ... })
 
-			print(
-				`{string.format(LOGGER_LOG_FORMATS[logType], name, logMessage)}{stdPolyfills.stdio.style("reset")}{stdPolyfills.stdio.color(
-					"reset"
-				)}`
-			)
+			print(`{string.format(LOGGER_LOG_FORMATS[logType], name, logMessage)}{RESET}`)
 
 			if logValue >= 5 then
 				local thread = coroutine.running()

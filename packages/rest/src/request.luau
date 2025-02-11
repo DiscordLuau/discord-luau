@@ -170,7 +170,7 @@ function Request.Prototype.executeAsync<Resolve>(self: Request)
 			}))
 		end
 
-		local decodeSuccess, decodedBody = pcall(stdPolyfills.net.jsonDecode, request.body)
+		local decodeSuccess, decodedBody = pcall(stdPolyfills.serde.decode, "json", request.body)
 
 		for _, hook in self.afterHooks do
 			hook(self, {

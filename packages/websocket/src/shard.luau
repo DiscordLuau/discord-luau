@@ -94,7 +94,7 @@ function Shard.Prototype.heartbeatAsync(self: Shard, requested: boolean?)
 
 		self.logger:debug(`Shard '{self.shardId}' sending heartbeat request`)
 
-		self:sendAsync(stdPolyfills.net.jsonEncode({
+		self:sendAsync(stdPolyfills.serde.encode("json", {
 			["op"] = apiTypes.gateway.opcodes.Heartbeat,
 			["d"] = self.lastSequence or false,
 		}, true)):await()
@@ -108,7 +108,7 @@ function Shard.Prototype.identifyAsync(self: Shard)
 	return future.Future.new(function()
 		self.logger:debug(`Shard '{self.shardId}' sending identify request`)
 
-		self:sendAsync(stdPolyfills.net.jsonEncode({
+		self:sendAsync(stdPolyfills.serde.encode("json", {
 			["op"] = apiTypes.gateway.opcodes.Identify,
 			["d"] = {
 				["token"] = self.token,
@@ -120,7 +120,7 @@ function Shard.Prototype.identifyAsync(self: Shard)
 					self.shardCount,
 				},
 				["properties"] = {
-					["os"] = stdPolyfills.process.os,
+					["os"] = stdPolyfills.process.getPlatform(),
 					["browser"] = LIBRARY_IDENTIFIER,
 					["device"] = LIBRARY_IDENTIFIER,
 				},
@@ -177,7 +177,7 @@ function Shard.Prototype.connectAsync(self: Shard, socketUrl: string, socketVers
 
 		self.logger:debug(`Shard '{self.shardId}' connecting to: {`{socketUrl}/?v={socketVersion}`}`)
 
-		local success0, response0 = pcall(stdPolyfills.net.socket, `{socketUrl}/?v={socketVersion}`)
+		local success0, response0 = pcall(stdPolyfills.net.tcpSocket, `{socketUrl}/?v={socketVersion}`)
 
 		assert(success0, response0)
 
@@ -245,7 +245,7 @@ function Shard.Prototype.resumeAsync(self: Shard)
 					if response:isOk() then
 						self.logger:debug(`Shard '{self.shardId}' attempting to resume..`)
 
-						self:sendAsync(stdPolyfills.net.jsonEncode({
+						self:sendAsync(stdPolyfills.serde.encode("json", {
 							["op"] = apiTypes.gateway.opcodes.Resume,
 							["d"] = {
 								["token"] = self.token,
