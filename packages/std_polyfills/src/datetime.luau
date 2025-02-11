@@ -39,6 +39,8 @@ end
 export type DateTime = typeof(DateTime) & {
 	unixTimestamp: number,
 	unixTimestampMillis: number,
+
+	toIsoDate: (self: DateTime) -> string,
 }
 
 return DateTime

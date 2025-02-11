@@ -10,7 +10,7 @@ function Process.getPlatform(): OS
 	local target = Runtime:AssertRuntime()
 
 	if target == "Lune" then
-		return require("lune/process").os
+		return require("lune/process").os :: OS
 	end
 
 	error(`Out of reach`)
