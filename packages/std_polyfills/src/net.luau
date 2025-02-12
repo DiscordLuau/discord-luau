@@ -1,13 +1,13 @@
 --[=[
-    @class Std.Net
+    @class Std.net
 ]=]
 
-local Runtime = require("runtime")
+local runtime = require("runtime")
 
-local Net = {}
+local net = {}
 
-function Net.urlEncode(url: string, binary: boolean?): string
-	local target = Runtime:AssertRuntime()
+function net.urlEncode(url: string, binary: boolean?): string
+	local target = runtime.assertRuntime()
 
 	if target == "Lune" then
 		return require("lune/net").urlEncode(url, binary)
@@ -16,8 +16,8 @@ function Net.urlEncode(url: string, binary: boolean?): string
 	error(`Out of reach`)
 end
 
-function Net.request(config: string | FetchParams): FetchResponse
-	local target = Runtime:AssertRuntime()
+function net.request(config: string | FetchParams): FetchResponse
+	local target = runtime.assertRuntime()
 
 	if target == "Lune" then
 		return require("lune/net").request(config)
@@ -26,8 +26,8 @@ function Net.request(config: string | FetchParams): FetchResponse
 	error(`Out of reach`)
 end
 
-function Net.tcpSocket(url: string)
-	local target = Runtime:AssertRuntime()
+function net.tcpSocket(url: string)
+	local target = runtime.assertRuntime()
 
 	if target == "Lune" then
 		return require("lune/net").socket(url)
@@ -36,7 +36,7 @@ function Net.tcpSocket(url: string)
 	error(`Out of reach`)
 end
 
-function Net.udpSocket(_url: string)
+function net.udpSocket(_url: string)
 	error(`No Runtimes currently support UDP sockets!`)
 end
 
@@ -74,4 +74,4 @@ export type FetchParams = {
 
 export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "HEAD" | "OPTIONS" | "PATCH"
 
-return Net
+return net

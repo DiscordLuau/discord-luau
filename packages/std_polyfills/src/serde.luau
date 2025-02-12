@@ -1,13 +1,13 @@
 --[=[
-    @class Std.Serde
+    @class Std.serde
 ]=]
 
-local Runtime = require("runtime")
+local runtime = require("runtime")
 
-local Serde = {}
+local serde = {}
 
-function Serde.encode(format: EncodeDecodeFormat, value: any, pretty: boolean?): string
-	local target = Runtime:AssertRuntime()
+function serde.encode(format: EncodeDecodeFormat, value: any, pretty: boolean?): string
+	local target = runtime.assertRuntime()
 
 	if target == "Lune" then
 		return require("./lune/serde").encode(format, value, pretty)
@@ -16,8 +16,8 @@ function Serde.encode(format: EncodeDecodeFormat, value: any, pretty: boolean?):
 	error(`Out of reach`)
 end
 
-function Serde.decode(format: EncodeDecodeFormat, encoded: buffer | string): any
-	local target = Runtime:AssertRuntime()
+function serde.decode(format: EncodeDecodeFormat, encoded: buffer | string): any
+	local target = runtime.assertRuntime()
 
 	if target == "Lune" then
 		return require("./lune/serde").decode(format, encoded)
@@ -26,8 +26,8 @@ function Serde.decode(format: EncodeDecodeFormat, encoded: buffer | string): any
 	error(`Out of reach`)
 end
 
-function Serde.decompress(format: CompressDecompressFormat, s: buffer | string): string
-	local target = Runtime:AssertRuntime()
+function serde.decompress(format: CompressDecompressFormat, s: buffer | string): string
+	local target = runtime.assertRuntime()
 
 	if target == "Lune" then
 		return require("./lune/serde").decompress(format, s)
@@ -36,8 +36,8 @@ function Serde.decompress(format: CompressDecompressFormat, s: buffer | string):
 	error(`Out of reach`)
 end
 
-function Serde.compress(format: CompressDecompressFormat, s: buffer | string, level: number?): string
-	local target = Runtime:AssertRuntime()
+function serde.compress(format: CompressDecompressFormat, s: buffer | string, level: number?): string
+	local target = runtime.assertRuntime()
 
 	if target == "Lune" then
 		return require("./lune/serde").compress(format, s, level)
@@ -49,4 +49,4 @@ end
 export type EncodeDecodeFormat = "json" | "yaml" | "toml"
 export type CompressDecompressFormat = "brotli" | "gzip" | "lz4" | "zlib"
 
-return Serde
+return serde

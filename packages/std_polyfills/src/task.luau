@@ -1,13 +1,13 @@
 --[=[
-    @class Std.Task
+    @class Std.task
 ]=]
 
-local Runtime = require("runtime")
+local runtime = require("runtime")
 
-local Task = {}
+local task = {}
 
-function Task.cancel(thread: thread)
-	local target = Runtime:AssertRuntime()
+function task.cancel(thread: thread)
+	local target = runtime.assertRuntime()
 
 	if target == "Lune" then
 		return require("lune/task").cancel(thread)
@@ -16,8 +16,8 @@ function Task.cancel(thread: thread)
 	error(`Out of reach`)
 end
 
-function Task.defer<T...>(functionOrThread: thread | (T...) -> ...any, ...: T...): thread
-	local target = Runtime:AssertRuntime()
+function task.defer<T...>(functionOrThread: thread | (T...) -> ...any, ...: T...): thread
+	local target = runtime.assertRuntime()
 
 	if target == "Lune" then
 		return require("lune/task").defer(functionOrThread, ...)
@@ -26,8 +26,8 @@ function Task.defer<T...>(functionOrThread: thread | (T...) -> ...any, ...: T...
 	error(`Out of reach`)
 end
 
-function Task.delay<T...>(duration: number, functionOrThread: thread | (T...) -> ...any, ...: T...): thread
-	local target = Runtime:AssertRuntime()
+function task.delay<T...>(duration: number, functionOrThread: thread | (T...) -> ...any, ...: T...): thread
+	local target = runtime.assertRuntime()
 
 	if target == "Lune" then
 		return require("lune/task").delay(duration, functionOrThread, ...)
@@ -36,8 +36,8 @@ function Task.delay<T...>(duration: number, functionOrThread: thread | (T...) ->
 	error(`Out of reach`)
 end
 
-function Task.spawn<T...>(functionOrThread: thread | (T...) -> ...any, ...: T...): thread
-	local target = Runtime:AssertRuntime()
+function task.spawn<T...>(functionOrThread: thread | (T...) -> ...any, ...: T...): thread
+	local target = runtime.assertRuntime()
 
 	if target == "Lune" then
 		return require("lune/task").spawn(functionOrThread, ...)
@@ -46,8 +46,8 @@ function Task.spawn<T...>(functionOrThread: thread | (T...) -> ...any, ...: T...
 	error(`Out of reach`)
 end
 
-function Task.wait(duration: number?): number
-	local target = Runtime:AssertRuntime()
+function task.wait(duration: number?): number
+	local target = runtime.assertRuntime()
 
 	if target == "Lune" then
 		return require("lune/task").wait(duration)
@@ -58,4 +58,4 @@ end
 
 export type OS = "linux" | "macos" | "windows"
 
-return Task
+return task

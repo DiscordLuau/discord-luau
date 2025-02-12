@@ -1,13 +1,13 @@
 --[=[
-    @class Std.Process
+    @class Std.process
 ]=]
 
-local Runtime = require("runtime")
+local runtime = require("runtime")
 
-local Process = {}
+local process = {}
 
-function Process.getPlatform(): OS
-	local target = Runtime:AssertRuntime()
+function process.getPlatform(): OS
+	local target = runtime.assertRuntime()
 
 	if target == "Lune" then
 		return require("lune/process").os :: OS
@@ -18,4 +18,4 @@ end
 
 export type OS = "linux" | "macos" | "windows"
 
-return Process
+return process

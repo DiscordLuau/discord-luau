@@ -1,13 +1,13 @@
 --[[
-	@class Std.DateTime
+	@class Std.datetime
 ]]
 
-local Runtime = require("runtime")
+local runtime = require("runtime")
 
-local DateTime = {}
+local datetime = {}
 
-function DateTime.fromIsoDate(isoDate: string): DateTime
-	local target = Runtime:AssertRuntime()
+function datetime.fromIsoDate(isoDate: string): DateTime
+	local target = runtime.assertRuntime()
 
 	if target == "Lune" then
 		return require("lune/datetime").fromIsoDate(isoDate) :: any
@@ -16,8 +16,8 @@ function DateTime.fromIsoDate(isoDate: string): DateTime
 	error(`Out of reach`)
 end
 
-function DateTime.fromUnixTimestamp(unixTimestamp: number): DateTime
-	local target = Runtime:AssertRuntime()
+function datetime.fromUnixTimestamp(unixTimestamp: number): DateTime
+	local target = runtime.assertRuntime()
 
 	if target == "Lune" then
 		return require("lune/datetime").fromUnixTimestamp(unixTimestamp) :: any
@@ -26,8 +26,8 @@ function DateTime.fromUnixTimestamp(unixTimestamp: number): DateTime
 	error(`Out of reach`)
 end
 
-function DateTime.now(): DateTime
-	local target = Runtime:AssertRuntime()
+function datetime.now(): DateTime
+	local target = runtime.assertRuntime()
 
 	if target == "Lune" then
 		return require("lune/datetime").now() :: any
@@ -43,4 +43,4 @@ export type DateTime = typeof(DateTime) & {
 	toIsoDate: (self: DateTime) -> string,
 }
 
-return DateTime
+return datetime

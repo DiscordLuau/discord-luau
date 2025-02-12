@@ -1,13 +1,13 @@
 --[=[
-    @class Std.Runtime
+    @class Std.runtime
 ]=]
 
 local LUNE_STRING_MATCH = "(Lune) (%d+%.%d+%.%d+.*)+(%d+)"
 local ZUNE_STRING_MATCH = "(Zune) (%d+%.%d+%.%d+.*)+(%d+%.%d+)"
 
-local Runtime = {}
+local runtime = {}
 
-function Runtime.GetRuntime(_: Runtime): RuntimeValue
+function runtime.getRuntime(): RuntimeValue
 	local version = _VERSION
 
 	if version == "Luau" then
@@ -30,8 +30,8 @@ function Runtime.GetRuntime(_: Runtime): RuntimeValue
 	return "Unknown"
 end
 
-function Runtime.AssertRuntime(self: Runtime): RuntimeValue
-	local currentRuntime = self:GetRuntime()
+function runtime.assertRuntime(): RuntimeValue
+	local currentRuntime = runtime.getRuntime()
 
 	if currentRuntime ~= "Lune" then
 		error(`Discord-Luau currently doesn't support the '{currentRuntime}' runtime!`)
@@ -41,6 +41,6 @@ function Runtime.AssertRuntime(self: Runtime): RuntimeValue
 end
 
 export type RuntimeValue = "Lune" | "Zune" | "Roblox" | "Luau" | "Lute" | "Unknown"
-export type Runtime = typeof(Runtime)
+export type Runtime = typeof(runtime)
 
-return Runtime
+return runtime
