@@ -22,7 +22,7 @@ pesde add discord_luau/std_polyfills
 
 1. Require the library in your project:
 ```luau
-local Std = require("./lune_packages/std_polyfills")
+local stdPolyfills = require("./lune_packages/std_polyfills")
 ```
 
 2. Use the provided library:
