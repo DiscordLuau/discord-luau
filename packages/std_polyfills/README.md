@@ -12,7 +12,7 @@ All Discord-Luau packages depend on this package as a core dependency.
 
 ### Installation
 
-To use DiscordLuau State, add it to your project using the pesde package manager:
+To use DiscordLuau's standard library polyfills, add it to your project using the pesde package manager:
 
 ```bash
 pesde add discord_luau/std_polyfills
