@@ -1,5 +1,5 @@
 --[[
-	@class Std.datetime
+	@class std.datetime
 ]]
 
 local runtime = require("runtime")
@@ -36,7 +36,7 @@ function datetime.now(): DateTime
 	error(`Out of reach`)
 end
 
-export type DateTime = typeof(DateTime) & {
+export type DateTime = typeof(datetime) & {
 	unixTimestamp: number,
 	unixTimestampMillis: number,
 

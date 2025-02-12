@@ -1,5 +1,5 @@
 --[=[
-    @class Std.process
+    @class std.process
 ]=]
 
 local runtime = require("runtime")

@@ -1,5 +1,5 @@
 --[=[
-    @class Std.serde
+    @class std.serde
 ]=]
 
 local runtime = require("runtime")

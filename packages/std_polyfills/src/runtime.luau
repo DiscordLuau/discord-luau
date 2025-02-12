@@ -1,5 +1,5 @@
 --[=[
-    @class Std.runtime
+    @class std.runtime
 ]=]
 
 local LUNE_STRING_MATCH = "(Lune) (%d+%.%d+%.%d+.*)+(%d+)"
