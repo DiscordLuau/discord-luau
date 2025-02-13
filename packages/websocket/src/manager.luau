@@ -1,17 +1,13 @@
-local task = require("@std-polyfills/task")
+local stdPolyfills = require("../lune_packages/std_polyfills")
 
-local emitter = require("@vendor/emitter")
-local future = require("@vendor/future")
-local logger = require("@vendor/logger")
+local emitter = require("../luau_packages/emitter")
+local future = require("../luau_packages/future")
+local logger = require("../lune_packages/logger")
 
-local gatewayTypes = require("@api-types/gateway/types")
-local restTypes = require("@api-types/rest/types")
+local apiTypes = require("../lune_packages/api_types")
+local secret = require("../luau_packages/secret")
 
-local secret = require("@classes/secret")
-
-local receiveEvents = require("@api-types/gateway/receiveEvents")
-
-local shard = require("@websocket/shard")
+local shard = require("./shard")
 
 local CONCURRENT_IDENTIFY_YIELD = 5
 
@@ -20,8 +16,11 @@ local Manager = {}
 Manager.Interface = {}
 Manager.Prototype = {}
 
-function Manager.Prototype.connectAsync(self: Manager, gatewayInformation: restTypes.GetGatewayBotResponse)
-	return future.new(function()
+function Manager.Prototype.connectAsync(
+	self: Manager,
+	gatewayInformation: apiTypes.GetGatewayBotResponse
+): future.FutureLike<string, nil>
+	return future.Future.new(function()
 		local maxConcurrency = gatewayInformation.session_start_limit.max_concurrency
 
 		local websocketUrl = gatewayInformation.url
@@ -52,7 +51,7 @@ function Manager.Prototype.connectAsync(self: Manager, gatewayInformation: restT
 
 		for shardIndex, shardInstance in next, self.shards do
 			if shardIndex ~= 1 and shardIndex % maxConcurrency == 0 then
-				task.wait(CONCURRENT_IDENTIFY_YIELD)
+				stdPolyfills.task.wait(CONCURRENT_IDENTIFY_YIELD)
 			end
 
 			self.logger:debug(`Connecting Shard '{shardIndex - 1}' to Discord Gateway`)
@@ -65,7 +64,7 @@ function Manager.Prototype.connectAsync(self: Manager, gatewayInformation: restT
 					payload = event,
 				})
 
-				if event.t == receiveEvents.Ready then
+				if event.t == apiTypes.gateway.receiveEvents.Ready then
 					table.insert(readyShards, shardIndex - 1)
 
 					if #readyShards == shardCount then
@@ -159,13 +158,13 @@ export type Manager = typeof(Manager.Prototype) & {
 	onHeartbeat: emitter.Emitter<ShardPayload<{ latency: number }>>,
 	onDispatch: emitter.Emitter<ShardPayload<{
 		shardId: number,
-		event: receiveEvents.ReceiveEvent,
-		payload: gatewayTypes.Payload<unknown>,
+		event: apiTypes.ReceiveEvent,
+		payload: apiTypes.Payload<unknown>,
 	}>>,
 
 	onAllShardsReady: emitter.Emitter<ShardPayload<{
 		shardId: number,
-		payload: gatewayTypes.ReadyPayload,
+		payload: apiTypes.ReadyPayload,
 	}>>,
 }
 

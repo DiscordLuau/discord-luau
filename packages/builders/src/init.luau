@@ -1,0 +1,156 @@
+local provider = require("./embed/provider")
+local field = require("./embed/field")
+local thumbnail = require("./embed/thumbnail")
+local embed = require("./embed/embed")
+local author = require("./embed/author")
+local image = require("./embed/image")
+local footer = require("./embed/footer")
+local video = require("./embed/video")
+local invite = require("./invite")
+local emoji = require("./emoji")
+local channel = require("./channel")
+local messageParams = require("./thread/messageParams")
+local messageThread = require("./thread/messageThread")
+local forumMedia = require("./thread/forumMedia")
+local noMessageThread = require("./thread/noMessageThread")
+local guild = require("./guild/guild")
+local onboardingOption = require("./guild/onboarding/option")
+local prompt = require("./guild/onboarding/prompt")
+local onboarding = require("./guild/onboarding/onboarding")
+local welcomeScreenChannel = require("./guild/welcomeScreen/channel")
+local welcomeScreen = require("./guild/welcomeScreen/welcomeScreen")
+local overwrite = require("./guild/overwrite")
+local widgetSettings = require("./guild/widgetSettings")
+local role = require("./guild/role")
+local forumTag = require("./forumTag")
+local actionRow = require("./message/components/actionRow")
+local textInput = require("./message/components/textInput")
+local button = require("./message/components/button")
+local selectMenuOption = require("./message/components/selectMenu/option")
+local defaultValue = require("./message/components/selectMenu/defaultValue")
+local selectMenu = require("./message/components/selectMenu/selectMenu")
+local media = require("./message/poll/media")
+local answer = require("./message/poll/answer")
+local poll = require("./message/poll/poll")
+local message = require("./message/message")
+local reference = require("./message/reference")
+local allowedMention = require("./message/allowedMention")
+local option = require("./interaction/option")
+local choice = require("./interaction/choice")
+local interaction = require("./interaction/interaction")
+local attachment = require("./attachment")
+local defaultReaction = require("./defaultReaction")
+local permission = require("./permission")
+local intents = require("./intents")
+
+export type providerJSON = provider.JSON
+export type fieldJSON = field.JSON
+export type thumbnailJSON = thumbnail.JSON
+export type embedJSON = embed.JSON
+export type authorJSON = author.JSON
+export type imageJSON = image.JSON
+export type footerJSON = footer.JSON
+export type videoJSON = video.JSON
+export type inviteJSON = invite.JSON
+export type emojiJSON = emoji.JSON
+export type channelJSON = channel.JSON
+export type messageParamsJSON = messageParams.JSON
+export type messageThreadJSON = messageThread.JSON
+export type forumMediaJSON = forumMedia.JSON
+export type noMessageThreadJSON = noMessageThread.JSON
+export type guildJSON = guild.JSON
+export type onboardingOptionJSON = onboardingOption.JSON
+export type promptJSON = prompt.JSON
+export type onboardingJSON = onboarding.JSON
+export type welcomeScreenChannelJSON = welcomeScreenChannel.JSON
+export type welcomeScreenJSON = welcomeScreen.JSON
+export type overwriteJSON = overwrite.JSON
+export type widgetSettingsJSON = widgetSettings.JSON
+export type roleJSON = role.JSON
+export type forumTagJSON = forumTag.JSON
+export type actionRowJSON = actionRow.JSON
+export type textInputJSON = textInput.JSON
+export type buttonJSON = button.JSON
+export type selectMenuOptionJSON = selectMenuOption.JSON
+export type defaultValueJSON = defaultValue.JSON
+export type selectMenuJSON = selectMenu.JSON
+export type mediaJSON = media.JSON
+export type answerJSON = answer.JSON
+export type pollJSON = poll.JSON
+export type messageJSON = message.JSON
+export type referenceJSON = reference.JSON
+export type allowedMentionJSON = allowedMention.JSON
+export type optionJSON = option.JSON
+export type choiceJSON = choice.JSON
+export type interactionJSON = interaction.JSON
+export type attachmentJSON = attachment.JSON
+export type defaultReactionJSON = defaultReaction.JSON
+export type permissionJSON = permission.JSON
+export type intents = intents.Intents
+
+return {
+	intents = intents,
+	permission = permission,
+	defaultReaction = defaultReaction,
+	attachment = attachment,
+	interaction = {
+		interaction = interaction,
+		choice = choice,
+		option = option,
+	},
+	message = {
+		allowedMention = allowedMention,
+		reference = reference,
+		message = message,
+		poll = {
+			poll = poll,
+			answer = answer,
+			media = media,
+		},
+		components = {
+			selectMenu = {
+				selectMenu = selectMenu,
+				defaultValue = defaultValue,
+				option = selectMenuOption,
+			},
+			button = button,
+			textInput = textInput,
+			actionRow = actionRow,
+		},
+	},
+	forumTag = forumTag,
+	guild = {
+		role = role,
+		widgetSettings = widgetSettings,
+		overwrite = overwrite,
+		welcomeScreen = {
+			welcomeScreen = welcomeScreen,
+			channel = welcomeScreenChannel,
+		},
+		onboarding = {
+			onboarding = onboarding,
+			prompt = prompt,
+			option = onboardingOption,
+		},
+		guild = guild,
+	},
+	thread = {
+		noMessageThread = noMessageThread,
+		forumMedia = forumMedia,
+		messageThread = messageThread,
+		messageParams = messageParams,
+	},
+	channel = channel,
+	emoji = emoji,
+	invite = invite,
+	embed = {
+		video = video,
+		footer = footer,
+		image = image,
+		author = author,
+		embed = embed,
+		thumbnail = thumbnail,
+		field = field,
+		provider = provider,
+	},
+}

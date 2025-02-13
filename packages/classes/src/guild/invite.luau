@@ -4,21 +4,17 @@
 	https://discord.com/developers/docs/resources/invite#invite-object
 ]]
 
-local datetime = require("@std-polyfills/datetime")
+local apiTypes = require("../../lune_packages/api_types")
+local state = require("../../lune_packages/state")
+local stdPolyfills = require("../../lune_packages/std_polyfills")
 
-local apiTypes = require("@api-types/apiTypes")
-local guildTypes = require("@api-types/guild")
-local channelTypes = require("@api-types/channel")
+local unavailableGuild = require("./unavailableGuild")
+local scheduledEvent = require("./scheduledEvent")
 
-local unavailableGuild = require("@classes/guild/unavailableGuild")
+local user = require("../user")
+local application = require("../application/application")
 
-local user = require("@classes/user")
-local application = require("@classes/application/application")
-local scheduledEvent = require("@classes/guild/scheduledEvent")
-
-local state = require("@classes/state")
-
-local import = require("@utils/import")
+local _require = require :: any
 
 local Invite = {}
 
@@ -27,20 +23,20 @@ Invite.Prototype = {}
 
 function Invite.Prototype.sync(self: Invite, inviteData: apiTypes.InviteObject)
 	if inviteData.channel then
-		local channel = import("@utils/constructChannelFromData")(self.state, inviteData.channel)
+		local channel = _require("../channels/construct")(self.state, inviteData.channel)
 
-		self.channel = channel :: channelTypes.AbstractChannel
+		self.channel = channel :: apiTypes.AbstractChannel
 	end
 
-	self.type = guildTypes.InviteType[inviteData.type]
+	self.type = apiTypes.guild.InviteType[inviteData.type]
 	self.code = inviteData.code
 	self.guild = inviteData.guild and unavailableGuild.new(self.state, inviteData.guild.id :: string)
 	self.inviter = inviteData.inviter and user.new(inviteData.inviter)
-	self.targetType = inviteData.target_type and guildTypes.InviteTargetType[inviteData.target_type]
+	self.targetType = inviteData.target_type and apiTypes.guild.InviteTargetType[inviteData.target_type]
 	self.targetUser = inviteData.target_user and user.new(inviteData.target_user)
 	self.approximatePresenceCount = inviteData.approximate_presence_count
 	self.approximateMemberCount = inviteData.approximate_member_count
-	self.expiresAt = inviteData.expires_at and datetime.fromIsoDate(inviteData.expires_at)
+	self.expiresAt = inviteData.expires_at and stdPolyfills.datetime.fromIsoDate(inviteData.expires_at)
 	self.scheduledEvent = inviteData.guild_scheduled_event and scheduledEvent.new(inviteData.guild_scheduled_event)
 end
 
@@ -60,17 +56,17 @@ end
 export type Invite = typeof(Invite.Prototype) & {
 	state: state.State,
 
-	type: guildTypes.InviteType,
+	type: apiTypes.InviteType,
 	code: string,
 	guild: unavailableGuild.UnavailableGuild?,
-	channel: channelTypes.AbstractChannel,
+	channel: apiTypes.AbstractChannel,
 	inviter: user.User?,
-	targetType: guildTypes.InviteTargetType?,
+	targetType: apiTypes.InviteTargetType?,
 	targetUser: user.User?,
 	targetApplication: application.Application?,
 	approximatePresenceCount: number?,
 	approximateMemberCount: number?,
-	expiresAt: datetime.DateTime?,
+	expiresAt: stdPolyfills.DateTime?,
 	scheduledEvent: scheduledEvent.ScheduledEvent?,
 }
 

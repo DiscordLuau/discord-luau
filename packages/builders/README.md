@@ -4,14 +4,39 @@
 	</p>
 </div>
 
-## DiscordLuau - Builders
+## [DiscordLuau - Builders](https://pesde.dev/packages/discord_luau/builders)
 
-This package is a collection of builders that can be used to create Objects that can be parsed by the Discord API.
+DiscordLuau - Builders is a package that provides a collection of builders designed to create and modify objects compatible with the Discord API.
 
----
+Builders are designed to handle both the creation and modification of Discord-compatible data structures, ensuring flexibility and ease of use.
 
-Builders take the following approach:
-- Support the creation of new Builders which represent structures the Discord API understands.
-- Support the modification of existing data structures that the Discord API understands.
+### Installation
 
-Builders should cover both the creation and modification of discord data structures.
+To use DiscordLuau Builders, add it to your project using the pesde package manager:
+
+```bash
+pesde add discord_luau/builders
+```
+
+### Getting Started
+
+1. Require the library in your project:
+```luau
+local Builders = require("./luau_packages/builders")
+```
+
+2. Use the provided library to create a discord-compatible object:
+```luau
+local channelObject = Builders.channel.new()
+	:setName(`my-channel`)
+	:setTopic(`my-topic`)
+	:setType(`GuildText`)
+	:build()
+```
+
+### Contributing
+
+See the [Contributing Guide](CONTRIBUTING) for more information on how to contribute to this project.
+
+### License
+This project is licensed under the MIT License. Feel free to use it in your projects.

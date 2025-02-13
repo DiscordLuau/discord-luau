@@ -1,11 +1,9 @@
-local serde = require("@std-polyfills/serde")
+local stdPolyfills = require("../lune_packages/std_polyfills")
 
-local request = require("@rest/request")
-local future = require("@vendor/future")
+local future = require("../luau_packages/future")
+local apiTypes = require("../lune_packages/api_types")
 
-local restTypes = require("@api-types/rest/types")
-local apiTypes = require("@api-types/apiTypes")
-local restEndpoints = require("@api-types/rest/endpoints")
+local request = require("./request")
 
 --[[
 	HTTP Rest API implementation for the following Resource:
@@ -15,78 +13,52 @@ local restEndpoints = require("@api-types/rest/endpoints")
 local User = {}
 
 -- https://discord.com/developers/docs/resources/user#get-current-user
-function User.getCurrentUserAsync(instance: request.Request): future.Future<restTypes.GetCurrentUserResponse>
-	return future.new(function()
+function User.getCurrentUserAsync(instance: request.Request)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(restEndpoints.GetCurrentUser)
+		instance:setUrl(apiTypes.rest.endpoints.GetCurrentUser)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.GetCurrentUserResponse>
 end
 
 -- https://discord.com/developers/docs/resources/user#get-user
-function User.getUserAsync(
-	instance: request.Request,
-	userId: apiTypes.Snowflake
-): future.Future<restTypes.GetUserResponse>
-	return future.new(function()
+function User.getUserAsync(instance: request.Request, userId: apiTypes.Snowflake)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetUser, userId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetUser, userId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.GetUserResponse>
 end
 
 -- https://discord.com/developers/docs/resources/user#modify-current-user
-function User.modifyCurrentUserAsync(
-	instance: request.Request,
-	jsonParams: restTypes.ModifyCurrentUserRequest
-): future.Future<restTypes.ModifyCurrentUserResponse>
-	return future.new(function()
+function User.modifyCurrentUserAsync(instance: request.Request, jsonParams: apiTypes.ModifyCurrentUserRequest)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PATCH")
-		instance:setUrl(restEndpoints.ModifyCurrentUser)
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(apiTypes.rest.endpoints.ModifyCurrentUser)
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
-end
-
--- https://discord.com/developers/docs/resources/user#modify-current-user
-function User.modifyCurrentUserAsync(
-	instance: request.Request,
-	jsonParams: restTypes.ModifyCurrentUserRequest
-): future.Future<restTypes.ModifyCurrentUserResponse>
-	return future.new(function()
-		instance:assertToken()
-
-		instance:setMethod("PATCH")
-		instance:setUrl(restEndpoints.ModifyCurrentUser)
-		instance:setBody(serde.encode("json", jsonParams, true))
-
-		local status, response = instance:executeAsync():await()
-
-		assert(status == "Fulfilled", tostring(response))
-
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.ModifyCurrentUserResponse>
 end
 
 -- https://discord.com/developers/docs/resources/user#get-current-user-guilds
@@ -98,8 +70,8 @@ function User.getCurrentUserGuildsAsync(
 		limit: number?,
 		withCounts: boolean?,
 	}
-): future.Future<restTypes.GetCurrentUserGuildsResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:addUrlParam("before", urlParams.before and tostring(urlParams.before) or (nil :: any))
@@ -108,154 +80,141 @@ function User.getCurrentUserGuildsAsync(
 		instance:addUrlParam("with_counts", urlParams.withCounts and tostring(urlParams.withCounts) or (nil :: any))
 
 		instance:setMethod("GET")
-		instance:setUrl(restEndpoints.GetCurrentUserGuilds)
+		instance:setUrl(apiTypes.rest.endpoints.GetCurrentUserGuilds)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.GetCurrentUserGuildsResponse>
 end
 
 -- https://discord.com/developers/docs/resources/user#get-current-user-guild-member
-function User.getCurrentUserGuildMember(
-	instance: request.Request,
-	guildId: apiTypes.Snowflake
-): future.Future<restTypes.GetCurrentUserGuildMemberResponse>
-	return future.new(function()
+function User.getCurrentUserGuildMember(instance: request.Request, guildId: apiTypes.Snowflake)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetCurrentUserGuilds, guildId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetCurrentUserGuilds, guildId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.GetCurrentUserGuildMemberResponse>
 end
 
 -- https://discord.com/developers/docs/resources/user#leave-guild
-function User.leaveGuildAsync(
-	instance: request.Request,
-	guildId: apiTypes.Snowflake
-): future.Future<restTypes.LeaveGuildResponse>
-	return future.new(function()
+function User.leaveGuildAsync(instance: request.Request, guildId: apiTypes.Snowflake)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
-		instance:setUrl(string.format(restEndpoints.GetCurrentUserGuilds, guildId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetCurrentUserGuilds, guildId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.LeaveGuildResponse>
 end
 
 -- https://discord.com/developers/docs/resources/user#create-dm
-function User.createDMAsync(
-	instance: request.Request,
-	jsonParams: restTypes.CreateDMRequest
-): future.Future<restTypes.CreateDMResponse>
-	return future.new(function()
+function User.createDMAsync(instance: request.Request, jsonParams: apiTypes.CreateDMRequest)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("POST")
-		instance:setUrl(restEndpoints.CreateDM)
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(apiTypes.rest.endpoints.CreateDM)
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.CreateDMResponse>
 end
 
 -- https://discord.com/developers/docs/resources/user#create-group-dm
-function User.createGroupDMAsync(
-	instance: request.Request,
-	jsonParams: restTypes.CreateGroupDMRequest
-): future.Future<restTypes.CreateGroupDMResponse>
-	return future.new(function()
+function User.createGroupDMAsync(instance: request.Request, jsonParams: apiTypes.CreateGroupDMRequest)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("POST")
-		instance:setUrl(restEndpoints.CreateGroupDM)
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(apiTypes.rest.endpoints.CreateGroupDM)
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.CreateGroupDMResponse>
 end
 
 -- https://discord.com/developers/docs/resources/user#get-current-user-connections
-function User.getCurrentUserConnectionsAsync(
-	instance: request.Request
-): future.Future<restTypes.GetCurrentUserConnectionResponse>
-	return future.new(function()
+function User.getCurrentUserConnectionsAsync(instance: request.Request)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(restEndpoints.GetCurrentUserConnections)
+		instance:setUrl(apiTypes.rest.endpoints.GetCurrentUserConnections)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.GetCurrentUserConnectionResponse>
 end
 
 -- https://discord.com/developers/docs/resources/user#get-current-user-application-role-connection
-function User.getCurrentUserApplicationRoleConnectionAsync(
-	instance: request.Request,
-	applicationId: apiTypes.Snowflake
-): future.Future<
-	restTypes.GetCurrentUserApplicationRoleConnectionResponse
->
-	return future.new(function()
-		instance:assertToken()
+function User.getCurrentUserApplicationRoleConnectionAsync(instance: request.Request, applicationId: apiTypes.Snowflake)
+	return future.Future.new(
+			function()
+				instance:assertToken()
 
-		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetCurrentUserApplicationRolConnections, applicationId))
+				instance:setMethod("GET")
+				instance:setUrl(
+					string.format(apiTypes.rest.endpoints.GetCurrentUserApplicationRolConnections, applicationId)
+				)
 
-		local status, response = instance:executeAsync():await()
+				local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+				assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+				return response:unwrapOk().body
+			end
+		) :: future.FutureLike<string, apiTypes.GetCurrentUserApplicationRoleConnectionResponse>
 end
 
 -- https://discord.com/developers/docs/resources/user#update-current-user-application-role-connection
 function User.updateCurrentUserApplicationRoleConnectionAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
-	jsonParams: restTypes.UpdateCurrentUserApplicationRoleConnectionRequest
-): future.Future<
-	restTypes.UpdateCurrentUserApplicationRoleConnectionResponse
->
-	return future.new(function()
-		instance:assertToken()
+	jsonParams: apiTypes.UpdateCurrentUserApplicationRoleConnectionRequest
+)
+	return future.Future.new(
+			function()
+				instance:assertToken()
 
-		instance:setMethod("PUT")
-		instance:setUrl(string.format(restEndpoints.UpdateCurrentUserApplicationRoleConnection, applicationId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+				instance:setMethod("PUT")
+				instance:setUrl(
+					string.format(apiTypes.rest.endpoints.UpdateCurrentUserApplicationRoleConnection, applicationId)
+				)
+				instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
-		local status, response = instance:executeAsync():await()
+				local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+				assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+				return response:unwrapOk().body
+			end
+		) :: future.FutureLike<string, apiTypes.UpdateCurrentUserApplicationRoleConnectionResponse>
 end
 
 return User

@@ -4,11 +4,11 @@
 	https://discord.com/developers/docs/topics/gateway-events#update-presence
 ]]
 
-local datetime = require("@std-polyfills/datetime")
+local stdPolyfills = require("../lune_packages/std_polyfills")
 
-local apiTypes = require("@api-types/apiTypes")
+local apiTypes = require("../lune_packages/api_types")
 
-local activity = require("@classes/activity/activity")
+local activity = require("./activity/activity")
 
 local Presence = {}
 
@@ -18,13 +18,13 @@ Presence.Prototype = {}
 function Presence.Prototype.sync(self: Presence, presenceData: apiTypes.PresenceObject)
 	local activities = {}
 
-	for _, activityData in ipairs(presenceData.activities) do
+	for _, activityData in next, presenceData.activities do
 		table.insert(activities, activity.new(activityData))
 	end
 
 	self.activities = activities
 
-	self.since = datetime.fromUnixTimestamp(presenceData.since)
+	self.since = stdPolyfills.datetime.fromUnixTimestamp(presenceData.since)
 	self.status = presenceData.status
 	self.afk = presenceData.afk
 end
@@ -38,7 +38,7 @@ function Presence.Interface.new(presenceData: apiTypes.PresenceObject): Presence
 end
 
 export type Presence = typeof(Presence.Prototype) & {
-	since: datetime.DateTime,
+	since: stdPolyfills.DateTime,
 	activities: { activity.Activity },
 	status: string,
 	afk: boolean,

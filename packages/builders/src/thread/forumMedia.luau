@@ -4,7 +4,7 @@
 	https://discord.com/developers/docs/resources/channel#start-thread-without-message-json-params
 ]]
 
-local messageParams = require("@builders/thread/messageParams")
+local messageParams = require("./messageParams")
 
 local ForumMediaThread = {}
 
@@ -83,7 +83,7 @@ function ForumMediaThread.Prototype.build(self: ForumMediaThread): JSON
 		auto_archive_duration = self.autoArchiveDuration,
 		rate_limit_per_user = self.rateLimitPerUser,
 		message = self.message,
-		applied_tags = self.appliedTags,
+		applied_tags = self.appliedTags :: { string }?,
 	}
 end
 

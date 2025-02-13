@@ -1,11 +1,9 @@
-local serde = require("@std-polyfills/serde")
+local stdPolyfills = require("../lune_packages/std_polyfills")
 
-local request = require("@rest/request")
-local future = require("@vendor/future")
+local future = require("../luau_packages/future")
+local apiTypes = require("../lune_packages/api_types")
 
-local restTypes = require("@api-types/rest/types")
-local apiTypes = require("@api-types/apiTypes")
-local restEndpoints = require("@api-types/rest/endpoints")
+local request = require("./request")
 
 --[[
 	HTTP Rest API implementation for the following Resource:
@@ -21,10 +19,8 @@ function GuildScheduledEvent.listScheduledEventsForGuildAsync(
 	urlParams: {
 		withUserCount: boolean?,
 	}
-): future.Future<
-	restTypes.ListScheduledEventsForGuildResponse
->
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:addUrlParam(
@@ -33,37 +29,37 @@ function GuildScheduledEvent.listScheduledEventsForGuildAsync(
 		)
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.ListGuildScheduledForEvents, guildId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.ListGuildScheduledForEvents, guildId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.ListScheduledEventsForGuildResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild-scheduled-event#create-guild-scheduled-event
 function GuildScheduledEvent.createGuildScheduledEvent(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
-	jsonParams: restTypes.CreateGuildScheduledEventRequest,
+	jsonParams: apiTypes.CreateGuildScheduledEventRequest,
 	auditLogReason: string?
-): future.Future<restTypes.CreateGuildScheduledEventResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("POST")
-		instance:setUrl(string.format(restEndpoints.CreateGuildScheduledEvent, guildId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.CreateGuildScheduledEvent, guildId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.CreateGuildScheduledEventResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild-scheduled-event#get-guild-scheduled-event
@@ -74,8 +70,8 @@ function GuildScheduledEvent.getScheduledEventsForGuildAsync(
 	urlParams: {
 		withUserCount: boolean?,
 	}
-): future.Future<restTypes.GetGuildScheduledEventResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:addUrlParam(
@@ -84,14 +80,14 @@ function GuildScheduledEvent.getScheduledEventsForGuildAsync(
 		)
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetGuildScheduledEvent, guildId, scheduledEventId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetGuildScheduledEvent, guildId, scheduledEventId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.GetGuildScheduledEventResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild-scheduled-event#modify-guild-scheduled-event
@@ -99,23 +95,23 @@ function GuildScheduledEvent.modifyGuildScheduledEvent(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	scheduledEventId: apiTypes.Snowflake,
-	jsonParams: restTypes.ModifyGuildScheduledEventRequest,
+	jsonParams: apiTypes.ModifyGuildScheduledEventRequest,
 	auditLogReason: string?
-): future.Future<restTypes.ModifyGuildScheduledEventResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PATCH")
-		instance:setUrl(string.format(restEndpoints.ModifyGuildScheduledEvent, guildId, scheduledEventId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.ModifyGuildScheduledEvent, guildId, scheduledEventId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.ModifyGuildScheduledEventResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild-scheduled-event#delete-guild-scheduled-event
@@ -123,19 +119,19 @@ function GuildScheduledEvent.deleteGuildScheduledEvent(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	scheduledEventId: apiTypes.Snowflake
-): future.Future<restTypes.DeleteGuildScheduledEventResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
-		instance:setUrl(string.format(restEndpoints.DeleteGuildScheduledEvent, guildId, scheduledEventId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.DeleteGuildScheduledEvent, guildId, scheduledEventId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.DeleteGuildScheduledEventResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild-scheduled-event#get-guild-scheduled-event-users
@@ -143,19 +139,19 @@ function GuildScheduledEvent.getGuildScheduledEventUsers(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	scheduledEventId: apiTypes.Snowflake
-): future.Future<restTypes.GetGuildScheduledEventUsersResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetGuildScheduledEventUsers, guildId, scheduledEventId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetGuildScheduledEventUsers, guildId, scheduledEventId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.GetGuildScheduledEventUsersResponse>
 end
 
 return GuildScheduledEvent

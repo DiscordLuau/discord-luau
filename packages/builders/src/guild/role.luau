@@ -4,11 +4,10 @@
 	https://discord.com/developers/docs/resources/guild#create-guild-role-json-params
 ]]
 
-local permissionTypes = require("@api-types/permission")
+local apiTypes = require("../../lune_packages/api_types")
+local util = require("../../lune_packages/util")
 
-local bit = require("@vendor/bit")
-
-local validateKebabCase = require("@utils/validateKebabCase")
+local bit = require("../../luau_packages/bit")
 
 local Role = {}
 
@@ -22,7 +21,7 @@ function Role.Prototype.setName(self: Role, roleName: string): Role
 	assert(#roleName <= 100, `Role name must be less than 100 characters.`)
 	assert(#roleName > 1, `Role name must be more than 1 characters.`)
 
-	assert(validateKebabCase(roleName), `Tag name must be kebab-case.`)
+	assert(util.validateKebabCase(roleName), `Tag name must be kebab-case.`)
 
 	self.name = roleName
 
@@ -32,7 +31,7 @@ end
 --[[
 	Sets the permissions of the role, optionally this could be defined when creating the Role Builder as well.
 ]]
-function Role.Prototype.setPermissions(self: Role, ...: permissionTypes.Permissions): Role
+function Role.Prototype.setPermissions(self: Role, ...: apiTypes.Permissions): Role
 	for _, permissionType in { ... } do
 		table.insert(self.permissionFlags, permissionType)
 	end
@@ -74,7 +73,7 @@ function Role.Prototype.build(self: Role): JSON
 	local permissionBits = {}
 
 	for index, permissionEnum in self.permissionFlags do
-		local permissionBit = permissionTypes.Permissions[permissionEnum]
+		local permissionBit = apiTypes.permission.Permissions[permissionEnum]
 
 		permissionBits[index] = permissionBit
 	end
@@ -103,7 +102,7 @@ end
 ]]
 function Role.Interface.new(resource: {
 	roleName: string?,
-	rolePermissions: { permissionTypes.Permissions }?,
+	rolePermissions: { apiTypes.Permissions }?,
 }): Role
 	local self = setmetatable({} :: Role, { __index = Role.Prototype })
 
@@ -113,7 +112,7 @@ function Role.Interface.new(resource: {
 
 	if resource.rolePermissions then
 		-- HACK: Typecasting here so that all varargs are typed as a Permission.
-		self:setPermissions(table.unpack(resource.rolePermissions) :: permissionTypes.Permissions)
+		self:setPermissions(table.unpack(resource.rolePermissions) :: apiTypes.Permissions)
 	end
 
 	return self
@@ -121,7 +120,7 @@ end
 
 export type Role = typeof(Role.Prototype) & {
 	name: string?,
-	permissionFlags: { permissionTypes.Permissions },
+	permissionFlags: { apiTypes.Permissions },
 	color: number?,
 	isHoisted: boolean?,
 	icon: string?,

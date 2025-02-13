@@ -26,8 +26,16 @@ end
 function requireTests(path: string)
 	for _, object in fs.readDir(path) do
 		if fs.isDir(`{path}/{object}`) then
+			if object == "luau_packages" or object == "lune_packages" then
+				continue
+			end
+
 			requireTests(`{path}/{object}`)
 		else
+			if not string.find(object, ".spec.luau") then
+				continue
+			end
+
 			requireFile(`{path}/{object}`)
 		end
 	end

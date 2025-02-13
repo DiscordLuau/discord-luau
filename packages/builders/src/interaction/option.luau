@@ -4,13 +4,11 @@
 	https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
-local interactionTypes = require("@api-types/interaction")
-local channelTypes = require("@api-types/channel")
+local apiTypes = require("../../lune_packages/api_types")
 
-local interactionChoice = require("@builders/interaction/choice")
+local interactionChoice = require("./choice")
 
-local validateKebabCase = require("@utils/validateKebabCase")
+local util = require("../../lune_packages/util")
 
 local Option = {}
 
@@ -20,7 +18,7 @@ Option.Interface = {}
 --[[
 	Set the Type of option that will be built.
 ]]
-function Option.Prototype.setType(self: Option, type: interactionTypes.ApplicationCommandOptionType): Option
+function Option.Prototype.setType(self: Option, type: apiTypes.ApplicationCommandOptionType): Option
 	self.type = type
 
 	return self
@@ -33,7 +31,7 @@ function Option.Prototype.setName(self: Option, name: string): Option
 	assert(#name <= 32, "name must be less than 32 characters")
 	assert(#name >= 1, "name must be at least 1 character")
 
-	validateKebabCase(name)
+	assert(util.validateKebabCase(name), `name must be kebab case`)
 
 	self.name = name
 
@@ -51,7 +49,7 @@ function Option.Prototype.setNameLocalization(
 	assert(#name <= 32, "name must be less than 32 characters")
 	assert(#name >= 1, "name must be at least 1 character")
 
-	validateKebabCase(name)
+	assert(util.validateKebabCase(name), `name must be kebab case`)
 
 	self.nameLocalizations[localization] = name
 
@@ -131,10 +129,10 @@ end
 --[[
 	add supported channel types, will only work on Channel options.
 ]]
-function Option.Prototype.addChannelType(self: Option, channelType: channelTypes.ChannelType): Option
+function Option.Prototype.addChannelType(self: Option, channelType: apiTypes.ChannelType): Option
 	assert(self.type == "Channel", `Channel types can only be added to Channel options`)
 
-	table.insert(self.channelTypes, channelType)
+	table.insert(self.apiTypes, channelType)
 
 	return self
 end
@@ -203,15 +201,15 @@ end
 function Option.Prototype.build(self: Option): JSON
 	local channelTypeArray = {}
 
-	for _, channelType in self.channelTypes do
-		table.insert(channelTypeArray, channelTypes.ChannelTypes[channelType])
+	for _, channelType in self.apiTypes do
+		table.insert(channelTypeArray, apiTypes.channel.ChannelTypes[channelType])
 	end
 
 	assert(self.name, `Missing name for option: {self.name}`)
 	assert(self.description, `Missing description for option: {self.name}`)
 
 	return {
-		type = interactionTypes.InteractionType[self.type],
+		type = apiTypes.interaction.InteractionType[self.type],
 		channel_types = channelTypeArray,
 
 		name = self.name,
@@ -237,7 +235,7 @@ end
 	```
 ]]
 function Option.Interface.new(resource: {
-	type: interactionTypes.ApplicationCommandOptionType?,
+	type: apiTypes.ApplicationCommandOptionType?,
 	name: string?,
 	nameLocalizations: { [apiTypes.LanguageLocales]: string }?,
 	description: string?,
@@ -245,7 +243,7 @@ function Option.Interface.new(resource: {
 	required: boolean?,
 	choices: { apiTypes.ApplicationCommandOptionChoiceObject }?,
 	options: { JSON }?,
-	channelTypes: { apiTypes.ChannelType }?,
+	apiTypes: { apiTypes.ChannelType }?,
 	minValue: number?,
 	maxValue: number?,
 	minLength: number?,
@@ -262,7 +260,7 @@ function Option.Interface.new(resource: {
 			required = resource and resource.required,
 			choices = resource and resource.choices or {},
 			options = resource and resource.options or {},
-			channelTypes = resource and resource.channelTypes or {},
+			apiTypes = resource and resource.apiTypes or {},
 			minValue = resource and resource.minValue,
 			maxValue = resource and resource.maxValue,
 			minLength = resource and resource.minLength,
@@ -276,7 +274,7 @@ function Option.Interface.new(resource: {
 end
 
 export type Option = typeof(Option.Prototype) & {
-	type: interactionTypes.ApplicationCommandOptionType?,
+	type: apiTypes.ApplicationCommandOptionType?,
 	name: string?,
 	nameLocalizations: { [apiTypes.LanguageLocales]: string },
 	description: string?,
@@ -284,7 +282,7 @@ export type Option = typeof(Option.Prototype) & {
 	required: boolean?,
 	choices: { interactionChoice.JSON },
 	options: { JSON },
-	channelTypes: { channelTypes.ChannelType },
+	apiTypes: { apiTypes.ChannelType },
 	minValue: number?,
 	maxValue: number?,
 	minLength: number?,

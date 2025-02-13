@@ -1,9 +1,7 @@
-local request = require("@rest/request")
-local future = require("@vendor/future")
+local future = require("../luau_packages/future")
+local apiTypes = require("../lune_packages/api_types")
 
-local restTypes = require("@api-types/rest/types")
-local apiTypes = require("@api-types/apiTypes")
-local restEndpoints = require("@api-types/rest/endpoints")
+local request = require("./request")
 
 --[[
 	HTTP Rest API implementation for the following Resource:
@@ -21,8 +19,8 @@ function Invite.getInviteAsync(
 		withExpiration: boolean?,
 		guildScheduledEventId: apiTypes.Snowflake?,
 	}
-): future.Future<restTypes.GetInviteResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:addUrlParam("with_counts", urlParams.withCounts and tostring(urlParams.withCounts) or (nil :: any))
 		instance:addUrlParam(
 			"with_expiration",
@@ -34,35 +32,31 @@ function Invite.getInviteAsync(
 		)
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetInvite, inviteCode))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetInvite, inviteCode))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.GetInviteResponse>
 end
 
 -- https://discord.com/developers/docs/resources/invite#delete-invite
-function Invite.deleteInviteAsync(
-	instance: request.Request,
-	inviteCode: string,
-	auditLogReason: string?
-): future.Future<restTypes.GetInviteResponse>
-	return future.new(function()
+function Invite.deleteInviteAsync(instance: request.Request, inviteCode: string, auditLogReason: string?)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
-		instance:setUrl(string.format(restEndpoints.DeleteInvite, inviteCode))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.DeleteInvite, inviteCode))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.DeleteInviteResponse>
 end
 
 return Invite

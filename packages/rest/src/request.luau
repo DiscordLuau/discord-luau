@@ -1,6 +1,6 @@
-local net = require("@std-polyfills/net")
+local stdPolyfills = require("../lune_packages/std_polyfills")
 
-local future = require("@vendor/future")
+local future = require("../luau_packages/future")
 
 --[[
 	Request is a class that represents a single HTTP request. The idea behind this class is to provide
@@ -98,24 +98,20 @@ function Request.Prototype.addHook(
 end
 
 --[[
-	Responsible for executing this request asynchronously. This will return a future that will resolve when the request is
+	Responsible for executing this request asynchronously. This will return a async that will resolve when the request is
 	completed.
 
 	This function will decode the response body, and return a table with the following keys:
 		- headers: A table of headers returned from the request.
 		- body: The body of the request, decoded from the response.
 ]]
-function Request.Prototype.executeAsync<Resolve>(self: Request): future.Future<{ headers: { [string]: string }, body: Resolve }>
-	return future.new(function()
+function Request.Prototype.executeAsync<Resolve>(self: Request)
+	return future.Future.new(function()
 		assert(self.method, `Request method is not set!`)
 		assert(self.url, `Request URL is not set!`)
 		assert(self.headers, `Request headers are not set!`)
 
-		if self.method == "POST" then
-			assert(self.body, `Request body is not set!`)
-		end
-
-		local headerTable: net.HttpHeaderMap = {}
+		local headerTable: stdPolyfills.HttpHeaderMap = {}
 		local baseUrl = `https://discord.com/api/v{self.restApiVersion}{self.url}`
 		local hasUrlParams = next(self.urlParams) ~= nil
 
@@ -155,12 +151,12 @@ function Request.Prototype.executeAsync<Resolve>(self: Request): future.Future<{
 			end
 		end
 
-		local request = net.request({
+		local request = stdPolyfills.net.request({
 			url = baseUrl,
 			method = self.method,
 			body = self.body,
 			headers = headerTable,
-		} :: net.FetchParams)
+		} :: stdPolyfills.FetchParams)
 
 		if not request.ok then
 			error(setmetatable({
@@ -174,7 +170,7 @@ function Request.Prototype.executeAsync<Resolve>(self: Request): future.Future<{
 			}))
 		end
 
-		local decodeSuccess, decodedBody = pcall(net.jsonDecode, request.body)
+		local decodeSuccess, decodedBody = pcall(stdPolyfills.serde.decode, "json" :: "json", request.body)
 
 		for _, hook in self.afterHooks do
 			hook(self, {
@@ -187,7 +183,7 @@ function Request.Prototype.executeAsync<Resolve>(self: Request): future.Future<{
 
 		return {
 			headers = request.headers,
-			body = decodeSuccess and decodedBody or request.body,
+			body = (decodeSuccess and decodedBody or request.body) :: Resolve,
 		}
 	end)
 end
@@ -220,14 +216,14 @@ export type Request = typeof(Request.Prototype) & {
 	beforeHooks: {
 		(
 			self: Request,
-			{ url: string, method: string, body: string, headers: net.HttpHeaderMap }
+			{ url: string, method: string, body: string, headers: stdPolyfills.HttpHeaderMap }
 		) -> boolean
 	},
 	afterHooks: {
 		(
 			self: Request,
-			{ url: string, method: string, body: string, headers: net.HttpHeaderMap },
-			net.FetchResponse
+			{ url: string, method: string, body: string, headers: stdPolyfills.HttpHeaderMap },
+			stdPolyfills.FetchResponse
 		) -> ()
 	},
 

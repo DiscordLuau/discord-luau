@@ -4,46 +4,38 @@
 	https://discord.com/developers/docs/resources/message#message-object
 ]]
 
-local datetime = require("@std-polyfills/datetime")
+local stdPolyfills = require("../../lune_packages/std_polyfills")
 
-local import = require("@utils/import")
+local apiTypes = require("../../lune_packages/api_types")
+local future = require("../../luau_packages/future")
+local builders = require("../../lune_packages/builders")
+local state = require("../../lune_packages/state")
+local rest = require("../../lune_packages/rest")
 
-local future = require("@vendor/future")
+local user = require("../user")
+local role = require("../guild/role")
+local channelMention = require("../channels/mention")
+local attachment = require("../attachment")
+local embed = require("../embed/embed")
+local reaction = require("../reaction/reaction")
+local activity = require("./activity")
+local application = require("../application/application")
+local reference = require("./reference")
+local interactionMetadata = require("./ineractionMetadata")
+local interaction = require("./interaction")
+local stickerItem = require("./stickerItem")
+local roleSubscriptionData = require("./roleSubscriptionData")
+local member = require("../guild/member")
+local poll = require("./poll/poll")
+local call = require("./call")
+local messageBitflag = require("../bitflags/message")
 
-local apiTypes: string = require("@api-types/apiTypes")
-local messageTypes = require("@api-types/message")
+local textInputComponent = require("./components/textInput")
+local selectMenuComponent = require("./components/selectMenu/selectMenu")
+local actionRowComponent = require("./components/actionRow")
+local buttonComponent = require("./components/button")
 
-local user = require("@classes/user")
-local role = require("@classes/guild/role")
-local channelMention = require("@classes/channels/mention")
-local attachment = require("@classes/attachment")
-local embed = require("@classes/embed/embed")
-local reaction = require("@classes/reaction/reaction")
-local activity = require("@classes/message/activity")
-local application = require("@classes/application/application")
-local reference = require("@classes/message/reference")
-local interactionMetadata = require("@classes/message/ineractionMetadata")
-local interaction = require("@classes/message/interaction")
-local stickerItem = require("@classes/message/stickerItem")
-local roleSubscriptionData = require("@classes/message/roleSubscriptionData")
-local member = require("@classes/guild/member")
-local poll = require("@classes/message/poll/poll")
-local call = require("@classes/message/call")
-local state = require("@classes/state")
-
-local textInputComponent = require("@classes/message/components/textInput")
-local selectMenuComponent = require("@classes/message/components/selectMenu/selectMenu")
-local actionRowComponent = require("@classes/message/components/actionRow")
-local buttonComponent = require("@classes/message/components/button")
-
-local emojiBuilder = require("@builders/emoji")
-local messageBuilder = require("@builders/message/message")
-
-local messageBitflag = require("@classes/bitflags/message")
-
-local messageRest = require("@rest/message")
-
--- https://discord.com/developers/docs/resources/channel#start-thread-from-message
+local _require = require :: any
 
 local Message = {}
 
@@ -51,41 +43,76 @@ Message.Interface = {}
 Message.Prototype = {}
 
 --[[
-	Add a reaction to a message. Requires READ_MESSAGE_HISTORY and ADD_REACTIONS permissions.
+	Creates a new thread from an existing message.
 ]]
-function Message.Prototype.addReactionAsync(self: Message, emoji: emojiBuilder.JSON): future.Future<nil>
-	return future.new(function()
+function Message.Prototype.startThreadAsync(
+	self: Message,
+	threadName: string,
+	autoArchiveDuration: number,
+	rateLimitPerUser: number?
+)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		assert(emoji.id, `Reaction must have an id`)
-		assert(emoji.name, `Reaction must have a name`)
+		assert(#threadName > 0, `threadName needs to be above 0.`)
+		assert(#threadName <= 100, `threadName shouldn't be above 100`)
 
-		local status, response =
-			messageRest.createReactionAsync(request, self.channelId, self.id, emoji.id, emoji.name):await()
+		local response = rest.channel
+			.startThreadFromMessageAsync(request, self.channelId, self.id, {
+				name = threadName,
+				auto_archive_duration = autoArchiveDuration,
+				rate_limit_per_user = rateLimitPerUser,
+			})
+			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		return response:unwrapOk() :: any
+	end) :: future.FutureLike<string, apiTypes.AbstractChannel>
+end
 
-		return
-	end)
+--[[
+	Add a reaction to a message. Requires READ_MESSAGE_HISTORY and ADD_REACTIONS permissions.
+]]
+function Message.Prototype.addReactionAsync(self: Message, emoji: builders.emojiJSON | string)
+	return future.Future.new(function()
+		local request = self.state.rest:newRequest()
+		local emojiObject = emoji :: string
+
+		if type(emoji) == "table" then
+			assert(emoji.id, `Reaction must have an id`)
+			assert(emoji.name, `Reaction must have a name`)
+
+			emojiObject = `{emoji.name}:{emoji.id}`
+		end
+
+		local response = rest.message.createReactionAsync(request, self.channelId, self.id, emojiObject):await()
+
+		assert(response:isOk(), tostring(response:unwrapErr()))
+
+		return nil
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
 	Remove the current user's reaction from a message
 ]]
-function Message.Prototype.removeOwnReactionAsync(self: Message, emoji: emojiBuilder.JSON): future.Future<nil>
-	return future.new(function()
+function Message.Prototype.removeOwnReactionAsync(self: Message, emoji: builders.emojiJSON | string)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
+		local emojiObject = emoji :: string
 
-		assert(emoji.id, `Reaction must have an id`)
-		assert(emoji.name, `Reaction must have a name`)
+		if type(emoji) == "table" then
+			assert(emoji.id, `Reaction must have an id`)
+			assert(emoji.name, `Reaction must have a name`)
 
-		local status, response =
-			messageRest.deleteOwnReactionAsync(request, self.channelId, self.id, emoji.id, emoji.name):await()
+			emojiObject = `{emoji.name}:{emoji.id}`
+		end
 
-		assert(status == "Fulfilled", tostring(response))
+		local response = rest.message.deleteOwnReactionAsync(request, self.channelId, self.id, emojiObject):await()
 
-		return
-	end)
+		assert(response:isOk(), tostring(response:unwrapErr()))
+
+		return nil
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -93,22 +120,27 @@ end
 ]]
 function Message.Prototype.deleteUserReactionAsync(
 	self: Message,
-	emoji: emojiBuilder.JSON,
+	emoji: builders.emojiJSON | string,
 	userId: apiTypes.Snowflake
-): future.Future<nil>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
+		local emojiObject = emoji :: string
 
-		assert(emoji.id, `Reaction must have an id`)
-		assert(emoji.name, `Reaction must have a name`)
+		if type(emoji) == "table" then
+			assert(emoji.id, `Reaction must have an id`)
+			assert(emoji.name, `Reaction must have a name`)
 
-		local status, response =
-			messageRest.deleteUserReactionAsync(request, self.channelId, self.id, emoji.id, emoji.name, userId):await()
+			emojiObject = `{emoji.name}:{emoji.id}`
+		end
 
-		assert(status == "Fulfilled", tostring(response))
+		local response =
+			rest.message.deleteUserReactionAsync(request, self.channelId, self.id, emojiObject, userId):await()
 
-		return
-	end)
+		assert(response:isOk(), tostring(response:unwrapErr()))
+
+		return nil
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -116,79 +148,89 @@ end
 ]]
 function Message.Prototype.getReactionsAsync(
 	self: Message,
-	emoji: emojiBuilder.JSON,
-	reactionType: messageTypes.ReactionType?,
+	emoji: builders.emojiJSON | string,
+	reactionType: apiTypes.ReactionType?,
 	afterUserId: apiTypes.Snowflake?,
 	limit: number?
-): future.Future<{ reaction.Reaction }>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
+		local emojiObject = emoji :: string
 
-		assert(emoji.id, `Reaction must have an id`)
-		assert(emoji.name, `Reaction must have a name`)
+		if type(emoji) == "table" then
+			assert(emoji.id, `Reaction must have an id`)
+			assert(emoji.name, `Reaction must have a name`)
 
-		local status, response = messageRest
-			.getReactionsAsync(request, self.channelId, self.id, emoji.id, emoji.name, {
+			emojiObject = `{emoji.name}:{emoji.id}`
+		end
+
+		local response = rest.message
+			.getReactionsAsync(request, self.channelId, self.id, emojiObject, {
 				reactionType = reactionType,
 				after = afterUserId,
 				limit = limit,
 			})
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local users = {}
 
-		for _, userData in next, response do
+		for _, userData in next, response:unwrapOk() do
 			table.insert(users, user.new(userData))
 		end
 
-		return users
-	end)
+		return users :: any
+	end) :: future.FutureLike<string, user.User>
 end
 
 --[[
 	Remove all reactions from a message. Requires MANAGE_MESSAGES permission.
 ]]
-function Message.Prototype.deleteAllReactionsAsync(self: Message): future.Future<nil>
-	return future.new(function()
+function Message.Prototype.deleteAllReactionsAsync(self: Message)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = messageRest.deleteAllReactionsAsync(request, self.channelId, self.id):await()
+		local response = rest.message.deleteAllReactionsAsync(request, self.channelId, self.id):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return
-	end)
+		return nil
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
 	Remove all reactions of a specific emoji from a message. Requires MANAGE_MESSAGES permission.
 ]]
-function Message.Prototype.deleteAllReactionsForEmojiAsync(self: Message, emoji: emojiBuilder.JSON): future.Future<nil>
-	return future.new(function()
+function Message.Prototype.deleteAllReactionsForEmojiAsync(self: Message, emoji: builders.emojiJSON | string)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
+		local emojiObject = emoji :: string
 
-		assert(emoji.id, `Reaction must have an id`)
-		assert(emoji.name, `Reaction must have a name`)
+		if type(emoji) == "table" then
+			assert(emoji.id, `Reaction must have an id`)
+			assert(emoji.name, `Reaction must have a name`)
 
-		local status, response =
-			messageRest.deleteAllReactionsForEmojiAsync(request, self.channelId, self.id, emoji.name, emoji.id):await()
+			emojiObject = `{emoji.name}:{emoji.id}`
+		end
 
-		assert(status == "Fulfilled", tostring(response))
+		local response =
+			rest.message.deleteAllReactionsForEmojiAsync(request, self.channelId, self.id, emojiObject):await()
 
-		return
-	end)
+		assert(response:isOk(), tostring(response:unwrapErr()))
+
+		return nil
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
 	Edit a message. The current user must be the author of the message.
 ]]
-function Message.Prototype.editMessageAsync(self: Message, message: messageBuilder.JSON): future.Future<Message>
-	return future.new(function()
+function Message.Prototype.editMessageAsync(self: Message, message: builders.messageJSON)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = messageRest
+		local response = rest.message
 			.editMessageAsync(request, self.channelId, self.id, {
 				content = message.content,
 				embeds = message.embeds,
@@ -199,31 +241,32 @@ function Message.Prototype.editMessageAsync(self: Message, message: messageBuild
 			})
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		self:sync(response)
+		self:sync(response:unwrapOk())
 
 		return self
-	end)
+	end) :: future.FutureLike<string, Message>
 end
+
 --[[
 	Delete a message. If operating on a guild channel and trying to delete a message that was not sent by the current user,
 	this endpoint requires the MANAGE_MESSAGES permission.
 ]]
-function Message.Prototype.deleteMessageAsync(self: Message, reason: string): future.Future<Message>
-	return future.new(function()
+function Message.Prototype.deleteMessageAsync(self: Message, reason: string?)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = messageRest.deleteMessageAsync(request, self.channelId, self.id, reason):await()
+		local response = rest.message.deleteMessageAsync(request, self.channelId, self.id, reason):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return
-	end)
+		return nil
+	end) :: future.FutureLike<string, nil>
 end
 
 function Message.Prototype.sync(self: Message, messageData: apiTypes.MessageObject)
-	self.type = messageTypes.MessageType[messageData.type]
+	self.type = apiTypes.message.MessageType[messageData.type]
 
 	local mentionArray = {}
 	local roleArray = {}
@@ -275,7 +318,7 @@ function Message.Prototype.sync(self: Message, messageData: apiTypes.MessageObje
 	self.channelId = messageData.channel_id :: string
 	self.author = messageData.author and user.new(messageData.author)
 	self.content = messageData.content
-	self.timestamp = messageData.timestamp and datetime.fromIsoDate(messageData.timestamp)
+	self.timestamp = messageData.timestamp and stdPolyfills.datetime.fromIsoDate(messageData.timestamp)
 	self.tts = messageData.tts
 	self.mentionEveryone = messageData.mention_everyone
 	self.mentionChannels = mentionArray
@@ -306,7 +349,7 @@ function Message.Prototype.sync(self: Message, messageData: apiTypes.MessageObje
 	self.call = messageData.call and call.new(messageData.call)
 
 	-- cyclic dependency, can only require during runtime.
-	self.resolved = messageData.resolved and import("@classes/resolved").new(self.state, messageData.resolved)
+	self.resolved = messageData.resolved and _require("../resolved").new(self.state, messageData.resolved)
 end
 
 function Message.Interface.new(state: state.State, messageData: apiTypes.MessageObject): Message
@@ -329,8 +372,8 @@ export type Message = typeof(Message.Prototype) & {
 	channelId: apiTypes.Snowflake,
 	author: user.User?,
 	content: string?,
-	timestamp: datetime.DateTime?,
-	editedTimestamp: datetime.DateTime?,
+	timestamp: stdPolyfills.DateTime?,
+	editedTimestamp: stdPolyfills.DateTime?,
 	tts: boolean?,
 	mentionEveryone: boolean?,
 	mentions: { user.User },
@@ -342,7 +385,7 @@ export type Message = typeof(Message.Prototype) & {
 	nonce: string,
 	pinned: boolean?,
 	webhookId: apiTypes.Snowflake?,
-	type: messageTypes.MessageType,
+	type: apiTypes.MessageType,
 	activity: activity.Activity?,
 	application: application.Application?,
 	applicationId: apiTypes.Snowflake?,

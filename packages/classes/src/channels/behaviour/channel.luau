@@ -3,17 +3,13 @@
 	channel object.
 ]]
 
-local future = require("@vendor/future")
+local apiTypes = require("../../../lune_packages/api_types")
+local future = require("../../../luau_packages/future")
+local rest = require("../../../lune_packages/rest")
+local state = require("../../../lune_packages/state")
+local builders = require("../../../lune_packages/builders")
 
-local apiTypes: string = require("@api-types/apiTypes")
-local channelTypes = require("@api-types/channel")
-
-local channelRest = require("@rest/channel")
-
-local state = require("@classes/state")
-local channelBitflags = require("@classes/bitflags/channel")
-
-local channelBuilder = require("@builders/channel")
+local channelBitflags = require("../../bitflags/channel")
 
 local ChannelBehaviour = {}
 
@@ -25,18 +21,18 @@ ChannelBehaviour.Prototype = {}
 	if the channel is a thread. Deleting a category does not delete its child channels; they will have their parent_id
 	removed and a Channel Update Gateway event will fire for each of them.
 ]]
-function ChannelBehaviour.Prototype.deleteChannelAsync<T>(self: Channel<T>): future.Future<T>
-	return future.new(function()
+function ChannelBehaviour.Prototype.deleteChannelAsync<T>(self: Channel<T>)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = channelRest.deleteOrCloseChannelAsync(request, self.id):await()
+		local response = rest.channel.deleteOrCloseChannelAsync(request, self.id):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		self:sync(response)
+		self:sync(response:unwrapOk())
 
 		return self
-	end)
+	end) :: future.FutureLike<string, Channel<T>>
 end
 
 --[[
@@ -45,41 +41,37 @@ end
 	Generally bots should not use this route. However, if a bot is responding to a command and expects the computation to
 	take a few seconds, this endpoint may be called to let the user know that the bot is processing their message.
 ]]
-function ChannelBehaviour.Prototype.triggerTypingIndicatorAsync<T>(self: Channel<T>): future.Future<nil>
-	return future.new(function()
+function ChannelBehaviour.Prototype.triggerTypingIndicatorAsync<T>(self: Channel<T>)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = channelRest.triggerTypingIndicatorAsync(request, self.id):await()
+		local response = rest.channel.triggerTypingIndicatorAsync(request, self.id):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return nil
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
 	Lists all private archived threads that the current user has joined. Returns thread and member information.
 ]]
-function ChannelBehaviour.Prototype.modifyAsync<T>(
-	self: Channel<T>,
-	json: channelBuilder.JSON,
-	reason: string?
-): future.Future<Channel<T>>
-	return future.new(function()
+function ChannelBehaviour.Prototype.modifyAsync<T>(self: Channel<T>, json: builders.channelJSON, reason: string?)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = channelRest.modifyChannelAsync(request, self.id, json, reason):await()
+		local response = rest.channel.modifyChannelAsync(request, self.id, json, reason):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		self:sync(response)
+		self:sync(response:unwrapOk())
 
 		return self
-	end)
+	end) :: future.FutureLike<string, Channel<T>>
 end
 
 function ChannelBehaviour.Interface.inheritProperties(class: any, channelData: apiTypes.ChannelObject)
-	class.type = channelTypes.ChannelTypes[channelData.type]
+	class.type = apiTypes.channel.ChannelTypes[channelData.type]
 
 	class.id = channelData.id
 	class.name = channelData.name
@@ -102,7 +94,7 @@ type Channel<T> = T & ChannelBehaviour & {
 export type ChannelBehaviourMethods = typeof(ChannelBehaviour.Prototype)
 export type ChannelBehaviourProperties = {
 	id: apiTypes.Snowflake,
-	type: channelTypes.ChannelType,
+	type: apiTypes.ChannelType,
 	name: string?,
 	flags: channelBitflags.ChannelBitflag?,
 }

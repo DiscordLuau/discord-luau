@@ -4,10 +4,9 @@
 	https://discord.com/developers/docs/resources/guild#guild-prompt-object-prompt-prompt-structure
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
-local guildTypes = require("@api-types/guild")
+local apiTypes = require("../../../lune_packages/api_types")
 
-local option = require("@classes/guild/onboarding/option")
+local option = require("./option")
 
 local Prompt = {}
 
@@ -22,7 +21,7 @@ function Prompt.Prototype.sync(self: Prompt, promptData: apiTypes.OnboardingProm
 	end
 
 	self.id = promptData.id
-	self.type = guildTypes.OnboardingPromptType[promptData.type]
+	self.type = apiTypes.guild.OnboardingPromptType[promptData.type]
 	self.options = optionsArray
 	self.title = promptData.title
 	self.singleSelect = promptData.single_select
@@ -40,7 +39,7 @@ end
 
 export type Prompt = typeof(Prompt.Prototype) & {
 	id: apiTypes.Snowflake?,
-	type: guildTypes.OnboardingPromptType,
+	type: apiTypes.OnboardingPromptType,
 	options: { option.Option },
 	title: string?,
 	singleSelect: boolean?,

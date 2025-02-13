@@ -4,15 +4,13 @@
 	https://discord.com/developers/docs/resources/integration#integration-object
 ]]
 
-local datetime = require("@std-polyfills/datetime")
+local apiTypes = require("../../../lune_packages/api_types")
+local stdPolyfills = require("../../../lune_packages/std_polyfills")
 
-local apiTypes = require("@api-types/apiTypes")
-local guildTypes = require("@api-types/guild")
+local account = require("./account")
+local application = require("./application")
 
-local account = require("@classes/guild/integration/account")
-local application = require("@classes/guild/integration/application")
-
-local user = require("@classes/user")
+local user = require("../../user")
 
 local Integration = {}
 
@@ -22,16 +20,16 @@ Integration.Prototype = {}
 function Integration.Prototype.sync(self: Integration, integrationData: apiTypes.IntegrationObject)
 	self.id = integrationData.id
 	self.name = integrationData.name
-	self.type = guildTypes.IntegrationType[integrationData.type]
+	self.type = apiTypes.guild.IntegrationType[integrationData.type]
 	self.enabled = integrationData.enabled
 	self.syncing = integrationData.syncing
 	self.roleId = integrationData.role_id
 	self.enableEmoticons = integrationData.enable_emoticons
-	self.expireBehavior = guildTypes.IntegrationExpireBehaviour[integrationData.expire_behaviour]
+	self.expireBehavior = apiTypes.guild.IntegrationExpireBehaviour[integrationData.expire_behaviour]
 	self.expireGracePeriod = integrationData.expire_grace_period
 	self.user = integrationData.user and user.new(integrationData.user)
 	self.account = integrationData.account and account.new(integrationData.account)
-	self.syncedAt = integrationData.synced_at and datetime.fromIsoDate(integrationData.synced_at)
+	self.syncedAt = integrationData.synced_at and stdPolyfills.datetime.fromIsoDate(integrationData.synced_at)
 	self.subscriberCount = integrationData.subscriber_count
 	self.revoked = integrationData.revoked
 	self.application = integrationData.application and application.new(integrationData.application)
@@ -49,16 +47,16 @@ end
 export type Integration = typeof(Integration.Prototype) & {
 	id: apiTypes.Snowflake,
 	name: string,
-	type: guildTypes.IntegrationType,
+	type: apiTypes.IntegrationType,
 	enabled: boolean,
 	syncing: boolean?,
 	roleId: apiTypes.Snowflake?,
 	enableEmoticons: boolean?,
-	expireBehavior: guildTypes.IntegrationExpireBehaviour,
+	expireBehavior: apiTypes.IntegrationExpireBehaviour,
 	expireGracePeriod: number?,
 	user: user.User?,
 	account: account.Account,
-	syncedAt: datetime.DateTime?,
+	syncedAt: stdPolyfills.DateTime?,
 	subscriberCount: number?,
 	revoked: boolean?,
 	application: application.Application?,

@@ -4,56 +4,42 @@
 	https://discord.com/developers/docs/resources/guild#guild-object
 ]]
 
-local future = require("@vendor/future")
+local future = require("../../luau_packages/future")
+local apiTypes = require("../../lune_packages/api_types")
+local state = require("../../lune_packages/state")
+local builders = require("../../lune_packages/builders")
+local rest = require("../../lune_packages/rest")
 
-local apiTypes = require("@api-types/apiTypes")
-local guildTypes = require("@api-types/guild")
-local channelTypes = require("@api-types/channel")
+local emoji = require("../emoji")
+local sticker = require("../sticker")
+local role = require("./role")
+local welcomeScreen = require("./welcomeScreen")
+local preview = require("./preview")
+local member = require("./member")
+local ban = require("./ban")
+local voiceRegion = require("./voiceRegion")
+local invite = require("./invite")
+local integration = require("./integration/integration")
+local widget = require("./widget/widget")
+local widgetSettings = require("./widget/widgetSettings")
+local vanityUrl = require("./vanityUrl")
+local onboarding = require("./onboarding/onboarding")
 
-local state = require("@classes/state")
-local emoji = require("@classes/emoji")
-local sticker = require("@classes/sticker")
-local role = require("@classes/guild/role")
-local welcomeScreen = require("@classes/guild/welcomeScreen")
-local preview = require("@classes/guild/preview")
-local member = require("@classes/guild/member")
-local ban = require("@classes/guild/ban")
-local voiceRegion = require("@classes/guild/voiceRegion")
-local invite = require("@classes/guild/invite")
-local integration = require("@classes/guild/integration/integration")
-local widget = require("@classes/guild/widget/widget")
-local widgetSettings = require("@classes/guild/widget/widgetSettings")
-local vanityUrl = require("@classes/guild/vanityUrl")
-local onboarding = require("@classes/guild/onboarding/onboarding")
+local guildAnnouncement = require("../channels/types/guildAnnouncement")
+local guildCategory = require("../channels/types/guildCategory")
+local guildDirectory = require("../channels/types/guildDirectory")
+local guildStageVoice = require("../channels/types/guildStageVoice")
+local guildText = require("../channels/types/guildText")
+local guildVoice = require("../channels/types/guildVoice")
 
-local guildAnnouncement = require("@classes/channels/types/guildAnnouncement")
-local guildCategory = require("@classes/channels/types/guildCategory")
-local guildDirectory = require("@classes/channels/types/guildDirectory")
-local guildStageVoice = require("@classes/channels/types/guildStageVoice")
-local guildText = require("@classes/channels/types/guildText")
-local guildVoice = require("@classes/channels/types/guildVoice")
+local announcementThread = require("../channels/threads/announcement")
+local privateThread = require("../channels/threads/private")
+local publicThread = require("../channels/threads/public")
 
-local announcementThread = require("@classes/channels/threads/announcement")
-local privateThread = require("@classes/channels/threads/private")
-local publicThread = require("@classes/channels/threads/public")
+local systemChannelBitflag = require("../bitflags/systemChannel")
+local commandObject = require("../application/command/command")
 
-local onboardingBuilder = require("@builders/guild/onboarding/onboarding")
-local welcomeScreenBuilder = require("@builders/guild/welcomeScreen/welcomeScreen")
-local widgetSettingsBuilder = require("@builders/guild/widgetSettings")
-local guildBuilder = require("@builders/guild/guild")
-local channelBuilder = require("@builders/channel")
-
-local systemChannelBitflag = require("@classes/bitflags/systemChannel")
-
-local guildRest = require("@rest/guild")
-local commandsRest = require("@rest/commands")
-
-local interactionBuilder = require("@builders/interaction/interaction")
-local roleBuilder = require("@builders/guild/role")
-
-local commandObject = require("@classes/application/command/command")
-
-local constructChannelFromData = require("@utils/constructChannelFromData")
+local constructChannelFromData = require("../channels/construct")
 
 local Guild = {}
 
@@ -63,36 +49,35 @@ Guild.Prototype = {}
 --[[
 	Creates a guild Slash command for the application
 ]]
-function Guild.Prototype.createSlashCommandAsync(
-	self: Guild,
-	slashCommand: interactionBuilder.JSON
-): future.Future<commandObject.Command>
-	return future.new(function()
+function Guild.Prototype.createSlashCommandAsync(self: Guild, slashCommand: builders.interactionJSON)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = commandsRest
+		local response = rest.commands
 			.createGuildApplicationCommandAsync(request, self.state.applicationId, self.id, slashCommand)
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return commandObject.new(response)
-	end)
+		return commandObject.new(response:unwrapOk())
+	end) :: future.FutureLike<string, commandObject.Command>
 end
 
 --[[
 	Delete an existing guild application command.
 ]]
-function Guild.Prototype.deleteSlashCommandAsync(self: Guild, slashCommandId: apiTypes.Snowflake): future.Future<nil>
-	return future.new(function()
+function Guild.Prototype.deleteSlashCommandAsync(self: Guild, slashCommandId: apiTypes.Snowflake)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = commandsRest
+		local response = rest.commands
 			.deleteGuildApplicationCommandAsync(request, self.state.applicationId, self.id, slashCommandId)
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
-	end)
+		assert(response:isOk(), tostring(response:unwrapErr()))
+
+		return nil
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -101,125 +86,121 @@ end
 function Guild.Prototype.editSlashCommandAsync(
 	self: Guild,
 	slashCommandId: apiTypes.Snowflake,
-	slashCommand: interactionBuilder.JSON
-): future.Future<commandObject.Command>
-	return future.new(function()
+	slashCommand: builders.interactionJSON
+)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = commandsRest
+		local response = rest.commands
 			.editGuildApplicationCommandAsync(request, self.state.applicationId, self.id, slashCommandId, slashCommand)
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return commandObject.new(response)
-	end)
+		return commandObject.new(response:unwrapOk())
+	end) :: future.FutureLike<string, commandObject.Command>
 end
 
 --[[
 	Get a list of guild application commands.
 ]]
-function Guild.Prototype.getSlashCommandsAsync(
-	self: Guild,
-	withLocalizations: boolean?
-): future.Future<{ commandObject.Command }>
-	return future.new(function()
+function Guild.Prototype.getSlashCommandsAsync(self: Guild, withLocalizations: boolean?)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = commandsRest
+		local response = rest.commands
 			.getGuildApplicationCommandsAsync(request, self.state.applicationId, self.id, {
 				withLocalizations = withLocalizations,
 			})
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local commands = {}
 
-		for _, commandData in response do
+		for _, commandData in response:unwrapOk() do
 			table.insert(commands, commandObject.new(commandData))
 		end
 
 		return commands
-	end)
+	end) :: future.FutureLike<string, { commandObject.Command }>
 end
 
 --[[
 	Overwrite all guild application commands. This will skip over commands that are the same as the current commands,
 	and will not remove any existing commands.
 ]]
-function Guild.Prototype.overwriteSlashCommandsAsync(
-	self: Guild,
-	slashCommands: { interactionBuilder.JSON }
-): future.Future<{ commandObject.Command }>
-	return future.new(function()
+function Guild.Prototype.overwriteSlashCommandsAsync(self: Guild, slashCommands: { builders.interactionJSON })
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		-- fixme: casted this as any, the command object itself has extra fields as required by the other APIs
-		local status, response = commandsRest
+		local response = rest.commands
 			.bulkOverwriteGuildApplicationCommandsAsync(request, self.state.applicationId, self.id, slashCommands :: any)
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local commands = {}
 
-		for _, commandData in response do
+		for _, commandData in response:unwrapOk() do
 			table.insert(commands, commandObject.new(commandData))
 		end
 
 		return commands
-	end)
+	end) :: future.FutureLike<string, { commandObject.Command }>
 end
 
 --[[
 	Returns the guild preview object for the given id. If the user is not in the guild, then the guild must be
 	discoverable.
 ]]
-function Guild.Prototype.fetchGuildPreviewAsync(self: Guild): future.Future<preview.Preview>
-	return future.new(function()
+function Guild.Prototype.fetchGuildPreviewAsync(self: Guild)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		-- fixme: casted this as any, the command object itself has extra fields as required by the other APIs
-		local status, response = guildRest.getGuildPreviewAsync(request, self.id):await()
+		local response = rest.guild.getGuildPreviewAsync(request, self.id):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return preview.new(response)
-	end)
+		return preview.new(response:unwrapOk())
+	end) :: future.FutureLike<string, preview.Preview>
 end
 
 --[[
 	Modify a guild's settings. Requires the MANAGE_GUILD permission. Returns the updated guild object on success.
 	Fires a Guild Update Gateway event.
 ]]
-function Guild.Prototype.modifyGuildAsync(self: Guild, json: guildBuilder.JSON, reason: string?): future.Future<Guild>
-	return future.new(function()
+function Guild.Prototype.modifyGuildAsync(self: Guild, json: builders.guildJSON, reason: string?)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		-- fixme: casted this as any, the command object itself has extra fields as required by the other APIs
-		local status, response = guildRest.modifyGuildAsync(request, self.id, json, reason):await()
+		local response = rest.guild.modifyGuildAsync(request, self.id, json, reason):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		self:sync(response)
+		self:sync(response:unwrapOk())
 
 		return self
-	end)
+	end) :: future.FutureLike<string, Guild>
 end
 
 --[[
 	Delete a guild permanently. User must be owner. Returns 204 No Content on success.Fires a Guild Delete Gateway
 	event.
 ]]
-function Guild.Prototype.deleteGuildAsync(self: Guild): future.Future<nil>
-	return future.new(function()
+function Guild.Prototype.deleteGuildAsync(self: Guild)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = guildRest.deleteGuildAsync(request, self.id):await()
+		local response = rest.guild.deleteGuildAsync(request, self.id):await()
 
-		assert(status == "Fulfilled", tostring(response))
-	end)
+		assert(response:isOk(), tostring(response:unwrapErr()))
+
+		return nil
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -230,144 +211,172 @@ end
 
 	Please use explicit functions for specific channel types, for example: getTextChannelsAsync, getVoiceChannelsAsync, etc.
 ]]
-function Guild.Prototype.getChannelsAsync(self: Guild): future.Future<{ type: channelTypes.ChannelType }>
-	return future.new(function()
+function Guild.Prototype.getChannelsAsync(self: Guild)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = guildRest.getGuildChannelsAsync(request, self.id):await()
+		local response = rest.guild.getGuildChannelsAsync(request, self.id):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local channels: { unknown } = {}
 
-		for _, channelData in next, response do
+		for _, channelData in next, response:unwrapOk() do
 			table.insert(channels, constructChannelFromData(self.state, channelData))
 		end
 
-		return channels
-	end)
+		return channels :: any
+	end) :: future.FutureLike<string, { apiTypes.AbstractChannel }>
 end
 
 --[[
 	Returns a list of guild text channel objects.
 ]]
-function Guild.Prototype.getTextChannelsAsync(self: Guild): future.Future<{ guildText.GuildText }>
-	return future.new(function()
-		local channels = self:getChannelsAsync():expect(`:getChannelsAsync failed!`)
-		local textChannels: { guildText.GuildText } = {}
+function Guild.Prototype.getTextChannelsAsync(self: Guild)
+	return future.Future.new(function()
+		local channels = self:getChannelsAsync():await()
 
-		for _, channel in next, channels do
-			if channel.type ~= "GuildText" then
-				continue
+		if channels:isOk() then
+			local resolvedChannels: { guildText.GuildText } = {}
+
+			for _, channel in next, channels:unwrapOk() do
+				if channel.type ~= "GuildText" then
+					continue
+				end
+
+				table.insert(resolvedChannels, channel :: any)
 			end
 
-			table.insert(textChannels, channel :: guildText.GuildText)
+			return resolvedChannels
+		else
+			error(channels:unwrapErr())
 		end
-
-		return textChannels
-	end)
+	end) :: future.FutureLike<string, { guildText.GuildText }>
 end
 
 --[[
 	Returns a list of guild voice channel objects.
 ]]
-function Guild.Prototype.getVoiceChannelsAsync(self: Guild): future.Future<{ guildVoice.GuildVoice }>
-	return future.new(function()
-		local channels = self:getChannelsAsync():expect(`:getChannelsAsync failed!`)
-		local voiceChannels: { guildVoice.GuildVoice } = {}
+function Guild.Prototype.getVoiceChannelsAsync(self: Guild)
+	return future.Future.new(function()
+		local channels = self:getChannelsAsync():await()
 
-		for _, channel in next, channels do
-			if channel.type ~= "GuildVoice" then
-				continue
+		if channels:isOk() then
+			local resolvedChannels: { guildText.GuildText } = {}
+
+			for _, channel in next, channels:unwrapOk() do
+				if channel.type ~= "GuildVoice" then
+					continue
+				end
+
+				table.insert(resolvedChannels, channel :: any)
 			end
 
-			table.insert(voiceChannels, channel :: guildVoice.GuildVoice)
+			return resolvedChannels :: any
+		else
+			error(channels:unwrapErr())
 		end
-
-		return voiceChannels
-	end)
+	end) :: future.FutureLike<string, { guildVoice.GuildVoice }>
 end
 
 --[[
 	Returns a list of guild category channel objects.
 ]]
-function Guild.Prototype.getCategoryChannelsAsync(self: Guild): future.Future<{ guildText.GuildText }>
-	return future.new(function()
-		local channels = self:getChannelsAsync():expect(`:getChannelsAsync failed!`)
-		local categoryChannels: { guildCategory.GuildCategory } = {}
+function Guild.Prototype.getCategoryChannelsAsync(self: Guild)
+	return future.Future.new(function()
+		local channels = self:getChannelsAsync():await()
 
-		for _, channel in next, channels do
-			if channel.type ~= "GuildCategory" then
-				continue
+		if channels:isOk() then
+			local resolvedChannels: { guildText.GuildText } = {}
+
+			for _, channel in next, channels:unwrapOk() do
+				if channel.type ~= "GuildCategory" then
+					continue
+				end
+
+				table.insert(resolvedChannels, channel :: any)
 			end
 
-			table.insert(categoryChannels, channel :: guildCategory.GuildCategory)
+			return resolvedChannels :: any
+		else
+			error(channels:unwrapErr())
 		end
-
-		return categoryChannels
-	end)
+	end) :: future.FutureLike<string, { guildCategory.GuildCategory }>
 end
 
 --[[
 	Returns a list of guild announcement channel objects.
 ]]
-function Guild.Prototype.getAnnouncementChannelsAsync(
-	self: Guild
-): future.Future<{ guildAnnouncement.GuildAnnouncement }>
-	return future.new(function()
-		local channels = self:getChannelsAsync():expect(`:getChannelsAsync failed!`)
-		local announcementChannels: { guildAnnouncement.GuildAnnouncement } = {}
+function Guild.Prototype.getAnnouncementChannelsAsync(self: Guild)
+	return future.Future.new(function()
+		local channels = self:getChannelsAsync():await()
 
-		for _, channel in next, channels do
-			if channel.type ~= "GuildCategory" then
-				continue
+		if channels:isOk() then
+			local resolvedChannels: { guildText.GuildText } = {}
+
+			for _, channel in next, channels:unwrapOk() do
+				if channel.type ~= "GuildAnnouncement" then
+					continue
+				end
+
+				table.insert(resolvedChannels, channel :: any)
 			end
 
-			table.insert(announcementChannels, channel :: guildAnnouncement.GuildAnnouncement)
+			return resolvedChannels :: any
+		else
+			error(channels:unwrapErr())
 		end
-
-		return announcementChannels
-	end)
+	end) :: future.FutureLike<string, { guildAnnouncement.GuildAnnouncement }>
 end
 
 --[[
 	Returns a list of guild stage voice channel objects.
 ]]
-function Guild.Prototype.getStageVoiceChannelsAsync(self: Guild): future.Future<{ guildStageVoice.GuildStageVoice }>
-	return future.new(function()
-		local channels = self:getChannelsAsync():expect(`:getChannelsAsync failed!`)
-		local stageVoiceChannels: { guildStageVoice.GuildStageVoice } = {}
+function Guild.Prototype.getStageVoiceChannelsAsync(self: Guild)
+	return future.Future.new(function()
+		local channels = self:getChannelsAsync():await()
 
-		for _, channel in next, channels do
-			if channel.type ~= "GuildStageVoice" then
-				continue
+		if channels:isOk() then
+			local resolvedChannels: { guildText.GuildText } = {}
+
+			for _, channel in next, channels:unwrapOk() do
+				if channel.type ~= "GuildStageVoice" then
+					continue
+				end
+
+				table.insert(resolvedChannels, channel :: any)
 			end
 
-			table.insert(stageVoiceChannels, channel :: guildStageVoice.GuildStageVoice)
+			return resolvedChannels :: any
+		else
+			error(channels:unwrapErr())
 		end
-
-		return stageVoiceChannels
-	end)
+	end) :: future.FutureLike<string, { guildStageVoice.GuildStageVoice }>
 end
 
 --[[
 	Returns a list of guild directory channel objects.
 ]]
-function Guild.Prototype.getDirectoryChannelsAsync(self: Guild): future.Future<{ guildDirectory.GuildDirectory }>
-	return future.new(function()
-		local channels = self:getChannelsAsync():expect(`:getChannelsAsync failed!`)
-		local directoryChannels: { guildDirectory.GuildDirectory } = {}
+function Guild.Prototype.getDirectoryChannelsAsync(self: Guild)
+	return future.Future.new(function()
+		local channels = self:getChannelsAsync():await()
 
-		for _, channel in next, channels do
-			if channel.type ~= "GuildDirectory" then
-				continue
+		if channels:isOk() then
+			local resolvedChannels: { guildText.GuildText } = {}
+
+			for _, channel in next, channels:unwrapOk() do
+				if channel.type ~= "GuildDirectory" then
+					continue
+				end
+
+				table.insert(resolvedChannels, channel :: any)
 			end
 
-			table.insert(directoryChannels, channel :: guildDirectory.GuildDirectory)
+			return resolvedChannels :: any
+		else
+			error(channels:unwrapErr())
 		end
-
-		return directoryChannels
-	end)
+	end) :: future.FutureLike<string, { guildDirectory.GuildDirectory }>
 end
 
 --[[
@@ -380,20 +389,16 @@ end
 	
 	Fires a Channel Create Gateway event.
 ]]
-function Guild.Prototype.createChannelAsync<T>(
-	self: Guild,
-	json: channelBuilder.JSON,
-	reason: string?
-): future.Future<{ T }>
-	return future.new(function()
+function Guild.Prototype.createChannelAsync<T>(self: Guild, json: builders.channelJSON, reason: string?)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = guildRest.createGuildChannelAsync(request, self.id, json, reason):await()
+		local response = rest.guild.createGuildChannelAsync(request, self.id, json, reason):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return constructChannelFromData(self.state, response)
-	end)
+		return constructChannelFromData(self.state, response:unwrapOk()) :: any
+	end) :: future.FutureLike<string, { apiTypes.AbstractChannel }>
 end
 
 --[[
@@ -405,178 +410,165 @@ end
 
 	Please use explicit functions for specific channel types, for example: getMediaThreadsAsync, getAnnouncementThreadsAsync, etc.
 ]]
-function Guild.Prototype.getThreadsAsync(self: Guild): future.Future<{ type: channelTypes.ChannelType }>
-	return future.new(function()
+function Guild.Prototype.getThreadsAsync(self: Guild)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = guildRest.listActiveGuildThreadsAsync(request, self.id):await()
+		local response = rest.guild.listActiveGuildThreadsAsync(request, self.id):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local channels: { unknown } = {}
 
-		for _, channelData in next, response.threads do
+		for _, channelData in next, response:unwrapOk().threads do
 			table.insert(channels, constructChannelFromData(self.state, channelData))
 		end
 
-		return channels
-	end)
+		return channels :: any
+	end) :: future.FutureLike<string, { publicThread.Public | privateThread.Private }>
 end
 
 --[[
 	Returns a list of guild announcement thread objects.
 ]]
-function Guild.Prototype.getAnnouncementThreadsAsync(self: Guild): future.Future<{ announcementThread.Announcement }>
-	return future.new(function()
-		local channels = self:getThreadsAsync():expect(`:getThreadsAsync failed!`)
-		local announcementThreads: { announcementThread.Announcement } = {}
+function Guild.Prototype.getAnnouncementThreadsAsync(self: Guild)
+	return future.Future.new(function()
+		local channels = self:getChannelsAsync():await()
 
-		for _, channel in next, channels do
-			if channel.type ~= "AnnouncementThread" then
-				continue
+		if channels:isOk() then
+			local resolvedChannels: { guildText.GuildText } = {}
+
+			for _, channel in next, channels:unwrapOk() do
+				if channel.type ~= "AnnouncementThread" then
+					continue
+				end
+
+				table.insert(resolvedChannels, channel :: any)
 			end
 
-			table.insert(announcementThreads, channel :: announcementThread.Announcement)
+			return resolvedChannels :: any
+		else
+			error(channels:unwrapErr())
 		end
-
-		return announcementThreads
-	end)
+	end) :: future.FutureLike<string, { announcementThread.Announcement }>
 end
 
 --[[
 	Returns a list of public guild thread objects.
 ]]
-function Guild.Prototype.getPublicThreadsAsync(self: Guild): future.Future<{ publicThread.Public }>
-	return future.new(function()
-		local channels = self:getThreadsAsync():expect(`:getThreadsAsync failed!`)
-		local publicThreads: { publicThread.Public } = {}
+function Guild.Prototype.getPublicThreadsAsync(self: Guild)
+	return future.Future.new(function()
+		local channels = self:getChannelsAsync():await()
 
-		for _, channel in next, channels do
-			if channel.type ~= "PublicThread" then
-				continue
+		if channels:isOk() then
+			local resolvedChannels: { guildText.GuildText } = {}
+
+			for _, channel in next, channels:unwrapOk() do
+				if channel.type ~= "PublicThread" then
+					continue
+				end
+
+				table.insert(resolvedChannels, channel :: any)
 			end
 
-			table.insert(publicThreads, channel :: publicThread.Public)
+			return resolvedChannels :: any
+		else
+			error(channels:unwrapErr())
 		end
-
-		return publicThreads
-	end)
+	end) :: future.FutureLike<string, { publicThread.Public }>
 end
 
 --[[
 	Returns a list of private guild thread objects.
 ]]
-function Guild.Prototype.getPrivateThreadsAsync(self: Guild): future.Future<{ privateThread.Private }>
-	return future.new(function()
-		local channels = self:getThreadsAsync():expect(`:getThreadsAsync failed!`)
-		local privateThreads: { privateThread.Private } = {}
+function Guild.Prototype.getPrivateThreadsAsync(self: Guild)
+	return future.Future.new(function()
+		local channels = self:getChannelsAsync():await()
 
-		for _, channel in next, channels do
-			if channel.type ~= "PrivateThread" then
-				continue
+		if channels:isOk() then
+			local resolvedChannels: { guildText.GuildText } = {}
+
+			for _, channel in next, channels:unwrapOk() do
+				if channel.type ~= "PrivateThread" then
+					continue
+				end
+
+				table.insert(resolvedChannels, channel :: any)
 			end
 
-			table.insert(privateThreads, channel :: privateThread.Private)
+			return resolvedChannels :: any
+		else
+			error(channels:unwrapErr())
 		end
-
-		return privateThreads
-	end)
-end
-
---[[
-	Returns a list of private guild thread objects.
-]]
-function Guild.Prototype.getPrivateThreadsAsync(self: Guild): future.Future<{ privateThread.Private }>
-	return future.new(function()
-		local channels = self:getThreadsAsync():expect(`:getThreadsAsync failed!`)
-		local privateThreads: { privateThread.Private } = {}
-
-		for _, channel in next, channels do
-			if channel.type ~= "GuildDirectory" then
-				continue
-			end
-
-			table.insert(privateThreads, channel :: privateThread.Private)
-		end
-
-		return privateThreads
-	end)
+	end) :: future.FutureLike<string, { privateThread.Private }>
 end
 
 --[[
 	Returns a guild member object for the specified user.
 ]]
-function Guild.Prototype.getGuildMemberAsync(self: Guild, userId: string): future.Future<member.Member>
-	return future.new(function()
+function Guild.Prototype.getGuildMemberAsync(self: Guild, userId: string)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		-- fixme: casted this as any, the command object itself has extra fields as required by the other APIs
-		local status, response = guildRest.getGuildMemberAsync(request, self.id, userId):await()
+		local response = rest.guild.getGuildMemberAsync(request, self.id, userId):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return member.new(self.state, self.id, response)
-	end)
+		return member.new(self.state, self.id, response:unwrapOk())
+	end) :: future.FutureLike<string, member.Member>
 end
 
 --[[
 	Returns a list of guild member objects that are members of the guild.
 ]]
-function Guild.Prototype.listGuildMembersAsync(
-	self: Guild,
-	lastSnowflake: string?,
-	limit: number?
-): future.Future<{ member.Member }>
-	return future.new(function()
+function Guild.Prototype.listGuildMembersAsync(self: Guild, lastSnowflake: string?, limit: number?)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = guildRest
+		local response = rest.guild
 			.listGuildMembersAsync(request, self.id, {
 				limit = limit,
 				after = lastSnowflake,
 			})
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local members = {}
 
-		for _, memberData in response do
+		for _, memberData in response:unwrapOk() do
 			table.insert(members, member.new(self.state, self.id, memberData))
 		end
 
 		return members
-	end)
+	end) :: future.FutureLike<string, { member.Member }>
 end
 
 --[[
 	Returns a list of guild member objects whose username or nickname starts with a provided string.
 ]]
-function Guild.Prototype.searchGuildMembersAsync(
-	self: Guild,
-	query: string,
-	limit: number?
-): future.Future<{ member.Member }>
-	return future.new(function()
+function Guild.Prototype.searchGuildMembersAsync(self: Guild, query: string, limit: number?)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = guildRest
+		local response = rest.guild
 			.searchGuildMembersAsync(request, self.id, {
 				query = query,
 				limit = limit,
 			})
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local members = {}
 
-		for _, memberData in response do
+		for _, memberData in response:unwrapOk() do
 			table.insert(members, member.new(self.state, self.id, memberData))
 		end
 
 		return members
-	end)
+	end) :: future.FutureLike<string, { member.Member }>
 end
 
 --[[
@@ -590,16 +582,15 @@ function Guild.Prototype.addGuildMemberAsync(
 	self: Guild,
 	userId: apiTypes.Snowflake,
 	accessToken: string,
-
 	nickname: string?,
 	roles: { apiTypes.Snowflake }?,
 	muted: boolean?,
 	deafened: boolean?
-): future.Future<member.Member?>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = guildRest
+		local response = rest.guild
 			.addGuildMemberAsync(request, self.id, userId, {
 				access_token = accessToken,
 				nick = nickname,
@@ -609,33 +600,31 @@ function Guild.Prototype.addGuildMemberAsync(
 			})
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		if response then
-			return member.new(self.state, self.id, response)
+		local data = response:unwrapOk()
+
+		if data then
+			return member.new(self.state, self.id, data) :: any
+		else
+			return nil :: any
 		end
-
-		return
-	end)
+	end) :: future.FutureLike<string, member.Member?>
 end
 
 --[[
 	Removes a role from a guild member. Requires the MANAGE_ROLES permission.
 ]]
-function Guild.Prototype.kickGuildMemberAsync(
-	self: Guild,
-	userId: apiTypes.Snowflake,
-	reason: string?
-): future.Future<nil>
-	return future.new(function()
+function Guild.Prototype.kickGuildMemberAsync(self: Guild, userId: apiTypes.Snowflake, reason: string?)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = guildRest.removeGuildMemberAsync(request, self.id, userId, reason):await()
+		local response = rest.guild.removeGuildMemberAsync(request, self.id, userId, reason):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return
-	end)
+		return nil
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -647,8 +636,8 @@ function Guild.Prototype.banGuildMemberAsync(
 	reason: string?,
 	deleteMessageDays: number?,
 	deleteMessageSeconds: number?
-): future.Future<nil>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		if deleteMessageSeconds then
@@ -661,17 +650,17 @@ function Guild.Prototype.banGuildMemberAsync(
 			assert(deleteMessageDays > 0, "deleteMessageSeconds must be greater than 0")
 		end
 
-		local status, response = guildRest
+		local response = rest.guild
 			.createGuildBanAsync(request, self.id, userId, {
 				delete_message_days = deleteMessageDays,
 				delete_message_seconds = deleteMessageSeconds,
 			}, reason)
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return
-	end)
+		return nil
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -682,31 +671,37 @@ function Guild.Prototype.bulkBanGuildMembersAsync(
 	userIds: { apiTypes.Snowflake },
 	reason: string?,
 	deleteMessageSeconds: number?
-): future.Future<{ failedUsers: { apiTypes.Snowflake }, bannedUsers: { apiTypes.Snowflake } }>
-	return future.new(function()
-		local request = self.state.rest:newRequest()
+): future.Future<
+	string,
+	{ failedUsers: { apiTypes.Snowflake }, bannedUsers: { apiTypes.Snowflake } }
+>
+	return future.Future.new(
+			function()
+				local request = self.state.rest:newRequest()
 
-		if deleteMessageSeconds then
-			assert(deleteMessageSeconds < 604800, "deleteMessageSeconds must be less than 604800")
-			assert(deleteMessageSeconds > 0, "deleteMessageSeconds must be greater than 0")
-		end
+				if deleteMessageSeconds then
+					assert(deleteMessageSeconds < 604800, "deleteMessageSeconds must be less than 604800")
+					assert(deleteMessageSeconds > 0, "deleteMessageSeconds must be greater than 0")
+				end
 
-		local status, response = guildRest
-			.bulkGuildBanAsync(request, self.id, {
-				user_ids = userIds,
-				delete_message_seconds = deleteMessageSeconds,
-			}, reason)
-			:await()
+				local response = rest.guild
+					.bulkGuildBanAsync(request, self.id, {
+						user_ids = userIds,
+						delete_message_seconds = deleteMessageSeconds,
+					}, reason)
+					:await()
 
-		assert(status == "Fulfilled", tostring(response))
+				assert(response:isOk(), tostring(response:unwrapErr()))
 
-		local returnedValue = {}
+				local data = response:unwrapOk()
+				local returnedValue = {}
 
-		returnedValue.bannedUsers = response.banned_users
-		returnedValue.failedUsers = response.failed_users
+				returnedValue.bannedUsers = data.banned_users
+				returnedValue.failedUsers = data.failed_users
 
-		return returnedValue
-	end)
+				return returnedValue
+			end
+		) :: future.FutureLike<string, { bannedUsers: { apiTypes.Snowflake }, failedUsers: { apiTypes.Snowflake } }>
 end
 
 --[[
@@ -717,11 +712,11 @@ function Guild.Prototype.getGuildBansAsync(
 	limit: number?,
 	before: apiTypes.Snowflake?,
 	after: apiTypes.Snowflake?
-): future.Future<{ ban.Ban }>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = guildRest
+		local response = rest.guild
 			.getGuildBansAsync(request, self.id, {
 				limit = limit,
 				before = before,
@@ -729,113 +724,107 @@ function Guild.Prototype.getGuildBansAsync(
 			})
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local bans = {}
 
-		for _, banData in response do
-			table.insert(bans, ban.new(banData))
+		for _, banData in response:unwrapOk() do
+			table.insert(bans, ban.new(self.state, self.id, banData))
 		end
 
 		return bans
-	end)
+	end) :: future.FutureLike<string, { ban.Ban }>
 end
 
 --[[
 	Returns a ban object for the given user or a 404 not found if the ban cannot be found.
 ]]
-function Guild.Prototype.getGuildBanAsync(self: Guild, userId: apiTypes.Snowflake): future.Future<ban.Ban?>
-	return future.new(function()
+function Guild.Prototype.getGuildBanAsync(self: Guild, userId: apiTypes.Snowflake)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = guildRest.getGuildBanAsync(request, self.id, userId):await()
+		local response = rest.guild.getGuildBanAsync(request, self.id, userId):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		if response then
-			return ban.new(response)
+		local data = response:unwrapOk()
+
+		if data then
+			return ban.new(self.state, self.id, data) :: any
+		else
+			return nil :: any
 		end
-
-		return
-	end)
+	end) :: future.FutureLike<string, ban.Ban?>
 end
 
 --[[
 	Returns a list of role objects for the guild.
 ]]
-function Guild.Prototype.getGuildRolesAsync(self: Guild): future.Future<{ role.Role }>
-	return future.new(function()
+function Guild.Prototype.getGuildRolesAsync(self: Guild)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = guildRest.getGuildRolesAsync(request, self.id):await()
+		local response = rest.guild.getGuildRolesAsync(request, self.id):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local roles = {}
 
-		for _, roleData in next, response do
+		for _, roleData in next, response:unwrapOk() do
 			table.insert(roles, role.new(self.state, self.id, roleData))
 		end
 
 		return roles
-	end)
+	end) :: future.FutureLike<string, { role.Role }>
 end
 
 --[[
 	Returns a role object for the specified role.
 ]]
-function Guild.Prototype.getGuildRoleAsync(self: Guild, roleId: apiTypes.Snowflake): future.Future<role.Role>
-	return future.new(function()
+function Guild.Prototype.getGuildRoleAsync(self: Guild, roleId: apiTypes.Snowflake)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = guildRest.getGuildRoleAsync(request, self.id, roleId):await()
+		local response = rest.guild.getGuildRoleAsync(request, self.id, roleId):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return role.new(self.state, self.id, response)
-	end)
+		return role.new(self.state, self.id, response:unwrapOk())
+	end) :: future.FutureLike<string, role.Role>
 end
 
 --[[
 	Create a new role for the guild. Requires the MANAGE_ROLES permission. Returns the new role object on success
 ]]
-function Guild.Prototype.createGuildRoleAsync(
-	self: Guild,
-	roleJson: roleBuilder.JSON,
-	reason: string?
-): future.Future<role.Role>
-	return future.new(function()
+function Guild.Prototype.createGuildRoleAsync(self: Guild, roleJson: builders.roleJSON, reason: string?)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = guildRest.createGuildRoleAsync(request, self.id, roleJson, reason):await()
+		local response = rest.guild.createGuildRoleAsync(request, self.id, roleJson, reason):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return role.new(self.state, self.id, response)
-	end)
+		return role.new(self.state, self.id, response:unwrapOk())
+	end) :: future.FutureLike<string, role.Role>
 end
 
 --[[
 	Modify a guild's MFA level. Requires guild ownership. Returns the updated level on success.
 ]]
-function Guild.Prototype.setGuildMFALevelAsync(
-	self: Guild,
-	mfaLevel: guildTypes.MFALevel,
-	reason: string?
-): future.Future<guildTypes.MFALevel>
-	return future.new(function()
+function Guild.Prototype.setGuildMFALevelAsync(self: Guild, mfaLevel: apiTypes.MFALevel, reason: string?)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = guildRest
+		local response = rest.guild
 			.modifyGuildMFALevelAsync(request, self.id, {
-				level = guildTypes.MFALevel[mfaLevel],
+				level = apiTypes.guild.MFALevel[mfaLevel],
 			}, reason)
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return guildTypes.MFALevel[response]
-	end)
+		return apiTypes.guild.MFALevel[response:unwrapOk()]
+	end) :: future.FutureLike<string, apiTypes.MFALevel>
 end
 
 --[[
@@ -846,25 +835,21 @@ end
 	providing the include_roles parameter. Any inactive user that has a subset of the provided role(s) will be
 	counted in the prune and users with additional roles will not.
 ]]
-function Guild.Prototype.getGuildPruneCountAsync(
-	self: Guild,
-	days: number?,
-	includedRoles: { apiTypes.Snowflake }?
-): future.Future<number>
-	return future.new(function()
+function Guild.Prototype.getGuildPruneCountAsync(self: Guild, days: number?, includedRoles: { apiTypes.Snowflake }?)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = guildRest
+		local response = rest.guild
 			.getGuildPruneCountAsync(request, self.id, {
 				days = days or 7,
 				includeRoles = table.concat(includedRoles or {}, ","),
 			})
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.pruned
-	end)
+		return response:unwrapOk().pruned
+	end) :: future.FutureLike<string, number>
 end
 
 --[[
@@ -883,11 +868,11 @@ function Guild.Prototype.beginGuildPruneAsync(
 	returnPruneCount: boolean?,
 	includedRoles: { apiTypes.Snowflake }?,
 	reason: string?
-): future.Future<number>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = guildRest
+		local response = rest.guild
 			.beginGuildPruneAsync(request, self.id, {
 				days = days or 7,
 				compute_prune_count = returnPruneCount or true,
@@ -896,77 +881,77 @@ function Guild.Prototype.beginGuildPruneAsync(
 			})
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		if returnPruneCount then
-			return response.pruned
+			return response:unwrapOk().pruned
 		else
 			return 0
 		end
-	end)
+	end) :: future.FutureLike<string, number>
 end
 
 --[[
 	Returns an array of voice region objects that can be used when setting a voice or stage channel's rtc_region.
 ]]
-function Guild.Prototype.getGuildVoiceRegionsAsync(self: Guild): future.Future<{ voiceRegion.VoiceRegion }>
-	return future.new(function()
+function Guild.Prototype.getGuildVoiceRegionsAsync(self: Guild)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = guildRest.getGuildVoiceRegionsAsync(request, self.id):await()
+		local response = rest.guild.getGuildVoiceRegionsAsync(request, self.id):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local voiceRegions = {}
 
-		for _, voiceRegionData in response do
+		for _, voiceRegionData in response:unwrapOk() do
 			table.insert(voiceRegions, voiceRegion.new(voiceRegionData))
 		end
 
 		return voiceRegions
-	end)
+	end) :: future.FutureLike<string, { voiceRegion.VoiceRegion }>
 end
 
 --[[
 	Returns a list of invite objects (with invite metadata) for the guild. Requires the MANAGE_GUILD permission.
 ]]
-function Guild.Prototype.getGuildInvitesAsync(self: Guild): future.Future<{ invite.Invite }>
-	return future.new(function()
+function Guild.Prototype.getGuildInvitesAsync(self: Guild)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = guildRest.getGuildInvitesAsync(request, self.id):await()
+		local response = rest.guild.getGuildInvitesAsync(request, self.id):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local invites = {}
 
-		for _, inviteData in response do
+		for _, inviteData in response:unwrapOk() do
 			table.insert(invites, invite.new(self.state, inviteData))
 		end
 
 		return invites
-	end)
+	end) :: future.FutureLike<string, { invite.Invite }>
 end
 
 --[[
 	Returns a list of integration objects for the guild. Requires the MANAGE_GUILD permission.
 ]]
-function Guild.Prototype.getGuildIntegrationsAsync(self: Guild): future.Future<{ integration.Integration }>
-	return future.new(function()
+function Guild.Prototype.getGuildIntegrationsAsync(self: Guild)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = guildRest.getGuildIntegrationsAsync(request, self.id):await()
+		local response = rest.guild.getGuildIntegrationsAsync(request, self.id):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local integrations = {}
 
-		for _, integrationData in response do
+		for _, integrationData in response:unwrapOk() do
 			table.insert(integrations, integration.new(integrationData))
 		end
 
 		return integrations
-	end)
+	end) :: future.FutureLike<string, { integration.Integration }>
 end
 
 --[[
@@ -975,83 +960,79 @@ end
 	
 	Requires the MANAGE_GUILD permission.
 ]]
-function Guild.Prototype.deleteGuildIntegrationAsync(self: Guild, integrationId: string): future.Future<nil>
-	return future.new(function()
+function Guild.Prototype.deleteGuildIntegrationAsync(self: Guild, integrationId: string)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = guildRest.deleteGuildIntegrationAsync(request, self.id, integrationId):await()
+		local response = rest.guild.deleteGuildIntegrationAsync(request, self.id, integrationId):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return
-	end)
+		return nil
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
 	Returns a guild widget settings object. Requires the MANAGE_GUILD permission.
 ]]
-function Guild.Prototype.getGuildWidgetSettingsAsync(self: Guild): future.Future<widgetSettings.WidgetSettings>
-	return future.new(function()
+function Guild.Prototype.getGuildWidgetSettingsAsync(self: Guild)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = guildRest.getGuildWidgetSettingsAsync(request, self.id):await()
+		local response = rest.guild.getGuildWidgetSettingsAsync(request, self.id):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return widgetSettings.new(response)
-	end)
+		return widgetSettings.new(response:unwrapOk())
+	end) :: future.FutureLike<string, widgetSettings.WidgetSettings>
 end
 
 --[[
 	Modify a guild widget settings object for the guild. All attributes may be passed in with JSON and modified.
 	Requires the MANAGE_GUILD permission. Returns the updated guild widget settings object. 
 ]]
-function Guild.Prototype.modifyGuildWidgetAsync(
-	self: Guild,
-	json: widgetSettingsBuilder.JSON,
-	reason: string?
-): future.Future<widgetSettings.WidgetSettings>
-	return future.new(function()
+function Guild.Prototype.modifyGuildWidgetAsync(self: Guild, json: builders.widgetSettingsJSON, reason: string?)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = guildRest.modifyGuildWidgetAsync(request, self.id, json, reason):await()
+		local response = rest.guild.modifyGuildWidgetAsync(request, self.id, json, reason):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return widgetSettings.new(response)
-	end)
+		return widgetSettings.new(response:unwrapOk())
+	end) :: future.FutureLike<string, widgetSettings.WidgetSettings>
 end
 
 --[[
 	Returns the widget for the guild. Fires an Invite Create Gateway event when an invite channel is defined
 	and a new Invite is generated.
 ]]
-function Guild.Prototype.getGuildWidgetAsync(self: Guild): future.Future<widget.Widget>
-	return future.new(function()
+function Guild.Prototype.getGuildWidgetAsync(self: Guild)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = guildRest.getGuildWidgetAsync(request, self.id):await()
+		local response = rest.guild.getGuildWidgetAsync(request, self.id):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return widget.new(self.state, response)
-	end)
+		return widget.new(self.state, response:unwrapOk())
+	end) :: future.FutureLike<string, widget.Widget>
 end
 
 --[[
 	Returns a partial invite object for guilds with that feature enabled. Requires the MANAGE_GUILD permission.
 	code will be null if a vanity url for the guild is not set.
 ]]
-function Guild.Prototype.getGuildVanityUrlAsync(self: Guild): future.Future<vanityUrl.VanityUrl>
-	return future.new(function()
+function Guild.Prototype.getGuildVanityUrlAsync(self: Guild)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = guildRest.getGuildVanityURLAsync(request, self.id):await()
+		local response = rest.guild.getGuildVanityURLAsync(request, self.id):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return vanityUrl.new(response)
-	end)
+		return vanityUrl.new(response:unwrapOk())
+	end) :: future.FutureLike<string, vanityUrl.VanityUrl>
 end
 
 --[[
@@ -1060,20 +1041,20 @@ end
 function Guild.Prototype.getGuildWidgetImageAsync(
 	self: Guild,
 	style: "shield" | "banner1" | "banner2" | "banner3" | "banner4"
-): future.Future<string>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = guildRest
+		local response = rest.guild
 			.getGuildWidgetImageAsync(request, self.id, {
 				style = style,
 			})
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response
-	end)
+		return response:unwrapOk()
+	end) :: future.FutureLike<string, string>
 end
 
 --[[
@@ -1081,70 +1062,62 @@ end
 	
 	the MANAGE_GUILD permission is required.
 ]]
-function Guild.Prototype.getGuildWelcomeScreenAsync(self: Guild): future.Future<welcomeScreen.WelcomeScreen>
-	return future.new(function()
+function Guild.Prototype.getGuildWelcomeScreenAsync(self: Guild)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = guildRest.getGuildWelcomeScreenAsync(request, self.id):await()
+		local response = rest.guild.getGuildWelcomeScreenAsync(request, self.id):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return welcomeScreen.new(response)
-	end)
+		return welcomeScreen.new(response:unwrapOk())
+	end) :: future.FutureLike<string, welcomeScreen.WelcomeScreen>
 end
 
 --[[
 	Modify the guild's Welcome Screen. Requires the MANAGE_GUILD permission.
 ]]
-function Guild.Prototype.modifyGuildWelcomeScreenAsync(
-	self: Guild,
-	json: welcomeScreenBuilder.JSON,
-	reason: string?
-): future.Future<welcomeScreen.WelcomeScreen>
-	return future.new(function()
+function Guild.Prototype.modifyGuildWelcomeScreenAsync(self: Guild, json: builders.welcomeScreenJSON, reason: string?)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = guildRest.modifyGuildWelcomeScreenAsync(request, self.id, json, reason):await()
+		local response = rest.guild.modifyGuildWelcomeScreenAsync(request, self.id, json, reason):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return welcomeScreen.new(response)
-	end)
+		return welcomeScreen.new(response:unwrapOk())
+	end) :: future.FutureLike<string, welcomeScreen.WelcomeScreen>
 end
 
 --[[
 	Returns the Onboarding object for the guild.
 ]]
-function Guild.Prototype.getGuildOnboardingAsync(self: Guild): future.Future<onboarding.Onboarding>
-	return future.new(function()
+function Guild.Prototype.getGuildOnboardingAsync(self: Guild)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = guildRest.getGuildOnboardingAsync(request, self.id):await()
+		local response = rest.guild.getGuildOnboardingAsync(request, self.id):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return onboarding.new(response)
-	end)
+		return onboarding.new(response:unwrapOk())
+	end) :: future.FutureLike<string, onboarding.Onboarding>
 end
 
 --[[
 	Modifies the onboarding configuration of the guild. Returns a 200 with the Onboarding object for the guild.
 	Requires the MANAGE_GUILD and MANAGE_ROLES permissions.
 ]]
-function Guild.Prototype.modifyGuildOnboardingAsync(
-	self: Guild,
-	json: onboardingBuilder.JSON,
-	reason: string?
-): future.Future<onboarding.Onboarding>
-	return future.new(function()
+function Guild.Prototype.modifyGuildOnboardingAsync(self: Guild, json: builders.onboardingJSON, reason: string?)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = guildRest.modifyGuildOnboardingAsync(request, self.id, json, reason):await()
+		local response = rest.guild.modifyGuildOnboardingAsync(request, self.id, json, reason):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return onboarding.new(response)
-	end)
+		return onboarding.new(response:unwrapOk())
+	end) :: future.FutureLike<string, onboarding.Onboarding>
 end
 
 function Guild.Prototype.sync(self: Guild, guildData: apiTypes.GuildObject)
@@ -1172,12 +1145,13 @@ function Guild.Prototype.sync(self: Guild, guildData: apiTypes.GuildObject)
 	self.roles = rolesArray
 	self.emojis = emojiArray
 
-	self.verificationLevel = guildTypes.VerificationLevel[guildData.verification_level]
-	self.defaultMessageNotifications = guildTypes.DefaultMessageNotification[guildData.default_message_notifications]
-	self.explicitContentFilter = guildTypes.ExplicitContentFilterLevel[guildData.explicit_content_filter]
-	self.premiumTier = guildTypes.PremiumTier[guildData.premium_tier]
-	self.nsfwLevel = guildTypes.NSFWLevel[guildData.nsfw_level]
-	self.mfaLevel = guildTypes.MFALevel[guildData.mfa_level]
+	self.verificationLevel = apiTypes.guild.VerificationLevel[guildData.verification_level]
+	self.defaultMessageNotifications =
+		apiTypes.guild.DefaultMessageNotification[guildData.default_message_notifications]
+	self.explicitContentFilter = apiTypes.guild.ExplicitContentFilterLevel[guildData.explicit_content_filter]
+	self.premiumTier = apiTypes.guild.PremiumTier[guildData.premium_tier]
+	self.nsfwLevel = apiTypes.guild.NSFWLevel[guildData.nsfw_level]
+	self.mfaLevel = apiTypes.guild.MFALevel[guildData.mfa_level]
 
 	self.systemChannelFlags = guildData.system_channel_flags
 		and systemChannelBitflag.new(guildData.system_channel_flags)
@@ -1255,11 +1229,11 @@ export type Guild = typeof(Guild.Prototype) & {
 	afkTimeout: number?,
 	widgetEnabled: boolean?,
 	widgetChannelId: apiTypes.Snowflake?,
-	verificationLevel: guildTypes.VerificationLevel,
-	defaultMessageNotifications: guildTypes.DefaultMessageNotification,
-	explicitContentFilter: guildTypes.ExplicitContentFilterLevel,
+	verificationLevel: apiTypes.VerificationLevel,
+	defaultMessageNotifications: apiTypes.DefaultMessageNotification,
+	explicitContentFilter: apiTypes.ExplicitContentFilterLevel,
 	features: { apiTypes.GuildFeature }?,
-	mfaLevel: guildTypes.MFALevel?,
+	mfaLevel: apiTypes.MFALevel?,
 	applicationId: apiTypes.Snowflake?,
 	systemChannelId: apiTypes.Snowflake?,
 	systemChannelFlags: systemChannelBitflag.SystemChannelBitflag?,
@@ -1269,7 +1243,7 @@ export type Guild = typeof(Guild.Prototype) & {
 	vanityUrlCode: string?,
 	description: string?,
 	banner: string?,
-	premiumTier: guildTypes.PremiumTier,
+	premiumTier: apiTypes.PremiumTier,
 	premiumSubscriptionCount: number?,
 	preferredLocale: string?,
 	publicUpdatesChannelId: apiTypes.Snowflake?,
@@ -1277,7 +1251,7 @@ export type Guild = typeof(Guild.Prototype) & {
 	maxStageVideoChannelUsers: number?,
 	approximateMemberCount: number?,
 	approximatePresenceCount: number?,
-	nsfwLevel: guildTypes.NSFWLevel,
+	nsfwLevel: apiTypes.NSFWLevel,
 	premiumProgressBarEnabled: boolean?,
 	safetyAlertsChannelId: apiTypes.Snowflake?,
 }

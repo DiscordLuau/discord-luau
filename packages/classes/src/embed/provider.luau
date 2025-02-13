@@ -4,7 +4,7 @@
 	https://discord.com/developers/docs/resources/message#embed-object-embed-provider-structure
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
+local apiTypes = require("../../lune_packages/api_types")
 
 local Provider = {}
 

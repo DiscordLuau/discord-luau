@@ -4,12 +4,11 @@
 	https://discord.com/developers/docs/interactions/receiving-and-responding#message-interaction-object-message-interaction-structure
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
-local interactionTypes = require("@api-types/interaction")
+local apiTypes = require("../../lune_packages/api_types")
+local state = require("../../lune_packages/state")
 
-local user = require("@classes/user")
-local member = require("@classes/guild/member")
-local state = require("@classes/state")
+local user = require("../user")
+local member = require("../guild/member")
 
 local Interaction = {}
 
@@ -17,7 +16,7 @@ Interaction.Interface = {}
 Interaction.Prototype = {}
 
 function Interaction.Prototype.sync(self: Interaction, interactionData: apiTypes.MessageInteractionObject)
-	self.type = interactionTypes.InteractionType[interactionData.type]
+	self.type = apiTypes.interaction.InteractionType[interactionData.type]
 
 	self.user = user.new(interactionData.user)
 	self.member = interactionData.member and member.new(self.state, "interaction", interactionData.member)
@@ -43,7 +42,7 @@ export type Interaction = typeof(Interaction.Prototype) & {
 	state: state.State,
 
 	id: apiTypes.Snowflake,
-	type: interactionTypes.InteractionType,
+	type: apiTypes.InteractionType,
 	name: string,
 	user: user.User,
 	member: member.Member?,

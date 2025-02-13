@@ -4,9 +4,9 @@
 	https://discord.com/developers/docs/topics/permissions
 ]]
 
-local permissionTypes = require("@api-types/permission")
+local apiTypes = require("../lune_packages/api_types")
 
-local bit = require("@vendor/bit")
+local bit = require("../luau_packages/bit")
 
 local Permission = {}
 
@@ -16,17 +16,18 @@ Permission.Prototype = {}
 --[[
 	Responsible for querying what permission a discord permission bitflag has.
 ]]
-function Permission.Prototype.hasPermission(self: Permission, permission: permissionTypes.Permissions)
-	return bit.band(self.permission, permissionTypes.Permissions[permission]) == permissionTypes.Permissions[permission]
+function Permission.Prototype.hasPermission(self: Permission, permission: apiTypes.Permissions)
+	return bit.band(self.permission, apiTypes.permission.Permissions[permission])
+		== apiTypes.permission.Permissions[permission]
 end
 
 --[[
 	Generates an array of permissions that are apart of this bitflag.
 ]]
-function Permission.Prototype.toList(self: Permission): { permissionTypes.Permissions }
-	local permissions: { permissionTypes.Permissions } = {}
+function Permission.Prototype.toList(self: Permission): { apiTypes.Permissions }
+	local permissions: { apiTypes.Permissions } = {}
 
-	for key: permissionTypes.Permissions in next, permissionTypes.Permissions do
+	for key: apiTypes.Permissions in next, apiTypes.permission.Permissions do
 		-- tables in the 'type' directory are flipped, only account for the strings!
 		if type(key) ~= "string" then
 			continue

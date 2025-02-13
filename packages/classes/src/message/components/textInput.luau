@@ -4,8 +4,7 @@
 	https://discord.com/developers/docs/interactions/message-components#text-input-object-text-input-structure
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
-local messageTypes = require("@api-types/message")
+local apiTypes = require("../../../lune_packages/api_types")
 
 local TextInput = {}
 
@@ -15,7 +14,7 @@ TextInput.Prototype = {}
 function TextInput.Prototype.sync(self: TextInput, textInputData: apiTypes.TextInputComponentObject)
 	self.type = textInputData.type
 	self.customId = textInputData.custom_id
-	self.style = messageTypes.TextInputStyle[textInputData.style]
+	self.style = apiTypes.message.TextInputStyle[textInputData.style]
 	self.label = textInputData.label
 	self.minLength = textInputData.min_length
 	self.maxLength = textInputData.max_length
@@ -35,7 +34,7 @@ end
 export type TextInput = typeof(TextInput.Prototype) & {
 	type: number,
 	customId: string,
-	style: messageTypes.TextInputStyle,
+	style: apiTypes.TextInputStyle,
 	label: string,
 	minLength: number?,
 	maxLength: number?,

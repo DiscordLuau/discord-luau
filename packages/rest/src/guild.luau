@@ -1,11 +1,9 @@
-local serde = require("@std-polyfills/serde")
+local stdPolyfills = require("../lune_packages/std_polyfills")
 
-local request = require("@rest/request")
-local future = require("@vendor/future")
+local future = require("../luau_packages/future")
+local apiTypes = require("../lune_packages/api_types")
 
-local restTypes = require("@api-types/rest/types")
-local apiTypes = require("@api-types/apiTypes")
-local restEndpoints = require("@api-types/rest/endpoints")
+local request = require("./request")
 
 --[[
 	HTTP Rest API implementation for the following Resource:
@@ -15,23 +13,20 @@ local restEndpoints = require("@api-types/rest/endpoints")
 local Guild = {}
 
 -- https://discord.com/developers/docs/resources/guild#create-guild
-function Guild.createGuildAsync(
-	instance: request.Request,
-	jsonParams: restTypes.CreateGuildRequest
-): future.Future<restTypes.CreateGuildResponse>
-	return future.new(function()
+function Guild.createGuildAsync(instance: request.Request, jsonParams: apiTypes.CreateGuildRequest)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("POST")
-		instance:setUrl(restEndpoints.CreateGuild)
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(apiTypes.rest.endpoints.CreateGuild)
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.CreateGuildResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#get-guild
@@ -41,184 +36,168 @@ function Guild.getGuildAsync(
 	urlParams: {
 		withCounts: boolean?,
 	}
-): future.Future<restTypes.GetGuildResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:addUrlParam("with_counts", urlParams.withCounts and tostring(urlParams.withCounts) or (nil :: any))
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetGuild, guildId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetGuild, guildId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.GetGuildResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#get-guild-preview
-function Guild.getGuildPreviewAsync(
-	instance: request.Request,
-	guildId: apiTypes.Snowflake
-): future.Future<restTypes.GetGuildPreviewResponse>
-	return future.new(function()
+function Guild.getGuildPreviewAsync(instance: request.Request, guildId: apiTypes.Snowflake)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetGuildPreview, guildId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetGuildPreview, guildId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.GetGuildPreviewResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#modify-guild
 function Guild.modifyGuildAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
-	jsonParams: restTypes.ModifyGuildRequest,
+	jsonParams: apiTypes.ModifyGuildRequest,
 	auditLogReason: string?
-): future.Future<restTypes.ModifyGuildResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PATCH")
-		instance:setUrl(string.format(restEndpoints.ModifyGuild, guildId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.ModifyGuild, guildId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.ModifyGuildResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#delete-guild
-function Guild.deleteGuildAsync(
-	instance: request.Request,
-	guildId: apiTypes.Snowflake
-): future.Future<restTypes.DeleteGuildResponse>
-	return future.new(function()
+function Guild.deleteGuildAsync(instance: request.Request, guildId: apiTypes.Snowflake)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
-		instance:setUrl(string.format(restEndpoints.DeleteGuild, guildId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.DeleteGuild, guildId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.DeleteGuildResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#get-guild-channels
-function Guild.getGuildChannelsAsync(
-	instance: request.Request,
-	guildId: apiTypes.Snowflake
-): future.Future<restTypes.GetGuildChannelsResponse>
-	return future.new(function()
+function Guild.getGuildChannelsAsync(instance: request.Request, guildId: apiTypes.Snowflake)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetGuildChannels, guildId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetGuildChannels, guildId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.GetGuildChannelsResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#create-guild-channel
 function Guild.createGuildChannelAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
-	jsonParams: restTypes.CreateGuildChannelRequest,
+	jsonParams: apiTypes.CreateGuildChannelRequest,
 	auditLogReason: string?
-): future.Future<restTypes.CreateGuildChannelResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("POST")
-		instance:setUrl(string.format(restEndpoints.CreateGuildChannel, guildId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.CreateGuildChannel, guildId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.CreateGuildChannelResponse_>
 end
 
 -- https://discord.com/developers/docs/resources/guild#modify-guild-channel-positions
 function Guild.modifyGuildChannelPositionsAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
-	jsonParams: restTypes.ModifyGuildChannelPositionsRequest
-): future.Future<restTypes.ModifyGuildChannelPositionsResponse>
-	return future.new(function()
+	jsonParams: apiTypes.ModifyGuildChannelPositionsRequest
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PATCH")
-		instance:setUrl(string.format(restEndpoints.ModifyGuildChannelPositions, guildId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.ModifyGuildChannelPositions, guildId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.ModifyGuildChannelPositionsResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#list-active-guild-threads
-function Guild.listActiveGuildThreadsAsync(
-	instance: request.Request,
-	guildId: apiTypes.Snowflake
-): future.Future<restTypes.ListActiveGuildThreadsResponse>
-	return future.new(function()
+function Guild.listActiveGuildThreadsAsync(instance: request.Request, guildId: apiTypes.Snowflake)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.ListActiveGuildThreads, guildId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.ListActiveGuildThreads, guildId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.ListActiveGuildThreadsResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#get-guild-member
-function Guild.getGuildMemberAsync(
-	instance: request.Request,
-	guildId: apiTypes.Snowflake,
-	userId: apiTypes.Snowflake
-): future.Future<restTypes.GetGuildMemberResponse>
-	return future.new(function()
+function Guild.getGuildMemberAsync(instance: request.Request, guildId: apiTypes.Snowflake, userId: apiTypes.Snowflake)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetGuildMember, guildId, userId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetGuildMember, guildId, userId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.GetGuildMemberResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#list-guild-members
@@ -229,22 +208,22 @@ function Guild.listGuildMembersAsync(
 		limit: number?,
 		after: string?,
 	}
-): future.Future<restTypes.ListGuildMembersResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:addUrlParam("limit", urlParams.limit and tostring(urlParams.limit) or (nil :: any))
 		instance:addUrlParam("after", urlParams.after and tostring(urlParams.after) or (nil :: any))
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.ListGuildMembers, guildId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.ListGuildMembers, guildId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.ListGuildMembersResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#search-guild-members
@@ -255,22 +234,22 @@ function Guild.searchGuildMembersAsync(
 		query: string,
 		limit: number?,
 	}
-): future.Future<restTypes.SearchGuildMembersResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:addUrlParam("query", urlParams.query)
 		instance:addUrlParam("limit", urlParams.limit and tostring(urlParams.limit) or (nil :: any))
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.SearchGuildMembers, guildId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.SearchGuildMembers, guildId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.SearchGuildMembersResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#add-guild-member
@@ -278,21 +257,21 @@ function Guild.addGuildMemberAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	userId: apiTypes.Snowflake,
-	jsonParams: restTypes.AddGuildMemberRequest
-): future.Future<restTypes.AddGuildMemberResponse>
-	return future.new(function()
+	jsonParams: apiTypes.AddGuildMemberRequest
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PUT")
-		instance:setUrl(string.format(restEndpoints.AddGuildMember, guildId, userId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.AddGuildMember, guildId, userId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.AddGuildMemberResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#modify-guild-member
@@ -300,46 +279,46 @@ function Guild.modifyGuildMemberAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	userId: apiTypes.Snowflake,
-	jsonParams: restTypes.ModifyGuildMemberRequest,
+	jsonParams: apiTypes.ModifyGuildMemberRequest,
 	auditLogReason: string?
-): future.Future<restTypes.ModifyGuildMemberResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PATCH")
-		instance:setUrl(string.format(restEndpoints.ModifyGuildMember, guildId, userId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.ModifyGuildMember, guildId, userId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.ModifyGuildMemberResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#modify-current-member
 function Guild.modifyCurrentMemberAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
-	jsonParams: restTypes.ModifyCurrentMemberRequest,
+	jsonParams: apiTypes.ModifyCurrentMemberRequest,
 	auditLogReason: string?
-): future.Future<restTypes.ModifyCurrentMemberResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PATCH")
-		instance:setUrl(string.format(restEndpoints.ModifyCurrentMember, guildId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.ModifyCurrentMember, guildId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.ModifyCurrentMemberResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#add-guild-member-role
@@ -349,20 +328,20 @@ function Guild.addGuildMemberRoleAsync(
 	userId: apiTypes.Snowflake,
 	roleId: apiTypes.Snowflake,
 	auditLogReason: string?
-): future.Future<restTypes.AddGuildMemberRoleResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PUT")
-		instance:setUrl(string.format(restEndpoints.AddGuildMemberRole, guildId, userId, roleId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.AddGuildMemberRole, guildId, userId, roleId))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.AddGuildMemberRoleResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#remove-guild-member-role
@@ -372,20 +351,20 @@ function Guild.removeGuildMemberRoleAsync(
 	userId: apiTypes.Snowflake,
 	roleId: apiTypes.Snowflake,
 	auditLogReason: string?
-): future.Future<restTypes.RemoveGuildMemberRoleResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
-		instance:setUrl(string.format(restEndpoints.RemoveGuildMemberRole, guildId, userId, roleId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.RemoveGuildMemberRole, guildId, userId, roleId))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.RemoveGuildMemberRoleResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#remove-guild-member
@@ -394,20 +373,20 @@ function Guild.removeGuildMemberAsync(
 	guildId: apiTypes.Snowflake,
 	userId: apiTypes.Snowflake,
 	auditLogReason: string?
-): future.Future<restTypes.RemoveGuildMemberResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
-		instance:setUrl(string.format(restEndpoints.RemoveGuildMember, guildId, userId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.RemoveGuildMember, guildId, userId))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.RemoveGuildMemberResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#get-guild-bans
@@ -419,8 +398,8 @@ function Guild.getGuildBansAsync(
 		before: apiTypes.Snowflake?,
 		after: apiTypes.Snowflake?,
 	}
-): future.Future<restTypes.GetGuildBansResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:addUrlParam("limit", urlParams.limit and tostring(urlParams.limit) or (nil :: any))
@@ -428,34 +407,30 @@ function Guild.getGuildBansAsync(
 		instance:addUrlParam("after", urlParams.after and tostring(urlParams.after) or (nil :: any))
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetGuildBans, guildId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetGuildBans, guildId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.GetGuildBansResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#get-guild-ban
-function Guild.getGuildBanAsync(
-	instance: request.Request,
-	guildId: apiTypes.Snowflake,
-	userId: apiTypes.Snowflake
-): future.Future<restTypes.GetGuildBanResponse>
-	return future.new(function()
+function Guild.getGuildBanAsync(instance: request.Request, guildId: apiTypes.Snowflake, userId: apiTypes.Snowflake)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetGuildBan, guildId, userId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetGuildBan, guildId, userId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.GetGuildBanResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#create-guild-ban
@@ -463,23 +438,23 @@ function Guild.createGuildBanAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	userId: apiTypes.Snowflake,
-	jsonParams: restTypes.CreateGuildBanRequest,
+	jsonParams: apiTypes.CreateGuildBanRequest,
 	auditLogReason: string?
-): future.Future<restTypes.CreateGuildBanResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PUT")
-		instance:setUrl(string.format(restEndpoints.CreateGuildBan, guildId, userId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.CreateGuildBan, guildId, userId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.CreateGuildBanResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#remove-guild-ban
@@ -488,128 +463,121 @@ function Guild.removeGuildBanAsync(
 	guildId: apiTypes.Snowflake,
 	userId: apiTypes.Snowflake,
 	auditLogReason: string?
-): future.Future<restTypes.RemoveGuildBanResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
-		instance:setUrl(string.format(restEndpoints.RemoveGuildBan, guildId, userId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.RemoveGuildBan, guildId, userId))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.RemoveGuildBanResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#bulk-guild-ban
 function Guild.bulkGuildBanAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
-	jsonParams: restTypes.BulkGuildBanRequest,
+	jsonParams: apiTypes.BulkGuildBanRequest,
 	auditLogReason: string?
-): future.Future<restTypes.BulkGuildBanResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("POST")
-		instance:setUrl(string.format(restEndpoints.BulkGuildBan, guildId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.BulkGuildBan, guildId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.BulkGuildBanResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#get-guild-roles
-function Guild.getGuildRolesAsync(
-	instance: request.Request,
-	guildId: apiTypes.Snowflake
-): future.Future<restTypes.GetGuildRolesResponse>
-	return future.new(function()
+function Guild.getGuildRolesAsync(instance: request.Request, guildId: apiTypes.Snowflake)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetGuildRoles, guildId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetGuildRoles, guildId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.GetGuildRolesResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#get-guild-role
-function Guild.getGuildRoleAsync(
-	instance: request.Request,
-	guildId: apiTypes.Snowflake,
-	roleId: apiTypes.Snowflake
-): future.Future<restTypes.GetGuildRoleResponse>
-	return future.new(function()
+function Guild.getGuildRoleAsync(instance: request.Request, guildId: apiTypes.Snowflake, roleId: apiTypes.Snowflake)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetGuildRole, guildId, roleId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetGuildRole, guildId, roleId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.GetGuildRoleResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#create-guild-role
 function Guild.createGuildRoleAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
-	jsonParams: restTypes.CreateGuildRoleRequest,
+	jsonParams: apiTypes.CreateGuildRoleRequest,
 	auditLogReason: string?
-): future.Future<restTypes.CreateGuildRoleResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("POST")
-		instance:setUrl(string.format(restEndpoints.CreateGuildRole, guildId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.CreateGuildRole, guildId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.CreateGuildRoleResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#modify-guild-role-positions
 function Guild.modifyGuildRolePositionsAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
-	jsonParams: restTypes.ModifyGuildRolePositionsRequest,
+	jsonParams: apiTypes.ModifyGuildRolePositionsRequest,
 	auditLogReason: string?
-): future.Future<restTypes.ModifyGuildRolePositionsResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PATCH")
-		instance:setUrl(string.format(restEndpoints.ModifyGuildRolePositions, guildId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.ModifyGuildRolePositions, guildId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.ModifyGuildRolePositionsResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#modify-guild-role
@@ -617,46 +585,46 @@ function Guild.modifyGuildRoleAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	roleId: apiTypes.Snowflake,
-	jsonParams: restTypes.ModifyGuildRoleRequest,
+	jsonParams: apiTypes.ModifyGuildRoleRequest,
 	auditLogReason: string?
-): future.Future<restTypes.ModifyGuildRoleResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PATCH")
-		instance:setUrl(string.format(restEndpoints.ModifyGuildRole, guildId, roleId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.ModifyGuildRole, guildId, roleId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.ModifyGuildRoleResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#modify-guild-mfa-level
 function Guild.modifyGuildMFALevelAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
-	jsonParams: restTypes.ModifyGuildMFALevelRequest,
+	jsonParams: apiTypes.ModifyGuildMFALevelRequest,
 	auditLogReason: string?
-): future.Future<restTypes.ModifyGuildMFALevelResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("POST")
-		instance:setUrl(string.format(restEndpoints.ModifyGuildMFALevel, guildId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.ModifyGuildMFALevel, guildId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.ModifyGuildMFALevelResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#delete-guild-role
@@ -665,20 +633,20 @@ function Guild.deleteGuildRoleAsync(
 	guildId: apiTypes.Snowflake,
 	roleId: apiTypes.Snowflake,
 	auditLogReason: string?
-): future.Future<restTypes.DeleteGuildRoleResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
-		instance:setMethod("POST")
-		instance:setUrl(string.format(restEndpoints.DeleteGuildRole, guildId, roleId))
+		instance:setMethod("DELETE")
+		instance:setUrl(string.format(apiTypes.rest.endpoints.DeleteGuildRole, guildId, roleId))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.DeleteGuildRoleResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#get-guild-prune-count
@@ -689,102 +657,93 @@ function Guild.getGuildPruneCountAsync(
 		days: number,
 		includeRoles: string,
 	}
-): future.Future<restTypes.GetGuildPruneCountResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:addUrlParam("days", tostring(urlParams.days))
 		instance:addUrlParam("include_roles", tostring(urlParams.includeRoles))
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetGuildPruneCount, guildId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetGuildPruneCount, guildId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.GetGuildPruneCountResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#begin-guild-prune
 function Guild.beginGuildPruneAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
-	jsonParams: restTypes.BeginGuildPruneRequest,
+	jsonParams: apiTypes.BeginGuildPruneRequest,
 	auditLogReason: string?
-): future.Future<restTypes.BeginGuildPruneResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("POST")
-		instance:setUrl(string.format(restEndpoints.BeginGuildPrune, guildId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.BeginGuildPrune, guildId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.BeginGuildPruneResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#get-guild-voice-regions
-function Guild.getGuildVoiceRegionsAsync(
-	instance: request.Request,
-	guildId: apiTypes.Snowflake
-): future.Future<restTypes.GetGuildVoiceRegionsResponse>
-	return future.new(function()
+function Guild.getGuildVoiceRegionsAsync(instance: request.Request, guildId: apiTypes.Snowflake)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetGuildVoiceRegions, guildId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetGuildVoiceRegions, guildId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.GetGuildVoiceRegionsResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#get-guild-invites
-function Guild.getGuildInvitesAsync(
-	instance: request.Request,
-	guildId: apiTypes.Snowflake
-): future.Future<restTypes.GetGuildInvitesResponse>
-	return future.new(function()
+function Guild.getGuildInvitesAsync(instance: request.Request, guildId: apiTypes.Snowflake)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetGuildInvites, guildId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetGuildInvites, guildId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.GetGuildInvitesResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#get-guild-integrations
-function Guild.getGuildIntegrationsAsync(
-	instance: request.Request,
-	guildId: apiTypes.Snowflake
-): future.Future<restTypes.GetGuildIntegrationsResponse>
-	return future.new(function()
+function Guild.getGuildIntegrationsAsync(instance: request.Request, guildId: apiTypes.Snowflake)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetGuildIntegrations, guildId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetGuildIntegrations, guildId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.GetGuildIntegrationsResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#delete-guild-integration
@@ -793,100 +752,91 @@ function Guild.deleteGuildIntegrationAsync(
 	guildId: apiTypes.Snowflake,
 	integrationId: apiTypes.Snowflake,
 	auditLogReason: string?
-): future.Future<restTypes.DeleteGuildIntegrationResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
-		instance:setUrl(string.format(restEndpoints.DeleteGuildIntegration, guildId, integrationId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.DeleteGuildIntegration, guildId, integrationId))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.DeleteGuildIntegrationResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#get-guild-widget-settings
-function Guild.getGuildWidgetSettingsAsync(
-	instance: request.Request,
-	guildId: apiTypes.Snowflake
-): future.Future<restTypes.GetGuildWidgetSettingsResponse>
-	return future.new(function()
+function Guild.getGuildWidgetSettingsAsync(instance: request.Request, guildId: apiTypes.Snowflake)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetGuildWidgetSettings, guildId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetGuildWidgetSettings, guildId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.GetGuildWidgetSettingsResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#modify-guild-widget
 function Guild.modifyGuildWidgetAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
-	jsonParams: restTypes.ModifyGuildWidgetRequest,
+	jsonParams: apiTypes.ModifyGuildWidgetRequest,
 	auditLogReason: string?
-): future.Future<restTypes.ModifyGuildWidgetResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PATCH")
-		instance:setUrl(string.format(restEndpoints.GetGuildWidgetSettings, guildId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetGuildWidgetSettings, guildId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.ModifyGuildWidgetResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#get-guild-widget
-function Guild.getGuildWidgetAsync(
-	instance: request.Request,
-	guildId: apiTypes.Snowflake
-): future.Future<restTypes.GetGuildWidgetResponse>
-	return future.new(function()
+function Guild.getGuildWidgetAsync(instance: request.Request, guildId: apiTypes.Snowflake)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetGuildWidget, guildId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetGuildWidget, guildId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.GetGuildWidgetResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#get-guild-vanity-url
-function Guild.getGuildVanityURLAsync(
-	instance: request.Request,
-	guildId: apiTypes.Snowflake
-): future.Future<restTypes.GetGuildVanityUrlResponse>
-	return future.new(function()
+function Guild.getGuildVanityURLAsync(instance: request.Request, guildId: apiTypes.Snowflake)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetGuildVanityURL, guildId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetGuildVanityURL, guildId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.GetGuildVanityUrlResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#get-guild-widget-image
@@ -896,105 +846,99 @@ function Guild.getGuildWidgetImageAsync(
 	urlParams: {
 		style: ("shield" | "banner1" | "banner2" | "banner3" | "banner4")?,
 	}
-): future.Future<restTypes.GetGuildWidgetImageResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:addUrlParam("style", urlParams.style :: any)
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetGuildWidgetImage, guildId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetGuildWidgetImage, guildId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.GetGuildWidgetImageResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#get-guild-welcome-screen
-function Guild.getGuildWelcomeScreenAsync(
-	instance: request.Request,
-	guildId: apiTypes.Snowflake
-): future.Future<restTypes.GetGuildWelcomeScreenResponse>
-	return future.new(function()
+function Guild.getGuildWelcomeScreenAsync(instance: request.Request, guildId: apiTypes.Snowflake)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetGuildWelcomeScreen, guildId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetGuildWelcomeScreen, guildId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.GetGuildWelcomeScreenResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#modify-guild-welcome-screen
 function Guild.modifyGuildWelcomeScreenAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
-	jsonParams: restTypes.ModifyGuildWelcomeScreenRequest,
+	jsonParams: apiTypes.ModifyGuildWelcomeScreenRequest,
 	auditLogReason: string?
-): future.Future<restTypes.ModifyGuildWelcomeScreenResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PATCH")
-		instance:setUrl(string.format(restEndpoints.ModifyGuildWelcomeScreen, guildId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.ModifyGuildWelcomeScreen, guildId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.ModifyGuildWelcomeScreenResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#get-guild-onboarding
-function Guild.getGuildOnboardingAsync(
-	instance: request.Request,
-	guildId: apiTypes.Snowflake
-): future.Future<restTypes.GetGuildOnboardingResponse>
-	return future.new(function()
+function Guild.getGuildOnboardingAsync(instance: request.Request, guildId: apiTypes.Snowflake)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetGuildOnboarding, guildId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetGuildOnboarding, guildId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.GetGuildOnboardingResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#modify-guild-onboarding
 function Guild.modifyGuildOnboardingAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
-	jsonParams: restTypes.ModifyGuildOnboardingRequest,
+	jsonParams: apiTypes.ModifyGuildOnboardingRequest,
 	auditLogReason: string?
-): future.Future<restTypes.GetGuildOnboardingResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PUT")
-		instance:setUrl(string.format(restEndpoints.ModifyGuildOnboarding, guildId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.ModifyGuildOnboarding, guildId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.ModifyGuildOnboardingResponse>
 end
 
 return Guild

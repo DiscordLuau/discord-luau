@@ -4,6 +4,8 @@
 	</p>
 </div>
 
-## DiscordLuau - Voice
+## [DiscordLuau - Voice](https://pesde.dev/packages/discord_luau/voice)
 
 This package is responsible for implementing voice support in DiscordLuau. One of the difficulties of this package will be overcoming the 64 bit encrypted voice packets that are sent by Discord.
+
+> ⚠️ this package is still a work in progress.

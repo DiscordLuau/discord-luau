@@ -4,13 +4,13 @@
 	https://discord.com/developers/docs/resources/channel#thread-member-object
 ]]
 
-local datetime = require("@std-polyfills/datetime")
+local stdPolyfills = require("../lune_packages/std_polyfills")
 
-local apiTypes = require("@api-types/apiTypes")
+local apiTypes = require("../lune_packages/api_types")
+local state = require("../lune_packages/state")
 
-local threadMemberBitflag = require("@classes/bitflags/threadMember")
-local state = require("@classes/state")
-local member = require("@classes/guild/member")
+local threadMemberBitflag = require("./bitflags/threadMember")
+local member = require("./guild/member")
 
 local ThreadMember = {}
 
@@ -18,7 +18,7 @@ ThreadMember.Interface = {}
 ThreadMember.Prototype = {}
 
 function ThreadMember.Prototype.sync(self: ThreadMember, threadMemberData: apiTypes.ThreadMemberObject)
-	self.joinTimestamp = datetime.fromIsoDate(threadMemberData.join_timestamp)
+	self.joinTimestamp = stdPolyfills.datetime.fromIsoDate(threadMemberData.join_timestamp)
 
 	self.flags = threadMemberData.flags and threadMemberBitflag.new(threadMemberData.flags)
 	self.member = threadMemberData.member and member.new(self.state, self.guildId, threadMemberData.member)
@@ -51,7 +51,7 @@ export type ThreadMember = typeof(ThreadMember.Prototype) & {
 
 	id: apiTypes.Snowflake?,
 	userId: apiTypes.Snowflake?,
-	joinTimestamp: datetime.DateTime,
+	joinTimestamp: stdPolyfills.DateTime,
 	flags: threadMemberBitflag.ThreadMemberBitflag,
 	member: member.Member?,
 }

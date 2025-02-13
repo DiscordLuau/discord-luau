@@ -4,18 +4,6 @@
 		"*": false
 	},
 	"aliases": {
-		"builders": "./packages/builders/src",
-		"cdn": "./packages/cdn/src",
-		"classes": "./packages/classes/src",
-		"core": "./packages/core/src",
-		"extensions": "./packages/extensions/src",
-		"std-polyfills": "./packages/std-polyfills/src",
-		"api-types": "./packages/api-types/src",
-		"rest": "./packages/rest/src",
-		"utils": "./packages/utils/src",
-		"vendor": "./packages/vendor/src",
-		"voice": "./packages/voice/src",
-		"websocket": "./packages/websocket/src",
-		"frktest": "./extern/frktest/src"
+		"lune": "~/.lune/.typedefs/0.8.9/"
 	}
 }

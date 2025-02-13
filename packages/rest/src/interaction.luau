@@ -1,11 +1,9 @@
-local serde = require("@std-polyfills/serde")
+local stdPolyfills = require("../lune_packages/std_polyfills")
 
-local request = require("@rest/request")
-local future = require("@vendor/future")
+local future = require("../luau_packages/future")
+local apiTypes = require("../lune_packages/api_types")
 
-local restTypes = require("@api-types/rest/types")
-local apiTypes = require("@api-types/apiTypes")
-local restEndpoints = require("@api-types/rest/endpoints")
+local request = require("./request")
 
 --[[
 	HTTP Rest API implementation for the following Resource:
@@ -19,12 +17,12 @@ function Interaction.createInteractionResponseAsync(
 	instance: request.Request,
 	interactionId: apiTypes.Snowflake,
 	interactionToken: string,
-	jsonParams: restTypes.CreateInteractionRequest,
+	jsonParams: apiTypes.CreateInteractionRequest,
 	urlParams: {
 		withResponse: boolean?,
 	}
-): future.Future<restTypes.CreateInteractionResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:addUrlParam(
@@ -33,15 +31,17 @@ function Interaction.createInteractionResponseAsync(
 		)
 
 		instance:setMethod("POST")
-		instance:setUrl(string.format(restEndpoints.CreateInteractionResponse, interactionId, interactionToken))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(
+			string.format(apiTypes.rest.endpoints.CreateInteractionResponse, interactionId, interactionToken)
+		)
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.CreateInteractionResponse>
 end
 
 -- https://discord.com/developers/docs/interactions/receiving-and-responding#get-original-interaction-response
@@ -52,21 +52,23 @@ function Interaction.getOriginalInteractionResponseAsync(
 	urlParams: {
 		threadId: apiTypes.Snowflake?,
 	}
-): future.Future<restTypes.GetOriginalInteractionResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:addUrlParam("thread_id", urlParams.threadId and tostring(urlParams.threadId) or (nil :: any))
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetOriginalInteractionResponse, applicationId, interactionToken))
+		instance:setUrl(
+			string.format(apiTypes.rest.endpoints.GetOriginalInteractionResponse, applicationId, interactionToken)
+		)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.GetOriginalInteractionResponse>
 end
 
 -- https://discord.com/developers/docs/interactions/receiving-and-responding#edit-original-interaction-response
@@ -74,26 +76,28 @@ function Interaction.editOriginalInteractionResponseAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	interactionToken: string,
-	jsonParams: restTypes.EditOriginalInteractionRequest,
+	jsonParams: apiTypes.EditOriginalInteractionRequest,
 	urlParams: {
 		threadId: apiTypes.Snowflake?,
 	}
-): future.Future<restTypes.EditOriginalInteractionResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:addUrlParam("thread_id", urlParams.threadId and tostring(urlParams.threadId) or (nil :: any))
 
 		instance:setMethod("PATCH")
-		instance:setUrl(string.format(restEndpoints.GetOriginalInteractionResponse, applicationId, interactionToken))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(
+			string.format(apiTypes.rest.endpoints.GetOriginalInteractionResponse, applicationId, interactionToken)
+		)
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.EditOriginalInteractionResponse>
 end
 
 -- https://discord.com/developers/docs/interactions/receiving-and-responding#delete-original-interaction-response
@@ -101,19 +105,21 @@ function Interaction.deleteOriginalInteractionResponseAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	interactionToken: string
-): future.Future<restTypes.DeleteOriginalInteractionResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
-		instance:setUrl(string.format(restEndpoints.DeleteOriginalInteractionResponse, applicationId, interactionToken))
+		instance:setUrl(
+			string.format(apiTypes.rest.endpoints.DeleteOriginalInteractionResponse, applicationId, interactionToken)
+		)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.DeleteOriginalInteractionResponse>
 end
 
 -- https://discord.com/developers/docs/interactions/receiving-and-responding#create-followup-message
@@ -121,28 +127,28 @@ function Interaction.createFollowupMessageAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	interactionToken: string,
-	jsonParams: restTypes.CreateFollowupMessageRequest,
+	jsonParams: apiTypes.CreateFollowupMessageRequest,
 	urlParams: {
 		wait: boolean?,
 		threadId: apiTypes.Snowflake?,
 	}
-): future.Future<restTypes.CreateFollowupMessageResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:addUrlParam("wait", urlParams.wait and tostring(urlParams.wait) or (nil :: any))
 		instance:addUrlParam("thread_id", urlParams.threadId and tostring(urlParams.threadId) or (nil :: any))
 
 		instance:setMethod("POST")
-		instance:setUrl(string.format(restEndpoints.CreateFollowupMessage, applicationId, interactionToken))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.CreateFollowupMessage, applicationId, interactionToken))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.CreateFollowupMessageResponse>
 end
 
 -- https://discord.com/developers/docs/interactions/receiving-and-responding#get-followup-message
@@ -154,21 +160,23 @@ function Interaction.getFollowupMessageAsync(
 	urlParams: {
 		threadId: apiTypes.Snowflake?,
 	}
-): future.Future<restTypes.GetFollowupMessageResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:addUrlParam("thread_id", urlParams.threadId and tostring(urlParams.threadId) or (nil :: any))
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetFollowupMessage, applicationId, interactionToken, messageId))
+		instance:setUrl(
+			string.format(apiTypes.rest.endpoints.GetFollowupMessage, applicationId, interactionToken, messageId)
+		)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.GetFollowupMessageResponse>
 end
 
 -- https://discord.com/developers/docs/interactions/receiving-and-responding#edit-followup-message
@@ -177,26 +185,28 @@ function Interaction.editFollowupMessageAsync(
 	applicationId: apiTypes.Snowflake,
 	interactionToken: string,
 	messageId: apiTypes.Snowflake,
-	jsonParams: restTypes.EditFollowupMessageRequest,
+	jsonParams: apiTypes.EditFollowupMessageRequest,
 	urlParams: {
 		threadId: apiTypes.Snowflake?,
 	}
-): future.Future<restTypes.EditFollowupMessageResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:addUrlParam("thread_id", urlParams.threadId and tostring(urlParams.threadId) or (nil :: any))
 
 		instance:setMethod("POST")
-		instance:setUrl(string.format(restEndpoints.EditFollowupMessage, applicationId, interactionToken, messageId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(
+			string.format(apiTypes.rest.endpoints.EditFollowupMessage, applicationId, interactionToken, messageId)
+		)
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.EditFollowupMessageResponse>
 end
 
 -- https://discord.com/developers/docs/interactions/receiving-and-responding#delete-followup-message
@@ -205,19 +215,21 @@ function Interaction.deleteFollowupMessageAsync(
 	applicationId: apiTypes.Snowflake,
 	interactionToken: string,
 	messageId: apiTypes.Snowflake
-): future.Future<restTypes.DeleteFollowupMessageResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
-		instance:setUrl(string.format(restEndpoints.DeleteFollowupMessage, applicationId, interactionToken, messageId))
+		instance:setUrl(
+			string.format(apiTypes.rest.endpoints.DeleteFollowupMessage, applicationId, interactionToken, messageId)
+		)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.DeleteFollowupMessageResponse>
 end
 
 return Interaction

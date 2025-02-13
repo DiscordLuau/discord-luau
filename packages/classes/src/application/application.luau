@@ -4,23 +4,18 @@
 	https://discord.com/developers/docs/resources/application#application-object
 ]]
 
-local future = require("@vendor/future")
+local apiTypes = require("../../lune_packages/api_types")
+local state = require("../../lune_packages/state")
+local rest = require("../../lune_packages/rest")
+local builders = require("../../lune_packages/builders")
+local future = require("../../luau_packages/future")
 
-local apiTypes = require("@api-types/apiTypes")
-local applicationTypes = require("@api-types/application")
-
-local user = require("@classes/user")
-local unavailableGuild = require("@classes/guild/unavailableGuild")
-local team = require("@classes/application/team/team")
-local state = require("@classes/state")
-local installParams = require("@classes/application/installParams")
-
-local commandsRest = require("@rest/commands")
-local interactionBuilder = require("@builders/interaction/interaction")
-
-local commandObject = require("@classes/application/command/command")
-
-local applicationBitflags = require("@classes/bitflags/application")
+local user = require("../user")
+local applicationBitflags = require("../bitflags/application")
+local team = require("./team/team")
+local unavailableGuild = require("../guild/unavailableGuild")
+local installParams = require("./installParams")
+local commandObject = require("./command/command")
 
 local Application = {}
 
@@ -33,37 +28,31 @@ Application.Prototype = {}
 
 	For testing/building commands, it's advised you use guild commands, which do not suffer the same constraints.
 ]]
-function Application.Prototype.createSlashCommandAsync(
-	self: Application,
-	slashCommand: interactionBuilder.JSON
-): future.Future<commandObject.Command>
-	return future.new(function()
+function Application.Prototype.createSlashCommandAsync(self: Application, slashCommand: builders.interactionJSON)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response =
-			commandsRest.createGlobalApplicationCommandAsync(request, self.id, slashCommand):await()
+		local response = rest.commands.createGlobalApplicationCommandAsync(request, self.id, slashCommand):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return commandObject.new(response)
-	end)
+		return commandObject.new(response:unwrapOk())
+	end) :: future.FutureLike<string, commandObject.Command>
 end
 
 --[[
 	Delete an existing global application command.
 ]]
-function Application.Prototype.deleteSlashCommandAsync(
-	self: Application,
-	slashCommandId: apiTypes.Snowflake
-): future.Future<nil>
-	return future.new(function()
+function Application.Prototype.deleteSlashCommandAsync(self: Application, slashCommandId: apiTypes.Snowflake)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response =
-			commandsRest.deleteGlobalApplicationCommandAsync(request, self.id, slashCommandId):await()
+		local response = rest.commands.deleteGlobalApplicationCommandAsync(request, self.id, slashCommandId):await()
 
-		assert(status == "Fulfilled", tostring(response))
-	end)
+		assert(response:isOk(), tostring(response:unwrapErr()))
+
+		return nil
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -72,46 +61,43 @@ end
 function Application.Prototype.editSlashCommandAsync(
 	self: Application,
 	slashCommandId: apiTypes.Snowflake,
-	slashCommand: interactionBuilder.JSON
-): future.Future<commandObject.Command>
-	return future.new(function()
+	slashCommand: builders.interactionJSON
+)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response =
-			commandsRest.editGlobalApplicationCommandAsync(request, self.id, slashCommandId, slashCommand):await()
+		local response =
+			rest.commands.editGlobalApplicationCommandAsync(request, self.id, slashCommandId, slashCommand):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return commandObject.new(response)
-	end)
+		return commandObject.new(response:unwrapOk())
+	end) :: future.FutureLike<string, commandObject.Command>
 end
 
 --[[
 	Get a list of global application commands.
 ]]
-function Application.Prototype.getSlashCommandsAsync(
-	self: Application,
-	withLocalizations: boolean?
-): future.Future<{ commandObject.Command }>
-	return future.new(function()
+function Application.Prototype.getSlashCommandsAsync(self: Application, withLocalizations: boolean?)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = commandsRest
+		local response = rest.commands
 			.getGlobalApplicationCommandsAsync(request, self.id, {
 				withLocalizations = withLocalizations,
 			})
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local commands = {}
 
-		for _, commandData in response do
+		for _, commandData in response:unwrapOk() do
 			table.insert(commands, commandObject.new(commandData))
 		end
 
 		return commands
-	end)
+	end) :: future.FutureLike<string, { commandObject.Command }>
 end
 
 --[[
@@ -119,24 +105,24 @@ end
 ]]
 function Application.Prototype.overwriteSlashCommandsAsync(
 	self: Application,
-	slashCommands: { interactionBuilder.JSON }
-): future.Future<{ commandObject.Command }>
-	return future.new(function()
+	slashCommands: { builders.interactionJSON }
+)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response =
-			commandsRest.bulkOverwriteGlobalApplicationCommandsAsync(request, self.id, slashCommands):await()
+		local response =
+			rest.commands.bulkOverwriteGlobalApplicationCommandsAsync(request, self.id, slashCommands):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local commands = {}
 
-		for _, commandData in response do
+		for _, commandData in response:unwrapOk() do
 			table.insert(commands, commandObject.new(commandData))
 		end
 
 		return commands
-	end)
+	end) :: future.FutureLike<string, { commandObject.Command }>
 end
 
 function Application.Prototype.sync(self: Application, applicationData: apiTypes.ApplicationObject)
@@ -219,7 +205,7 @@ export type Application = typeof(Application.Prototype) & {
 	approximateUserInstallCount: number?,
 	redirectUris: { string }?,
 	installParams: installParams.InstallParams?,
-	integrationTypesConfig: { [applicationTypes.IntegrationTypesConfig]: boolean }?,
+	integrationTypesConfig: { [apiTypes.IntegrationTypesConfig]: boolean }?,
 	customInstallUrl: string?,
 }
 

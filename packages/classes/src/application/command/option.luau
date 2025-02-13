@@ -4,11 +4,9 @@
 	https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-choice-structure
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
-local channelTypes = require("@api-types/channel")
-local interactionTypes = require("@api-types/interaction")
+local apiTypes = require("../../../lune_packages/api_types")
 
-local choice = require("@classes/application/command/choice")
+local choice = require("./choice")
 
 local Option = {}
 
@@ -33,10 +31,10 @@ function Option.Prototype.sync(self: Option, optionData: apiTypes.ApplicationCom
 
 	-- fixme: need to use `next` iterator here to avoid LSP errors.
 	for _, channelType in next, optionData.channel_types or {} do
-		table.insert(channelTypeArray, channelTypes.ChannelTypes[channelType])
+		table.insert(channelTypeArray, apiTypes.channel.ChannelTypes[channelType])
 	end
 
-	self.type = interactionTypes.ApplicationCommandOptionType[optionData.type]
+	self.type = apiTypes.interaction.ApplicationCommandOptionType[optionData.type]
 	self.name = optionData.name
 	self.nameLocalizations = optionData.name_localizations
 	self.description = optionData.description
@@ -44,7 +42,7 @@ function Option.Prototype.sync(self: Option, optionData: apiTypes.ApplicationCom
 	self.required = optionData.required
 	self.choices = choiceArray
 	self.options = optionArray
-	self.channelTypes = channelTypeArray
+	self.apiTypes = channelTypeArray
 	self.minValue = optionData.min_value
 	self.maxValue = optionData.max_value
 	self.minLength = optionData.min_length
@@ -69,7 +67,7 @@ export type Option = typeof(Option.Prototype) & {
 	required: boolean?,
 	choices: { choice.Choice }?,
 	options: { Option }?,
-	channelTypes: { channelTypes.ChannelType },
+	apiTypes: { apiTypes.ChannelType },
 	minValue: number?,
 	maxValue: number?,
 	minLength: number?,

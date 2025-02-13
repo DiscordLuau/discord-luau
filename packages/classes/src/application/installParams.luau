@@ -4,10 +4,9 @@
 	https://discord.com/developers/docs/resources/application#install-params-object
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
-local applicationTypes = require("@api-types/application")
+local apiTypes = require("../../lune_packages/api_types")
 
-local permission = require("@classes/permission")
+local permission = require("../permission")
 
 local InstallParams = {}
 
@@ -28,7 +27,7 @@ function InstallParams.Interface.new(installParamsData: apiTypes.InstallParamsOb
 end
 
 export type InstallParams = typeof(InstallParams.Prototype) & {
-	scopes: { applicationTypes.OAuth2Scopes },
+	scopes: { apiTypes.OAuth2Scopes },
 	permissions: permission.Permission,
 }
 

@@ -4,7 +4,7 @@
 	https://discord.com/developers/docs/resources/poll#poll-answer-object-poll-answer-object-structure
 ]]
 
-local mediaBuilder = require("@builders/message/poll/media")
+local mediaBuilder = require("./media")
 
 local PollAnswer = {}
 

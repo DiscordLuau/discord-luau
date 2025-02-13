@@ -4,15 +4,15 @@
 	https://discord.com/developers/docs/resources/channel#start-thread-in-forum-or-media-channel-forum-and-media-thread-message-params-object
 ]]
 
-local embed = require("@builders/embed/embed")
-local allowedMention = require("@builders/message/allowedMention")
+local embed = require("../embed/embed")
+local allowedMention = require("../message/allowedMention")
 
-local button = require("@builders/message/components/button")
-local textInput = require("@builders/message/components/textInput")
-local selectMenu = require("@builders/message/components/selectMenu/selectMenu")
-local actionRow = require("@builders/message/components/actionRow")
+local button = require("../message/components/button")
+local textInput = require("../message/components/textInput")
+local selectMenu = require("../message/components/selectMenu/selectMenu")
+local actionRow = require("../message/components/actionRow")
 
-local attachment = require("@builders/attachment")
+local attachment = require("../attachment")
 
 local MessageParams = {}
 
@@ -109,11 +109,11 @@ end
 function MessageParams.Prototype.build(self: MessageParams): JSON
 	return {
 		content = self.content,
-		embeds = self.embeds,
+		embeds = self.embeds :: { embed.JSON }?,
 		allowed_mentions = self.allowedMentions,
-		components = self.components,
-		sticker_ids = self.stickerIds,
-		attachments = self.attachments,
+		components = self.components :: { button.JSON | textInput.JSON | selectMenu.JSON | actionRow.JSON }?,
+		sticker_ids = self.stickerIds :: { string }?,
+		attachments = self.attachments :: { attachment.JSON }?,
 		flags = self.flags,
 	}
 end

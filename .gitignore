@@ -1,1 +1,4 @@
 .env.luau
+pesde.lock
+*_packages/
+darklua

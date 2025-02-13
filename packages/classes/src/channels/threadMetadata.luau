@@ -4,9 +4,8 @@
 	https://discord.com/developers/docs/resources/channel#thread-metadata-object
 ]]
 
-local datetime = require("@std-polyfills/datetime")
-
-local apiTypes = require("@api-types/apiTypes")
+local apiTypes = require("../../lune_packages/api_types")
+local stdPolyfills = require("../../lune_packages/std_polyfills")
 
 local ThreadMetadata = {}
 
@@ -14,9 +13,9 @@ ThreadMetadata.Interface = {}
 ThreadMetadata.Prototype = {}
 
 function ThreadMetadata.Prototype.sync(self: ThreadMetadata, threadMetadataData: apiTypes.ThreadMetadataObject)
-	self.archiveTimestamp = datetime.fromIsoDate(threadMetadataData.archive_timestamp)
+	self.archiveTimestamp = stdPolyfills.datetime.fromIsoDate(threadMetadataData.archive_timestamp)
 	self.createTimestamp = threadMetadataData.create_timestamp
-		and datetime.fromIsoDate(threadMetadataData.create_timestamp)
+		and stdPolyfills.datetime.fromIsoDate(threadMetadataData.create_timestamp)
 
 	self.archived = threadMetadataData.archived
 	self.autoArchiveDuration = threadMetadataData.auto_archive_duration
@@ -34,10 +33,10 @@ end
 export type ThreadMetadata = typeof(ThreadMetadata.Prototype) & {
 	archived: boolean,
 	autoArchiveDuration: number,
-	archiveTimestamp: datetime.DateTime,
+	archiveTimestamp: stdPolyfills.DateTime,
 	locked: boolean,
 	invitable: boolean?,
-	createTimestamp: datetime.DateTime?,
+	createTimestamp: stdPolyfills.DateTime?,
 }
 
 return ThreadMetadata.Interface

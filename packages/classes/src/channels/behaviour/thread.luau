@@ -2,15 +2,13 @@
 	Thread Behaviour, responsible for implementing the various properties, and methods for a generic thread channels.
 ]]
 
-local future = require("@vendor/future")
+local apiTypes = require("../../../lune_packages/api_types")
+local future = require("../../../luau_packages/future")
+local rest = require("../../../lune_packages/rest")
+local state = require("../../../lune_packages/state")
 
-local apiTypes = require("@api-types/apiTypes")
-
-local channelRest = require("@rest/channel")
-
-local threadMember = require("@classes/threadMember")
-local threadMetadata = require("@classes/channels/threadMetadata")
-local state = require("@classes/state")
+local threadMember = require("../../threadMember")
+local threadMetadata = require("../../channels/threadMetadata")
 
 local ThreadBehaviour = {}
 
@@ -20,99 +18,80 @@ ThreadBehaviour.Prototype = {}
 --[[
 	Adds the current user to a thread. Also requires the thread is not archived. 
 ]]
-function ThreadBehaviour.Prototype.joinThreadAsync<T>(self: Channel<T>): future.Future<nil>
-	return future.new(function()
+function ThreadBehaviour.Prototype.joinThreadAsync<T>(self: Channel<T>)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = channelRest.joinThreadAsync(request, self.id):await()
+		local response = rest.channel.joinThreadAsync(request, self.id):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return
-	end)
+		return nil
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
 	Adds another member to a thread. Requires the ability to send messages in the thread. Also requires the thread is not archived. 
 ]]
-function ThreadBehaviour.Prototype.addMemberToThreadAsync<T>(self: Channel<T>, userId: string): future.Future<nil>
-	return future.new(function()
+function ThreadBehaviour.Prototype.addMemberToThreadAsync<T>(self: Channel<T>, userId: string)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = channelRest.addThreadMemberAsync(request, self.id, userId):await()
+		local response = rest.channel.addThreadMemberAsync(request, self.id, userId):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return
-	end)
+		return nil
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
 	Removes the current user from a thread.
 ]]
-function ThreadBehaviour.Prototype.leaveThreadAsync<T>(self: Channel<T>): future.Future<nil>
-	return future.new(function()
+function ThreadBehaviour.Prototype.leaveThreadAsync<T>(self: Channel<T>)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = channelRest.leaveThreadAsync(request, self.id):await()
+		local response = rest.channel.leaveThreadAsync(request, self.id):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return
-	end)
+		return nil
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
 	Removes another member from a thread. Requires the ability to manage threads.
 ]]
-function ThreadBehaviour.Prototype.removeMemberAsync<T>(self: Channel<T>, userId: string): future.Future<nil>
-	return future.new(function()
+function ThreadBehaviour.Prototype.removeMemberAsync<T>(self: Channel<T>, userId: string)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = channelRest.removeThreadMemberAsync(request, self.id, userId):await()
+		local response = rest.channel.removeThreadMemberAsync(request, self.id, userId):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return
-	end)
-end
-
---[[
-	Removes another member from a thread. Requires the ability to manage threads.
-]]
-function ThreadBehaviour.Prototype.removeMemberAsync<T>(self: Channel<T>, userId: string): future.Future<nil>
-	return future.new(function()
-		local request = self.state.rest:newRequest()
-
-		local status, response = channelRest.removeThreadMemberAsync(request, self.id, userId):await()
-
-		assert(status == "Fulfilled", tostring(response))
-
-		return
-	end)
+		return nil
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
 	Gets a thread member by their user ID. Can optionally include the member object.
 ]]
-function ThreadBehaviour.Prototype.getMemberAsync<T>(
-	self: Channel<T>,
-	userId: string,
-	withMember: boolean?
-): future.Future<threadMember.ThreadMember>
-	return future.new(function()
+function ThreadBehaviour.Prototype.getMemberAsync<T>(self: Channel<T>, userId: string, withMember: boolean?)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = channelRest
+		local response = rest.channel
 			.getThreadMemberAsync(request, self.id, userId, {
 				withMember = withMember,
 			})
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return threadMember.new(self.state, self.guildId, response)
-	end)
+		return threadMember.new(self.state, self.guildId, response:unwrapOk())
+	end) :: future.FutureLike<string, threadMember.ThreadMember>
 end
 
 --[[
@@ -123,11 +102,11 @@ function ThreadBehaviour.Prototype.listMembersAsync<T>(
 	withMember: boolean?,
 	after: string?,
 	limit: number?
-): future.Future<threadMember.ThreadMember>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = channelRest
+		local response = rest.channel
 			.listThreadMembersAsync(request, self.id, {
 				withMember = withMember,
 				after = after,
@@ -135,16 +114,16 @@ function ThreadBehaviour.Prototype.listMembersAsync<T>(
 			})
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local threadMembers = {}
 
-		for _, memberData in response do
+		for _, memberData in response:unwrapOk() do
 			table.insert(threadMembers, threadMember.new(self.state, self.guildId, memberData))
 		end
 
 		return threadMembers
-	end)
+	end) :: future.FutureLike<string, { threadMember.ThreadMember }>
 end
 
 function ThreadBehaviour.Interface.inheritProperties(class: any, channelData: apiTypes.ChannelObject)

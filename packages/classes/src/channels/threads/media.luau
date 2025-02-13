@@ -4,15 +4,14 @@
 	https://discord.com/developers/docs/resources/channel#channel-object
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
+local apiTypes = require("../../../lune_packages/api_types")
+local state = require("../../../lune_packages/state")
 
-local channelBehaviour = require("@classes/channels/behaviour/channel")
-local guildBehaviour = require("@classes/channels/behaviour/guild")
-local textBehaviour = require("@classes/channels/behaviour/text")
-local threadBehaviour = require("@classes/channels/behaviour/thread")
-local mediaBehaviour = require("@classes/channels/behaviour/media")
-
-local state = require("@classes/state")
+local channelBehaviour = require("../behaviour/channel")
+local guildBehaviour = require("../behaviour/guild")
+local textBehaviour = require("../behaviour/text")
+local threadBehaviour = require("../behaviour/thread")
+local mediaBehaviour = require("../behaviour/media")
 
 local Media = {}
 

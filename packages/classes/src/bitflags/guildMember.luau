@@ -4,7 +4,7 @@
 	https://discord.com/developers/docs/resources/guild#guild-member-object-guild-member-flags
 ]]
 
-local bit = require("@vendor/bit")
+local bit = require("../../luau_packages/bit")
 
 local GuildMemberBitflag = {}
 

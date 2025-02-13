@@ -1,9 +1,7 @@
-local request = require("@rest/request")
-local future = require("@vendor/future")
+local future = require("../luau_packages/future")
+local apiTypes = require("../lune_packages/api_types")
 
-local restTypes = require("@api-types/rest/types")
-local apiTypes = require("@api-types/apiTypes")
-local restEndpoints = require("@api-types/rest/endpoints")
+local request = require("./request")
 
 --[[
 	HTTP Rest API implementation for the following Resource:
@@ -16,42 +14,46 @@ local ApplicationRoleConnectionMetadata = {}
 function ApplicationRoleConnectionMetadata.getApplicationRoleConnectionMetadataRecordsAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake
-): future.Future<
-	restTypes.GetCurrentApplicationResponse
->
-	return future.new(function()
-		instance:assertToken()
+)
+	return future.Future.new(
+			function()
+				instance:assertToken()
 
-		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetApplicationRoleConnectionMetadataRecords, applicationId))
+				instance:setMethod("GET")
+				instance:setUrl(
+					string.format(apiTypes.rest.endpoints.GetApplicationRoleConnectionMetadataRecords, applicationId)
+				)
 
-		local status, response = instance:executeAsync():await()
+				local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+				assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+				return response:unwrapOk().body
+			end
+		) :: future.FutureLike<string, apiTypes.GetApplicationRoleConnectionMetadataRecordsResponse>
 end
 
 -- https://discord.com/developers/docs/resources/application-role-connection-metadata#update-application-role-connection-metadata-records
 function ApplicationRoleConnectionMetadata.updateApplicationRoleConnectionMetadataRecordsAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake
-): future.Future<
-	restTypes.UpdateApplicationRoleConnectionMetadataRecordsResponse
->
-	return future.new(function()
-		instance:assertToken()
+)
+	return future.Future.new(
+			function()
+				instance:assertToken()
 
-		instance:setMethod("PUT")
-		instance:setUrl(string.format(restEndpoints.UpdateApplicationRoleConnectionMetadataRecords, applicationId))
+				instance:setMethod("PUT")
+				instance:setUrl(
+					string.format(apiTypes.rest.endpoints.UpdateApplicationRoleConnectionMetadataRecords, applicationId)
+				)
 
-		local status, response = instance:executeAsync():await()
+				local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+				assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+				return response:unwrapOk().body
+			end
+		) :: future.FutureLike<string, apiTypes.UpdateApplicationRoleConnectionMetadataRecordsResponse>
 end
 
 return ApplicationRoleConnectionMetadata

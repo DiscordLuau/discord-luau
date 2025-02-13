@@ -4,9 +4,9 @@
 	https://discord.com/developers/docs/topics/permissions#permissions
 ]]
 
-local permissionTypes = require("@api-types/permission")
+local apiTypes = require("../lune_packages/api_types")
 
-local bit = require("@vendor/bit")
+local bit = require("../luau_packages/bit")
 
 local Permission = {}
 
@@ -29,7 +29,7 @@ end
 --[[
 	add a specific permission to this permissions builder.
 ]]
-function Permission.Prototype.addPermission(self: Permission, permission: permissionTypes.Permissions): Permission
+function Permission.Prototype.addPermission(self: Permission, permission: apiTypes.Permissions): Permission
 	table.insert(self.addedPermissions, permission)
 
 	return self
@@ -38,7 +38,7 @@ end
 --[[
 	remove a specific permission to this permissions builder.
 ]]
-function Permission.Prototype.removePermission(self: Permission, permission: permissionTypes.Permissions): Permission
+function Permission.Prototype.removePermission(self: Permission, permission: apiTypes.Permissions): Permission
 	table.insert(self.removedPermissions, permission)
 
 	return self
@@ -51,11 +51,11 @@ function Permission.Prototype.build(self: Permission): JSON
 	local bitflag = self.bitflag
 
 	for _, permission in self.addedPermissions do
-		bitflag = bit.bor(bitflag, permissionTypes[permission])
+		bitflag = bit.bor(bitflag, apiTypes.permission.Permissions[permission])
 	end
 
 	for _, permission in self.removedPermissions do
-		bitflag = bit.band(bitflag, bit.bnot(permissionTypes[permission]))
+		bitflag = bit.band(bitflag, bit.bnot(apiTypes.permission.Permissions[permission]))
 	end
 
 	return tostring(bitflag)
@@ -75,6 +75,7 @@ function Permission.Interface.new(resource: {
 		{
 			addedPermissions = {},
 			removedPermissions = {},
+			bitflag = 0,
 		} :: Permission,
 		{
 			__index = Permission.Prototype,
@@ -93,11 +94,11 @@ end
 --[[
 	Enables you to create a permission builder from a list of permissions.
 ]]
-function Permission.Interface.fromPermissions(permissions: { permissionTypes.Permissions }): Permission
+function Permission.Interface.fromPermissions(permissions: { apiTypes.Permissions }): Permission
 	local bitflag = 0
 
 	for _, permission in permissions do
-		bitflag = bit.bor(bitflag, permissionTypes[permission])
+		bitflag = bit.bor(bitflag, apiTypes.permission.Permissions[permission])
 	end
 
 	return Permission.Interface.new({
@@ -107,8 +108,8 @@ end
 
 export type Permission = typeof(Permission.Prototype) & {
 	bitflag: number,
-	addedPermissions: { permissionTypes.Permissions },
-	removedPermissions: { permissionTypes.Permissions },
+	addedPermissions: { apiTypes.Permissions },
+	removedPermissions: { apiTypes.Permissions },
 }
 
 export type JSON = typeof(Permission.Prototype.build(nil :: any))

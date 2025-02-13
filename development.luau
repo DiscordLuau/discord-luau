@@ -1,35 +1,34 @@
-local botObject = require("@core/bot")
-local dateTime = require("@std-polyfills/datetime")
-
-local intentsBuilder = require("@builders/intents")
-local widgetSettings = require("@builders/guild/widgetSettings")
-
 local env = require(".env")
 
-local PENGU_BOT_ID = "726819179054891149"
-local DISCORD_LUAU_GENERAL_ID = "1273035768700338278"
-local DISCORD_LUAU_SERVER = "1273035219561091193"
+local discordLuau = require("./packages/discord_luau/src")
+local builders = require("./packages/builders/src")
 
-local discordIntents = intentsBuilder.new()
-
-discordIntents:addIntent("Guilds")
-
-local discordBot = botObject.new({
+local discordBot = discordLuau.Bot.new({
 	token = env.DISCORD_BOT_TOKEN,
-	intents = discordIntents:build(),
+	intents = builders.intents.new({ "Guilds" }):build(),
 })
 
+-- discordBot:getGuildAsync(guildId)
+
+discordBot.onMessage:listen(function() end)
+
 discordBot.onAllShardsReady:listen(function()
-	assert(discordBot.application, ``)
+	xpcall(function()
+		local channel = discordBot:getForumChannelAsync("1334296315038929009"):await():unwrapOk()
 
-	local guild = discordBot:getGuildAsync(DISCORD_LUAU_SERVER):expect("1")
-	local textChannel = discordBot:getTextChannelAsync(DISCORD_LUAU_GENERAL_ID):expect("2")
+		local result = channel
+			:createPostAsync({
+				message = {
+					content = "hi guys",
+				},
+				name = "test post",
+			})
+			:await()
 
-	textChannel:createMessageAsync({
-		content = "Hello, world!",
-	})
+		print("request sent:", result)
+	end, function(e)
+		print(e)
+	end)
 end)
 
-discordBot:connectAsync():after(function()
-	print("Connected to Discord!")
-end)
+discordBot:connectAsync():await()

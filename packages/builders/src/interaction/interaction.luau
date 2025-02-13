@@ -4,13 +4,11 @@
 	https://discord.com/developers/docs/interactions/application-commands#edit-global-application-command-json-params
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
-local interactionTypes = require("@api-types/interaction")
-local applicationTypes = require("@api-types/application")
+local apiTypes = require("../../lune_packages/api_types")
 
-local interactionOption = require("@builders/interaction/option")
+local interactionOption = require("./option")
 
-local validateKebabCase = require("@utils/validateKebabCase")
+local util = require("../../lune_packages/util")
 
 local Interaction = {}
 
@@ -32,10 +30,7 @@ end
 --[[
 	Set the Type of command
 ]]
-function Interaction.Prototype.setType(
-	self: Interaction,
-	commandType: interactionTypes.ApplicationCommandType
-): Interaction
+function Interaction.Prototype.setType(self: Interaction, commandType: apiTypes.ApplicationCommandType): Interaction
 	self.type = commandType
 
 	return self
@@ -52,7 +47,7 @@ function Interaction.Prototype.setNameLocalization(
 	assert(#name <= 32, "name must be less than 32 characters")
 	assert(#name >= 1, "name must be at least 1 character")
 
-	validateKebabCase(name)
+	assert(util.validateKebabCase(name), `name must be kebab case`)
 
 	self.nameLocalizations[localization] = name
 
@@ -108,10 +103,7 @@ end
 --[[
 	Installation context(s) where the command is available
 ]]
-function Interaction.Prototype.addIntegrationType(
-	self: Interaction,
-	type: applicationTypes.IntegrationTypesConfig
-): Interaction
+function Interaction.Prototype.addIntegrationType(self: Interaction, type: apiTypes.IntegrationTypesConfig): Interaction
 	table.insert(self.integrationTypes, type)
 
 	return self
@@ -120,10 +112,7 @@ end
 --[[
 	Interaction context(s) where the command can be used
 ]]
-function Interaction.Prototype.addContext(
-	self: Interaction,
-	context: interactionTypes.InteractionContextType
-): Interaction
+function Interaction.Prototype.addContext(self: Interaction, context: apiTypes.InteractionContextType): Interaction
 	table.insert(self.contexts, context)
 
 	return self
@@ -150,11 +139,11 @@ function Interaction.Prototype.build(self: Interaction): JSON
 	local integrationTypeArray: { number } = {}
 
 	for _, context in self.contexts do
-		table.insert(contexts, interactionTypes.InteractionContextType[context])
+		table.insert(contexts, apiTypes.interaction.InteractionContextType[context])
 	end
 
 	for _, interactionType in self.integrationTypes do
-		table.insert(integrationTypeArray, applicationTypes.IntegrationTypesConfig[interactionType])
+		table.insert(integrationTypeArray, apiTypes.interaction.IntegrationTypesConfig[interactionType])
 	end
 
 	return {
@@ -172,7 +161,7 @@ function Interaction.Prototype.build(self: Interaction): JSON
 		default_permission = nil :: any,
 		integration_types = integrationTypeArray,
 		contexts = contexts,
-		type = interactionTypes.ApplicationCommandType[self.type] or nil,
+		type = apiTypes.application.ApplicationCommandType[self.type] or nil,
 		nsfw = self.nsfw,
 	}
 end
@@ -191,8 +180,8 @@ function Interaction.Interface.new(resource: {
 	descriptionLocalizations: { [apiTypes.LanguageLocales]: string }?,
 	options: { interactionOption.JSON }?,
 	defaultMemberPermissions: string?,
-	integrationTypes: { applicationTypes.IntegrationTypesConfig }?,
-	contexts: { interactionTypes.InteractionContextType }?,
+	integrationTypes: { apiTypes.IntegrationTypesConfig }?,
+	contexts: { apiTypes.InteractionContextType }?,
 	nsfw: boolean?,
 }?): Interaction
 	local self = setmetatable(
@@ -237,13 +226,13 @@ function Interaction.Interface.new(resource: {
 	end
 
 	if resource and resource.integrationTypes then
-		for _, type: applicationTypes.IntegrationTypesConfig in resource.integrationTypes do
+		for _, type: apiTypes.IntegrationTypesConfig in resource.integrationTypes do
 			self:addIntegrationType(type)
 		end
 	end
 
 	if resource and resource.contexts then
-		for _, context: interactionTypes.InteractionContextType in resource.contexts do
+		for _, context: apiTypes.InteractionContextType in resource.contexts do
 			self:addContext(context)
 		end
 	end
@@ -262,9 +251,9 @@ export type Interaction = typeof(Interaction.Prototype) & {
 	descriptionLocalizations: { [apiTypes.LanguageLocales]: string },
 	options: { interactionOption.JSON },
 	defaultMemberPermissions: string?,
-	integrationTypes: { applicationTypes.IntegrationTypesConfig },
-	contexts: { interactionTypes.InteractionContextType },
-	type: interactionTypes.ApplicationCommandType,
+	integrationTypes: { apiTypes.IntegrationTypesConfig },
+	contexts: { apiTypes.InteractionContextType },
+	type: apiTypes.ApplicationCommandType,
 	nsfw: boolean?,
 }
 

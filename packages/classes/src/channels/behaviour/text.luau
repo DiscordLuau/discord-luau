@@ -2,20 +2,14 @@
 	Text Behaviour, responsible for implementing the various properties, and methods for a text-able channels.
 ]]
 
-local datetime = require("@std-polyfills/datetime")
+local apiTypes = require("../../../lune_packages/api_types")
+local stdPolyfills = require("../../../lune_packages/std_polyfills")
+local future = require("../../../luau_packages/future")
+local rest = require("../../../lune_packages/rest")
+local state = require("../../../lune_packages/state")
+local builders = require("../../../lune_packages/builders")
 
-local future = require("@vendor/future")
-
-local channelRest = require("@rest/channel")
-local messageRest = require("@rest/message")
-
-local apiTypes = require("@api-types/apiTypes")
-
-local state = require("@classes/state")
-local message = require("@classes/message/message")
-
-local messageBuilder = require("@builders/message/message")
-local noMessageThreadBuilder = require("@builders/thread/noMessageThread")
+local message = require("../../message/message")
 
 local TextBehaviour = {}
 
@@ -26,24 +20,20 @@ TextBehaviour.Prototype = {}
 	Delete multiple messages in a single request. This endpoint can only be used on guild channels and requires the
 	MANAGE_MESSAGES permission.
 ]]
-function TextBehaviour.Prototype.bulkDeleteMessagesAsync<T>(
-	self: Channel<T>,
-	messageIds: { string },
-	reason: string?
-): future.Future<nil>
-	return future.new(function()
+function TextBehaviour.Prototype.bulkDeleteMessagesAsync<T>(self: Channel<T>, messageIds: { string }, reason: string?)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = messageRest
+		local response = rest.message
 			.bulkDeleteMessagesAsync(request, self.id, {
 				messages = messageIds,
 			}, reason)
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return
-	end)
+		return nil
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
@@ -55,11 +45,11 @@ function TextBehaviour.Prototype.getMessagesAsync<T>(
 	before: apiTypes.Snowflake?,
 	after: apiTypes.Snowflake?,
 	limit: number?
-): future.Future<{ message.Message }>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = messageRest
+		local response = rest.message
 			.getChannelMessagesAsync(request, self.id, {
 				around = around,
 				before = before,
@@ -68,127 +58,118 @@ function TextBehaviour.Prototype.getMessagesAsync<T>(
 			})
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local messages = {}
 
-		for _, messageData in response do
+		for _, messageData in response:unwrapOk() do
 			table.insert(messages, message.new(self.state, messageData))
 		end
 
 		return messages
-	end)
+	end) :: future.FutureLike<string, { message.Message }>
 end
 
 --[[
 	Gets a specific message from a channel using its ID. Returns a message object.
 ]]
-function TextBehaviour.Prototype.getMessageAsync<T>(
-	self: Channel<T>,
-	messageId: apiTypes.Snowflake
-): future.Future<message.Message>
-	return future.new(function()
+function TextBehaviour.Prototype.getMessageAsync<T>(self: Channel<T>, messageId: apiTypes.Snowflake)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = messageRest.getChannelMessageAsync(request, self.id, messageId):await()
+		local response = rest.message.getChannelMessageAsync(request, self.id, messageId):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return message.new(self.state, response)
-	end)
+		return message.new(self.state, response:unwrapOk())
+	end) :: future.FutureLike<string, message.Message>
 end
 
 --[[
 	Creates a new message in the channel. Returns the created message object.
 ]]
-function TextBehaviour.Prototype.createMessageAsync<T>(
-	self: Channel<T>,
-	json: messageBuilder.JSON
-): future.Future<message.Message>
-	return future.new(function()
+function TextBehaviour.Prototype.createMessageAsync<T>(self: Channel<T>, json: builders.messageJSON)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = messageRest.createMessageAsync(request, self.id, json):await()
+		local response = rest.message.createMessageAsync(request, self.id, json):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return message.new(self.state, response)
-	end)
+		return message.new(self.state, response:unwrapOk())
+	end) :: future.FutureLike<string, message.Message>
 end
 
 --[[
 	Gets all pinned messages in the channel. Returns an array of message objects.
 ]]
-function TextBehaviour.Prototype.getPinnedMessagesAsync<T>(self: Channel<T>): future.Future<{ message.Message }>
-	return future.new(function()
+function TextBehaviour.Prototype.getPinnedMessagesAsync<T>(self: Channel<T>)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = channelRest.getPinnedMessagesAsync(request, self.id):await()
+		local response = rest.channel.getPinnedMessagesAsync(request, self.id):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		local messages = {}
 
-		for _, messageData in response do
+		for _, messageData in response:unwrapOk() do
 			table.insert(messages, message.new(self.state, messageData))
 		end
 
 		return messages
-	end)
+	end) :: future.FutureLike<string, { message.Message }>
 end
 
 --[[
 	Pins a message in the channel.
 ]]
-function TextBehaviour.Prototype.pinMessageAsync<T>(self: Channel<T>, messageId: string): future.Future<nil>
-	return future.new(function()
+function TextBehaviour.Prototype.pinMessageAsync<T>(self: Channel<T>, messageId: string)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = channelRest.pinMessageAsync(request, self.id, messageId):await()
+		local response = rest.channel.pinMessageAsync(request, self.id, messageId):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return nil
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
 	Unpins a message from the channel.
 ]]
-function TextBehaviour.Prototype.unpinMessageAsync<T>(
-	self: Channel<T>,
-	messageId: string,
-	reason: string?
-): future.Future<nil>
-	return future.new(function()
+function TextBehaviour.Prototype.unpinMessageAsync<T>(self: Channel<T>, messageId: string, reason: string?)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = channelRest.unpinMessageAsync(request, self.id, messageId, reason):await()
+		local response = rest.channel.unpinMessageAsync(request, self.id, messageId, reason):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return nil
-	end)
+	end) :: future.FutureLike<string, nil>
 end
 
 --[[
 	Starts a new thread in the channel without an associated message. Returns the thread ID.
 ]]
-function TextBehaviour.Prototype.startThread<T>(self: Channel<T>, json: noMessageThreadBuilder.JSON): future.Future<string>
-	return future.new(function()
+function TextBehaviour.Prototype.startThread<T>(self: Channel<T>, json: builders.noMessageThreadJSON)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response = channelRest.startThreadWithoutMessageAsync(request, self.id, json):await()
+		local response = rest.channel.startThreadWithoutMessageAsync(request, self.id, json):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.id
-	end)
+		return response:unwrapOk().id :: any
+	end) :: future.FutureLike<string, apiTypes.Snowflake>
 end
 
 function TextBehaviour.Interface.inheritProperties(class: any, channelData: apiTypes.ChannelObject)
 	class.lastMessageId = channelData.last_message_id
-	class.lastPinTimestamp = channelData.last_pin_timestamp and datetime.fromIsoDate(channelData.last_pin_timestamp)
+	class.lastPinTimestamp = channelData.last_pin_timestamp
+		and stdPolyfills.datetime.fromIsoDate(channelData.last_pin_timestamp)
 	class.rateLimitPerUser = channelData.rate_limit_per_user
 end
 
@@ -209,7 +190,7 @@ type Channel<T> = T & TextBehaviour & {
 export type TextBehaviourMethods = typeof(TextBehaviour.Prototype)
 export type TextBehaviourProperties = {
 	lastMessageId: string?,
-	lastPinTimestamp: datetime.DateTime?,
+	lastPinTimestamp: stdPolyfills.DateTime?,
 	rateLimitPerUser: number,
 }
 

@@ -4,16 +4,13 @@
 	https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-structure
 ]]
 
-local future = require("@vendor/future")
-
-local apiTypes = require("@api-types/apiTypes")
-
-local interactionRest = require("@rest/interaction")
-
-local interactionBehaviour = require("@classes/interaction/behaviour/interaction")
-
 -- selene: allow(unused_variable)
-local state = require("@classes/state")
+local state = require("../../../lune_packages/state")
+local apiTypes = require("../../../lune_packages/api_types")
+local rest = require("../../../lune_packages/rest")
+local future = require("../../../luau_packages/future")
+
+local interactionBehaviour = require("../behaviour/interaction")
 
 local Ping = {}
 
@@ -26,11 +23,11 @@ Ping.Behaviours = {
 --[[
 	acknowledge an interaction ping
 ]]
-function Ping.Prototype.pongAsync(self: Ping): future.Future<nil>
+function Ping.Prototype.pongAsync(self: Ping)
 	local request = self.state.rest:newRequest()
 
-	return future.new(function()
-		local status, response = interactionRest
+	return future.Future.new(function()
+		local response = rest.interaction
 			.createInteractionResponseAsync(request, self.id, self.token, {
 				type = 1,
 				data = {},
@@ -39,8 +36,10 @@ function Ping.Prototype.pongAsync(self: Ping): future.Future<nil>
 			})
 			:await()
 
-		assert(status == "Fulfilled", tostring(response))
-	end)
+		assert(response:isOk(), tostring(response:unwrapErr()))
+
+		return nil
+	end) :: future.FutureLike<string, nil>
 end
 
 function Ping.Prototype.sync(self: Ping, interactionData: apiTypes.InteractionObject)

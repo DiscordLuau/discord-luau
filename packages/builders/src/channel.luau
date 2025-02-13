@@ -4,10 +4,9 @@
 	https://discord.com/developers/docs/resources/guild#create-guild-channel
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
-local channelTypes = require("@api-types/channel")
+local apiTypes = require("../lune_packages/api_types")
 
-local validateKebabCase = require("@utils/validateKebabCase")
+local util = require("../lune_packages/util")
 
 local GUILD_CHANNEL_TYPE_MAP = {
 	["GuildText"] = 0,
@@ -53,7 +52,7 @@ function Channel.Prototype.setName(self: Channel, tagName: string): Channel
 	assert(#tagName <= 100, `Channel name must be less than 100 characters.`)
 	assert(#tagName > 1, `Channel name must be more than 1 characters.`)
 
-	assert(validateKebabCase(tagName), `Channel name must be kebab-case.`)
+	assert(util.validateKebabCase(tagName), `Channel name must be kebab-case.`)
 
 	self.name = tagName
 
@@ -63,7 +62,7 @@ end
 --[[
 	Set the Type of channel this is.
 ]]
-function Channel.Prototype.setType(self: Channel, channelType: channelTypes.ChannelType): Channel
+function Channel.Prototype.setType(self: Channel, channelType: apiTypes.ChannelType): Channel
 	self.type = channelType
 
 	return self
@@ -223,7 +222,7 @@ end
 --[[
 	sets the video quality mode of the voice channel.
 ]]
-function Channel.Prototype.setVideoQualityMode(self: Channel, videoQualityMode: channelTypes.VideoQualityMode): Channel
+function Channel.Prototype.setVideoQualityMode(self: Channel, videoQualityMode: apiTypes.VideoQualityMode): Channel
 	assert(
 		self.type == "GuildVoice" or self.type == "GuildStageVoice",
 		`Channel video quality mode is only supported for voice and stage voice.`
@@ -292,7 +291,7 @@ end
 
 	This is the sort order that the channel will use for newly created threads.
 ]]
-function Channel.Prototype.setDefaultSortOrder(self: Channel, sortOrder: channelTypes.ForumSortOrder): Channel
+function Channel.Prototype.setDefaultSortOrder(self: Channel, sortOrder: apiTypes.ForumSortOrder): Channel
 	assert(
 		self.type == "GuildForum" or self.type == "GuildMedia",
 		`Channel sort order is only supported for forum, and media channels.`
@@ -308,7 +307,7 @@ end
 
 	This is the layout that the channel will use for newly created threads.
 ]]
-function Channel.Prototype.setDefaultForumLayout(self: Channel, forumLayout: channelTypes.ForumLayout): Channel
+function Channel.Prototype.setDefaultForumLayout(self: Channel, forumLayout: apiTypes.ForumLayout): Channel
 	assert(self.type == "GuildForum", `Channel forum layout is only supported for forum channels.`)
 
 	self.defaultForumLayout = forumLayout
@@ -393,7 +392,7 @@ end
 ]]
 function Channel.Interface.new(resource: {
 	channelName: string?,
-	channelType: channelTypes.ChannelType?,
+	channelType: apiTypes.ChannelType?,
 	channelPosition: number?,
 	channelPermissionOverwrites: { apiTypes.OverwriteObject }?,
 }?): Channel
@@ -427,7 +426,7 @@ export type Channel = typeof(Channel.Prototype) & {
 	id: apiTypes.Snowflake?,
 
 	name: string?,
-	type: channelTypes.ChannelType,
+	type: apiTypes.ChannelType,
 	permissionOverwrites: { apiTypes.OverwriteObject },
 	position: number?,
 
@@ -446,13 +445,13 @@ export type Channel = typeof(Channel.Prototype) & {
 	-- MEDIA
 	defaultReactionEmoji: apiTypes.DefaultReactionObject?,
 	availableTags: { apiTypes.ForumTagObject }?,
-	defaultSortOrder: channelTypes.ForumSortOrder?,
+	defaultSortOrder: apiTypes.ForumSortOrder?,
 
 	-- FORUM
-	defaultForumLayout: channelTypes.ForumLayout?,
+	defaultForumLayout: apiTypes.ForumLayout?,
 
 	-- VOICE
-	videoQualityMode: channelTypes.VideoQualityMode?,
+	videoQualityMode: apiTypes.VideoQualityMode?,
 	rtcRegion: string?,
 	rateLimitPerUser: number?,
 	userLimit: number?,

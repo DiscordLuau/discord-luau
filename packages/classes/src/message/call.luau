@@ -4,11 +4,11 @@
 	https://discord.com/developers/docs/resources/message#message-call-object
 ]]
 
-local datetime = require("@std-polyfills/datetime")
+local stdPolyfills = require("../../lune_packages/std_polyfills")
 
-local apiTypes = require("@api-types/apiTypes")
+local apiTypes = require("../../lune_packages/api_types")
 
-local user = require("@classes/user")
+local user = require("../user")
 
 local Call = {}
 
@@ -23,7 +23,7 @@ function Call.Prototype.sync(self: Call, callData: apiTypes.MessageCallObject)
 	end
 
 	self.participants = userArray
-	self.endedTimestamp = datetime.fromIsoDate(callData.ended_timestamp)
+	self.endedTimestamp = stdPolyfills.datetime.fromIsoDate(callData.ended_timestamp)
 end
 
 function Call.Interface.new(callData: apiTypes.MessageCallObject): Call
@@ -36,7 +36,7 @@ end
 
 export type Call = typeof(Call.Prototype) & {
 	participants: { user.User },
-	endedTimestamp: datetime.DateTime,
+	endedTimestamp: stdPolyfills.DateTime,
 }
 
 return Call.Interface

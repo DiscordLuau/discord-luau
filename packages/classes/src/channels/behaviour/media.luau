@@ -2,18 +2,14 @@
 	Media Behaviour, responsible for implementing the various properties, and methods for a media thread channel.
 ]]
 
-local future = require("@vendor/future")
+local apiTypes = require("../../../lune_packages/api_types")
+local future = require("../../../luau_packages/future")
+local rest = require("../../../lune_packages/rest")
+local state = require("../../../lune_packages/state")
+local builders = require("../../../lune_packages/builders")
 
-local apiTypes = require("@api-types/apiTypes")
-local channelTypes = require("@api-types/channel")
-
-local channelRest = require("@rest/channel")
-
-local forumTag = require("@classes/channels/forumTag")
-local defaultReaction = require("@classes/channels/defaultReaction")
-local state = require("@classes/state")
-
-local forumMediaBuilder = require("@builders/thread/forumMedia")
+local forumTag = require("../forumTag")
+local defaultReaction = require("../defaultReaction")
 
 local MediaBehaviour = {}
 
@@ -25,27 +21,22 @@ MediaBehaviour.Prototype = {}
  	
  	Example usage:
  	
- 	local builder = forumMediaBuilder.new()
+ 	local builder = builders.forumMediaJSON.new()
  		:setName("My Thread")
  		:setContent("First post!")
  	
  	channel:createPostAsync(builder:build()):await()
 ]]
-function MediaBehaviour.Prototype.createPostAsync<T>(
-	self: Channel<T>,
-	post: forumMediaBuilder.JSON,
-	reason: string?
-): future.Future<string>
-	return future.new(function()
+function MediaBehaviour.Prototype.createPostAsync<T>(self: Channel<T>, post: builders.forumMediaJSON, reason: string?)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response =
-			channelRest.startThreadInForumOrMediaChannelAsync(request, self.id, post, reason):await()
+		local response = rest.channel.startThreadInForumOrMediaChannelAsync(request, self.id, post, reason):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.id
-	end)
+		return response:unwrapOk().id :: any
+	end) :: future.FutureLike<string, apiTypes.Snowflake>
 end
 
 function MediaBehaviour.Interface.inheritProperties(class: any, channelData: apiTypes.ChannelObject)
@@ -64,7 +55,7 @@ function MediaBehaviour.Interface.inheritProperties(class: any, channelData: api
 	class.defaultForumLayout = channelData.default_forum_layout
 	class.appliedTags = channelData.applied_tags
 
-	class.defaultSortOrder = channelTypes.MediaSortOrder[channelData.default_sort_order]
+	class.defaultSortOrder = apiTypes.channel.MediaSortOrder[channelData.default_sort_order]
 end
 
 function MediaBehaviour.Interface.inheritMethods(class: any)
@@ -85,7 +76,7 @@ export type MediaBehaviourProperties = {
 	availableTags: { forumTag.ForumTag },
 	defaultReaction: defaultReaction.DefaultReaction?,
 	appliedTags: { apiTypes.Snowflake },
-	defaultForumLayout: channelTypes.MediaSortOrder,
+	defaultForumLayout: apiTypes.MediaSortOrder,
 }
 
 export type MediaBehaviour = MediaBehaviourMethods & MediaBehaviourProperties

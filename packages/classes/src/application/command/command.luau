@@ -4,13 +4,11 @@
 	https://discord.com/developers/docs/interactions/application-commands#application-command-object
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
-local applicationTypes = require("@api-types/application")
-local interactionTypes = require("@api-types/interaction")
+local apiTypes = require("../../../lune_packages/api_types")
 
-local permission = require("@classes/permission")
+local permission = require("../../permission")
 
-local option = require("@classes/application/command/option")
+local option = require("./option")
 
 local Command = {}
 
@@ -29,16 +27,16 @@ function Command.Prototype.sync(self: Command, commandData: apiTypes.Application
 
 	-- fixme: need to use `next` iterator here to avoid LSP errors.
 	for _, integrationType in next, commandData.integration_types or {} do
-		table.insert(integrationTypeArray, applicationTypes.IntegrationTypesConfig[integrationType])
+		table.insert(integrationTypeArray, apiTypes.application.IntegrationTypesConfig[integrationType])
 	end
 
 	-- fixme: need to use `next` iterator here to avoid LSP errors.
 	for _, context in next, commandData.contexts or {} do
-		table.insert(integrationTypeArray, interactionTypes.InteractionContextType[context])
+		table.insert(integrationTypeArray, apiTypes.application.InteractionContextType[context])
 	end
 
 	self.id = commandData.id or "-1"
-	self.type = interactionTypes.ApplicationCommandType[commandData.type]
+	self.type = apiTypes.application.ApplicationCommandType[commandData.type]
 	self.applicationId = commandData.application_id or "-1"
 	self.guildId = commandData.guild_id
 	self.name = commandData.name
@@ -76,8 +74,8 @@ export type Command = typeof(Command.Prototype) & {
 	-- dmPermission: boolean?,
 	-- defaultPermissions: boolean?
 	nsfw: boolean?,
-	integrationTypes: { applicationTypes.IntegrationTypesConfig },
-	contexts: { interactionTypes.InteractionContextType },
+	integrationTypes: { apiTypes.IntegrationTypesConfig },
+	contexts: { apiTypes.InteractionContextType },
 	version: apiTypes.Snowflake,
 	-- handler: -- todo: implement handler type
 }

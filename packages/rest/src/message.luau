@@ -1,12 +1,9 @@
-local serde = require("@std-polyfills/serde")
-local net = require("@std-polyfills/net")
+local stdPolyfills = require("../lune_packages/std_polyfills")
 
-local request = require("@rest/request")
-local future = require("@vendor/future")
+local future = require("../luau_packages/future")
+local apiTypes = require("../lune_packages/api_types")
 
-local restTypes = require("@api-types/rest/types")
-local apiTypes = require("@api-types/apiTypes")
-local restEndpoints = require("@api-types/rest/endpoints")
+local request = require("./request")
 
 --[[
 	HTTP Rest API implementation for the following Resource:
@@ -25,8 +22,8 @@ function Message.getChannelMessagesAsync(
 		after: apiTypes.Snowflake?,
 		limit: number?,
 	}
-): future.Future<restTypes.GetChannelMessagesResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:addUrlParam("around", urlParams.around and tostring(urlParams.around) or (nil :: any))
@@ -35,76 +32,67 @@ function Message.getChannelMessagesAsync(
 		instance:addUrlParam("limit", urlParams.limit and tostring(urlParams.limit) or (nil :: any))
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetChannelMessages, channelId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetChannelMessages, channelId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.GetChannelMessagesResponse>
 end
 
 -- https://discord.com/developers/docs/resources/message#get-channel-message
-function Message.getChannelMessageAsync(
-	instance: request.Request,
-	channelId: string,
-	messageId: apiTypes.Snowflake
-): future.Future<restTypes.GetChannelMessageResponse>
-	return future.new(function()
+function Message.getChannelMessageAsync(instance: request.Request, channelId: string, messageId: apiTypes.Snowflake)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetChannelMessage, channelId, messageId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetChannelMessage, channelId, messageId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.GetChannelMessageResponse>
 end
 
 -- https://discord.com/developers/docs/resources/message#create-message
 function Message.createMessageAsync(
 	instance: request.Request,
 	channelId: string,
-	jsonParams: restTypes.CreateMessageRequest
-): future.Future<restTypes.CreateMessageResponse>
-	return future.new(function()
+	jsonParams: apiTypes.CreateMessageRequest
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("POST")
-		instance:setUrl(string.format(restEndpoints.CreateMessage, channelId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.CreateMessage, channelId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.CreateMessageResponse>
 end
 
 -- https://discord.com/developers/docs/resources/message#crosspost-message
-function Message.crosspostMessageAsync(
-	instance: request.Request,
-	channelId: string,
-	jsonParams: restTypes.CrosspostMessageRequest
-): future.Future<restTypes.CrosspostMessageResponse>
-	return future.new(function()
+function Message.crosspostMessageAsync(instance: request.Request, channelId: string, messageId: string)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("POST")
-		instance:setUrl(string.format(restEndpoints.CrosspostMessage, channelId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.CrosspostMessage, channelId, messageId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.CrosspostMessageResponse>
 end
 
 -- https://discord.com/developers/docs/resources/message#create-reaction
@@ -112,23 +100,27 @@ function Message.createReactionAsync(
 	instance: request.Request,
 	channelId: string,
 	messageId: apiTypes.Snowflake,
-	emojiId: apiTypes.Snowflake,
-	emojiName: string
-): future.Future<restTypes.CreateReactionResponse>
-	return future.new(function()
+	emoji: string
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PUT")
 		instance:setUrl(
-			string.format(restEndpoints.CreateReaction, channelId, messageId, net.urlEncode(`{emojiName}:{emojiId}`))
+			string.format(
+				apiTypes.rest.endpoints.CreateReaction,
+				channelId,
+				messageId,
+				stdPolyfills.net.urlEncode(emoji)
+			)
 		)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.CreateReactionResponse>
 end
 
 -- https://discord.com/developers/docs/resources/message#delete-own-reaction
@@ -136,23 +128,27 @@ function Message.deleteOwnReactionAsync(
 	instance: request.Request,
 	channelId: string,
 	messageId: apiTypes.Snowflake,
-	emojiId: apiTypes.Snowflake,
-	emojiName: string
-): future.Future<restTypes.DeleteOwnReactionResponse>
-	return future.new(function()
+	emoji: string
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
 		instance:setUrl(
-			string.format(restEndpoints.DeleteOwnReaction, channelId, messageId, net.urlEncode(`{emojiName}:{emojiId}`))
+			string.format(
+				apiTypes.rest.endpoints.DeleteOwnReaction,
+				channelId,
+				messageId,
+				stdPolyfills.net.urlEncode(emoji)
+			)
 		)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.DeleteOwnReactionResponse>
 end
 
 -- https://discord.com/developers/docs/resources/message#delete-user-reaction
@@ -160,30 +156,29 @@ function Message.deleteUserReactionAsync(
 	instance: request.Request,
 	channelId: string,
 	messageId: apiTypes.Snowflake,
-	emojiId: apiTypes.Snowflake,
-	emojiName: string,
+	emoji: string,
 	userId: apiTypes.Snowflake
-): future.Future<restTypes.DeleteUserReactionResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
 		instance:setUrl(
 			string.format(
-				restEndpoints.DeleteUserReaction,
+				apiTypes.rest.endpoints.DeleteUserReaction,
 				channelId,
 				messageId,
-				net.urlEncode(`{emojiName}:{emojiId}`),
+				stdPolyfills.net.urlEncode(emoji),
 				userId
 			)
 		)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.DeleteUserReactionResponse>
 end
 
 -- https://discord.com/developers/docs/resources/message#get-reactions
@@ -191,15 +186,14 @@ function Message.getReactionsAsync(
 	instance: request.Request,
 	channelId: string,
 	messageId: apiTypes.Snowflake,
-	emojiId: apiTypes.Snowflake,
-	emojiName: string,
+	emoji: string,
 	urlParams: {
 		type: ("Normal" | "Burst")?,
 		after: apiTypes.Snowflake?,
 		limit: number?,
 	}
-): future.Future<restTypes.GetReactionsResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:addUrlParam("type", (urlParams.type and (urlParams.type == "Normal" and 0 or 1)) or (nil :: any))
@@ -208,35 +202,31 @@ function Message.getReactionsAsync(
 
 		instance:setMethod("GET")
 		instance:setUrl(
-			string.format(restEndpoints.GetReactions, channelId, messageId, net.urlEncode(`{emojiName}:{emojiId}`))
+			string.format(apiTypes.rest.endpoints.GetReactions, channelId, messageId, stdPolyfills.net.urlEncode(emoji))
 		)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.GetReactionsResponse>
 end
 
 -- https://discord.com/developers/docs/resources/message#delete-all-reactions
-function Message.deleteAllReactionsAsync(
-	instance: request.Request,
-	channelId: string,
-	messageId: apiTypes.Snowflake
-): future.Future<restTypes.DeleteAllReactionsResponse>
-	return future.new(function()
+function Message.deleteAllReactionsAsync(instance: request.Request, channelId: string, messageId: apiTypes.Snowflake)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
-		instance:setUrl(string.format(restEndpoints.DeleteAllReactions, channelId, messageId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.DeleteAllReactions, channelId, messageId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.DeleteAllReactionsResponse>
 end
 
 -- https://discord.com/developers/docs/resources/message#delete-all-reactions-for-emoji
@@ -244,28 +234,27 @@ function Message.deleteAllReactionsForEmojiAsync(
 	instance: request.Request,
 	channelId: string,
 	messageId: apiTypes.Snowflake,
-	emojiId: apiTypes.Snowflake,
-	emojiName: string
-): future.Future<restTypes.DeleteAllReactionsForEmojiResponse>
-	return future.new(function()
+	emoji: string
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
 		instance:setUrl(
 			string.format(
-				restEndpoints.DeleteAllReactions,
+				apiTypes.rest.endpoints.DeleteAllReactions,
 				channelId,
 				messageId,
-				net.urlEncode(`{emojiName}:{emojiId}`)
+				stdPolyfills.net.urlEncode(emoji)
 			)
 		)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.DeleteAllReactionsForEmojiResponse>
 end
 
 -- https://discord.com/developers/docs/resources/message#edit-message
@@ -273,21 +262,21 @@ function Message.editMessageAsync(
 	instance: request.Request,
 	channelId: string,
 	messageId: apiTypes.Snowflake,
-	jsonParams: restTypes.EditMessageRequest
-): future.Future<restTypes.EditMessageResponse>
-	return future.new(function()
+	jsonParams: apiTypes.EditMessageRequest
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PATCH")
-		instance:setUrl(string.format(restEndpoints.EditMessage, channelId, messageId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.EditMessage, channelId, messageId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.EditMessageResponse>
 end
 
 -- https://discord.com/developers/docs/resources/message#delete-message
@@ -296,43 +285,43 @@ function Message.deleteMessageAsync(
 	channelId: string,
 	messageId: apiTypes.Snowflake,
 	auditLogReason: string?
-): future.Future<restTypes.DeleteMessageResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
-		instance:setUrl(string.format(restEndpoints.DeleteMessage, channelId, messageId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.DeleteMessage, channelId, messageId))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.DeleteMessageResponse>
 end
 
 -- https://discord.com/developers/docs/resources/message#bulk-delete-messages
 function Message.bulkDeleteMessagesAsync(
 	instance: request.Request,
 	channelId: string,
-	jsonParams: restTypes.BulkDeleteMessagesRequest,
+	jsonParams: apiTypes.BulkDeleteMessagesRequest,
 	auditLogReason: string?
-): future.Future<restTypes.BulkDeleteMessageResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
-		instance:setMethod("DELETE")
-		instance:setUrl(string.format(restEndpoints.BulkDeleteMessages, channelId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setMethod("POST")
+		instance:setUrl(string.format(apiTypes.rest.endpoints.BulkDeleteMessages, channelId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.BulkDeleteMessageResponse>
 end
 
 return Message

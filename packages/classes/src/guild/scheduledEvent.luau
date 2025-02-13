@@ -4,12 +4,10 @@
 	https://discord.com/developers/docs/resources/scheduledevent#scheduledevent-object
 ]]
 
-local datetime = require("@std-polyfills/datetime")
+local apiTypes = require("../../lune_packages/api_types")
+local stdPolyfills = require("../../lune_packages/std_polyfills")
 
-local apiTypes = require("@api-types/apiTypes")
-local guildTypes = require("@api-types/guild")
-
-local user = require("@classes/user")
+local user = require("../user")
 
 local ScheduledEvent = {}
 
@@ -23,12 +21,12 @@ function ScheduledEvent.Prototype.sync(self: ScheduledEvent, scheduledeventData:
 	self.creatorId = scheduledeventData.creator_id
 	self.name = scheduledeventData.name
 	self.description = scheduledeventData.description
-	self.scheduledStartTime = datetime.fromIsoDate(scheduledeventData.scheduled_start_time)
+	self.scheduledStartTime = stdPolyfills.datetime.fromIsoDate(scheduledeventData.scheduled_start_time)
 	self.scheduledEndTime = scheduledeventData.scheduled_end_time
-		and datetime.fromIsoDate(scheduledeventData.scheduled_end_time)
-	self.privacyLevel = guildTypes.ScheduledEventPrivacyLevel[scheduledeventData.privacy_level]
-	self.status = guildTypes.SchedledEventStatus[scheduledeventData.status + 1]
-	self.entityType = guildTypes.SchedledEventEntityType[scheduledeventData.entity_type + 1]
+		and stdPolyfills.datetime.fromIsoDate(scheduledeventData.scheduled_end_time)
+	self.privacyLevel = apiTypes.guild.ScheduledEventPrivacyLevel[scheduledeventData.privacy_level]
+	self.status = apiTypes.guild.SchedledEventStatus[scheduledeventData.status + 1]
+	self.entityType = apiTypes.guild.SchedledEventEntityType[scheduledeventData.entity_type + 1]
 	self.entityId = scheduledeventData.entity_id
 	self.location = scheduledeventData.entity_metadata and scheduledeventData.entity_metadata.location
 	self.creator = scheduledeventData.creator and user.new(scheduledeventData.creator)
@@ -51,11 +49,11 @@ export type ScheduledEvent = typeof(ScheduledEvent.Prototype) & {
 	creatorId: apiTypes.Snowflake?,
 	name: string,
 	description: string?,
-	scheduledStartTime: datetime.DateTime,
-	scheduledEndTime: datetime.DateTime?,
-	privacyLevel: guildTypes.ScheduledEventPrivacyLevel,
-	status: guildTypes.SchedledEventStatus,
-	entityType: guildTypes.SchedledEventEntityType,
+	scheduledStartTime: stdPolyfills.DateTime,
+	scheduledEndTime: stdPolyfills.DateTime?,
+	privacyLevel: apiTypes.ScheduledEventPrivacyLevel,
+	status: apiTypes.SchedledEventStatus,
+	entityType: apiTypes.SchedledEventEntityType,
 	entityId: apiTypes.Snowflake?,
 	location: string?,
 	creator: user.User?,

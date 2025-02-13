@@ -1,8 +1,7 @@
-local request = require("@rest/request")
-local future = require("@vendor/future")
+local future = require("../luau_packages/future")
+local apiTypes = require("../lune_packages/api_types")
 
-local restTypes = require("@api-types/rest/types")
-local restEndpoints = require("@api-types/rest/endpoints")
+local request = require("./request")
 
 --[[
 	HTTP Rest API implementation for the following Resource:
@@ -12,33 +11,33 @@ local restEndpoints = require("@api-types/rest/endpoints")
 local Gateway = {}
 
 -- https://discord.com/developers/docs/topics/gateway#get-gateway
-function Gateway.getGatewayAsync(instance: request.Request): future.Future<restTypes.GetGatewayResponse>
-	return future.new(function()
+function Gateway.getGatewayAsync(instance: request.Request)
+	return future.Future.new(function()
 		instance:setMethod("GET")
-		instance:setUrl(restEndpoints.GetGateway)
+		instance:setUrl(apiTypes.rest.endpoints.GetGateway)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.GetGatewayResponse>
 end
 
 -- https://discord.com/developers/docs/topics/gateway#get-gateway-bot
-function Gateway.getGatewayBotAsync(instance: request.Request): future.Future<restTypes.GetGatewayBotResponse>
-	return future.new(function()
+function Gateway.getGatewayBotAsync(instance: request.Request)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(restEndpoints.GetGatewayBot)
+		instance:setUrl(apiTypes.rest.endpoints.GetGatewayBot)
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.GetGatewayBotResponse>
 end
 
 return Gateway

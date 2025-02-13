@@ -4,12 +4,12 @@
 	https://discord.com/developers/docs/resources/poll#poll-object
 ]]
 
-local datetime = require("@std-polyfills/datetime")
+local stdPolyfills = require("../../../lune_packages/std_polyfills")
 
-local messageTypes = require("@api-types/message")
+local apiTypes = require("../../../lune_packages/api_types")
 
-local mediaBuilder = require("@builders/message/poll/media")
-local answerBuilder = require("@builders/message/poll/answer")
+local mediaBuilder = require("./media")
+local answerBuilder = require("./answer")
 
 local Poll = {}
 
@@ -37,9 +37,9 @@ end
 --[[
 	Sets the expiry time for the poll.
 ]]
-function Poll.Prototype.setExpiry(self: Poll, expiry: string | number | datetime.DateTime): Poll
+function Poll.Prototype.setExpiry(self: Poll, expiry: string | number | stdPolyfills.DateTime): Poll
 	if typeof(expiry) == "DateTime" then
-		local object = expiry :: datetime.DateTime
+		local object = expiry :: stdPolyfills.DateTime
 
 		self.expiry = tostring(object.unixTimestampMillis)
 	else
@@ -61,7 +61,7 @@ end
 --[[
 	Sets the layout type for the poll.
 ]]
-function Poll.Prototype.setLayoutType(self: Poll, layoutType: messageTypes.PollLayoutType): Poll
+function Poll.Prototype.setLayoutType(self: Poll, layoutType: apiTypes.PollLayoutType): Poll
 	self.layoutType = layoutType
 
 	return self
@@ -81,7 +81,7 @@ function Poll.Prototype.build(self: Poll): JSON
 		answers = self.answers,
 		expiry = self.expiry,
 		allow_multiselect = self.allowMultiselect,
-		layout_type = messageTypes.PollLayoutType[self.layoutType],
+		layout_type = apiTypes.channel.PollLayoutType[self.layoutType],
 		results = nil,
 	}
 end
@@ -98,7 +98,7 @@ function Poll.Interface.new(resource: {
 	answers: { answerBuilder.JSON }?,
 	expiry: number?,
 	allowMultiselect: boolean?,
-	layoutType: messageTypes.PollLayoutType?,
+	layoutType: apiTypes.PollLayoutType?,
 }?): Poll
 	local self = setmetatable(
 		{
@@ -141,7 +141,7 @@ export type Poll = typeof(Poll.Prototype) & {
 	answers: { answerBuilder.JSON },
 	expiry: string,
 	allowMultiselect: boolean,
-	layoutType: messageTypes.PollLayoutType,
+	layoutType: apiTypes.PollLayoutType,
 }
 
 export type JSON = typeof(Poll.Prototype.build(nil :: any))

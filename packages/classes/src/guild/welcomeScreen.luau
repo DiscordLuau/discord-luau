@@ -4,16 +4,16 @@
 	https://discord.com/developers/docs/resources/guild#welcome-screen-object
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
+local apiTypes = require("../../lune_packages/api_types")
 
-local welcomeScreenChannel = require("@classes/guild/welcomeScreenChannel")
+local welcomeScreenChannel = require("./welcomeScreenChannel")
 
 local WelcomeScreen = {}
 
 WelcomeScreen.Interface = {}
 WelcomeScreen.Prototype = {}
 
-function WelcomeScreen.Prototype.sync(self: WelcomeScreen, welcomeScreenData: apiTypes.WelcomeScreenObject)
+function WelcomeScreen.Prototype.sync(self: WelcomeScreen, welcomeScreenData: apiTypes.WelcomeScreenObject_)
 	local welcomeChannelArray = {}
 
 	for _, welcomeChannelData in welcomeScreenData.welcome_channels do
@@ -25,7 +25,7 @@ function WelcomeScreen.Prototype.sync(self: WelcomeScreen, welcomeScreenData: ap
 	self.description = welcomeScreenData.description
 end
 
-function WelcomeScreen.Interface.new(welcomeScreenData: apiTypes.WelcomeScreenObject): WelcomeScreen
+function WelcomeScreen.Interface.new(welcomeScreenData: apiTypes.WelcomeScreenObject_): WelcomeScreen
 	local self = setmetatable({} :: WelcomeScreen, { __index = WelcomeScreen.Prototype })
 
 	self:sync(welcomeScreenData)

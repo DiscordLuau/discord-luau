@@ -4,9 +4,9 @@
 	https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-choice-structure
 ]]
 
-local validateKebabCase = require("@utils/validateKebabCase")
+local apiTypes = require("../../lune_packages/api_types")
 
-local apiTypes = require("@api-types/apiTypes")
+local util = require("../../lune_packages/util")
 
 local Choice = {}
 
@@ -20,7 +20,7 @@ function Choice.Prototype.setName(self: Choice, name: string): Choice
 	assert(#name <= 100, "name must be less than 100 characters")
 	assert(#name >= 1, "name must be at least 1 character")
 
-	validateKebabCase(name)
+	assert(util.validateKebabCase(name), `name must be kebab case`)
 
 	self.name = name
 
@@ -38,7 +38,7 @@ function Choice.Prototype.setNameLocalization(
 	assert(#name <= 100, "name must be less than 100 characters")
 	assert(#name >= 1, "name must be at least 1 character")
 
-	validateKebabCase(name)
+	assert(util.validateKebabCase(name), `name must be kebab case`)
 
 	self.nameLocalizations[localization] = name
 

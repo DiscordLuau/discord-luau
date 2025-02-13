@@ -1,11 +1,9 @@
-local serde = require("@std-polyfills/serde")
+local stdPolyfills = require("../lune_packages/std_polyfills")
 
-local request = require("@rest/request")
-local future = require("@vendor/future")
+local future = require("../luau_packages/future")
+local apiTypes = require("../lune_packages/api_types")
 
-local restTypes = require("@api-types/rest/types")
-local apiTypes = require("@api-types/apiTypes")
-local restEndpoints = require("@api-types/rest/endpoints")
+local request = require("./request")
 
 --[[
 	HTTP Rest API implementation for the following Resource:
@@ -15,83 +13,80 @@ local restEndpoints = require("@api-types/rest/endpoints")
 local GuildTemplate = {}
 
 -- https://discord.com/developers/docs/resources/guild-template#get-guild-template
-function GuildTemplate.getGuildTemplateAsync(
-	instance: request.Request,
-	templateCode: string
-): future.Future<restTypes.GetGuildTemplateResponse>
-	return future.new(function()
+function GuildTemplate.getGuildTemplateAsync(instance: request.Request, templateCode: string)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetGuildTemplate, templateCode))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetGuildTemplate, templateCode))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.GetGuildTemplateResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild-template#create-guild-from-guild-template
 function GuildTemplate.createGuildFromGuildTemplateAsync(
 	instance: request.Request,
 	templateCode: string,
-	jsonParams: restTypes.CreateGuildFromGuildTemplateRequest
-): future.Future<restTypes.CreateGuildFromGuildTemplateResponse>
-	return future.new(function()
+	jsonParams: apiTypes.CreateGuildFromGuildTemplateRequest
+): future.Future<
+	string,
+	apiTypes.CreateGuildFromGuildTemplateResponse
+>
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("POST")
-		instance:setUrl(string.format(restEndpoints.CreateGuildFromTemplate, templateCode))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.CreateGuildFromTemplate, templateCode))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.CreateGuildFromGuildTemplateResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild-template#get-guild-templates
-function GuildTemplate.getGuildTemplatesAsync(
-	instance: request.Request,
-	guildId: apiTypes.Snowflake
-): future.Future<restTypes.GetGuildTemplatesResponse>
-	return future.new(function()
+function GuildTemplate.getGuildTemplatesAsync(instance: request.Request, guildId: apiTypes.Snowflake)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(restEndpoints.GetGuildTemplates, guildId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetGuildTemplates, guildId))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.GetGuildTemplatesResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild-template#create-guild-template
 function GuildTemplate.createGuildTemplateAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
-	jsonParams: restTypes.CreateGuildTemplateRequest
-): future.Future<restTypes.CreateGuildTemplateResponse>
-	return future.new(function()
+	jsonParams: apiTypes.CreateGuildTemplateRequest
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("POST")
-		instance:setUrl(string.format(restEndpoints.CreateGuildTemplate, guildId))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.CreateGuildTemplate, guildId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.CreateGuildTemplateResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild-template#sync-guild-template
@@ -99,19 +94,19 @@ function GuildTemplate.syncGuildTemplateAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	templateCode: string
-): future.Future<restTypes.SyncGuildTemplateResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PUT")
-		instance:setUrl(string.format(restEndpoints.SyncGuildTemplate, guildId, templateCode))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.SyncGuildTemplate, guildId, templateCode))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.SyncGuildTemplateResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild-template#modify-guild-template
@@ -119,21 +114,21 @@ function GuildTemplate.modifyGuildTemplateAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	templateCode: string,
-	jsonParams: restTypes.ModifyGuildTemplateRequest
-): future.Future<restTypes.ModifyGuildTemplateResponse>
-	return future.new(function()
+	jsonParams: apiTypes.ModifyGuildTemplateRequest
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PATCH")
-		instance:setUrl(string.format(restEndpoints.ModifyGuildTemplate, guildId, templateCode))
-		instance:setBody(serde.encode("json", jsonParams, true))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.ModifyGuildTemplate, guildId, templateCode))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.ModifyGuildTemplateResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild-template#delete-guild-template
@@ -141,19 +136,19 @@ function GuildTemplate.deleteGuildTemplateAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	templateCode: string
-): future.Future<restTypes.ModifyGuildTemplateResponse>
-	return future.new(function()
+)
+	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
-		instance:setUrl(string.format(restEndpoints.DeleteGuildTemplate, guildId, templateCode))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.DeleteGuildTemplate, guildId, templateCode))
 
-		local status, response = instance:executeAsync():await()
+		local response = instance:executeAsync():await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.body
-	end)
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.DeleteGuildTemplateResponse>
 end
 
 return GuildTemplate

@@ -6,8 +6,7 @@
 	https://discord.com/developers/docs/resources/guild
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
-local guildTypes = require("@api-types/guild")
+local apiTypes = require("../../lune_packages/api_types")
 
 local Guild = {}
 
@@ -29,8 +28,8 @@ end
 --[[
 	set the explicit verification level for this guild
 ]]
-function Guild.Prototype.setVerificationLevel(self: Guild, verificationLevel: guildTypes.VerificationLevel): Guild
-	assert(guildTypes.VerificationLevel[verificationLevel], "Invalid verification level")
+function Guild.Prototype.setVerificationLevel(self: Guild, verificationLevel: apiTypes.VerificationLevel): Guild
+	assert(apiTypes.guild.VerificationLevel[verificationLevel], "Invalid verification level")
 
 	self.verificationLevel = verificationLevel
 
@@ -42,10 +41,10 @@ end
 ]]
 function Guild.Prototype.setDefaultMessageNotifications(
 	self: Guild,
-	defaultMessageNotifications: guildTypes.DefaultMessageNotification
+	defaultMessageNotifications: apiTypes.DefaultMessageNotification
 ): Guild
 	assert(
-		guildTypes.DefaultMessageNotification[defaultMessageNotifications],
+		apiTypes.guild.DefaultMessageNotification[defaultMessageNotifications],
 		"Invalid defaultMessageNotifications level"
 	)
 
@@ -59,9 +58,9 @@ end
 ]]
 function Guild.Prototype.setExplicitContentFilter(
 	self: Guild,
-	explicitContentFilter: guildTypes.ExplicitContentFilterLevel
+	explicitContentFilter: apiTypes.ExplicitContentFilterLevel
 ): Guild
-	assert(guildTypes.ExplicitContentFilterLevel[explicitContentFilter], "Invalid explicitContentFilter level")
+	assert(apiTypes.guild.ExplicitContentFilterLevel[explicitContentFilter], "Invalid explicitContentFilter level")
 
 	self.explicitContentFilter = explicitContentFilter
 
@@ -220,9 +219,9 @@ end
 function Guild.Prototype.build(self: Guild): JSON
 	return {
 		name = self.name,
-		verification_level = guildTypes.VerificationLevel[self.verificationLevel],
-		default_message_notifications = guildTypes.DefaultMessageNotification[self.defaultMessageNotifications],
-		explicit_content_filter = guildTypes.ExplicitContentFilterLevel[self.explicitContentFilter],
+		verification_level = apiTypes.guild.VerificationLevel[self.verificationLevel],
+		default_message_notifications = apiTypes.guild.DefaultMessageNotification[self.defaultMessageNotifications],
+		explicit_content_filter = apiTypes.guild.ExplicitContentFilterLevel[self.explicitContentFilter],
 		afk_channel_id = self.afkChannelId,
 		afk_timeout = self.afkTimeout,
 		icon = self.icon,
@@ -251,9 +250,9 @@ end
 ]]
 function Guild.Interface.new(resource: {
 	name: string?,
-	verificationLevel: guildTypes.VerificationLevel?,
-	defaultMessageNotifications: guildTypes.DefaultMessageNotification?,
-	explicitContentFilter: guildTypes.ExplicitContentFilterLevel?,
+	verificationLevel: apiTypes.VerificationLevel?,
+	defaultMessageNotifications: apiTypes.DefaultMessageNotification?,
+	explicitContentFilter: apiTypes.ExplicitContentFilterLevel?,
 	afkChannelId: apiTypes.Snowflake?,
 	afkTimeout: number?,
 	icon: string?,
@@ -369,9 +368,9 @@ end
 
 export type Guild = typeof(Guild.Prototype) & {
 	name: string?,
-	verificationLevel: guildTypes.VerificationLevel,
-	defaultMessageNotifications: guildTypes.DefaultMessageNotification,
-	explicitContentFilter: guildTypes.ExplicitContentFilterLevel,
+	verificationLevel: apiTypes.VerificationLevel,
+	defaultMessageNotifications: apiTypes.DefaultMessageNotification,
+	explicitContentFilter: apiTypes.ExplicitContentFilterLevel,
 	afkChannelId: apiTypes.Snowflake?,
 	afkTimeout: number?,
 	icon: string?,

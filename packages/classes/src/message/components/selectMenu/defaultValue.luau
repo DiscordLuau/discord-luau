@@ -4,8 +4,7 @@
 	https://discord.com/developers/docs/interactions/message-components#select-menu-object-select-default-value-structure
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
-local messageTypes = require("@api-types/message")
+local apiTypes = require("../../../../lune_packages/api_types")
 
 local DefaultValue = {}
 
@@ -14,7 +13,7 @@ DefaultValue.Prototype = {}
 
 function DefaultValue.Prototype.sync(self: DefaultValue, valueData: apiTypes.SelectDefaultValueObject)
 	self.id = valueData.id
-	self.type = messageTypes.SelectDefaultValueType[valueData.type]
+	self.type = apiTypes.message.SelectDefaultValueType[valueData.type]
 end
 
 function DefaultValue.Interface.new(valueData: apiTypes.SelectDefaultValueObject): DefaultValue
@@ -27,7 +26,7 @@ end
 
 export type DefaultValue = typeof(DefaultValue.Prototype) & {
 	id: apiTypes.Snowflake,
-	type: messageTypes.SelectDefaultValueType,
+	type: apiTypes.SelectDefaultValueType,
 }
 
 return DefaultValue.Interface

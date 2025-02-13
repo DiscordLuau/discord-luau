@@ -7,10 +7,9 @@
 	https://discord.com/developers/docs/resources/channel#overwrite-object
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
-local permissionTypes = require("@api-types/permission")
+local apiTypes = require("../../lune_packages/api_types")
 
-local bit = require("@vendor/bit")
+local bit = require("../../luau_packages/bit")
 
 local Overwrite = {}
 
@@ -18,20 +17,20 @@ Overwrite.Prototype = {}
 Overwrite.Interface = {}
 
 --[[
-	Responsible for allowing specific permissionTypes to be set on either a Role of a Member.
+	Responsible for allowing specific apiTypes to be set on either a Role of a Member.
 ]]
-function Overwrite.Prototype.allowPermissions(self: Overwrite, ...: permissionTypes.Permissions): Overwrite
-	for _, permissionTypes in { ... } do
-		table.insert(self.allowedPermissionFlags, permissionTypes)
+function Overwrite.Prototype.allowPermissions(self: Overwrite, ...: apiTypes.Permissions): Overwrite
+	for _, apiTypes in { ... } do
+		table.insert(self.allowedPermissionFlags, apiTypes)
 	end
 
 	return self
 end
 
 --[[
-	Responsible for denying specific permissionTypes to be set on either a Role of a Member.
+	Responsible for denying specific apiTypes to be set on either a Role of a Member.
 ]]
-function Overwrite.Prototype.denyPermissions(self: Overwrite, ...: permissionTypes.Permissions): Overwrite
+function Overwrite.Prototype.denyPermissions(self: Overwrite, ...: apiTypes.Permissions): Overwrite
 	for _, permissionType in { ... } do
 		table.insert(self.deniedPermissionFlags, permissionType)
 	end
@@ -47,13 +46,13 @@ function Overwrite.Prototype.build(self: Overwrite): JSON
 	local denyPermissionBits = {}
 
 	for index, permissionEnum in self.allowedPermissionFlags do
-		local permissionBit = permissionTypes.Permissions[permissionEnum]
+		local permissionBit = apiTypes.permission.Permissions[permissionEnum]
 
 		allowPermissionBits[index] = permissionBit
 	end
 
 	for index, permissionEnum in self.deniedPermissionFlags do
-		local permissionBit = permissionTypes.Permissions[permissionEnum]
+		local permissionBit = apiTypes.permission.Permissions[permissionEnum]
 
 		denyPermissionBits[index] = permissionBit
 	end
@@ -75,8 +74,8 @@ end
 ]]
 function Overwrite.Interface.new(resource: {
 	permissionType: PermissionOverwriteType,
-	allowFlags: { permissionTypes.Permissions }?,
-	denyFlags: { permissionTypes.Permissions }?,
+	allowFlags: { apiTypes.Permissions }?,
+	denyFlags: { apiTypes.Permissions }?,
 }): Overwrite
 	return setmetatable(
 		{
@@ -99,8 +98,8 @@ end
 function Overwrite.Interface.fromId(resource: {
 	permissionId: apiTypes.Snowflake,
 	permissionType: PermissionOverwriteType,
-	allowFlags: { permissionTypes.Permissions }?,
-	denyFlags: { permissionTypes.Permissions }?,
+	allowFlags: { apiTypes.Permissions }?,
+	denyFlags: { apiTypes.Permissions }?,
 }): Overwrite
 	local self = Overwrite.Interface.new(resource)
 
@@ -110,8 +109,8 @@ function Overwrite.Interface.fromId(resource: {
 end
 
 export type Overwrite = typeof(Overwrite.Prototype) & {
-	allowedPermissionFlags: { permissionTypes.Permissions },
-	deniedPermissionFlags: { permissionTypes.Permissions },
+	allowedPermissionFlags: { apiTypes.Permissions },
+	deniedPermissionFlags: { apiTypes.Permissions },
 
 	type: PermissionOverwriteType,
 	id: apiTypes.Snowflake,

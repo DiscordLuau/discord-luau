@@ -4,13 +4,12 @@
 	https://discord.com/developers/docs/resources/guild#guild-widget-settings-object
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
-local channelTypes = require("@api-types/channel")
+local apiTypes = require("../../../lune_packages/api_types")
+local state = require("../../../lune_packages/state")
 
-local user = require("@classes/user")
-local state = require("@classes/state")
+local user = require("../../user")
 
-local constructChannelFromData = require("@utils/constructChannelFromData")
+local constructChannelFromData = require("../../channels/construct")
 
 local Widget = {}
 
@@ -22,7 +21,7 @@ function Widget.Prototype.sync(self: Widget, widgetData: apiTypes.GuildWidgetObj
 	local userArray = {}
 
 	for _, channelData in widgetData.channels do
-		table.insert(channelArray, constructChannelFromData(self.state, channelData) :: channelTypes.AbstractChannel)
+		table.insert(channelArray, constructChannelFromData(self.state, channelData) :: apiTypes.AbstractChannel)
 	end
 
 	for _, userData in widgetData.members do
@@ -55,7 +54,7 @@ export type Widget = typeof(Widget.Prototype) & {
 	id: string,
 	name: string,
 	instantInvite: string?,
-	channels: { channelTypes.AbstractChannel },
+	channels: { apiTypes.AbstractChannel },
 	members: { user.User },
 	presenceCount: number,
 }

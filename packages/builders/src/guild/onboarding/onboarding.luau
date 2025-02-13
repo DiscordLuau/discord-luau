@@ -4,9 +4,9 @@
 	https://discord.com/developers/docs/resources/guild#modify-guild-onboarding-json-params
 ]]
 
-local guildTypes = require("@api-types/guild")
+local apiTypes = require("../../../lune_packages/api_types")
 
-local prompt = require("@builders/guild/onboarding/prompt")
+local prompt = require("./prompt")
 
 local Onboarding = {}
 
@@ -43,7 +43,7 @@ end
 --[[
 	Set the mode of this onboarding.
 ]]
-function Onboarding.Prototype.setMode(self: Onboarding, mode: guildTypes.OnboardingMode): Onboarding
+function Onboarding.Prototype.setMode(self: Onboarding, mode: apiTypes.OnboardingMode): Onboarding
 	self.mode = mode
 
 	return self
@@ -72,7 +72,7 @@ function Onboarding.Interface.new(resource: {
 	prompts: { prompt.JSON }?,
 	defaultChannelIds: { string }?,
 	enabled: boolean?,
-	mode: guildTypes.OnboardingMode?,
+	mode: apiTypes.OnboardingMode?,
 }?): Onboarding
 	local self = setmetatable(
 		{
@@ -113,7 +113,7 @@ export type Onboarding = typeof(Onboarding.Prototype) & {
 	prompts: { prompt.JSON },
 	defaultChannelIds: { string },
 	enabled: boolean,
-	mode: guildTypes.OnboardingMode,
+	mode: apiTypes.OnboardingMode,
 }
 
 export type JSON = typeof(Onboarding.Prototype.build(nil :: any))

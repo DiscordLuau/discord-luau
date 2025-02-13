@@ -4,10 +4,9 @@
 	https://discord.com/developers/docs/resources/sticker#sticker-object
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
-local stickerTypes = require("@api-types/sticker")
+local apiTypes = require("../lune_packages/api_types")
 
-local user = require("@classes/user")
+local user = require("./user")
 
 local Sticker = {}
 
@@ -20,8 +19,8 @@ function Sticker.Prototype.sync(self: Sticker, stickerData: apiTypes.StickerObje
 	self.name = stickerData.name
 	self.description = stickerData.description
 	self.tags = stickerData.tags
-	self.type = stickerTypes.StickerTypes[stickerData.type]
-	self.formatType = stickerTypes.StickerFormatTypes[stickerData.format_type]
+	self.type = apiTypes.sticker.StickerTypes[stickerData.type]
+	self.formatType = apiTypes.sticker.StickerFormatTypes[stickerData.format_type]
 	self.available = stickerData.available
 	self.guildId = stickerData.guild_id
 	self.user = stickerData.user and user.new(stickerData.user)
@@ -42,8 +41,8 @@ export type Sticker = typeof(Sticker.Prototype) & {
 	name: string,
 	description: string?,
 	tags: string,
-	type: stickerTypes.StickerType,
-	formatType: stickerTypes.StickerFormatType,
+	type: apiTypes.StickerType,
+	formatType: apiTypes.StickerFormatType,
 	available: boolean?,
 	guildId: apiTypes.Snowflake?,
 	user: user.User?,

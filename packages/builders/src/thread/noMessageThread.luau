@@ -4,7 +4,7 @@
 	https://discord.com/developers/docs/resources/channel#start-thread-without-message-json-params
 ]]
 
-local channelTypes = require("@api-types/channel")
+local apiTypes = require("../../lune_packages/api_types")
 
 local NoMessageThread = {}
 
@@ -43,8 +43,8 @@ end
 	Sets the type of thread channel.
 	Must be a valid Discord channel type.
 ]]
-function NoMessageThread.Prototype.setType(self: NoMessageThread, type: channelTypes.ChannelType): NoMessageThread
-	assert(channelTypes.ChannelTypes[type], `Invalid channel type: {type}`)
+function NoMessageThread.Prototype.setType(self: NoMessageThread, type: apiTypes.ChannelType): NoMessageThread
+	assert(apiTypes.channel.ChannelTypes[type], `Invalid channel type: {type}`)
 
 	self.type = type
 
@@ -80,7 +80,7 @@ function NoMessageThread.Prototype.build(self: NoMessageThread): JSON
 	return {
 		name = self.name,
 		auto_archive_duration = self.autoArchiveDuration,
-		type = channelTypes.ChannelTypes[self.type],
+		type = apiTypes.channel.ChannelTypes[self.type],
 		invitable = self.invitable,
 		rate_limit_per_user = self.rateLimitPerUser,
 	}
@@ -96,7 +96,7 @@ end
 function NoMessageThread.Interface.new(resource: {
 	name: string?,
 	autoArchiveDuration: number?,
-	type: channelTypes.ChannelType?,
+	type: apiTypes.ChannelType?,
 	invitable: boolean?,
 	rateLimitPerUser: number?,
 }?): NoMessageThread
@@ -132,7 +132,7 @@ end
 export type NoMessageThread = typeof(NoMessageThread.Prototype) & {
 	name: string?,
 	autoArchiveDuration: number?,
-	type: channelTypes.ChannelType?,
+	type: apiTypes.ChannelType?,
 	invitable: boolean?,
 	rateLimitPerUser: number?,
 }

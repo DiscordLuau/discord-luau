@@ -1,0 +1,20 @@
+name = "discord_luau/snowflake"
+version = "0.0.1"
+description = "Discord-Luau Snowflake - library enabling developers to query information on snowflake ids"
+license = "MIT"
+authors = ["Async Matrix <hi@asyncmatrix.dev>"]
+repository = "https://github.com/DiscordLuau/discord-luau/tree/Master/packages/snowflake"
+pesde_version = "0.5.2"
+
+includes = ["src/**/*", "pesde.toml", "LICENSE", "CONTRIBUTING.md"]
+
+[target]
+environment = "lune"
+lib = "src/init.luau"
+
+[indices]
+default = "https://github.com/pesde-pkg/index"
+
+[dependencies]
+std_polyfills = { workspace = "discord_luau/std_polyfills" }
+bit = { workspace = "discord_luau/bit", target = "luau" }

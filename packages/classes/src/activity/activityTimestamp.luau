@@ -4,7 +4,7 @@
 	https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-timestamps
 ]]
 
-local datetime = require("@std-polyfills/datetime")
+local stdPolyfills = require("../../lune_packages/std_polyfills")
 
 local ActivityTimestamp = {}
 
@@ -14,8 +14,8 @@ ActivityTimestamp.Prototype = {}
 function ActivityTimestamp.Interface.new(startTime: number, endTime: number): ActivityTimestamp
 	local self = setmetatable(
 		{
-			startTime = datetime.fromUnixTimestamp(startTime),
-			endTime = datetime.fromUnixTimestamp(endTime),
+			startTime = stdPolyfills.datetime.fromUnixTimestamp(startTime),
+			endTime = stdPolyfills.datetime.fromUnixTimestamp(endTime),
 		} :: ActivityTimestamp,
 		{ __index = ActivityTimestamp.Prototype }
 	)
@@ -24,8 +24,8 @@ function ActivityTimestamp.Interface.new(startTime: number, endTime: number): Ac
 end
 
 export type ActivityTimestamp = typeof(ActivityTimestamp.Prototype) & {
-	startTime: datetime.DateTime,
-	endTime: datetime.DateTime,
+	startTime: stdPolyfills.DateTime,
+	endTime: stdPolyfills.DateTime,
 }
 
 return ActivityTimestamp.Interface

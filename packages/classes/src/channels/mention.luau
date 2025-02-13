@@ -4,8 +4,7 @@
 	https://discord.com/developers/docs/resources/message#channel-mention-object
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
-local channelTypes = require("@api-types/channel")
+local apiTypes = require("../../lune_packages/api_types")
 
 local ChannelMention = {}
 
@@ -13,7 +12,7 @@ ChannelMention.Interface = {}
 ChannelMention.Prototype = {}
 
 function ChannelMention.Prototype.sync(self: ChannelMention, mentionData: apiTypes.ChannelMentionObject)
-	self.type = channelTypes.ChannelTypes[mentionData.type]
+	self.type = apiTypes.channel.ChannelTypes[mentionData.type]
 
 	self.id = mentionData.id
 	self.name = mentionData.name
@@ -31,7 +30,7 @@ end
 export type ChannelMention = typeof(ChannelMention.Prototype) & {
 	id: apiTypes.Snowflake,
 	guildId: apiTypes.Snowflake,
-	type: channelTypes.ChannelType,
+	type: apiTypes.ChannelType,
 	name: string,
 }
 

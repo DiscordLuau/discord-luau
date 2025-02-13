@@ -4,10 +4,10 @@
 	https://discord.com/developers/docs/resources/message#reaction-object-reaction-structure
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
+local apiTypes = require("../../lune_packages/api_types")
 
-local countDetails = require("@classes/reaction/countDetails")
-local emoji = require("@classes/emoji")
+local countDetails = require("./countDetails")
+local emoji = require("../emoji")
 
 local Reaction = {}
 

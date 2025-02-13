@@ -1,0 +1,27 @@
+return {
+	user = require("./user"),
+	sticker = require("./sticker"),
+	poll = require("./poll"),
+	permission = require("./permission"),
+	message = require("./message"),
+	interaction = require("./interaction"),
+	guild = require("./guild"),
+	entitlement = require("./entitlement"),
+	embed = require("./embed"),
+	channel = require("./channel"),
+	application = require("./application"),
+	apiTypes = require("./apiTypes"),
+	voice = {},
+	rest = {
+		endpoints = require("./rest/endpoints"),
+		types = require("./rest/types"),
+	},
+	gateway = {
+		closeCodes = require("./gateway/closeCodes"),
+		intents = require("./gateway/intents"),
+		opcodes = require("./gateway/opcodes"),
+		receiveEvents = require("./gateway/receiveEvents"),
+		sendEvents = require("./gateway/sendEvents"),
+		types = require("./gateway/types"),
+	},
+}

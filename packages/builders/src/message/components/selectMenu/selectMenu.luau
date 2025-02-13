@@ -4,10 +4,10 @@
 	https://discord.com/developers/docs/interactions/message-components#SelectMenus
 ]]
 
-local channelTypes = require("@api-types/channel")
+local apiTypes = require("../../../../lune_packages/api_types")
 
-local defaultValue = require("@builders/message/components/selectMenu/defaultValue")
-local option = require("@builders/message/components/selectMenu/option")
+local defaultValue = require("./defaultValue")
+local option = require("./option")
 
 local SelectMenu = {}
 
@@ -17,7 +17,7 @@ SelectMenu.Interface = {}
 --[[
 	
 ]]
-function SelectMenu.Prototype.setType(self: SelectMenu, selectMenuType: channelTypes.SelectMenuType): SelectMenu
+function SelectMenu.Prototype.setType(self: SelectMenu, selectMenuType: apiTypes.SelectMenuType): SelectMenu
 	self.type = selectMenuType
 
 	return self
@@ -80,8 +80,8 @@ end
 --[[
 	
 ]]
-function SelectMenu.Prototype.addChannelType(self: SelectMenu, channelType: channelTypes.ChannelType): SelectMenu
-	table.insert(self.channelTypes, channelType)
+function SelectMenu.Prototype.addChannelType(self: SelectMenu, channelType: apiTypes.ChannelType): SelectMenu
+	table.insert(self.apiTypes, channelType)
 
 	return self
 end
@@ -103,10 +103,10 @@ function SelectMenu.Prototype.build(self: SelectMenu): JSON
 	assert(self.customId, "SelectMenu customId is required")
 
 	return {
-		type = channelTypes.SelectMenuType[self.type],
+		type = apiTypes.channel.SelectMenuType[self.type],
 		custom_id = self.customId,
 		options = self.options,
-		channel_types = self.channelTypes,
+		channel_types = self.apiTypes,
 		placeholder = self.placeholder,
 		default_values = self.defaultValues,
 		min_values = self.minValues,
@@ -123,10 +123,10 @@ end
 	```
 ]]
 function SelectMenu.Interface.new(resource: {
-	type: channelTypes.SelectMenuType?,
+	type: apiTypes.SelectMenuType?,
 	customId: string?,
 	options: { option.JSON },
-	channelTypes: { channelTypes.ChannelType },
+	apiTypes: { apiTypes.ChannelType },
 	placeholder: string?,
 	defaultValues: { defaultValue.JSON },
 	minValues: number?,
@@ -137,7 +137,7 @@ function SelectMenu.Interface.new(resource: {
 		{
 			defaultValues = {},
 			options = {},
-			channelTypes = {},
+			apiTypes = {},
 		} :: SelectMenu,
 		{
 			__index = SelectMenu.Prototype,
@@ -175,8 +175,8 @@ function SelectMenu.Interface.new(resource: {
 			end
 		end
 
-		if resource.channelTypes then
-			for _, channelType: channelTypes.ChannelType in resource.channelTypes do
+		if resource.apiTypes then
+			for _, channelType: apiTypes.ChannelType in resource.apiTypes do
 				self:addChannelType(channelType)
 			end
 		end
@@ -192,10 +192,10 @@ function SelectMenu.Interface.new(resource: {
 end
 
 export type SelectMenu = typeof(SelectMenu.Prototype) & {
-	type: channelTypes.SelectMenuType?,
+	type: apiTypes.SelectMenuType?,
 	customId: string?,
 	options: { option.JSON },
-	channelTypes: { channelTypes.ChannelType },
+	apiTypes: { apiTypes.ChannelType },
 	placeholder: string?,
 	defaultValues: { defaultValue.JSON },
 	minValues: number?,

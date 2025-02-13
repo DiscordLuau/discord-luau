@@ -4,9 +4,9 @@
 	https://discord.com/developers/docs/resources/channel#forum-tag-object
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
+local apiTypes = require("../lune_packages/api_types")
 
-local validateKebabCase = require("@utils/validateKebabCase")
+local util = require("../lune_packages/util")
 
 local ForumTag = {}
 
@@ -39,7 +39,7 @@ function ForumTag.Prototype.setName(self: ForumTag, tagName: string): ForumTag
 	assert(#tagName <= 20, `Tag name must be less than 20 characters.`)
 	assert(#tagName > 0, `Tag name must be more than 0 characters.`)
 
-	assert(validateKebabCase(tagName), `Tag name must be kebab-case.`)
+	assert(util.validateKebabCase(tagName), `Tag name must be kebab-case.`)
 
 	self.name = tagName
 

@@ -4,18 +4,16 @@
 	https://discord.com/developers/docs/resources/message#attachment-object
 ]]
 
-local datetime = require("@std-polyfills/datetime")
+local apiTypes = require("../../lune_packages/api_types")
+local stdPolyfills = require("../../lune_packages/std_polyfills")
 
-local apiTypes = require("@api-types/apiTypes")
-local embedTypes = require("@api-types/embed")
-
-local author = require("@classes/embed/author")
-local footer = require("@classes/embed/footer")
-local image = require("@classes/embed/image")
-local thumbnail = require("@classes/embed/thumbnail")
-local video = require("@classes/embed/video")
-local provider = require("@classes/embed/provider")
-local field = require("@classes/embed/field")
+local author = require("./author")
+local footer = require("./footer")
+local image = require("./image")
+local thumbnail = require("./thumbnail")
+local video = require("./video")
+local provider = require("./provider")
+local field = require("./field")
 
 local Embed = {}
 
@@ -35,7 +33,7 @@ function Embed.Prototype.sync(self: Embed, embedData: apiTypes.EmbedObject)
 	self.type = embedData.type :: any
 	self.description = embedData.description
 	self.url = embedData.url
-	self.timestamp = embedData.timestamp and datetime.fromIsoDate(embedData.timestamp)
+	self.timestamp = embedData.timestamp and stdPolyfills.datetime.fromIsoDate(embedData.timestamp)
 	self.color = embedData.color
 	self.footer = embedData.footer and footer.new(embedData.footer)
 	self.image = embedData.image and image.new(embedData.image)
@@ -55,10 +53,10 @@ end
 
 export type Embed = typeof(Embed.Prototype) & {
 	title: string?,
-	type: embedTypes.EmbedType?,
+	type: apiTypes.EmbedType?,
 	description: string?,
 	url: string?,
-	timestamp: datetime.DateTime?,
+	timestamp: stdPolyfills.DateTime?,
 	color: number?,
 	footer: footer.Footer?,
 	image: image.Image?,

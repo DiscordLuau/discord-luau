@@ -4,8 +4,7 @@
 	https://discord.com/developers/docs/interactions/message-components#text-input-object-text-input-structure
 ]]
 
-local messageTypes = require("@api-types/message")
-local apiTypes = require("@api-types/apiTypes")
+local apiTypes = require("../../../lune_packages/api_types")
 
 local TextInput = {}
 
@@ -24,7 +23,7 @@ end
 --[[
 	
 ]]
-function TextInput.Prototype.setStyle(self: TextInput, style: messageTypes.TextInputStyle): TextInput
+function TextInput.Prototype.setStyle(self: TextInput, style: apiTypes.TextInputStyle): TextInput
 	self.style = style
 
 	return self
@@ -95,7 +94,7 @@ function TextInput.Prototype.build(self: TextInput): JSON
 	return {
 		type = 4,
 		custom_id = self.customId,
-		style = messageTypes.MessageType[self.style],
+		style = apiTypes.message.MessageType[self.style],
 		label = self.label,
 		min_length = self.minLength,
 		max_length = self.maxLength,
@@ -114,7 +113,7 @@ end
 ]]
 function TextInput.Interface.new(resource: {
 	customId: string?,
-	style: messageTypes.TextInputStyle?,
+	style: apiTypes.TextInputStyle?,
 	label: string?,
 	minLength: number?,
 	maxLength: number?,
@@ -165,7 +164,7 @@ end
 
 export type TextInput = typeof(TextInput.Prototype) & {
 	customId: string?,
-	style: messageTypes.TextInputStyle?,
+	style: apiTypes.TextInputStyle?,
 	label: string?,
 	minLength: number?,
 	maxLength: number?,

@@ -4,9 +4,9 @@
 	https://discord.com/developers/docs/resources/poll#poll-results-object-poll-results-object-structure
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
+local apiTypes = require("../../../lune_packages/api_types")
 
-local answerCount = require("@classes/message/poll/answerCount")
+local answerCount = require("./answerCount")
 
 local Results = {}
 

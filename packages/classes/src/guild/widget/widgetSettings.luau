@@ -4,7 +4,7 @@
 	https://discord.com/developers/docs/resources/guild#guild-widget-settings-object
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
+local apiTypes = require("../../../lune_packages/api_types")
 
 local WidgetSettings = {}
 

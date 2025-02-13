@@ -4,14 +4,14 @@
 	https://discord.com/developers/docs/topics/gateway-events#activity-object
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
+local apiTypes = require("../../lune_packages/api_types")
 
-local activityAssets = require("@classes/activity/activityAssets")
-local activityButton = require("@classes/activity/activityButton")
-local activitySecrets = require("@classes/activity/activitySecrets")
-local activityEmoji = require("@classes/activity/activityEmoji")
-local activityParty = require("@classes/activity/activityParty")
-local activityTimestamp = require("@classes/activity/activityTimestamp")
+local activityAssets = require("./activityAssets")
+local activityButton = require("./activityButton")
+local activitySecrets = require("./activitySecrets")
+local activityEmoji = require("./activityEmoji")
+local activityParty = require("./activityParty")
+local activityTimestamp = require("./activityTimestamp")
 
 local Activity = {}
 

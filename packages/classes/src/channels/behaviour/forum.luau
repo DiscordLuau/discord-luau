@@ -2,18 +2,14 @@
 	Forum Behaviour, responsible for implementing the various properties, and methods for a forum thread channel.
 ]]
 
-local future = require("@vendor/future")
+local apiTypes = require("../../../lune_packages/api_types")
+local future = require("../../../luau_packages/future")
+local rest = require("../../../lune_packages/rest")
+local state = require("../../../lune_packages/state")
+local builders = require("../../../lune_packages/builders")
 
-local apiTypes = require("@api-types/apiTypes")
-local channelTypes = require("@api-types/channel")
-
-local channelRest = require("@rest/channel")
-
-local forumTag = require("@classes/channels/forumTag")
-local defaultReaction = require("@classes/channels/defaultReaction")
-local state = require("@classes/state")
-
-local forumMediaBuilder = require("@builders/thread/forumMedia")
+local forumTag = require("../forumTag")
+local defaultReaction = require("../defaultReaction")
 
 local ForumBehaviour = {}
 
@@ -31,21 +27,16 @@ ForumBehaviour.Prototype = {}
  	
  	channel:createPostAsync(builder:build()):await()
 ]]
-function ForumBehaviour.Prototype.createPostAsync<T>(
-	self: Channel<T>,
-	post: forumMediaBuilder.JSON,
-	reason: string?
-): future.Future<string>
-	return future.new(function()
+function ForumBehaviour.Prototype.createPostAsync<T>(self: Channel<T>, post: builders.forumMediaJSON, reason: string?)
+	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local status, response =
-			channelRest.startThreadInForumOrMediaChannelAsync(request, self.id, post, reason):await()
+		local response = rest.channel.startThreadInForumOrMediaChannelAsync(request, self.id, post, reason):await()
 
-		assert(status == "Fulfilled", tostring(response))
+		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return response.id
-	end)
+		return response:unwrapOk().id :: any
+	end) :: future.FutureLike<string, apiTypes.Snowflake>
 end
 
 function ForumBehaviour.Interface.inheritProperties(class: any, channelData: apiTypes.ChannelObject)
@@ -62,8 +53,8 @@ function ForumBehaviour.Interface.inheritProperties(class: any, channelData: api
 	class.defaultReaction = channelData.default_reaction_emoji
 		and defaultReaction.new(channelData.default_reaction_emoji)
 
-	class.defaultSortOrder = channelTypes.ForumSortOrder[channelData.default_sort_order]
-	class.defaultForumLayout = channelTypes.ForumLayout[channelData.default_forum_layout]
+	class.defaultSortOrder = apiTypes.channel.ForumSortOrder[channelData.default_sort_order]
+	class.defaultForumLayout = apiTypes.channel.ForumLayout[channelData.default_forum_layout]
 end
 
 function ForumBehaviour.Interface.inheritMethods(class: any)
@@ -84,8 +75,8 @@ export type ForumBehaviourProperties = {
 	availableTags: { forumTag.ForumTag },
 	defaultReaction: defaultReaction.DefaultReaction?,
 	appliedTags: { apiTypes.Snowflake },
-	defaultSortOrder: channelTypes.ForumSortOrder,
-	defaultForumLayout: channelTypes.ForumLayout,
+	defaultSortOrder: apiTypes.ForumSortOrder,
+	defaultForumLayout: apiTypes.ForumLayout,
 }
 
 export type ForumBehaviour = ForumBehaviourMethods & ForumBehaviourProperties

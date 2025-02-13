@@ -4,10 +4,9 @@
 	https://discord.com/developers/docs/topics/teams#data-models-team-object
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
-local applicationTypes = require("@api-types/application")
+local apiTypes = require("../../../lune_packages/api_types")
 
-local user = require("@classes/user")
+local user = require("../../user")
 
 local Member = {}
 
@@ -18,13 +17,13 @@ function Member.Prototype.sync(self: Member, memberData: apiTypes.TeamMemberObje
 	self.teamId = memberData.team_id
 	self.user = user.new(memberData.user)
 
-	self.membershipState = applicationTypes.MembershipState[memberData.membership_state]
+	self.membershipState = apiTypes.application.MembershipState[memberData.membership_state]
 
 	self.role = (
 		memberData.role == "Admin" and "Admin"
 		or memberData.role == "Developer" and "Developer"
 		or memberData.role == "Read-only" and "ReadOnly"
-	) :: applicationTypes.TeamRole
+	) :: apiTypes.TeamRole
 end
 
 function Member.Interface.new(memberData: apiTypes.TeamMemberObject): Member
@@ -36,10 +35,10 @@ function Member.Interface.new(memberData: apiTypes.TeamMemberObject): Member
 end
 
 export type Member = typeof(Member.Prototype) & {
-	membershipState: applicationTypes.MembershipState,
+	membershipState: apiTypes.MembershipState,
 	teamId: apiTypes.Snowflake,
 	user: user.User,
-	role: applicationTypes.TeamRole,
+	role: apiTypes.TeamRole,
 }
 
 return Member.Interface

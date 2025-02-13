@@ -4,17 +4,17 @@
 	https://discord.com/developers/docs/resources/message#embed-object
 ]]
 
-local embedTypes = require("@api-types/embed")
+local apiTypes = require("../../lune_packages/api_types")
 
-local datetime = require("@std-polyfills/datetime")
+local stdPolyfills = require("../../lune_packages/std_polyfills")
 
-local embedAuthor = require("@builders/embed/author")
-local embedField = require("@builders/embed/field")
-local embedFooter = require("@builders/embed/footer")
-local embedImage = require("@builders/embed/image")
-local embedProvider = require("@builders/embed/provider")
-local embedThumbnail = require("@builders/embed/thumbnail")
-local embedVideo = require("@builders/embed/video")
+local embedAuthor = require("./author")
+local embedField = require("./field")
+local embedFooter = require("./footer")
+local embedImage = require("./image")
+local embedProvider = require("./provider")
+local embedThumbnail = require("./thumbnail")
+local embedVideo = require("./video")
 
 local Embed = {}
 
@@ -36,7 +36,7 @@ end
 --[[
 	Sets the Type of the embed.
 ]]
-function Embed.Prototype.setType(self: Embed, type: embedTypes.EmbedType): Embed
+function Embed.Prototype.setType(self: Embed, type: apiTypes.EmbedType): Embed
 	self.type = type
 
 	return self
@@ -66,7 +66,7 @@ end
 --[[
 	Set the timestamp of the embed, timestamps will exist at the bottom/footer of the embed.
 ]]
-function Embed.Prototype.setTimestamp(self: Embed, timestamp: datetime.DateTime): Embed
+function Embed.Prototype.setTimestamp(self: Embed, timestamp: stdPolyfills.DateTime): Embed
 	self.timestamp = timestamp.unixTimestampMillis
 
 	return self
@@ -159,7 +159,7 @@ function Embed.Prototype.build(self: Embed): JSON
 
 	return {
 		title = self.title,
-		type = embedTypes.EmbedType[self.type],
+		type = apiTypes.embed.EmbedType[self.type],
 		description = self.description,
 		url = self.url,
 		timestamp = tostring(self.timestamp),
@@ -183,10 +183,10 @@ end
 ]]
 function Embed.Interface.new(resource: {
 	title: string?,
-	type: embedTypes.EmbedType?,
+	type: apiTypes.EmbedType?,
 	description: string?,
 	url: string?,
-	timestamp: datetime.DateTime?,
+	timestamp: stdPolyfills.DateTime?,
 	color: number?,
 	footer: embedFooter.JSON?,
 	image: embedImage.JSON?,
@@ -262,7 +262,7 @@ end
 
 export type Embed = typeof(Embed.Prototype) & {
 	title: string?,
-	type: embedTypes.EmbedType?,
+	type: apiTypes.EmbedType?,
 	description: string?,
 	url: string?,
 	timestamp: number?,

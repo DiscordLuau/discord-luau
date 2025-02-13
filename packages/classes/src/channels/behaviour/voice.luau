@@ -2,8 +2,7 @@
 	Voice Behaviour, responsible for implementing the various properties, and methods for a voice-able channels.
 ]]
 
-local apiTypes = require("@api-types/apiTypes")
-local channelTypes = require("@api-types/channel")
+local apiTypes = require("../../../lune_packages/api_types")
 
 local VoiceBehaviour = {}
 
@@ -11,7 +10,7 @@ VoiceBehaviour.Interface = {}
 VoiceBehaviour.Prototype = {}
 
 function VoiceBehaviour.Interface.inheritProperties(class: any, channelData: apiTypes.ChannelObject)
-	class.videoQualityMode = channelTypes.VideoQualityMode[channelData.video_quality_mode]
+	class.videoQualityMode = apiTypes.channel.VideoQualityMode[channelData.video_quality_mode]
 
 	class.bitrate = channelData.bitrate
 	class.userLimit = channelData.user_limit
@@ -29,7 +28,7 @@ export type VoiceBehaviourProperties = {
 	bitrate: number,
 	userLimit: number,
 	rtcRegion: string?,
-	videoQualityMode: channelTypes.VideoQualityMode,
+	videoQualityMode: apiTypes.VideoQualityMode,
 }
 
 export type VoiceBehaviour = VoiceBehaviourMethods & VoiceBehaviourProperties
