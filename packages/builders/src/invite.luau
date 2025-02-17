@@ -62,7 +62,7 @@ end
 	Used for stream and embedded application invites.
 ]]
 function Invite.Prototype.setTargetType(self: Invite, targetType: apiTypes.InviteTargetType): Invite
-	assert(apiTypes.guild.InviteTargetType[self.targetType], "Invalid target type")
+	assert(apiTypes.guild.InviteTargetType[targetType], "Invalid target type")
 
 	self.targetType = targetType
 
