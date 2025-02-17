@@ -1,5 +1,5 @@
 --[=[
-    @class std.task
+    std.task
 ]=]
 
 local runtime = require("runtime")

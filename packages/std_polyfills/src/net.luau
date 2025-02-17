@@ -1,5 +1,5 @@
 --[=[
-    @class std.net
+	std.net
 ]=]
 
 local runtime = require("runtime")

@@ -1,5 +1,5 @@
 --[[
-	@class std.datetime
+	std.datetime
 ]]
 
 local runtime = require("runtime")
