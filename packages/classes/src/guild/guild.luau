@@ -155,7 +155,7 @@ end
 	Returns the guild preview object for the given id. If the user is not in the guild, then the guild must be
 	discoverable.
 ]]
-function Guild.Prototype.fetchGuildPreviewAsync(self: Guild)
+function Guild.Prototype.getPreviewAsync(self: Guild)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -172,7 +172,7 @@ end
 	Modify a guild's settings. Requires the MANAGE_GUILD permission. Returns the updated guild object on success.
 	Fires a Guild Update Gateway event.
 ]]
-function Guild.Prototype.modifyGuildAsync(self: Guild, json: builders.guildJSON, reason: string?)
+function Guild.Prototype.modifyAsync(self: Guild, json: builders.guildJSON, reason: string?)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -191,7 +191,7 @@ end
 	Delete a guild permanently. User must be owner. Returns 204 No Content on success.Fires a Guild Delete Gateway
 	event.
 ]]
-function Guild.Prototype.deleteGuildAsync(self: Guild)
+function Guild.Prototype.deleteAsync(self: Guild)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -506,7 +506,7 @@ end
 --[[
 	Returns a guild member object for the specified user.
 ]]
-function Guild.Prototype.getGuildMemberAsync(self: Guild, userId: string)
+function Guild.Prototype.getMemberAsync(self: Guild, userId: string)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -522,7 +522,7 @@ end
 --[[
 	Returns a list of guild member objects that are members of the guild.
 ]]
-function Guild.Prototype.listGuildMembersAsync(self: Guild, lastSnowflake: string?, limit: number?)
+function Guild.Prototype.listMembersAsync(self: Guild, lastSnowflake: string?, limit: number?)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -548,7 +548,7 @@ end
 --[[
 	Returns a list of guild member objects whose username or nickname starts with a provided string.
 ]]
-function Guild.Prototype.searchGuildMembersAsync(self: Guild, query: string, limit: number?)
+function Guild.Prototype.searchMembersAsync(self: Guild, query: string, limit: number?)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -578,7 +578,7 @@ end
 	guild member object. Members that are pending will have to complete membership screening before they become full
 	members that can talk.
 ]]
-function Guild.Prototype.addGuildMemberAsync(
+function Guild.Prototype.addMemberAsync(
 	self: Guild,
 	userId: apiTypes.Snowflake,
 	accessToken: string,
@@ -615,7 +615,7 @@ end
 --[[
 	Removes a role from a guild member. Requires the MANAGE_ROLES permission.
 ]]
-function Guild.Prototype.kickGuildMemberAsync(self: Guild, userId: apiTypes.Snowflake, reason: string?)
+function Guild.Prototype.kickMemberAsync(self: Guild, userId: apiTypes.Snowflake, reason: string?)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -630,7 +630,7 @@ end
 --[[
 	Create a guild ban, and optionally delete previous messages sent by the banned user.
 ]]
-function Guild.Prototype.banGuildMemberAsync(
+function Guild.Prototype.banMemberAsync(
 	self: Guild,
 	userId: apiTypes.Snowflake,
 	reason: string?,
@@ -666,7 +666,7 @@ end
 --[[
 	Create a guild ban, and optionally delete previous messages sent by the banned user.
 ]]
-function Guild.Prototype.bulkBanGuildMembersAsync(
+function Guild.Prototype.bulkBanAsync(
 	self: Guild,
 	userIds: { apiTypes.Snowflake },
 	reason: string?,
@@ -707,7 +707,7 @@ end
 --[[
 	Returns a list of ban objects for the users banned from this guild.
 ]]
-function Guild.Prototype.getGuildBansAsync(
+function Guild.Prototype.getBansAsync(
 	self: Guild,
 	limit: number?,
 	before: apiTypes.Snowflake?,
@@ -739,7 +739,7 @@ end
 --[[
 	Returns a ban object for the given user or a 404 not found if the ban cannot be found.
 ]]
-function Guild.Prototype.getGuildBanAsync(self: Guild, userId: apiTypes.Snowflake)
+function Guild.Prototype.getBanAsync(self: Guild, userId: apiTypes.Snowflake)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -760,7 +760,7 @@ end
 --[[
 	Returns a list of role objects for the guild.
 ]]
-function Guild.Prototype.getGuildRolesAsync(self: Guild)
+function Guild.Prototype.getRolesAsync(self: Guild)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -781,7 +781,7 @@ end
 --[[
 	Returns a role object for the specified role.
 ]]
-function Guild.Prototype.getGuildRoleAsync(self: Guild, roleId: apiTypes.Snowflake)
+function Guild.Prototype.getRoleAsync(self: Guild, roleId: apiTypes.Snowflake)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -796,7 +796,7 @@ end
 --[[
 	Create a new role for the guild. Requires the MANAGE_ROLES permission. Returns the new role object on success
 ]]
-function Guild.Prototype.createGuildRoleAsync(self: Guild, roleJson: builders.roleJSON, reason: string?)
+function Guild.Prototype.createRoleAsync(self: Guild, roleJson: builders.roleJSON, reason: string?)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -811,7 +811,7 @@ end
 --[[
 	Modify a guild's MFA level. Requires guild ownership. Returns the updated level on success.
 ]]
-function Guild.Prototype.setGuildMFALevelAsync(self: Guild, mfaLevel: apiTypes.MFALevel, reason: string?)
+function Guild.Prototype.setMFALevelAsync(self: Guild, mfaLevel: apiTypes.MFALevel, reason: string?)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -835,7 +835,7 @@ end
 	providing the include_roles parameter. Any inactive user that has a subset of the provided role(s) will be
 	counted in the prune and users with additional roles will not.
 ]]
-function Guild.Prototype.getGuildPruneCountAsync(self: Guild, days: number?, includedRoles: { apiTypes.Snowflake }?)
+function Guild.Prototype.getPruneCountAsync(self: Guild, days: number?, includedRoles: { apiTypes.Snowflake }?)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -862,7 +862,7 @@ end
 	providing the include_roles parameter. Any inactive user that has a subset of the provided role(s)
 	will be included in the prune and users with additional roles will not.
 ]]
-function Guild.Prototype.beginGuildPruneAsync(
+function Guild.Prototype.beginPruneAsync(
 	self: Guild,
 	days: number?,
 	returnPruneCount: boolean?,
@@ -894,7 +894,7 @@ end
 --[[
 	Returns an array of voice region objects that can be used when setting a voice or stage channel's rtc_region.
 ]]
-function Guild.Prototype.getGuildVoiceRegionsAsync(self: Guild)
+function Guild.Prototype.getVoiceRegionsAsync(self: Guild)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -915,7 +915,7 @@ end
 --[[
 	Returns a list of invite objects (with invite metadata) for the guild. Requires the MANAGE_GUILD permission.
 ]]
-function Guild.Prototype.getGuildInvitesAsync(self: Guild)
+function Guild.Prototype.getInvitesAsync(self: Guild)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -936,7 +936,7 @@ end
 --[[
 	Returns a list of integration objects for the guild. Requires the MANAGE_GUILD permission.
 ]]
-function Guild.Prototype.getGuildIntegrationsAsync(self: Guild)
+function Guild.Prototype.getIntegrationsAsync(self: Guild)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -960,7 +960,7 @@ end
 	
 	Requires the MANAGE_GUILD permission.
 ]]
-function Guild.Prototype.deleteGuildIntegrationAsync(self: Guild, integrationId: string)
+function Guild.Prototype.deleteIntegrationAsync(self: Guild, integrationId: string)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -975,7 +975,7 @@ end
 --[[
 	Returns a guild widget settings object. Requires the MANAGE_GUILD permission.
 ]]
-function Guild.Prototype.getGuildWidgetSettingsAsync(self: Guild)
+function Guild.Prototype.getWidgetSettingsAsync(self: Guild)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -991,7 +991,7 @@ end
 	Modify a guild widget settings object for the guild. All attributes may be passed in with JSON and modified.
 	Requires the MANAGE_GUILD permission. Returns the updated guild widget settings object. 
 ]]
-function Guild.Prototype.modifyGuildWidgetAsync(self: Guild, json: builders.widgetSettingsJSON, reason: string?)
+function Guild.Prototype.modifyWidgetAsync(self: Guild, json: builders.widgetSettingsJSON, reason: string?)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -1007,7 +1007,7 @@ end
 	Returns the widget for the guild. Fires an Invite Create Gateway event when an invite channel is defined
 	and a new Invite is generated.
 ]]
-function Guild.Prototype.getGuildWidgetAsync(self: Guild)
+function Guild.Prototype.getWidgetAsync(self: Guild)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -1023,7 +1023,7 @@ end
 	Returns a partial invite object for guilds with that feature enabled. Requires the MANAGE_GUILD permission.
 	code will be null if a vanity url for the guild is not set.
 ]]
-function Guild.Prototype.getGuildVanityUrlAsync(self: Guild)
+function Guild.Prototype.getVanityUrlAsync(self: Guild)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -1038,7 +1038,7 @@ end
 --[[
 	Returns a PNG image widget for the guild. Requires no permissions or authentication.
 ]]
-function Guild.Prototype.getGuildWidgetImageAsync(
+function Guild.Prototype.getWidgetImageAsync(
 	self: Guild,
 	style: "shield" | "banner1" | "banner2" | "banner3" | "banner4"
 )
@@ -1062,7 +1062,7 @@ end
 	
 	the MANAGE_GUILD permission is required.
 ]]
-function Guild.Prototype.getGuildWelcomeScreenAsync(self: Guild)
+function Guild.Prototype.getWelcomeScreenAsync(self: Guild)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -1077,7 +1077,7 @@ end
 --[[
 	Modify the guild's Welcome Screen. Requires the MANAGE_GUILD permission.
 ]]
-function Guild.Prototype.modifyGuildWelcomeScreenAsync(self: Guild, json: builders.welcomeScreenJSON, reason: string?)
+function Guild.Prototype.modifyWelcomeScreenAsync(self: Guild, json: builders.welcomeScreenJSON, reason: string?)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -1092,7 +1092,7 @@ end
 --[[
 	Returns the Onboarding object for the guild.
 ]]
-function Guild.Prototype.getGuildOnboardingAsync(self: Guild)
+function Guild.Prototype.getOnboardingAsync(self: Guild)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -1108,7 +1108,7 @@ end
 	Modifies the onboarding configuration of the guild. Returns a 200 with the Onboarding object for the guild.
 	Requires the MANAGE_GUILD and MANAGE_ROLES permissions.
 ]]
-function Guild.Prototype.modifyGuildOnboardingAsync(self: Guild, json: builders.onboardingJSON, reason: string?)
+function Guild.Prototype.modifyOnboardingAsync(self: Guild, json: builders.onboardingJSON, reason: string?)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 

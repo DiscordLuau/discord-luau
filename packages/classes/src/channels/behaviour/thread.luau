@@ -18,7 +18,7 @@ ThreadBehaviour.Prototype = {}
 --[[
 	Adds the current user to a thread. Also requires the thread is not archived. 
 ]]
-function ThreadBehaviour.Prototype.joinThreadAsync<T>(self: Channel<T>)
+function ThreadBehaviour.Prototype.joinAsync<T>(self: Channel<T>)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -33,7 +33,7 @@ end
 --[[
 	Adds another member to a thread. Requires the ability to send messages in the thread. Also requires the thread is not archived. 
 ]]
-function ThreadBehaviour.Prototype.addMemberToThreadAsync<T>(self: Channel<T>, userId: string)
+function ThreadBehaviour.Prototype.addMemberAsync<T>(self: Channel<T>, userId: string)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -48,7 +48,7 @@ end
 --[[
 	Removes the current user from a thread.
 ]]
-function ThreadBehaviour.Prototype.leaveThreadAsync<T>(self: Channel<T>)
+function ThreadBehaviour.Prototype.leaveAsync<T>(self: Channel<T>)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 

@@ -226,7 +226,7 @@ end
 --[[
 	Edit a message. The current user must be the author of the message.
 ]]
-function Message.Prototype.editMessageAsync(self: Message, message: builders.messageJSON)
+function Message.Prototype.editAsync(self: Message, message: builders.messageJSON)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -253,7 +253,7 @@ end
 	Delete a message. If operating on a guild channel and trying to delete a message that was not sent by the current user,
 	this endpoint requires the MANAGE_MESSAGES permission.
 ]]
-function Message.Prototype.deleteMessageAsync(self: Message, reason: string?)
+function Message.Prototype.deleteAsync(self: Message, reason: string?)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
