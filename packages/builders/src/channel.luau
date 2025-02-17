@@ -8,38 +8,6 @@ local apiTypes = require("../lune_packages/api_types")
 
 local util = require("../lune_packages/util")
 
-local GUILD_CHANNEL_TYPE_MAP = {
-	["GuildText"] = 0,
-	["Dm"] = 1,
-	["GuildVoice"] = 2,
-	["GroupDm"] = 3,
-	["GuildCategory"] = 4,
-	["GuildAnnouncement"] = 5,
-	["AnnouncementThread"] = 10,
-	["PublicThread"] = 11,
-	["PrivateThread"] = 12,
-	["GuildStageVoice"] = 13,
-	["GuildDirectory"] = 14,
-	["GuildForum"] = 15,
-	["GuildMedia"] = 16,
-}
-
-local GUILD_VIDEO_QUALITY_MODE_MAP = {
-	["Auto"] = 1,
-	["Full"] = 2,
-}
-
-local GUILD_SORT_ORDER_MAP = {
-	["LatestActivity"] = 0,
-	["CreationDate"] = 1,
-}
-
-local GUILD_FORUM_LAYOUT_MAP = {
-	["NotSet"] = 0,
-	["ListView"] = 1,
-	["GalleryView"] = 2,
-}
-
 local Channel = {}
 
 Channel.Prototype = {}
@@ -363,7 +331,7 @@ function Channel.Prototype.build(self: Channel): JSON
 		id = self.id,
 
 		name = self.name,
-		type = GUILD_CHANNEL_TYPE_MAP[self.type],
+		type = apiTypes.channel.ChannelTypes[self.type],
 		position = self.position,
 		permission_overwrites = #self.permissionOverwrites > 0 and self.permissionOverwrites or nil,
 
@@ -377,12 +345,12 @@ function Channel.Prototype.build(self: Channel): JSON
 		parent_id = self.parentId,
 		nsfw = self.nsfw,
 		rtc_region = self.rtcRegion,
-		video_quality_mode = GUILD_VIDEO_QUALITY_MODE_MAP[self.videoQualityMode],
+		video_quality_mode = apiTypes.channel.VideoQualityMode[self.videoQualityMode],
 		default_auto_archive_duration = self.defaultAutoArchiveDuration,
 		default_reaction_emoji = self.defaultReactionEmoji,
 		available_tags = self.availableTags,
-		default_sort_order = GUILD_SORT_ORDER_MAP[self.defaultSortOrder],
-		default_forum_layout = GUILD_FORUM_LAYOUT_MAP[self.defaultForumLayout],
+		default_sort_order = apiTypes.channel.MediaSortOrder[self.defaultSortOrder],
+		default_forum_layout = apiTypes.channel.ForumLayout[self.defaultForumLayout],
 		default_thread_rate_limit_per_user = self.defaultThreadRateLimitPerUser,
 	}
 end
