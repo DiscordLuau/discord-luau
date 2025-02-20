@@ -6,10 +6,9 @@ local rest = require("../lune_packages/rest")
 local logger = require("../lune_packages/logger")
 local emitter = require("../luau_packages/emitter")
 local classes = require("../lune_packages/classes")
+local builders = require("../lune_packages/builders")
 
 local DISCORD_VERSION = 10
-
--- https://discord.com/developers/docs/resources/channel#get-channel
 
 local Bot = {}
 
@@ -467,6 +466,13 @@ function Bot.Prototype.getVoiceChannelAsync(self: Bot, channelId: string)
 
 		return channel :: any
 	end) :: future.FutureLike<string, classes.GuildVoice>
+end
+
+--[[
+	
+]]
+function Bot.Prototype.setPresenceAsync(self: Bot, presence: builders.presenceJSON)
+	return self.state.webSocketManager:sendAsync(apiTypes.gateway.opcodes.PresenceUpdate, presence)
 end
 
 function Bot.Interface.new(options: {
