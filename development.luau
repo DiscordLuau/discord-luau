@@ -8,34 +8,44 @@ local builders = require("./packages/builders/src")
 local discordBot = discordLuau.Bot.new({
 	token = env.DISCORD_BOT_TOKEN,
 	intents = builders.intents.new({ "Guilds" }):build(),
+	reconnect = true,
 })
 
 discordBot.onMessage:listen(function() end)
 
 discordBot.onAllShardsReady:listen(function()
-	local i = 0
+	local channel = discordBot:getTextChannelAsync("1273035768700338278"):await():unwrapOk()
 
-	task.wait(2)
+	for id, shard in discordBot.state.webSocketManager.shards do
+		shard.onSocketDisconnected:listen(function(_, e)
+			if e then
+				return
+			end
 
-	while true do
-		i += 1
+			channel
+				:createMessageAsync({
+					content = `Shard '{id}' DOWN!`,
+				})
+				:poll()
+		end)
 
-		print("sent")
-		discordBot
-			:setPresenceAsync({
-				afk = true,
-				since = 0,
-				status = "idle",
-				activities = {
-					{
-						type = 0,
-						name = `Idling out at '{i}'`,
-					},
-				},
+		shard.onSocketConnected:listen(function()
+			channel
+				:createMessageAsync({
+					content = `Shard '{id}' UP!`,
+				})
+				:poll()
+		end)
+
+		task.wait(5)
+
+		channel
+			:createMessageAsync({
+				content = `Shard '{id}' DOWN! (manual invoke)`,
 			})
-			:await()
+			:poll()
 
-		task.wait(0.5)
+		shard:reconnectAsync():poll()
 	end
 end)
 
