@@ -11,6 +11,7 @@ return {
 	channel = require("./channel"),
 	application = require("./application"),
 	apiTypes = require("./apiTypes"),
+	client = require("./client"),
 	voice = {},
 	rest = {
 		endpoints = require("./rest/endpoints"),
