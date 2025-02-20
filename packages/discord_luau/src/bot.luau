@@ -472,16 +472,18 @@ end
 	
 ]]
 function Bot.Prototype.setPresenceAsync(self: Bot, presence: builders.presenceJSON)
+	print(1)
 	return self.state.webSocketManager:sendAsync(apiTypes.gateway.opcodes.PresenceUpdate, presence)
 end
 
 function Bot.Interface.new(options: {
 	token: string,
 	intents: number,
+	reconnect: boolean?,
 })
 	local self = setmetatable(
 		{
-			state = state.state.new(options.token, options.intents, DISCORD_VERSION),
+			state = state.state.new(options.token, options.intents, DISCORD_VERSION, options.reconnect or false),
 			logger = logger.new("Bot"),
 
 			onReady = emitter.new(),
