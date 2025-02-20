@@ -42,6 +42,8 @@ local attachment = require("./attachment")
 local defaultReaction = require("./defaultReaction")
 local permission = require("./permission")
 local intents = require("./intents")
+local activity = require("./activity")
+local presence = require("./presence")
 
 export type providerJSON = provider.JSON
 export type fieldJSON = field.JSON
@@ -86,6 +88,8 @@ export type interactionJSON = interaction.JSON
 export type attachmentJSON = attachment.JSON
 export type defaultReactionJSON = defaultReaction.JSON
 export type permissionJSON = permission.JSON
+export type activityJSON = activity.JSON
+export type presenceJSON = presence.JSON
 export type intents = intents.Intents
 
 return {
@@ -93,6 +97,8 @@ return {
 	permission = permission,
 	defaultReaction = defaultReaction,
 	attachment = attachment,
+	presence = presence,
+	activity = activity,
 	interaction = {
 		interaction = interaction,
 		choice = choice,
