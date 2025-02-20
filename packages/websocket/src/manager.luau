@@ -110,7 +110,8 @@ function Manager.Prototype.sendAsync<T>(self: Manager, operation: apiTypes.Opcod
 		local requests = {}
 
 		for _, shard in self.shards do
-			local shardObject = shard :: shard.Shard
+			-- fixme: should type this as shard!
+			local shardObject = shard :: any
 	
 			table.insert(requests, shardObject:sendAsync(stdPolyfills.serde.encode("json", {
 				["op"] = operation,
