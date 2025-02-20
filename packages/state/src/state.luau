@@ -29,7 +29,7 @@ end
 --[[
 	Constructor for the State class.
 ]]
-function State.Interface.new(token: string, intents: number, version: number): State
+function State.Interface.new(token: string, intents: number, version: number, reconnect: boolean): State
 	local secretToken = secret.new(token)
 
 	local self = setmetatable(
@@ -43,6 +43,7 @@ function State.Interface.new(token: string, intents: number, version: number): S
 				intents = intents,
 				webSocketVersion = version,
 				largeThreshold = 250,
+				reconnect = reconnect,
 			}),
 
 			intents = intents,
