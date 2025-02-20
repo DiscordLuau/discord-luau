@@ -105,7 +105,28 @@ function Manager.Prototype.connectAsync(
 	end)
 end
 
-function Manager.Prototype.send() end
+function Manager.Prototype.sendAsync<T>(self: Manager, operation: apiTypes.Opcode, data: T)
+	return future.Future.new(function()
+		local requests = {}
+
+		for _, shard in self.shards do
+			local shardObject = shard :: shard.Shard
+	
+			table.insert(requests, shardObject:sendAsync(stdPolyfills.serde.encode("json", {
+				["op"] = operation,
+				["d"] = data,
+			}, false)))
+		end
+
+		for _, request in requests do
+			request:poll()
+		end
+
+		for _, request in requests do
+			request:await()
+		end
+	end)
+end
 
 function Manager.Interface.new(settings: {
 	token: secret.Secret<string>,
