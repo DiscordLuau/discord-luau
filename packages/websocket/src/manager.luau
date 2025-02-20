@@ -40,6 +40,7 @@ function Manager.Prototype.connectAsync(
 					token = self.token.value,
 					intents = self.intents,
 					largeThreshold = self.largeThreshold,
+					shouldReconnect = self.shouldReconnect,
 
 					shardId = shardId,
 					shardCount = shardCount,
@@ -72,6 +73,8 @@ function Manager.Prototype.connectAsync(
 							shardId = shardIndex - 1,
 							payload = event,
 						})
+
+						self.ready = true
 					end
 				end
 			end)
@@ -109,14 +112,24 @@ function Manager.Prototype.sendAsync<T>(self: Manager, operation: apiTypes.Opcod
 	return future.Future.new(function()
 		local requests = {}
 
+		while not self.ready do
+			stdPolyfills.task.wait(0.5)
+		end
+
 		for _, shard in self.shards do
 			-- fixme: should type this as shard!
 			local shardObject = shard :: any
-	
-			table.insert(requests, shardObject:sendAsync(stdPolyfills.serde.encode("json", {
-				["op"] = operation,
-				["d"] = data,
-			}, false)))
+
+			table.insert(requests,  future.Future.new(function()
+				while not shardObject.socketIdentified do
+					stdPolyfills.task.wait(0.5)
+				end
+		
+				shardObject:sendAsync(stdPolyfills.serde.encode("json", {
+					["op"] = operation,
+					["d"] = data,
+				}, false)):await()
+			end))
 		end
 
 		for _, request in requests do
@@ -133,8 +146,8 @@ function Manager.Interface.new(settings: {
 	token: secret.Secret<string>,
 	intents: number,
 	largeThreshold: number?,
-
 	webSocketVersion: number,
+	reconnect: boolean
 }): Manager
 	return setmetatable(
 		{
@@ -142,6 +155,8 @@ function Manager.Interface.new(settings: {
 			intents = settings.intents,
 			webSocketVersion = settings.webSocketVersion,
 			largeThreshold = settings.largeThreshold,
+			shouldReconnect = settings.reconnect,
+			ready = false,
 
 			shardIds = {},
 			shards = {},
@@ -168,6 +183,8 @@ export type Manager = typeof(Manager.Prototype) & {
 	intents: number,
 	webSocketVersion: number,
 	largeThreshold: number?,
+	shouldReconnect: boolean,
+	ready: boolean,
 
 	shardIds: { ShardId },
 	shards: { [ShardId]: shard.Shard },
