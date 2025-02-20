@@ -1,3 +1,5 @@
+local task = require("@lune/task")
+
 local env = require(".env")
 
 local discordLuau = require("./packages/discord_luau/src")
@@ -8,27 +10,33 @@ local discordBot = discordLuau.Bot.new({
 	intents = builders.intents.new({ "Guilds" }):build(),
 })
 
--- discordBot:getGuildAsync(guildId)
-
 discordBot.onMessage:listen(function() end)
 
 discordBot.onAllShardsReady:listen(function()
-	xpcall(function()
-		local channel = discordBot:getForumChannelAsync("1334296315038929009"):await():unwrapOk()
+	local i = 0
 
-		local result = channel
-			:createPostAsync({
-				message = {
-					content = "hi guys",
+	task.wait(2)
+
+	while true do
+		i += 1
+
+		print("sent")
+		discordBot
+			:setPresenceAsync({
+				afk = true,
+				since = 0,
+				status = "idle",
+				activities = {
+					{
+						type = 0,
+						name = `Idling out at '{i}'`,
+					},
 				},
-				name = "test post",
 			})
 			:await()
 
-		print("request sent:", result)
-	end, function(e)
-		print(e)
-	end)
+		task.wait(0.5)
+	end
 end)
 
 discordBot:connectAsync():await()
