@@ -37,8 +37,8 @@ local LOGGER_LOG_FORMATS = table.freeze({
 	["Warn"] = `{YELLOW}[%s][WARN]: %s`,
 	["Error"] = `{RED}[%s][ERROR]: %s`,
 	["Critical"] = `{RED}[%s][CRITICAL]: %s`,
-	["Alert"] = `{BOLD}{RED}[%s][DEBUG]: %s`,
-	["Emergency"] = `{BOLD}{RED}[%s][DEBUG]: %s`,
+	["Alert"] = `{BOLD}{RED}[%s][ALERT]: %s`,
+	["Emergency"] = `{BOLD}{RED}[%s][EMERGENCY]: %s`,
 })
 
 local Logger = {}
