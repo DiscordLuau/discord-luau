@@ -105,7 +105,7 @@ function Guild.deleteGuildAsync(instance: request.Request, guildId: apiTypes.Sno
 		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
-	end) :: future.FutureLike<string, apiTypes.DeleteGuildResponse>
+	end) :: future.FutureLike<string, apiTypes.DeleteGuildResponse_>
 end
 
 -- https://discord.com/developers/docs/resources/guild#get-guild-channels
@@ -144,7 +144,7 @@ function Guild.createGuildChannelAsync(
 		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
-	end) :: future.FutureLike<string, apiTypes.CreateGuildChannelResponse_>
+	end) :: future.FutureLike<string, apiTypes.CreateGuildChannelResponse>
 end
 
 -- https://discord.com/developers/docs/resources/guild#modify-guild-channel-positions
