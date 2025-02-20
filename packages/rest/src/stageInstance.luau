@@ -86,7 +86,7 @@ function StageInstance.deleteStageInstanceAsync(instance: request.Request, chann
 		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
-	end) :: future.FutureLike<string, apiTypes.DeleteStageInstanceResponse>
+	end) :: future.FutureLike<string, apiTypes.DeleteStageInstanceResponse_>
 end
 
 return StageInstance
