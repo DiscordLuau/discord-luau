@@ -190,8 +190,8 @@ export type CreateGuildRequest = Request<{
 	explicit_content_filter: objects.ExplicitContentFilterLevel?, -- explicit content filter level
 	roles: { objects.GuildRoleObject }?, -- new guild roles
 	channels: { objects.ChannelObject }?, -- new guild's channels
-	afk_channel_id: objects.Snowflake, -- id for afk channel
-	afk_timeout: number, -- afk timeout in seconds, can be set to: 60, 300, 900, 1800, 3600
+	afk_channel_id: objects.Snowflake?, -- id for afk channel
+	afk_timeout: number?, -- afk timeout in seconds, can be set to: 60, 300, 900, 1800, 3600
 	system_channel_id: objects.Snowflake?, -- the id of the channel where guild notices such as welcome messages and boost events are posted
 	system_channel_flags: objects.SystemChannelFlags?, -- system channel flags
 }>
