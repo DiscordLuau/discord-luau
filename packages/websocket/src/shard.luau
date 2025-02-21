@@ -52,7 +52,7 @@ function Shard.Prototype._handleMessage(self: Shard, message: string): ()
 	local isJson, jsonContent = pcall(stdPolyfills.serde.decode, "json" :: any, message)
 
 	if isJson then
-		self.logger:debug(`Shard '{self.shardId}' received message: #{string.len(message)}`)
+		self.logger:debug(`received message: #{string.len(message)}`)
 
 		self.onSocketRawMessage:invoke(jsonContent)
 	else
@@ -61,7 +61,7 @@ function Shard.Prototype._handleMessage(self: Shard, message: string): ()
 		local success0, response0 = pcall(stdPolyfills.serde.decompress, "zlib" :: any, self.zlibBuffer.data)
 
 		if success0 then
-			self.logger:debug(`Shard '{self.shardId}' decompressed Shard message: #{string.len(response0)}`)
+			self.logger:debug(`decompressed Shard message: #{string.len(response0)}`)
 			self.zlibBuffer:flush()
 
 			local success1, response1 = pcall(stdPolyfills.serde.decode, "json" :: any, response0)
@@ -69,11 +69,11 @@ function Shard.Prototype._handleMessage(self: Shard, message: string): ()
 			if success1 then
 				self.onSocketRawMessage:invoke(response1)
 			else
-				self.logger:error(`Shard '{self.shardId}' failed to decode Shard JSON message: {response1}`)
+				self.logger:error(`failed to decode Shard JSON message: {response1}`)
 			end
 		else
 			self.logger:debug(
-				`Shard '{self.shardId}' received complete message: #{string.len(message)}, decompressing...`
+				`received complete message: #{string.len(message)}, decompressing...`
 			)
 		end
 	end
@@ -85,7 +85,7 @@ end
 function Shard.Prototype.heartbeatAsync(self: Shard, requested: boolean?)
 	return future.Future.new(function()
 		if not self.heartbeatAcknowledged and not requested then
-			self.logger:warn(`Shard '{self.shardId}' discord WebSocket state has become Zombified, reconnecting...`)
+			self.logger:warn(`discord WebSocket state has become Zombified, reconnecting...`)
 
 			self:reconnectAsync():await()
 		end
@@ -93,7 +93,7 @@ function Shard.Prototype.heartbeatAsync(self: Shard, requested: boolean?)
 		self.heartbeatClockTime = os.clock()
 		self.heartbeatAcknowledged = false
 
-		self.logger:debug(`Shard '{self.shardId}' sending heartbeat request`)
+		self.logger:info(`sending heartbeat request`)
 
 		self:sendAsync(stdPolyfills.serde.encode("json", {
 			["op"] = apiTypes.gateway.opcodes.Heartbeat,
@@ -107,7 +107,7 @@ end
 ]]
 function Shard.Prototype.identifyAsync(self: Shard)
 	return future.Future.new(function()
-		self.logger:debug(`Shard '{self.shardId}' sending identify request`)
+		self.logger:info(`sending identify request`)
 
 		self:sendAsync(stdPolyfills.serde.encode("json", {
 			["op"] = apiTypes.gateway.opcodes.Identify,
@@ -138,7 +138,7 @@ end
 ]]
 function Shard.Prototype.disconnectAsync(self: Shard, code: number?)
 	return future.Future.new(function()
-		self.logger:debug(`Shard '{self.shardId}' requesting disconnect: {code or 0}`)
+		self.logger:info(`requesting disconnect: {code or 0}`)
 
 		self.socketDisconnecting = true
 
@@ -146,7 +146,7 @@ function Shard.Prototype.disconnectAsync(self: Shard, code: number?)
 			xpcall(function()
 				self.socketInstance.close(code)
 			end, function(errorMessage)
-				self.logger:debug(
+				self.logger:info(
 					`Error during socketInstance.close, assuming socket has been closed: {tostring(errorMessage)}`
 				)
 			end)
@@ -161,16 +161,16 @@ function Shard.Prototype.disconnectAsync(self: Shard, code: number?)
 		if self.socketActive then
 			self.socketActive = false
 
+			self.logger:info(`waiting for socket to close..`)
+
 			while self.socketInstance do
 				stdPolyfills.task.wait(0.5)
 			end
-
-			self.logger:debug(`Shard '{self.shardId}' socket has forcefully been disconnected, receive thread stopped.`)
 		end
 
 		self.socketDisconnecting = false
 		
-		self.logger:debug(`Shard '{self.shardId}' disconnected.`)
+		self.logger:info(`disconnected.`)
 	end) :: future.FutureLike<string, nil>
 end
 
@@ -187,7 +187,7 @@ function Shard.Prototype.connectAsync(self: Shard, socketUrl: string, socketVers
 	return future.Future.new(function()
 		assert(not self.socketActive, `Shard '{self.shardId}' already connected to a socket.`)
 
-		self.logger:debug(`Shard '{self.shardId}' connecting to: {`{socketUrl}/?v={socketVersion}`}`)
+		self.logger:info(`connecting to: {`{socketUrl}/?v={socketVersion}`}`)
 
 		local success0, response0 = pcall(stdPolyfills.net.tcpSocket, `{socketUrl}/?v={socketVersion}`)
 
@@ -204,10 +204,10 @@ function Shard.Prototype.connectAsync(self: Shard, socketUrl: string, socketVers
 		self.socketInstance = response0
 		self.socketActive = true
 
-		self.logger:debug(`Shard '{self.shardId}' has connected to: {socketUrl}, starting receive thread.`)
+		self.logger:info(`has connected to: {socketUrl}, starting receive thread.`)
 
 		self.socketThread = util.coroutine.run(function()
-			self.logger:debug(`Shard '{self.shardId}' Receive thread started, awaiting messages.`)
+			self.logger:info(`Receive thread started, awaiting messages.`)
 
 			self.onSocketConnected:invoke()
 
@@ -215,7 +215,7 @@ function Shard.Prototype.connectAsync(self: Shard, socketUrl: string, socketVers
 				assert(self.socketInstance, `Socket instance is nil.`)
 
 				if self.socketInstance.closeCode then
-					self.logger:warn(`Shard '{self.shardId}' closed from server: {self.socketInstance.closeCode}`)
+					self.logger:warn(`closed from server: {self.socketInstance.closeCode}`)
 
 					self.socketActive = false
 				else
@@ -225,7 +225,7 @@ function Shard.Prototype.connectAsync(self: Shard, socketUrl: string, socketVers
 						continue
 					elseif not self.socketInstance then
 						self.logger:warn(
-							`Shard '{self.shardId}' - missing WebSocket: {response and response or "No error provided"}`
+							`- missing WebSocket: {response and response or "No error provided"}`
 						)
 
 						self.socketActive = false
@@ -233,7 +233,7 @@ function Shard.Prototype.connectAsync(self: Shard, socketUrl: string, socketVers
 						self:_handleMessage(response :: string)
 					else
 						self.logger:warn(
-							`Shard '{self.shardId}' error during receive: {response and response or "No error provided, see close code"}`
+							`error during receive: {response and response or "No error provided, see close code"}`
 						)
 
 						self.socketActive = false
@@ -245,7 +245,7 @@ function Shard.Prototype.connectAsync(self: Shard, socketUrl: string, socketVers
 
 			self.socketThread = nil
 			self.socketInstance = nil
-			self.logger:debug(`Shard '{self.shardId}' socket has disconnected, receive thread stopped.`)
+			self.logger:info(`socket has disconnected, receive thread stopped.`)
 
 			if self.socketReconnecting then
 				return
@@ -272,11 +272,11 @@ function Shard.Prototype.resumeAsync(self: Shard)
 			:await()
 
 		if response:isOk() then
-			self.logger:debug(`Shard '{self.shardId}' waiting for ready..`)
+			self.logger:notice(`waiting for ready..`)
 
 			self.onSocketReady:wait()
 
-			self.logger:debug(`Shard '{self.shardId}' attempting to resume..`)
+			self.logger:notice(`attempting to resume..`)
 
 			self:sendAsync(stdPolyfills.serde.encode("json", {
 				["op"] = apiTypes.gateway.opcodes.Resume,
@@ -289,17 +289,17 @@ function Shard.Prototype.resumeAsync(self: Shard)
 				:andThen(function(response)
 					return future.Future.new(function()
 						if response:isOk() then
-							self.logger:debug(`Shard '{self.shardId}' has resumed!`)
+							self.logger:notice(`has resumed!`)
 						else
 							self.logger:critical(
-								`Shard '{self.shardId}' failed to resume session: {response:unwrapErr()}`
+								`failed to resume session: {response:unwrapErr()}`
 							)
 						end
 					end) :: future.FutureLike<string, nil>
 				end)
 				:await()
 		else
-			self.logger:warn(`Shard '{self.shardId}' failed to resume session: {response:unwrapErr()}, will try to re-instantiate!`)
+			self.logger:warn(`failed to resume session: {response:unwrapErr()}, will try to re-instantiate!`)
 
 			self:reinstantiateAsync(self.shouldReconnect):await()
 		end
@@ -320,7 +320,7 @@ function Shard.Prototype.reconnectAsync(self: Shard)
 		self.socketReconnecting = true
 
 		if self.sessionGateway then
-			self.logger:debug(`Shard '{self.shardId}' reconnection requested, reconnecting..`)
+			self.logger:notice(`reconnection requested, reconnecting..`)
 
 			local response = self:disconnectAsync(1012):await()
 
@@ -328,19 +328,19 @@ function Shard.Prototype.reconnectAsync(self: Shard)
 				local response = self:resumeAsync():await()
 
 				if response:isOk() then
-					self.logger:debug(`Shard '{self.shardId}' reconnection successful`)
+					self.logger:notice(`reconnection successful`)
 				else
 					self.logger:critical(
-						`Shard '{self.shardId}' failed to reconnect session: {response:unwrapErr()}`
+						`failed to reconnect session: {response:unwrapErr()}`
 					)
 				end
 			else
 				self.logger:critical(
-					`Shard '{self.shardId}' failed to reconnect session: {response:unwrapErr()}`
+					`failed to reconnect session: {response:unwrapErr()}`
 				)
 			end
 		else
-			self.logger:warn(`Shard '{self.shardId}' failed to reconnect! Re-instantiating instead!`)
+			self.logger:warn(`failed to reconnect! Re-instantiating instead!`)
 
 			self:reinstantiateAsync(self.shouldReconnect):await()
 		end
@@ -360,14 +360,14 @@ function Shard.Prototype.sendAsync(self: Shard, data: string)
 	return future.Future.new(function()
 		assert(self.socketActive and self.socketInstance, `Shard '{self.shardId}' not connected to a socket.`)
 
-		self.logger:debug(`Shard '{self.shardId}' sending message of length: {string.len(data)}`)
+		self.logger:debug(`sending message of length: {string.len(data)}`)
 
 		local success, response: string? = pcall(self.socketInstance.send, data, true)
 
 		if not success then
 			self.socketActive = false
 
-			self.logger:warn(`Shard '{self.shardId}' error during send: {response}\nTraceback: {debugTraceback}`)
+			self.logger:warn(`error during send: {response}\nTraceback: {debugTraceback}`)
 			
 			self.onSocketDisconnected:wait()
 		end
@@ -385,7 +385,7 @@ end
 ]]
 function Shard.Prototype.reinstantiateAsync(self: Shard, noFail: boolean?)
 	return future.Future.new(function()
-		self.logger:debug(`Shard '{self.shardId}' re-instantiation requested..`)
+		self.logger:debug(`re-instantiation requested..`)
 
 		local response
 
@@ -393,7 +393,7 @@ function Shard.Prototype.reinstantiateAsync(self: Shard, noFail: boolean?)
 
 		if not response:isOk() then
 			self.logger:emergency(
-				`Shard '{self.shardId}' exception during re-instantiation, shard {self.shardId} is now dead! \n{response:unwrapErr()}`
+				`exception during re-instantiation, shard {self.shardId} is now dead! \n{response:unwrapErr()}`
 			)
 		end
 
@@ -401,7 +401,7 @@ function Shard.Prototype.reinstantiateAsync(self: Shard, noFail: boolean?)
 
 		if response:isOk() then
 			self.logger:warn(
-				`Shard '{self.shardId}' re-instantiation successful, shard {self.shardId} has recovered.`
+				`re-instantiation successful, shard {self.shardId} has recovered.`
 			)
 		else
 			if noFail then
@@ -410,7 +410,7 @@ function Shard.Prototype.reinstantiateAsync(self: Shard, noFail: boolean?)
 				self:reinstantiateAsync(noFail):await()
 			else
 				self.logger:emergency(
-					`Shard '{self.shardId}' exception during re-instantiation, shard {self.shardId} is now dead! \n{response:unwrapErr()}`
+					`exception during re-instantiation, shard {self.shardId} is now dead! \n{response:unwrapErr()}`
 				)
 			end
 		end
@@ -426,7 +426,7 @@ function Shard.Prototype.heartbeatIn(self: Shard, milliseconds: number): ()
 		coroutine.close(self.heartbeatThread)
 	end
 
-	self.logger:debug(`Shard '{self.shardId}' to heartbeat in '{milliseconds}' ms`)
+	self.logger:debug(`to heartbeat in '{milliseconds}' ms`)
 
 	self.heartbeatThread = util.coroutine.run(function()
 		stdPolyfills.task.wait(milliseconds / 1000)
@@ -493,7 +493,7 @@ function Shard.Interface.new(settings: {
 		if payload.op == apiTypes.gateway.opcodes.Dispatch then
 			-- https://discord.com/developers/docs/topics/gateway#dispatch-events
 
-			self.logger:debug(`Shard '{self.shardId}' received dispatch message: {payload.t}`)
+			self.logger:debug(`received dispatch message: {payload.t}`)
 
 			self.lastSequence = payload.s
 
@@ -501,10 +501,12 @@ function Shard.Interface.new(settings: {
 		elseif payload.op == apiTypes.gateway.opcodes.Heartbeat then
 			-- https://discord.com/developers/docs/topics/gateway-events#heartbeat
 
-			self.logger:debug(`Shard '{self.shardId}' received heartbeat request, responding.`)
+			self.logger:info(`received heartbeat request, responding.`)
 			self:heartbeatAsync(true):poll()
 		elseif payload.op == apiTypes.gateway.opcodes.Reconnect then
 			-- https://discord.com/developers/docs/topics/gateway-events#reconnect
+
+			self.logger:info(`received reconnection request, reconnecting..`)
 
 			self:reconnectAsync():poll()
 		elseif payload.op == apiTypes.gateway.opcodes.InvalidSession then
@@ -512,16 +514,16 @@ function Shard.Interface.new(settings: {
 
 			local messageObject = payload :: apiTypes.InvalidSessionPayload
 
-			self.logger:warn(`Shard '{self.shardId}' discord returned invalid session, reconnecting..`)
+			self.logger:warn(`discord returned invalid session, reconnecting..`)
 
 			if messageObject.d then
-				self.logger:warn(`Shard '{self.shardId}' discord invalid session is recoverable, resuming session..`)
+				self.logger:warn(`discord invalid session is recoverable, resuming session..`)
 
 				self:reconnectAsync()
 					:andThen(function(result)
 						return future.Future.new(function()
 							self.logger:warn(
-								`Shard '{self.shardId}' unrecoverable error during reconnection, re-instantiating shard.. \n{result:unwrapErr()}`
+								`unrecoverable error during reconnection, re-instantiating shard.. \n{result:unwrapErr()}`
 							)
 
 							self:reinstantiateAsync(self.shouldReconnect):await()
@@ -530,7 +532,7 @@ function Shard.Interface.new(settings: {
 					:poll()
 			else
 				self.logger:warn(
-					`Shard '{self.shardId}' unrecoverable error during connection, re-instantiating shard..`
+					`unrecoverable error during connection, re-instantiating shard..`
 				)
 
 				self:reinstantiateAsync(self.shouldReconnect):poll()
@@ -538,7 +540,7 @@ function Shard.Interface.new(settings: {
 		elseif payload.op == apiTypes.gateway.opcodes.Hello then
 			-- https://discord.com/developers/docs/topics/gateway-events#hello
 
-			self.logger:debug(`Shard '{self.shardId}' received hello message, starting heartbeat..`)
+			self.logger:info(`received hello message, starting heartbeat..`)
 
 			local messageObject = payload :: apiTypes.HelloPayload
 
@@ -558,17 +560,17 @@ function Shard.Interface.new(settings: {
 		elseif payload.op == apiTypes.gateway.opcodes.HeartbeatACK then
 			-- https://discord.com/developers/docs/topics/gateway#heartbeat-interval
 
-			self.logger:debug(`Shard '{self.shardId}' received heartbeat acknowledgement.`)
-
 			self.heartbeatAcknowledged = true
 			self.heartbeatPing = os.clock() - self.heartbeatClockTime :: number
+			
+			self.logger:info(`received heartbeat acknowledgement, ping: '{string.sub(tostring(self.heartbeatPing), 1, 7)}'`)
 
 			self.onSocketHeartbeat:invoke(self.heartbeatPing)
 
 			if not self.socketIdentified then
 				self.socketIdentified = true
 
-				self.logger:debug(`Shard '{self.shardId}' hasn't identified yet, identifying..`)
+				self.logger:debug(`hasn't identified yet, identifying..`)
 
 				self:identifyAsync()
 					:andThen(function(result)
@@ -577,7 +579,7 @@ function Shard.Interface.new(settings: {
 								self.socketIdentified = false
 
 								self.logger:critical(
-									`Shard '{self.shardId}' exception during initial identify: {result:unwrapErr()}`
+									`exception during initial identify: {result:unwrapErr()}`
 								)
 							end
 						end) :: future.FutureLike<string, nil>
@@ -605,8 +607,8 @@ function Shard.Interface.new(settings: {
 		self.sessionId = message.d.session_id
 
 		self.onSocketReady:invoke()
-		self.logger:debug(
-			`Shard '{self.shardId}' has identified as {message.d.user.username}#{message.d.user.discriminator}`
+		self.logger:info(
+			`ready! identified as {message.d.user.username}#{message.d.user.discriminator}`
 		)
 	end)
 

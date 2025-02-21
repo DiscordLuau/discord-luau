@@ -31,14 +31,14 @@ local LOGGER_LOG_LEVELS = table.freeze({
 })
 
 local LOGGER_LOG_FORMATS = table.freeze({
-	["Debug"] = `{DIM}{RESET}[%s][DEBUG]: %s`,
-	["Info"] = `{CYAN}[%s][INFO]: %s`,
-	["Notice"] = `{BLUE}[%s][NOTICE]: %s`,
-	["Warn"] = `{YELLOW}[%s][WARN]: %s`,
-	["Error"] = `{RED}[%s][ERROR]: %s`,
-	["Critical"] = `{RED}[%s][CRITICAL]: %s`,
-	["Alert"] = `{BOLD}{RED}[%s][ALERT]: %s`,
-	["Emergency"] = `{BOLD}{RED}[%s][EMERGENCY]: %s`,
+	["Debug"] = `{DIM}[%s][%s][DEBUG]: %s`,
+	["Info"] = `{CYAN}[%s][%s][INFO]: %s`,
+	["Notice"] = `{BLUE}[%s][%s][NOTICE]: %s`,
+	["Warn"] = `{YELLOW}[%s][%s][WARN]: %s`,
+	["Error"] = `{RED}[%s][%s][ERROR]: %s`,
+	["Critical"] = `{RED}[%s][%s][CRITICAL]: %s`,
+	["Alert"] = `{BOLD}{RED}[%s][%s][ALERT]: %s`,
+	["Emergency"] = `{BOLD}{RED}[%s][%s][EMERGENCY]: %s`,
 })
 
 local Logger = {}
@@ -95,8 +95,21 @@ function Logger.Interface.new(name: string, logLevel: LogLevel?): Logger
 			end
 
 			local logMessage = parseVaradic({ ... })
+			local unixTimestampMillis = stdPolyfills.datetime.now().unixTimestampMillis
+			local date = os.date("!*t", unixTimestampMillis / 1000)
+			local milliseconds = unixTimestampMillis % 1000
+			local time = string.format(
+				"%04d-%02d-%02d %02d:%02d:%02d.%02d",
+				date.year,
+				date.month,
+				date.day,
+				date.hour,
+				date.min,
+				date.sec,
+				milliseconds
+			)
 
-			print(`{string.format(LOGGER_LOG_FORMATS[logType], name, logMessage)}{RESET}`)
+			print(`{string.format(LOGGER_LOG_FORMATS[logType], time, name, logMessage)}{RESET}`)
 
 			if logValue >= 5 then
 				local thread = coroutine.running()
