@@ -454,6 +454,8 @@ function Shard.Interface.new(settings: {
 	shardCount: number,
 	shouldReconnect: boolean,
 
+	logLevel: logger.LogLevel,
+
 	largeThreshold: number?,
 }): Shard
 	local self = setmetatable(
@@ -478,7 +480,7 @@ function Shard.Interface.new(settings: {
 			onSocketRawMessage = emitter.new(),
 			onSocketReady = emitter.new(),
 
-			logger = logger.new(`Shard<{settings.shardId}>`),
+			logger = logger.new(`Shard<{settings.shardId}>`, settings.logLevel),
 
 			socketActive = false,
 			socketReconnecting = false,
