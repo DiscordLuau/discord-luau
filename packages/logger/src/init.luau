@@ -73,6 +73,13 @@ function Logger.Prototype.setLogLevel(self: Logger, logLevel: LogLevel)
 end
 
 --[[
+	Function responsible for for getting the log level of the logger
+]]
+function Logger.Prototype.getLogLevel(self: Logger): LogLevel
+	return LOGGER_LOG_LEVELS[self.logLevel] :: LogLevel
+end
+
+--[[
 	Constructor for the Logger object.
 ]]
 function Logger.Interface.new(name: string, logLevel: LogLevel?): Logger
