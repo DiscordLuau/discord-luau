@@ -42,6 +42,8 @@ function Manager.Prototype.connectAsync(
 					largeThreshold = self.largeThreshold,
 					shouldReconnect = self.shouldReconnect,
 
+					logLevel = self.logger:getLogLevel(),
+
 					shardId = shardId,
 					shardCount = shardCount,
 				})
@@ -147,7 +149,7 @@ function Manager.Interface.new(settings: {
 	intents: number,
 	largeThreshold: number?,
 	webSocketVersion: number,
-	reconnect: boolean
+	reconnect: boolean,
 }): Manager
 	return setmetatable(
 		{
