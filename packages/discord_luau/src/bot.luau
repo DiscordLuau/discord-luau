@@ -456,6 +456,39 @@ function Bot.Prototype.getMediaChannelAsync(self: Bot, channelId: string)
 end
 
 --[[
+	
+]]
+function Bot.Prototype.createGuildAsync(
+	self: Bot,
+	guildData: builders.guildJSON & {
+		name: string,
+	}
+)
+	return future.Future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local response = rest.guild.createGuildAsync(request, guildData :: any):await()
+
+		assert(response:isOk(), tostring(response:unwrapErr()))
+
+		return classes.guild.guild.new(self.state, response:unwrapOk()) :: any
+	end) :: future.FutureLike<string, classes.Guild>
+end
+
+--[[
+	
+]]
+function Bot.Prototype.setLogLevel(self: Bot, logLevel: logger.LogLevel)
+	self.logger:setLogLevel(logLevel)
+
+	self.state.webSocketManager.logger:setLogLevel(logLevel)
+
+	for _, shard in self.state.webSocketManager.shards do
+		shard.logger:setLogLevel(logLevel)
+	end
+end
+
+--[[
 	Returns a voice channel object for the given channel ID.
 
 	This function sends a request to the Discord API to retrieve information about a voice channel.
@@ -472,7 +505,6 @@ end
 	
 ]]
 function Bot.Prototype.setPresenceAsync(self: Bot, presence: builders.presenceJSON)
-	print(1)
 	return self.state.webSocketManager:sendAsync(apiTypes.gateway.opcodes.PresenceUpdate, presence)
 end
 
@@ -480,6 +512,7 @@ function Bot.Interface.new(options: {
 	token: string,
 	intents: number,
 	reconnect: boolean?,
+	logLevel: logger.LogLevel?,
 })
 	local self = setmetatable(
 		{
@@ -542,6 +575,10 @@ function Bot.Interface.new(options: {
 		} :: Bot,
 		{ __index = Bot.Prototype }
 	)
+
+	if options.logLevel then
+		self:setLogLevel(options.logLevel)
+	end
 
 	return self
 end
