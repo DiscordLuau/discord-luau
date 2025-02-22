@@ -14,30 +14,30 @@ local ScheduledEvent = {}
 ScheduledEvent.Interface = {}
 ScheduledEvent.Prototype = {}
 
-function ScheduledEvent.Prototype.sync(self: ScheduledEvent, scheduledeventData: apiTypes.GuildScheduledEventObject)
-	self.id = scheduledeventData.id
-	self.guildId = scheduledeventData.guild_id
-	self.channelId = scheduledeventData.channel_id
-	self.creatorId = scheduledeventData.creator_id
-	self.name = scheduledeventData.name
-	self.description = scheduledeventData.description
-	self.scheduledStartTime = stdPolyfills.datetime.fromIsoDate(scheduledeventData.scheduled_start_time)
-	self.scheduledEndTime = scheduledeventData.scheduled_end_time
-		and stdPolyfills.datetime.fromIsoDate(scheduledeventData.scheduled_end_time)
-	self.privacyLevel = apiTypes.guild.ScheduledEventPrivacyLevel[scheduledeventData.privacy_level]
-	self.status = apiTypes.guild.SchedledEventStatus[scheduledeventData.status + 1]
-	self.entityType = apiTypes.guild.SchedledEventEntityType[scheduledeventData.entity_type + 1]
-	self.entityId = scheduledeventData.entity_id
-	self.location = scheduledeventData.entity_metadata and scheduledeventData.entity_metadata.location
-	self.creator = scheduledeventData.creator and user.new(scheduledeventData.creator)
-	self.userCount = scheduledeventData.user_count
-	self.image = scheduledeventData.image
+function ScheduledEvent.Prototype.sync(self: ScheduledEvent, scheduledEventData: apiTypes.GuildScheduledEventObject)
+	self.id = scheduledEventData.id
+	self.guildId = scheduledEventData.guild_id
+	self.channelId = scheduledEventData.channel_id
+	self.creatorId = scheduledEventData.creator_id
+	self.name = scheduledEventData.name
+	self.description = scheduledEventData.description
+	self.scheduledStartTime = stdPolyfills.datetime.fromIsoDate(scheduledEventData.scheduled_start_time)
+	self.scheduledEndTime = scheduledEventData.scheduled_end_time
+		and stdPolyfills.datetime.fromIsoDate(scheduledEventData.scheduled_end_time)
+	self.privacyLevel = apiTypes.guild.ScheduledEventPrivacyLevel[scheduledEventData.privacy_level]
+	self.status = apiTypes.guild.SchedledEventStatus[scheduledEventData.status + 1]
+	self.entityType = apiTypes.guild.SchedledEventEntityType[scheduledEventData.entity_type + 1]
+	self.entityId = scheduledEventData.entity_id
+	self.location = scheduledEventData.entity_metadata and scheduledEventData.entity_metadata.location
+	self.creator = scheduledEventData.creator and user.new(scheduledEventData.creator)
+	self.userCount = scheduledEventData.user_count
+	self.image = scheduledEventData.image
 end
 
-function ScheduledEvent.Interface.new(scheduledeventData: apiTypes.GuildScheduledEventObject): ScheduledEvent
+function ScheduledEvent.Interface.new(scheduledEventData: apiTypes.GuildScheduledEventObject): ScheduledEvent
 	local self = setmetatable({} :: ScheduledEvent, { __index = ScheduledEvent.Prototype })
 
-	self:sync(scheduledeventData)
+	self:sync(scheduledEventData)
 
 	return self
 end
