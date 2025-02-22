@@ -93,6 +93,36 @@ local OverwriteType = table.freeze(util.table.reflect({
 	Member = 1,
 }))
 
+local TriggerTypes = table.freeze(util.table.reflect({
+	Keyword = 1,
+	Spam = 3,
+	KeywordPreset = 4,
+	MentionSpam = 5,
+	MemberProfile = 6,
+}))
+
+local KeywordPresetType = table.freeze(util.table.reflect({
+	Profanity = 1,
+	SexualContent = 2,
+	Slurs = 3,
+}))
+
+local EventTypes = table.freeze(util.table.reflect({
+	MessageSend = 1,
+	MemberUpdate = 2,
+}))
+
+local ActionTypes = table.freeze(util.table.reflect({
+	BlockMessage = 1,
+	SendAlertMessage = 2,
+	Timeout = 3,
+	BlockMemberInteraction = 4,
+}))
+
+export type ActionTypes = "BlockMessage" | "SendAlertMessage" | "Timeout" | "BlockMemberInteraction"
+export type EventTypes = "MessageSend" | "MemberUpdate"
+export type KeywordPresetType = "Profanity" | "SexualContent" | "Slurs"
+export type TriggerTypes = "Keyword" | "Spam" | "KeywordPreset" | "MentionSpam" | "MemberProfile"
 export type VerificationLevel = "None" | "Low" | "Medium" | "High" | "VeryHigh"
 export type DefaultMessageNotification = "AllMessages" | "OnlyMentions"
 export type ExplicitContentFilterLevel = "Disabled" | "MembersWithoutRoles" | "AllMembers"
