@@ -115,6 +115,10 @@ local installParams = require("./application/installParams")
 local team = require("./application/team/team")
 local member = require("./application/team/member")
 local permission = require("./permission")
+local automoderationRule = require("./automoderation/rule")
+local automoderationAction = require("./automoderation/action/action")
+local automoderationActionMetadata = require("./automoderation/action/metadata")
+local automoderationTriggerMetadata = require("./automoderation/trigger/metadata")
 
 export type Provider = provider.Provider
 export type Permission = permission.Permission
@@ -232,9 +236,21 @@ export type Author = author.Author
 export type Embed = embed.Embed
 export type Thumbnail = thumbnail.Thumbnail
 export type Field = field.Field
+export type AutomoderationRule = automoderationRule.AutomoderationRule
+export type AutomoderationAction = automoderationAction.Action
+export type AutomoderationActionMetadata = automoderationActionMetadata.ActionMetadata
+export type AutomoderationTriggerMetadata = automoderationTriggerMetadata.TriggerMetadata
 
 return {
 	permission = permission,
+	automoderation = {
+		rule = automoderationRule,
+		action = {
+			action = automoderationAction,
+			metadata = automoderationActionMetadata,
+		},
+		triggerMetadata = automoderationTriggerMetadata,
+	},
 	application = {
 		team = {
 			member = member,
