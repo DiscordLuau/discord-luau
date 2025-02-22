@@ -1,5 +1,6 @@
 return {
 	user = require("./user"),
+	webhook = require("./webhook"),
 	sticker = require("./sticker"),
 	poll = require("./poll"),
 	permission = require("./permission"),
