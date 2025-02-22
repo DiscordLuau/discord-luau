@@ -579,11 +579,11 @@ export type GuildApplicationCommandPermissionsObject = {
 -- https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-rule-object-trigger-metadata
 export type AutomoderationRuleTriggerMetadataObject = {
 	keyword_filter: { string }, -- substrings which will be searched for in content (Maximum of 1000)
-	regex_patters: { string }, -- regular expression patterns which will be matched against content (Maximum of 10)
+	regex_patterns: { string }, -- regular expression patterns which will be matched against content (Maximum of 10)
 	presets: { AutomoderationRuleKeywordPresetType }, -- the internally pre-defined wordsets which will be searched for in content
 	allow_list: { string }, -- substrings which should not trigger the rule (Maximum of 100 or 1000)
 	mention_total_limit: number, -- total number of unique role and user mentions allowed per message (Maximum of 50)
-	mention_radi_protection_enabled: boolean, -- whether to automatically detect mention raids
+	mention_raid_protection_enabled: boolean, -- whether to automatically detect mention raids
 }
 
 -- https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-action-object-action-metadata
