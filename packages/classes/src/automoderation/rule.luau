@@ -18,6 +18,9 @@ local AutomoderationRule = {}
 AutomoderationRule.Interface = {}
 AutomoderationRule.Prototype = {}
 
+--[[
+	Modify an existing rule. Returns an auto moderation rule on success..
+]]
 function AutomoderationRule.Prototype.modifyAsync(
 	self: AutomoderationRule,
 	automoderationRuleJSON: builders.AutomoderationRuleJSON,
@@ -38,6 +41,9 @@ function AutomoderationRule.Prototype.modifyAsync(
 	end) :: future.FutureLike<string, AutomoderationRule>
 end
 
+--[[
+	Deletes an automoderation rule.
+]]
 function AutomoderationRule.Prototype.deleteAsync(self: AutomoderationRule, auditLogReason: string?)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
