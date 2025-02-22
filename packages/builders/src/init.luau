@@ -39,11 +39,15 @@ local option = require("./interaction/option")
 local choice = require("./interaction/choice")
 local interaction = require("./interaction/interaction")
 local attachment = require("./attachment")
-local defaultReaction = require("./defaultReaction")
+local defaultReaction = require("./default/reaction")
 local permission = require("./permission")
 local intents = require("./intents")
 local activity = require("./activity")
 local presence = require("./presence")
+local automoderationRule = require("./automoderation/rule")
+local automoderationAction = require("./automoderation/action/action")
+local automoderationActionMetadata = require("./automoderation/action/metadata")
+local automoderationTriggerMetadata = require("./automoderation/trigger/metadata")
 
 export type providerJSON = provider.JSON
 export type fieldJSON = field.JSON
@@ -90,6 +94,10 @@ export type defaultReactionJSON = defaultReaction.JSON
 export type permissionJSON = permission.JSON
 export type activityJSON = activity.JSON
 export type presenceJSON = presence.JSON
+export type AutomoderationRuleJSON = automoderationRule.JSON
+export type AutomoderationActionJSON = automoderationAction.JSON
+export type AutomoderationActionMetadataJSON = automoderationActionMetadata.JSON
+export type AutomoderationTriggerMetadataJSON = automoderationTriggerMetadata.JSON
 export type intents = intents.Intents
 
 return {
@@ -99,6 +107,14 @@ return {
 	attachment = attachment,
 	presence = presence,
 	activity = activity,
+	automoderation = {
+		rule = automoderationRule,
+		action = {
+			action = automoderationAction,
+			metadata = automoderationActionMetadata,
+		},
+		triggerMetadata = automoderationTriggerMetadata,
+	},
 	interaction = {
 		interaction = interaction,
 		choice = choice,
