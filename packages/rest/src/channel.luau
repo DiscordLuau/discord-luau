@@ -303,7 +303,7 @@ function Channel.startThreadFromMessageAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
 	messageId: apiTypes.Snowflake,
-	jsonParams: apiTypes.StartThreadFromMessageRequest_,
+	jsonParams: apiTypes.StartThreadFromMessageRequest,
 	auditLogReason: string?
 )
 	return future.Future.new(function()

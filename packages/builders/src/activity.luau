@@ -73,7 +73,7 @@ end
 ]]
 function Activity.Interface.new(resource: {
 	name: string?,
-	activityType: number?,
+	activityType: apiTypes.ActivityType?,
 	streamingURL: string?,
 }?): Activity
 	local self = setmetatable({} :: Activity, { __index = Activity.Prototype })
@@ -95,7 +95,7 @@ end
 
 export type Activity = typeof(Activity.Prototype) & {
 	name: string,
-	activityType: number,
+	activityType: apiTypes.ActivityType,
 	streamingURL: string?,
 }
 
