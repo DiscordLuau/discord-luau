@@ -16,14 +16,10 @@ ActionRow.Interface = {}
 ActionRow.Prototype = {}
 
 function ActionRow.Prototype.sync(self: ActionRow, activityObject: apiTypes.ActionRowComponentObject)
-	local components: { button.Button | textInput.TextInput | selectMenu.SelectMenu | ActionRow } = {}
+	local components: { button.Button | textInput.TextInput | selectMenu.SelectMenu } = {}
 
 	for _, componentData in activityObject.components do
-		if componentData.type == 1 then
-			local data = componentData :: apiTypes.ActionRowComponentObject
-
-			table.insert(components, ActionRow.Interface.new(data))
-		elseif componentData.type == 2 then
+		if componentData.type == 2 then
 			local data = componentData :: apiTypes.ButtonComponentObject
 
 			table.insert(components, button.new(data))
@@ -58,7 +54,8 @@ end
 
 export type ActionRow = typeof(ActionRow.Prototype) & {
 	type: number,
-	components: { button.Button | textInput.TextInput | selectMenu.SelectMenu | ActionRow },
+
+	components: { button.Button | textInput.TextInput | selectMenu.SelectMenu },
 }
 
 return ActionRow.Interface
