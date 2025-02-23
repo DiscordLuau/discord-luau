@@ -949,7 +949,7 @@ function Guild.Prototype.getIntegrationsAsync(self: Guild)
 		local integrations = {}
 
 		for _, integrationData in response:unwrapOk() do
-			table.insert(integrations, integration.new(integrationData))
+			table.insert(integrations, integration.new(self.state, self.id, integrationData))
 		end
 
 		return integrations
