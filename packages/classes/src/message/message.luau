@@ -265,6 +265,64 @@ function Message.Prototype.deleteAsync(self: Message, reason: string?)
 	end) :: future.FutureLike<string, nil>
 end
 
+--[[
+	
+]]
+function Message.Prototype.replyAsync(self: Message, message: builders.messageJSON)
+	return future.Future.new(function()
+		local request = self.state.rest:newRequest()
+
+		message.message_reference = {
+			type = 0, -- referenced
+			message_id = self.id,
+			channel_id = self.channelId,
+			fail_if_not_exists = false,
+		}
+
+		local response = rest.message.createMessageAsync(request, self.channelId, message):await()
+
+		assert(response:isOk(), tostring(response:unwrapErr()))
+
+		self.pinned = true
+
+		return nil
+	end) :: future.FutureLike<string, nil>
+end
+
+--[[
+	
+]]
+function Message.Prototype.pinAsync(self: Message)
+	return future.Future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local response = rest.channel.pinMessageAsync(request, self.channelId, self.id):await()
+
+		assert(response:isOk(), tostring(response:unwrapErr()))
+
+		self.pinned = true
+
+		return nil
+	end) :: future.FutureLike<string, nil>
+end
+
+--[[
+	
+]]
+function Message.Prototype.unpinAsync(self: Message)
+	return future.Future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local response = rest.channel.unpinMessageAsync(request, self.channelId, self.id):await()
+
+		assert(response:isOk(), tostring(response:unwrapErr()))
+
+		self.pinned = false
+
+		return nil
+	end) :: future.FutureLike<string, nil>
+end
+
 function Message.Prototype.sync(self: Message, messageData: apiTypes.MessageObject)
 	self.type = apiTypes.message.MessageType[messageData.type]
 
