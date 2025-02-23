@@ -9,6 +9,10 @@ local state = require("../../../lune_packages/state")
 local apiTypes = require("../../../lune_packages/api_types")
 
 local interactionBehaviour = require("../behaviour/interaction")
+local interactableBehaviour = require("../behaviour/interactable")
+
+local actionRow = require("../../message/components/actionRow")
+local textInput = require("../../message/components/textInput")
 
 local Modal = {}
 
@@ -16,7 +20,24 @@ Modal.Interface = {}
 Modal.Prototype = {}
 Modal.Behaviours = {
 	interactionBehaviour,
+	interactableBehaviour,
 }
+
+function Modal.Prototype.getContent(self: Modal, customId: string): string?
+	assert(self.data, `Expected data`)
+	assert(self.data.components, `Expected components`)
+	assert(self.data.components[1], `Expected component list`)
+
+	local componentList = self.data.components[1] :: actionRow.ActionRow
+
+	for _, value in componentList.components :: { textInput.TextInput } do
+		if value.customId == customId then
+			return value.value
+		end
+	end
+
+	return nil
+end
 
 function Modal.Prototype.sync(self: Modal, interactionData: apiTypes.InteractionObject)
 	for _, behaviour in Modal.Behaviours do
@@ -38,6 +59,6 @@ function Modal.Interface.new(state: state.State, interactionData: apiTypes.Inter
 	return self
 end
 
-export type Modal = typeof(Modal.Prototype) & interactionBehaviour.Interaction
+export type Modal = typeof(Modal.Prototype) & interactionBehaviour.Interaction & interactableBehaviour.Interaction
 
 return Modal.Interface
