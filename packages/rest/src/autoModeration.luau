@@ -31,7 +31,7 @@ function AutoModeration.listAutoModerationRulesForGuildAsync(instance: request.R
 end
 
 -- https://discord.com/developers/docs/resources/auto-moderation#get-auto-moderation-rule
-function AutoModeration.getAutoModerationRulesForGuildAsync(
+function AutoModeration.getAutoModerationRuleForGuildAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	autoModerationRuleId: apiTypes.Snowflake
