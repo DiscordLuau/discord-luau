@@ -1,5 +1,5 @@
 --[[
-	Voice Behaviour, responsible for implementing the various properties, and methods for a voice-able channels.
+	Base interaction behaviour
 ]]
 
 local apiTypes = require("../../../lune_packages/api_types")
