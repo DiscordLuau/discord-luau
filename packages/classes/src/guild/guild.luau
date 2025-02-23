@@ -24,6 +24,8 @@ local widget = require("./widget/widget")
 local widgetSettings = require("./widget/widgetSettings")
 local vanityUrl = require("./vanityUrl")
 local onboarding = require("./onboarding/onboarding")
+local auditlog = require("../auditlog/auditlog")
+local automoderationRule = require("../automoderation/rule")
 
 local guildAnnouncement = require("../channels/types/guildAnnouncement")
 local guildCategory = require("../channels/types/guildCategory")
@@ -1118,6 +1120,97 @@ function Guild.Prototype.modifyOnboardingAsync(self: Guild, json: builders.onboa
 
 		return onboarding.new(response:unwrapOk())
 	end) :: future.FutureLike<string, onboarding.Onboarding>
+end
+
+--[[
+	Returns an audit log object for the guild. Requires the VIEW_AUDIT_LOG permission.
+
+	The returned list of audit log entries is ordered based on whether you use before or after. When using before, the
+		list is ordered by the audit log entry ID descending (newer entries first). If after is used, the list is reversed
+		and appears in ascending order (older entries first). Omitting both before and after defaults to before the current
+		timestamp and will show the most recent entries in descending order by ID, the opposite can be achieved using after=0
+		(showing oldest entries).
+]]
+function Guild.Prototype.getGuildAuditLogAsync(
+	self: Guild,
+	userId: apiTypes.Snowflake?,
+	actionType: apiTypes.ActionTypes?,
+	before: apiTypes.Snowflake?,
+	after: apiTypes.Snowflake?,
+	limit: number?
+)
+	return future.Future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local response = rest.auditLog
+			.getGuildAuditLogAsync(request, self.id, {
+				userId = userId,
+				actionType = actionType and apiTypes.guild.ActionTypes[actionType],
+				before = before,
+				after = after,
+				limit = limit,
+			})
+			:await()
+
+		assert(response:isOk(), tostring(response:unwrapErr()))
+
+		return auditlog.new(self.state, response:unwrapOk())
+	end) :: future.FutureLike<string, auditlog.AuditLogs>
+end
+
+--[[
+	Get a list of all rules currently configured for the guild. Returns a list of auto moderation rule objects for the given guild.
+]]
+function Guild.Prototype.listAutomoderationRulesAsync(self: Guild)
+	return future.Future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local response = rest.autoModeration.listAutoModerationRulesForGuildAsync(request, self.id):await()
+
+		assert(response:isOk(), tostring(response:unwrapErr()))
+
+		local automoderationRules = {}
+
+		for _, rule in response:unwrapOk() do
+			table.insert(automoderationRules, automoderationRule.new(self.state, rule))
+		end
+
+		return automoderationRules
+	end) :: future.FutureLike<string, { automoderationRule.AutomoderationRule }>
+end
+
+--[[
+	Get a single rule. Returns an auto moderation rule object.
+]]
+function Guild.Prototype.getAutomoderationRuleAsync(self: Guild, ruleId: apiTypes.Snowflake)
+	return future.Future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local response = rest.autoModeration.getAutoModerationRuleForGuildAsync(request, self.id, ruleId):await()
+
+		assert(response:isOk(), tostring(response:unwrapErr()))
+
+		return automoderationRule.new(self.state, response:unwrapOk())
+	end) :: future.FutureLike<string, automoderationRule.AutomoderationRule>
+end
+
+--[[
+	Create a new rule. Returns an auto moderation rule on success.
+]]
+function Guild.Prototype.createAutomoderationRuleAsync(
+	self: Guild,
+	ruleJSON: builders.AutomoderationRuleJSON,
+	reason: string?
+)
+	return future.Future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local response = rest.autoModeration.createAutoModerationRuleAsync(request, self.id, ruleJSON, reason):await()
+
+		assert(response:isOk(), tostring(response:unwrapErr()))
+
+		return automoderationRule.new(self.state, response:unwrapOk())
+	end) :: future.FutureLike<string, automoderationRule.AutomoderationRule>
 end
 
 function Guild.Prototype.sync(self: Guild, guildData: apiTypes.GuildObject)
