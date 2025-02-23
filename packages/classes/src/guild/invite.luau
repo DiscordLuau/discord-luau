@@ -6,7 +6,9 @@
 
 local apiTypes = require("../../lune_packages/api_types")
 local state = require("../../lune_packages/state")
+local rest = require("../../lune_packages/rest")
 local stdPolyfills = require("../../lune_packages/std_polyfills")
+local future = require("../../luau_packages/future")
 
 local unavailableGuild = require("./unavailableGuild")
 local scheduledEvent = require("./scheduledEvent")
@@ -20,6 +22,22 @@ local Invite = {}
 
 Invite.Interface = {}
 Invite.Prototype = {}
+
+--[[
+	Delete the attached integration object for the guild. Deletes any associated webhooks and kicks the associated bot
+	if there is one. Requires the MANAGE_GUILD permission.
+]]
+function Invite.Prototype.deleteAsync(self: Invite, reason: string?)
+	return future.Future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local response = rest.invite.deleteInviteAsync(request, self.code, reason):await()
+
+		assert(response:isOk(), tostring(response:unwrapErr()))
+
+		return nil
+	end) :: future.FutureLike<string, nil>
+end
 
 function Invite.Prototype.sync(self: Invite, inviteData: apiTypes.InviteObject)
 	if inviteData.channel then
