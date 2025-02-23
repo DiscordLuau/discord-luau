@@ -25,6 +25,7 @@ local role = require("./guild/role")
 local forumTag = require("./forumTag")
 local actionRow = require("./message/components/actionRow")
 local textInput = require("./message/components/textInput")
+local modal = require("./message/components/modal")
 local button = require("./message/components/button")
 local selectMenuOption = require("./message/components/selectMenu/option")
 local defaultValue = require("./message/components/selectMenu/defaultValue")
@@ -98,6 +99,7 @@ export type AutomoderationRuleJSON = automoderationRule.JSON
 export type AutomoderationActionJSON = automoderationAction.JSON
 export type AutomoderationActionMetadataJSON = automoderationActionMetadata.JSON
 export type AutomoderationTriggerMetadataJSON = automoderationTriggerMetadata.JSON
+export type ModalJSON = modal.JSON
 export type intents = intents.Intents
 
 return {
@@ -135,6 +137,7 @@ return {
 				defaultValue = defaultValue,
 				option = selectMenuOption,
 			},
+			modal = modal,
 			button = button,
 			textInput = textInput,
 			actionRow = actionRow,
