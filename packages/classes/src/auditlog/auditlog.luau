@@ -39,7 +39,7 @@ function AuditLogs.Prototype.sync(self: AuditLogs, auditLogsData: apiTypes.Audit
 	end
 
 	for _, integrationData in auditLogsData.integrations do
-		table.insert(self.integrations, integration.new(integrationData))
+		table.insert(self.integrations, integration.new(self.state, nil, integrationData))
 	end
 
 	for _, channelData in auditLogsData.threads do
