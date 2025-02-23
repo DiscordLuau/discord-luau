@@ -654,7 +654,7 @@ export type Bot =
 		}>,
 
 		onPingInteraction: emitter.Emitter<classes.Ping>,
-		onCommandInteraction: emitter.Emitter<classes.Command>,
+		onCommandInteraction: emitter.Emitter<classes.TypesCommand>,
 		onComponentInteraction: emitter.Emitter<classes.Component>,
 		onAutocompleteInteraction: emitter.Emitter<classes.Autocomplete>,
 		onModalInteraction: emitter.Emitter<classes.Modal>,
