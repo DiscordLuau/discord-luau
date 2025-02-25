@@ -306,6 +306,12 @@ end
 ]]
 function Bot.Prototype.getGuildAsync(self: Bot, guildId: string, withCount: boolean?)
 	return future.Future.new(function()
+		local cachedGuildData = self.state.cache.guilds:get(guildId)
+
+		if cachedGuildData then
+			return classes.guild.guild.new(self.state, cachedGuildData)
+		end
+
 		local request = self.state.rest:newRequest()
 
 		local response = rest.guild
@@ -328,6 +334,12 @@ end
 ]]
 function Bot.Prototype.getChannelAsync<T>(self: Bot, channelId: string)
 	return future.Future.new(function()
+		local cachedChannelIdData = self.state.cache.channels:get(channelId)
+
+		if cachedChannelIdData then
+			return classes.channels.construct(self.state, cachedChannelIdData) :: any
+		end
+
 		local request = self.state.rest:newRequest()
 
 		local response = rest.channel.getChannelAsync(request, channelId):await()
@@ -453,6 +465,33 @@ function Bot.Prototype.getMediaChannelAsync(self: Bot, channelId: string)
 
 		return channel :: any
 	end) :: future.FutureLike<string, classes.ThreadMedia>
+end
+
+--[[
+	Returns a user object for the given user ID.
+
+	This function sends a request to the Discord API to retrieve information about a user. 
+]]
+function Bot.Prototype.getUserAsync(self: Bot, userId: string)
+	return future.Future.new(function()
+		local cachedUserData = self.state.cache.users:get(userId)
+
+		if cachedUserData then
+			return classes.user.new(cachedUserData)
+		end
+
+		local request = self.state.rest:newRequest()
+
+		local response = rest.user.getUserAsync(request, userId):await()
+
+		assert(response:isOk(), tostring(response:unwrapErr()))
+
+		local data = response:unwrapOk()
+
+		self.state.cache.users:set(userId, data)
+
+		return classes.user.new(data)
+	end) :: future.FutureLike<string, classes.User>
 end
 
 --[[
