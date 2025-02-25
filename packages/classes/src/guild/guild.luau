@@ -773,6 +773,8 @@ function Guild.Prototype.getRolesAsync(self: Guild)
 		local roles = {}
 
 		for _, roleData in next, response:unwrapOk() do
+			self.state.cache.roles:set(roleData.id :: string, roleData)
+
 			table.insert(roles, role.new(self.state, self.id, roleData))
 		end
 
@@ -785,13 +787,23 @@ end
 ]]
 function Guild.Prototype.getRoleAsync(self: Guild, roleId: apiTypes.Snowflake)
 	return future.Future.new(function()
+		local cachedRoleData = self.state.cache.roles:get(roleId)
+
+		if cachedRoleData then
+			return role.new(self.state, self.id, cachedRoleData)
+		end
+
 		local request = self.state.rest:newRequest()
 
 		local response = rest.guild.getGuildRoleAsync(request, self.id, roleId):await()
 
 		assert(response:isOk(), tostring(response:unwrapErr()))
 
-		return role.new(self.state, self.id, response:unwrapOk())
+		local data = response:unwrapOk()
+
+		self.state.cache.roles:set(roleId, data)
+
+		return role.new(self.state, self.id, data)
 	end) :: future.FutureLike<string, role.Role>
 end
 
