@@ -50,11 +50,10 @@ function State.Interface.new(token: string, intents: number, version: number, re
 			version = version,
 
 			cache = {
-				guilds = cache.new(30 * 60 * 60),
-				users = cache.new(30 * 60 * 60),
-				channels = cache.new(30 * 60 * 60),
-				roles = cache.new(30 * 60 * 60),
-				emojis = cache.new(30 * 60 * 60),
+				guilds = cache.new(1 * 60 * 60),
+				users = cache.new(1 * 60 * 60),
+				channels = cache.new(1 * 60 * 60),
+				roles = cache.new(1 * 60 * 60),
 			},
 		} :: State,
 		{
@@ -80,7 +79,6 @@ export type State = typeof(State.Prototype) & {
 		users: cache.Cache<apiTypes.Snowflake, apiTypes.UserObject>,
 		channels: cache.Cache<apiTypes.Snowflake, apiTypes.ChannelObject>,
 		roles: cache.Cache<apiTypes.Snowflake, apiTypes.GuildRoleObject>,
-		emojis: cache.Cache<apiTypes.Snowflake, apiTypes.EmojiObject>,
 	},
 }
 
