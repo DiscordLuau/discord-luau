@@ -1,5 +1,3 @@
-local task = require("@lune/task")
-
 local env = require(".env")
 
 local discordLuau = require("./packages/discord_luau/src")
@@ -15,22 +13,17 @@ local discordBot = discordLuau.Bot.new({
 discordBot.onAllShardsReady:listen(function()
 	local channel = discordBot:getTextChannelAsync("1344070759722647654"):await():unwrapOk()
 
-	local index = 0
-
-	while true do
-		index += 1
-		local response = channel
-			:createMessageAsync({
-				content = `Example: '{index}'`,
-			})
-			:await()
-
-		if not response:isOk() then
-			print(response)
-		end
-
-		task.wait(1)
-	end
+	channel
+		:createMessageAsync({
+			content = `Example`,
+			attachments = {
+				{
+					content = "abc",
+					filename = "example.txt",
+				},
+			},
+		})
+		:await()
 end)
 
 discordBot:connectAsync():await()
