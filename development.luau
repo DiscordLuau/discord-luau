@@ -19,7 +19,11 @@ discordBot.onAllShardsReady:listen(function()
 
 	while true do
 		index += 1
-		local response = channel:setNameAsync(`TEST-{index}`):await()
+		local response = channel
+			:createMessageAsync({
+				content = `Example: '{index}'`,
+			})
+			:await()
 
 		if not response:isOk() then
 			print(response)
