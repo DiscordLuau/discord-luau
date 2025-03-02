@@ -92,6 +92,8 @@ function TextBehaviour.Prototype.createMessageAsync<T>(self: Channel<T>, json: b
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
+		request:setFlag("FormdataRequest", true)
+
 		local response = rest.message.createMessageAsync(request, self.id, json):await()
 
 		assert(response:isOk(), tostring(response:unwrapErr()))
