@@ -18,6 +18,8 @@ default = "https://github.com/pesde-pkg/index"
 [dependencies]
 std_polyfills = { workspace = "discord_luau/std_polyfills" }
 api_types = { workspace = "discord_luau/api_types" }
+utils = { workspace = "discord_luau/util" }
 websocket = { workspace = "discord_luau/websocket" }
 rest = { workspace = "discord_luau/rest" }
 secret = { workspace = "discord_luau/secret", target = "luau" }
+logger = { workspace = "discord_luau/logger" }
