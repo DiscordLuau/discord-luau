@@ -19,9 +19,9 @@ Interaction.Prototype = {}
 	acknowledge an interaction and edit a response later, the user sees a loading state
 ]]
 function Interaction.Prototype.deferAsync(self: Interaction)
-	local request = self.state.rest:newRequest()
-
 	return future.Future.new(function()
+		local request = self.state.rest:newRequest()
+
 		local response = rest.interaction
 			.createInteractionResponseAsync(request, self.id, self.token, {
 				type = 5,
@@ -47,9 +47,11 @@ function Interaction.Prototype.messageAsync(
 	messageJSON: builders.messageJSON,
 	responseMessage: boolean?
 )
-	local request = self.state.rest:newRequest()
-
 	return future.Future.new(function()
+		local request = self.state.rest:newRequest()
+
+		request:setFlag("FormdataRequest", true)
+
 		local response = rest.interaction
 			.createInteractionResponseAsync(request, self.id, self.token, {
 				type = self.isDeferred and 5 or 4,
@@ -126,9 +128,11 @@ function Interaction.Prototype.editResponseAsync(
 	messageJSON: builders.messageJSON,
 	threadId: string?
 )
-	local request = self.state.rest:newRequest()
-
 	return future.Future.new(function()
+		local request = self.state.rest:newRequest()
+
+		request:setFlag("FormdataRequest", true)
+
 		local response = rest.interaction
 			.editOriginalInteractionResponseAsync(request, self.id, self.token, messageJSON, {
 				threadId = threadId,
@@ -165,9 +169,11 @@ function Interaction.Prototype.createFollowupResponseAsync(
 	messageJSON: builders.messageJSON,
 	threadId: string?
 )
-	local request = self.state.rest:newRequest()
-
 	return future.Future.new(function()
+		local request = self.state.rest:newRequest()
+
+		request:setFlag("FormdataRequest", true)
+
 		local response = rest.interaction
 			.createFollowupMessageAsync(request, self.id, self.token, messageJSON, {
 				wait = true,
@@ -209,9 +215,11 @@ function Interaction.Prototype.editFollowupResponseAsync(
 	messageJSON: builders.messageJSON,
 	threadId: string?
 )
-	local request = self.state.rest:newRequest()
-
 	return future.Future.new(function()
+		local request = self.state.rest:newRequest()
+
+		request:setFlag("FormdataRequest", true)
+
 		local response = rest.interaction
 			.editFollowupMessageAsync(request, self.id, self.token, messageId, messageJSON, {
 				threadId = threadId,
