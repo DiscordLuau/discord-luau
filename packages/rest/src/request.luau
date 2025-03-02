@@ -24,6 +24,14 @@ function Request.Prototype.setBody(self: Request, body: string)
 end
 
 --[[
+	Allows us to define flags for this request, used to flag requests that could potentially contain attachments. and,
+		therefore need to be translated into formdata before we push anything.
+]]
+function Request.Prototype.setFlag(self: Request, name: string, value: boolean)
+	self.flags[name] = value
+end
+
+--[[
 	Responsible for adding to the Url Params of this request. Both the param key and values are strings.
 ]]
 function Request.Prototype.addUrlParam(self: Request, paramName: string, paramValue: string)
@@ -86,11 +94,7 @@ end
 function Request.Prototype.addHook(
 	self: Request,
 	hookState: "BeforeRequest" | "AfterRequest",
-	hookCallback: (
-		request: Request,
-		RequestInformation,
-		stdPolyfills.FetchResponse?
-	) -> any
+	hookCallback: (RequestInformation, stdPolyfills.FetchResponse?) -> any
 )
 	if hookState == "AfterRequest" then
 		table.insert(self.afterHooks, hookCallback)
@@ -143,7 +147,7 @@ function Request.Prototype.executeAsync<Resolve>(self: Request)
 		end
 
 		for _, hook in self.beforeHooks do
-			local response, reason = hook(self, {
+			local success, response = hook({
 				requestUrl = self.url,
 				url = baseUrl,
 				method = self.method,
@@ -151,9 +155,18 @@ function Request.Prototype.executeAsync<Resolve>(self: Request)
 				headers = headerTable,
 			})
 
-			if not response then
+			if success then
+				if response then
+					local info = response :: RequestInformation
+
+					baseUrl = info.url
+					self.method = info.method :: any
+					self.body = info.body
+					headerTable = info.headers
+				end
+			else
 				error(
-					`Hook: {debug.info(hook, "s")} returned false: '{reason or `No reason provided`}', failed to send Network request!`
+					`Hook: {debug.info(hook, "s")} returned false: '{response or `No reason provided`}', failed to send Network request!`
 				)
 			end
 		end
@@ -166,7 +179,7 @@ function Request.Prototype.executeAsync<Resolve>(self: Request)
 		} :: stdPolyfills.FetchParams)
 
 		for _, hook in self.afterHooks do
-			local response, reason = hook(self, {
+			local success, response = hook({
 				requestUrl = self.url,
 				url = baseUrl,
 				method = self.method,
@@ -174,9 +187,9 @@ function Request.Prototype.executeAsync<Resolve>(self: Request)
 				headers = headerTable,
 			}, request)
 
-			if not response then
+			if not success then
 				error(
-					`Hook: {debug.info(hook, "s")} returned false: '{reason or `No reason provided`}', failed to handle Network request!`
+					`Hook: {debug.info(hook, "s")} returned false: '{response or `No reason provided`}', failed to handle Network request!`
 				)
 			end
 		end
@@ -217,6 +230,7 @@ function Request.Interface.new(settings: {
 		{
 			token = settings.token,
 			restApiVersion = settings.restApiVersion,
+			flags = {},
 			headers = {},
 			urlParams = {},
 			beforeHooks = {},
@@ -238,11 +252,12 @@ export type Request = typeof(Request.Prototype) & {
 	token: string?,
 	restApiVersion: number,
 
-	beforeHooks: { (self: Request, RequestInformation) -> (boolean?, string?) },
-	afterHooks: { (self: Request, RequestInformation, stdPolyfills.FetchResponse) -> (boolean?, string?) },
+	beforeHooks: { (RequestInformation) -> (boolean?, string | RequestInformation?) },
+	afterHooks: { (RequestInformation, stdPolyfills.FetchResponse) -> (boolean?, string | RequestInformation?) },
 
 	method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE",
 	url: string,
+	flags: { [string]: boolean },
 	headers: { [string]: string },
 	urlParams: { [string]: string },
 	body: string,
