@@ -15,8 +15,6 @@ local textInput = require("./components/textInput")
 local selectMenu = require("./components/selectMenu/selectMenu")
 local actionRow = require("./components/actionRow")
 
-local attachment = require("../attachment")
-
 local Message = {}
 
 Message.Prototype = {}
@@ -116,12 +114,11 @@ end
 --[[
 	Adds an attachment to the message.
 ]]
-function Message.Prototype.addAttachment(self: Message, attachmentData: attachment.JSON): Message
-	local attachments = (self.components or {}) :: { attachment.JSON }
-
-	table.insert(attachments, attachmentData)
-
-	self.attachments = attachments
+function Message.Prototype.addAttachment(self: Message, data: string, name: string?): Message
+	table.insert(self.attachments, {
+		content = data,
+		filename = name,
+	})
 
 	return self
 end
@@ -191,7 +188,7 @@ function Message.Interface.new(resource: {
 	messageReference: reference.JSON?,
 	components: { button.JSON | textInput.JSON | selectMenu.JSON | actionRow.JSON }?,
 	stickerIds: { string }?,
-	attachments: { attachment.JSON }?,
+	attachments: { Attachment }?,
 	flags: number?,
 	enforceNonce: boolean?,
 	poll: poll.JSON?,
@@ -261,13 +258,18 @@ function Message.Interface.new(resource: {
 
 		if resource.attachments then
 			for _, attachment in resource.attachments do
-				self:addAttachment(attachment)
+				self:addAttachment(attachment.content, attachment.filename)
 			end
 		end
 	end
 
 	return self
 end
+
+export type Attachment = {
+	content: string,
+	filename: string?,
+}
 
 export type Message = typeof(Message.Prototype) & {
 	content: string?,
@@ -280,7 +282,7 @@ export type Message = typeof(Message.Prototype) & {
 	stickerIds: { string },
 	-- files[n]
 	-- payloadJson
-	attachments: { attachment.JSON },
+	attachments: { Attachment },
 	flags: number?,
 	enforceNonce: boolean?,
 	poll: poll.JSON?,
