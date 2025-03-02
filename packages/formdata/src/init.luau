@@ -22,6 +22,7 @@ local FILE_FORMATS = table.freeze({
 	html = "text/html",
 
 	mp4 = "video/mp4",
+	json = "application/json",
 })
 
 local FormData = {}
@@ -65,7 +66,7 @@ function FormData.Prototype.getBody(self: FormData): string
 	local multiformContent = ""
 
 	for _, entry in self.entries do
-		local fileType = string.match(entry.filename or "", ".+%.(%S+)")
+		local fileType = entry.encoding or string.match(entry.filename or "", ".+%.(%S+)")
 
 		multiformContent ..= `--{self.boundary}\r\n`
 		multiformContent ..= `Content-Disposition: form-data; name="{entry.name}"{entry.filename and `; filename="{entry.filename}"` or ""}\r\n`
@@ -142,7 +143,7 @@ function FormData.Prototype.set(self: FormData, name: string, value: string, fil
 			end, index)
 		end
 	else
-		self:append(name, value, filename)
+		self:append(name, value, filename, encoding)
 	end
 end
 
