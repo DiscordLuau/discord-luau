@@ -5,6 +5,7 @@
 ]]
 
 local secret = require("../luau_packages/secret")
+local formdata = require("../luau_packages/formdata")
 local stdPolyfills = require("../lune_packages/std_polyfills")
 local utils = require("../lune_packages/utils")
 local rest = require("../lune_packages/rest")
@@ -40,7 +41,7 @@ end
 	Adds per-route bucket rate limit handling for each request.
 ]]
 function REST.Prototype.implementBucketRatelimitsFor(self: REST, request: rest.Request)
-	request:addHook("BeforeRequest", function(_, requestInfo)
+	request:addHook("BeforeRequest", function(requestInfo)
 		local requestHash = `{requestInfo.method}@{requestInfo.url}`
 		local bucketId = self.routeBuckets[requestHash]
 
@@ -68,7 +69,7 @@ function REST.Prototype.implementBucketRatelimitsFor(self: REST, request: rest.R
 		return true
 	end)
 
-	request:addHook("AfterRequest", function(_, requestInfo, data)
+	request:addHook("AfterRequest", function(requestInfo, data)
 		assert(data, `Expected 'data'`)
 
 		local ratelimitBucket = data.headers["x-ratelimit-bucket"] :: string
@@ -103,7 +104,7 @@ end
 	Adds global ratelimiting to application
 ]]
 function REST.Prototype.implementGlobalRatelimitsFor(self: REST, request: rest.Request)
-	request:addHook("BeforeRequest", function(_, requestInfo)
+	request:addHook("BeforeRequest", function(requestInfo)
 		local requestHash = `{requestInfo.method}@{requestInfo.url}`
 
 		self:yieldUntil(function()
@@ -132,7 +133,7 @@ end
 	Responsible for handling errors that occur when a request has been sent to discord
 ]]
 function REST.Prototype.implementErrorHandlerFor(self: REST, request: rest.Request)
-	request:addHook("AfterRequest", function(_, requestInfo, data)
+	request:addHook("AfterRequest", function(requestInfo, data)
 		assert(data, `Expected request data`)
 
 		local success = true
@@ -172,6 +173,58 @@ function REST.Prototype.implementErrorHandlerFor(self: REST, request: rest.Reque
 	end)
 end
 
+--[[
+	Responsible for handling errors that occur when a request has been sent to discord
+]]
+function REST.Prototype.implementAttachmentHandlerFor(_: REST, request: rest.Request)
+	request:addHook("BeforeRequest", function(requestInfo)
+		if request.flags["FormdataRequest"] then
+			local bodyJson = stdPolyfills.serde.decode("json", requestInfo.body)
+			local messageJson = (bodyJson.data and bodyJson.data or bodyJson) :: {
+				attachments: { Attachment }?,
+			}
+
+			if messageJson.attachments and #messageJson.attachments > 0 then
+				local attachments = table.clone(messageJson.attachments)
+				local formdata = formdata.new()
+
+				messageJson.attachments = nil
+
+				formdata:set("payload_json", stdPolyfills.serde.encode("json", messageJson, true), nil, "json")
+
+				for index, attachment in attachments do
+					formdata:set(`files[{index - 1}]`, attachment.content, attachment.filename or utils.createGuid())
+				end
+
+				requestInfo.headers["content-type"] = `multipart/form-data; boundary={formdata:getHeader()}`
+
+				warn({
+					url = requestInfo.url,
+					method = requestInfo.method,
+					body = formdata:getBody(),
+					headers = requestInfo.headers,
+				})
+
+				return true,
+					{
+						url = requestInfo.url,
+						method = requestInfo.method,
+						body = formdata:getBody(),
+						headers = requestInfo.headers,
+					}
+			end
+		end
+
+		return true,
+			{
+				url = requestInfo.url,
+				method = requestInfo.method,
+				body = requestInfo.body,
+				headers = requestInfo.headers,
+			}
+	end)
+end
+
 function REST.Prototype.newRequest(self: REST): rest.Request
 	local newRequest = rest.request.new({
 		token = self.token.value,
@@ -181,6 +234,8 @@ function REST.Prototype.newRequest(self: REST): rest.Request
 	self:implementBucketRatelimitsFor(newRequest)
 	self:implementGlobalRatelimitsFor(newRequest)
 	self:implementErrorHandlerFor(newRequest)
+
+	self:implementAttachmentHandlerFor(newRequest)
 
 	return newRequest
 end
@@ -213,13 +268,18 @@ function REST.Interface.new(settings: {
 	return self
 end
 
-export type bucket = string
-export type ratelimit = { remaining: number, limit: number, resetAfter: number, cooloff: boolean? }
+export type Attachment = {
+	content: string,
+	filename: string?,
+}
+
+export type Bucket = string
+export type Ratelimit = { remaining: number, limit: number, resetAfter: number, cooloff: boolean? }
 export type REST = typeof(REST.Prototype) & {
 	token: secret.Secret<string>,
 	logger: logger.Logger,
-	routeRatelimits: { [bucket]: ratelimit },
-	routeBuckets: { [string]: bucket? },
+	routeRatelimits: { [Bucket]: Ratelimit },
+	routeBuckets: { [string]: Bucket? },
 	globalRequestCount: number,
 	globalRatelimit: number,
 	isBlocked: boolean,
