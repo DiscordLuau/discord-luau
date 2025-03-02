@@ -69,7 +69,7 @@ function Message.createMessageAsync(
 
 		instance:setMethod("POST")
 		instance:setUrl(string.format(apiTypes.rest.endpoints.CreateMessage, channelId))
-		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams))
 
 		local response = instance:executeAsync():await()
 
