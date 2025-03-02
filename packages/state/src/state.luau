@@ -15,6 +15,7 @@ local rest = require("./rest")
 
 local secret = require("../luau_packages/secret")
 local apiTypes = require("../lune_packages/api_types")
+local logger = require("../lune_packages/logger")
 local websocket = require("../lune_packages/websocket")
 
 local State = {}
@@ -29,25 +30,39 @@ end
 --[[
 	Constructor for the State class.
 ]]
-function State.Interface.new(token: string, intents: number, version: number, reconnect: boolean): State
-	local secretToken = secret.new(token)
+function State.Interface.new(settings: {
+	token: string,
+	intents: number,
+	version: number,
+	reconnect: boolean,
+	globalRatelimit: number,
+	logLevel: logger.LogLevel?,
+}): State
+	local secretToken = secret.new(settings.token)
 
 	local self = setmetatable(
 		{
 			token = secretToken,
 			applicationId = "",
 
-			rest = rest.new(secretToken, intents, version),
-			webSocketManager = websocket.manager.new({
+			rest = rest.new({
 				token = secretToken,
-				intents = intents,
-				webSocketVersion = version,
-				largeThreshold = 250,
-				reconnect = reconnect,
+				logLevel = settings.logLevel,
+				intents = settings.intents,
+				version = settings.version,
+				globalRatelimit = settings.globalRatelimit,
 			}),
 
-			intents = intents,
-			version = version,
+			webSocketManager = websocket.manager.new({
+				token = secretToken,
+				intents = settings.intents,
+				webSocketVersion = settings.version,
+				largeThreshold = 250,
+				reconnect = settings.reconnect,
+			}),
+
+			intents = settings.intents,
+			version = settings.version,
 
 			cache = {
 				guilds = cache.new(1 * 60 * 60),
