@@ -86,7 +86,11 @@ end
 function Request.Prototype.addHook(
 	self: Request,
 	hookState: "BeforeRequest" | "AfterRequest",
-	hookCallback: (request: Request) -> boolean
+	hookCallback: (
+		request: Request,
+		RequestInformation,
+		stdPolyfills.FetchResponse?
+	) -> any
 )
 	if hookState == "AfterRequest" then
 		table.insert(self.afterHooks, hookCallback)
@@ -139,15 +143,18 @@ function Request.Prototype.executeAsync<Resolve>(self: Request)
 		end
 
 		for _, hook in self.beforeHooks do
-			if
-				not hook(self, {
-					url = baseUrl,
-					method = self.method,
-					body = self.body,
-					headers = headerTable,
-				})
-			then
-				error(`Hook: {debug.info(hook, "s")} returned false, failed to send Network request!`)
+			local response, reason = hook(self, {
+				requestUrl = self.url,
+				url = baseUrl,
+				method = self.method,
+				body = self.body,
+				headers = headerTable,
+			})
+
+			if not response then
+				error(
+					`Hook: {debug.info(hook, "s")} returned false: '{reason or `No reason provided`}', failed to send Network request!`
+				)
 			end
 		end
 
@@ -157,6 +164,22 @@ function Request.Prototype.executeAsync<Resolve>(self: Request)
 			body = self.body,
 			headers = headerTable,
 		} :: stdPolyfills.FetchParams)
+
+		for _, hook in self.afterHooks do
+			local response, reason = hook(self, {
+				requestUrl = self.url,
+				url = baseUrl,
+				method = self.method,
+				body = self.body,
+				headers = headerTable,
+			}, request)
+
+			if not response then
+				error(
+					`Hook: {debug.info(hook, "s")} returned false: '{reason or `No reason provided`}', failed to handle Network request!`
+				)
+			end
+		end
 
 		if not request.ok then
 			error(setmetatable({
@@ -172,20 +195,14 @@ function Request.Prototype.executeAsync<Resolve>(self: Request)
 
 		local decodeSuccess, decodedBody = pcall(stdPolyfills.serde.decode, "json" :: "json", request.body)
 
-		for _, hook in self.afterHooks do
-			hook(self, {
-				url = baseUrl,
-				method = self.method,
-				body = self.body,
-				headers = headerTable,
-			}, request)
-		end
-
 		return {
 			headers = request.headers,
 			body = (decodeSuccess and decodedBody or request.body) :: Resolve,
 		}
-	end)
+	end) :: future.FutureLike<string, {
+		headers: stdPolyfills.HttpHeaderMap,
+		body: Resolve,
+	}>
 end
 
 --[[
@@ -209,23 +226,20 @@ function Request.Interface.new(settings: {
 	)
 end
 
+export type RequestInformation = {
+	url: string,
+	method: string,
+	body: string,
+	headers: stdPolyfills.HttpHeaderMap,
+	requestUrl: string,
+}
+
 export type Request = typeof(Request.Prototype) & {
 	token: string?,
 	restApiVersion: number,
 
-	beforeHooks: {
-		(
-			self: Request,
-			{ url: string, method: string, body: string, headers: stdPolyfills.HttpHeaderMap }
-		) -> boolean
-	},
-	afterHooks: {
-		(
-			self: Request,
-			{ url: string, method: string, body: string, headers: stdPolyfills.HttpHeaderMap },
-			stdPolyfills.FetchResponse
-		) -> ()
-	},
+	beforeHooks: { (self: Request, RequestInformation) -> (boolean?, string?) },
+	afterHooks: { (self: Request, RequestInformation, stdPolyfills.FetchResponse) -> (boolean?, string?) },
 
 	method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE",
 	url: string,
