@@ -230,6 +230,8 @@ function Message.Prototype.editAsync(self: Message, message: builders.messageJSO
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
+		request:setFlag("FormdataRequest", true)
+
 		local response = rest.message
 			.editMessageAsync(request, self.channelId, self.id, {
 				content = message.content,
@@ -271,6 +273,8 @@ end
 function Message.Prototype.replyAsync(self: Message, message: builders.messageJSON)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
+
+		request:setFlag("FormdataRequest", true)
 
 		message.message_reference = {
 			type = 0, -- referenced
