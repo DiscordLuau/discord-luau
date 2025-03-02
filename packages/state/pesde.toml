@@ -22,4 +22,5 @@ utils = { workspace = "discord_luau/util" }
 websocket = { workspace = "discord_luau/websocket" }
 rest = { workspace = "discord_luau/rest" }
 secret = { workspace = "discord_luau/secret", target = "luau" }
+formdata = { workspace = "discord_luau/formdata", target = "luau" }
 logger = { workspace = "discord_luau/logger" }
