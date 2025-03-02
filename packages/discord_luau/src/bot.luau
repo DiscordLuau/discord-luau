@@ -521,6 +521,7 @@ function Bot.Prototype.setLogLevel(self: Bot, logLevel: logger.LogLevel)
 	self.logger:setLogLevel(logLevel)
 
 	self.state.webSocketManager.logger:setLogLevel(logLevel)
+	self.state.rest.logger:setLogLevel(logLevel)
 
 	for _, shard in self.state.webSocketManager.shards do
 		shard.logger:setLogLevel(logLevel)
@@ -552,10 +553,19 @@ function Bot.Interface.new(options: {
 	intents: number,
 	reconnect: boolean?,
 	logLevel: logger.LogLevel?,
+	globalRatelimit: number?,
 })
 	local self = setmetatable(
 		{
-			state = state.state.new(options.token, options.intents, DISCORD_VERSION, options.reconnect or false),
+			state = state.state.new({
+				token = options.token,
+				intents = options.intents,
+				logLevel = options.logLevel,
+				version = DISCORD_VERSION,
+				reconnect = options.reconnect or false,
+				globalRatelimit = options.globalRatelimit or 50,
+			}),
+
 			logger = logger.new("Bot"),
 
 			onReady = emitter.new(),
