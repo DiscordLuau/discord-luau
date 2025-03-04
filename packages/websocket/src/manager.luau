@@ -11,11 +11,25 @@ local shard = require("./shard")
 
 local CONCURRENT_IDENTIFY_YIELD = 5
 
+--[=[
+	@class Manager
+	@__index Prototype
+
+	@external future https://xyz.com/docs
+
+	EXAMPLE MANAGER DOCUMENTATION
+]=]
+
 local Manager = {}
 
 Manager.Interface = {}
 Manager.Prototype = {}
 
+--[=[
+	@within Manager
+
+	EXAMPLE CONNECT ASYNC DOCUMENTATION
+]=]
 function Manager.Prototype.connectAsync(
 	self: Manager,
 	gatewayInformation: apiTypes.GetGatewayBotResponse
@@ -110,6 +124,11 @@ function Manager.Prototype.connectAsync(
 	end)
 end
 
+--[=[
+	@within Manager
+
+	EXAMPLE SEND ASYNC DOCUMENTATION
+]=]
 function Manager.Prototype.sendAsync<T>(self: Manager, operation: apiTypes.Opcode, data: T)
 	return future.Future.new(function()
 		local requests = {}
@@ -144,6 +163,11 @@ function Manager.Prototype.sendAsync<T>(self: Manager, operation: apiTypes.Opcod
 	end)
 end
 
+--[=[
+	@within Manager
+
+	EXAMPLE CONNECT ASYNC DOCUMENTATION
+]=]
 function Manager.Interface.new(settings: {
 	token: secret.Secret<string>,
 	intents: number,

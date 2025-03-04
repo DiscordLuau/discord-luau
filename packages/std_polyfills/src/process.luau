@@ -1,6 +1,6 @@
---[=[
+--[[
 	std.process
-]=]
+]]
 
 local runtime = require("runtime")
 

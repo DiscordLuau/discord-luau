@@ -1,6 +1,6 @@
---[=[
+--[[
     std.task
-]=]
+]]
 
 local runtime = require("runtime")
 

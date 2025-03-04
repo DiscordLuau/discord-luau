@@ -1,6 +1,6 @@
---[=[
+--[[
 	std.net
-]=]
+]]
 
 local runtime = require("runtime")
 

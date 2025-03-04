@@ -1,6 +1,6 @@
---[=[
+--[[
 	std.serde
-]=]
+]]
 
 local runtime = require("runtime")
 
