@@ -1,6 +1,10 @@
+--[=[
+	@class Types.client
+--]=]
+
 local util = require("../lune_packages/util")
 
-local ActivityType = table.freeze(util.table.reflect({
+local ActivityType = table.freeze(util.tableReflect({
 	Game = 0,
 	Streaming = 1,
 	Listening = 2,
@@ -8,7 +12,7 @@ local ActivityType = table.freeze(util.table.reflect({
 	Competing = 5,
 }))
 
-local Status = table.freeze(util.table.reflect({
+local Status = table.freeze(util.tableReflect({
 	Online = "online",
 	DoNotDisturb = "dnd",
 	Idle = "idle",

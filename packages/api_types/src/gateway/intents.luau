@@ -1,4 +1,6 @@
 --[[
+	@class Types.gateway.intents
+
 	https://discord.com/developers/docs/topics/gateway#list-of-intents
 ]]
 

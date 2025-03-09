@@ -10,7 +10,10 @@ local apiTypes = require("../lune_packages/api_types")
 
 local LIBRARY_IDENTIFIER = "DiscordLuau"
 
---[[
+--[=[
+	@class WebSocket.Shard
+	@__index Prototype
+
 	Shard is responsible for managing a single WebSocket connection to Discord's Gateway API.
 	Its key responsibilities include:
 
@@ -29,13 +32,18 @@ local LIBRARY_IDENTIFIER = "DiscordLuau"
 
 	The Shard module is crucial for maintaining real-time communication with Discord's Gateway,
 	ensuring the bot stays connected and can send and receive updates efficiently.
-]]
+
+	@external future https://yetanotherclown.github.io/luau-futures/
+]=]
 local Shard = {}
 
 Shard.Interface = {}
 Shard.Prototype = {}
 
---[[
+--[=[
+	@within WebSocket.Shard
+	@private
+
 	Function responsible for handling incoming messages from the WebSocket connection.
 	
 	It performs the following steps:
@@ -47,7 +55,7 @@ Shard.Prototype = {}
 
 	Roughly based on the following documentation:
 	https://discord.com/developers/docs/topics/gateway#zlibstream
-]]
+]=]
 function Shard.Prototype._handleMessage(self: Shard, message: string): ()
 	local isJson, jsonContent = pcall(stdPolyfills.serde.decode, "json" :: any, message)
 
@@ -79,9 +87,11 @@ function Shard.Prototype._handleMessage(self: Shard, message: string): ()
 	end
 end
 
---[[
+--[=[
+	@within WebSocket.Shard
+
 	Sends a heartbeat to the Discord Gateway API.
-]]
+]=]
 function Shard.Prototype.heartbeatAsync(self: Shard, requested: boolean?)
 	return future.Future.new(function()
 		if not self.heartbeatAcknowledged and not requested then
@@ -102,9 +112,11 @@ function Shard.Prototype.heartbeatAsync(self: Shard, requested: boolean?)
 	end) :: future.FutureLike<string, nil>
 end
 
---[[
+--[=[
+	@within WebSocket.Shard
+
 	Identifies the current shard with the Discord Gateway.
-]]
+]=]
 function Shard.Prototype.identifyAsync(self: Shard)
 	return future.Future.new(function()
 		self.logger:info(`sending identify request`)
@@ -130,12 +142,14 @@ function Shard.Prototype.identifyAsync(self: Shard)
 	end) :: future.FutureLike<string, nil>
 end
 
---[[
+--[=[
+	@within WebSocket.Shard
+
 	Disconnects the Shard from the Discord Gateway.
 
 	Optionally, a WebSocket close code can be provided, websocket close code spec can be found here:
 	https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent/code
-]]
+]=]
 function Shard.Prototype.disconnectAsync(self: Shard, code: number?)
 	return future.Future.new(function()
 		self.logger:info(`requesting disconnect: {code or 0}`)
@@ -174,7 +188,9 @@ function Shard.Prototype.disconnectAsync(self: Shard, code: number?)
 	end) :: future.FutureLike<string, nil>
 end
 
---[[
+--[=[
+	@within WebSocket.Shard
+
 	Connects the shard to a Discord Gateway.
 
 	Expects both a Socket URL, and Socket Version to be provided. It will prepend the socket version
@@ -182,7 +198,7 @@ end
 
 	Also responsible for spawning the thread that will be responsible for
 	receiving messages from the socket.
-]]
+]=]
 function Shard.Prototype.connectAsync(self: Shard, socketUrl: string, socketVersion: number)
 	return future.Future.new(function()
 		assert(not self.socketActive, `Shard '{self.shardId}' already connected to a socket.`)
@@ -206,7 +222,7 @@ function Shard.Prototype.connectAsync(self: Shard, socketUrl: string, socketVers
 
 		self.logger:info(`has connected to: {socketUrl}, starting receive thread.`)
 
-		self.socketThread = util.coroutine.run(function()
+		self.socketThread = util.coroutineRun(function()
 			self.logger:info(`Receive thread started, awaiting messages.`)
 
 			self.onSocketConnected:invoke()
@@ -262,10 +278,12 @@ function Shard.Prototype.connectAsync(self: Shard, socketUrl: string, socketVers
 	end) :: future.FutureLike<string, nil>
 end
 
---[[
+--[=[
+	@within WebSocket.Shard
+
 	Resumes a shard session if for some reason the session has either become
 	zombified, or the session has been invalidated by Discord.
-]]
+]=]
 function Shard.Prototype.resumeAsync(self: Shard)
 	return future.Future.new(function()
 		local response = self:connectAsync(self.sessionGateway :: string, self.socketVersion :: number)
@@ -306,10 +324,12 @@ function Shard.Prototype.resumeAsync(self: Shard)
 	end) :: future.FutureLike<string, nil>
 end
 
---[[
+--[=[
+	@within WebSocket.Shard
+
 	Closes the websocket connection and reconnects the shard.
 	This is not a re-instantiation of the shard, but a re-connection of the shard.
-]]
+]=]
 function Shard.Prototype.reconnectAsync(self: Shard)
 	return future.Future.new(function()
 		if self.socketReconnecting then
@@ -349,11 +369,13 @@ function Shard.Prototype.reconnectAsync(self: Shard)
 	end) :: future.FutureLike<string, nil>
 end
 
---[[
+--[=[
+	@within WebSocket.Shard
+
 	Sends a message through the WebSocket to Discords Gateway.
 
 	NOTE: Messages are expected to be JSON encoded strings.
-]]
+]=]
 function Shard.Prototype.sendAsync(self: Shard, data: string)
 	local debugTraceback = debug.traceback()
 
@@ -374,7 +396,9 @@ function Shard.Prototype.sendAsync(self: Shard, data: string)
 	end) :: future.FutureLike<string, nil>
 end
 
---[[
+--[=[
+	@within WebSocket.Shard
+
 	Disconnects the Shard, and re-instantiats it.
 
 	Re-instantiation is the reconnection of the shard to the original socket passed, and not the
@@ -382,7 +406,7 @@ end
 
 	Any events between the initial disconnection and reconnection will not be recovered. If this is
 	what you intend to do, use `Shard:reconnectAsync` instead.
-]]
+]=]
 function Shard.Prototype.reinstantiateAsync(self: Shard, noFail: boolean?)
 	return future.Future.new(function()
 		self.logger:debug(`re-instantiation requested..`)
@@ -417,10 +441,12 @@ function Shard.Prototype.reinstantiateAsync(self: Shard, noFail: boolean?)
 	end) :: future.FutureLike<string, nil>
 end
 
---[[
+--[=[
+	@within WebSocket.Shard
+
 	Sends a heartbeat after `milliseconds` milliseconds, looping and continuing to heartbeat 
 	until the shard is disconnected.
-]]
+]=]
 function Shard.Prototype.heartbeatIn(self: Shard, milliseconds: number): ()
 	if self.heartbeatThread then
 		coroutine.close(self.heartbeatThread)
@@ -428,7 +454,7 @@ function Shard.Prototype.heartbeatIn(self: Shard, milliseconds: number): ()
 
 	self.logger:debug(`to heartbeat in '{milliseconds}' ms`)
 
-	self.heartbeatThread = util.coroutine.run(function()
+	self.heartbeatThread = util.coroutineRun(function()
 		stdPolyfills.task.wait(milliseconds / 1000)
 
 		self.heartbeatThread = nil
@@ -443,9 +469,11 @@ function Shard.Prototype.heartbeatIn(self: Shard, milliseconds: number): ()
 	end)
 end
 
---[[
-	Constructor function for Shard.
-]]
+--[=[
+	@within WebSocket.Shard
+
+	Will instantiate a new Shard class.
+]=]
 function Shard.Interface.new(settings: {
 	token: string,
 

@@ -1,11 +1,16 @@
---[[
-	std.serde
-]]
+--[=[
+	@class StdPolyfills.serde
+]=]
 
 local runtime = require("runtime")
 
 local serde = {}
 
+--[=[
+	@within StdPolyfills.serde
+
+	Encodes the given value using the given format.
+]=]
 function serde.encode(format: EncodeDecodeFormat, value: any, pretty: boolean?): string
 	local target = runtime.assertRuntime()
 
@@ -16,6 +21,11 @@ function serde.encode(format: EncodeDecodeFormat, value: any, pretty: boolean?):
 	error(`Out of reach`)
 end
 
+--[=[
+	@within StdPolyfills.serde
+
+	Decodes the given string using the given format into a lua value.
+]=]
 function serde.decode(format: EncodeDecodeFormat, encoded: buffer | string): any
 	local target = runtime.assertRuntime()
 
@@ -26,6 +36,11 @@ function serde.decode(format: EncodeDecodeFormat, encoded: buffer | string): any
 	error(`Out of reach`)
 end
 
+--[=[
+	@within StdPolyfills.serde
+
+	Decompresses the given string using the given format.
+]=]
 function serde.decompress(format: CompressDecompressFormat, s: buffer | string): string
 	local target = runtime.assertRuntime()
 
@@ -36,6 +51,11 @@ function serde.decompress(format: CompressDecompressFormat, s: buffer | string):
 	error(`Out of reach`)
 end
 
+--[=[
+	@within StdPolyfills.serde
+
+	Compresses the given string using the given format.
+]=]
 function serde.compress(format: CompressDecompressFormat, s: buffer | string, level: number?): string
 	local target = runtime.assertRuntime()
 

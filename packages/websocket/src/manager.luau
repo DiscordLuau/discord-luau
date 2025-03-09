@@ -12,12 +12,15 @@ local shard = require("./shard")
 local CONCURRENT_IDENTIFY_YIELD = 5
 
 --[=[
-	@class Manager
+	@class WebSocket.Manager
 	@__index Prototype
 
-	@external future https://xyz.com/docs
+	Manages the connection and communication with the Discord Gateway using multiple shards.
 
-	EXAMPLE MANAGER DOCUMENTATION
+	This serves as the primary class for developers wanting to interact with the Discord Gateway, this class is
+	responsible for creating the required shards sending messages asynchronously through each shard.
+	
+	@external future https://yetanotherclown.github.io/luau-futures/
 ]=]
 
 local Manager = {}
@@ -26,9 +29,10 @@ Manager.Interface = {}
 Manager.Prototype = {}
 
 --[=[
-	@within Manager
+	@within WebSocket.Manager
 
-	EXAMPLE CONNECT ASYNC DOCUMENTATION
+	Will create, as well as connect all of the shards this application requires in order to communicate
+	back and fourth between discords WebSocket
 ]=]
 function Manager.Prototype.connectAsync(
 	self: Manager,
@@ -125,9 +129,10 @@ function Manager.Prototype.connectAsync(
 end
 
 --[=[
-	@within Manager
+	@within WebSocket.Manager
 
-	EXAMPLE SEND ASYNC DOCUMENTATION
+	Will send a message through all shards this Manager is currently responsible for. This message is sent to the
+	discord WebSocket.
 ]=]
 function Manager.Prototype.sendAsync<T>(self: Manager, operation: apiTypes.Opcode, data: T)
 	return future.Future.new(function()
@@ -164,9 +169,9 @@ function Manager.Prototype.sendAsync<T>(self: Manager, operation: apiTypes.Opcod
 end
 
 --[=[
-	@within Manager
+	@within WebSocket.Manager
 
-	EXAMPLE CONNECT ASYNC DOCUMENTATION
+	Will instantiate a new Manager class.
 ]=]
 function Manager.Interface.new(settings: {
 	token: secret.Secret<string>,

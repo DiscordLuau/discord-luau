@@ -1,4 +1,7 @@
---[[
+--[=[
+	@class State.State
+	@__index Prototype
+
 	State class, this class is responsible for storing the state of the bot as
 	as well as providing a way to interact with the state.
 
@@ -7,8 +10,7 @@
 	- Discord Cache
 	- Discord REST API
 	- Discord Gateway Manager
-
-]]
+]=]
 
 local cache = require("./cache")
 local rest = require("./rest")
@@ -23,13 +25,20 @@ local State = {}
 State.Interface = {}
 State.Prototype = {}
 
+--[=[
+	@within State.State
+
+	Will set the current application ID
+]=]
 function State.Prototype.setApplicationId(self: State, applicationId: apiTypes.Snowflake)
 	self.applicationId = applicationId
 end
 
---[[
+--[=[
+	@within State.State
+
 	Constructor for the State class.
-]]
+]=]
 function State.Interface.new(settings: {
 	token: string,
 	intents: number,

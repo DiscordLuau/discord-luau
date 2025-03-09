@@ -1,4 +1,6 @@
 --[[
+	@class StdPolyfills.rest.endpoints
+
 	Mapping out all discord V10 endpoints.
 ]]
 

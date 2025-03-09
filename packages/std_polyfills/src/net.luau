@@ -1,11 +1,16 @@
---[[
-	std.net
-]]
+--[=[
+	@class StdPolyfills.net
+]=]
 
 local runtime = require("runtime")
 
 local net = {}
 
+--[=[
+	@within StdPolyfills.net
+
+	Encodes the given string using URL encoding.
+]=]
 function net.urlEncode(url: string, binary: boolean?): string
 	local target = runtime.assertRuntime()
 
@@ -16,6 +21,14 @@ function net.urlEncode(url: string, binary: boolean?): string
 	error(`Out of reach`)
 end
 
+--[=[
+	@within StdPolyfills.net
+
+	Sends an HTTP request using the given url and / or parameters, and returns a dictionary that describes the
+		response received.
+
+	Only throws an error if a miscellaneous network or I/O error occurs, never for unsuccessful status codes.
+]=]
 function net.request(config: string | FetchParams): FetchResponse
 	local target = runtime.assertRuntime()
 
@@ -26,6 +39,14 @@ function net.request(config: string | FetchParams): FetchResponse
 	error(`Out of reach`)
 end
 
+--[=[
+	@within StdPolyfills.net
+
+	Connects to a TCP web socket at the given URL.
+
+	Throws an error if the server at the given URL does not support web sockets, or if a miscellaneous network or I/O
+		error occurs.
+]=]
 function net.tcpSocket(url: string)
 	local target = runtime.assertRuntime()
 
@@ -36,6 +57,14 @@ function net.tcpSocket(url: string)
 	error(`Out of reach`)
 end
 
+--[=[
+	@within StdPolyfills.net
+
+	Connects to a UDP web socket at the given URL.
+
+	Throws an error if the server at the given URL does not support web sockets, or if a miscellaneous network or I/O
+		error occurs.
+]=]
 function net.udpSocket(_url: string)
 	error(`No Runtimes currently support UDP sockets!`)
 end

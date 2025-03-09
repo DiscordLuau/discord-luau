@@ -1,8 +1,11 @@
---[[
+--[=[
+	@class State.Rest
+	@__index Prototype
+
 	REST represents an interface to manipulate the Discord REST API.
 	When making any sort of REST request, this class is used so that we accurately
 	track the rate limits and add the token to each request.
-]]
+]=]
 
 local secret = require("../luau_packages/secret")
 local formdata = require("../luau_packages/formdata")
@@ -19,9 +22,11 @@ local REST = {}
 REST.Interface = {}
 REST.Prototype = {}
 
---[[
+--[=[
+	@within State.Rest
+
 	Quality of life method to yield, warn after a specific duration, and resume once a condition has been met
-]]
+]=]
 function REST.Prototype.yieldUntil(self: REST, callback: () -> boolean, message: string)
 	local timeDelayed = 0
 	local hasWarned = false
@@ -37,9 +42,11 @@ function REST.Prototype.yieldUntil(self: REST, callback: () -> boolean, message:
 	end
 end
 
---[[
+--[=[
+	@within State.Rest
+
 	Adds per-route bucket rate limit handling for each request.
-]]
+]=]
 function REST.Prototype.implementBucketRatelimitsFor(self: REST, request: rest.Request)
 	request:addHook("BeforeRequest", function(requestInfo)
 		local requestHash = `{requestInfo.method}@{requestInfo.url}`
@@ -90,7 +97,7 @@ function REST.Prototype.implementBucketRatelimitsFor(self: REST, request: rest.R
 				resetAfter = tonumber(ratelimitResetAfter) :: number,
 			}
 
-			utils.coroutine.run(function()
+			utils.coroutineRun(function()
 				stdPolyfills.task.wait(self.routeRatelimits[ratelimitBucket].resetAfter)
 				self.routeRatelimits[ratelimitBucket].remaining = self.routeRatelimits[ratelimitBucket].limit
 			end)
@@ -100,9 +107,11 @@ function REST.Prototype.implementBucketRatelimitsFor(self: REST, request: rest.R
 	end)
 end
 
---[[
+--[=[
+	@within State.Rest
+
 	Adds global ratelimiting to application
-]]
+]=]
 function REST.Prototype.implementGlobalRatelimitsFor(self: REST, request: rest.Request)
 	request:addHook("BeforeRequest", function(requestInfo)
 		local requestHash = `{requestInfo.method}@{requestInfo.url}`
@@ -129,9 +138,11 @@ function REST.Prototype.implementGlobalRatelimitsFor(self: REST, request: rest.R
 	end)
 end
 
---[[
+--[=[
+	@within State.Rest
+
 	Responsible for handling errors that occur when a request has been sent to discord
-]]
+]=]
 function REST.Prototype.implementErrorHandlerFor(self: REST, request: rest.Request)
 	request:addHook("AfterRequest", function(requestInfo, data)
 		assert(data, `Expected request data`)
@@ -173,9 +184,11 @@ function REST.Prototype.implementErrorHandlerFor(self: REST, request: rest.Reque
 	end)
 end
 
---[[
+--[=[
+	@within State.Rest
+
 	Responsible for handling errors that occur when a request has been sent to discord
-]]
+]=]
 function REST.Prototype.implementAttachmentHandlerFor(_: REST, request: rest.Request)
 	request:addHook("BeforeRequest", function(requestInfo)
 		if request.flags["FormdataRequest"] then
@@ -225,6 +238,11 @@ function REST.Prototype.implementAttachmentHandlerFor(_: REST, request: rest.Req
 	end)
 end
 
+--[=[
+	@within State.Rest
+
+	Will create a new Request
+]=]
 function REST.Prototype.newRequest(self: REST): rest.Request
 	local newRequest = rest.request.new({
 		token = self.token.value,
