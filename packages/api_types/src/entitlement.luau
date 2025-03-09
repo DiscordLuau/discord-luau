@@ -1,6 +1,6 @@
 --[=[
 	@class Types.entitlement
---]=]
+]=]
 
 local util = require("../lune_packages/util")
 

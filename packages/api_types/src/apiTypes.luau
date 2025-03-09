@@ -1,6 +1,6 @@
 --[=[
 	@class Types.apiTypes
---]=]
+]=]
 
 export type Partial<T> = any
 

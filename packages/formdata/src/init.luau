@@ -33,10 +33,10 @@ local FormData = {}
 FormData.Interface = {}
 FormData.Prototype = {}
 
---[=[
+--[[
 	QoL function to filter an array with a predicate, returns the index and value of the first item that
 		matches the predicate
-]=]
+]]
 local function filter<T>(array, predicate: (T) -> boolean, after: number?): (number?, T?)
 	for index = after or 1, #array do
 		local value = array[index]
@@ -49,9 +49,9 @@ local function filter<T>(array, predicate: (T) -> boolean, after: number?): (num
 	return nil
 end
 
---[=[
+--[[
 	responsible for generating a UUID that we use in the compilation of the formdata object.
-]=]
+]]
 local function uuid()
 	local template = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx"
 
@@ -127,12 +127,12 @@ function FormData.Prototype.set(self: FormData, name: string, value: string, fil
 		return object.name == name
 	end)
 
-	--[=[
+	--[[
 		If there are entries in this’s entry list whose name is name,
 			then replace the first such entry with entry and remove the others.
 
 		Otherwise, append entry to this’s entry list.
-	]=]
+	]]
 
 	if index then
 		self.entries[index] = {

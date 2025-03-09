@@ -1,6 +1,6 @@
 --[=[
 	@class Types.webhook
---]=]
+]=]
 
 local util = require("../lune_packages/util")
 

@@ -1,6 +1,6 @@
 --[=[
 	@class Types.message
---]=]
+]=]
 
 local util = require("../lune_packages/util")
 

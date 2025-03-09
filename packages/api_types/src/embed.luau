@@ -1,6 +1,6 @@
 --[=[
 	@class Types.embed
---]=]
+]=]
 
 local util = require("../lune_packages/util")
 

@@ -1,6 +1,6 @@
 --[=[
 	@class Types.channel
---]=]
+]=]
 
 local util = require("../lune_packages/util")
 

@@ -32,8 +32,6 @@ local LIBRARY_IDENTIFIER = "DiscordLuau"
 
 	The Shard module is crucial for maintaining real-time communication with Discord's Gateway,
 	ensuring the bot stays connected and can send and receive updates efficiently.
-
-	@external future https://yetanotherclown.github.io/luau-futures/
 ]=]
 local Shard = {}
 

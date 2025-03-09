@@ -1,6 +1,6 @@
 --[=[
 	@class Types.poll
---]=]
+]=]
 
 export type PollLayoutType = "Default"
 

@@ -1,6 +1,6 @@
 --[=[
 	@class Types.interaction
---]=]
+]=]
 
 local util = require("../lune_packages/util")
 

@@ -1,6 +1,6 @@
 --[[
-    An optimized 64-bit library to provide 64-bit binary operations in Luau
-    using 32-bit operations and `bit32` for improved performance.
+	An optimized 64-bit library to provide 64-bit binary operations in Luau
+	using 32-bit operations and `bit32` for improved performance.
 ]]
 local Bit64 = {}
 

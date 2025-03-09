@@ -1,6 +1,6 @@
 --[=[
 	@class Types.sticker
---]=]
+]=]
 
 local util = require("../lune_packages/util")
 
