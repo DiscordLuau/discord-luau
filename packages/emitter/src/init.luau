@@ -76,7 +76,7 @@ end
 
 	This will additionally resume all the threads that are currently waiting for an event to be emitted.
 ]=]
-function Emitter.Prototype.invoke<T...>(self: Emitter<T...>, ...): ()
+function Emitter.Prototype.invoke<T...>(self: Emitter<T...>, ...: any): ()
 	local callback = coroutine.wrap(function(...)
 		for _, thread in self._yieldingThreads do
 			coroutine.resume(thread, ...)

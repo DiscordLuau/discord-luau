@@ -146,16 +146,21 @@ function Manager.Prototype.sendAsync<T>(self: Manager, operation: apiTypes.Opcod
 			-- fixme: should type this as shard!
 			local shardObject = shard :: any
 
-			table.insert(requests,  future.Future.new(function()
-				while not shardObject.socketIdentified do
-					stdPolyfills.task.wait(0.5)
-				end
-		
-				shardObject:sendAsync(stdPolyfills.serde.encode("json", {
-					["op"] = operation,
-					["d"] = data,
-				}, false)):await()
-			end))
+			table.insert(
+				requests,
+				future.Future.new(function()
+					while not shardObject.socketIdentified do
+						stdPolyfills.task.wait(0.5)
+					end
+
+					shardObject
+						:sendAsync(stdPolyfills.serde.encode("json", {
+							["op"] = operation,
+							["d"] = data,
+						}, false))
+						:await()
+				end)
+			)
 		end
 
 		for _, request in requests do
