@@ -5,15 +5,24 @@ local apiTypes = require("../lune_packages/api_types")
 
 local request = require("./request")
 
---[[
+--[=[
+	@class Rest.guild
+
 	HTTP Rest API implementation for the following Resource:
 
 	- https://discord.com/developers/docs/resources/guild
-]]
-local Guild = {}
+]=]
+local guild = {}
 
--- https://discord.com/developers/docs/resources/guild#create-guild
-function Guild.createGuildAsync(instance: request.Request, jsonParams: apiTypes.CreateGuildRequest)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#create-guild
+]=]
+function guild.createGuildAsync(
+	instance: request.Request,
+	jsonParams: apiTypes.CreateGuildRequest
+): future.FutureLike<string, apiTypes.CreateGuildResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -29,14 +38,18 @@ function Guild.createGuildAsync(instance: request.Request, jsonParams: apiTypes.
 	end) :: future.FutureLike<string, apiTypes.CreateGuildResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#get-guild
-function Guild.getGuildAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#get-guild
+]=]
+function guild.getGuildAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	urlParams: {
 		withCounts: boolean?,
 	}
-)
+): future.FutureLike<string, apiTypes.GetGuildResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -53,8 +66,15 @@ function Guild.getGuildAsync(
 	end) :: future.FutureLike<string, apiTypes.GetGuildResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#get-guild-preview
-function Guild.getGuildPreviewAsync(instance: request.Request, guildId: apiTypes.Snowflake)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#get-guild-preview
+]=]
+function guild.getGuildPreviewAsync(
+	instance: request.Request,
+	guildId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.GetGuildPreviewResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -69,13 +89,17 @@ function Guild.getGuildPreviewAsync(instance: request.Request, guildId: apiTypes
 	end) :: future.FutureLike<string, apiTypes.GetGuildPreviewResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#modify-guild
-function Guild.modifyGuildAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#modify-guild
+]=]
+function guild.modifyGuildAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	jsonParams: apiTypes.ModifyGuildRequest,
 	auditLogReason: string?
-)
+): future.FutureLike<string, apiTypes.ModifyGuildResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -92,8 +116,15 @@ function Guild.modifyGuildAsync(
 	end) :: future.FutureLike<string, apiTypes.ModifyGuildResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#delete-guild
-function Guild.deleteGuildAsync(instance: request.Request, guildId: apiTypes.Snowflake)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#delete-guild
+]=]
+function guild.deleteGuildAsync(
+	instance: request.Request,
+	guildId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.DeleteGuildResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -108,8 +139,15 @@ function Guild.deleteGuildAsync(instance: request.Request, guildId: apiTypes.Sno
 	end) :: future.FutureLike<string, apiTypes.DeleteGuildResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#get-guild-channels
-function Guild.getGuildChannelsAsync(instance: request.Request, guildId: apiTypes.Snowflake)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#get-guild-channels
+]=]
+function guild.getGuildChannelsAsync(
+	instance: request.Request,
+	guildId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.GetGuildChannelsResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -124,13 +162,17 @@ function Guild.getGuildChannelsAsync(instance: request.Request, guildId: apiType
 	end) :: future.FutureLike<string, apiTypes.GetGuildChannelsResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#create-guild-channel
-function Guild.createGuildChannelAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#create-guild-channel
+]=]
+function guild.createGuildChannelAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	jsonParams: apiTypes.CreateGuildChannelRequest,
 	auditLogReason: string?
-)
+): future.FutureLike<string, apiTypes.CreateGuildChannelResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -147,12 +189,16 @@ function Guild.createGuildChannelAsync(
 	end) :: future.FutureLike<string, apiTypes.CreateGuildChannelResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#modify-guild-channel-positions
-function Guild.modifyGuildChannelPositionsAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#modify-guild-channel-positions
+]=]
+function guild.modifyGuildChannelPositionsAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	jsonParams: apiTypes.ModifyGuildChannelPositionsRequest
-)
+): future.FutureLike<string, apiTypes.ModifyGuildChannelPositionsResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -168,8 +214,15 @@ function Guild.modifyGuildChannelPositionsAsync(
 	end) :: future.FutureLike<string, apiTypes.ModifyGuildChannelPositionsResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#list-active-guild-threads
-function Guild.listActiveGuildThreadsAsync(instance: request.Request, guildId: apiTypes.Snowflake)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#list-active-guild-threads
+]=]
+function guild.listActiveGuildThreadsAsync(
+	instance: request.Request,
+	guildId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.ListActiveGuildThreadsResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -184,8 +237,16 @@ function Guild.listActiveGuildThreadsAsync(instance: request.Request, guildId: a
 	end) :: future.FutureLike<string, apiTypes.ListActiveGuildThreadsResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#get-guild-member
-function Guild.getGuildMemberAsync(instance: request.Request, guildId: apiTypes.Snowflake, userId: apiTypes.Snowflake)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#get-guild-member
+]=]
+function guild.getGuildMemberAsync(
+	instance: request.Request,
+	guildId: apiTypes.Snowflake,
+	userId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.GetGuildMemberResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -200,15 +261,19 @@ function Guild.getGuildMemberAsync(instance: request.Request, guildId: apiTypes.
 	end) :: future.FutureLike<string, apiTypes.GetGuildMemberResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#list-guild-members
-function Guild.listGuildMembersAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#list-guild-members
+]=]
+function guild.listGuildMembersAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	urlParams: {
 		limit: number?,
 		after: string?,
 	}
-)
+): future.FutureLike<string, apiTypes.ListGuildMembersResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -226,15 +291,19 @@ function Guild.listGuildMembersAsync(
 	end) :: future.FutureLike<string, apiTypes.ListGuildMembersResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#search-guild-members
-function Guild.searchGuildMembersAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#search-guild-members
+]=]
+function guild.searchGuildMembersAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	urlParams: {
 		query: string,
 		limit: number?,
 	}
-)
+): future.FutureLike<string, apiTypes.SearchGuildMembersResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -252,13 +321,17 @@ function Guild.searchGuildMembersAsync(
 	end) :: future.FutureLike<string, apiTypes.SearchGuildMembersResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#add-guild-member
-function Guild.addGuildMemberAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#add-guild-member
+]=]
+function guild.addGuildMemberAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	userId: apiTypes.Snowflake,
 	jsonParams: apiTypes.AddGuildMemberRequest
-)
+): future.FutureLike<string, apiTypes.AddGuildMemberResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -274,14 +347,18 @@ function Guild.addGuildMemberAsync(
 	end) :: future.FutureLike<string, apiTypes.AddGuildMemberResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#modify-guild-member
-function Guild.modifyGuildMemberAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#modify-guild-member
+]=]
+function guild.modifyGuildMemberAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	userId: apiTypes.Snowflake,
 	jsonParams: apiTypes.ModifyGuildMemberRequest,
 	auditLogReason: string?
-)
+): future.FutureLike<string, apiTypes.ModifyGuildMemberResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -298,13 +375,17 @@ function Guild.modifyGuildMemberAsync(
 	end) :: future.FutureLike<string, apiTypes.ModifyGuildMemberResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#modify-current-member
-function Guild.modifyCurrentMemberAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#modify-current-member
+]=]
+function guild.modifyCurrentMemberAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	jsonParams: apiTypes.ModifyCurrentMemberRequest,
 	auditLogReason: string?
-)
+): future.FutureLike<string, apiTypes.ModifyCurrentMemberResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -321,14 +402,18 @@ function Guild.modifyCurrentMemberAsync(
 	end) :: future.FutureLike<string, apiTypes.ModifyCurrentMemberResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#add-guild-member-role
-function Guild.addGuildMemberRoleAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#add-guild-member-role
+]=]
+function guild.addGuildMemberRoleAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	userId: apiTypes.Snowflake,
 	roleId: apiTypes.Snowflake,
 	auditLogReason: string?
-)
+): future.FutureLike<string, apiTypes.AddGuildMemberRoleResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -344,14 +429,18 @@ function Guild.addGuildMemberRoleAsync(
 	end) :: future.FutureLike<string, apiTypes.AddGuildMemberRoleResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#remove-guild-member-role
-function Guild.removeGuildMemberRoleAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#remove-guild-member-role
+]=]
+function guild.removeGuildMemberRoleAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	userId: apiTypes.Snowflake,
 	roleId: apiTypes.Snowflake,
 	auditLogReason: string?
-)
+): future.FutureLike<string, apiTypes.RemoveGuildMemberRoleResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -367,13 +456,17 @@ function Guild.removeGuildMemberRoleAsync(
 	end) :: future.FutureLike<string, apiTypes.RemoveGuildMemberRoleResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#remove-guild-member
-function Guild.removeGuildMemberAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#remove-guild-member
+]=]
+function guild.removeGuildMemberAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	userId: apiTypes.Snowflake,
 	auditLogReason: string?
-)
+): future.FutureLike<string, apiTypes.RemoveGuildMemberResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -389,8 +482,12 @@ function Guild.removeGuildMemberAsync(
 	end) :: future.FutureLike<string, apiTypes.RemoveGuildMemberResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#get-guild-bans
-function Guild.getGuildBansAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#get-guild-bans
+]=]
+function guild.getGuildBansAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	urlParams: {
@@ -398,7 +495,7 @@ function Guild.getGuildBansAsync(
 		before: apiTypes.Snowflake?,
 		after: apiTypes.Snowflake?,
 	}
-)
+): future.FutureLike<string, apiTypes.GetGuildBansResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -417,8 +514,16 @@ function Guild.getGuildBansAsync(
 	end) :: future.FutureLike<string, apiTypes.GetGuildBansResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#get-guild-ban
-function Guild.getGuildBanAsync(instance: request.Request, guildId: apiTypes.Snowflake, userId: apiTypes.Snowflake)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#get-guild-ban
+]=]
+function guild.getGuildBanAsync(
+	instance: request.Request,
+	guildId: apiTypes.Snowflake,
+	userId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.GetGuildBanResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -433,14 +538,18 @@ function Guild.getGuildBanAsync(instance: request.Request, guildId: apiTypes.Sno
 	end) :: future.FutureLike<string, apiTypes.GetGuildBanResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#create-guild-ban
-function Guild.createGuildBanAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#create-guild-ban
+]=]
+function guild.createGuildBanAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	userId: apiTypes.Snowflake,
 	jsonParams: apiTypes.CreateGuildBanRequest,
 	auditLogReason: string?
-)
+): future.FutureLike<string, apiTypes.CreateGuildBanResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -457,13 +566,17 @@ function Guild.createGuildBanAsync(
 	end) :: future.FutureLike<string, apiTypes.CreateGuildBanResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#remove-guild-ban
-function Guild.removeGuildBanAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#remove-guild-ban
+]=]
+function guild.removeGuildBanAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	userId: apiTypes.Snowflake,
 	auditLogReason: string?
-)
+): future.FutureLike<string, apiTypes.RemoveGuildBanResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -479,13 +592,17 @@ function Guild.removeGuildBanAsync(
 	end) :: future.FutureLike<string, apiTypes.RemoveGuildBanResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#bulk-guild-ban
-function Guild.bulkGuildBanAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#bulk-guild-ban
+]=]
+function guild.bulkGuildBanAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	jsonParams: apiTypes.BulkGuildBanRequest,
 	auditLogReason: string?
-)
+): future.FutureLike<string, apiTypes.BulkGuildBanResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -502,8 +619,15 @@ function Guild.bulkGuildBanAsync(
 	end) :: future.FutureLike<string, apiTypes.BulkGuildBanResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#get-guild-roles
-function Guild.getGuildRolesAsync(instance: request.Request, guildId: apiTypes.Snowflake)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#get-guild-roles
+]=]
+function guild.getGuildRolesAsync(
+	instance: request.Request,
+	guildId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.GetGuildRolesResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -518,8 +642,16 @@ function Guild.getGuildRolesAsync(instance: request.Request, guildId: apiTypes.S
 	end) :: future.FutureLike<string, apiTypes.GetGuildRolesResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#get-guild-role
-function Guild.getGuildRoleAsync(instance: request.Request, guildId: apiTypes.Snowflake, roleId: apiTypes.Snowflake)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#get-guild-role
+]=]
+function guild.getGuildRoleAsync(
+	instance: request.Request,
+	guildId: apiTypes.Snowflake,
+	roleId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.GetGuildRoleResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -534,13 +666,17 @@ function Guild.getGuildRoleAsync(instance: request.Request, guildId: apiTypes.Sn
 	end) :: future.FutureLike<string, apiTypes.GetGuildRoleResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#create-guild-role
-function Guild.createGuildRoleAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#create-guild-role
+]=]
+function guild.createGuildRoleAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	jsonParams: apiTypes.CreateGuildRoleRequest,
 	auditLogReason: string?
-)
+): future.FutureLike<string, apiTypes.CreateGuildRoleResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -557,13 +693,17 @@ function Guild.createGuildRoleAsync(
 	end) :: future.FutureLike<string, apiTypes.CreateGuildRoleResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#modify-guild-role-positions
-function Guild.modifyGuildRolePositionsAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#modify-guild-role-positions
+]=]
+function guild.modifyGuildRolePositionsAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	jsonParams: apiTypes.ModifyGuildRolePositionsRequest,
 	auditLogReason: string?
-)
+): future.FutureLike<string, apiTypes.ModifyGuildRolePositionsResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -580,14 +720,18 @@ function Guild.modifyGuildRolePositionsAsync(
 	end) :: future.FutureLike<string, apiTypes.ModifyGuildRolePositionsResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#modify-guild-role
-function Guild.modifyGuildRoleAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#modify-guild-role
+]=]
+function guild.modifyGuildRoleAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	roleId: apiTypes.Snowflake,
 	jsonParams: apiTypes.ModifyGuildRoleRequest,
 	auditLogReason: string?
-)
+): future.FutureLike<string, apiTypes.ModifyGuildRoleResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -604,13 +748,17 @@ function Guild.modifyGuildRoleAsync(
 	end) :: future.FutureLike<string, apiTypes.ModifyGuildRoleResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#modify-guild-mfa-level
-function Guild.modifyGuildMFALevelAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#modify-guild-mfa-level
+]=]
+function guild.modifyGuildMFALevelAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	jsonParams: apiTypes.ModifyGuildMFALevelRequest,
 	auditLogReason: string?
-)
+): future.FutureLike<string, apiTypes.ModifyGuildMFALevelResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -627,13 +775,17 @@ function Guild.modifyGuildMFALevelAsync(
 	end) :: future.FutureLike<string, apiTypes.ModifyGuildMFALevelResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#delete-guild-role
-function Guild.deleteGuildRoleAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#delete-guild-role
+]=]
+function guild.deleteGuildRoleAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	roleId: apiTypes.Snowflake,
 	auditLogReason: string?
-)
+): future.FutureLike<string, apiTypes.DeleteGuildRoleResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -649,15 +801,19 @@ function Guild.deleteGuildRoleAsync(
 	end) :: future.FutureLike<string, apiTypes.DeleteGuildRoleResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#get-guild-prune-count
-function Guild.getGuildPruneCountAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#get-guild-prune-count
+]=]
+function guild.getGuildPruneCountAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	urlParams: {
 		days: number,
 		includeRoles: string,
 	}
-)
+): future.FutureLike<string, apiTypes.GetGuildPruneCountResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -675,13 +831,17 @@ function Guild.getGuildPruneCountAsync(
 	end) :: future.FutureLike<string, apiTypes.GetGuildPruneCountResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#begin-guild-prune
-function Guild.beginGuildPruneAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#begin-guild-prune
+]=]
+function guild.beginGuildPruneAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	jsonParams: apiTypes.BeginGuildPruneRequest,
 	auditLogReason: string?
-)
+): future.FutureLike<string, apiTypes.BeginGuildPruneResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -698,8 +858,15 @@ function Guild.beginGuildPruneAsync(
 	end) :: future.FutureLike<string, apiTypes.BeginGuildPruneResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#get-guild-voice-regions
-function Guild.getGuildVoiceRegionsAsync(instance: request.Request, guildId: apiTypes.Snowflake)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#get-guild-voice-regions
+]=]
+function guild.getGuildVoiceRegionsAsync(
+	instance: request.Request,
+	guildId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.GetGuildVoiceRegionsResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -714,8 +881,15 @@ function Guild.getGuildVoiceRegionsAsync(instance: request.Request, guildId: api
 	end) :: future.FutureLike<string, apiTypes.GetGuildVoiceRegionsResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#get-guild-invites
-function Guild.getGuildInvitesAsync(instance: request.Request, guildId: apiTypes.Snowflake)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#get-guild-invites
+]=]
+function guild.getGuildInvitesAsync(
+	instance: request.Request,
+	guildId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.GetGuildInvitesResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -730,8 +904,15 @@ function Guild.getGuildInvitesAsync(instance: request.Request, guildId: apiTypes
 	end) :: future.FutureLike<string, apiTypes.GetGuildInvitesResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#get-guild-integrations
-function Guild.getGuildIntegrationsAsync(instance: request.Request, guildId: apiTypes.Snowflake)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#get-guild-integrations
+]=]
+function guild.getGuildIntegrationsAsync(
+	instance: request.Request,
+	guildId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.GetGuildIntegrationsResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -746,13 +927,17 @@ function Guild.getGuildIntegrationsAsync(instance: request.Request, guildId: api
 	end) :: future.FutureLike<string, apiTypes.GetGuildIntegrationsResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#delete-guild-integration
-function Guild.deleteGuildIntegrationAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#delete-guild-integration
+]=]
+function guild.deleteGuildIntegrationAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	integrationId: apiTypes.Snowflake,
 	auditLogReason: string?
-)
+): future.FutureLike<string, apiTypes.DeleteGuildIntegrationResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -768,8 +953,15 @@ function Guild.deleteGuildIntegrationAsync(
 	end) :: future.FutureLike<string, apiTypes.DeleteGuildIntegrationResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#get-guild-widget-settings
-function Guild.getGuildWidgetSettingsAsync(instance: request.Request, guildId: apiTypes.Snowflake)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#get-guild-widget-settings
+]=]
+function guild.getGuildWidgetSettingsAsync(
+	instance: request.Request,
+	guildId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.GetGuildWidgetSettingsResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -784,13 +976,17 @@ function Guild.getGuildWidgetSettingsAsync(instance: request.Request, guildId: a
 	end) :: future.FutureLike<string, apiTypes.GetGuildWidgetSettingsResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#modify-guild-widget
-function Guild.modifyGuildWidgetAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#modify-guild-widget
+]=]
+function guild.modifyGuildWidgetAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	jsonParams: apiTypes.ModifyGuildWidgetRequest,
 	auditLogReason: string?
-)
+): future.FutureLike<string, apiTypes.ModifyGuildWidgetResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -807,8 +1003,15 @@ function Guild.modifyGuildWidgetAsync(
 	end) :: future.FutureLike<string, apiTypes.ModifyGuildWidgetResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#get-guild-widget
-function Guild.getGuildWidgetAsync(instance: request.Request, guildId: apiTypes.Snowflake)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#get-guild-widget
+]=]
+function guild.getGuildWidgetAsync(
+	instance: request.Request,
+	guildId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.GetGuildWidgetResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -823,8 +1026,15 @@ function Guild.getGuildWidgetAsync(instance: request.Request, guildId: apiTypes.
 	end) :: future.FutureLike<string, apiTypes.GetGuildWidgetResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#get-guild-vanity-url
-function Guild.getGuildVanityURLAsync(instance: request.Request, guildId: apiTypes.Snowflake)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#get-guild-vanity-url
+]=]
+function guild.getGuildVanityURLAsync(
+	instance: request.Request,
+	guildId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.GetGuildVanityUrlResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -839,14 +1049,18 @@ function Guild.getGuildVanityURLAsync(instance: request.Request, guildId: apiTyp
 	end) :: future.FutureLike<string, apiTypes.GetGuildVanityUrlResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#get-guild-widget-image
-function Guild.getGuildWidgetImageAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#get-guild-widget-image
+]=]
+function guild.getGuildWidgetImageAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	urlParams: {
 		style: ("shield" | "banner1" | "banner2" | "banner3" | "banner4")?,
 	}
-)
+): future.FutureLike<string, apiTypes.GetGuildWidgetImageResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -863,8 +1077,15 @@ function Guild.getGuildWidgetImageAsync(
 	end) :: future.FutureLike<string, apiTypes.GetGuildWidgetImageResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#get-guild-welcome-screen
-function Guild.getGuildWelcomeScreenAsync(instance: request.Request, guildId: apiTypes.Snowflake)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#get-guild-welcome-screen
+]=]
+function guild.getGuildWelcomeScreenAsync(
+	instance: request.Request,
+	guildId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.GetGuildWelcomeScreenResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -879,13 +1100,17 @@ function Guild.getGuildWelcomeScreenAsync(instance: request.Request, guildId: ap
 	end) :: future.FutureLike<string, apiTypes.GetGuildWelcomeScreenResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#modify-guild-welcome-screen
-function Guild.modifyGuildWelcomeScreenAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#modify-guild-welcome-screen
+]=]
+function guild.modifyGuildWelcomeScreenAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	jsonParams: apiTypes.ModifyGuildWelcomeScreenRequest,
 	auditLogReason: string?
-)
+): future.FutureLike<string, apiTypes.ModifyGuildWelcomeScreenResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -902,8 +1127,15 @@ function Guild.modifyGuildWelcomeScreenAsync(
 	end) :: future.FutureLike<string, apiTypes.ModifyGuildWelcomeScreenResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#get-guild-onboarding
-function Guild.getGuildOnboardingAsync(instance: request.Request, guildId: apiTypes.Snowflake)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#get-guild-onboarding
+]=]
+function guild.getGuildOnboardingAsync(
+	instance: request.Request,
+	guildId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.GetGuildOnboardingResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -918,13 +1150,17 @@ function Guild.getGuildOnboardingAsync(instance: request.Request, guildId: apiTy
 	end) :: future.FutureLike<string, apiTypes.GetGuildOnboardingResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild#modify-guild-onboarding
-function Guild.modifyGuildOnboardingAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild#modify-guild-onboarding
+]=]
+function guild.modifyGuildOnboardingAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	jsonParams: apiTypes.ModifyGuildOnboardingRequest,
 	auditLogReason: string?
-)
+): future.FutureLike<string, apiTypes.ModifyGuildOnboardingResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -941,4 +1177,4 @@ function Guild.modifyGuildOnboardingAsync(
 	end) :: future.FutureLike<string, apiTypes.ModifyGuildOnboardingResponse>
 end
 
-return Guild
+return guild
