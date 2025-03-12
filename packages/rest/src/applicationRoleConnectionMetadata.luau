@@ -3,18 +3,27 @@ local apiTypes = require("../lune_packages/api_types")
 
 local request = require("./request")
 
---[[
+--[=[
+	@class Rest.applicationRoleConnectionMetadata
+
 	HTTP Rest API implementation for the following Resource:
 
 	- https://discord.com/developers/docs/resources/application-role-connection-metadata
-]]
-local ApplicationRoleConnectionMetadata = {}
+]=]
+local applicationRoleConnectionMetadata = {}
 
--- https://discord.com/developers/docs/resources/application-role-connection-metadata#get-application-role-connection-metadata-records
-function ApplicationRoleConnectionMetadata.getApplicationRoleConnectionMetadataRecordsAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/application-role-connection-metadata#get-application-role-connection-metadata-records
+]=]
+function applicationRoleConnectionMetadata.getApplicationRoleConnectionMetadataRecordsAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake
-)
+): future.FutureLike<
+	string,
+	apiTypes.GetApplicationRoleConnectionMetadataRecordsResponse
+>
 	return future.Future.new(
 			function()
 				instance:assertToken()
@@ -33,11 +42,18 @@ function ApplicationRoleConnectionMetadata.getApplicationRoleConnectionMetadataR
 		) :: future.FutureLike<string, apiTypes.GetApplicationRoleConnectionMetadataRecordsResponse>
 end
 
--- https://discord.com/developers/docs/resources/application-role-connection-metadata#update-application-role-connection-metadata-records
-function ApplicationRoleConnectionMetadata.updateApplicationRoleConnectionMetadataRecordsAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/application-role-connection-metadata#update-application-role-connection-metadata-records
+]=]
+function applicationRoleConnectionMetadata.updateApplicationRoleConnectionMetadataRecordsAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake
-)
+): future.FutureLike<
+	string,
+	apiTypes.UpdateApplicationRoleConnectionMetadataRecordsResponse
+>
 	return future.Future.new(
 			function()
 				instance:assertToken()
@@ -56,4 +72,4 @@ function ApplicationRoleConnectionMetadata.updateApplicationRoleConnectionMetada
 		) :: future.FutureLike<string, apiTypes.UpdateApplicationRoleConnectionMetadataRecordsResponse>
 end
 
-return ApplicationRoleConnectionMetadata
+return applicationRoleConnectionMetadata
