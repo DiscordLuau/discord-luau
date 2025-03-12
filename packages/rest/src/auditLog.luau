@@ -3,74 +3,21 @@ local apiTypes = require("../lune_packages/api_types")
 
 local request = require("./request")
 
-local ACTION_TYPE_MAPPING = table.freeze({
-	GuildUpdate = 1,
-	ChannelCreate = 10,
-	ChannelUpdate = 11,
-	ChannelDelete = 12,
-	ChannelOverwriteCreate = 13,
-	ChannelOverwriteUpdate = 14,
-	ChannelOverwriteDelete = 15,
-	MemberKick = 20,
-	MemberPrune = 21,
-	MemberBanAdd = 22,
-	MemberBanRemove = 23,
-	MemberUpdate = 24,
-	MemberRoleUpdate = 25,
-	MemberMove = 26,
-	MemberDisconnect = 27,
-	BotAdd = 28,
-	RoleCreate = 30,
-	RoleUpdate = 31,
-	RoleDelete = 32,
-	InviteCreate = 40,
-	InviteUpdate = 41,
-	InviteDelete = 42,
-	WebhookCreate = 50,
-	WebhookUpdate = 51,
-	WebhookDelete = 52,
-	EmojiCreate = 60,
-	EmojiUpdate = 61,
-	EmojiDelete = 62,
-	MessageDelete = 72,
-	MessageBulkDelete = 73,
-	MessagePin = 74,
-	MessageUnpin = 75,
-	IntegrationCreate = 80,
-	IntegrationUpdate = 81,
-	IntegrationDelete = 82,
-	StageInstanceCreate = 83,
-	StageInstanceUpdate = 84,
-	StageInstanceDelete = 85,
-	StickerCreate = 90,
-	StickerUpdate = 91,
-	StickerDelete = 92,
-	GuildScheduledEventCreate = 100,
-	GuildScheduledEventUpdate = 101,
-	GuildScheduledEventDelete = 102,
-	ThreadCreate = 110,
-	ThreadUpdate = 111,
-	ThreadDelete = 112,
-	ApplicationCommandPermissionUpdate = 121,
-	AutoModerationRuleCreate = 140,
-	AutoModerationRuleUpdate = 141,
-	AutoModerationRuleDelete = 142,
-	AutoModerationBlockMessage = 143,
-	AutoModerationFlagToChannel = 144,
-	AutoModerationUserCommunicationDisabled = 145,
-	CreatorMonetizationRequestCreated = 150,
-	CreatorMonetizationTermsAccepted = 151,
-})
+--[=[
+	@class Rest.auditLog
 
---[[
 	HTTP Rest API implementation for the following Resource:
 
 	- https://discord.com/developers/docs/resources/audit-log
-]]
-local AuditLog = {}
+]=]
+local auditLog = {}
 
--- https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log
-function AuditLog.getGuildAuditLogAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log
+]=]
+function auditLog.getGuildAuditLogAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	urlParams: {
@@ -80,7 +27,7 @@ function AuditLog.getGuildAuditLogAsync(
 		limit: number?,
 		actionType: ActionType,
 	}
-)
+): future.FutureLike<string, apiTypes.GetGuildAuditLogResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -90,7 +37,7 @@ function AuditLog.getGuildAuditLogAsync(
 		instance:addUrlParam("limit", urlParams.limit and tostring(urlParams.limit) or (nil :: any))
 		instance:addUrlParam(
 			"action_type",
-			urlParams.actionType and ACTION_TYPE_MAPPING[urlParams.actionType] or (nil :: any)
+			urlParams.actionType and apiTypes.guild.AuditLogEvent[urlParams.actionType] or (nil :: any)
 		)
 
 		instance:setMethod("GET")
@@ -160,4 +107,4 @@ export type ActionType =
 	| "AutoModerationFlagToChannel"
 	| "AutoModerationUserCommunicationDisabled"
 
-return AuditLog
+return auditLog
