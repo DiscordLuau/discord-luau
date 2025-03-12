@@ -28,9 +28,33 @@ export type HttpHeaderMap = net.HttpHeaderMap
 ]=]
 
 return {
+	--[=[
+		@prop task StdPolyfills.task 
+		@within StdPolyfills
+	]=]
 	task = task,
+
+	--[=[
+		@prop serde StdPolyfills.serde 
+		@within StdPolyfills
+	]=]
 	serde = serde,
+
+	--[=[
+		@prop process StdPolyfills.process 
+		@within StdPolyfills
+	]=]
 	process = process,
+
+	--[=[
+		@prop datetime StdPolyfills.datetime 
+		@within StdPolyfills
+	]=]
 	datetime = datetime,
+
+	--[=[
+		@prop net StdPolyfills.net 
+		@within StdPolyfills
+	]=]
 	net = net,
 }

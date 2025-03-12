@@ -15,7 +15,7 @@ Stream.Interface = {}
 Stream.Prototype = {}
 
 --[=[
-	@within WebSocket.Manager
+	@within Stream
 
 	Responsible for peeking further ahead into the stream, without incrementing  the cursor position.
 ]=]
@@ -32,7 +32,7 @@ function Stream.Prototype.peek(self: Stream, length: number?): string?
 end
 
 --[=[
-	@within WebSocket.Manager
+	@within Stream
 
 	Responsible for advancing the cursor position of the stream, this will increment the cursor position by the
 		amount specified. (defaults to 1)
@@ -52,7 +52,7 @@ function Stream.Prototype.advance(self: Stream, length: number?): string?
 end
 
 --[=[
-	@within WebSocket.Manager
+	@within Stream
 
 	Responsible for advancing the cursor position of the stream until a predicate is met, this will increment the
 		cursor position by the amount specified.
@@ -79,7 +79,7 @@ function Stream.Prototype.advanceUntil(self: Stream, predicate: (char: string) -
 end
 
 --[=[
-	@within WebSocket.Manager
+	@within Stream
 
 	Will read the stream until the end, this will return the remaining text source.
 ]=]
@@ -90,7 +90,7 @@ function Stream.Prototype.readUntilEnd(self: Stream): string
 end
 
 --[=[
-	@within WebSocket.Manager
+	@within Stream
 
 	Trims all whitespaces from the current stream position and onwards
 ]=]
@@ -105,7 +105,7 @@ function Stream.Prototype.trim(self: Stream)
 end
 
 --[=[
-	@within WebSocket.Manager
+	@within Stream
 
 	Constructor for the Stream object, will return a new instance of the Stream object.
 ]=]
@@ -122,7 +122,16 @@ function Stream.Interface.new(textSource: string): Stream
 end
 
 export type Stream = typeof(Stream.Prototype) & {
+	--[=[
+		@prop textSource string
+		@within Stream
+	]=]
 	textSource: string,
+
+	--[=[
+		@prop cursorPosition number
+		@within Stream
+	]=]
 	cursorPosition: number,
 }
 

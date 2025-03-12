@@ -18,7 +18,21 @@ export type State = state.State
 ]=]
 
 return {
+	--[=[
+		@prop state State.State 
+		@within State
+	]=]
 	state = state,
+
+	--[=[
+		@prop cache State.Cache 
+		@within State
+	]=]
 	cache = cache,
+
+	--[=[
+		@prop rest State.Rest 
+		@within State
+	]=]
 	rest = rest,
 }
