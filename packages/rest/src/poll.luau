@@ -3,15 +3,21 @@ local apiTypes = require("../lune_packages/api_types")
 
 local request = require("./request")
 
---[[
+--[=[
+	@class Rest.poll
+
 	HTTP Rest API implementation for the following Resource:
 
 	- https://discord.com/developers/docs/resources/poll
-]]
-local Poll = {}
+]=]
+local poll = {}
 
--- https://discord.com/developers/docs/resources/poll#get-answer-voters
-function Poll.getAnswerVotersAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/poll#get-answer-voters
+]=]
+function poll.getAnswerVotersAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
 	messageId: apiTypes.Snowflake,
@@ -20,7 +26,7 @@ function Poll.getAnswerVotersAsync(
 		after: number?,
 		limit: number?,
 	}
-)
+): future.FutureLike<string, apiTypes.GetAnswerVotersResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -38,8 +44,16 @@ function Poll.getAnswerVotersAsync(
 	end) :: future.FutureLike<string, apiTypes.GetAnswerVotersResponse>
 end
 
--- https://discord.com/developers/docs/resources/poll#end-poll
-function Poll.endPollAsync(instance: request.Request, channelId: apiTypes.Snowflake, messageId: apiTypes.Snowflake)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/poll#end-poll
+]=]
+function poll.endPollAsync(
+	instance: request.Request,
+	channelId: apiTypes.Snowflake,
+	messageId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.EndPollResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -54,4 +68,4 @@ function Poll.endPollAsync(instance: request.Request, channelId: apiTypes.Snowfl
 	end) :: future.FutureLike<string, apiTypes.EndPollResponse>
 end
 
-return Poll
+return poll
