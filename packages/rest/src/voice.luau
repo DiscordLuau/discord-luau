@@ -5,15 +5,23 @@ local apiTypes = require("../lune_packages/api_types")
 
 local request = require("./request")
 
---[[
+--[=[
+	@class Rest.voice
+
 	HTTP Rest API implementation for the following Resource:
 
 	- https://discord.com/developers/docs/resources/voice
-]]
-local Voice = {}
+]=]
+local voice = {}
 
--- https://discord.com/developers/docs/resources/voice#list-voice-regions
-function Voice.listVoiceRegionsAsync(instance: request.Request)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/voice#list-voice-regions
+]=]
+function voice.listVoiceRegionsAsync(
+	instance: request.Request
+): future.FutureLike<string, apiTypes.ListVoiceRegionsResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -28,8 +36,15 @@ function Voice.listVoiceRegionsAsync(instance: request.Request)
 	end) :: future.FutureLike<string, apiTypes.ListVoiceRegionsResponse>
 end
 
--- https://discord.com/developers/docs/resources/voice#get-current-user-voice-state
-function Voice.getCurrentUserVoiceStateAsync(instance: request.Request, guildId: apiTypes.Snowflake)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/voice#get-current-user-voice-state
+]=]
+function voice.getCurrentUserVoiceStateAsync(
+	instance: request.Request,
+	guildId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.GetCurrentUserVoiceStateResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -44,12 +59,16 @@ function Voice.getCurrentUserVoiceStateAsync(instance: request.Request, guildId:
 	end) :: future.FutureLike<string, apiTypes.GetCurrentUserVoiceStateResponse>
 end
 
--- https://discord.com/developers/docs/resources/voice#get-user-voice-state
-function Voice.getUserVoiceStateAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/voice#get-user-voice-state
+]=]
+function voice.getUserVoiceStateAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	userId: apiTypes.Snowflake
-)
+): future.FutureLike<string, apiTypes.GetUserVoiceStateResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -64,12 +83,16 @@ function Voice.getUserVoiceStateAsync(
 	end) :: future.FutureLike<string, apiTypes.GetUserVoiceStateResponse>
 end
 
--- https://discord.com/developers/docs/resources/voice#modify-current-user-voice-state
-function Voice.modifyCurrentUserVoiceStateAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/voice#modify-current-user-voice-state
+]=]
+function voice.modifyCurrentUserVoiceStateAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	jsonParams: apiTypes.ModifyCurrentUserVoiceStateRequest
-)
+): future.FutureLike<string, apiTypes.ModifyCurrentUserVoiceStateResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -85,13 +108,17 @@ function Voice.modifyCurrentUserVoiceStateAsync(
 	end) :: future.FutureLike<string, apiTypes.ModifyCurrentUserVoiceStateResponse>
 end
 
--- https://discord.com/developers/docs/resources/voice#modify-user-voice-state
-function Voice.modifyUserVoiceStateAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/voice#modify-user-voice-state
+]=]
+function voice.modifyUserVoiceStateAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	userId: apiTypes.Snowflake,
 	jsonParams: apiTypes.ModifyUserVoiceStateRequest
-)
+): future.FutureLike<string, apiTypes.ModifyUserVoiceStateResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -107,4 +134,4 @@ function Voice.modifyUserVoiceStateAsync(
 	end) :: future.FutureLike<string, apiTypes.ModifyUserVoiceStateResponse>
 end
 
-return Voice
+return voice
