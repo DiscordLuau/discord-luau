@@ -5,15 +5,24 @@ local apiTypes = require("../lune_packages/api_types")
 
 local request = require("./request")
 
---[[
+--[=[
+	@class Rest.channel
+
 	HTTP Rest API implementation for the following Resource:
 
 	- https://discord.com/developers/docs/resources/channel
-]]
-local Channel = {}
+]=]
+local channel = {}
 
--- https://discord.com/developers/docs/resources/channel#get-channel
-function Channel.getChannelAsync(instance: request.Request, channelId: apiTypes.Snowflake)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/channel#get-channel
+]=]
+function channel.getChannelAsync(
+	instance: request.Request,
+	channelId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.GetChannelResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -28,13 +37,17 @@ function Channel.getChannelAsync(instance: request.Request, channelId: apiTypes.
 	end) :: future.FutureLike<string, apiTypes.GetChannelResponse>
 end
 
--- https://discord.com/developers/docs/resources/channel#modify-channel
-function Channel.modifyChannelAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/channel#modify-channel
+]=]
+function channel.modifyChannelAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
 	jsonParams: apiTypes.ModifyChannelRequest,
 	auditLogReason: string?
-)
+): future.FutureLike<string, apiTypes.ModifyChannelResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -51,12 +64,16 @@ function Channel.modifyChannelAsync(
 	end) :: future.FutureLike<string, apiTypes.ModifyChannelResponse>
 end
 
--- https://discord.com/developers/docs/resources/channel#deleteclose-channel
-function Channel.deleteOrCloseChannelAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/channel#deleteclose-channel
+]=]
+function channel.deleteOrCloseChannelAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
 	auditLogReason: string?
-)
+): future.FutureLike<string, apiTypes.DeleteCloseChannelResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -72,14 +89,18 @@ function Channel.deleteOrCloseChannelAsync(
 	end) :: future.FutureLike<string, apiTypes.DeleteCloseChannelResponse>
 end
 
--- https://discord.com/developers/docs/resources/channel#edit-channel-permissions
-function Channel.editChannelPermissionsAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/channel#edit-channel-permissions
+]=]
+function channel.editChannelPermissionsAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
 	overwriteId: apiTypes.Snowflake,
 	jsonParams: apiTypes.EditChannelPermissionsRequest,
 	auditLogReason: string?
-)
+): future.FutureLike<string, apiTypes.EditChannelPermissionsResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -96,8 +117,15 @@ function Channel.editChannelPermissionsAsync(
 	end) :: future.FutureLike<string, apiTypes.EditChannelPermissionsResponse>
 end
 
--- https://discord.com/developers/docs/resources/channel#get-channel-invites
-function Channel.getChannelInvitesAsync(instance: request.Request, channelId: apiTypes.Snowflake)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/channel#get-channel-invites
+]=]
+function channel.getChannelInvitesAsync(
+	instance: request.Request,
+	channelId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.GetChannelInvitesResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -112,13 +140,17 @@ function Channel.getChannelInvitesAsync(instance: request.Request, channelId: ap
 	end) :: future.FutureLike<string, apiTypes.GetChannelInvitesResponse>
 end
 
--- https://discord.com/developers/docs/resources/channel#create-channel-invite
-function Channel.createChannelInviteAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/channel#create-channel-invite
+]=]
+function channel.createChannelInviteAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
 	jsonParams: apiTypes.CreateChannelInviteRequest,
 	auditLogReason: string?
-)
+): future.FutureLike<string, apiTypes.CreateChannelInviteResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -135,13 +167,17 @@ function Channel.createChannelInviteAsync(
 	end) :: future.FutureLike<string, apiTypes.CreateChannelInviteResponse>
 end
 
--- https://discord.com/developers/docs/resources/channel#delete-channel-permission
-function Channel.deleteChannelPermissionAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/channel#delete-channel-permission
+]=]
+function channel.deleteChannelPermissionAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
 	overwriteId: apiTypes.Snowflake,
 	auditLogReason: string?
-)
+): future.FutureLike<string, apiTypes.DeleteChannelPermissionResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -157,13 +193,17 @@ function Channel.deleteChannelPermissionAsync(
 	end) :: future.FutureLike<string, apiTypes.DeleteChannelPermissionResponse>
 end
 
--- https://discord.com/developers/docs/resources/channel#follow-announcement-channel
-function Channel.followAnnouncementChannelAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/channel#follow-announcement-channel
+]=]
+function channel.followAnnouncementChannelAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
 	jsonParams: apiTypes.FollowAnnouncementChannelRequest,
 	auditLogReason: string?
-)
+): future.FutureLike<string, apiTypes.FollowAnnouncementChannelResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -180,8 +220,15 @@ function Channel.followAnnouncementChannelAsync(
 	end) :: future.FutureLike<string, apiTypes.FollowAnnouncementChannelResponse>
 end
 
--- https://discord.com/developers/docs/resources/channel#trigger-typing-indicator
-function Channel.triggerTypingIndicatorAsync(instance: request.Request, channelId: apiTypes.Snowflake)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/channel#trigger-typing-indicator
+]=]
+function channel.triggerTypingIndicatorAsync(
+	instance: request.Request,
+	channelId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.TriggerTypingIndicatorResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -196,8 +243,15 @@ function Channel.triggerTypingIndicatorAsync(instance: request.Request, channelI
 	end) :: future.FutureLike<string, apiTypes.TriggerTypingIndicatorResponse>
 end
 
--- https://discord.com/developers/docs/resources/channel#get-pinned-messages
-function Channel.getPinnedMessagesAsync(instance: request.Request, channelId: apiTypes.Snowflake)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/channel#get-pinned-messages
+]=]
+function channel.getPinnedMessagesAsync(
+	instance: request.Request,
+	channelId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.GetPinnedMessagesResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -212,13 +266,17 @@ function Channel.getPinnedMessagesAsync(instance: request.Request, channelId: ap
 	end) :: future.FutureLike<string, apiTypes.GetPinnedMessagesResponse>
 end
 
--- https://discord.com/developers/docs/resources/channel#pin-message
-function Channel.pinMessageAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/channel#pin-message
+]=]
+function channel.pinMessageAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
 	messageId: apiTypes.Snowflake,
 	auditLogReason: string?
-)
+): future.FutureLike<string, apiTypes.PinMessageResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -234,13 +292,17 @@ function Channel.pinMessageAsync(
 	end) :: future.FutureLike<string, apiTypes.PinMessageResponse>
 end
 
--- https://discord.com/developers/docs/resources/channel#unpin-message
-function Channel.unpinMessageAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/channel#unpin-message
+]=]
+function channel.unpinMessageAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
 	messageId: apiTypes.Snowflake,
 	auditLogReason: string?
-)
+): future.FutureLike<string, apiTypes.UnpinMessageResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -256,13 +318,17 @@ function Channel.unpinMessageAsync(
 	end) :: future.FutureLike<string, apiTypes.UnpinMessageResponse>
 end
 
--- https://discord.com/developers/docs/resources/channel#group-dm-add-recipient
-function Channel.groupDMAddRecipientAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/channel#group-dm-add-recipient
+]=]
+function channel.groupDMAddRecipientAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
 	userId: apiTypes.Snowflake,
 	jsonParams: apiTypes.GroupDMAddRecipientRequest
-)
+): future.FutureLike<string, apiTypes.GroupDMAddRecipientResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -278,12 +344,16 @@ function Channel.groupDMAddRecipientAsync(
 	end) :: future.FutureLike<string, apiTypes.GroupDMAddRecipientResponse>
 end
 
--- https://discord.com/developers/docs/resources/channel#group-dm-remove-recipient
-function Channel.groupDMRemoveRecipientAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/channel#group-dm-remove-recipient
+]=]
+function channel.groupDMRemoveRecipientAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
 	userId: apiTypes.Snowflake
-)
+): future.FutureLike<string, apiTypes.GroupDMRemoveRecipientResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -298,14 +368,18 @@ function Channel.groupDMRemoveRecipientAsync(
 	end) :: future.FutureLike<string, apiTypes.GroupDMRemoveRecipientResponse>
 end
 
--- https://discord.com/developers/docs/resources/channel#start-thread-from-message
-function Channel.startThreadFromMessageAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/channel#start-thread-from-message
+]=]
+function channel.startThreadFromMessageAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
 	messageId: apiTypes.Snowflake,
 	jsonParams: apiTypes.StartThreadFromMessageRequest,
 	auditLogReason: string?
-)
+): future.FutureLike<string, apiTypes.StartThreadFromMessageResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -322,13 +396,17 @@ function Channel.startThreadFromMessageAsync(
 	end) :: future.FutureLike<string, apiTypes.StartThreadFromMessageResponse>
 end
 
--- https://discord.com/developers/docs/resources/channel#start-thread-without-message
-function Channel.startThreadWithoutMessageAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/channel#start-thread-without-message
+]=]
+function channel.startThreadWithoutMessageAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
 	jsonParams: apiTypes.StartThreadWithoutMessageRequest,
 	auditLogReason: string?
-)
+): future.FutureLike<string, apiTypes.StartThreadWithoutMessageResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -345,13 +423,20 @@ function Channel.startThreadWithoutMessageAsync(
 	end) :: future.FutureLike<string, apiTypes.StartThreadWithoutMessageResponse>
 end
 
--- https://discord.com/developers/docs/resources/channel#start-thread-in-forum-or-media-channel
-function Channel.startThreadInForumOrMediaChannelAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/channel#start-thread-in-forum-or-media-channel
+]=]
+function channel.startThreadInForumOrMediaChannelAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
 	jsonParams: apiTypes.StartThreadInForumOrMediaChannelRequest,
 	auditLogReason: string?
-)
+): future.FutureLike<
+	string,
+	apiTypes.StartThreadInForumOrMediaChannelResponse
+>
 	return future.Future.new(
 			function()
 				instance:assertToken()
@@ -370,8 +455,15 @@ function Channel.startThreadInForumOrMediaChannelAsync(
 		) :: future.FutureLike<string, apiTypes.StartThreadInForumOrMediaChannelResponse>
 end
 
--- https://discord.com/developers/docs/resources/channel#join-thread
-function Channel.joinThreadAsync(instance: request.Request, channelId: apiTypes.Snowflake)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/channel#join-thread
+]=]
+function channel.joinThreadAsync(
+	instance: request.Request,
+	channelId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.JoinThreadResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -386,12 +478,16 @@ function Channel.joinThreadAsync(instance: request.Request, channelId: apiTypes.
 	end) :: future.FutureLike<string, apiTypes.JoinThreadResponse>
 end
 
--- https://discord.com/developers/docs/resources/channel#add-thread-member
-function Channel.addThreadMemberAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/channel#add-thread-member
+]=]
+function channel.addThreadMemberAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
 	userId: apiTypes.Snowflake
-)
+): future.FutureLike<string, apiTypes.AddThreadMemberResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -406,8 +502,15 @@ function Channel.addThreadMemberAsync(
 	end) :: future.FutureLike<string, apiTypes.AddThreadMemberResponse>
 end
 
--- https://discord.com/developers/docs/resources/channel#leave-thread
-function Channel.leaveThreadAsync(instance: request.Request, channelId: apiTypes.Snowflake)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/channel#leave-thread
+]=]
+function channel.leaveThreadAsync(
+	instance: request.Request,
+	channelId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.LeaveThreadResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -422,12 +525,16 @@ function Channel.leaveThreadAsync(instance: request.Request, channelId: apiTypes
 	end) :: future.FutureLike<string, apiTypes.LeaveThreadResponse>
 end
 
--- https://discord.com/developers/docs/resources/channel#remove-thread-member
-function Channel.removeThreadMemberAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/channel#remove-thread-member
+]=]
+function channel.removeThreadMemberAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
 	userId: apiTypes.Snowflake
-)
+): future.FutureLike<string, apiTypes.RemoveThreadMemberResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -442,15 +549,19 @@ function Channel.removeThreadMemberAsync(
 	end) :: future.FutureLike<string, apiTypes.RemoveThreadMemberResponse>
 end
 
--- https://discord.com/developers/docs/resources/channel#get-thread-member
-function Channel.getThreadMemberAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/channel#get-thread-member
+]=]
+function channel.getThreadMemberAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
 	userId: apiTypes.Snowflake,
 	urlParams: {
 		withMember: boolean?,
 	}
-)
+): future.FutureLike<string, apiTypes.GetThreadMemberResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -467,8 +578,12 @@ function Channel.getThreadMemberAsync(
 	end) :: future.FutureLike<string, apiTypes.GetThreadMemberResponse>
 end
 
--- https://discord.com/developers/docs/resources/channel#list-thread-members
-function Channel.listThreadMembersAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/channel#list-thread-members
+]=]
+function channel.listThreadMembersAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
 	urlParams: {
@@ -476,7 +591,7 @@ function Channel.listThreadMembersAsync(
 		after: apiTypes.Snowflake?,
 		limit: number?,
 	}
-)
+): future.FutureLike<string, apiTypes.ListThreadMembersResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -495,15 +610,19 @@ function Channel.listThreadMembersAsync(
 	end) :: future.FutureLike<string, apiTypes.ListThreadMembersResponse>
 end
 
--- https://discord.com/developers/docs/resources/channel#list-public-archived-threads
-function Channel.listPublicArchivedThreadsAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/channel#list-public-archived-threads
+]=]
+function channel.listPublicArchivedThreadsAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
 	urlParams: {
 		before: string?,
 		limit: number?,
 	}
-)
+): future.FutureLike<string, apiTypes.ListPublicArchivedThreadsResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -521,15 +640,19 @@ function Channel.listPublicArchivedThreadsAsync(
 	end) :: future.FutureLike<string, apiTypes.ListPublicArchivedThreadsResponse>
 end
 
--- https://discord.com/developers/docs/resources/channel#list-private-archived-threads
-function Channel.listPrivateArchivedThreadsAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/channel#list-private-archived-threads
+]=]
+function channel.listPrivateArchivedThreadsAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
 	urlParams: {
 		before: string?,
 		limit: number?,
 	}
-)
+): future.FutureLike<string, apiTypes.ListPrivateArchivedThreadsResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -547,15 +670,22 @@ function Channel.listPrivateArchivedThreadsAsync(
 	end) :: future.FutureLike<string, apiTypes.ListPrivateArchivedThreadsResponse>
 end
 
--- https://discord.com/developers/docs/resources/channel#list-joined-private-archived-threads
-function Channel.listJoinedPrivateArchivedThreadsAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/channel#list-joined-private-archived-threads
+]=]
+function channel.listJoinedPrivateArchivedThreadsAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
 	urlParams: {
 		before: string?,
 		limit: number?,
 	}
-)
+): future.FutureLike<
+	string,
+	apiTypes.ListJoinedPrivateArchivedThreadsResponse
+>
 	return future.Future.new(
 			function()
 				instance:assertToken()
@@ -575,4 +705,4 @@ function Channel.listJoinedPrivateArchivedThreadsAsync(
 		) :: future.FutureLike<string, apiTypes.ListJoinedPrivateArchivedThreadsResponse>
 end
 
-return Channel
+return channel
