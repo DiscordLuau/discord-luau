@@ -5,19 +5,25 @@ local apiTypes = require("../lune_packages/api_types")
 
 local request = require("./request")
 
---[[
+--[=[
+	@class Rest.stageInstance
+
 	HTTP Rest API implementation for the following Resource:
 
 	- https://discord.com/developers/docs/resources/stage-instance
-]]
-local StageInstance = {}
+]=]
+local stageInstance = {}
 
--- https://discord.com/developers/docs/resources/stage-instance#create-stage-instance
-function StageInstance.createStageInstanceAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/stage-instance#create-stage-instance
+]=]
+function stageInstance.createStageInstanceAsync(
 	instance: request.Request,
 	jsonParams: apiTypes.CreateStageInstanceRequest,
 	auditLogReason: string?
-)
+): future.FutureLike<string, apiTypes.CreateStageInstanceResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -34,8 +40,15 @@ function StageInstance.createStageInstanceAsync(
 	end) :: future.FutureLike<string, apiTypes.CreateStageInstanceResponse>
 end
 
--- https://discord.com/developers/docs/resources/stage-instance#get-stage-instance
-function StageInstance.getStageInstanceAsync(instance: request.Request, channelId: apiTypes.Snowflake)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/stage-instance#get-stage-instance
+]=]
+function stageInstance.getStageInstanceAsync(
+	instance: request.Request,
+	channelId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.GetStageInstanceResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -50,13 +63,17 @@ function StageInstance.getStageInstanceAsync(instance: request.Request, channelI
 	end) :: future.FutureLike<string, apiTypes.GetStageInstanceResponse>
 end
 
--- https://discord.com/developers/docs/resources/stage-instance#modify-stage-instance
-function StageInstance.modifyStageInstanceAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/stage-instance#modify-stage-instance
+]=]
+function stageInstance.modifyStageInstanceAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
 	jsonParams: apiTypes.ModifyStageInstanceRequest,
 	auditLogReason: string?
-)
+): future.FutureLike<string, apiTypes.ModifyStageInstanceResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -73,8 +90,15 @@ function StageInstance.modifyStageInstanceAsync(
 	end) :: future.FutureLike<string, apiTypes.ModifyStageInstanceResponse>
 end
 
--- https://discord.com/developers/docs/resources/stage-instance#delete-stage-instance
-function StageInstance.deleteStageInstanceAsync(instance: request.Request, channelId: apiTypes.Snowflake)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/stage-instance#delete-stage-instance
+]=]
+function stageInstance.deleteStageInstanceAsync(
+	instance: request.Request,
+	channelId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.DeleteStageInstanceResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -89,4 +113,4 @@ function StageInstance.deleteStageInstanceAsync(instance: request.Request, chann
 	end) :: future.FutureLike<string, apiTypes.DeleteStageInstanceResponse>
 end
 
-return StageInstance
+return stageInstance
