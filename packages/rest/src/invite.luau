@@ -3,15 +3,21 @@ local apiTypes = require("../lune_packages/api_types")
 
 local request = require("./request")
 
---[[
+--[=[
+	@class Rest.invite
+
 	HTTP Rest API implementation for the following Resource:
 
 	- https://discord.com/developers/docs/resources/invite
-]]
-local Invite = {}
+]=]
+local invite = {}
 
--- https://discord.com/developers/docs/resources/invite#get-invite
-function Invite.getInviteAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/invite#get-invite
+]=]
+function invite.getInviteAsync(
 	instance: request.Request,
 	inviteCode: string,
 	urlParams: {
@@ -19,7 +25,7 @@ function Invite.getInviteAsync(
 		withExpiration: boolean?,
 		guildScheduledEventId: apiTypes.Snowflake?,
 	}
-)
+): future.FutureLike<string, apiTypes.GetInviteResponse>
 	return future.Future.new(function()
 		instance:addUrlParam("with_counts", urlParams.withCounts and tostring(urlParams.withCounts) or (nil :: any))
 		instance:addUrlParam(
@@ -42,8 +48,16 @@ function Invite.getInviteAsync(
 	end) :: future.FutureLike<string, apiTypes.GetInviteResponse>
 end
 
--- https://discord.com/developers/docs/resources/invite#delete-invite
-function Invite.deleteInviteAsync(instance: request.Request, inviteCode: string, auditLogReason: string?)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/invite#delete-invite
+]=]
+function invite.deleteInviteAsync(
+	instance: request.Request,
+	inviteCode: string,
+	auditLogReason: string?
+): future.FutureLike<string, apiTypes.DeleteInviteResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -59,4 +73,4 @@ function Invite.deleteInviteAsync(instance: request.Request, inviteCode: string,
 	end) :: future.FutureLike<string, apiTypes.DeleteInviteResponse>
 end
 
-return Invite
+return invite
