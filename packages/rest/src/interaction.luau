@@ -5,15 +5,21 @@ local apiTypes = require("../lune_packages/api_types")
 
 local request = require("./request")
 
---[[
+--[=[
+	@class Rest.interaction
+
 	HTTP Rest API implementation for the following Resource:
 
 	- https://discord.com/developers/docs/interactions/receiving-and-responding
-]]
-local Interaction = {}
+]=]
+local interaction = {}
 
--- https://discord.com/developers/docs/interactions/receiving-and-responding#create-interaction-response
-function Interaction.createInteractionResponseAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/interactions/receiving-and-responding#create-interaction-response
+]=]
+function interaction.createInteractionResponseAsync(
 	instance: request.Request,
 	interactionId: apiTypes.Snowflake,
 	interactionToken: string,
@@ -21,7 +27,7 @@ function Interaction.createInteractionResponseAsync(
 	urlParams: {
 		withResponse: boolean?,
 	}
-)
+): future.FutureLike<string, apiTypes.CreateInteractionResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -44,15 +50,22 @@ function Interaction.createInteractionResponseAsync(
 	end) :: future.FutureLike<string, apiTypes.CreateInteractionResponse>
 end
 
--- https://discord.com/developers/docs/interactions/receiving-and-responding#get-original-interaction-response
-function Interaction.getOriginalInteractionResponseAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/interactions/receiving-and-responding#get-original-interaction-response
+]=]
+function interaction.getOriginalInteractionResponseAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	interactionToken: string,
 	urlParams: {
 		threadId: apiTypes.Snowflake?,
 	}
-)
+): future.FutureLike<
+	string,
+	apiTypes.GetOriginalInteractionResponse
+>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -71,8 +84,12 @@ function Interaction.getOriginalInteractionResponseAsync(
 	end) :: future.FutureLike<string, apiTypes.GetOriginalInteractionResponse>
 end
 
--- https://discord.com/developers/docs/interactions/receiving-and-responding#edit-original-interaction-response
-function Interaction.editOriginalInteractionResponseAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/interactions/receiving-and-responding#edit-original-interaction-response
+]=]
+function interaction.editOriginalInteractionResponseAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	interactionToken: string,
@@ -80,7 +97,10 @@ function Interaction.editOriginalInteractionResponseAsync(
 	urlParams: {
 		threadId: apiTypes.Snowflake?,
 	}
-)
+): future.FutureLike<
+	string,
+	apiTypes.EditOriginalInteractionResponse
+>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -100,12 +120,19 @@ function Interaction.editOriginalInteractionResponseAsync(
 	end) :: future.FutureLike<string, apiTypes.EditOriginalInteractionResponse>
 end
 
--- https://discord.com/developers/docs/interactions/receiving-and-responding#delete-original-interaction-response
-function Interaction.deleteOriginalInteractionResponseAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/interactions/receiving-and-responding#delete-original-interaction-response
+]=]
+function interaction.deleteOriginalInteractionResponseAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	interactionToken: string
-)
+): future.FutureLike<
+	string,
+	apiTypes.DeleteOriginalInteractionResponse
+>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -122,8 +149,12 @@ function Interaction.deleteOriginalInteractionResponseAsync(
 	end) :: future.FutureLike<string, apiTypes.DeleteOriginalInteractionResponse>
 end
 
--- https://discord.com/developers/docs/interactions/receiving-and-responding#create-followup-message
-function Interaction.createFollowupMessageAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/interactions/receiving-and-responding#create-followup-message
+]=]
+function interaction.createFollowupMessageAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	interactionToken: string,
@@ -132,7 +163,7 @@ function Interaction.createFollowupMessageAsync(
 		wait: boolean?,
 		threadId: apiTypes.Snowflake?,
 	}
-)
+): future.FutureLike<string, apiTypes.CreateFollowupMessageResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -151,8 +182,12 @@ function Interaction.createFollowupMessageAsync(
 	end) :: future.FutureLike<string, apiTypes.CreateFollowupMessageResponse>
 end
 
--- https://discord.com/developers/docs/interactions/receiving-and-responding#get-followup-message
-function Interaction.getFollowupMessageAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/interactions/receiving-and-responding#get-followup-message
+]=]
+function interaction.getFollowupMessageAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	interactionToken: string,
@@ -160,7 +195,7 @@ function Interaction.getFollowupMessageAsync(
 	urlParams: {
 		threadId: apiTypes.Snowflake?,
 	}
-)
+): future.FutureLike<string, apiTypes.GetFollowupMessageResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -179,8 +214,12 @@ function Interaction.getFollowupMessageAsync(
 	end) :: future.FutureLike<string, apiTypes.GetFollowupMessageResponse>
 end
 
--- https://discord.com/developers/docs/interactions/receiving-and-responding#edit-followup-message
-function Interaction.editFollowupMessageAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/interactions/receiving-and-responding#edit-followup-message
+]=]
+function interaction.editFollowupMessageAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	interactionToken: string,
@@ -189,7 +228,7 @@ function Interaction.editFollowupMessageAsync(
 	urlParams: {
 		threadId: apiTypes.Snowflake?,
 	}
-)
+): future.FutureLike<string, apiTypes.EditFollowupMessageResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -209,13 +248,17 @@ function Interaction.editFollowupMessageAsync(
 	end) :: future.FutureLike<string, apiTypes.EditFollowupMessageResponse>
 end
 
--- https://discord.com/developers/docs/interactions/receiving-and-responding#delete-followup-message
-function Interaction.deleteFollowupMessageAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/interactions/receiving-and-responding#delete-followup-message
+]=]
+function interaction.deleteFollowupMessageAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	interactionToken: string,
 	messageId: apiTypes.Snowflake
-)
+): future.FutureLike<string, apiTypes.DeleteFollowupMessageResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -232,4 +275,4 @@ function Interaction.deleteFollowupMessageAsync(
 	end) :: future.FutureLike<string, apiTypes.DeleteFollowupMessageResponse>
 end
 
-return Interaction
+return interaction
