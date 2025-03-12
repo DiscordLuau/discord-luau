@@ -696,47 +696,190 @@ function Shard.Interface.new(settings: {
 end
 
 export type Shard = typeof(Shard.Prototype) & {
+	--[=[
+		@prop token Secret 
+		@within WebSocket.Shard
+	]=]
 	token: string,
+
+	--[=[
+		@prop intents number
+		@within WebSocket.Shard
+	]=]
 	intents: number,
+
+	--[=[
+		@prop shardId number
+		@within WebSocket.Shard
+	]=]
 	shardId: number,
+
+	--[=[
+		@prop shardCount number
+		@within WebSocket.Shard
+	]=]
 	shardCount: number,
+
+	--[=[
+		@prop shouldReconnect boolean
+		@within WebSocket.Shard
+	]=]
 	shouldReconnect: boolean,
 
+	--[=[
+		@prop largeThreshold number?
+		@within WebSocket.Shard
+	]=]
 	largeThreshold: number?,
 
+	--[=[
+		@prop zlibBuffer Buffer
+		@within WebSocket.Shard
+	]=]
 	zlibBuffer: buffer.Buffer,
 
+	--[=[
+		@prop onSocketConnected Emitter<()>
+		@within WebSocket.Shard
+	]=]
 	onSocketConnected: emitter.Emitter<()>,
+
+	--[=[
+		@prop onSocketReconnected Emitter<number?>
+		@within WebSocket.Shard
+	]=]
 	onSocketReconnected: emitter.Emitter<number?>,
+
+	--[=[
+		@prop onSocketDisconnected Emitter<number?, boolean?>
+		@within WebSocket.Shard
+	]=]
 	onSocketDisconnected: emitter.Emitter<number?, boolean?>,
 
+	--[=[
+		@prop onSocketHeartbeat Emitter<number?>
+		@within WebSocket.Shard
+	]=]
 	onSocketHeartbeat: emitter.Emitter<number?>,
 
+	--[=[
+		@prop onSocketDispatch Emitter<apiTypes.Payload<unknown>>
+		@within WebSocket.Shard
+	]=]
 	onSocketDispatch: emitter.Emitter<apiTypes.Payload<unknown>>,
+
+	--[=[
+		@prop onSocketRawMessage Emitter<apiTypes.Payload<unknown>>
+		@within WebSocket.Shard
+	]=]
 	onSocketRawMessage: emitter.Emitter<apiTypes.Payload<unknown>>,
+
+	--[=[
+		@prop onSocketReady Emitter<()>
+		@within WebSocket.Shard
+	]=]
 	onSocketReady: emitter.Emitter<()>,
 
+	--[=[
+		@prop heartbeatAcknowledged boolean?
+		@within WebSocket.Shard
+	]=]
 	heartbeatAcknowledged: boolean?,
+
+	--[=[
+		@prop heartbeatClockTime number?
+		@within WebSocket.Shard
+	]=]
 	heartbeatClockTime: number?,
+
+	--[=[
+		@prop heartbeatInterval number?
+		@within WebSocket.Shard
+	]=]
 	heartbeatInterval: number?,
+	
+	--[=[
+		@prop heartbeatThread thread?
+		@within WebSocket.Shard
+	]=]
 	heartbeatThread: thread?,
+	
+	--[=[
+		@prop heartbeatPing number?
+		@within WebSocket.Shard
+	]=]
 	heartbeatPing: number?,
 
+	--[=[
+		@prop lastSequence number?
+		@within WebSocket.Shard
+	]=]
 	lastSequence: number?,
 
+	--[=[
+		@prop logger Logger
+		@within WebSocket.Shard
+	]=]
 	logger: logger.Logger,
 
+	--[=[
+		@prop socketActive boolean
+		@within WebSocket.Shard
+	]=]
 	socketActive: boolean,
+	
+	--[=[
+		@prop socketReconnecting boolean
+		@within WebSocket.Shard
+	]=]
 	socketReconnecting: boolean,
+
+	--[=[
+		@prop socketDisconnecting boolean
+		@within WebSocket.Shard
+	]=]
 	socketDisconnecting: boolean,
+
+	--[=[
+		@prop socketIdentified boolean
+		@within WebSocket.Shard
+	]=]
 	socketIdentified: boolean,
 
+	--[=[
+		@prop sessionId string?
+		@within WebSocket.Shard
+	]=]
 	sessionId: string?,
+	
+	--[=[
+		@prop sessionGateway string?
+		@within WebSocket.Shard
+	]=]
 	sessionGateway: string?,
 
+	--[=[
+		@prop socketVersion number?
+		@within WebSocket.Shard
+	]=]
 	socketVersion: number?,
+
+	--[=[
+		@prop socketUrl string?
+		@within WebSocket.Shard
+	]=]
 	socketUrl: string?,
+	
+	--[=[
+		@prop socketInstance any?
+		@within WebSocket.Shard
+	]=]
 	socketInstance: any?,
+	
+	--[=[
+		@prop socketThread thread?
+		@within WebSocket.Shard
+	]=]
 	socketThread: thread?,
 }
 
