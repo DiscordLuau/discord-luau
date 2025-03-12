@@ -5,15 +5,24 @@ local apiTypes = require("../lune_packages/api_types")
 
 local request = require("./request")
 
---[[
+--[=[
+	@class Rest.application
+
 	HTTP Rest API implementation for the following Resource:
 
 	- https://discord.com/developers/docs/resources/application
-]]
-local Application = {}
+]=]
+local application = {}
 
--- https://discord.com/developers/docs/resources/application#get-current-application
-function Application.getCurrentApplicationAsync(instance: request.Request, applicationId: apiTypes.Snowflake)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/application#get-current-application
+]=]
+function application.getCurrentApplicationAsync(
+	instance: request.Request,
+	applicationId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.GetCurrentApplicationResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -28,12 +37,16 @@ function Application.getCurrentApplicationAsync(instance: request.Request, appli
 	end) :: future.FutureLike<string, apiTypes.GetCurrentApplicationResponse>
 end
 
--- https://discord.com/developers/docs/resources/application#edit-current-application
-function Application.editCurrentApplicationAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/application#edit-current-application
+]=]
+function application.editCurrentApplicationAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	jsonParams: apiTypes.EditCurrentApplicationRequest
-)
+): future.FutureLike<string, apiTypes.EditCurrentApplicationResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -45,4 +58,4 @@ function Application.editCurrentApplicationAsync(
 	end) :: future.FutureLike<string, apiTypes.EditCurrentApplicationResponse>
 end
 
-return Application
+return application
