@@ -66,8 +66,16 @@ end
 
 export type Store<K, V> = { [K]: V }
 export type Cache<K, V> = typeof(Cache.Prototype) & {
+	--[=[
+		@prop store { [K]: V }
+		@within State.Cache
+	]=]
 	store: Store<K, V>,
 
+	--[=[
+		@prop expiry number
+		@within State.Cache
+	]=]
 	expiry: number,
 }
 
