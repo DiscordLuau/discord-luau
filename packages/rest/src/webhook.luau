@@ -5,20 +5,26 @@ local apiTypes = require("../lune_packages/api_types")
 
 local request = require("./request")
 
---[[
+--[=[
+	@class Rest.webhook
+
 	HTTP Rest API implementation for the following Resource:
 
 	- https://discord.com/developers/docs/resources/webhook
-]]
-local Webhook = {}
+]=]
+local webhook = {}
 
--- https://discord.com/developers/docs/resources/webhook#create-webhook
-function Webhook.createWebhookAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/webhook#create-webhook
+]=]
+function webhook.createWebhookAsync(
 	instance: request.Request,
 	channelId: apiTypes.Snowflake,
 	jsonParams: apiTypes.CreateWebhookRequest,
 	auditLogReason: string?
-)
+): future.FutureLike<string, apiTypes.CreateWebhookResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -32,11 +38,18 @@ function Webhook.createWebhookAsync(
 		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
-	end) :: future.FutureLike<string, apiTypes.CreateWebhookResponse>
+	end) :: any
 end
 
--- https://discord.com/developers/docs/resources/webhook#get-channel-webhooks
-function Webhook.getChannelWebhooksAsync(instance: request.Request, channelId: apiTypes.Snowflake)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/webhook#get-channel-webhooks
+]=]
+function webhook.getChannelWebhooksAsync(
+	instance: request.Request,
+	channelId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.GetChannelWebhooksResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -48,11 +61,18 @@ function Webhook.getChannelWebhooksAsync(instance: request.Request, channelId: a
 		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
-	end) :: future.FutureLike<string, apiTypes.GetChannelWebhooksResponse>
+	end) :: any
 end
 
--- https://discord.com/developers/docs/resources/webhook#get-guild-webhooks
-function Webhook.getGuildWebhooksAsync(instance: request.Request, guildId: apiTypes.Snowflake)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/webhook#get-guild-webhooks
+]=]
+function webhook.getGuildWebhooksAsync(
+	instance: request.Request,
+	guildId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.GetGuildWebhooksResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -64,11 +84,18 @@ function Webhook.getGuildWebhooksAsync(instance: request.Request, guildId: apiTy
 		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
-	end) :: future.FutureLike<string, apiTypes.GetGuildWebhooksResponse>
+	end) :: any
 end
 
--- https://discord.com/developers/docs/resources/webhook#get-webhook
-function Webhook.getWebhookAsync(instance: request.Request, webhookId: apiTypes.Snowflake)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/webhook#get-webhook
+]=]
+function webhook.getWebhookAsync(
+	instance: request.Request,
+	webhookId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.GetWebhookResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -80,15 +107,19 @@ function Webhook.getWebhookAsync(instance: request.Request, webhookId: apiTypes.
 		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
-	end) :: future.FutureLike<string, apiTypes.GetWebhookResponse>
+	end) :: any
 end
 
--- https://discord.com/developers/docs/resources/webhook#get-webhook-with-token
-function Webhook.getWebhookWithTokenAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/webhook#get-webhook-with-token
+]=]
+function webhook.getWebhookWithTokenAsync(
 	instance: request.Request,
 	webhookId: apiTypes.Snowflake,
 	webhookToken: string
-)
+): future.FutureLike<string, apiTypes.GetWebhookWithTokenResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -100,16 +131,20 @@ function Webhook.getWebhookWithTokenAsync(
 		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
-	end) :: future.FutureLike<string, apiTypes.GetWebhookWithTokenResponse>
+	end) :: any
 end
 
--- https://discord.com/developers/docs/resources/webhook#modify-webhook
-function Webhook.modifyWebhookAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/webhook#modify-webhook
+]=]
+function webhook.modifyWebhookAsync(
 	instance: request.Request,
 	webhookId: apiTypes.Snowflake,
 	jsonParams: apiTypes.ModifyWebhookRequest,
 	auditLogReason: string?
-)
+): future.FutureLike<string, apiTypes.ModifyWebhookResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -123,17 +158,21 @@ function Webhook.modifyWebhookAsync(
 		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
-	end) :: future.FutureLike<string, apiTypes.ModifyWebhookResponse>
+	end) :: any
 end
 
--- https://discord.com/developers/docs/resources/webhook#modify-webhook-with-token
-function Webhook.modifyWebhookWithTokenAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/webhook#modify-webhook-with-token
+]=]
+function webhook.modifyWebhookWithTokenAsync(
 	instance: request.Request,
 	webhookId: apiTypes.Snowflake,
 	webhookToken: string,
 	jsonParams: apiTypes.ModifyWebhookRequest,
 	auditLogReason: string?
-)
+): future.FutureLike<string, apiTypes.ModifyWebhookWithTokenResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -147,11 +186,19 @@ function Webhook.modifyWebhookWithTokenAsync(
 		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
-	end) :: future.FutureLike<string, apiTypes.ModifyWebhookWithTokenResponse>
+	end) :: any
 end
 
--- https://discord.com/developers/docs/resources/webhook#delete-webhook
-function Webhook.deleteWebhookAsync(instance: request.Request, webhookId: apiTypes.Snowflake, auditLogReason: string?)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/webhook#delete-webhook
+]=]
+function webhook.deleteWebhookAsync(
+	instance: request.Request,
+	webhookId: apiTypes.Snowflake,
+	auditLogReason: string?
+): future.FutureLike<string, apiTypes.DeleteWebhookResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -164,16 +211,20 @@ function Webhook.deleteWebhookAsync(instance: request.Request, webhookId: apiTyp
 		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
-	end) :: future.FutureLike<string, apiTypes.DeleteWebhookResponse>
+	end) :: any
 end
 
--- https://discord.com/developers/docs/resources/webhook#delete-webhook-with-token
-function Webhook.deleteWebhookWithTokenAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/webhook#delete-webhook-with-token
+]=]
+function webhook.deleteWebhookWithTokenAsync(
 	instance: request.Request,
 	webhookId: apiTypes.Snowflake,
 	webhookToken: string,
 	auditLogReason: string?
-)
+): future.FutureLike<string, apiTypes.DeleteWebhookWitHTokenResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -186,11 +237,15 @@ function Webhook.deleteWebhookWithTokenAsync(
 		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
-	end) :: future.FutureLike<string, apiTypes.DeleteWebhookWitHTokenResponse>
+	end) :: any
 end
 
--- https://discord.com/developers/docs/resources/webhook#execute-webhook
-function Webhook.executeWebhookAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/webhook#execute-webhook
+]=]
+function webhook.executeWebhookAsync(
 	instance: request.Request,
 	webhookId: apiTypes.Snowflake,
 	webhookToken: string,
@@ -199,7 +254,7 @@ function Webhook.executeWebhookAsync(
 		wait: boolean?,
 		threadId: apiTypes.Snowflake?,
 	}
-)
+): future.FutureLike<string, apiTypes.ExecuteWebhookResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -215,11 +270,15 @@ function Webhook.executeWebhookAsync(
 		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
-	end) :: future.FutureLike<string, apiTypes.ExecuteWebhookResponse>
+	end) :: any
 end
 
--- https://discord.com/developers/docs/resources/webhook#get-webhook-message
-function Webhook.getWebhookMessageAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/webhook#get-webhook-message
+]=]
+function webhook.getWebhookMessageAsync(
 	instance: request.Request,
 	webhookId: apiTypes.Snowflake,
 	webhookToken: string,
@@ -227,7 +286,7 @@ function Webhook.getWebhookMessageAsync(
 	urlParams: {
 		threadId: apiTypes.Snowflake?,
 	}
-)
+): future.FutureLike<string, apiTypes.GetWebhookMessageResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -241,11 +300,15 @@ function Webhook.getWebhookMessageAsync(
 		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
-	end) :: future.FutureLike<string, apiTypes.GetWebhookMessageResponse>
+	end) :: any
 end
 
--- https://discord.com/developers/docs/resources/webhook#edit-webhook-message
-function Webhook.editWebhookMessageAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/webhook#edit-webhook-message
+]=]
+function webhook.editWebhookMessageAsync(
 	instance: request.Request,
 	webhookId: apiTypes.Snowflake,
 	webhookToken: string,
@@ -254,7 +317,7 @@ function Webhook.editWebhookMessageAsync(
 	urlParams: {
 		threadId: apiTypes.Snowflake?,
 	}
-)
+): future.FutureLike<string, apiTypes.EditWebhookMessageResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -269,11 +332,15 @@ function Webhook.editWebhookMessageAsync(
 		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
-	end) :: future.FutureLike<string, apiTypes.EditWebhookMessageResponse>
+	end) :: any
 end
 
--- https://discord.com/developers/docs/resources/webhook#delete-webhook-message
-function Webhook.deleteWebhookMessageAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/webhook#delete-webhook-message
+]=]
+function webhook.deleteWebhookMessageAsync(
 	instance: request.Request,
 	webhookId: apiTypes.Snowflake,
 	webhookToken: string,
@@ -281,7 +348,7 @@ function Webhook.deleteWebhookMessageAsync(
 	urlParams: {
 		threadId: apiTypes.Snowflake?,
 	}
-)
+): future.FutureLike<string, apiTypes.DeleteWebhookMessageResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -295,7 +362,7 @@ function Webhook.deleteWebhookMessageAsync(
 		assert(response:isOk(), tostring(response:unwrapErr()))
 
 		return response:unwrapOk().body
-	end) :: future.FutureLike<string, apiTypes.DeleteWebhookMessageResponse>
+	end) :: any
 end
 
-return Webhook
+return webhook
