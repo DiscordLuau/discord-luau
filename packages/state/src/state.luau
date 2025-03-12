@@ -89,15 +89,50 @@ function State.Interface.new(settings: {
 end
 
 export type State = typeof(State.Prototype) & {
+	--[=[
+		@prop token Secret
+		@within State.State
+	]=]
 	token: secret.Secret<string>,
+
+	--[=[
+		@prop applicationId string
+		@within State.State
+	]=]
 	applicationId: apiTypes.Snowflake,
 
+	--[=[
+		@prop rest State.Rest
+		@within State.State
+	]=]
 	rest: rest.REST,
+
+	--[=[
+		@prop webSocketManager WebSocket.Manager
+		@within State.State
+	]=]
 	webSocketManager: websocket.Manager,
 
+	--[=[
+		@prop intents number
+		@within State.State
+	]=]
 	intents: number,
+
+	--[=[
+		@prop version number
+		@within State.State
+	]=]
 	version: number,
 
+	--[=[
+		@interface cache
+		@within State.State
+			.guilds Cache<apiTypes.Snowflake, apiTypes.GuildObject>
+			.users Cache<apiTypes.Snowflake, apiTypes.UserObject>
+			.channels Cache<apiTypes.Snowflake, apiTypes.ChannelObject>
+			.roles Cache<apiTypes.Snowflake, apiTypes.GuildRoleObject>
+	]=]
 	cache: {
 		guilds: cache.Cache<apiTypes.Snowflake, apiTypes.GuildObject>,
 		users: cache.Cache<apiTypes.Snowflake, apiTypes.UserObject>,
