@@ -455,8 +455,6 @@ end
 --[=[
 	@within DiscordLuau.Bot
 
-	@within DiscordLuau.Bot
-
 	Returns a directory channel object for the given channel ID.
 
 	This function sends a request to the Discord API to retrieve information about a directory channel.
@@ -473,8 +471,6 @@ function Bot.Prototype.getDirectoryChannelAsync(
 end
 
 --[=[
-	@within DiscordLuau.Bot
-
 	@within DiscordLuau.Bot
 
 	Returns a stage voice channel object for the given channel ID.
