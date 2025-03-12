@@ -3,21 +3,30 @@ local apiTypes = require("../lune_packages/api_types")
 
 local request = require("./request")
 
---[[
+--[=[
+	@class Rest.commands
+
 	HTTP Rest API implementation for the following Resource:
 
 	- https://discord.com/developers/docs/interactions/application-commands
-]]
-local Commands = {}
+]=]
+local commands = {}
 
--- https://discord.com/developers/docs/interactions/application-commands#get-global-application-commands
-function Commands.getGlobalApplicationCommandsAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/interactions/application-commands#get-global-application-commands
+]=]
+function commands.getGlobalApplicationCommandsAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	urlParams: {
 		withLocalizations: boolean?,
 	}
-)
+): future.FutureLike<
+	string,
+	apiTypes.GetGlobalApplicationCommandsResponse
+>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -34,12 +43,19 @@ function Commands.getGlobalApplicationCommandsAsync(
 	end) :: future.FutureLike<string, apiTypes.GetGlobalApplicationCommandsResponse>
 end
 
--- https://discord.com/developers/docs/interactions/application-commands#create-global-application-command
-function Commands.createGlobalApplicationCommandAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/interactions/application-commands#create-global-application-command
+]=]
+function commands.createGlobalApplicationCommandAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	jsonParams: apiTypes.CreateGlobalApplicationCommandRequest
-)
+): future.FutureLike<
+	string,
+	apiTypes.CreateGlobalApplicationCommandResponse
+>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -55,12 +71,19 @@ function Commands.createGlobalApplicationCommandAsync(
 	end) :: future.FutureLike<string, apiTypes.CreateGlobalApplicationCommandResponse>
 end
 
--- https://discord.com/developers/docs/interactions/application-commands#get-global-application-command
-function Commands.getGlobalApplicationCommandAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/interactions/application-commands#get-global-application-command
+]=]
+function commands.getGlobalApplicationCommandAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	commandId: apiTypes.Snowflake
-)
+): future.FutureLike<
+	string,
+	apiTypes.GetGlobalApplicationCommandResponse
+>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -75,13 +98,20 @@ function Commands.getGlobalApplicationCommandAsync(
 	end) :: future.FutureLike<string, apiTypes.GetGlobalApplicationCommandResponse>
 end
 
--- https://discord.com/developers/docs/interactions/application-commands#edit-global-application-command
-function Commands.editGlobalApplicationCommandAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/interactions/application-commands#edit-global-application-command
+]=]
+function commands.editGlobalApplicationCommandAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	commandId: apiTypes.Snowflake,
 	jsonParams: apiTypes.EditGlobalApplicationCommandRequest
-)
+): future.FutureLike<
+	string,
+	apiTypes.EditGlobalApplicationCommandResponse
+>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -97,12 +127,19 @@ function Commands.editGlobalApplicationCommandAsync(
 	end) :: future.FutureLike<string, apiTypes.EditGlobalApplicationCommandResponse>
 end
 
--- https://discord.com/developers/docs/interactions/application-commands#delete-global-application-command
-function Commands.deleteGlobalApplicationCommandAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/interactions/application-commands#delete-global-application-command
+]=]
+function commands.deleteGlobalApplicationCommandAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	commandId: apiTypes.Snowflake
-)
+): future.FutureLike<
+	string,
+	apiTypes.DeleteGlobalApplicationCommandResponse
+>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -117,12 +154,19 @@ function Commands.deleteGlobalApplicationCommandAsync(
 	end) :: future.FutureLike<string, apiTypes.DeleteGlobalApplicationCommandResponse>
 end
 
--- https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-global-application-commands
-function Commands.bulkOverwriteGlobalApplicationCommandsAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-global-application-commands
+]=]
+function commands.bulkOverwriteGlobalApplicationCommandsAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	jsonParams: apiTypes.BulkOverwriteGlobalApplicationCommandsRequest
-)
+): future.FutureLike<
+	string,
+	apiTypes.BulkOverwriteGlobalApplicationCommandsResponse
+>
 	return future.Future.new(
 			function()
 				instance:assertToken()
@@ -142,15 +186,22 @@ function Commands.bulkOverwriteGlobalApplicationCommandsAsync(
 		) :: future.FutureLike<string, apiTypes.BulkOverwriteGlobalApplicationCommandsResponse>
 end
 
--- https://discord.com/developers/docs/interactions/application-commands#get-guild-application-commands
-function Commands.getGuildApplicationCommandsAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/interactions/application-commands#get-guild-application-commands
+]=]
+function commands.getGuildApplicationCommandsAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	guildId: apiTypes.Snowflake,
 	urlParams: {
 		withLocalizations: boolean?,
 	}
-)
+): future.FutureLike<
+	string,
+	apiTypes.GetGuildApplicationCommandsResponse
+>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -167,13 +218,20 @@ function Commands.getGuildApplicationCommandsAsync(
 	end) :: future.FutureLike<string, apiTypes.GetGuildApplicationCommandsResponse>
 end
 
--- https://discord.com/developers/docs/interactions/application-commands#create-guild-application-command
-function Commands.createGuildApplicationCommandAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/interactions/application-commands#create-guild-application-command
+]=]
+function commands.createGuildApplicationCommandAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	guildId: apiTypes.Snowflake,
 	jsonParams: apiTypes.CreateGuildApplicationCommandRequest
-)
+): future.FutureLike<
+	string,
+	apiTypes.CreateGuildApplicationCommandResponse
+>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -189,13 +247,20 @@ function Commands.createGuildApplicationCommandAsync(
 	end) :: future.FutureLike<string, apiTypes.CreateGuildApplicationCommandResponse>
 end
 
--- https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command
-function Commands.getGuildApplicationCommandAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command
+]=]
+function commands.getGuildApplicationCommandAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	guildId: apiTypes.Snowflake,
 	commandId: apiTypes.Snowflake
-)
+): future.FutureLike<
+	string,
+	apiTypes.GetGuildApplicationCommandResponse
+>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -212,14 +277,21 @@ function Commands.getGuildApplicationCommandAsync(
 	end) :: future.FutureLike<string, apiTypes.GetGuildApplicationCommandResponse>
 end
 
--- https://discord.com/developers/docs/interactions/application-commands#edit-guild-application-command
-function Commands.editGuildApplicationCommandAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/interactions/application-commands#edit-guild-application-command
+]=]
+function commands.editGuildApplicationCommandAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	guildId: apiTypes.Snowflake,
 	commandId: apiTypes.Snowflake,
 	jsonParams: apiTypes.EditGuildApplicationCommandRequest
-)
+): future.FutureLike<
+	string,
+	apiTypes.EditGuildApplicationCommandResponse
+>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -237,13 +309,20 @@ function Commands.editGuildApplicationCommandAsync(
 	end) :: future.FutureLike<string, apiTypes.EditGuildApplicationCommandResponse>
 end
 
--- https://discord.com/developers/docs/interactions/application-commands#delete-guild-application-command
-function Commands.deleteGuildApplicationCommandAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/interactions/application-commands#delete-guild-application-command
+]=]
+function commands.deleteGuildApplicationCommandAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	guildId: apiTypes.Snowflake,
 	commandId: apiTypes.Snowflake
-)
+): future.FutureLike<
+	string,
+	apiTypes.DeleteGuildApplicationCommandResponse
+>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -260,13 +339,20 @@ function Commands.deleteGuildApplicationCommandAsync(
 	end) :: future.FutureLike<string, apiTypes.DeleteGuildApplicationCommandResponse>
 end
 
--- https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-guild-application-commands
-function Commands.bulkOverwriteGuildApplicationCommandsAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-guild-application-commands
+]=]
+function commands.bulkOverwriteGuildApplicationCommandsAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	guildId: apiTypes.Snowflake,
 	jsonParams: apiTypes.BulkOverwriteGuildApplicationCommandsRequest
-)
+): future.FutureLike<
+	string,
+	apiTypes.BulkOverwriteGlobalApplicationCommandsResponse
+>
 	return future.Future.new(
 			function()
 				instance:assertToken()
@@ -286,12 +372,19 @@ function Commands.bulkOverwriteGuildApplicationCommandsAsync(
 		) :: future.FutureLike<string, apiTypes.BulkOverwriteGlobalApplicationCommandsResponse>
 end
 
--- https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command-permissions
-function Commands.getGuildApplicationCommandPermissionsAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command-permissions
+]=]
+function commands.getGuildApplicationCommandPermissionsAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	guildId: apiTypes.Snowflake
-)
+): future.FutureLike<
+	string,
+	apiTypes.GetGuildApplicationCommandPermissionsResponse
+>
 	return future.Future.new(
 			function()
 				instance:assertToken()
@@ -310,13 +403,20 @@ function Commands.getGuildApplicationCommandPermissionsAsync(
 		) :: future.FutureLike<string, apiTypes.GetGuildApplicationCommandPermissionsResponse>
 end
 
--- https://discord.com/developers/docs/interactions/application-commands#get-application-command-permissions
-function Commands.getApplicationCommandPermissionsAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/interactions/application-commands#get-application-command-permissions
+]=]
+function commands.getApplicationCommandPermissionsAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	guildId: apiTypes.Snowflake,
 	commandId: apiTypes.Snowflake
-)
+): future.FutureLike<
+	string,
+	apiTypes.GetApplicationCommandPermissionsResponse
+>
 	return future.Future.new(
 			function()
 				instance:assertToken()
@@ -340,14 +440,21 @@ function Commands.getApplicationCommandPermissionsAsync(
 		) :: future.FutureLike<string, apiTypes.GetApplicationCommandPermissionsResponse>
 end
 
--- https://discord.com/developers/docs/interactions/application-commands#edit-application-command-permissions
-function Commands.editApplicationCommandPermissionsAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/interactions/application-commands#edit-application-command-permissions
+]=]
+function commands.editApplicationCommandPermissionsAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	guildId: apiTypes.Snowflake,
 	commandId: apiTypes.Snowflake,
 	jsonParams: apiTypes.EditApplicationCommandPermissionsRequest
-)
+): future.FutureLike<
+	string,
+	apiTypes.EditApplicationCommandPermissionsResponse
+>
 	return future.Future.new(
 			function()
 				instance:assertToken()
@@ -372,4 +479,4 @@ function Commands.editApplicationCommandPermissionsAsync(
 		) :: future.FutureLike<string, apiTypes.EditApplicationCommandPermissionsResponse>
 end
 
-return Commands
+return commands
