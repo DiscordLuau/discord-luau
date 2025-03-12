@@ -215,28 +215,98 @@ export type ShardId = number
 export type ShardPayload<DATA> = { shardId: number } & DATA
 
 export type Manager = typeof(Manager.Prototype) & {
+	--[=[
+		@prop token Secret 
+		@within WebSocket.Manager
+	]=]
 	token: secret.Secret<string>,
+
+	--[=[
+		@prop intents number
+		@within WebSocket.Manager
+	]=]
 	intents: number,
+
+	--[=[
+		@prop webSocketVersion number
+		@within WebSocket.Manager
+	]=]
 	webSocketVersion: number,
+
+	--[=[
+		@prop largeThreshold number?
+		@within WebSocket.Manager
+	]=]
 	largeThreshold: number?,
+
+	--[=[
+		@prop shouldReconnect boolean
+		@within WebSocket.Manager
+	]=]
 	shouldReconnect: boolean,
+
+	--[=[
+		@prop ready boolean
+		@within WebSocket.Manager
+	]=]
 	ready: boolean,
 
+	--[=[
+		@prop shardIds { ShardId }
+		@within WebSocket.Manager
+	]=]
 	shardIds: { ShardId },
+
+	--[=[
+		@prop shards { [ShardId]: WebSocket.Shard }
+		@within WebSocket.Manager
+	]=]
 	shards: { [ShardId]: shard.Shard },
 
+	--[=[
+		@prop logger Logger.Logger
+		@within WebSocket.Manager
+	]=]
 	logger: logger.Logger,
 
+	--[=[
+		@prop onDisconnected Emitter<ShardPayload<{ errorCode: number? }>>
+		@within WebSocket.Manager
+	]=]
 	onDisconnected: emitter.Emitter<ShardPayload<{ errorCode: number? }>>,
+
+	--[=[
+		@prop onDisconnected Emitter<ShardPayload<{}>>,
+		@within WebSocket.Manager
+	]=]
 	onReconnected: emitter.Emitter<ShardPayload<{}>>,
+	
+	--[=[
+		@prop onDisconnected Emitter<ShardPayload<{}>>,
+		@within WebSocket.Manager
+	]=]
 	onConnected: emitter.Emitter<ShardPayload<{}>>,
+	
+	--[=[
+		@prop onDisconnected Emitter<ShardPayload<{ latency: number }>>,
+		@within WebSocket.Manager
+	]=]
 	onHeartbeat: emitter.Emitter<ShardPayload<{ latency: number }>>,
+	
+	--[=[
+		@prop onDisconnected Emitter<ShardPayload<{ shardId: number, event: apiTypes.ReceiveEvent, payload: apiTypes.Payload<unknown> }>>
+		@within WebSocket.Manager
+	]=]
 	onDispatch: emitter.Emitter<ShardPayload<{
 		shardId: number,
 		event: apiTypes.ReceiveEvent,
 		payload: apiTypes.Payload<unknown>,
 	}>>,
 
+	--[=[
+		@prop onDisconnected Emitter<ShardPayload<{ shardId: number, payload: apiTypes.ReadyPayload }>>
+		@within WebSocket.Manager
+	]=]
 	onAllShardsReady: emitter.Emitter<ShardPayload<{
 		shardId: number,
 		payload: apiTypes.ReadyPayload,
