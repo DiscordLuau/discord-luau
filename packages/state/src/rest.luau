@@ -258,6 +258,11 @@ function REST.Prototype.newRequest(self: REST): rest.Request
 	return newRequest
 end
 
+--[=[
+	@within State.Rest
+
+	Will create a new REST object
+]=]
 function REST.Interface.new(settings: {
 	token: secret.Secret<string>,
 	intents: number,
@@ -294,15 +299,64 @@ export type Attachment = {
 export type Bucket = string
 export type Ratelimit = { remaining: number, limit: number, resetAfter: number, cooloff: boolean? }
 export type REST = typeof(REST.Prototype) & {
+	--[=[
+		@prop token Secret
+		@within State.Rest
+	]=]
 	token: secret.Secret<string>,
+
+	--[=[
+		@prop logger Logger
+		@within State.Rest
+	]=]
 	logger: logger.Logger,
+
+	--[=[
+		@prop routeRatelimits { [string]: { remaining: number, limit: number, resetAfter: number, cooloff: boolean? } }
+		@within State.Rest
+	]=]
 	routeRatelimits: { [Bucket]: Ratelimit },
+
+	--[=[
+		@prop routeBuckets { [string]: string? }
+		@within State.Rest
+	]=]
 	routeBuckets: { [string]: Bucket? },
+
+	--[=[
+		@prop globalRequestCount number
+		@within State.Rest
+	]=]
 	globalRequestCount: number,
+
+	--[=[
+		@prop globalRatelimit number
+		@within State.Rest
+	]=]
 	globalRatelimit: number,
+
+	--[=[
+		@prop isBlocked boolean
+		@within State.Rest
+	]=]
 	isBlocked: boolean,
+
+	--[=[
+		@prop resourcesBlocked { [string]: boolean? }
+		@within State.Rest
+	]=]
 	resourcesBlocked: { [string]: boolean? },
+
+	--[=[
+		@prop intents number
+		@within State.Rest
+	]=]
 	intents: number,
+
+	--[=[
+		@prop version number
+		@within State.Rest
+	]=]
 	version: number,
 }
 
