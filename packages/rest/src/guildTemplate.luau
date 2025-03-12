@@ -5,15 +5,24 @@ local apiTypes = require("../lune_packages/api_types")
 
 local request = require("./request")
 
---[[
+--[=[
+	@class Rest.guildTemplate
+
 	HTTP Rest API implementation for the following Resource:
 
 	- https://discord.com/developers/docs/resources/guild-template
-]]
-local GuildTemplate = {}
+]=]
+local guildTemplate = {}
 
--- https://discord.com/developers/docs/resources/guild-template#get-guild-template
-function GuildTemplate.getGuildTemplateAsync(instance: request.Request, templateCode: string)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild-template#get-guild-template
+]=]
+function guildTemplate.getGuildTemplateAsync(
+	instance: request.Request,
+	templateCode: string
+): future.FutureLike<string, apiTypes.GetGuildTemplateResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -28,8 +37,12 @@ function GuildTemplate.getGuildTemplateAsync(instance: request.Request, template
 	end) :: future.FutureLike<string, apiTypes.GetGuildTemplateResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild-template#create-guild-from-guild-template
-function GuildTemplate.createGuildFromGuildTemplateAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild-template#create-guild-from-guild-template
+]=]
+function guildTemplate.createGuildFromGuildTemplateAsync(
 	instance: request.Request,
 	templateCode: string,
 	jsonParams: apiTypes.CreateGuildFromGuildTemplateRequest
@@ -52,8 +65,15 @@ function GuildTemplate.createGuildFromGuildTemplateAsync(
 	end) :: future.FutureLike<string, apiTypes.CreateGuildFromGuildTemplateResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild-template#get-guild-templates
-function GuildTemplate.getGuildTemplatesAsync(instance: request.Request, guildId: apiTypes.Snowflake)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild-template#get-guild-templates
+]=]
+function guildTemplate.getGuildTemplatesAsync(
+	instance: request.Request,
+	guildId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.GetGuildTemplatesResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -68,12 +88,16 @@ function GuildTemplate.getGuildTemplatesAsync(instance: request.Request, guildId
 	end) :: future.FutureLike<string, apiTypes.GetGuildTemplatesResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild-template#create-guild-template
-function GuildTemplate.createGuildTemplateAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild-template#create-guild-template
+]=]
+function guildTemplate.createGuildTemplateAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	jsonParams: apiTypes.CreateGuildTemplateRequest
-)
+): future.FutureLike<string, apiTypes.CreateGuildTemplateResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -89,12 +113,16 @@ function GuildTemplate.createGuildTemplateAsync(
 	end) :: future.FutureLike<string, apiTypes.CreateGuildTemplateResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild-template#sync-guild-template
-function GuildTemplate.syncGuildTemplateAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild-template#sync-guild-template
+]=]
+function guildTemplate.syncGuildTemplateAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	templateCode: string
-)
+): future.FutureLike<string, apiTypes.SyncGuildTemplateResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -109,13 +137,17 @@ function GuildTemplate.syncGuildTemplateAsync(
 	end) :: future.FutureLike<string, apiTypes.SyncGuildTemplateResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild-template#modify-guild-template
-function GuildTemplate.modifyGuildTemplateAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild-template#modify-guild-template
+]=]
+function guildTemplate.modifyGuildTemplateAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	templateCode: string,
 	jsonParams: apiTypes.ModifyGuildTemplateRequest
-)
+): future.FutureLike<string, apiTypes.ModifyGuildTemplateResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -131,12 +163,16 @@ function GuildTemplate.modifyGuildTemplateAsync(
 	end) :: future.FutureLike<string, apiTypes.ModifyGuildTemplateResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild-template#delete-guild-template
-function GuildTemplate.deleteGuildTemplateAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild-template#delete-guild-template
+]=]
+function guildTemplate.deleteGuildTemplateAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	templateCode: string
-)
+): future.FutureLike<string, apiTypes.DeleteGuildTemplateResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -151,4 +187,4 @@ function GuildTemplate.deleteGuildTemplateAsync(
 	end) :: future.FutureLike<string, apiTypes.DeleteGuildTemplateResponse>
 end
 
-return GuildTemplate
+return guildTemplate
