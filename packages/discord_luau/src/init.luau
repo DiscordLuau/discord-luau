@@ -1,11 +1,26 @@
 local bot = require("./bot")
 
+--[=[
+	@class DiscordLuau
+
+	Top level documentation for the Discord-Luau library, welcome! 👋
+
+	This package will represent the entrypoint to your adventure using Discord-Luau, through this package you'll generate
+	a discord Bot object, this bot Object enables you to write discord bots for the Discord API.
+
+	```luau
+	local DiscordLuau = require("/path/to/discord-luau") -- this module!
+
+	-- do something with DiscordLuau
+	```
+]=]
 local DiscordLuau = {}
 
-DiscordLuau.Bot = bot
+--[=[
+	@prop bot DiscordLuau.bot
+	@within DiscordLuau
+]=]
+DiscordLuau.bot = bot
 export type Bot = bot.Bot
 
 return DiscordLuau
-
--- tehe, secret egg? The thunder before the storm? Who knows - all I know is that Discord-Luau is going to be super-charged after this..
--- this might take a while.. sorry!
