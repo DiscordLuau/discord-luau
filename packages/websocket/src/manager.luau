@@ -280,19 +280,19 @@ export type Manager = typeof(Manager.Prototype) & {
 		@within WebSocket.Manager
 	]=]
 	onReconnected: emitter.Emitter<ShardPayload<{}>>,
-	
+
 	--[=[
 		@prop onDisconnected Emitter<ShardPayload<{}>>,
 		@within WebSocket.Manager
 	]=]
 	onConnected: emitter.Emitter<ShardPayload<{}>>,
-	
+
 	--[=[
 		@prop onDisconnected Emitter<ShardPayload<{ latency: number }>>,
 		@within WebSocket.Manager
 	]=]
 	onHeartbeat: emitter.Emitter<ShardPayload<{ latency: number }>>,
-	
+
 	--[=[
 		@prop onDisconnected Emitter<ShardPayload<{ shardId: number, event: apiTypes.ReceiveEvent, payload: apiTypes.Payload<unknown> }>>
 		@within WebSocket.Manager

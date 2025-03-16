@@ -797,13 +797,13 @@ export type Shard = typeof(Shard.Prototype) & {
 		@within WebSocket.Shard
 	]=]
 	heartbeatInterval: number?,
-	
+
 	--[=[
 		@prop heartbeatThread thread?
 		@within WebSocket.Shard
 	]=]
 	heartbeatThread: thread?,
-	
+
 	--[=[
 		@prop heartbeatPing number?
 		@within WebSocket.Shard
@@ -827,7 +827,7 @@ export type Shard = typeof(Shard.Prototype) & {
 		@within WebSocket.Shard
 	]=]
 	socketActive: boolean,
-	
+
 	--[=[
 		@prop socketReconnecting boolean
 		@within WebSocket.Shard
@@ -851,7 +851,7 @@ export type Shard = typeof(Shard.Prototype) & {
 		@within WebSocket.Shard
 	]=]
 	sessionId: string?,
-	
+
 	--[=[
 		@prop sessionGateway string?
 		@within WebSocket.Shard
@@ -869,13 +869,13 @@ export type Shard = typeof(Shard.Prototype) & {
 		@within WebSocket.Shard
 	]=]
 	socketUrl: string?,
-	
+
 	--[=[
 		@prop socketInstance any?
 		@within WebSocket.Shard
 	]=]
 	socketInstance: any?,
-	
+
 	--[=[
 		@prop socketThread thread?
 		@within WebSocket.Shard
