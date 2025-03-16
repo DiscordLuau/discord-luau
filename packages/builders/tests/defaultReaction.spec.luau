@@ -1,4 +1,4 @@
-local defaultReaction = require("../src/defaultReaction")
+local defaultReaction = require("../src/default/reaction")
 local frktest = require("../../../lune_packages/frktest")
 
 local DefaultReaction = defaultReaction
