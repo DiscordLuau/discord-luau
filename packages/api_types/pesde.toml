@@ -6,7 +6,7 @@ authors = ["Async Matrix <hi@asyncmatrix.dev>"]
 repository = "https://github.com/DiscordLuau/discord-luau/tree/Master/packages/api_types"
 pesde_version = "0.5.2"
 
-includes = ["src/**/*", "pesde.toml", "LICENSE", "CONTRIBUTING.md"]
+includes = ["bundled.luau", "pesde.toml", "LICENSE", "CONTRIBUTING.md"]
 
 [target]
 environment = "lune"
