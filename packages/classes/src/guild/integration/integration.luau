@@ -1,8 +1,11 @@
---[[
+--[=[
+	@class Classes.Integration
+	@__index Prototype
+
 	Implementation of the Discord Integration class in Luau
 
 	https://discord.com/developers/docs/resources/integration#integration-object
-]]
+]=]
 
 local apiTypes = require("../../../lune_packages/api_types")
 local state = require("../../../lune_packages/state")
@@ -20,10 +23,11 @@ local Integration = {}
 Integration.Interface = {}
 Integration.Prototype = {}
 
---[[
+--[=[
+	@within Classes.Integration
 	Delete the attached integration object for the guild. Deletes any associated webhooks and kicks the associated bot
 	if there is one. Requires the MANAGE_GUILD permission.
-]]
+]=]
 function Integration.Prototype.deleteAsync(self: Integration, reason: string?)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
@@ -38,25 +42,128 @@ function Integration.Prototype.deleteAsync(self: Integration, reason: string?)
 	end) :: future.FutureLike<string, nil>
 end
 
+--[=[
+	@within Classes.Integration
+	@private
+]=]
 function Integration.Prototype.sync(self: Integration, integrationData: apiTypes.IntegrationObject)
+	--[=[
+		@prop id string
+		@within Classes.Integration
+		The integration's id
+	]=]
 	self.id = integrationData.id
+
+	--[=[
+		@prop name string
+		@within Classes.Integration
+		The integration's name
+	]=]
 	self.name = integrationData.name
+
+	--[=[
+		@prop type apiTypes.IntegrationType
+		@within Classes.Integration
+		Integration type (twitch, youtube, discord, or guild_subscription)
+	]=]
 	self.type = apiTypes.guild.IntegrationType[integrationData.type]
+
+	--[=[
+		@prop enabled boolean
+		@within Classes.Integration
+		Whether this integration is enabled
+	]=]
 	self.enabled = integrationData.enabled
+
+	--[=[
+		@prop syncing boolean?
+		@within Classes.Integration
+		Whether this integration is syncing
+	]=]
 	self.syncing = integrationData.syncing
+
+	--[=[
+		@prop roleId string?
+		@within Classes.Integration
+		ID that this integration uses for "subscribers"
+	]=]
 	self.roleId = integrationData.role_id
+
+	--[=[
+		@prop enableEmoticons boolean?
+		@within Classes.Integration
+		Whether emoticons should be synced for this integration
+	]=]
 	self.enableEmoticons = integrationData.enable_emoticons
+
+	--[=[
+		@prop expireBehavior apiTypes.IntegrationExpireBehaviour
+		@within Classes.Integration
+		The behavior of expiring subscribers
+	]=]
 	self.expireBehavior = apiTypes.guild.IntegrationExpireBehaviour[integrationData.expire_behaviour]
+
+	--[=[
+		@prop expireGracePeriod number?
+		@within Classes.Integration
+		The grace period (in days) before expiring subscribers
+	]=]
 	self.expireGracePeriod = integrationData.expire_grace_period
+
+	--[=[
+		@prop user Classes.User?
+		@within Classes.Integration
+		User for this integration
+	]=]
 	self.user = integrationData.user and user.new(integrationData.user)
+
+	--[=[
+		@prop account Classes.Account
+		@within Classes.Integration
+		Integration account information
+	]=]
 	self.account = integrationData.account and account.new(integrationData.account)
+
+	--[=[
+		@prop syncedAt stdPolyfills.DateTime?
+		@within Classes.Integration
+		When this integration was last synced
+	]=]
 	self.syncedAt = integrationData.synced_at and stdPolyfills.datetime.fromIsoDate(integrationData.synced_at)
+
+	--[=[
+		@prop subscriberCount number?
+		@within Classes.Integration
+		How many subscribers this integration has
+	]=]
 	self.subscriberCount = integrationData.subscriber_count
+
+	--[=[
+		@prop revoked boolean?
+		@within Classes.Integration
+		Whether this integration has been revoked
+	]=]
 	self.revoked = integrationData.revoked
+
+	--[=[
+		@prop application Classes.Application?
+		@within Classes.Integration
+		The bot/OAuth2 application for discord integrations
+	]=]
 	self.application = integrationData.application and application.new(integrationData.application)
+
+	--[=[
+		@prop scopes { apiTypes.OAuth2Scopes }?
+		@within Classes.Integration
+		The scopes the application has been authorized for
+	]=]
 	self.scopes = integrationData.scopes
 end
 
+--[=[
+	@within Classes.Integration
+	@private
+]=]
 function Integration.Interface.new(
 	state: state.State,
 	guildId: apiTypes.Snowflake?,
