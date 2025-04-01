@@ -1,11 +1,11 @@
 --[=[
-	@class Classes.Interaction
+	@class Classes.InteractionBehaviour
 	@__index Prototype
 
 	Represents a Discord Interaction object that implements the Discord Interaction class in Luau.
 	This class serves as the base for all interaction types in Discord.
 
-	@see https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object
+	 https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object
 ]=]
 
 local apiTypes = require("../../../lune_packages/api_types")
@@ -25,7 +25,7 @@ Interaction.Interface = {}
 Interaction.Prototype = {}
 
 --[=[
-	@within Classes.Interaction
+	@within Classes.InteractionBehaviour
 	@private
 
 	Responsible for inheriting properties from the interaction data to the class instance.
@@ -49,7 +49,7 @@ function Interaction.Interface.inheritProperties(class: any, interactionData: ap
 
 	--[=[
 		@prop type string
-		@within Classes.Interaction
+		@within Classes.InteractionBehaviour
 		
 		The type of interaction. This can be one of the following values:
 		- "PING"
@@ -62,7 +62,7 @@ function Interaction.Interface.inheritProperties(class: any, interactionData: ap
 
 	--[=[
 		@prop context string
-		@within Classes.Interaction
+		@within Classes.InteractionBehaviour
 		
 		The context type of the interaction. This can be one of the following values:
 		- "GUILD"
@@ -73,7 +73,7 @@ function Interaction.Interface.inheritProperties(class: any, interactionData: ap
 
 	--[=[
 		@prop id string
-		@within Classes.Interaction
+		@within Classes.InteractionBehaviour
 		
 		The unique identifier for the interaction.
 	]=]
@@ -81,15 +81,15 @@ function Interaction.Interface.inheritProperties(class: any, interactionData: ap
 
 	--[=[
 		@prop applicationId string
-		@within Classes.Interaction
+		@within Classes.InteractionBehaviour
 		
 		The ID of the application this interaction is for.
 	]=]
 	class.applicationId = interactionData.application_id
 
 	--[=[
-		@prop data Classes.InteractionData?
-		@within Classes.Interaction
+		@prop data Classes.InteractionBehaviourData?
+		@within Classes.InteractionBehaviour
 		
 		The data associated with the interaction. The structure of this data varies based on the interaction type.
 	]=]
@@ -97,7 +97,7 @@ function Interaction.Interface.inheritProperties(class: any, interactionData: ap
 
 	--[=[
 		@prop guild Classes.UnavailableGuild?
-		@within Classes.Interaction
+		@within Classes.InteractionBehaviour
 		
 		The guild where the interaction was triggered. This is only present for guild interactions.
 	]=]
@@ -105,7 +105,7 @@ function Interaction.Interface.inheritProperties(class: any, interactionData: ap
 
 	--[=[
 		@prop guildId string?
-		@within Classes.Interaction
+		@within Classes.InteractionBehaviour
 		
 		The ID of the guild where the interaction was triggered. This is only present for guild interactions.
 	]=]
@@ -113,7 +113,7 @@ function Interaction.Interface.inheritProperties(class: any, interactionData: ap
 
 	--[=[
 		@prop channelId string?
-		@within Classes.Interaction
+		@within Classes.InteractionBehaviour
 		
 		The ID of the channel where the interaction was triggered.
 	]=]
@@ -121,7 +121,7 @@ function Interaction.Interface.inheritProperties(class: any, interactionData: ap
 
 	--[=[
 		@prop member Classes.Member?
-		@within Classes.Interaction
+		@within Classes.InteractionBehaviour
 		
 		The member who triggered the interaction. This is only present for guild interactions.
 	]=]
@@ -130,7 +130,7 @@ function Interaction.Interface.inheritProperties(class: any, interactionData: ap
 
 	--[=[
 		@prop user Classes.User?
-		@within Classes.Interaction
+		@within Classes.InteractionBehaviour
 		
 		The user who triggered the interaction.
 	]=]
@@ -138,7 +138,7 @@ function Interaction.Interface.inheritProperties(class: any, interactionData: ap
 
 	--[=[
 		@prop token string
-		@within Classes.Interaction
+		@within Classes.InteractionBehaviour
 		
 		The token used for responding to the interaction.
 	]=]
@@ -146,7 +146,7 @@ function Interaction.Interface.inheritProperties(class: any, interactionData: ap
 
 	--[=[
 		@prop version number
-		@within Classes.Interaction
+		@within Classes.InteractionBehaviour
 		
 		The version of the interaction.
 	]=]
@@ -154,7 +154,7 @@ function Interaction.Interface.inheritProperties(class: any, interactionData: ap
 
 	--[=[
 		@prop message Classes.Message?
-		@within Classes.Interaction
+		@within Classes.InteractionBehaviour
 		
 		The message that triggered the interaction. This is only present for message component interactions.
 	]=]
@@ -162,7 +162,7 @@ function Interaction.Interface.inheritProperties(class: any, interactionData: ap
 
 	--[=[
 		@prop appPermissions Classes.Permission
-		@within Classes.Interaction
+		@within Classes.InteractionBehaviour
 		
 		The permissions the application has in the channel where the interaction was triggered.
 	]=]
@@ -170,7 +170,7 @@ function Interaction.Interface.inheritProperties(class: any, interactionData: ap
 
 	--[=[
 		@prop locale string?
-		@within Classes.Interaction
+		@within Classes.InteractionBehaviour
 		
 		The selected language of the user who triggered the interaction.
 	]=]
@@ -178,7 +178,7 @@ function Interaction.Interface.inheritProperties(class: any, interactionData: ap
 
 	--[=[
 		@prop guildLocale string?
-		@within Classes.Interaction
+		@within Classes.InteractionBehaviour
 		
 		The guild's preferred locale, if the interaction was triggered in a guild.
 	]=]
@@ -186,7 +186,7 @@ function Interaction.Interface.inheritProperties(class: any, interactionData: ap
 
 	--[=[
 		@prop entitlements {Classes.Entitlement}
-		@within Classes.Interaction
+		@within Classes.InteractionBehaviour
 		
 		The entitlements for the user who triggered the interaction.
 	]=]
@@ -194,7 +194,7 @@ function Interaction.Interface.inheritProperties(class: any, interactionData: ap
 
 	--[=[
 		@prop authorizingIntegrationOwners {[string]: string}
-		@within Classes.Interaction
+		@within Classes.InteractionBehaviour
 		
 		The mapping of integration types to their respective owners.
 	]=]
@@ -202,7 +202,7 @@ function Interaction.Interface.inheritProperties(class: any, interactionData: ap
 end
 
 --[=[
-	@within Classes.Interaction
+	@within Classes.InteractionBehaviour
 	@private
 
 	Responsible for inheriting methods from the Interaction prototype to the class instance.

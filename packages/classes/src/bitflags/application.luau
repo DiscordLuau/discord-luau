@@ -1,6 +1,6 @@
 --[=[
 	@class Classes.ApplicationBitflag
-	@_index Prototype
+	@__index Prototype
 
 	Implementation of the Discord Application Bitflags in Luau.
 	This class provides methods to check various application flags that indicate different states and capabilities of a Discord application.

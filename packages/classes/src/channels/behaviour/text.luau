@@ -1,6 +1,6 @@
 --[=[
 	@class Classes.TextBehaviour
-	@_index Prototype
+	@__index Prototype
 
 	Behaviour class that implements the properties and methods specific to text-based channels in Discord.
 	This behaviour is inherited by text channel classes to provide text messaging functionality.

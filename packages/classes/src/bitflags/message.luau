@@ -1,6 +1,6 @@
 --[=[
 	@class Classes.MessageBitflag
-	@_index MessageBitflag.Prototype
+	@__index MessageBitflag.Prototype
 	
 	Implementation of the Discord Message Bitflags in Luau.
 	Represents various flags that can be applied to Discord messages.

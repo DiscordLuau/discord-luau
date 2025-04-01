@@ -1,11 +1,11 @@
---[[
+--[=[
 	@class Classes.Sticker
 	@__index Prototype
 
 	Implementation of the Discord Sticker class in Luau
 
 	https://discord.com/developers/docs/resources/sticker#sticker-object
-]]
+]=]
 
 local apiTypes = require("../lune_packages/api_types")
 

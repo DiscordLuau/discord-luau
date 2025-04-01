@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.Member
+	@class Classes.TeamMember
 	@__index Prototype
 
 	Implementation of the Discord Member class in Luau
@@ -17,7 +17,7 @@ Member.Interface = {}
 Member.Prototype = {}
 
 --[=[
-	@within Classes.Member
+	@within Classes.TeamMember
 	@private
 
 	Responsible for syncing data to this member object. This is typically called by the API when this object is
@@ -26,7 +26,7 @@ Member.Prototype = {}
 function Member.Prototype.sync(self: Member, memberData: apiTypes.TeamMemberObject)
 	--[=[
 		@prop membershipState apiTypes.MembershipState
-		@within Classes.Member
+		@within Classes.TeamMember
 
 		The state of the team member's membership. Represents the current status of this member within the team.
 	]=]
@@ -34,7 +34,7 @@ function Member.Prototype.sync(self: Member, memberData: apiTypes.TeamMemberObje
 
 	--[=[
 		@prop teamId string
-		@within Classes.Member
+		@within Classes.TeamMember
 
 		The unique identifier of the team this member belongs to.
 	]=]
@@ -42,7 +42,7 @@ function Member.Prototype.sync(self: Member, memberData: apiTypes.TeamMemberObje
 
 	--[=[
 		@prop user Classes.User
-		@within Classes.Member
+		@within Classes.TeamMember
 
 		The user object associated with this team member. Contains detailed information about the user's profile.
 	]=]
@@ -50,7 +50,7 @@ function Member.Prototype.sync(self: Member, memberData: apiTypes.TeamMemberObje
 
 	--[=[
 		@prop role apiTypes.TeamRole
-		@within Classes.Member
+		@within Classes.TeamMember
 
 		The role assigned to this team member. Can be either Admin, Developer, or ReadOnly, determining their permissions.
 	]=]
@@ -62,7 +62,7 @@ function Member.Prototype.sync(self: Member, memberData: apiTypes.TeamMemberObje
 end
 
 --[=[
-	@within Classes.Member
+	@within Classes.TeamMember
 	@private
 
 	Responsible for constructing this class.

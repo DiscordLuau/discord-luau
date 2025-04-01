@@ -1,11 +1,11 @@
---[[
+--[=[
 	@class Classes.ThreadMember
 	@__index Prototype
 
 	Implementation of the Discord ThreadMember class in Luau
 
 	https://discord.com/developers/docs/resources/channel#thread-member-object
-]]
+]=]
 
 local stdPolyfills = require("../lune_packages/std_polyfills")
 

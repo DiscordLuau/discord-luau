@@ -1,6 +1,6 @@
 --[=[
 	@class Classes.Guild
-	@_index Guild.Prototype
+	@__index Guild.Prototype
 	
 	Implementation of the Discord Guild class in Luau.
 	Represents a Discord guild (server) with all its properties and methods.

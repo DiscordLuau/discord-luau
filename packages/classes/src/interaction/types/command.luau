@@ -3,7 +3,7 @@
 	Implementation of the Discord Command Interaction class in Luau
 
 	https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-structure
-	@_index Command.Prototype
+	@__index Command.Prototype
 ]=]
 
 -- selene: allow(unused_variable)

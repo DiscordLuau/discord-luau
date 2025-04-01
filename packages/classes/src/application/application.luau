@@ -1,6 +1,6 @@
 --[=[
 	@class Classes.Application
-	@_index Prototype
+	@__index Prototype
 
 	Implementation of the Discord Application class in Luau.
 	This class represents a Discord application and provides methods to manage application commands and properties.

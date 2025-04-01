@@ -1,6 +1,6 @@
 --[=[
 	@class Classes.Member
-	@_index Member.Prototype
+	@__index Member.Prototype
 	
 	Implementation of the Discord Member class in Luau
 	
@@ -253,12 +253,14 @@ end
 ]=]
 function Member.Prototype.sync(self: Member, guildMemberData: apiTypes.GuildMemberObject)
 	--[=[
+		@within Classes.Member
 		@prop user Classes.User
 		The user this member represents.
 	]=]
 	self.user = guildMemberData.user and user.new(guildMemberData.user)
 
 	--[=[
+		@within Classes.Member
 		@prop communicationDisabledUntil DateTime
 		When the member's communication is disabled until.
 	]=]
@@ -266,6 +268,7 @@ function Member.Prototype.sync(self: Member, guildMemberData: apiTypes.GuildMemb
 		and stdPolyfills.datetime.fromIsoDate(guildMemberData.communication_disabled_until)
 
 	--[=[
+		@within Classes.Member
 		@prop avatarDecorationData Classes.AvatarDecoration
 		The member's avatar decoration data.
 	]=]
@@ -276,18 +279,21 @@ function Member.Prototype.sync(self: Member, guildMemberData: apiTypes.GuildMemb
 		)
 
 	--[=[
+		@within Classes.Member
 		@prop flags Classes.GuildMemberBitflag
 		Member flags combined as a bitfield.
 	]=]
 	self.flags = guildMemberData.flags and guildMemberBitflag.new(guildMemberData.flags)
 
 	--[=[
+		@within Classes.Member
 		@prop joinedAt DateTime
 		When the member joined the guild.
 	]=]
 	self.joinedAt = stdPolyfills.datetime.fromIsoDate(guildMemberData.joined_at)
 
 	--[=[
+		@within Classes.Member
 		@prop premiumSince DateTime
 		When the member started boosting the guild.
 	]=]
@@ -295,42 +301,49 @@ function Member.Prototype.sync(self: Member, guildMemberData: apiTypes.GuildMemb
 		and stdPolyfills.datetime.fromIsoDate(guildMemberData.premium_since)
 
 	--[=[
+		@within Classes.Member
 		@prop nick string
 		The member's nickname.
 	]=]
 	self.nick = guildMemberData.nick
 
 	--[=[
+		@within Classes.Member
 		@prop avatar string
 		The member's avatar hash.
 	]=]
 	self.avatar = guildMemberData.avatar
 
 	--[=[
+		@within Classes.Member
 		@prop roles { string }
 		The member's role IDs.
 	]=]
 	self.roles = guildMemberData.roles
 
 	--[=[
+		@within Classes.Member
 		@prop deaf boolean
 		Whether the member is deafened.
 	]=]
 	self.deaf = guildMemberData.deaf
 
 	--[=[
+		@within Classes.Member
 		@prop mute boolean
 		Whether the member is muted.
 	]=]
 	self.mute = guildMemberData.mute
 
 	--[=[
+		@within Classes.Member
 		@prop pending boolean
 		Whether the member has not yet passed the guild's Membership Screening requirements.
 	]=]
 	self.pending = guildMemberData.pending
 
 	--[=[
+		@within Classes.Member
 		@prop permissions string
 		The member's permissions.
 	]=]

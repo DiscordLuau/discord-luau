@@ -1,6 +1,6 @@
 --[=[
 	@class Classes.Role
-	@_index Role.Prototype
+	@__index Role.Prototype
 	
 	Implementation of the Discord Role class in Luau
 	
@@ -186,107 +186,107 @@ function Role.Prototype.sync(self: Role, roleData: apiTypes.GuildRoleObject)
 
 	--[=[
 		@within Classes.Role
-        @prop flags Classes.RoleBitflag
-        Role flags combined as a bitfield.
-    ]=]
+		@prop flags Classes.RoleBitflag
+		Role flags combined as a bitfield.
+	]=]
 	self.flags = roleBitflag.new(roleData.flags)
 
 	--[=[
 		@within Classes.Role
-        @prop tags { Classes.RoleTag }
-        Tags associated with this role.
-    ]=]
+		@prop tags { Classes.RoleTag }
+		Tags associated with this role.
+	]=]
 	self.tags = tagArray
 
 	--[=[
 		@within Classes.Role
-        @prop id string
-        The ID of the role.
-    ]=]
+		@prop id string
+		The ID of the role.
+	]=]
 	self.id = roleData.id :: string
 
 	--[=[
 		@within Classes.Role
-        @prop name string
-        The name of the role.
-    ]=]
+		@prop name string
+		The name of the role.
+	]=]
 	self.name = roleData.name
 
 	--[=[
 		@within Classes.Role
-        @prop color number
-        The color of the role.
-    ]=]
+		@prop color number
+		The color of the role.
+	]=]
 	self.color = roleData.color
 
 	--[=[
 		@within Classes.Role
-        @prop hoist boolean
-        Whether the role is displayed separately in the member list.
-    ]=]
+		@prop hoist boolean
+		Whether the role is displayed separately in the member list.
+	]=]
 	self.hoist = roleData.hoist
 
 	--[=[
 		@within Classes.Role
-        @prop icon string
-        The icon hash of the role.
-    ]=]
+		@prop icon string
+		The icon hash of the role.
+	]=]
 	self.icon = roleData.icon
 
 	--[=[
 		@within Classes.Role
-        @prop unicodeEmoji string
-        The unicode emoji of the role.
-    ]=]
+		@prop unicodeEmoji string
+		The unicode emoji of the role.
+	]=]
 	self.unicodeEmoji = roleData.unicode_emoji
 
 	--[=[
 		@within Classes.Role
-        @prop position number
-        The position of the role.
-    ]=]
+		@prop position number
+		The position of the role.
+	]=]
 	self.position = roleData.position
 
 	--[=[
 		@within Classes.Role
-        @prop permissions Classes.Permission
-        The permissions of the role.
-    ]=]
+		@prop permissions Classes.Permission
+		The permissions of the role.
+	]=]
 	self.permissions = roleData.permissions and permission.new(roleData.permissions)
 
 	--[=[
 		@within Classes.Role
-        @prop managed boolean
-        Whether the role is managed by an integration.
-    ]=]
+		@prop managed boolean
+		Whether the role is managed by an integration.
+	]=]
 	self.managed = roleData.managed
 
 	--[=[
 		@within Classes.Role
-        @prop mentionable boolean
-        Whether the role is mentionable.
-    ]=]
+		@prop mentionable boolean
+		Whether the role is mentionable.
+	]=]
 	self.mentionable = roleData.mentionable
 end
 
 --[=[
-    @private
-    @within Classes.Role
-    Creates a new Role instance with the specified role data.
+	@private
+	@within Classes.Role
+	Creates a new Role instance with the specified role data.
 ]=]
 function Role.Interface.new(state: state.State, guildId: apiTypes.Snowflake, roleData: apiTypes.GuildRoleObject): Role
 	local self = setmetatable(
 		{
 			--[=[
-                @prop state State
-                The state object for this role.
-            ]=]
+				@prop state State
+				The state object for this role.
+			]=]
 			state = state,
 
 			--[=[
-                @prop guildId string
-                The ID of the guild this role belongs to.
-            ]=]
+				@prop guildId string
+				The ID of the guild this role belongs to.
+			]=]
 			guildId = guildId,
 		} :: Role,
 		{ __index = Role.Prototype }
