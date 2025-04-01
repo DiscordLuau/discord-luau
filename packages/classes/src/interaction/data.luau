@@ -1,8 +1,11 @@
---[[
+--[=[
+	@class Classes.Data
+	@__index Prototype
+
 	Implementation of the Discord Data class in Luau
 
 	https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-data
-]]
+]=]
 
 local apiTypes = require("../../lune_packages/api_types")
 
@@ -21,6 +24,13 @@ local Data = {}
 Data.Interface = {}
 Data.Prototype = {}
 
+--[=[
+	@within Classes.Data
+	@private
+
+	Responsible for syncing data to this interaction data object. This is typically called by the API when this object is
+	created or updated.
+]=]
 function Data.Prototype.sync(self: Data, dataObject: apiTypes.InteractionDataObject)
 	local optionArray = {}
 	local componentsArray: { button.Button | textInput.TextInput | selectMenu.SelectMenu | actionRow.ActionRow } = {}
@@ -51,19 +61,93 @@ function Data.Prototype.sync(self: Data, dataObject: apiTypes.InteractionDataObj
 		end
 	end
 
+	--[=[
+		@prop type string
+		@within Classes.Data
+
+		The type of interaction this data object represents. This is a string representation of the interaction type.
+	]=]
 	self.type = apiTypes.interaction.InteractionType[dataObject.type]
 
+	--[=[
+		@prop id string
+		@within Classes.Data
+
+		The unique identifier for this interaction data object.
+	]=]
 	self.id = dataObject.id
+
+	--[=[
+		@prop name string
+		@within Classes.Data
+
+		The name of the interaction, typically representing the command or component name.
+	]=]
 	self.name = dataObject.name
+
+	--[=[
+		@prop options { Classes.DataOption }
+		@within Classes.Data
+
+		An array of data options associated with this interaction. Contains the parsed arguments or choices.
+	]=]
 	self.options = optionArray
+
+	--[=[
+		@prop resolved Classes.Resolved?
+		@within Classes.Data
+
+		Contains resolved objects from the interaction data, such as users, members, roles, or channels.
+	]=]
 	self.resolved = dataObject.resolved and resolved.new(self.state, dataObject.resolved)
+
+	--[=[
+		@prop guildId string?
+		@within Classes.Data
+
+		The ID of the guild where the interaction occurred. Will be nil for DM interactions.
+	]=]
 	self.guildId = dataObject.guild_id
+
+	--[=[
+		@prop targetId string?
+		@within Classes.Data
+
+		The ID of the targeted entity in the interaction, if applicable.
+	]=]
 	self.targetId = dataObject.target_id
+
+	--[=[
+		@prop customId string?
+		@within Classes.Data
+
+		The custom identifier for this interaction, used primarily with message components.
+	]=]
 	self.customId = dataObject.custom_id
+
+	--[=[
+		@prop componentType string?
+		@within Classes.Data
+
+		The type of component this interaction represents, if it's a component interaction.
+	]=]
 	self.componentType = apiTypes.interaction.ComponentTypes[dataObject.component_type]
+
+	--[=[
+		@prop components { Classes.Button | Classes.TextInput | Classes.SelectMenu | Classes.ActionRow }?
+		@within Classes.Data
+
+		An array of component objects that were included in this interaction.
+	]=]
 	self.components = componentsArray
 end
 
+--[=[
+	@within Classes.Data
+	@private
+
+	Responsible for constructing this class.
+]=]
 function Data.Interface.new(state: state.State, dataObject: apiTypes.InteractionDataObject): Data
 	local self = setmetatable(
 		{
