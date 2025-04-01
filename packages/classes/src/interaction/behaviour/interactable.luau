@@ -1,6 +1,9 @@
---[[
-	Interactable interaction bevaiours
-]]
+--[=[
+	@class Classes.Interaction
+	@_index Interaction.Prototype
+	
+	Interactable interaction behaviours for Discord interactions.
+]=]
 
 local state = require("../../../lune_packages/state")
 local apiTypes = require("../../../lune_packages/api_types")
@@ -15,9 +18,10 @@ local Interaction = {}
 Interaction.Interface = {}
 Interaction.Prototype = {}
 
---[[
-	acknowledge an interaction and edit a response later, the user sees a loading state
-]]
+--[=[
+	@within Classes.Interaction
+	Acknowledge an interaction and edit a response later, the user sees a loading state.
+]=]
 function Interaction.Prototype.deferAsync(self: Interaction)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
@@ -39,9 +43,10 @@ function Interaction.Prototype.deferAsync(self: Interaction)
 	end) :: future.FutureLike<string, nil>
 end
 
---[[
-	respond to this interaction with a message
-]]
+--[=[
+	@within Classes.Interaction
+	Respond to this interaction with a message.
+]=]
 function Interaction.Prototype.messageAsync(
 	self: Interaction,
 	messageJSON: builders.messageJSON,
@@ -73,9 +78,10 @@ function Interaction.Prototype.messageAsync(
 	end) :: future.FutureLike<string, message.Message?>
 end
 
---[[
-	respond to this interaction with a message
-]]
+--[=[
+	@within Classes.Interaction
+	Respond to this interaction with a modal.
+]=]
 function Interaction.Prototype.modalAsync(self: Interaction, modalJSON: builders.ModalJSON, responseMessage: boolean?)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
@@ -101,9 +107,10 @@ function Interaction.Prototype.modalAsync(self: Interaction, modalJSON: builders
 	end) :: future.FutureLike<string, message.Message?>
 end
 
---[[
-	get the response created by this interaction
-]]
+--[=[
+	@within Classes.Interaction
+	Get the response created by this interaction.
+]=]
 function Interaction.Prototype.getResponseAsync(self: Interaction, threadId: string?)
 	local request = self.state.rest:newRequest()
 
@@ -120,9 +127,10 @@ function Interaction.Prototype.getResponseAsync(self: Interaction, threadId: str
 	end) :: future.FutureLike<string, message.Message>
 end
 
---[[
-	edit the response made by this interaction
-]]
+--[=[
+	@within Classes.Interaction
+	Edit the response made by this interaction.
+]=]
 function Interaction.Prototype.editResponseAsync(
 	self: Interaction,
 	messageJSON: builders.messageJSON,
@@ -145,9 +153,10 @@ function Interaction.Prototype.editResponseAsync(
 	end) :: future.FutureLike<string, message.Message>
 end
 
---[[
-	delete the original response made by this interaction
-]]
+--[=[
+	@within Classes.Interaction
+	Delete the original response made by this interaction.
+]=]
 function Interaction.Prototype.deleteResponseAsync(self: Interaction)
 	local request = self.state.rest:newRequest()
 
@@ -160,10 +169,11 @@ function Interaction.Prototype.deleteResponseAsync(self: Interaction)
 	end) :: future.FutureLike<string, nil>
 end
 
---[[
-	create a followup response to an interaction, followup responses are messages you can send after
+--[=[
+	@within Classes.Interaction
+	Create a followup response to an interaction, followup responses are messages you can send after
 	the initial response is sent.
-]]
+]=]
 function Interaction.Prototype.createFollowupResponseAsync(
 	self: Interaction,
 	messageJSON: builders.messageJSON,
@@ -187,9 +197,10 @@ function Interaction.Prototype.createFollowupResponseAsync(
 	end) :: future.FutureLike<string, message.Message>
 end
 
---[[
-	get the followup response created by this interaction
-]]
+--[=[
+	@within Classes.Interaction
+	Get the followup response created by this interaction.
+]=]
 function Interaction.Prototype.getFollowupResponseAsync(self: Interaction, messageId: string, threadId: string?)
 	local request = self.state.rest:newRequest()
 
@@ -206,9 +217,10 @@ function Interaction.Prototype.getFollowupResponseAsync(self: Interaction, messa
 	end) :: future.FutureLike<string, message.Message>
 end
 
---[[
-	edit the followup response created by this interaction
-]]
+--[=[
+	@within Classes.Interaction
+	Edit the followup response created by this interaction.
+]=]
 function Interaction.Prototype.editFollowupResponseAsync(
 	self: Interaction,
 	messageId: apiTypes.Snowflake,
@@ -232,9 +244,10 @@ function Interaction.Prototype.editFollowupResponseAsync(
 	end) :: future.FutureLike<string, message.Message>
 end
 
---[[
-	delete the followup response created by this interaction
-]]
+--[=[
+	@within Classes.Interaction
+	Delete the followup response created by this interaction.
+]=]
 function Interaction.Prototype.deleteFollowupResponseAsync(self: Interaction, messageId: string)
 	local request = self.state.rest:newRequest()
 
@@ -247,8 +260,18 @@ function Interaction.Prototype.deleteFollowupResponseAsync(self: Interaction, me
 	end) :: future.FutureLike<string, nil>
 end
 
+--[=[
+	@within Classes.Interaction
+	@private
+	Inherit properties from the Interaction class.
+]=]
 function Interaction.Interface.inheritProperties() end
 
+--[=[
+	@within Classes.Interaction
+	@private
+	Inherit methods from the Interaction class.
+]=]
 function Interaction.Interface.inheritMethods(class: any)
 	for key, value in Interaction.Prototype do
 		class[key] = value
@@ -258,10 +281,32 @@ end
 export type InteractionMethods = typeof(Interaction.Prototype)
 
 export type Interaction = InteractionMethods & {
+	--[=[
+		@within Classes.Interaction
+        @prop state State
+        The state object for this interaction.
+    ]=]
 	state: state.State,
 
+	--[=[
+		@within Classes.Interaction
+        @prop id string
+        The ID of the interaction.
+    ]=]
 	id: string,
+
+	--[=[
+		@within Classes.Interaction
+        @prop token string
+        The token for this interaction.
+    ]=]
 	token: string,
+
+	--[=[
+		@within Classes.Interaction
+        @prop isDeferred boolean
+        Whether this interaction has been deferred.
+    ]=]
 	isDeferred: boolean?,
 }
 
