@@ -1,8 +1,11 @@
---[[
+--[=[
+	@class Classes.Announcement
+	@__index Prototype
+
 	Implementation of the Discord Announcement class in Luau
 
 	https://discord.com/developers/docs/resources/channel#channel-object
-]]
+]=]
 
 local apiTypes = require("../../../lune_packages/api_types")
 local state = require("../../../lune_packages/state")
@@ -23,6 +26,13 @@ Announcement.Behaviours = {
 	textBehaviour,
 }
 
+--[=[
+	@within Classes.Announcement
+	@private
+
+	Responsible for syncing data to this announcement object. This is typically called by the API when this object is
+	created or updated.
+]=]
 function Announcement.Prototype.sync(self: Announcement, channelData: apiTypes.ChannelObject)
 	for _, behaviour in Announcement.Behaviours do
 		behaviour.inheritMethods(self)
@@ -30,9 +40,19 @@ function Announcement.Prototype.sync(self: Announcement, channelData: apiTypes.C
 	end
 end
 
+--[=[
+	@within Classes.Announcement
+	@private
+
+	Responsible for constructing this class.
+]=]
 function Announcement.Interface.new(state: state.State, channelData: apiTypes.ChannelObject): Announcement
 	local self = setmetatable(
 		{
+			--[=[
+				@prop state Classes.State
+				@within Classes.Announcement
+			]=]
 			state = state,
 		} :: Announcement,
 		{ __index = Announcement.Prototype }
