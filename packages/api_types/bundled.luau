@@ -1094,6 +1094,7 @@ type WelcomeScreenObject__DARKLUA_TYPE_a5 = {
 	description: string,
 	welcome_channels: { WelcomeScreenChannelObject__DARKLUA_TYPE_a4 },
 }
+
 type StickerObject__DARKLUA_TYPE_a6 = {
 	id: Snowflake__DARKLUA_TYPE_R,
 	pack_id: Snowflake__DARKLUA_TYPE_R,
@@ -3943,22 +3944,16 @@ do
 		end
 	end
 	function a.c()
-		local b = coroutine
+		return function(b: () -> (), ...)
+			local c = coroutine.create(b)
+			local d, e = coroutine.resume(c, ...)
 
-		local c = {}
-
-		function c.run(d: () -> (), ...)
-			local e = b.create(d)
-			local f, g = b.resume(e, ...)
-
-			if not f then
-				error(g)
+			if not d then
+				error(e)
 			end
 
-			return e
+			return c
 		end
-
-		return setmetatable(c, { __index = b })
 	end
 	function a.d()
 		return function(b)
@@ -3977,11 +3972,8 @@ do
 		return {
 			validateKebabCase = a.load("a"),
 			createGuid = a.load("b"),
-			coroutine = a.load("c"),
-
-			table = {
-				reflect = a.load("d"),
-			},
+			coroutineRun = a.load("c"),
+			tableReflect = a.load("d"),
 		}
 	end
 	function a.f()
@@ -3991,7 +3983,7 @@ do
 	function a.g()
 		local b = a.load("f")
 
-		local c = table.freeze(b.table.reflect({
+		local c = table.freeze(b.tableReflect({
 			None = 0,
 			NitroClassic = 1,
 			Nitro = 2,
@@ -4005,7 +3997,7 @@ do
 	function a.h()
 		local b = a.load("f")
 
-		local c = table.freeze(b.table.reflect({
+		local c = table.freeze(b.tableReflect({
 			Incoming = 1,
 			ChannelFollower = 2,
 			Application = 3,
@@ -4018,12 +4010,12 @@ do
 	function a.i()
 		local b = a.load("f")
 
-		local c = table.freeze(b.table.reflect({
+		local c = table.freeze(b.tableReflect({
 			Standard = 1,
 			Guild = 2,
 		}))
 
-		local d = table.freeze(b.table.reflect({
+		local d = table.freeze(b.tableReflect({
 			PNG = 1,
 			APNG = 2,
 			LOTTIE = 3,
@@ -4175,7 +4167,7 @@ do
 
 		local c = a.load("m")
 
-		local d = table.freeze(b.table.reflect({
+		local d = table.freeze(b.tableReflect({
 			CreateInstantInvite = c.lshift(1, 0),
 			KickMembers = c.lshift(1, 1),
 			BanMembers = c.lshift(1, 2),
@@ -4232,7 +4224,7 @@ do
 	function a.o()
 		local b = a.load("f")
 
-		local c = table.freeze(b.table.reflect({
+		local c = table.freeze(b.tableReflect({
 			Default = 0,
 			RecipientAdd = 1,
 			RecipientRemove = 2,
@@ -4272,41 +4264,41 @@ do
 			PollResult = 46,
 		}))
 
-		local d = table.freeze(b.table.reflect({
+		local d = table.freeze(b.tableReflect({
 			Join = 1,
 			Spectate = 2,
 			Listen = 3,
 			JoinRequest = 5,
 		}))
 
-		local e = table.freeze(b.table.reflect({
+		local e = table.freeze(b.tableReflect({
 			Default = 0,
 			Forward = 1,
 		}))
 
-		local f = table.freeze(b.table.reflect({
+		local f = table.freeze(b.tableReflect({
 			Blurple = 1,
 			Grey = 2,
 			Green = 3,
 			Red = 4,
 		}))
 
-		local g = table.freeze(b.table.reflect({
+		local g = table.freeze(b.tableReflect({
 			Short = 1,
 			Paragraph = 2,
 		}))
 
-		local h = table.freeze(b.table.reflect({
+		local h = table.freeze(b.tableReflect({
 			Role = "role",
 			User = "user",
 			Channel = "channel",
 		}))
 
-		local i = table.freeze(b.table.reflect({
+		local i = table.freeze(b.tableReflect({
 			Default = 1,
 		}))
 
-		local j = table.freeze(b.table.reflect({
+		local j = table.freeze(b.tableReflect({
 			Normal = 0,
 			Burst = 1,
 		}))
@@ -4325,7 +4317,7 @@ do
 	function a.p()
 		local b = a.load("f")
 
-		local c = table.freeze(b.table.reflect({
+		local c = table.freeze(b.tableReflect({
 			Ping = 1,
 			ApplicationCommand = 2,
 			MessageComponent = 3,
@@ -4333,7 +4325,7 @@ do
 			ModalSubmit = 5,
 		}))
 
-		local d = table.freeze(b.table.reflect({
+		local d = table.freeze(b.tableReflect({
 			SubCommand = 1,
 			SubCommandGroup = 2,
 			String = 3,
@@ -4347,20 +4339,20 @@ do
 			Attachment = 11,
 		}))
 
-		local e = table.freeze(b.table.reflect({
+		local e = table.freeze(b.tableReflect({
 			Guild = 0,
 			BotDm = 1,
 			PrivateChannel = 2,
 		}))
 
-		local f = table.freeze(b.table.reflect({
+		local f = table.freeze(b.tableReflect({
 			ChatInput = 1,
 			User = 2,
 			Message = 3,
 			PrimaryEntryPoiant = 4,
 		}))
 
-		local g = table.freeze(b.table.reflect({
+		local g = table.freeze(b.tableReflect({
 			ActionRow = 1,
 			Button = 2,
 			StringSelect = 3,
@@ -4382,7 +4374,7 @@ do
 	function a.q()
 		local b = a.load("f")
 
-		local c = table.freeze(b.table.reflect({
+		local c = table.freeze(b.tableReflect({
 			None = 0,
 			Low = 1,
 			Medium = 2,
@@ -4390,92 +4382,92 @@ do
 			VeryHigh = 4,
 		}))
 
-		local d = table.freeze(b.table.reflect({
+		local d = table.freeze(b.tableReflect({
 			AllMessages = 0,
 			OnlyMentions = 1,
 		}))
 
-		local e = table.freeze(b.table.reflect({
+		local e = table.freeze(b.tableReflect({
 			Disabled = 0,
 			MembersWithoutRoles = 1,
 			AllMembers = 2,
 		}))
 
-		local f = table.freeze(b.table.reflect({
+		local f = table.freeze(b.tableReflect({
 			Default = 0,
 			Explicit = 1,
 			Safe = 2,
 			AgeRestricted = 3,
 		}))
 
-		local g = table.freeze(b.table.reflect({
+		local g = table.freeze(b.tableReflect({
 			None = 0,
 			Tier1 = 1,
 			Tier2 = 2,
 			Tier3 = 3,
 		}))
 
-		local h = table.freeze(b.table.reflect({
+		local h = table.freeze(b.tableReflect({
 			None = 0,
 			Elevated = 1,
 		}))
 
-		local i = table.freeze(b.table.reflect({
+		local i = table.freeze(b.tableReflect({
 			Guild = 0,
 			GroupDM = 1,
 			Friend = 2,
 		}))
 
-		local j = table.freeze(b.table.reflect({
+		local j = table.freeze(b.tableReflect({
 			Stream = 1,
 			EmbeddedApplication = 2,
 		}))
 
-		local k = table.freeze(b.table.reflect({
+		local k = table.freeze(b.tableReflect({
 			GuildOnly = 2,
 		}))
 
-		local l = table.freeze(b.table.reflect({
+		local l = table.freeze(b.tableReflect({
 			StageInstance = 1,
 			Voice = 2,
 			External = 3,
 		}))
 
-		local m = table.freeze(b.table.reflect({
+		local m = table.freeze(b.tableReflect({
 			Scheduled = 1,
 			Active = 2,
 			Completed = 3,
 			Cancelled = 4,
 		}))
 
-		local n = table.freeze(b.table.reflect({
+		local n = table.freeze(b.tableReflect({
 			Twitch = "twitch",
 			YouTube = "youtube",
 			Discord = "discord",
 			GuildSubscription = "guild_subscription",
 		}))
 
-		local o = table.freeze(b.table.reflect({
+		local o = table.freeze(b.tableReflect({
 			RemoveRole = 0,
 			Kick = 1,
 		}))
 
-		local p = table.freeze(b.table.reflect({
+		local p = table.freeze(b.tableReflect({
 			MultipleChoice = "MULTIPLE_CHOICE",
 			Dropdown = "DROPDOWN",
 		}))
 
-		local q = table.freeze(b.table.reflect({
+		local q = table.freeze(b.tableReflect({
 			Default = "ONBOARDING_DEFAULT",
 			Advanced = "ONBOARDING_ADVANCED",
 		}))
 
-		local r = table.freeze(b.table.reflect({
+		local r = table.freeze(b.tableReflect({
 			Role = 0,
 			Member = 1,
 		}))
 
-		local s = table.freeze(b.table.reflect({
+		local s = table.freeze(b.tableReflect({
 			Keyword = 1,
 			Spam = 3,
 			KeywordPreset = 4,
@@ -4483,25 +4475,25 @@ do
 			MemberProfile = 6,
 		}))
 
-		local t = table.freeze(b.table.reflect({
+		local t = table.freeze(b.tableReflect({
 			Profanity = 1,
 			SexualContent = 2,
 			Slurs = 3,
 		}))
 
-		local u = table.freeze(b.table.reflect({
+		local u = table.freeze(b.tableReflect({
 			MessageSend = 1,
 			MemberUpdate = 2,
 		}))
 
-		local v = table.freeze(b.table.reflect({
+		local v = table.freeze(b.tableReflect({
 			BlockMessage = 1,
 			SendAlertMessage = 2,
 			Timeout = 3,
 			BlockMemberInteraction = 4,
 		}))
 
-		local w = table.freeze(b.table.reflect({
+		local w = table.freeze(b.tableReflect({
 			GuildUpdate = 1,
 			ChannelCreate = 10,
 			ChannelUpdate = 11,
@@ -4597,7 +4589,7 @@ do
 	function a.r()
 		local b = a.load("f")
 
-		local c = table.freeze(b.table.reflect({
+		local c = table.freeze(b.tableReflect({
 			Purchase = 1,
 			PremiumSubscription = 2,
 			DeveloperGift = 3,
@@ -4615,7 +4607,7 @@ do
 	function a.s()
 		local b = a.load("f")
 
-		local c = table.freeze(b.table.reflect({
+		local c = table.freeze(b.tableReflect({
 			Rich = "rich",
 			Image = "image",
 			Video = "video",
@@ -4636,7 +4628,7 @@ do
 		local b = a.load("f")
 		a.load("t")
 
-		local c = table.freeze(b.table.reflect({
+		local c = table.freeze(b.tableReflect({
 			GuildText = 0,
 			DM = 1,
 			GuildVoice = 2,
@@ -4652,28 +4644,28 @@ do
 			GuildMedia = 16,
 		}))
 
-		local d = table.freeze(b.table.reflect({
+		local d = table.freeze(b.tableReflect({
 			LatestActivity = 0,
 			CreationDate = 1,
 		}))
 
-		local e = table.freeze(b.table.reflect({
+		local e = table.freeze(b.tableReflect({
 			LatestActivity = 0,
 			CreationDate = 1,
 		}))
 
-		local f = table.freeze(b.table.reflect({
+		local f = table.freeze(b.tableReflect({
 			NotSet = 0,
 			ListView = 1,
 			GalleryView = 2,
 		}))
 
-		local g = table.freeze(b.table.reflect({
+		local g = table.freeze(b.tableReflect({
 			Auto = 1,
 			Full = 2,
 		}))
 
-		local h = table.freeze(b.table.reflect({
+		local h = table.freeze(b.tableReflect({
 			String = 3,
 			Text = 4,
 			User = 5,
@@ -4694,12 +4686,12 @@ do
 	function a.v()
 		local b = a.load("f")
 
-		local c = table.freeze(b.table.reflect({
+		local c = table.freeze(b.tableReflect({
 			Invited = 1,
 			Accepted = 2,
 		}))
 
-		local d = table.freeze(b.table.reflect({
+		local d = table.freeze(b.tableReflect({
 			GuildInstall = 0,
 			UserInstall = 1,
 		}))
@@ -4712,7 +4704,7 @@ do
 	function a.w()
 		local b = a.load("f")
 
-		local c = table.freeze(b.table.reflect({
+		local c = table.freeze(b.tableReflect({
 			Game = 0,
 			Streaming = 1,
 			Listening = 2,
@@ -4720,7 +4712,7 @@ do
 			Competing = 5,
 		}))
 
-		local d = table.freeze(b.table.reflect({
+		local d = table.freeze(b.tableReflect({
 			Online = "online",
 			DoNotDisturb = "dnd",
 			Idle = "idle",
