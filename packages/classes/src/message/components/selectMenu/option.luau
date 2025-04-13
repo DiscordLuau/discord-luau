@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.Option
+	@class Classes.SelectMenuOption
 	@__index Prototype
 
 	Implementation of the Discord Option class in Luau
@@ -17,7 +17,7 @@ Option.Interface = {}
 Option.Prototype = {}
 
 --[=[
-	@within Classes.Option
+	@within Classes.SelectMenuOption
 	@private
 
 	Responsible for syncing data to this option object. This is typically called by the API when this object is
@@ -26,42 +26,42 @@ Option.Prototype = {}
 function Option.Prototype.sync(self: Option, optionData: apiTypes.SelectOptionObject)
 	--[=[
 		@prop label string
-		@within Classes.Option
+		@within Classes.SelectMenuOption
 		The text that appears on the select menu option
 	]=]
 	self.label = optionData.label
 
 	--[=[
 		@prop value string
-		@within Classes.Option
+		@within Classes.SelectMenuOption
 		The value that will be sent when this option is selected
 	]=]
 	self.value = optionData.value
 
 	--[=[
 		@prop description string?
-		@within Classes.Option
+		@within Classes.SelectMenuOption
 		Additional descriptive text that appears below the label
 	]=]
 	self.description = optionData.description
 
 	--[=[
 		@prop emoji Classes.Emoji?
-		@within Classes.Option
+		@within Classes.SelectMenuOption
 		The emoji that appears next to the option label
 	]=]
 	self.emoji = optionData.emoji and emoji.new(optionData.emoji)
 
 	--[=[
 		@prop default boolean?
-		@within Classes.Option
+		@within Classes.SelectMenuOption
 		Whether this option is selected by default
 	]=]
 	self.default = optionData.default
 end
 
 --[=[
-	@within Classes.Option
+	@within Classes.SelectMenuOption
 	@private
 
 	Responsible for constructing this class.

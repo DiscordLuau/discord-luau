@@ -1,6 +1,6 @@
 --[=[
 	@class Classes.GroupDMBehaviour
-	@_index Prototype
+	@__index Prototype
 
 	Behaviour class that implements the properties and methods specific to Group DM channels in Discord.
 	This behaviour is inherited by the GroupDM class to provide group DM specific functionality.

@@ -1,6 +1,6 @@
 --[=[
 	@class Classes.ThreadBehaviour
-	@_index Prototype
+	@__index Prototype
 
 	Behaviour class that implements the properties and methods specific to thread channels in Discord.
 	This behaviour is inherited by thread channel classes to provide thread-specific functionality.

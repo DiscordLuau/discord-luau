@@ -1,11 +1,11 @@
---[[
+--[=[
 	@class Classes.Presence
 	@__index Prototype
 
 	Implementation of the Discord Presence class in Luau
 
 	https://discord.com/developers/docs/topics/gateway-events#update-presence
-]]
+]=]
 
 local stdPolyfills = require("../lune_packages/std_polyfills")
 

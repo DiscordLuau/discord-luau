@@ -1,11 +1,11 @@
---[[
+--[=[
 	@class Classes.Resolved
 	@__index Prototype
 
 	Implementation of the Discord Resolved class in Luau
 
 	https://discord.com/developers/docs/resources/message#attachment-object
-]]
+]=]
 
 local apiTypes = require("../lune_packages/api_types")
 

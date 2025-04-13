@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.Application
+	@class Classes.IntegrationApplication
 	@__index Prototype
 
 	Implementation of the Discord Integration Application class in Luau
@@ -17,7 +17,7 @@ Application.Interface = {}
 Application.Prototype = {}
 
 --[=[
-	@within Classes.Application
+	@within Classes.IntegrationApplication
 	@private
 
 	Responsible for syncing data to this application object. This is typically called by the API when this object is
@@ -26,7 +26,7 @@ Application.Prototype = {}
 function Application.Prototype.sync(self: Application, applicationData: apiTypes.IntegrationApplicationObject)
 	--[=[
 		@prop id string
-		@within Classes.Application
+		@within Classes.IntegrationApplication
 
 		The unique identifier for this application
 	]=]
@@ -34,7 +34,7 @@ function Application.Prototype.sync(self: Application, applicationData: apiTypes
 
 	--[=[
 		@prop name string
-		@within Classes.Application
+		@within Classes.IntegrationApplication
 
 		The name of the application
 	]=]
@@ -42,7 +42,7 @@ function Application.Prototype.sync(self: Application, applicationData: apiTypes
 
 	--[=[
 		@prop icon string?
-		@within Classes.Application
+		@within Classes.IntegrationApplication
 
 		The icon hash of the application, if one exists
 	]=]
@@ -50,7 +50,7 @@ function Application.Prototype.sync(self: Application, applicationData: apiTypes
 
 	--[=[
 		@prop description string
-		@within Classes.Application
+		@within Classes.IntegrationApplication
 
 		The description of the application
 	]=]
@@ -58,7 +58,7 @@ function Application.Prototype.sync(self: Application, applicationData: apiTypes
 
 	--[=[
 		@prop bot Classes.User?
-		@within Classes.Application
+		@within Classes.IntegrationApplication
 
 		The bot user associated with this application, if it is a bot application
 	]=]
@@ -66,7 +66,7 @@ function Application.Prototype.sync(self: Application, applicationData: apiTypes
 end
 
 --[=[
-	@within Classes.Application
+	@within Classes.IntegrationApplication
 	@private
 
 	Responsible for constructing this class.

@@ -1,11 +1,11 @@
---[[
+--[=[
 	@class Classes.User
 	@__index Prototype
 
 	Implementation of the Discord User class in Luau
 
 	https://discord.com/developers/docs/resources/user#user-object
-]]
+]=]
 
 local apiTypes = require("../lune_packages/api_types")
 
@@ -103,9 +103,9 @@ function User.Prototype.sync(self: User, userData: apiTypes.UserObject)
 	self.verified = userData.verified
 
 	--[=[
-        @prop banner string?
-        @within Classes.User
-    ]=]
+		@prop banner string?
+		@within Classes.User
+	]=]
 	self.banner = userData.banner
 
 	--[=[

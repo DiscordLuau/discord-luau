@@ -1,6 +1,6 @@
 --[=[
 	@class Classes.Message
-	@_index Message.Prototype
+	@__index Message.Prototype
 	
 	Implementation of the Discord Message class in Luau
 	
@@ -619,17 +619,17 @@ function Message.Prototype.sync(self: Message, messageData: apiTypes.MessageObje
 end
 
 --[=[
-    @private
-    @within Classes.Message
-    Creates a new Message instance with the specified message data.
+	@private
+	@within Classes.Message
+	Creates a new Message instance with the specified message data.
 ]=]
 function Message.Interface.new(state: state.State, messageData: apiTypes.MessageObject): Message
 	local self = setmetatable(
 		{
 			--[=[
-                @prop state State
-                The state object for this message.
-            ]=]
+				@prop state State
+				The state object for this message.
+			]=]
 			state = state,
 		} :: Message,
 		{ __index = Message.Prototype }

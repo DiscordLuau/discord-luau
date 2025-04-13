@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.Option
+	@class Classes.OnboardingOption
 	@__index Prototype
 
 	Implementation of the Discord Option class in Luau
@@ -17,7 +17,7 @@ Option.Interface = {}
 Option.Prototype = {}
 
 --[=[
-	@within Classes.Option
+	@within Classes.OnboardingOption
 	@private
 
 	Responsible for syncing data to this option object. This is typically called by the API when this object is
@@ -26,49 +26,49 @@ Option.Prototype = {}
 function Option.Prototype.sync(self: Option, optionData: apiTypes.PromptOptionObject)
 	--[=[
 		@prop id string?
-		@within Classes.Option
+		@within Classes.OnboardingOption
 		The unique identifier of this option
 	]=]
 	self.id = optionData.id
 
 	--[=[
 		@prop channelIds {string}
-		@within Classes.Option
+		@within Classes.OnboardingOption
 		Array of channel IDs that will be added to the member when this option is selected
 	]=]
 	self.channelIds = optionData.channel_ids
 
 	--[=[
 		@prop roleIds {string}
-		@within Classes.Option
+		@within Classes.OnboardingOption
 		Array of role IDs that will be added to the member when this option is selected
 	]=]
 	self.roleIds = optionData.role_ids
 
 	--[=[
 		@prop emoji Classes.Emoji?
-		@within Classes.Option
+		@within Classes.OnboardingOption
 		The emoji displayed alongside this option
 	]=]
 	self.emoji = optionData.emoji and emoji.new(optionData.emoji)
 
 	--[=[
 		@prop title string?
-		@within Classes.Option
+		@within Classes.OnboardingOption
 		The title of this option that will be displayed to users
 	]=]
 	self.title = optionData.title
 
 	--[=[
 		@prop description string?
-		@within Classes.Option
+		@within Classes.OnboardingOption
 		The description of this option that will be displayed to users
 	]=]
 	self.description = optionData.description
 end
 
 --[=[
-	@within Classes.Option
+	@within Classes.OnboardingOption
 	@private
 
 	Responsible for constructing this class.

@@ -1,6 +1,6 @@
 --[=[
-	@class Classes.Interaction
-	@_index Interaction.Prototype
+	@class Classes.Interactable
+	@__index Interaction.Prototype
 	
 	Interactable interaction behaviours for Discord interactions.
 ]=]
@@ -19,7 +19,7 @@ Interaction.Interface = {}
 Interaction.Prototype = {}
 
 --[=[
-	@within Classes.Interaction
+	@within Classes.Interactable
 	Acknowledge an interaction and edit a response later, the user sees a loading state.
 ]=]
 function Interaction.Prototype.deferAsync(self: Interaction)
@@ -44,7 +44,7 @@ function Interaction.Prototype.deferAsync(self: Interaction)
 end
 
 --[=[
-	@within Classes.Interaction
+	@within Classes.Interactable
 	Respond to this interaction with a message.
 ]=]
 function Interaction.Prototype.messageAsync(
@@ -79,7 +79,7 @@ function Interaction.Prototype.messageAsync(
 end
 
 --[=[
-	@within Classes.Interaction
+	@within Classes.Interactable
 	Respond to this interaction with a modal.
 ]=]
 function Interaction.Prototype.modalAsync(self: Interaction, modalJSON: builders.ModalJSON, responseMessage: boolean?)
@@ -108,7 +108,7 @@ function Interaction.Prototype.modalAsync(self: Interaction, modalJSON: builders
 end
 
 --[=[
-	@within Classes.Interaction
+	@within Classes.Interactable
 	Get the response created by this interaction.
 ]=]
 function Interaction.Prototype.getResponseAsync(self: Interaction, threadId: string?)
@@ -128,7 +128,7 @@ function Interaction.Prototype.getResponseAsync(self: Interaction, threadId: str
 end
 
 --[=[
-	@within Classes.Interaction
+	@within Classes.Interactable
 	Edit the response made by this interaction.
 ]=]
 function Interaction.Prototype.editResponseAsync(
@@ -154,7 +154,7 @@ function Interaction.Prototype.editResponseAsync(
 end
 
 --[=[
-	@within Classes.Interaction
+	@within Classes.Interactable
 	Delete the original response made by this interaction.
 ]=]
 function Interaction.Prototype.deleteResponseAsync(self: Interaction)
@@ -170,7 +170,7 @@ function Interaction.Prototype.deleteResponseAsync(self: Interaction)
 end
 
 --[=[
-	@within Classes.Interaction
+	@within Classes.Interactable
 	Create a followup response to an interaction, followup responses are messages you can send after
 	the initial response is sent.
 ]=]
@@ -198,7 +198,7 @@ function Interaction.Prototype.createFollowupResponseAsync(
 end
 
 --[=[
-	@within Classes.Interaction
+	@within Classes.Interactable
 	Get the followup response created by this interaction.
 ]=]
 function Interaction.Prototype.getFollowupResponseAsync(self: Interaction, messageId: string, threadId: string?)
@@ -218,7 +218,7 @@ function Interaction.Prototype.getFollowupResponseAsync(self: Interaction, messa
 end
 
 --[=[
-	@within Classes.Interaction
+	@within Classes.Interactable
 	Edit the followup response created by this interaction.
 ]=]
 function Interaction.Prototype.editFollowupResponseAsync(
@@ -245,7 +245,7 @@ function Interaction.Prototype.editFollowupResponseAsync(
 end
 
 --[=[
-	@within Classes.Interaction
+	@within Classes.Interactable
 	Delete the followup response created by this interaction.
 ]=]
 function Interaction.Prototype.deleteFollowupResponseAsync(self: Interaction, messageId: string)
@@ -261,14 +261,14 @@ function Interaction.Prototype.deleteFollowupResponseAsync(self: Interaction, me
 end
 
 --[=[
-	@within Classes.Interaction
+	@within Classes.Interactable
 	@private
 	Inherit properties from the Interaction class.
 ]=]
 function Interaction.Interface.inheritProperties() end
 
 --[=[
-	@within Classes.Interaction
+	@within Classes.Interactable
 	@private
 	Inherit methods from the Interaction class.
 ]=]
@@ -282,31 +282,31 @@ export type InteractionMethods = typeof(Interaction.Prototype)
 
 export type Interaction = InteractionMethods & {
 	--[=[
-		@within Classes.Interaction
-        @prop state State
-        The state object for this interaction.
-    ]=]
+		@within Classes.Interactable
+		@prop state State
+		The state object for this interaction.
+	]=]
 	state: state.State,
 
 	--[=[
-		@within Classes.Interaction
-        @prop id string
-        The ID of the interaction.
-    ]=]
+		@within Classes.Interactable
+		@prop id string
+		The ID of the interaction.
+	]=]
 	id: string,
 
 	--[=[
-		@within Classes.Interaction
-        @prop token string
-        The token for this interaction.
-    ]=]
+		@within Classes.Interactable
+		@prop token string
+		The token for this interaction.
+	]=]
 	token: string,
 
 	--[=[
-		@within Classes.Interaction
-        @prop isDeferred boolean
-        Whether this interaction has been deferred.
-    ]=]
+		@within Classes.Interactable
+		@prop isDeferred boolean
+		Whether this interaction has been deferred.
+	]=]
 	isDeferred: boolean?,
 }
 

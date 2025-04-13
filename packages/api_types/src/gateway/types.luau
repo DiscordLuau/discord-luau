@@ -1,8 +1,8 @@
---[[
+--[=[
 	@class Types.gateway.types
 
 	Mapping out all discord recieve/send payloads that can be consumed by the Discord v10 API.
-]]
+]=]
 
 local objects = require("../apiTypes")
 

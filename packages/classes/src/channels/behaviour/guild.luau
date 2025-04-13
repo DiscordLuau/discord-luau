@@ -1,6 +1,6 @@
 --[=[
 	@class Classes.GuildBehaviour
-	@_index Prototype
+	@__index Prototype
 
 	Behaviour class that implements the properties and methods specific to guild channels in Discord.
 	This behaviour is inherited by guild channel classes to provide guild-specific functionality.
