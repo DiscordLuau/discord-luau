@@ -1,8 +1,11 @@
---[[
+--[=[
+	@class Builders.AllowedMention
+	@__index Prototype
+
 	Implementation of discords AllowedMention object as a Luau builder.	
 
 	https://discord.com/developers/docs/resources/message#allowed-mentions-object
-]]
+]=]
 
 local apiTypes = require("../../lune_packages/api_types")
 
@@ -11,9 +14,11 @@ local AllowedMention = {}
 AllowedMention.Prototype = {}
 AllowedMention.Interface = {}
 
---[[
+--[=[
+	@within Builders.AllowedMention
+
 	Add a user mention to the allowed mentions for this message.
-]]
+]=]
 function AllowedMention.Prototype.addUserMention(self: AllowedMention, userId: string): AllowedMention
 	if not table.find(self.parse, "users") then
 		table.insert(self.parse, "users")
@@ -24,9 +29,11 @@ function AllowedMention.Prototype.addUserMention(self: AllowedMention, userId: s
 	return self
 end
 
---[[
+--[=[
+	@within Builders.AllowedMention
+
 	Add a role mention to the allowed mentions for this message.
-]]
+]=]
 function AllowedMention.Prototype.addRoleMention(self: AllowedMention, roleId: string): AllowedMention
 	if not table.find(self.parse, "roles") then
 		table.insert(self.parse, "roles")
@@ -37,18 +44,22 @@ function AllowedMention.Prototype.addRoleMention(self: AllowedMention, roleId: s
 	return self
 end
 
---[[
+--[=[
+	@within Builders.AllowedMention
+
 	For replies, whether to mention the author of the message being replied to (default false)
-]]
+]=]
 function AllowedMention.Prototype.setRepliedUser(self: AllowedMention, repliedUser: boolean): AllowedMention
 	self.repliedUser = repliedUser
 
 	return self
 end
 
---[[
+--[=[
+	@within Builders.AllowedMention
+
 	Controls @everyone and @here mentions
-]]
+]=]
 function AllowedMention.Prototype.setMentionsEveryone(self: AllowedMention, mentionsEveryone: boolean): AllowedMention
 	if mentionsEveryone then
 		if not table.find(self.parse, "everyone") then
@@ -65,9 +76,11 @@ function AllowedMention.Prototype.setMentionsEveryone(self: AllowedMention, ment
 	return self
 end
 
---[[
+--[=[
+	@within Builders.AllowedMention
+
 	Responsible for building the AllowedMention JSON that can be parsed by the Discord API.
-]]
+]=]
 function AllowedMention.Prototype.build(self: AllowedMention): JSON
 	return {
 		parse = self.parse,
@@ -77,13 +90,11 @@ function AllowedMention.Prototype.build(self: AllowedMention): JSON
 	}
 end
 
---[[
-	Responsible for creating a new AllowedMention.
+--[=[
+	@within Builders.AllowedMention
 
-	```lua
-	
-	```
-]]
+	Responsible for creating a new AllowedMention.
+]=]
 function AllowedMention.Interface.new(resource: {
 	roles: { apiTypes.Snowflake },
 	users: { apiTypes.Snowflake },
@@ -92,9 +103,32 @@ function AllowedMention.Interface.new(resource: {
 }?): AllowedMention
 	local self = setmetatable(
 		{
+			--[=[
+				@prop parse { apiTypes.AllowedMentionTypes }
+				@within Builders.AllowedMention
+				An array of allowed mention types to parse from the content.
+			]=]
 			parse = {},
+
+			--[=[
+				@prop roles { string }
+				@within Builders.AllowedMention
+				Array of role_ids to mention (Max size of 100).
+			]=]
 			roles = {},
+
+			--[=[
+				@prop users { string }
+				@within Builders.AllowedMention
+				Array of user_ids to mention (Max size of 100).
+			]=]
 			users = {},
+
+			--[=[
+				@prop repliedUser boolean?
+				@within Builders.AllowedMention
+				For replies, whether to mention the author of the message being replied to.
+			]=]
 		} :: AllowedMention,
 		{
 			__index = AllowedMention.Prototype,
