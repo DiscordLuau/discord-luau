@@ -1,8 +1,11 @@
---[[
+--[=[
+	@class Builders.MessageParams
+	@__index Prototype
+
 	Implementation of discords MessageParams object as a Luau builder.	
 
 	https://discord.com/developers/docs/resources/channel#start-thread-in-forum-or-media-channel-forum-and-media-thread-message-params-object
-]]
+]=]
 
 local embed = require("../embed/embed")
 local allowedMention = require("../message/allowedMention")
@@ -19,9 +22,11 @@ local MessageParams = {}
 MessageParams.Prototype = {}
 MessageParams.Interface = {}
 
---[[
+--[=[
+	@within Builders.MessageParams
+
 	Sets the content of the message.
-]]
+]=]
 function MessageParams.Prototype.setContent(self: MessageParams, content: string): MessageParams
 	assert(#content < 2000, `MessageParams content must be less than 2000 characters.`)
 
@@ -30,9 +35,11 @@ function MessageParams.Prototype.setContent(self: MessageParams, content: string
 	return self
 end
 
---[[
+--[=[
+	@within Builders.MessageParams
+
 	Adds an embed to the message.
-]]
+]=]
 function MessageParams.Prototype.addEmbed(self: MessageParams, embedData: embed.JSON): MessageParams
 	local embeds = self.embeds or {}
 
@@ -43,18 +50,22 @@ function MessageParams.Prototype.addEmbed(self: MessageParams, embedData: embed.
 	return self
 end
 
---[[
+--[=[
+	@within Builders.MessageParams
+
 	Sets the allowed mentions for the message.
-]]
+]=]
 function MessageParams.Prototype.setAllowedMentions(self: MessageParams, mentions: allowedMention.JSON): MessageParams
 	self.allowedMentions = mentions
 
 	return self
 end
 
---[[
+--[=[
+	@within Builders.MessageParams
+
 	Adds a component to the message.
-]]
+]=]
 function MessageParams.Prototype.addComponent(
 	self: MessageParams,
 	component: button.JSON | textInput.JSON | selectMenu.JSON | actionRow.JSON
@@ -68,9 +79,11 @@ function MessageParams.Prototype.addComponent(
 	return self
 end
 
---[[
+--[=[
+	@within Builders.MessageParams
+
 	Adds a sticker ID to the message.
-]]
+]=]
 function MessageParams.Prototype.addStickerId(self: MessageParams, stickerId: string): MessageParams
 	local stickerIds = self.stickerIds or {}
 
@@ -81,9 +94,11 @@ function MessageParams.Prototype.addStickerId(self: MessageParams, stickerId: st
 	return self
 end
 
---[[
+--[=[
+	@within Builders.MessageParams
+
 	Adds an attachment to the message.
-]]
+]=]
 function MessageParams.Prototype.addAttachment(self: MessageParams, attachmentData: attachment.JSON): MessageParams
 	local attachments = (self.components or {}) :: { attachment.JSON }
 
@@ -94,18 +109,22 @@ function MessageParams.Prototype.addAttachment(self: MessageParams, attachmentDa
 	return self
 end
 
---[[
+--[=[
+	@within Builders.MessageParams
+
 	Sets the flags for the message.
-]]
+]=]
 function MessageParams.Prototype.setFlags(self: MessageParams, flags: number): MessageParams
 	self.flags = flags
 
 	return self
 end
 
---[[
+--[=[
+	@within Builders.MessageParams
+
 	Responsible for building the MessageParams JSON that can be parsed by the Discord API.
-]]
+]=]
 function MessageParams.Prototype.build(self: MessageParams): JSON
 	return {
 		content = self.content,
@@ -118,13 +137,11 @@ function MessageParams.Prototype.build(self: MessageParams): JSON
 	}
 end
 
---[[
+--[=[
+	@within Builders.MessageParams
+
 	Responsible for creating a new MessageParams.
-
-	```lua
-
-	```
-]]
+]=]
 function MessageParams.Interface.new(resource: {
 	content: string?,
 	embeds: { embed.JSON }?,
@@ -136,10 +153,50 @@ function MessageParams.Interface.new(resource: {
 }?): MessageParams
 	local self = setmetatable(
 		{
+			--[=[
+				@prop content string?
+				@within Builders.MessageParams
+				The message content that will be sent.
+			]=]
+			--[=[
+				@prop embeds { Builders.Embed }
+				@within Builders.MessageParams
+				Array of embed objects that will be attached to the message.
+			]=]
 			embeds = {},
+
+			--[=[
+				@prop allowedMentions Builders.AllowedMention
+				@within Builders.MessageParams
+				Controls the mentions that will ping in the message.
+			]=]
+
+			--[=[
+				@prop components { Builders.Button | Builders.TextInput | Builders.SelectMenu | Builders.ActionRow }
+				@within Builders.MessageParams
+				Array of message components that will be attached to the message.
+			]=]
 			components = {},
+
+			--[=[
+				@prop stickerIds { string }
+				@within Builders.MessageParams
+				Array of sticker IDs that will be attached to the message.
+			]=]
 			stickerIds = {},
+
+			--[=[
+				@prop attachments { Builders.Attachment }
+				@within Builders.MessageParams
+				Array of attachment objects that will be attached to the message.
+			]=]
 			attachments = {},
+
+			--[=[
+				@prop flags number?
+				@within Builders.MessageParams
+				Message flags to be applied to the message.
+			]=]
 		} :: MessageParams,
 		{
 			__index = MessageParams.Prototype,
