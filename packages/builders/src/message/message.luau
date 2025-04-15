@@ -1,8 +1,11 @@
---[[
+--[=[
+	@class Builders.Message
+	@__index Prototype
+
 	Implementation of discords Message object as a Luau builder.	
 
 	https://discord.com/developers/docs/resources/message#message-object
-]]
+]=]
 
 local embed = require("../embed/embed")
 local allowedMention = require("./allowedMention")
@@ -20,9 +23,11 @@ local Message = {}
 Message.Prototype = {}
 Message.Interface = {}
 
---[[
+--[=[
+	@within Builders.Message
+
 	Sets the content of the message.
-]]
+]=]
 function Message.Prototype.setContent(self: Message, content: string): Message
 	assert(#content < 2000, `Message content must be less than 2000 characters.`)
 
@@ -31,9 +36,11 @@ function Message.Prototype.setContent(self: Message, content: string): Message
 	return self
 end
 
---[[
+--[=[
+	@within Builders.Message
+
 	Sets the nonce of the message.
-]]
+]=]
 function Message.Prototype.setNonce(self: Message, nonce: string): Message
 	assert(#nonce < 25, `Message nonse must be less than 25 characters.`)
 
@@ -42,18 +49,22 @@ function Message.Prototype.setNonce(self: Message, nonce: string): Message
 	return self
 end
 
---[[
+--[=[
+	@within Builders.Message
+
 	Sets whether the message is text-to-speech.
-]]
+]=]
 function Message.Prototype.setTTS(self: Message, tts: boolean): Message
 	self.tts = tts
 
 	return self
 end
 
---[[
+--[=[
+	@within Builders.Message
+
 	Adds an embed to the message.
-]]
+]=]
 function Message.Prototype.addEmbed(self: Message, embedData: embed.JSON): Message
 	local embeds = self.embeds or {}
 
@@ -64,27 +75,33 @@ function Message.Prototype.addEmbed(self: Message, embedData: embed.JSON): Messa
 	return self
 end
 
---[[
+--[=[
+	@within Builders.Message
+
 	Sets the allowed mentions for the message.
-]]
+]=]
 function Message.Prototype.setAllowedMentions(self: Message, mentions: allowedMention.JSON): Message
 	self.allowedMentions = mentions
 
 	return self
 end
 
---[[
+--[=[
+	@within Builders.Message
+
 	Sets the message reference.
-]]
+]=]
 function Message.Prototype.setMessageReference(self: Message, ref: reference.JSON): Message
 	self.messageReference = ref
 
 	return self
 end
 
---[[
+--[=[
+	@within Builders.Message
+
 	Adds a component to the message.
-]]
+]=]
 function Message.Prototype.addComponent(
 	self: Message,
 	component: button.JSON | textInput.JSON | selectMenu.JSON | actionRow.JSON
@@ -98,9 +115,11 @@ function Message.Prototype.addComponent(
 	return self
 end
 
---[[
+--[=[
+	@within Builders.Message
+
 	Adds a sticker ID to the message.
-]]
+]=]
 function Message.Prototype.addStickerId(self: Message, stickerId: string): Message
 	local stickerIds = self.stickerIds or {}
 
@@ -111,9 +130,11 @@ function Message.Prototype.addStickerId(self: Message, stickerId: string): Messa
 	return self
 end
 
---[[
+--[=[
+	@within Builders.Message
+
 	Adds an attachment to the message.
-]]
+]=]
 function Message.Prototype.addAttachment(self: Message, data: string, name: string?): Message
 	table.insert(self.attachments, {
 		content = data,
@@ -123,38 +144,44 @@ function Message.Prototype.addAttachment(self: Message, data: string, name: stri
 	return self
 end
 
---[[
+--[=[
+	@within Builders.Message
+
 	Sets the flags for the message.
-]]
+]=]
 function Message.Prototype.setFlags(self: Message, flags: number): Message
 	self.flags = flags
 
 	return self
 end
 
---[[
-	If true and nonce is present, it will be checked for uniqueness in the past few minutes. If another message
-	was created by the same author with the same nonce, that message will be returned and no new message will 
-	be created.
-]]
+--[=[
+	@within Builders.Message
+
+	If true and nonce is present, it will be checked for uniqueness in the past few minutes.
+]=]
 function Message.Prototype.setEnforceNonce(self: Message, enforceNonce: boolean): Message
 	self.enforceNonce = enforceNonce
 
 	return self
 end
 
---[[
+--[=[
+	@within Builders.Message
+
 	Sets the poll for the message.
-]]
+]=]
 function Message.Prototype.setPoll(self: Message, poll: poll.JSON): Message
 	self.poll = poll
 
 	return self
 end
 
---[[
+--[=[
+	@within Builders.Message
+
 	Responsible for building the Message JSON that can be parsed by the Discord API.
-]]
+]=]
 function Message.Prototype.build(self: Message): JSON
 	return {
 		content = self.content,
@@ -172,13 +199,11 @@ function Message.Prototype.build(self: Message): JSON
 	}
 end
 
---[[
+--[=[
+	@within Builders.Message
+
 	Responsible for creating a new Message.
-
-	```lua
-
-	```
-]]
+]=]
 function Message.Interface.new(resource: {
 	content: string?,
 	nonce: string?,
@@ -195,10 +220,63 @@ function Message.Interface.new(resource: {
 }?): Message
 	local self = setmetatable(
 		{
+			--[=[
+				@prop embeds { Builders.Embed }
+				@within Builders.Message
+				Embedded rich content (up to 10 embeds).
+			]=]
 			embeds = {},
+
+			--[=[
+				@prop allowedMentions Builders.AllowedMention?
+				@within Builders.Message
+				Allowed mentions for the message.
+			]=]
+
+			--[=[
+				@prop messageReference Builders.Reference?
+				@within Builders.Message
+				Include to make your message a reply.
+			]=]
+
+			--[=[
+				@prop components { Builders.Button | Builders.TextInput | Builders.SelectMenu | Builders.ActionRow }
+				@within Builders.Message
+				Components to include with the message.
+			]=]
 			components = {},
+
+			--[=[
+				@prop stickerIds { string }
+				@within Builders.Message
+				IDs of up to 3 stickers in the server to send in the message.
+			]=]
 			stickerIds = {},
+
+			--[=[
+				@prop attachments { Attachment }
+				@within Builders.Message
+				Attachment objects with filename and description.
+			]=]
 			attachments = {},
+
+			--[=[
+				@prop flags number?
+				@within Builders.Message
+				Message flags combined as a bitfield.
+			]=]
+
+			--[=[
+				@prop enforceNonce boolean?
+				@within Builders.Message
+				Whether to check nonce uniqueness.
+			]=]
+
+			--[=[
+				@prop poll Builders.Poll?
+				@within Builders.Message
+				Poll data for the message.
+			]=]
 		} :: Message,
 		{
 			__index = Message.Prototype,
@@ -280,8 +358,6 @@ export type Message = typeof(Message.Prototype) & {
 	messageReference: reference.JSON?,
 	components: { button.JSON | textInput.JSON | selectMenu.JSON | actionRow.JSON },
 	stickerIds: { string },
-	-- files[n]
-	-- payloadJson
 	attachments: { Attachment },
 	flags: number?,
 	enforceNonce: boolean?,
