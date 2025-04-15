@@ -1,35 +1,44 @@
---[[
+--[=[
+	@class Builders.Option
+	@__index Prototype
+
 	Implementation of discords Option object as a Luau builder.	
 
 	https://discord.com/developers/docs/resources/guild#guild-onboarding-object-prompt-option-structure
-]]
+]=]
 
 local Option = {}
 
 Option.Prototype = {}
 Option.Interface = {}
 
---[[
+--[=[
+	@within Builders.Option
+
 	Add a Channel to this option
-]]
+]=]
 function Option.Prototype.addChannelId(self: Option, channelId: string): Option
 	table.insert(self.channelIds, channelId)
 
 	return self
 end
 
---[[
+--[=[
+	@within Builders.Option
+
 	Add a Role to this option
-]]
+]=]
 function Option.Prototype.addRoleId(self: Option, roleId: string): Option
 	table.insert(self.roleIds, roleId)
 
 	return self
 end
 
---[[
+--[=[
+	@within Builders.Option
+
 	Sets the emoji of this option.
-]]
+]=]
 function Option.Prototype.setEmoji(self: Option, emojiId: string, emojiName: string, isAnimated: boolean?): Option
 	self.emojiId = emojiId
 	self.emojiName = emojiName
@@ -38,27 +47,33 @@ function Option.Prototype.setEmoji(self: Option, emojiId: string, emojiName: str
 	return self
 end
 
---[[
+--[=[
+	@within Builders.Option
+
 	Sets the title of this option.
-]]
+]=]
 function Option.Prototype.setTitle(self: Option, title: string): Option
 	self.title = title
 
 	return self
 end
 
---[[
+--[=[
+	@within Builders.Option
+
 	Sets the description of this option.
-]]
+]=]
 function Option.Prototype.setDescription(self: Option, description: string): Option
 	self.description = description
 
 	return self
 end
 
---[[
+--[=[
+	@within Builders.Option
+
 	Responsible for building the OptionObject JSON that can be parsed by the Discord API.
-]]
+]=]
 function Option.Prototype.build(self: Option): JSON
 	return {
 		channel_ids = self.channelIds,
@@ -74,13 +89,11 @@ function Option.Prototype.build(self: Option): JSON
 	}
 end
 
---[[
-	Responsible for creating a new Option.
+--[=[
+	@within Builders.Option
 
-	```lua
-	
-	```
-]]
+	Responsible for creating a new Option.
+]=]
 function Option.Interface.new(resource: {
 	channelIds: { string }?,
 	roleIds: { string }?,
@@ -92,8 +105,49 @@ function Option.Interface.new(resource: {
 }?): Option
 	local self = setmetatable(
 		{
+			--[=[
+				@prop channelIds {string}
+				@within Builders.Option
+				Array of channel IDs that are associated with this option.
+			]=]
 			channelIds = {},
+
+			--[=[
+				@prop roleIds {string}
+				@within Builders.Option
+				Array of role IDs that are associated with this option.
+			]=]
 			roleIds = {},
+
+			--[=[
+				@prop emojiId string?
+				@within Builders.Option
+				The ID of the emoji used for this option.
+			]=]
+
+			--[=[
+				@prop emojiName string?
+				@within Builders.Option
+				The name of the emoji used for this option.
+			]=]
+
+			--[=[
+				@prop emojiAnimated boolean?
+				@within Builders.Option
+				Whether the emoji used for this option is animated.
+			]=]
+
+			--[=[
+				@prop title string
+				@within Builders.Option
+				The title displayed for this option.
+			]=]
+
+			--[=[
+				@prop description string?
+				@within Builders.Option
+				The description displayed for this option.
+			]=]
 		} :: Option,
 		{
 			__index = Option.Prototype,
