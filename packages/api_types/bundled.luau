@@ -1,4 +1,5 @@
 --!nonstrict
+--# selene: allow(unused_variable)
 
 export type ActivityObject = ActivityObject__DARKLUA_TYPE_aU
 export type StickerPackObject = StickerPackObject__DARKLUA_TYPE_cs
