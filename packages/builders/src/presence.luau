@@ -1,8 +1,11 @@
---[[
+--[=[
+	@class Builders.Presence
+	@__index Prototype
+
 	Implementation of a Discord Presence as a Luau builder.
 	
 	https://discord.com/developers/docs/events/gateway-events#update-presence
-]]
+]=]
 
 local apiTypes = require("../lune_packages/api_types")
 
@@ -13,18 +16,24 @@ local Presence = {}
 Presence.Prototype = {}
 Presence.Interface = {}
 
---[[
+--[=[
+	@within Builders.Presence
+	@private
+
 	Adds an activity to the presence.
-]]
+]=]
 function Presence.Prototype.addActivity(self: Presence, activity: activity.JSON): Presence
 	table.insert(self.activities, activity)
 
 	return self
 end
 
---[[
+--[=[
+	@within Builders.Presence
+	@private
+
 	Sets the status of the presence.
-]]
+]=]
 function Presence.Prototype.setStatus(self: Presence, status: apiTypes.Status): Presence
 	assert(
 		apiTypes.client.Status[status],
@@ -36,27 +45,36 @@ function Presence.Prototype.setStatus(self: Presence, status: apiTypes.Status): 
 	return self
 end
 
---[[
+--[=[
+	@within Builders.Presence
+	@private
+
 	Sets whether the presence is AFK.
-]]
+]=]
 function Presence.Prototype.setAfk(self: Presence, isAfk: boolean): Presence
 	self.afk = isAfk
 
 	return self
 end
 
---[[
+--[=[
+	@within Builders.Presence
+	@private
+
 	Sets the time since the presence was last updated.
-]]
+]=]
 function Presence.Prototype.setSince(self: Presence, delta: number): Presence
 	self.since = delta
 
 	return self
 end
 
---[[
+--[=[
+	@within Builders.Presence
+	@private
+
 	Builds the presence object that can be sent to the Discord API.
-]]
+]=]
 function Presence.Prototype.build(self: Presence): JSON
 	return {
 		since = self.since or 0,
@@ -66,13 +84,12 @@ function Presence.Prototype.build(self: Presence): JSON
 	}
 end
 
---[[
+--[=[
+	@within Builders.Presence
+	@private
+
 	Constructor for the Discord Presence Builder.
-
-	```lua
-
-	```
-]]
+]=]
 function Presence.Interface.new(resource: {
 	status: string?,
 	afk: boolean?,
@@ -81,7 +98,30 @@ function Presence.Interface.new(resource: {
 }?): Presence
 	local self = setmetatable(
 		{
+			--[=[
+				@prop activities { Classes.Activity }
+				@within Builders.Presence
+				An array of activity objects that represent what the client is currently doing.
+			]=]
 			activities = {},
+
+			--[=[
+				@prop since number?
+				@within Builders.Presence
+				Unix timestamp (in milliseconds) of when the client went idle, or null if the client is not idle.
+			]=]
+
+			--[=[
+				@prop afk boolean?
+				@within Builders.Presence
+				Whether or not the client is afk.
+			]=]
+
+			--[=[
+				@prop status string?
+				@within Builders.Presence
+				The user's current status. Can be "online", "dnd", "idle", "invisible", or "offline".
+			]=]
 		} :: Presence,
 		{ __index = Presence.Prototype }
 	)
