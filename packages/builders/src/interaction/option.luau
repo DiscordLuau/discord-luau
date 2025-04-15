@@ -1,13 +1,14 @@
---[[
-	Implementation of the Application Command Option Structure in Luau.	
+--[=[
+	@class Builders.Option
+	@__index Prototype
+
+	Implementation of the Application Command Option Structure in Luau.
 
 	https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure
-]]
+]=]
 
 local apiTypes = require("../../lune_packages/api_types")
-
 local interactionChoice = require("./choice")
-
 local util = require("../../lune_packages/util")
 
 local Option = {}
@@ -15,32 +16,34 @@ local Option = {}
 Option.Prototype = {}
 Option.Interface = {}
 
---[[
+--[=[
+	@within Builders.Option
+
 	Set the Type of option that will be built.
-]]
+]=]
 function Option.Prototype.setType(self: Option, type: apiTypes.ApplicationCommandOptionType): Option
 	self.type = type
-
 	return self
 end
 
---[[
+--[=[
+	@within Builders.Option
+
 	Set the name of this option, option name needs to be kebab case.
-]]
+]=]
 function Option.Prototype.setName(self: Option, name: string): Option
 	assert(#name <= 32, "name must be less than 32 characters")
 	assert(#name >= 1, "name must be at least 1 character")
-
 	assert(util.validateKebabCase(name), `name must be kebab case`)
-
 	self.name = name
-
 	return self
 end
 
---[[
-	add a name localization for this option.
-]]
+--[=[
+	@within Builders.Option
+
+	Add a name localization for this option.
+]=]
 function Option.Prototype.setNameLocalization(
 	self: Option,
 	localization: apiTypes.LanguageLocales,
@@ -48,29 +51,28 @@ function Option.Prototype.setNameLocalization(
 ): Option
 	assert(#name <= 32, "name must be less than 32 characters")
 	assert(#name >= 1, "name must be at least 1 character")
-
 	assert(util.validateKebabCase(name), `name must be kebab case`)
-
 	self.nameLocalizations[localization] = name
-
 	return self
 end
 
---[[
-	set the description of this option.
-]]
+--[=[
+	@within Builders.Option
+
+	Set the description of this option.
+]=]
 function Option.Prototype.setDescription(self: Option, description: string): Option
 	assert(#description <= 100, "description must be less than 100 characters")
 	assert(#description >= 1, "description must be at least 1 character")
-
 	self.description = description
-
 	return self
 end
 
---[[
-	add a description localization for this option.
-]]
+--[=[
+	@within Builders.Option
+
+	Add a description localization for this option.
+]=]
 function Option.Prototype.setDescriptionLocalization(
 	self: Option,
 	localization: apiTypes.LanguageLocales,
@@ -78,129 +80,128 @@ function Option.Prototype.setDescriptionLocalization(
 ): Option
 	assert(#description <= 100, "description must be less than 100 characters")
 	assert(#description >= 1, "description must be at least 1 character")
-
 	self.descriptionLocalizations[localization] = description
-
 	return self
 end
 
---[[
-	set if the option is required, will not work on SubCommand or SubCommandGroup options.
-]]
+--[=[
+	@within Builders.Option
+
+	Set if the option is required, will not work on SubCommand or SubCommandGroup options.
+]=]
 function Option.Prototype.setRequired(self: Option, isRequired: boolean): Option
 	assert(
 		self.type == "SubCommand" or self.type == "SubCommandGroup",
 		`Required cannot be set on SubCommands, or SubCommandGroups`
 	)
-
 	self.required = isRequired
-
 	return self
 end
 
---[[
-	add a choice to the option, will only work on String, Integer, or Number options.
-]]
+--[=[
+	@within Builders.Option
+
+	Add a choice to the option, will only work on String, Integer, or Number options.
+]=]
 function Option.Prototype.addChoice(self: Option, choice: interactionChoice.JSON): Option
 	assert(
 		self.type == "String" or self.type == "Integer" or self.type == "Number",
 		"Choices can only be added to String, Integer, or Number options"
 	)
-
 	table.insert(self.choices, choice)
-
 	return self
 end
 
---[[
-	add an option to the option, will only work on SubCommand or SubCommandGroup options.
-]]
+--[=[
+	@within Builders.Option
+
+	Add an option to the option, will only work on SubCommand or SubCommandGroup options.
+]=]
 function Option.Prototype.addOption(self: Option, option: JSON): Option
 	assert(
 		self.type == "SubCommand" or self.type == "SubCommandGroup",
 		`Options can only be added to SubCommands, or SubCommandGroups`
 	)
-
 	table.insert(self.options, option)
-
 	return self
 end
 
---[[
-	add supported channel types, will only work on Channel options.
-]]
+--[=[
+	@within Builders.Option
+
+	Add supported channel types, will only work on Channel options.
+]=]
 function Option.Prototype.addChannelType(self: Option, channelType: apiTypes.ChannelType): Option
 	assert(self.type == "Channel", `Channel types can only be added to Channel options`)
-
 	table.insert(self.apiTypes, channelType)
-
 	return self
 end
 
---[[
-	set the min value of this option, will only work on Integer or Number options.
-]]
+--[=[
+	@within Builders.Option
+
+	Set the min value of this option, will only work on Integer or Number options.
+]=]
 function Option.Prototype.setMinValue(self: Option, value: number): Option
 	assert(self.type == "Integer" or self.type == "Number", "Min values can only be set on Integer or Number options")
-
 	self.minValue = value
-
 	return self
 end
 
---[[
-	set the max value of this option, will only work on Integer or Number options.
-]]
+--[=[
+	@within Builders.Option
+
+	Set the max value of this option, will only work on Integer or Number options.
+]=]
 function Option.Prototype.setMaxValue(self: Option, value: number): Option
 	assert(self.type == "Integer" or self.type == "Number", "Min values can only be set on Integer or Number options")
-
 	self.maxValue = value
-
 	return self
 end
 
---[[
-	set the min length of this option, will only work on String options.
-]]
+--[=[
+	@within Builders.Option
+
+	Set the min length of this option, will only work on String options.
+]=]
 function Option.Prototype.setMinLength(self: Option, value: number): Option
 	assert(self.type == "String", "Min values can only be set on String options")
-
 	self.minLength = value
-
 	return self
 end
 
---[[
-	set the max length of this option, will only work on String options.
-]]
+--[=[
+	@within Builders.Option
+
+	Set the max length of this option, will only work on String options.
+]=]
 function Option.Prototype.setMaxLength(self: Option, value: number): Option
 	assert(self.type == "String", "Max values can only be set on String options")
-
 	self.maxLength = value
-
 	return self
 end
 
---[[
+--[=[
+	@within Builders.Option
+
 	If autocomplete interactions are enabled for this option, will only work on String, Integer, or Number options.
-]]
+]=]
 function Option.Prototype.setAutocompleteEnabled(self: Option, autocompleteEnabled: boolean): Option
 	assert(
 		self.type == "String" or self.type == "Integer" or self.type == "Number",
 		`Autocomplete can only be set on String, Integer, or Number options`
 	)
-
 	self.autocomplete = autocompleteEnabled
-
 	return self
 end
 
---[[
-	Responsible for buillding the default reaction object that the Discord API can understand.
-]]
+--[=[
+	@within Builders.Option
+
+	Responsible for building the option object that the Discord API can understand.
+]=]
 function Option.Prototype.build(self: Option): JSON
 	local channelTypeArray = {}
-
 	for _, channelType in self.apiTypes do
 		table.insert(channelTypeArray, apiTypes.channel.ChannelTypes[channelType])
 	end
@@ -211,7 +212,6 @@ function Option.Prototype.build(self: Option): JSON
 	return {
 		type = apiTypes.interaction.InteractionType[self.type],
 		channel_types = channelTypeArray,
-
 		name = self.name,
 		name_localizations = self.nameLocalizations,
 		description = self.description,
@@ -227,13 +227,11 @@ function Option.Prototype.build(self: Option): JSON
 	}
 end
 
---[[
-	Constructor for the Discord Default Reaction Builder.
+--[=[
+	@within Builders.Option
 
-	```lua
-	local defaultReaction = Option.new("000000000000000000", "secret-emoji"):build()
-	```
-]]
+	Constructor for the Discord Default Reaction Builder.
+]=]
 function Option.Interface.new(resource: {
 	type: apiTypes.ApplicationCommandOptionType?,
 	name: string?,
@@ -250,6 +248,77 @@ function Option.Interface.new(resource: {
 	maxLength: number?,
 	autocomplete: boolean?,
 }?): Option
+	--[=[
+		@prop type apiTypes.ApplicationCommandOptionType?
+		@within Builders.Option
+		The type of option (e.g., String, Integer, SubCommand).
+	]=]
+	--[=[
+		@prop name string?
+		@within Builders.Option
+		The name of the option.
+	]=]
+	--[=[
+		@prop nameLocalizations { [apiTypes.LanguageLocales]: string }
+		@within Builders.Option
+		Name localizations for different language locales.
+	]=]
+	--[=[
+		@prop description string?
+		@within Builders.Option
+		The description of the option.
+	]=]
+	--[=[
+		@prop descriptionLocalizations { [apiTypes.LanguageLocales]: string }
+		@within Builders.Option
+		Description localizations for different language locales.
+	]=]
+	--[=[
+		@prop required boolean?
+		@within Builders.Option
+		Whether this option is required to be set by the user.
+	]=]
+	--[=[
+		@prop choices { Builders.Choice.JSON }
+		@within Builders.Option
+		Possible choices for this option (String, Integer, or Number types only).
+	]=]
+	--[=[
+		@prop options { Builders.Option.JSON }
+		@within Builders.Option
+		Sub-options for this option (SubCommand or SubCommandGroup only).
+	]=]
+	--[=[
+		@prop apiTypes { apiTypes.ChannelType }
+		@within Builders.Option
+		Supported channel types for Channel option type.
+	]=]
+	--[=[
+		@prop minValue number?
+		@within Builders.Option
+		Minimum value allowed for the option (Integer/Number only).
+	]=]
+	--[=[
+		@prop maxValue number?
+		@within Builders.Option
+		Maximum value allowed for the option (Integer/Number only).
+	]=]
+	--[=[
+		@prop minLength number?
+		@within Builders.Option
+		Minimum string length for the option (String only).
+	]=]
+	--[=[
+		@prop maxLength number?
+		@within Builders.Option
+		Maximum string length for the option (String only).
+	]=]
+	--[=[
+		@prop autocomplete boolean?
+		@within Builders.Option
+		Whether autocomplete is enabled (String, Integer, or Number types only).
+	]=]
+
 	local self = setmetatable(
 		{
 			type = resource and resource.type,
@@ -269,7 +338,6 @@ function Option.Interface.new(resource: {
 		} :: Option,
 		{ __index = Option.Prototype }
 	)
-
 	return self
 end
 
