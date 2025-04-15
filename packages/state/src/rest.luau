@@ -7,6 +7,56 @@
 	track the rate limits and add the token to each request.
 ]=]
 
+--[=[
+	@prop token Secret
+	@within State.Rest
+]=]
+
+--[=[
+	@prop logger Logger
+	@within State.Rest
+]=]
+
+--[=[
+	@prop routeRatelimits { [string]: { remaining: number, limit: number, resetAfter: number, cooloff: boolean? } }
+	@within State.Rest
+]=]
+
+--[=[
+	@prop routeBuckets { [string]: string? }
+	@within State.Rest
+]=]
+
+--[=[
+	@prop globalRequestCount number
+	@within State.Rest
+]=]
+
+--[=[
+	@prop globalRatelimit number
+	@within State.Rest
+]=]
+
+--[=[
+	@prop isBlocked boolean
+	@within State.Rest
+]=]
+
+--[=[
+	@prop resourcesBlocked { [string]: boolean? }
+	@within State.Rest
+]=]
+
+--[=[
+	@prop intents number
+	@within State.Rest
+]=]
+
+--[=[
+	@prop version number
+	@within State.Rest
+]=]
+
 local secret = require("../luau_packages/secret")
 local formdata = require("../luau_packages/formdata")
 local stdPolyfills = require("../lune_packages/std_polyfills")
@@ -299,64 +349,15 @@ export type Attachment = {
 export type Bucket = string
 export type Ratelimit = { remaining: number, limit: number, resetAfter: number, cooloff: boolean? }
 export type REST = typeof(REST.Prototype) & {
-	--[=[
-		@prop token Secret
-		@within State.Rest
-	]=]
 	token: secret.Secret<string>,
-
-	--[=[
-		@prop logger Logger
-		@within State.Rest
-	]=]
 	logger: logger.Logger,
-
-	--[=[
-		@prop routeRatelimits { [string]: { remaining: number, limit: number, resetAfter: number, cooloff: boolean? } }
-		@within State.Rest
-	]=]
 	routeRatelimits: { [Bucket]: Ratelimit },
-
-	--[=[
-		@prop routeBuckets { [string]: string? }
-		@within State.Rest
-	]=]
 	routeBuckets: { [string]: Bucket? },
-
-	--[=[
-		@prop globalRequestCount number
-		@within State.Rest
-	]=]
 	globalRequestCount: number,
-
-	--[=[
-		@prop globalRatelimit number
-		@within State.Rest
-	]=]
 	globalRatelimit: number,
-
-	--[=[
-		@prop isBlocked boolean
-		@within State.Rest
-	]=]
 	isBlocked: boolean,
-
-	--[=[
-		@prop resourcesBlocked { [string]: boolean? }
-		@within State.Rest
-	]=]
 	resourcesBlocked: { [string]: boolean? },
-
-	--[=[
-		@prop intents number
-		@within State.Rest
-	]=]
 	intents: number,
-
-	--[=[
-		@prop version number
-		@within State.Rest
-	]=]
 	version: number,
 }
 

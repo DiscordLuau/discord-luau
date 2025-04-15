@@ -5,6 +5,30 @@
 	Interactable interaction behaviours for Discord interactions.
 ]=]
 
+--[=[
+	@within Classes.Interactable
+	@prop state State
+	The state object for this interaction.
+]=]
+
+--[=[
+	@within Classes.Interactable
+	@prop id string
+	The ID of the interaction.
+]=]
+
+--[=[
+	@within Classes.Interactable
+	@prop token string
+	The token for this interaction.
+]=]
+
+--[=[
+	@within Classes.Interactable
+	@prop isDeferred boolean
+	Whether this interaction has been deferred.
+]=]
+
 local state = require("../../../lune_packages/state")
 local apiTypes = require("../../../lune_packages/api_types")
 local future = require("../../../luau_packages/future")
@@ -281,32 +305,9 @@ end
 export type InteractionMethods = typeof(Interaction.Prototype)
 
 export type Interaction = InteractionMethods & {
-	--[=[
-		@within Classes.Interactable
-		@prop state State
-		The state object for this interaction.
-	]=]
 	state: state.State,
-
-	--[=[
-		@within Classes.Interactable
-		@prop id string
-		The ID of the interaction.
-	]=]
 	id: string,
-
-	--[=[
-		@within Classes.Interactable
-		@prop token string
-		The token for this interaction.
-	]=]
 	token: string,
-
-	--[=[
-		@within Classes.Interactable
-		@prop isDeferred boolean
-		Whether this interaction has been deferred.
-	]=]
 	isDeferred: boolean?,
 }
 

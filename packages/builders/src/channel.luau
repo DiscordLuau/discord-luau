@@ -7,6 +7,126 @@
 	https://discord.com/developers/docs/resources/guild#create-guild-channel
 ]=]
 
+--[=[
+	@prop id string?
+	@within Builders.Channel
+	The id of the channel.
+]=]
+
+--[=[
+	@prop name string?
+	@within Builders.Channel
+	The name of the channel.
+]=]
+
+--[=[
+	@prop type apiTypes.ChannelType
+	@within Builders.Channel
+	The type of the channel.
+]=]
+
+--[=[
+	@prop position number?
+	@within Builders.Channel
+	Position of the channel in the list.
+]=]
+
+--[=[
+	@prop icon string?
+	@within Builders.Channel
+	The base64 icon for the channel (used in DMs).
+]=]
+
+--[=[
+	@prop flags number?
+	@within Builders.Channel
+	Bitfield flags for the channel.
+]=]
+
+--[=[
+	@prop topic string?
+	@within Builders.Channel
+	The topic of the text channel.
+]=]
+
+--[=[
+	@prop rateLimitPerUser number?
+	@within Builders.Channel
+	Slowmode in seconds for users.
+	]=]
+
+--[=[
+	@prop parentId string?
+	@within Builders.Channel
+	Parent category ID.
+]=]
+
+--[=[
+	@prop nsfw boolean?
+	@within Builders.Channel
+	Whether the channel is marked as NSFW.
+]=]
+
+--[=[
+	@prop defaultAutoArchiveDuration number?
+	@within Builders.Channel
+	Default auto archive duration in minutes.
+]=]
+
+--[=[
+	@prop defaultThreadRateLimitPerUser number?
+	@within Builders.Channel
+	Slowmode in seconds for thread messages.
+]=]
+
+--[=[
+	@prop defaultReactionEmoji apiTypes.DefaultReactionObject?
+	@within Builders.Channel
+	Default reaction emoji object.
+]=]
+
+--[=[
+	@prop availableTags { apiTypes.ForumTagObject }?
+	@within Builders.Channel
+	Available forum tags.
+]=]
+
+--[=[
+	@prop defaultSortOrder apiTypes.ForumSortOrder?
+	@within Builders.Channel
+	Default sort order for threads.
+]=]
+
+--[=[
+	@prop defaultForumLayout apiTypes.ForumLayout?
+	@within Builders.Channel
+	Default forum layout type.
+	]=]
+
+--[=[
+	@prop videoQualityMode apiTypes.VideoQualityMode?
+	@within Builders.Channel
+	Voice channel video quality mode.
+]=]
+
+--[=[
+	@prop rtcRegion string?
+	@within Builders.Channel
+	Voice region id for the channel.
+]=]
+
+--[=[
+	@prop userLimit number?
+	@within Builders.Channel
+	Maximum number of users allowed in the voice channel.
+]=]
+
+--[=[
+	@prop bitrate number?
+	@within Builders.Channel
+	Bitrate of the voice channel in bits.
+]=]
+
 local apiTypes = require("../lune_packages/api_types")
 local util = require("../lune_packages/util")
 
@@ -424,146 +544,26 @@ function Channel.Interface.new(resource: {
 end
 
 export type Channel = typeof(Channel.Prototype) & {
-	--[=[
-		@prop id string?
-		@within Builders.Channel
-		The id of the channel.
-	]=]
 	id: apiTypes.Snowflake?,
-
-	--[=[
-		@prop name string?
-		@within Builders.Channel
-		The name of the channel.
-	]=]
 	name: string?,
-
-	--[=[
-		@prop type apiTypes.ChannelType
-		@within Builders.Channel
-		The type of the channel.
-	]=]
 	type: apiTypes.ChannelType,
-
 	permissionOverwrites: { apiTypes.OverwriteObject },
-
-	--[=[
-		@prop position number?
-		@within Builders.Channel
-		Position of the channel in the list.
-	]=]
 	position: number?,
-
-	--[=[
-		@prop icon string?
-		@within Builders.Channel
-		The base64 icon for the channel (used in DMs).
-	]=]
 	icon: string?,
-
-	--[=[
-		@prop flags number?
-		@within Builders.Channel
-		Bitfield flags for the channel.
-	]=]
 	flags: number?,
-
-	--[=[
-		@prop topic string?
-		@within Builders.Channel
-		The topic of the text channel.
-	]=]
 	topic: string?,
-
-	--[=[
-		@prop rateLimitPerUser number?
-		@within Builders.Channel
-		Slowmode in seconds for users.
-	]=]
 	rateLimitPerUser: number?,
-
-	--[=[
-		@prop parentId string?
-		@within Builders.Channel
-		Parent category ID.
-	]=]
 	parentId: apiTypes.Snowflake?,
-
-	--[=[
-		@prop nsfw boolean?
-		@within Builders.Channel
-		Whether the channel is marked as NSFW.
-	]=]
 	nsfw: boolean?,
-
-	--[=[
-		@prop defaultAutoArchiveDuration number?
-		@within Builders.Channel
-		Default auto archive duration in minutes.
-	]=]
 	defaultAutoArchiveDuration: number?,
-
-	--[=[
-		@prop defaultThreadRateLimitPerUser number?
-		@within Builders.Channel
-		Slowmode in seconds for thread messages.
-	]=]
 	defaultThreadRateLimitPerUser: number?,
-
-	--[=[
-		@prop defaultReactionEmoji apiTypes.DefaultReactionObject?
-		@within Builders.Channel
-		Default reaction emoji object.
-	]=]
 	defaultReactionEmoji: apiTypes.DefaultReactionObject?,
-
-	--[=[
-		@prop availableTags { apiTypes.ForumTagObject }?
-		@within Builders.Channel
-		Available forum tags.
-	]=]
 	availableTags: { apiTypes.ForumTagObject }?,
-
-	--[=[
-		@prop defaultSortOrder apiTypes.ForumSortOrder?
-		@within Builders.Channel
-		Default sort order for threads.
-	]=]
 	defaultSortOrder: apiTypes.ForumSortOrder?,
-
-	--[=[
-		@prop defaultForumLayout apiTypes.ForumLayout?
-		@within Builders.Channel
-		Default forum layout type.
-	]=]
 	defaultForumLayout: apiTypes.ForumLayout?,
-
-	--[=[
-		@prop videoQualityMode apiTypes.VideoQualityMode?
-		@within Builders.Channel
-		Voice channel video quality mode.
-	]=]
 	videoQualityMode: apiTypes.VideoQualityMode?,
-
-	--[=[
-		@prop rtcRegion string?
-		@within Builders.Channel
-		Voice region id for the channel.
-	]=]
 	rtcRegion: string?,
-
-	--[=[
-		@prop userLimit number?
-		@within Builders.Channel
-		Maximum number of users allowed in the voice channel.
-	]=]
 	userLimit: number?,
-
-	--[=[
-		@prop bitrate number?
-		@within Builders.Channel
-		Bitrate of the voice channel in bits.
-	]=]
 	bitrate: number?,
 }
 

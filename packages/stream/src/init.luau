@@ -9,6 +9,16 @@
 		and instead rely on the Stream to peek, advance and so forth.
 ]=]
 
+--[=[
+	@prop textSource string
+	@within Stream
+]=]
+
+--[=[
+	@prop cursorPosition number
+	@within Stream
+]=]
+
 local Stream = {}
 
 Stream.Interface = {}
@@ -122,16 +132,7 @@ function Stream.Interface.new(textSource: string): Stream
 end
 
 export type Stream = typeof(Stream.Prototype) & {
-	--[=[
-		@prop textSource string
-		@within Stream
-	]=]
 	textSource: string,
-
-	--[=[
-		@prop cursorPosition number
-		@within Stream
-	]=]
 	cursorPosition: number,
 }
 

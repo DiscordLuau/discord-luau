@@ -5,6 +5,16 @@
 	Class responsible for handling the underlying cache for all objects in Discord-Luau
 ]=]
 
+--[=[
+	@prop store { [K]: V }
+	@within State.Cache
+]=]
+
+--[=[
+	@prop expiry number
+	@within State.Cache
+]=]
+
 local stdPolyfills = require("../lune_packages/std_polyfills")
 
 local Cache = {}
@@ -66,16 +76,7 @@ end
 
 export type Store<K, V> = { [K]: V }
 export type Cache<K, V> = typeof(Cache.Prototype) & {
-	--[=[
-		@prop store { [K]: V }
-		@within State.Cache
-	]=]
 	store: Store<K, V>,
-
-	--[=[
-		@prop expiry number
-		@within State.Cache
-	]=]
 	expiry: number,
 }
 

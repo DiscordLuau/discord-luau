@@ -1,3 +1,15 @@
+--[=[
+	@class WebSocket.Manager
+	@__index Prototype
+
+	Manages the connection and communication with the Discord Gateway using multiple shards.
+
+	This serves as the primary class for developers wanting to interact with the Discord Gateway, this class is
+	responsible for creating the required shards sending messages asynchronously through each shard.
+	
+	@external future https://yetanotherclown.github.io/luau-futures/
+]=]
+
 local stdPolyfills = require("../lune_packages/std_polyfills")
 
 local emitter = require("../luau_packages/emitter")
@@ -12,15 +24,78 @@ local shard = require("./shard")
 local CONCURRENT_IDENTIFY_YIELD = 5
 
 --[=[
-	@class WebSocket.Manager
-	@__index Prototype
+	@prop token Secret 
+	@within WebSocket.Manager
+]=]
 
-	Manages the connection and communication with the Discord Gateway using multiple shards.
+--[=[
+	@prop intents number
+	@within WebSocket.Manager
+]=]
 
-	This serves as the primary class for developers wanting to interact with the Discord Gateway, this class is
-	responsible for creating the required shards sending messages asynchronously through each shard.
-	
-	@external future https://yetanotherclown.github.io/luau-futures/
+--[=[
+	@prop webSocketVersion number
+	@within WebSocket.Manager
+]=]
+
+--[=[
+	@prop largeThreshold number?
+	@within WebSocket.Manager
+]=]
+
+--[=[
+	@prop shouldReconnect boolean
+	@within WebSocket.Manager
+]=]
+
+--[=[
+	@prop ready boolean
+	@within WebSocket.Manager
+]=]
+
+--[=[
+	@prop shardIds { ShardId }
+	@within WebSocket.Manager
+]=]
+
+--[=[
+	@prop shards { [ShardId]: WebSocket.Shard }
+	@within WebSocket.Manager
+]=]
+
+--[=[
+	@prop logger Logger.Logger
+	@within WebSocket.Manager
+]=]
+
+--[=[
+	@prop onDisconnected Emitter<ShardPayload<{ errorCode: number? }>>
+	@within WebSocket.Manager
+]=]
+
+--[=[
+	@prop onDisconnected Emitter<ShardPayload<{}>>,
+	@within WebSocket.Manager
+]=]
+
+--[=[
+	@prop onDisconnected Emitter<ShardPayload<{}>>,
+	@within WebSocket.Manager
+]=]
+
+--[=[
+	@prop onDisconnected Emitter<ShardPayload<{ latency: number }>>,
+	@within WebSocket.Manager
+]=]
+
+--[=[
+	@prop onDisconnected Emitter<ShardPayload<{ shardId: number, event: apiTypes.ReceiveEvent, payload: apiTypes.Payload<unknown> }>>
+	@within WebSocket.Manager
+]=]
+
+--[=[
+	@prop onDisconnected Emitter<ShardPayload<{ shardId: number, payload: apiTypes.ReadyPayload }>>
+	@within WebSocket.Manager
 ]=]
 
 local Manager = {}
@@ -215,98 +290,24 @@ export type ShardId = number
 export type ShardPayload<DATA> = { shardId: number } & DATA
 
 export type Manager = typeof(Manager.Prototype) & {
-	--[=[
-		@prop token Secret 
-		@within WebSocket.Manager
-	]=]
 	token: secret.Secret<string>,
-
-	--[=[
-		@prop intents number
-		@within WebSocket.Manager
-	]=]
 	intents: number,
-
-	--[=[
-		@prop webSocketVersion number
-		@within WebSocket.Manager
-	]=]
 	webSocketVersion: number,
-
-	--[=[
-		@prop largeThreshold number?
-		@within WebSocket.Manager
-	]=]
 	largeThreshold: number?,
-
-	--[=[
-		@prop shouldReconnect boolean
-		@within WebSocket.Manager
-	]=]
 	shouldReconnect: boolean,
-
-	--[=[
-		@prop ready boolean
-		@within WebSocket.Manager
-	]=]
 	ready: boolean,
-
-	--[=[
-		@prop shardIds { ShardId }
-		@within WebSocket.Manager
-	]=]
 	shardIds: { ShardId },
-
-	--[=[
-		@prop shards { [ShardId]: WebSocket.Shard }
-		@within WebSocket.Manager
-	]=]
 	shards: { [ShardId]: shard.Shard },
-
-	--[=[
-		@prop logger Logger.Logger
-		@within WebSocket.Manager
-	]=]
 	logger: logger.Logger,
-
-	--[=[
-		@prop onDisconnected Emitter<ShardPayload<{ errorCode: number? }>>
-		@within WebSocket.Manager
-	]=]
 	onDisconnected: emitter.Emitter<ShardPayload<{ errorCode: number? }>>,
-
-	--[=[
-		@prop onDisconnected Emitter<ShardPayload<{}>>,
-		@within WebSocket.Manager
-	]=]
 	onReconnected: emitter.Emitter<ShardPayload<{}>>,
-
-	--[=[
-		@prop onDisconnected Emitter<ShardPayload<{}>>,
-		@within WebSocket.Manager
-	]=]
 	onConnected: emitter.Emitter<ShardPayload<{}>>,
-
-	--[=[
-		@prop onDisconnected Emitter<ShardPayload<{ latency: number }>>,
-		@within WebSocket.Manager
-	]=]
 	onHeartbeat: emitter.Emitter<ShardPayload<{ latency: number }>>,
-
-	--[=[
-		@prop onDisconnected Emitter<ShardPayload<{ shardId: number, event: apiTypes.ReceiveEvent, payload: apiTypes.Payload<unknown> }>>
-		@within WebSocket.Manager
-	]=]
 	onDispatch: emitter.Emitter<ShardPayload<{
 		shardId: number,
 		event: apiTypes.ReceiveEvent,
 		payload: apiTypes.Payload<unknown>,
 	}>>,
-
-	--[=[
-		@prop onDisconnected Emitter<ShardPayload<{ shardId: number, payload: apiTypes.ReadyPayload }>>
-		@within WebSocket.Manager
-	]=]
 	onAllShardsReady: emitter.Emitter<ShardPayload<{
 		shardId: number,
 		payload: apiTypes.ReadyPayload,
