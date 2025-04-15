@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.Guild
+	@class Builders.Guild
 	@__index Prototype
 
 	Implementation of Discord's Guild object as a Luau builder.
@@ -17,7 +17,7 @@ Guild.Prototype = {}
 Guild.Interface = {}
 
 --[=[
-	@within Classes.Guild
+	@within Builders.Guild
 	Set the name for this guild.
 ]=]
 function Guild.Prototype.setName(self: Guild, name: string): Guild
@@ -30,7 +30,7 @@ function Guild.Prototype.setName(self: Guild, name: string): Guild
 end
 
 --[=[
-	@within Classes.Guild
+	@within Builders.Guild
 	Set the explicit verification level for this guild.
 ]=]
 function Guild.Prototype.setVerificationLevel(self: Guild, verificationLevel: apiTypes.VerificationLevel): Guild
@@ -42,7 +42,7 @@ function Guild.Prototype.setVerificationLevel(self: Guild, verificationLevel: ap
 end
 
 --[=[
-	@within Classes.Guild
+	@within Builders.Guild
 	Set the explicit default message notifications for this guild.
 ]=]
 function Guild.Prototype.setDefaultMessageNotifications(
@@ -60,7 +60,7 @@ function Guild.Prototype.setDefaultMessageNotifications(
 end
 
 --[=[
-	@within Classes.Guild
+	@within Builders.Guild
 	Set the explicit content filter level for this guild.
 ]=]
 function Guild.Prototype.setExplicitContentFilter(
@@ -75,7 +75,7 @@ function Guild.Prototype.setExplicitContentFilter(
 end
 
 --[=[
-	@within Classes.Guild
+	@within Builders.Guild
 	Set the id for the AFK channel.
 ]=]
 function Guild.Prototype.setAfkChannelId(self: Guild, afkChannelId: apiTypes.Snowflake): Guild
@@ -85,7 +85,7 @@ function Guild.Prototype.setAfkChannelId(self: Guild, afkChannelId: apiTypes.Sno
 end
 
 --[=[
-	@within Classes.Guild
+	@within Builders.Guild
 	Set the AFK timeout in seconds. Can be one of: 60, 300, 900, 1800, 3600.
 ]=]
 function Guild.Prototype.setAfkTimeout(self: Guild, afkTimeout: number): Guild
@@ -95,7 +95,7 @@ function Guild.Prototype.setAfkTimeout(self: Guild, afkTimeout: number): Guild
 end
 
 --[=[
-	@within Classes.Guild
+	@within Builders.Guild
 	Set the base64 1024x1024 PNG/JPEG/GIF image for the guild icon.
 ]=]
 function Guild.Prototype.setIcon(self: Guild, source: string): Guild
@@ -105,7 +105,7 @@ function Guild.Prototype.setIcon(self: Guild, source: string): Guild
 end
 
 --[=[
-	@within Classes.Guild
+	@within Builders.Guild
 	Set the user ID to transfer guild ownership to (must be owner).
 ]=]
 function Guild.Prototype.setOwnerId(self: Guild, ownerId: apiTypes.Snowflake): Guild
@@ -115,7 +115,7 @@ function Guild.Prototype.setOwnerId(self: Guild, ownerId: apiTypes.Snowflake): G
 end
 
 --[=[
-	@within Classes.Guild
+	@within Builders.Guild
 	Set the base64 16:9 PNG/JPEG image for the guild splash.
 ]=]
 function Guild.Prototype.setSplash(self: Guild, source: string): Guild
@@ -125,7 +125,7 @@ function Guild.Prototype.setSplash(self: Guild, source: string): Guild
 end
 
 --[=[
-	@within Classes.Guild
+	@within Builders.Guild
 	Set the base64 16:9 PNG/JPEG image for the discovery splash of the guild.
 ]=]
 function Guild.Prototype.setDiscoverySplash(self: Guild, source: string): Guild
@@ -135,7 +135,7 @@ function Guild.Prototype.setDiscoverySplash(self: Guild, source: string): Guild
 end
 
 --[=[
-	@within Classes.Guild
+	@within Builders.Guild
 	Set the base64 16:9 PNG/JPEG/GIF image for the guild banner.
 ]=]
 function Guild.Prototype.setBanner(self: Guild, source: string): Guild
@@ -145,7 +145,7 @@ function Guild.Prototype.setBanner(self: Guild, source: string): Guild
 end
 
 --[=[
-	@within Classes.Guild
+	@within Builders.Guild
 	Set the ID of the system channel.
 ]=]
 function Guild.Prototype.setSystemChannelId(self: Guild, systemChannelId: apiTypes.Snowflake): Guild
@@ -155,7 +155,7 @@ function Guild.Prototype.setSystemChannelId(self: Guild, systemChannelId: apiTyp
 end
 
 --[=[
-	@within Classes.Guild
+	@within Builders.Guild
 	Set the system channel flags.
 ]=]
 function Guild.Prototype.setSystemChannelFlags(self: Guild, systemChannelFlags: number): Guild
@@ -165,7 +165,7 @@ function Guild.Prototype.setSystemChannelFlags(self: Guild, systemChannelFlags: 
 end
 
 --[=[
-	@within Classes.Guild
+	@within Builders.Guild
 	Set the ID of the rules channel.
 ]=]
 function Guild.Prototype.setRulesChannelId(self: Guild, rulesChannelId: apiTypes.Snowflake): Guild
@@ -175,7 +175,7 @@ function Guild.Prototype.setRulesChannelId(self: Guild, rulesChannelId: apiTypes
 end
 
 --[=[
-	@within Classes.Guild
+	@within Builders.Guild
 	Set the ID of the public updates channel.
 ]=]
 function Guild.Prototype.setPublicUpdatesChannelId(self: Guild, publicUpdatesChannelId: apiTypes.Snowflake): Guild
@@ -185,7 +185,7 @@ function Guild.Prototype.setPublicUpdatesChannelId(self: Guild, publicUpdatesCha
 end
 
 --[=[
-	@within Classes.Guild
+	@within Builders.Guild
 	Set the preferred locale of the guild.
 ]=]
 function Guild.Prototype.setPreferredLocale(self: Guild, preferredLocale: apiTypes.LanguageLocales): Guild
@@ -195,7 +195,7 @@ function Guild.Prototype.setPreferredLocale(self: Guild, preferredLocale: apiTyp
 end
 
 --[=[
-	@within Classes.Guild
+	@within Builders.Guild
 	Enable a specific guild feature.
 ]=]
 function Guild.Prototype.addFeature(self: Guild, feature: apiTypes.GuildFeature): Guild
@@ -205,7 +205,7 @@ function Guild.Prototype.addFeature(self: Guild, feature: apiTypes.GuildFeature)
 end
 
 --[=[
-	@within Classes.Guild
+	@within Builders.Guild
 	Set the description for the guild.
 ]=]
 function Guild.Prototype.setDescription(self: Guild, description: string): Guild
@@ -215,7 +215,7 @@ function Guild.Prototype.setDescription(self: Guild, description: string): Guild
 end
 
 --[=[
-	@within Classes.Guild
+	@within Builders.Guild
 	Set whether the guild's boost progress bar should be enabled.
 ]=]
 function Guild.Prototype.setPremiumProgressBarEnabled(self: Guild, premiumProgressBarEnabled: boolean): Guild
@@ -225,7 +225,7 @@ function Guild.Prototype.setPremiumProgressBarEnabled(self: Guild, premiumProgre
 end
 
 --[=[
-	@within Classes.Guild
+	@within Builders.Guild
 	Set the ID of the safety alerts channel.
 ]=]
 function Guild.Prototype.setSafetyAlertsChannelId(self: Guild, safetyAlertsChannelId: apiTypes.Snowflake): Guild
@@ -235,7 +235,7 @@ function Guild.Prototype.setSafetyAlertsChannelId(self: Guild, safetyAlertsChann
 end
 
 --[=[
-	@within Classes.Guild
+	@within Builders.Guild
 	Responsible for building the Guild JSON that can be parsed by the Discord API.
 ]=]
 function Guild.Prototype.build(self: Guild): JSON
@@ -264,7 +264,7 @@ function Guild.Prototype.build(self: Guild): JSON
 end
 
 --[=[
-	@within Classes.Guild
+	@within Builders.Guild
 	Construct a new Guild object.
 ]=]
 function Guild.Interface.new(resource: {
@@ -293,122 +293,122 @@ function Guild.Interface.new(resource: {
 		{
 			--[=[
 				@prop name string?
-				@within Classes.Guild
+				@within Builders.Guild
 				The name of the guild.
 			]=]
 
 			--[=[
 				@prop verificationLevel Classes.VerificationLevel
-				@within Classes.Guild
+				@within Builders.Guild
 				Verification level setting for the guild.
 			]=]
 
 			--[=[
 				@prop defaultMessageNotifications Classes.DefaultMessageNotification
-				@within Classes.Guild
+				@within Builders.Guild
 				Default message notification level.
 			]=]
 
 			--[=[
 				@prop explicitContentFilter Classes.ExplicitContentFilterLevel
-				@within Classes.Guild
+				@within Builders.Guild
 				Explicit content filter level setting.
 			]=]
 
 			--[=[
 				@prop afkChannelId string?
-				@within Classes.Guild
+				@within Builders.Guild
 				ID of the AFK voice channel.
 			]=]
 
 			--[=[
 				@prop afkTimeout number?
-				@within Classes.Guild
+				@within Builders.Guild
 				AFK timeout duration in seconds.
 			]=]
 
 			--[=[
 				@prop icon string?
-				@within Classes.Guild
+				@within Builders.Guild
 				Base64 encoded icon for the guild.
 			]=]
 
 			--[=[
 				@prop ownerId string?
-				@within Classes.Guild
+				@within Builders.Guild
 				User ID of the owner of the guild.
 			]=]
 
 			--[=[
 				@prop splash string?
-				@within Classes.Guild
+				@within Builders.Guild
 				Base64 splash image for the guild.
 			]=]
 
 			--[=[
 				@prop discoverySplash string?
-				@within Classes.Guild
+				@within Builders.Guild
 				Base64 discovery splash image for the guild.
 			]=]
 
 			--[=[
 				@prop banner string?
-				@within Classes.Guild
+				@within Builders.Guild
 				Base64 banner image for the guild.
 			]=]
 
 			--[=[
 				@prop systemChannelId string?
-				@within Classes.Guild
+				@within Builders.Guild
 				ID of the system messages channel.
 			]=]
 
 			--[=[
 				@prop systemChannelFlags number?
-				@within Classes.Guild
+				@within Builders.Guild
 				Flags for the system channel.
 			]=]
 
 			--[=[
 				@prop rulesChannelId string?
-				@within Classes.Guild
+				@within Builders.Guild
 				ID of the rules channel.
 			]=]
 
 			--[=[
 				@prop publicUpdatesChannelId string?
-				@within Classes.Guild
+				@within Builders.Guild
 				ID of the public updates channel.
 			]=]
 
 			--[=[
 				@prop preferredLocale Classes.LanguageLocales?
-				@within Classes.Guild
+				@within Builders.Guild
 				Preferred language/locale for the guild.
 			]=]
 
 			--[=[
-				@prop features { Classes.GuildFeature }
-				@within Classes.Guild
+				@prop features { Builders.GuildFeature }
+				@within Builders.Guild
 				List of enabled guild features.
 			]=]
 			features = {},
 
 			--[=[
 				@prop description string?
-				@within Classes.Guild
+				@within Builders.Guild
 				Description of the guild.
 			]=]
 
 			--[=[
 				@prop premiumProgressBarEnabled boolean?
-				@within Classes.Guild
+				@within Builders.Guild
 				Whether boost progress bar is enabled.
 			]=]
 
 			--[=[
 				@prop safetyAlertsChannelId string?
-				@within Classes.Guild
+				@within Builders.Guild
 				ID of the safety alerts channel.
 			]=]
 		} :: Guild,

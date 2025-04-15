@@ -1,5 +1,5 @@
 --[=[
-	@class Builders.Option
+	@class Builders.Interaction.Option
 	@__index Prototype
 
 	Implementation of the Application Command Option Structure in Luau.
@@ -17,7 +17,7 @@ Option.Prototype = {}
 Option.Interface = {}
 
 --[=[
-	@within Builders.Option
+	@within Builders.Interaction.Option
 
 	Set the Type of option that will be built.
 ]=]
@@ -27,7 +27,7 @@ function Option.Prototype.setType(self: Option, type: apiTypes.ApplicationComman
 end
 
 --[=[
-	@within Builders.Option
+	@within Builders.Interaction.Option
 
 	Set the name of this option, option name needs to be kebab case.
 ]=]
@@ -40,7 +40,7 @@ function Option.Prototype.setName(self: Option, name: string): Option
 end
 
 --[=[
-	@within Builders.Option
+	@within Builders.Interaction.Option
 
 	Add a name localization for this option.
 ]=]
@@ -57,7 +57,7 @@ function Option.Prototype.setNameLocalization(
 end
 
 --[=[
-	@within Builders.Option
+	@within Builders.Interaction.Option
 
 	Set the description of this option.
 ]=]
@@ -69,7 +69,7 @@ function Option.Prototype.setDescription(self: Option, description: string): Opt
 end
 
 --[=[
-	@within Builders.Option
+	@within Builders.Interaction.Option
 
 	Add a description localization for this option.
 ]=]
@@ -85,7 +85,7 @@ function Option.Prototype.setDescriptionLocalization(
 end
 
 --[=[
-	@within Builders.Option
+	@within Builders.Interaction.Option
 
 	Set if the option is required, will not work on SubCommand or SubCommandGroup options.
 ]=]
@@ -99,7 +99,7 @@ function Option.Prototype.setRequired(self: Option, isRequired: boolean): Option
 end
 
 --[=[
-	@within Builders.Option
+	@within Builders.Interaction.Option
 
 	Add a choice to the option, will only work on String, Integer, or Number options.
 ]=]
@@ -113,7 +113,7 @@ function Option.Prototype.addChoice(self: Option, choice: interactionChoice.JSON
 end
 
 --[=[
-	@within Builders.Option
+	@within Builders.Interaction.Option
 
 	Add an option to the option, will only work on SubCommand or SubCommandGroup options.
 ]=]
@@ -127,7 +127,7 @@ function Option.Prototype.addOption(self: Option, option: JSON): Option
 end
 
 --[=[
-	@within Builders.Option
+	@within Builders.Interaction.Option
 
 	Add supported channel types, will only work on Channel options.
 ]=]
@@ -138,7 +138,7 @@ function Option.Prototype.addChannelType(self: Option, channelType: apiTypes.Cha
 end
 
 --[=[
-	@within Builders.Option
+	@within Builders.Interaction.Option
 
 	Set the min value of this option, will only work on Integer or Number options.
 ]=]
@@ -149,7 +149,7 @@ function Option.Prototype.setMinValue(self: Option, value: number): Option
 end
 
 --[=[
-	@within Builders.Option
+	@within Builders.Interaction.Option
 
 	Set the max value of this option, will only work on Integer or Number options.
 ]=]
@@ -160,7 +160,7 @@ function Option.Prototype.setMaxValue(self: Option, value: number): Option
 end
 
 --[=[
-	@within Builders.Option
+	@within Builders.Interaction.Option
 
 	Set the min length of this option, will only work on String options.
 ]=]
@@ -171,7 +171,7 @@ function Option.Prototype.setMinLength(self: Option, value: number): Option
 end
 
 --[=[
-	@within Builders.Option
+	@within Builders.Interaction.Option
 
 	Set the max length of this option, will only work on String options.
 ]=]
@@ -182,7 +182,7 @@ function Option.Prototype.setMaxLength(self: Option, value: number): Option
 end
 
 --[=[
-	@within Builders.Option
+	@within Builders.Interaction.Option
 
 	If autocomplete interactions are enabled for this option, will only work on String, Integer, or Number options.
 ]=]
@@ -196,7 +196,7 @@ function Option.Prototype.setAutocompleteEnabled(self: Option, autocompleteEnabl
 end
 
 --[=[
-	@within Builders.Option
+	@within Builders.Interaction.Option
 
 	Responsible for building the option object that the Discord API can understand.
 ]=]
@@ -228,7 +228,7 @@ function Option.Prototype.build(self: Option): JSON
 end
 
 --[=[
-	@within Builders.Option
+	@within Builders.Interaction.Option
 
 	Constructor for the Discord Default Reaction Builder.
 ]=]
@@ -250,72 +250,72 @@ function Option.Interface.new(resource: {
 }?): Option
 	--[=[
 		@prop type apiTypes.ApplicationCommandOptionType?
-		@within Builders.Option
+		@within Builders.Interaction.Option
 		The type of option (e.g., String, Integer, SubCommand).
 	]=]
 	--[=[
 		@prop name string?
-		@within Builders.Option
+		@within Builders.Interaction.Option
 		The name of the option.
 	]=]
 	--[=[
 		@prop nameLocalizations { [apiTypes.LanguageLocales]: string }
-		@within Builders.Option
+		@within Builders.Interaction.Option
 		Name localizations for different language locales.
 	]=]
 	--[=[
 		@prop description string?
-		@within Builders.Option
+		@within Builders.Interaction.Option
 		The description of the option.
 	]=]
 	--[=[
 		@prop descriptionLocalizations { [apiTypes.LanguageLocales]: string }
-		@within Builders.Option
+		@within Builders.Interaction.Option
 		Description localizations for different language locales.
 	]=]
 	--[=[
 		@prop required boolean?
-		@within Builders.Option
+		@within Builders.Interaction.Option
 		Whether this option is required to be set by the user.
 	]=]
 	--[=[
 		@prop choices { Builders.Choice.JSON }
-		@within Builders.Option
+		@within Builders.Interaction.Option
 		Possible choices for this option (String, Integer, or Number types only).
 	]=]
 	--[=[
-		@prop options { Builders.Option.JSON }
-		@within Builders.Option
+		@prop options { Builders.Interaction.Option.JSON }
+		@within Builders.Interaction.Option
 		Sub-options for this option (SubCommand or SubCommandGroup only).
 	]=]
 	--[=[
 		@prop apiTypes { apiTypes.ChannelType }
-		@within Builders.Option
+		@within Builders.Interaction.Option
 		Supported channel types for Channel option type.
 	]=]
 	--[=[
 		@prop minValue number?
-		@within Builders.Option
+		@within Builders.Interaction.Option
 		Minimum value allowed for the option (Integer/Number only).
 	]=]
 	--[=[
 		@prop maxValue number?
-		@within Builders.Option
+		@within Builders.Interaction.Option
 		Maximum value allowed for the option (Integer/Number only).
 	]=]
 	--[=[
 		@prop minLength number?
-		@within Builders.Option
+		@within Builders.Interaction.Option
 		Minimum string length for the option (String only).
 	]=]
 	--[=[
 		@prop maxLength number?
-		@within Builders.Option
+		@within Builders.Interaction.Option
 		Maximum string length for the option (String only).
 	]=]
 	--[=[
 		@prop autocomplete boolean?
-		@within Builders.Option
+		@within Builders.Interaction.Option
 		Whether autocomplete is enabled (String, Integer, or Number types only).
 	]=]
 

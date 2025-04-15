@@ -1,6 +1,6 @@
 --[=[
 	@class Builders.Reference
-	@_index Prototype
+	@__index Prototype
 
 	Implementation of discords Reference object as a Luau builder.	
 

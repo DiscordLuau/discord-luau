@@ -1,6 +1,6 @@
 --[=[
 	@class Builders.Attachment
-	@_index Prototype
+	@__index Prototype
 	Implementation of discords Attachment object as a Luau builder.	
 
 	https://discord.com/developers/docs/resources/message#attachment-object
