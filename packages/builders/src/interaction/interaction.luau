@@ -1,13 +1,14 @@
---[[
-	Implementation of a discord Interaction object as a luau builder.	
+--[=[
+	@class Builders.Interaction
+	@__index Prototype
+
+	Implementation of a discord Interaction object as a luau builder.
 
 	https://discord.com/developers/docs/interactions/application-commands#edit-global-application-command-json-params
-]]
+]=]
 
 local apiTypes = require("../../lune_packages/api_types")
-
 local interactionOption = require("./option")
-
 local util = require("../../lune_packages/util")
 
 local Interaction = {}
@@ -15,9 +16,11 @@ local Interaction = {}
 Interaction.Prototype = {}
 Interaction.Interface = {}
 
---[[
+--[=[
+	@within Builders.Interaction
+
 	Name of command, 1-32 characters
-]]
+]=]
 function Interaction.Prototype.setName(self: Interaction, name: string): Interaction
 	assert(#name <= 32, "name must be less than 32 characters")
 	assert(#name >= 1, "name must be at least 1 character")
@@ -27,18 +30,22 @@ function Interaction.Prototype.setName(self: Interaction, name: string): Interac
 	return self
 end
 
---[[
+--[=[
+	@within Builders.Interaction
+
 	Set the Type of command
-]]
+]=]
 function Interaction.Prototype.setType(self: Interaction, commandType: apiTypes.ApplicationCommandType): Interaction
 	self.type = commandType
 
 	return self
 end
 
---[[
+--[=[
+	@within Builders.Interaction
+
 	Localization dictionary for the name field. Values follow the same restrictions as name
-]]
+]=]
 function Interaction.Prototype.setNameLocalization(
 	self: Interaction,
 	localization: apiTypes.LanguageLocales,
@@ -54,9 +61,11 @@ function Interaction.Prototype.setNameLocalization(
 	return self
 end
 
---[[
+--[=[
+	@within Builders.Interaction
+
 	1-100 character description
-]]
+]=]
 function Interaction.Prototype.setDescription(self: Interaction, description: string): Interaction
 	assert(#description <= 100, "description must be less than 100 characters")
 	assert(#description >= 1, "description must be at least 1 character")
@@ -66,9 +75,11 @@ function Interaction.Prototype.setDescription(self: Interaction, description: st
 	return self
 end
 
---[[
+--[=[
+	@within Builders.Interaction
+
 	Localization dictionary for the description field. Values follow the same restrictions as description
-]]
+]=]
 function Interaction.Prototype.setDescriptionLocalization(
 	self: Interaction,
 	localization: apiTypes.LanguageLocales,
@@ -82,54 +93,66 @@ function Interaction.Prototype.setDescriptionLocalization(
 	return self
 end
 
---[[
-	the parameters for the command
-]]
+--[=[
+	@within Builders.Interaction
+
+	The parameters for the command
+]=]
 function Interaction.Prototype.addOption(self: Interaction, option: interactionOption.JSON): Interaction
 	table.insert(self.options, option)
 
 	return self
 end
 
---[[
+--[=[
+	@within Builders.Interaction
+
 	Set of permissions represented as a bit set, recommended that you use the permission builder.
-]]
+]=]
 function Interaction.Prototype.setDefaultMemberPermissions(self: Interaction, permissions: string): Interaction
 	self.defaultMemberPermissions = permissions
 
 	return self
 end
 
---[[
+--[=[
+	@within Builders.Interaction
+
 	Installation context(s) where the command is available
-]]
+]=]
 function Interaction.Prototype.addIntegrationType(self: Interaction, type: apiTypes.IntegrationTypesConfig): Interaction
 	table.insert(self.integrationTypes, type)
 
 	return self
 end
 
---[[
+--[=[
+	@within Builders.Interaction
+
 	Interaction context(s) where the command can be used
-]]
+]=]
 function Interaction.Prototype.addContext(self: Interaction, context: apiTypes.InteractionContextType): Interaction
 	table.insert(self.contexts, context)
 
 	return self
 end
 
---[[
+--[=[
+	@within Builders.Interaction
+
 	Indicates whether the command is age-restricted
-]]
+]=]
 function Interaction.Prototype.setNsfw(self: Interaction, isNsfw: boolean): Interaction
 	self.nsfw = isNsfw
 
 	return self
 end
 
---[[
-	Responsible for buillding the default reaction object that the Discord API can understand.
-]]
+--[=[
+	@within Builders.Interaction
+
+	Responsible for building the default reaction object that the Discord API can understand.
+]=]
 function Interaction.Prototype.build(self: Interaction): JSON
 	assert(self.name, "name must be set")
 	assert(#self.integrationTypes > 0, `must have one or more integration types set`)
@@ -166,13 +189,11 @@ function Interaction.Prototype.build(self: Interaction): JSON
 	}
 end
 
---[[
-	Constructor for the Discord Default Reaction Builder.
+--[=[
+	@within Builders.Interaction
 
-	```lua
-	local defaultReaction = Interaction.new("000000000000000000", "secret-emoji"):build()
-	```
-]]
+	Constructor for the Discord Default Reaction Builder.
+]=]
 function Interaction.Interface.new(resource: {
 	name: string?,
 	nameLocalizations: { [apiTypes.LanguageLocales]: string }?,
@@ -184,6 +205,51 @@ function Interaction.Interface.new(resource: {
 	contexts: { apiTypes.InteractionContextType }?,
 	nsfw: boolean?,
 }?): Interaction
+	--[=[
+		@prop name string
+		@within Builders.Interaction
+		The name of the command.
+	]=]
+	--[=[
+		@prop nameLocalizations { [package].LanguageLocales: string }
+		@within Builders.Interaction
+		Localization dictionary for the name field.
+	]=]
+	--[=[
+		@prop description string
+		@within Builders.Interaction
+		The description of the command.
+	]=]
+	--[=[
+		@prop descriptionLocalizations { [package].LanguageLocales: string }
+		@within Builders.Interaction
+		Localization dictionary for the description field.
+	]=]
+	--[=[
+		@prop options { package.option.JSON }
+		@within Builders.Interaction
+		A list of parameters/options for the command.
+	]=]
+	--[=[
+		@prop defaultMemberPermissions string?
+		@within Builders.Interaction
+		Permissions required to execute the command.
+	]=]
+	--[=[
+		@prop integrationTypes { package.api_types.IntegrationTypesConfig }
+		@within Builders.Interaction
+		Installation contexts the command is available to.
+	]=]
+	--[=[
+		@prop contexts { package.api_types.InteractionContextType }
+		@within Builders.Interaction
+		Interaction contexts where the command can be used.
+	]=]
+	--[=[
+		@prop nsfw boolean?
+		@within Builders.Interaction
+		Whether this command is age-restricted.
+	]=]
 	local self = setmetatable(
 		{
 			nameLocalizations = {},
