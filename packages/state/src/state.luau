@@ -1,4 +1,7 @@
---[[
+--[=[
+	@class State.State
+	@__index Prototype
+
 	State class, this class is responsible for storing the state of the bot as
 	as well as providing a way to interact with the state.
 
@@ -7,8 +10,46 @@
 	- Discord Cache
 	- Discord REST API
 	- Discord Gateway Manager
+]=]
 
-]]
+--[=[
+	@prop token Secret
+	@within State.State
+]=]
+
+--[=[
+	@prop applicationId string
+	@within State.State
+]=]
+
+--[=[
+	@prop rest State.Rest
+	@within State.State
+]=]
+
+--[=[
+	@prop webSocketManager WebSocket.Manager
+	@within State.State
+]=]
+
+--[=[
+	@prop intents number
+	@within State.State
+]=]
+
+--[=[
+	@prop version number
+	@within State.State
+]=]
+
+--[=[
+	@interface cache
+	@within State.State
+		.guilds Cache<apiTypes.Snowflake, apiTypes.GuildObject>
+		.users Cache<apiTypes.Snowflake, apiTypes.UserObject>
+		.channels Cache<apiTypes.Snowflake, apiTypes.ChannelObject>
+		.roles Cache<apiTypes.Snowflake, apiTypes.GuildRoleObject>
+]=]
 
 local cache = require("./cache")
 local rest = require("./rest")
@@ -23,13 +64,20 @@ local State = {}
 State.Interface = {}
 State.Prototype = {}
 
+--[=[
+	@within State.State
+
+	Will set the current application ID
+]=]
 function State.Prototype.setApplicationId(self: State, applicationId: apiTypes.Snowflake)
 	self.applicationId = applicationId
 end
 
---[[
+--[=[
+	@within State.State
+
 	Constructor for the State class.
-]]
+]=]
 function State.Interface.new(settings: {
 	token: string,
 	intents: number,
@@ -82,13 +130,10 @@ end
 export type State = typeof(State.Prototype) & {
 	token: secret.Secret<string>,
 	applicationId: apiTypes.Snowflake,
-
 	rest: rest.REST,
 	webSocketManager: websocket.Manager,
-
 	intents: number,
 	version: number,
-
 	cache: {
 		guilds: cache.Cache<apiTypes.Snowflake, apiTypes.GuildObject>,
 		users: cache.Cache<apiTypes.Snowflake, apiTypes.UserObject>,

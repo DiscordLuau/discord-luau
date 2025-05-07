@@ -1,3 +1,12 @@
+--[=[
+	@class Builders.AutomoderationRule
+	@__index Prototype
+
+	Implementation of a discord automoderation rule object as a luau builder.
+
+	https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-rule-object
+]=]
+
 local apiTypes = require("../../lune_packages/api_types")
 local triggerMetadata = require("./trigger/metadata")
 local action = require("./action/action")
@@ -6,18 +15,23 @@ local AutomoderationRule = {}
 
 AutomoderationRule.Prototype = {}
 AutomoderationRule.Interface = {}
---[[
+
+--[=[
+	@within Builders.AutomoderationRule
+
 	Sets the name of the automoderation rule.
-]]
+]=]
 function AutomoderationRule.Prototype.setName(self: AutomoderationRule, name: string): AutomoderationRule
 	self.name = name
 
 	return self
 end
 
---[[
+--[=[
+	@within Builders.AutomoderationRule
+
 	Sets the event type for the automoderation rule.
-]]
+]=]
 function AutomoderationRule.Prototype.setEventType(
 	self: AutomoderationRule,
 	eventType: apiTypes.EventTypes
@@ -27,9 +41,11 @@ function AutomoderationRule.Prototype.setEventType(
 	return self
 end
 
---[[
+--[=[
+	@within Builders.AutomoderationRule
+
 	Sets the trigger type for the automoderation rule.
-]]
+]=]
 function AutomoderationRule.Prototype.setTriggerType(
 	self: AutomoderationRule,
 	triggerType: apiTypes.TriggerTypes
@@ -39,9 +55,11 @@ function AutomoderationRule.Prototype.setTriggerType(
 	return self
 end
 
---[[
+--[=[
+	@within Builders.AutomoderationRule
+
 	Sets the trigger metadata for the automoderation rule.
-]]
+]=]
 function AutomoderationRule.Prototype.setTriggerMetadata(
 	self: AutomoderationRule,
 	triggerMetadata: triggerMetadata.JSON
@@ -51,27 +69,33 @@ function AutomoderationRule.Prototype.setTriggerMetadata(
 	return self
 end
 
---[[
+--[=[
+	@within Builders.AutomoderationRule
+
 	Sets the actions for the automoderation rule.
-]]
+]=]
 function AutomoderationRule.Prototype.setActions(self: AutomoderationRule, actions: { action.JSON }): AutomoderationRule
 	self.actions = actions
 
 	return self
 end
 
---[[
+--[=[
+	@within Builders.AutomoderationRule
+
 	Sets whether the automoderation rule is enabled.
-]]
+]=]
 function AutomoderationRule.Prototype.setEnabled(self: AutomoderationRule, enabled: boolean): AutomoderationRule
 	self.enabled = enabled
 
 	return self
 end
 
---[[
+--[=[
+	@within Builders.AutomoderationRule
+
 	Sets the exempt roles for the automoderation rule.
-]]
+]=]
 function AutomoderationRule.Prototype.setExemptRoles(
 	self: AutomoderationRule,
 	exemptRoles: { apiTypes.Snowflake }
@@ -81,9 +105,11 @@ function AutomoderationRule.Prototype.setExemptRoles(
 	return self
 end
 
---[[
+--[=[
+	@within Builders.AutomoderationRule
+
 	Sets the exempt channels for the automoderation rule.
-]]
+]=]
 function AutomoderationRule.Prototype.setExemptChannels(
 	self: AutomoderationRule,
 	exemptChannels: { apiTypes.Snowflake }
@@ -93,9 +119,11 @@ function AutomoderationRule.Prototype.setExemptChannels(
 	return self
 end
 
---[[
+--[=[
+	@within Builders.AutomoderationRule
+
 	Builds the automoderation rule object.
-]]
+]=]
 function AutomoderationRule.Prototype.build(self: AutomoderationRule): JSON
 	return {
 		name = self.name,
@@ -109,13 +137,25 @@ function AutomoderationRule.Prototype.build(self: AutomoderationRule): JSON
 	}
 end
 
---[[
-	Responsible for creating a new AutomoderationRule.
+--[=[
+	@within Builders.AutomoderationRule
 
-	```lua
-	
+	Constructs a new automoderation rule builder.
+
+	```luau
+	local rule = AutomoderationRule.new({
+		name = "My Rule",
+		eventType = "MESSAGE_SEND",
+		triggerType = "KEYWORD",
+		actions = {
+			{
+				type = "BLOCK_MESSAGE",
+				metadata = {}
+			}
+		}
+	})
 	```
-]]
+]=]
 function AutomoderationRule.Interface.new(resource: {
 	name: string?,
 	eventType: apiTypes.EventTypes?,
@@ -126,9 +166,68 @@ function AutomoderationRule.Interface.new(resource: {
 	exemptRoles: { apiTypes.Snowflake }?,
 	exemptChannels: { apiTypes.Snowflake }?,
 }?): AutomoderationRule
-	local self = setmetatable({} :: AutomoderationRule, {
-		__index = AutomoderationRule.Prototype,
-	})
+	local self = setmetatable(
+		{
+			--[=[
+				@prop name string
+				@within Builders.AutomoderationRule
+				The name of the automoderation rule.
+			]=]
+			name = nil,
+
+			--[=[
+				@prop eventType Builders.EventTypes
+				@within Builders.AutomoderationRule
+				The event type that will trigger the rule.
+			]=]
+			eventType = nil,
+
+			--[=[
+				@prop triggerType Builders.TriggerTypes
+				@within Builders.AutomoderationRule
+				The type of content which can trigger the rule.
+			]=]
+			triggerType = nil,
+
+			--[=[
+				@prop triggerMetadata Builders.TriggerMetadata
+				@within Builders.AutomoderationRule
+				The trigger metadata for the rule.
+			]=]
+			triggerMetadata = nil,
+
+			--[=[
+				@prop actions {Builders.Action}
+				@within Builders.AutomoderationRule
+				The actions which will execute when the rule is triggered.
+			]=]
+			actions = nil,
+
+			--[=[
+				@prop enabled boolean
+				@within Builders.AutomoderationRule
+				Whether the rule is enabled.
+			]=]
+			enabled = nil,
+
+			--[=[
+				@prop exemptRoles {string}
+				@within Builders.AutomoderationRule
+				The role ids that should not be affected by the rule.
+			]=]
+			exemptRoles = nil,
+
+			--[=[
+				@prop exemptChannels {string}
+				@within Builders.AutomoderationRule
+				The channel ids that should not be affected by the rule.
+			]=]
+			exemptChannels = nil,
+		} :: AutomoderationRule,
+		{
+			__index = AutomoderationRule.Prototype,
+		}
+	)
 
 	if resource then
 		if resource.name then

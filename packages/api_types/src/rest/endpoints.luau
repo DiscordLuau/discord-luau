@@ -1,6 +1,8 @@
---[[
+--[=[
+	@class StdPolyfills.rest.endpoints
+
 	Mapping out all discord V10 endpoints.
-]]
+]=]
 
 local endpoints = table.freeze({
 	-- https://discord.com/developers/docs/interactions/receiving-and-responding#create-interaction-response

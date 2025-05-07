@@ -1,11 +1,133 @@
---[[
+--[=[
+	@class Builders.Channel
+	@__index Prototype
+
 	Implementation of a discord Channel as a luau builder.	
 
 	https://discord.com/developers/docs/resources/guild#create-guild-channel
-]]
+]=]
+
+--[=[
+	@prop id string?
+	@within Builders.Channel
+	The id of the channel.
+]=]
+
+--[=[
+	@prop name string?
+	@within Builders.Channel
+	The name of the channel.
+]=]
+
+--[=[
+	@prop type apiTypes.ChannelType
+	@within Builders.Channel
+	The type of the channel.
+]=]
+
+--[=[
+	@prop position number?
+	@within Builders.Channel
+	Position of the channel in the list.
+]=]
+
+--[=[
+	@prop icon string?
+	@within Builders.Channel
+	The base64 icon for the channel (used in DMs).
+]=]
+
+--[=[
+	@prop flags number?
+	@within Builders.Channel
+	Bitfield flags for the channel.
+]=]
+
+--[=[
+	@prop topic string?
+	@within Builders.Channel
+	The topic of the text channel.
+]=]
+
+--[=[
+	@prop rateLimitPerUser number?
+	@within Builders.Channel
+	Slowmode in seconds for users.
+	]=]
+
+--[=[
+	@prop parentId string?
+	@within Builders.Channel
+	Parent category ID.
+]=]
+
+--[=[
+	@prop nsfw boolean?
+	@within Builders.Channel
+	Whether the channel is marked as NSFW.
+]=]
+
+--[=[
+	@prop defaultAutoArchiveDuration number?
+	@within Builders.Channel
+	Default auto archive duration in minutes.
+]=]
+
+--[=[
+	@prop defaultThreadRateLimitPerUser number?
+	@within Builders.Channel
+	Slowmode in seconds for thread messages.
+]=]
+
+--[=[
+	@prop defaultReactionEmoji apiTypes.DefaultReactionObject?
+	@within Builders.Channel
+	Default reaction emoji object.
+]=]
+
+--[=[
+	@prop availableTags { apiTypes.ForumTagObject }?
+	@within Builders.Channel
+	Available forum tags.
+]=]
+
+--[=[
+	@prop defaultSortOrder apiTypes.ForumSortOrder?
+	@within Builders.Channel
+	Default sort order for threads.
+]=]
+
+--[=[
+	@prop defaultForumLayout apiTypes.ForumLayout?
+	@within Builders.Channel
+	Default forum layout type.
+	]=]
+
+--[=[
+	@prop videoQualityMode apiTypes.VideoQualityMode?
+	@within Builders.Channel
+	Voice channel video quality mode.
+]=]
+
+--[=[
+	@prop rtcRegion string?
+	@within Builders.Channel
+	Voice region id for the channel.
+]=]
+
+--[=[
+	@prop userLimit number?
+	@within Builders.Channel
+	Maximum number of users allowed in the voice channel.
+]=]
+
+--[=[
+	@prop bitrate number?
+	@within Builders.Channel
+	Bitrate of the voice channel in bits.
+]=]
 
 local apiTypes = require("../lune_packages/api_types")
-
 local util = require("../lune_packages/util")
 
 local Channel = {}
@@ -13,9 +135,11 @@ local Channel = {}
 Channel.Prototype = {}
 Channel.Interface = {}
 
---[[
+--[=[
+	@within Builders.Channel
+
 	Set the name of this Channel
-]]
+]=]
 function Channel.Prototype.setName(self: Channel, tagName: string): Channel
 	assert(#tagName <= 100, `Channel name must be less than 100 characters.`)
 	assert(#tagName > 1, `Channel name must be more than 1 characters.`)
@@ -27,41 +151,46 @@ function Channel.Prototype.setName(self: Channel, tagName: string): Channel
 	return self
 end
 
---[[
+--[=[
+	@within Builders.Channel
+
 	Set the Type of channel this is.
-]]
+]=]
 function Channel.Prototype.setType(self: Channel, channelType: apiTypes.ChannelType): Channel
 	self.type = channelType
 
 	return self
 end
 
---[[
-	Sets the position of the channel in the discord channels list.
+--[=[
+	@within Builders.Channel
 
-	channels with the same position are sorted by id
-]]
+	Sets the position of the channel in the discord channels list. Channels with the same position are sorted by id.
+]=]
 function Channel.Prototype.setPosition(self: Channel, channelPosition: number): Channel
 	self.position = channelPosition
 
 	return self
 end
 
---[[
-	Adds an overwrite object to the channel's permission overwrites.
+--[=[
+	@within Builders.Channel
 
-	channel overwrites are responsible for handling user/role permission on a specific channel.
-]]
+	Adds an overwrite object to the channel's permission overwrites. Channel overwrites are responsible for handling
+	user/role permission on a specific channel.
+]=]
 function Channel.Prototype.setOverwrites(self: Channel, overwriteObjects: { apiTypes.OverwriteObject }): Channel
 	self.permissionOverwrites = overwriteObjects
 
 	return self
 end
 
---[[
-	Sets the channels topic, topics appear at the top of the discord app and help to inform players about
-		the channel's purpose.
-]]
+--[=[
+	@within Builders.Channel
+
+	Sets the channels topic, topics appear at the top of the discord app and help to inform players about the
+	channel's purpose.
+]=]
 function Channel.Prototype.setTopic(self: Channel, channelTopic: string): Channel
 	assert(
 		self.type == "GuildText"
@@ -79,9 +208,11 @@ function Channel.Prototype.setTopic(self: Channel, channelTopic: string): Channe
 	return self
 end
 
---[[
+--[=[
+	@within Builders.Channel
+
 	Sets the bitrate of the voice channel, the bitrate (in bits) of the voice or stage channel.
-]]
+]=]
 function Channel.Prototype.setBitrate(self: Channel, bitrate: number): Channel
 	assert(
 		self.type == "GuildVoice" or self.type == "GuildStageVoice",
@@ -96,11 +227,12 @@ function Channel.Prototype.setBitrate(self: Channel, bitrate: number): Channel
 	return self
 end
 
---[[
-	the user limit of the voice channel	
+--[=[
+	@within Builders.Channel
 
-	the user limit of a voice channel is the maximum number of users allowed in the channel at one time.
-]]
+	The user limit of the voice channel. The user limit of a voice channel is the maximum number of users allowed in
+	the channel at one time.
+]=]
 function Channel.Prototype.setUserLimit(self: Channel, userLimit: number?): Channel
 	assert(
 		self.type == "GuildVoice" or self.type == "GuildStageVoice",
@@ -112,10 +244,12 @@ function Channel.Prototype.setUserLimit(self: Channel, userLimit: number?): Chan
 	return self
 end
 
---[[
-	amount of seconds a user has to wait before sending another message; bots, as well as users with
-		the permission manage_messages or manage_channel, are unaffected
-]]
+--[=[
+	@within Builders.Channel
+
+	Amount of seconds a user has to wait before sending another message. Bots and users with certain permissions are
+	unaffected.
+]=]
 function Channel.Prototype.setRateLimitPerUser(self: Channel, rateLimitPerUser: number?): Channel
 	assert(
 		self.type == "GuildText"
@@ -134,9 +268,11 @@ function Channel.Prototype.setRateLimitPerUser(self: Channel, rateLimitPerUser: 
 	return self
 end
 
---[[
-	set the parent of the channel, channel parents are categories and can help break down a discord guild.
-]]
+--[=[
+	@within Builders.Channel
+
+	Set the parent of the channel. Channel parents are categories and can help organize a discord guild.
+]=]
 function Channel.Prototype.setParentId(self: Channel, parentId: apiTypes.Snowflake?): Channel
 	assert(
 		self.type == "GuildText"
@@ -153,9 +289,11 @@ function Channel.Prototype.setParentId(self: Channel, parentId: apiTypes.Snowfla
 	return self
 end
 
---[[
-	set weather this channel is NSFW or not.
-]]
+--[=[
+	@within Builders.Channel
+
+	Set whether this channel is NSFW or not.
+]=]
 function Channel.Prototype.setNSFW(self: Channel, isNSFW: boolean): Channel
 	assert(
 		self.type == "GuildText"
@@ -171,11 +309,12 @@ function Channel.Prototype.setNSFW(self: Channel, isNSFW: boolean): Channel
 	return self
 end
 
---[[
-	set the voice region (requires you to query for the voice region ids) of the voice channel.
+--[=[
+	@within Builders.Channel
 
-	voice regions are regions that discord uses to host voice channels.
-]]
+	Set the voice region (requires querying voice region ids). Voice regions are regions that Discord uses to host
+	voice channels.
+]=]
 function Channel.Prototype.setVoiceRegion(self: Channel, voiceRegionId: string): Channel
 	assert(
 		self.type == "GuildVoice" or self.type == "GuildStageVoice",
@@ -187,9 +326,11 @@ function Channel.Prototype.setVoiceRegion(self: Channel, voiceRegionId: string):
 	return self
 end
 
---[[
-	sets the video quality mode of the voice channel.
-]]
+--[=[
+	@within Builders.Channel
+
+	Sets the video quality mode of the voice channel.
+]=]
 function Channel.Prototype.setVideoQualityMode(self: Channel, videoQualityMode: apiTypes.VideoQualityMode): Channel
 	assert(
 		self.type == "GuildVoice" or self.type == "GuildStageVoice",
@@ -201,10 +342,12 @@ function Channel.Prototype.setVideoQualityMode(self: Channel, videoQualityMode: 
 	return self
 end
 
---[[
-	sets the default auto archive duration for the channel, the default duration that the clients use (not the API)
-		for newly created threads in the channel, in minutes, to automatically archive the thread after recent activity	
-]]
+--[=[
+	@within Builders.Channel
+
+	Sets the default auto archive duration for the channel. This is the default duration in minutes for newly created
+	threads to automatically archive after recent activity.
+]=]
 function Channel.Prototype.setDefaultAutoArchiveDuration(self: Channel, autoArchiveDuration: number): Channel
 	assert(
 		self.type == "GuildText"
@@ -219,11 +362,11 @@ function Channel.Prototype.setDefaultAutoArchiveDuration(self: Channel, autoArch
 	return self
 end
 
---[[
-	sets the default reaction emoji for either a forum or media channel.
+--[=[
+	@within Builders.Channel
 
-	This is the default emoji that the channel will use for the forum or media channel.
-]]
+	Sets the default reaction emoji for either a forum or media channel.
+]=]
 function Channel.Prototype.setDefaultReactionEmoji(
 	self: Channel,
 	defaultReactionEmoji: apiTypes.DefaultReactionObject
@@ -238,11 +381,11 @@ function Channel.Prototype.setDefaultReactionEmoji(
 	return self
 end
 
---[[
-	specify channel forum tags that are available to the channel.
+--[=[
+	@within Builders.Channel
 
-	This is the list of tags that the channel will use for the forum.
-]]
+	Specify channel forum tags that are available to the channel.
+]=]
 function Channel.Prototype.setForumTags(self: Channel, forumTags: { apiTypes.ForumTagObject }): Channel
 	assert(
 		self.type == "GuildForum" or self.type == "GuildMedia",
@@ -254,11 +397,11 @@ function Channel.Prototype.setForumTags(self: Channel, forumTags: { apiTypes.For
 	return self
 end
 
---[[
-	sets the default sort order for the channel.
+--[=[
+	@within Builders.Channel
 
-	This is the sort order that the channel will use for newly created threads.
-]]
+	Sets the default sort order for the channel.
+]=]
 function Channel.Prototype.setDefaultSortOrder(self: Channel, sortOrder: apiTypes.ForumSortOrder): Channel
 	assert(
 		self.type == "GuildForum" or self.type == "GuildMedia",
@@ -270,11 +413,11 @@ function Channel.Prototype.setDefaultSortOrder(self: Channel, sortOrder: apiType
 	return self
 end
 
---[[
-	sets the default forum layout for the channel.
+--[=[
+	@within Builders.Channel
 
-	This is the layout that the channel will use for newly created threads.
-]]
+	Sets the default forum layout for the channel.
+]=]
 function Channel.Prototype.setDefaultForumLayout(self: Channel, forumLayout: apiTypes.ForumLayout): Channel
 	assert(self.type == "GuildForum", `Channel forum layout is only supported for forum channels.`)
 
@@ -283,11 +426,11 @@ function Channel.Prototype.setDefaultForumLayout(self: Channel, forumLayout: api
 	return self
 end
 
---[[
-	sets the default thread rate limit per user for the channel.
+--[=[
+	@within Builders.Channel
 
-	This is the amount of seconds a user has to wait before sending another message in the thread,
-]]
+	Sets the default thread rate limit per user for the channel.
+]=]
 function Channel.Prototype.setDefaultThreadRateLimitPerUser(self: Channel, threadRateLimitPerUser: number): Channel
 	assert(
 		self.type == "GuildText"
@@ -302,30 +445,33 @@ function Channel.Prototype.setDefaultThreadRateLimitPerUser(self: Channel, threa
 	return self
 end
 
---[[
-	Sets the channel flags using a bitfield value.
+--[=[
+	@within Builders.Channel
 
-	The flags control various channel settings and behaviors.
-]]
+	Sets the channel flags using a bitfield value.
+]=]
 function Channel.Prototype.setFlags(self: Channel, bitflags: number): Channel
 	self.flags = bitflags
 
 	return self
 end
 
---[[
-	Sets the channel icon using the provided icon data.
+--[=[
+	@within Builders.Channel
 
-	The icon data should be a base64 encoded image string.
-]]
+	Sets the channel icon using the provided icon data.
+]=]
 function Channel.Prototype.setIcon(self: Channel, iconData: string): Channel
 	self.icon = iconData
 
 	return self
 end
---[[
-	Responsible for buillding the channel object that the Discord API can understand.
-]]
+
+--[=[
+	@within Builders.Channel
+
+	Responsible for building the channel object that the Discord API can understand.
+]=]
 function Channel.Prototype.build(self: Channel): JSON
 	return {
 		id = self.id,
@@ -355,9 +501,11 @@ function Channel.Prototype.build(self: Channel): JSON
 	}
 end
 
---[[
+--[=[
+	@within Builders.Channel
+
 	Constructor for the Discord Channel Builder.
-]]
+]=]
 function Channel.Interface.new(resource: {
 	channelName: string?,
 	channelType: apiTypes.ChannelType?,
@@ -366,6 +514,11 @@ function Channel.Interface.new(resource: {
 }?): Channel
 	local self = setmetatable(
 		{
+			--[=[
+				@prop permissionOverwrites { Builders.OverwriteObject }
+				@within Builders.Channel
+				List of permission overwrites applied to the channel.
+			]=]
 			permissionOverwrites = {},
 		} :: Channel,
 		{ __index = Channel.Prototype }
@@ -392,36 +545,24 @@ end
 
 export type Channel = typeof(Channel.Prototype) & {
 	id: apiTypes.Snowflake?,
-
 	name: string?,
 	type: apiTypes.ChannelType,
 	permissionOverwrites: { apiTypes.OverwriteObject },
 	position: number?,
-
-	-- DM
 	icon: string?,
 	flags: number?,
-
-	-- TEXT
 	topic: string?,
 	rateLimitPerUser: number?,
 	parentId: apiTypes.Snowflake?,
 	nsfw: boolean?,
 	defaultAutoArchiveDuration: number?,
 	defaultThreadRateLimitPerUser: number?,
-
-	-- MEDIA
 	defaultReactionEmoji: apiTypes.DefaultReactionObject?,
 	availableTags: { apiTypes.ForumTagObject }?,
 	defaultSortOrder: apiTypes.ForumSortOrder?,
-
-	-- FORUM
 	defaultForumLayout: apiTypes.ForumLayout?,
-
-	-- VOICE
 	videoQualityMode: apiTypes.VideoQualityMode?,
 	rtcRegion: string?,
-	rateLimitPerUser: number?,
 	userLimit: number?,
 	bitrate: number?,
 }

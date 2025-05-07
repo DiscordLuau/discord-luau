@@ -1,10 +1,13 @@
---[[
+--[=[
+	@class Formdata
+	@__index Prototype
+
 	A multipart/form-data implementation for luau.
 	
 	This implementation is based on the following spec(s):
 	- https://www.rfc-editor.org/rfc/rfc2388
 	- https://xhr.spec.whatwg.org/#formdata
-]]
+]=]
 
 local parser = require("./parser")
 
@@ -59,9 +62,11 @@ local function uuid()
 	end)
 end
 
---[[
-		Not included in the spec, but we need this to be able to get the body for the formdata object.
-]]
+--[=[
+	@within Formdata
+
+	Not included in the spec, but we need this to be able to get the body for the formdata object.
+]=]
 function FormData.Prototype.getBody(self: FormData): string
 	local multiformContent = ""
 
@@ -81,16 +86,20 @@ function FormData.Prototype.getBody(self: FormData): string
 	return multiformContent
 end
 
---[[
+--[=[
+	@within Formdata
+
 	Not included in the spec, but we need this to be able to get the header for the formdata object.
-]]
+]=]
 function FormData.Prototype.getHeader(self: FormData): string
 	return `multipart/form-data; boundary={self.boundary}`
 end
 
---[[
+--[=[
+	@within Formdata
+
 	Appends a new entry to the form data's internal 'entries' table.
-]]
+]=]
 function FormData.Prototype.append(
 	self: FormData,
 	name: string,
@@ -106,11 +115,13 @@ function FormData.Prototype.append(
 	})
 end
 
---[[
+--[=[
+	@within Formdata
+
 	Sets the name, value and filename of an entry in the form data's internal 'entries' table.
 
 	Follows the standard found here: https://xhr.spec.whatwg.org/#dom-formdata-append
-]]
+]=]
 function FormData.Prototype.set(self: FormData, name: string, value: string, filename: string?, encoding: string?): ()
 	local index = filter(self.entries, function(object)
 		return object.name == name
@@ -147,9 +158,11 @@ function FormData.Prototype.set(self: FormData, name: string, value: string, fil
 	end
 end
 
---[[
+--[=[
+	@within Formdata
+
 	Function responsible for the removal of a formdata entry from the formdata's internal 'entries' table.
-]]
+]=]
 function FormData.Prototype.delete(self: FormData, name: string): ()
 	local index = filter(self.entries, function(object)
 		return object.name == name
@@ -160,9 +173,11 @@ function FormData.Prototype.delete(self: FormData, name: string): ()
 	end
 end
 
---[[
+--[=[
+	@within Formdata
+
 	Function responsible for checking if this formdata object has a specific entry.
-]]
+]=]
 function FormData.Prototype.has(self: FormData, name: string): boolean
 	local _, formDataEntryValue = filter(self.entries, function(object)
 		return object.name == name
@@ -171,9 +186,11 @@ function FormData.Prototype.has(self: FormData, name: string): boolean
 	return formDataEntryValue ~= nil
 end
 
---[[
+--[=[
+	@within Formdata
+
 	Function responsible for getting the value of a formdata entry from the formdata's internal 'entries' table.
-]]
+]=]
 function FormData.Prototype.get(self: FormData, name: string): FormDataEntryValue?
 	local _, formDataEntryValue = filter(self.entries, function(object)
 		return object.name == name
@@ -182,11 +199,13 @@ function FormData.Prototype.get(self: FormData, name: string): FormDataEntryValu
 	return (formDataEntryValue and formDataEntryValue.value) or nil
 end
 
---[[
+--[=[
+	@within Formdata
+
 	Function responsible for getting all the values of a formdata entry from the formdata's internal 'entries' table.
 
 	If a name is provided, it will only return the values of all entries with the provided name.
-]]
+]=]
 function FormData.Prototype.getAll(self: FormData, name: string?): { FormDataEntryValue }
 	local entries = {}
 
@@ -214,12 +233,14 @@ function FormData.Prototype.getAll(self: FormData, name: string?): { FormDataEnt
 	return entries
 end
 
---[[
+--[=[
+	@within Formdata
+
 	Constructor for the FormData object.
 
 	This function is missing the form and submitter fields that are defined in the spec, but are not relevant for the
 		implementation of this feature in luau.
-]]
+]=]
 function FormData.Interface.new(): FormData
 	local entries = {}
 
@@ -235,9 +256,11 @@ function FormData.Interface.new(): FormData
 	)
 end
 
---[[
+--[=[
+	@within Formdata
+
 	Parses formdata a string into a FormData object.
-]]
+]=]
 function FormData.Interface.parse(textSource: string, mimeType: string): FormData
 	local formData = FormData.Interface.new()
 	local parsedFiles = parser(textSource, mimeType)

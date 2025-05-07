@@ -1,8 +1,11 @@
---[[
+--[=[
+	@class Classes.Modal
+	@__index Prototype
+
 	Implementation of the Discord Modal Interaction class in Luau
 
 	https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-structure
-]]
+]=]
 
 -- selene: allow(unused_variable)
 local state = require("../../../lune_packages/state")
@@ -23,6 +26,12 @@ Modal.Behaviours = {
 	interactableBehaviour,
 }
 
+--[=[
+	@within Classes.Modal
+	@private
+
+	Gets the content of a text input component with the specified custom ID.
+]=]
 function Modal.Prototype.getContent(self: Modal, customId: string): string?
 	assert(self.data, `Expected data`)
 	assert(self.data.components, `Expected components`)
@@ -39,6 +48,13 @@ function Modal.Prototype.getContent(self: Modal, customId: string): string?
 	return nil
 end
 
+--[=[
+	@within Classes.Modal
+	@private
+
+	Responsible for syncing data to this modal interaction object. This is typically called by the API when this object is
+	created or updated.
+]=]
 function Modal.Prototype.sync(self: Modal, interactionData: apiTypes.InteractionObject)
 	for _, behaviour in Modal.Behaviours do
 		behaviour.inheritMethods(self)
@@ -46,6 +62,12 @@ function Modal.Prototype.sync(self: Modal, interactionData: apiTypes.Interaction
 	end
 end
 
+--[=[
+	@within Classes.Modal
+	@private
+
+	Responsible for constructing this class.
+]=]
 function Modal.Interface.new(state: state.State, interactionData: apiTypes.InteractionObject): Modal
 	local self = setmetatable(
 		{

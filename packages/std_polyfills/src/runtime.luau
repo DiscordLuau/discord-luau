@@ -1,12 +1,17 @@
---[[
-	std.runtime
-]]
+--[=[
+	@class StdPolyfills.runtime
+]=]
 
 local LUNE_STRING_MATCH = "(Lune) (%d+%.%d+%.%d+.*)+(%d+)"
 local ZUNE_STRING_MATCH = "(Zune) (%d+%.%d+%.%d+.*)+(%d+%.%d+)"
 
 local runtime = {}
 
+--[=[
+	@within StdPolyfills.runtime
+
+	Will return the Runtime that this code is being executed under.
+]=]
 function runtime.getRuntime(): RuntimeValue
 	local version = _VERSION
 
@@ -30,6 +35,11 @@ function runtime.getRuntime(): RuntimeValue
 	return "Unknown"
 end
 
+--[=[
+	@within StdPolyfills.runtime
+
+	Will error out if the current Runtime is not supported by Discord-Luau
+]=]
 function runtime.assertRuntime(): RuntimeValue
 	local currentRuntime = runtime.getRuntime()
 

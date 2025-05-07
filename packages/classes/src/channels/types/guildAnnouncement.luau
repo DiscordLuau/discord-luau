@@ -1,8 +1,11 @@
---[[
+--[=[
+	@class Classes.GuildAnnouncement
+	@__index Prototype
+
 	Implementation of the Discord GuildAnnouncement class in Luau
 
 	https://discord.com/developers/docs/resources/channel#channel-object
-]]
+]=]
 
 local apiTypes = require("../../../lune_packages/api_types")
 local state = require("../../../lune_packages/state")
@@ -23,11 +26,13 @@ GuildAnnouncement.Behaviours = {
 	textBehaviour,
 }
 
---[[
+--[=[
+	@within Classes.GuildAnnouncement
+
 	Crosspost a message in an Announcement Channel to following channels. This endpoint requires the SEND_MESSAGES
 	permission, if the current user sent the message, or additionally the MANAGE_MESSAGES permission, for all
 	other messages, to be present for the current user.
-]]
+]=]
 function GuildAnnouncement.Prototype.crosspostAsync(self: GuildAnnouncement, messageId: string)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
@@ -40,10 +45,12 @@ function GuildAnnouncement.Prototype.crosspostAsync(self: GuildAnnouncement, mes
 	end) :: future.FutureLike<string, string>
 end
 
---[[
+--[=[
+	@within Classes.GuildAnnouncement
+
 	Follow an Announcement Channel to send messages to a target channel. Requires the MANAGE_WEBHOOKS permission
 	in the target channel. 
-]]
+]=]
 function GuildAnnouncement.Prototype.followAsync(self: GuildAnnouncement, targetChannelId: string)
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
@@ -60,6 +67,13 @@ function GuildAnnouncement.Prototype.followAsync(self: GuildAnnouncement, target
 	end) :: future.FutureLike<string, string>
 end
 
+--[=[
+	@within Classes.GuildAnnouncement
+	@private
+
+	Responsible for syncing data to this announcement channel object. This is typically called by the API when this object is
+	created or updated.
+]=]
 function GuildAnnouncement.Prototype.sync(self: GuildAnnouncement, channelData: apiTypes.ChannelObject)
 	for _, behaviour in GuildAnnouncement.Behaviours do
 		behaviour.inheritMethods(self)
@@ -67,7 +81,17 @@ function GuildAnnouncement.Prototype.sync(self: GuildAnnouncement, channelData: 
 	end
 end
 
+--[=[
+	@within Classes.GuildAnnouncement
+	@private
+
+	Responsible for constructing this class.
+]=]
 function GuildAnnouncement.Interface.new(state: state.State, channelData: apiTypes.ChannelObject): GuildAnnouncement
+	--[=[
+		@prop state state.State
+		@within Classes.GuildAnnouncement
+	]=]
 	local self = setmetatable(
 		{
 			state = state,

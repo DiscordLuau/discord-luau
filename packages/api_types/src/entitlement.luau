@@ -1,6 +1,10 @@
+--[=[
+	@class Types.entitlement
+]=]
+
 local util = require("../lune_packages/util")
 
-local EntitlementType = table.freeze(util.table.reflect({
+local EntitlementType = table.freeze(util.tableReflect({
 	Purchase = 1,
 	PremiumSubscription = 2,
 	DeveloperGift = 3,

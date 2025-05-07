@@ -5,15 +5,24 @@ local apiTypes = require("../lune_packages/api_types")
 
 local request = require("./request")
 
---[[
+--[=[
+	@class Rest.sticker
+
 	HTTP Rest API implementation for the following Resource:
 
 	- https://discord.com/developers/docs/resources/sticker
-]]
-local Sticker = {}
+]=]
+local sticker = {}
 
--- https://discord.com/developers/docs/resources/sticker#get-sticker
-function Sticker.getStickerAsync(instance: request.Request, stickerId: apiTypes.Snowflake)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/sticker#get-sticker
+]=]
+function sticker.getStickerAsync(
+	instance: request.Request,
+	stickerId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.GetStickerResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -30,8 +39,14 @@ function Sticker.getStickerAsync(instance: request.Request, stickerId: apiTypes.
 	end) :: future.FutureLike<string, apiTypes.GetStickerResponse>
 end
 
--- https://discord.com/developers/docs/resources/sticker#list-sticker-packs
-function Sticker.listStickerPacksAsync(instance: request.Request)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/sticker#list-sticker-packs
+]=]
+function sticker.listStickerPacksAsync(
+	instance: request.Request
+): future.FutureLike<string, apiTypes.ListStickerPacksResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -46,8 +61,15 @@ function Sticker.listStickerPacksAsync(instance: request.Request)
 	end) :: future.FutureLike<string, apiTypes.ListStickerPacksResponse>
 end
 
--- https://discord.com/developers/docs/resources/sticker#list-guild-stickers
-function Sticker.listGuildStickersAsync(instance: request.Request, guildId: apiTypes.Snowflake)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/sticker#list-guild-stickers
+]=]
+function sticker.listGuildStickersAsync(
+	instance: request.Request,
+	guildId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.ListGuildStickersResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -62,12 +84,16 @@ function Sticker.listGuildStickersAsync(instance: request.Request, guildId: apiT
 	end) :: future.FutureLike<string, apiTypes.ListGuildStickersResponse>
 end
 
--- https://discord.com/developers/docs/resources/sticker#get-guild-sticker
-function Sticker.getGuildStickerAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/sticker#get-guild-sticker
+]=]
+function sticker.getGuildStickerAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	stickerId: apiTypes.Snowflake
-)
+): future.FutureLike<string, apiTypes.GetGuildStickerResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -82,13 +108,17 @@ function Sticker.getGuildStickerAsync(
 	end) :: future.FutureLike<string, apiTypes.GetGuildStickerResponse>
 end
 
--- https://discord.com/developers/docs/resources/sticker#create-guild-sticker
-function Sticker.createGuildStickerAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/sticker#create-guild-sticker
+]=]
+function sticker.createGuildStickerAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	jsonParams: apiTypes.CreateGuildStickerRequest,
 	auditLogReason: string?
-)
+): future.FutureLike<string, apiTypes.CreateGuildStickerResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -105,14 +135,18 @@ function Sticker.createGuildStickerAsync(
 	end) :: future.FutureLike<string, apiTypes.CreateGuildStickerResponse>
 end
 
--- https://discord.com/developers/docs/resources/sticker#modify-guild-sticker
-function Sticker.modifyGuildStickerAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/sticker#modify-guild-sticker
+]=]
+function sticker.modifyGuildStickerAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	stickerId: apiTypes.Snowflake,
 	jsonParams: apiTypes.ModifyGuildStickerRequest,
 	auditLogReason: string?
-)
+): future.FutureLike<string, apiTypes.ModifyGuildStickerResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -129,13 +163,17 @@ function Sticker.modifyGuildStickerAsync(
 	end) :: future.FutureLike<string, apiTypes.ModifyGuildStickerResponse>
 end
 
--- https://discord.com/developers/docs/resources/sticker#delete-guild-sticker
-function Sticker.deleteGuildStickerAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/sticker#delete-guild-sticker
+]=]
+function sticker.deleteGuildStickerAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	stickerId: apiTypes.Snowflake,
 	auditLogReason: string?
-)
+): future.FutureLike<string, apiTypes.DeleteGuildStickerResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -151,4 +189,4 @@ function Sticker.deleteGuildStickerAsync(
 	end) :: future.FutureLike<string, apiTypes.DeleteGuildStickerResponse>
 end
 
-return Sticker
+return sticker

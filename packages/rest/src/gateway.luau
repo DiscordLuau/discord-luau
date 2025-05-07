@@ -3,15 +3,21 @@ local apiTypes = require("../lune_packages/api_types")
 
 local request = require("./request")
 
---[[
+--[=[
+	@class Rest.gateway
+
 	HTTP Rest API implementation for the following Resource:
 
 	- https://discord.com/developers/docs/topics/gateway
-]]
-local Gateway = {}
+]=]
+local gateway = {}
 
--- https://discord.com/developers/docs/topics/gateway#get-gateway
-function Gateway.getGatewayAsync(instance: request.Request)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/topics/gateway#get-gateway
+]=]
+function gateway.getGatewayAsync(instance: request.Request): future.FutureLike<string, apiTypes.GetGatewayResponse>
 	return future.Future.new(function()
 		instance:setMethod("GET")
 		instance:setUrl(apiTypes.rest.endpoints.GetGateway)
@@ -24,8 +30,14 @@ function Gateway.getGatewayAsync(instance: request.Request)
 	end) :: future.FutureLike<string, apiTypes.GetGatewayResponse>
 end
 
--- https://discord.com/developers/docs/topics/gateway#get-gateway-bot
-function Gateway.getGatewayBotAsync(instance: request.Request)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/topics/gateway#get-gateway-bot
+]=]
+function gateway.getGatewayBotAsync(
+	instance: request.Request
+): future.FutureLike<string, apiTypes.GetGatewayBotResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -40,4 +52,4 @@ function Gateway.getGatewayBotAsync(instance: request.Request)
 	end) :: future.FutureLike<string, apiTypes.GetGatewayBotResponse>
 end
 
-return Gateway
+return gateway

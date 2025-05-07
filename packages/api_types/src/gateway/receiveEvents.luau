@@ -1,9 +1,11 @@
---[[
+--[=[
+	@class Types.gateway.receiveEvents
+
 	https://discord.com/developers/docs/topics/gateway-events#receive-events
 
 	these enums map to the `T` event name given in a Discord payload; 
 		https://discord.com/developers/docs/topics/gateway-events#payload-structure
-]]
+]=]
 
 local ReceiveEvents = table.freeze({
 	Hello = "HELLO",

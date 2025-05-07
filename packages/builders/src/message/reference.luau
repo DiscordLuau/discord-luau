@@ -1,8 +1,11 @@
---[[
+--[=[
+	@class Builders.Reference
+	@__index Prototype
+
 	Implementation of discords Reference object as a Luau builder.	
 
 	https://discord.com/developers/docs/resources/message#message-reference-structure
-]]
+]=]
 
 local apiTypes = require("../../lune_packages/api_types")
 
@@ -11,54 +14,66 @@ local Reference = {}
 Reference.Prototype = {}
 Reference.Interface = {}
 
---[[
-	type of reference.
-]]
+--[=[
+	@within Builders.Reference
+
+	The type of reference.
+]=]
 function Reference.Prototype.setType(self: Reference, type: apiTypes.MessageReferenceType): Reference
 	self.type = type
 
 	return self
 end
 
---[[
-	id of the originating message
-]]
+--[=[
+	@within Builders.Reference
+
+	The id of the originating message.
+]=]
 function Reference.Prototype.setMessageId(self: Reference, messageId: string): Reference
 	self.messageId = messageId
 
 	return self
 end
 
---[[
-	id of the originating message's channel
-]]
+--[=[
+	@within Builders.Reference
+
+	The id of the originating message's channel.
+]=]
 function Reference.Prototype.setChannelId(self: Reference, channelId: string): Reference
 	self.channelId = channelId
 
 	return self
 end
 
---[[
-	id of the originating message's guild
-]]
+--[=[
+	@within Builders.Reference
+
+	The id of the originating message's guild.
+]=]
 function Reference.Prototype.setGuildId(self: Reference, guildId: string): Reference
 	self.guildId = guildId
 
 	return self
 end
 
---[[
-	when sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message, default true
-]]
+--[=[
+	@within Builders.Reference
+
+	When sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message, default true.
+]=]
 function Reference.Prototype.setFailIfNotExists(self: Reference, failIfNotExists: boolean): Reference
 	self.failIfNotExists = failIfNotExists
 
 	return self
 end
 
---[[
+--[=[
+	@within Builders.Reference
+
 	Responsible for building the Reference JSON that can be parsed by the Discord API.
-]]
+]=]
 function Reference.Prototype.build(self: Reference): JSON
 	return {
 		type = apiTypes.channel.MessageType[self.type],
@@ -69,13 +84,11 @@ function Reference.Prototype.build(self: Reference): JSON
 	}
 end
 
---[[
-	Responsible for creating a new Reference.
+--[=[
+	@within Builders.Reference
 
-	```lua
-	
-	```
-]]
+	Responsible for creating a new Reference.
+]=]
 function Reference.Interface.new(resource: {
 	type: apiTypes.MessageReferenceType?,
 	messageId: string?,
@@ -83,9 +96,37 @@ function Reference.Interface.new(resource: {
 	guildId: string?,
 	failIfNotExists: boolean?,
 }?): Reference
-	local self = setmetatable({} :: Reference, {
-		__index = Reference.Prototype,
-	})
+	local self = setmetatable(
+		{
+			--[=[
+				@prop type api_types.MessageReferenceType
+				The type of reference.
+			]=]
+
+			--[=[
+				@prop messageId string
+				The id of the originating message.
+			]=]
+
+			--[=[
+				@prop channelId string
+				The id of the originating message's channel.
+			]=]
+
+			--[=[
+				@prop guildId string
+				The id of the originating message's guild.
+			]=]
+
+			--[=[
+				@prop failIfNotExists boolean
+				When sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message.
+			]=]
+		} :: Reference,
+		{
+			__index = Reference.Prototype,
+		}
+	)
 
 	if resource then
 		if resource.type then

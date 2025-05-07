@@ -5,15 +5,21 @@ local apiTypes = require("../lune_packages/api_types")
 
 local request = require("./request")
 
---[[
+--[=[
+	@class Rest.message
+
 	HTTP Rest API implementation for the following Resource:
 
 	- https://discord.com/developers/docs/resources/message
-]]
-local Message = {}
+]=]
+local message = {}
 
--- https://discord.com/developers/docs/resources/message#get-channel-messages
-function Message.getChannelMessagesAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/message#get-channel-messages
+]=]
+function message.getChannelMessagesAsync(
 	instance: request.Request,
 	channelId: string,
 	urlParams: {
@@ -22,7 +28,7 @@ function Message.getChannelMessagesAsync(
 		after: apiTypes.Snowflake?,
 		limit: number?,
 	}
-)
+): future.FutureLike<string, apiTypes.GetChannelMessagesResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -42,8 +48,16 @@ function Message.getChannelMessagesAsync(
 	end) :: future.FutureLike<string, apiTypes.GetChannelMessagesResponse>
 end
 
--- https://discord.com/developers/docs/resources/message#get-channel-message
-function Message.getChannelMessageAsync(instance: request.Request, channelId: string, messageId: apiTypes.Snowflake)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/message#get-channel-message
+]=]
+function message.getChannelMessageAsync(
+	instance: request.Request,
+	channelId: string,
+	messageId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.GetChannelMessageResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -58,12 +72,16 @@ function Message.getChannelMessageAsync(instance: request.Request, channelId: st
 	end) :: future.FutureLike<string, apiTypes.GetChannelMessageResponse>
 end
 
--- https://discord.com/developers/docs/resources/message#create-message
-function Message.createMessageAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/message#create-message
+]=]
+function message.createMessageAsync(
 	instance: request.Request,
 	channelId: string,
 	jsonParams: apiTypes.CreateMessageRequest
-)
+): future.FutureLike<string, apiTypes.CreateMessageResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -79,8 +97,16 @@ function Message.createMessageAsync(
 	end) :: future.FutureLike<string, apiTypes.CreateMessageResponse>
 end
 
--- https://discord.com/developers/docs/resources/message#crosspost-message
-function Message.crosspostMessageAsync(instance: request.Request, channelId: string, messageId: string)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/message#crosspost-message
+]=]
+function message.crosspostMessageAsync(
+	instance: request.Request,
+	channelId: string,
+	messageId: string
+): future.FutureLike<string, apiTypes.CrosspostMessageResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -95,13 +121,17 @@ function Message.crosspostMessageAsync(instance: request.Request, channelId: str
 	end) :: future.FutureLike<string, apiTypes.CrosspostMessageResponse>
 end
 
--- https://discord.com/developers/docs/resources/message#create-reaction
-function Message.createReactionAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/message#create-reaction
+]=]
+function message.createReactionAsync(
 	instance: request.Request,
 	channelId: string,
 	messageId: apiTypes.Snowflake,
 	emoji: string
-)
+): future.FutureLike<string, apiTypes.CreateReactionResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -123,13 +153,17 @@ function Message.createReactionAsync(
 	end) :: future.FutureLike<string, apiTypes.CreateReactionResponse>
 end
 
--- https://discord.com/developers/docs/resources/message#delete-own-reaction
-function Message.deleteOwnReactionAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/message#delete-own-reaction
+]=]
+function message.deleteOwnReactionAsync(
 	instance: request.Request,
 	channelId: string,
 	messageId: apiTypes.Snowflake,
 	emoji: string
-)
+): future.FutureLike<string, apiTypes.DeleteOwnReactionResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -151,14 +185,18 @@ function Message.deleteOwnReactionAsync(
 	end) :: future.FutureLike<string, apiTypes.DeleteOwnReactionResponse>
 end
 
--- https://discord.com/developers/docs/resources/message#delete-user-reaction
-function Message.deleteUserReactionAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/message#delete-user-reaction
+]=]
+function message.deleteUserReactionAsync(
 	instance: request.Request,
 	channelId: string,
 	messageId: apiTypes.Snowflake,
 	emoji: string,
 	userId: apiTypes.Snowflake
-)
+): future.FutureLike<string, apiTypes.DeleteUserReactionResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -181,8 +219,12 @@ function Message.deleteUserReactionAsync(
 	end) :: future.FutureLike<string, apiTypes.DeleteUserReactionResponse>
 end
 
--- https://discord.com/developers/docs/resources/message#get-reactions
-function Message.getReactionsAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/message#get-reactions
+]=]
+function message.getReactionsAsync(
 	instance: request.Request,
 	channelId: string,
 	messageId: apiTypes.Snowflake,
@@ -192,7 +234,7 @@ function Message.getReactionsAsync(
 		after: apiTypes.Snowflake?,
 		limit: number?,
 	}
-)
+): future.FutureLike<string, apiTypes.GetReactionsResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -213,8 +255,16 @@ function Message.getReactionsAsync(
 	end) :: future.FutureLike<string, apiTypes.GetReactionsResponse>
 end
 
--- https://discord.com/developers/docs/resources/message#delete-all-reactions
-function Message.deleteAllReactionsAsync(instance: request.Request, channelId: string, messageId: apiTypes.Snowflake)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/message#delete-all-reactions
+]=]
+function message.deleteAllReactionsAsync(
+	instance: request.Request,
+	channelId: string,
+	messageId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.DeleteAllReactionsResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -229,13 +279,17 @@ function Message.deleteAllReactionsAsync(instance: request.Request, channelId: s
 	end) :: future.FutureLike<string, apiTypes.DeleteAllReactionsResponse>
 end
 
--- https://discord.com/developers/docs/resources/message#delete-all-reactions-for-emoji
-function Message.deleteAllReactionsForEmojiAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/message#delete-all-reactions-for-emoji
+]=]
+function message.deleteAllReactionsForEmojiAsync(
 	instance: request.Request,
 	channelId: string,
 	messageId: apiTypes.Snowflake,
 	emoji: string
-)
+): future.FutureLike<string, apiTypes.DeleteAllReactionsForEmojiResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -257,13 +311,17 @@ function Message.deleteAllReactionsForEmojiAsync(
 	end) :: future.FutureLike<string, apiTypes.DeleteAllReactionsForEmojiResponse>
 end
 
--- https://discord.com/developers/docs/resources/message#edit-message
-function Message.editMessageAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/message#edit-message
+]=]
+function message.editMessageAsync(
 	instance: request.Request,
 	channelId: string,
 	messageId: apiTypes.Snowflake,
 	jsonParams: apiTypes.EditMessageRequest
-)
+): future.FutureLike<string, apiTypes.EditMessageResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -279,13 +337,17 @@ function Message.editMessageAsync(
 	end) :: future.FutureLike<string, apiTypes.EditMessageResponse>
 end
 
--- https://discord.com/developers/docs/resources/message#delete-message
-function Message.deleteMessageAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/message#delete-message
+]=]
+function message.deleteMessageAsync(
 	instance: request.Request,
 	channelId: string,
 	messageId: apiTypes.Snowflake,
 	auditLogReason: string?
-)
+): future.FutureLike<string, apiTypes.DeleteMessageResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -301,13 +363,17 @@ function Message.deleteMessageAsync(
 	end) :: future.FutureLike<string, apiTypes.DeleteMessageResponse>
 end
 
--- https://discord.com/developers/docs/resources/message#bulk-delete-messages
-function Message.bulkDeleteMessagesAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/message#bulk-delete-messages
+]=]
+function message.bulkDeleteMessagesAsync(
 	instance: request.Request,
 	channelId: string,
 	jsonParams: apiTypes.BulkDeleteMessagesRequest,
 	auditLogReason: string?
-)
+): future.FutureLike<string, apiTypes.BulkDeleteMessageResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -324,4 +390,4 @@ function Message.bulkDeleteMessagesAsync(
 	end) :: future.FutureLike<string, apiTypes.BulkDeleteMessageResponse>
 end
 
-return Message
+return message

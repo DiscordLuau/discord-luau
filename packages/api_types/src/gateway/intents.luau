@@ -1,6 +1,8 @@
---[[
+--[=[
+	@class Types.gateway.intents
+
 	https://discord.com/developers/docs/topics/gateway#list-of-intents
-]]
+]=]
 
 local Intents = table.freeze({
 	Guilds = 0,

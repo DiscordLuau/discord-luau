@@ -5,15 +5,21 @@ local apiTypes = require("../lune_packages/api_types")
 
 local request = require("./request")
 
---[[
+--[=[
+	@class Rest.user
+
 	HTTP Rest API implementation for the following Resource:
 
 	- https://discord.com/developers/docs/resources/user
-]]
-local User = {}
+]=]
+local user = {}
 
--- https://discord.com/developers/docs/resources/user#get-current-user
-function User.getCurrentUserAsync(instance: request.Request)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/user#get-current-user
+]=]
+function user.getCurrentUserAsync(instance: request.Request): future.FutureLike<string, apiTypes.GetCurrentUserResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -28,8 +34,15 @@ function User.getCurrentUserAsync(instance: request.Request)
 	end) :: future.FutureLike<string, apiTypes.GetCurrentUserResponse>
 end
 
--- https://discord.com/developers/docs/resources/user#get-user
-function User.getUserAsync(instance: request.Request, userId: apiTypes.Snowflake)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/user#get-user
+]=]
+function user.getUserAsync(
+	instance: request.Request,
+	userId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.GetUserResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -44,8 +57,15 @@ function User.getUserAsync(instance: request.Request, userId: apiTypes.Snowflake
 	end) :: future.FutureLike<string, apiTypes.GetUserResponse>
 end
 
--- https://discord.com/developers/docs/resources/user#modify-current-user
-function User.modifyCurrentUserAsync(instance: request.Request, jsonParams: apiTypes.ModifyCurrentUserRequest)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/user#modify-current-user
+]=]
+function user.modifyCurrentUserAsync(
+	instance: request.Request,
+	jsonParams: apiTypes.ModifyCurrentUserRequest
+): future.FutureLike<string, apiTypes.ModifyCurrentUserResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -61,8 +81,12 @@ function User.modifyCurrentUserAsync(instance: request.Request, jsonParams: apiT
 	end) :: future.FutureLike<string, apiTypes.ModifyCurrentUserResponse>
 end
 
--- https://discord.com/developers/docs/resources/user#get-current-user-guilds
-function User.getCurrentUserGuildsAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/user#get-current-user-guilds
+]=]
+function user.getCurrentUserGuildsAsync(
 	instance: request.Request,
 	urlParams: {
 		before: apiTypes.Snowflake?,
@@ -70,7 +94,7 @@ function User.getCurrentUserGuildsAsync(
 		limit: number?,
 		withCounts: boolean?,
 	}
-)
+): future.FutureLike<string, apiTypes.GetCurrentUserGuildsResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -90,8 +114,15 @@ function User.getCurrentUserGuildsAsync(
 	end) :: future.FutureLike<string, apiTypes.GetCurrentUserGuildsResponse>
 end
 
--- https://discord.com/developers/docs/resources/user#get-current-user-guild-member
-function User.getCurrentUserGuildMember(instance: request.Request, guildId: apiTypes.Snowflake)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/user#get-current-user-guild-member
+]=]
+function user.getCurrentUserGuildMember(
+	instance: request.Request,
+	guildId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.GetCurrentUserGuildMemberResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -106,8 +137,15 @@ function User.getCurrentUserGuildMember(instance: request.Request, guildId: apiT
 	end) :: future.FutureLike<string, apiTypes.GetCurrentUserGuildMemberResponse>
 end
 
--- https://discord.com/developers/docs/resources/user#leave-guild
-function User.leaveGuildAsync(instance: request.Request, guildId: apiTypes.Snowflake)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/user#leave-guild
+]=]
+function user.leaveGuildAsync(
+	instance: request.Request,
+	guildId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.LeaveGuildResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -122,8 +160,15 @@ function User.leaveGuildAsync(instance: request.Request, guildId: apiTypes.Snowf
 	end) :: future.FutureLike<string, apiTypes.LeaveGuildResponse>
 end
 
--- https://discord.com/developers/docs/resources/user#create-dm
-function User.createDMAsync(instance: request.Request, jsonParams: apiTypes.CreateDMRequest)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/user#create-dm
+]=]
+function user.createDMAsync(
+	instance: request.Request,
+	jsonParams: apiTypes.CreateDMRequest
+): future.FutureLike<string, apiTypes.CreateDMResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -139,8 +184,15 @@ function User.createDMAsync(instance: request.Request, jsonParams: apiTypes.Crea
 	end) :: future.FutureLike<string, apiTypes.CreateDMResponse>
 end
 
--- https://discord.com/developers/docs/resources/user#create-group-dm
-function User.createGroupDMAsync(instance: request.Request, jsonParams: apiTypes.CreateGroupDMRequest)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/user#create-group-dm
+]=]
+function user.createGroupDMAsync(
+	instance: request.Request,
+	jsonParams: apiTypes.CreateGroupDMRequest
+): future.FutureLike<string, apiTypes.CreateGroupDMResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -156,8 +208,14 @@ function User.createGroupDMAsync(instance: request.Request, jsonParams: apiTypes
 	end) :: future.FutureLike<string, apiTypes.CreateGroupDMResponse>
 end
 
--- https://discord.com/developers/docs/resources/user#get-current-user-connections
-function User.getCurrentUserConnectionsAsync(instance: request.Request)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/user#get-current-user-connections
+]=]
+function user.getCurrentUserConnectionsAsync(
+	instance: request.Request
+): future.FutureLike<string, apiTypes.GetCurrentUserConnectionResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -172,8 +230,18 @@ function User.getCurrentUserConnectionsAsync(instance: request.Request)
 	end) :: future.FutureLike<string, apiTypes.GetCurrentUserConnectionResponse>
 end
 
--- https://discord.com/developers/docs/resources/user#get-current-user-application-role-connection
-function User.getCurrentUserApplicationRoleConnectionAsync(instance: request.Request, applicationId: apiTypes.Snowflake)
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/user#get-current-user-application-role-connection
+]=]
+function user.getCurrentUserApplicationRoleConnectionAsync(
+	instance: request.Request,
+	applicationId: apiTypes.Snowflake
+): future.FutureLike<
+	string,
+	apiTypes.GetCurrentUserApplicationRoleConnectionResponse
+>
 	return future.Future.new(
 			function()
 				instance:assertToken()
@@ -192,12 +260,19 @@ function User.getCurrentUserApplicationRoleConnectionAsync(instance: request.Req
 		) :: future.FutureLike<string, apiTypes.GetCurrentUserApplicationRoleConnectionResponse>
 end
 
--- https://discord.com/developers/docs/resources/user#update-current-user-application-role-connection
-function User.updateCurrentUserApplicationRoleConnectionAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/user#update-current-user-application-role-connection
+]=]
+function user.updateCurrentUserApplicationRoleConnectionAsync(
 	instance: request.Request,
 	applicationId: apiTypes.Snowflake,
 	jsonParams: apiTypes.UpdateCurrentUserApplicationRoleConnectionRequest
-)
+): future.FutureLike<
+	string,
+	apiTypes.UpdateCurrentUserApplicationRoleConnectionResponse
+>
 	return future.Future.new(
 			function()
 				instance:assertToken()
@@ -217,4 +292,4 @@ function User.updateCurrentUserApplicationRoleConnectionAsync(
 		) :: future.FutureLike<string, apiTypes.UpdateCurrentUserApplicationRoleConnectionResponse>
 end
 
-return User
+return user

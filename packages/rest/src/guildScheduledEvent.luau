@@ -5,21 +5,30 @@ local apiTypes = require("../lune_packages/api_types")
 
 local request = require("./request")
 
---[[
+--[=[
+	@class Rest.guildScheduledEvent
+
 	HTTP Rest API implementation for the following Resource:
 
 	- https://discord.com/developers/docs/resources/guild-scheduled-event
-]]
-local GuildScheduledEvent = {}
+]=]
+local guildScheduledEvent = {}
 
--- https://discord.com/developers/docs/resources/guild-scheduled-event#list-scheduled-events-for-guild
-function GuildScheduledEvent.listScheduledEventsForGuildAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild-scheduled-event#list-scheduled-events-for-guild
+]=]
+function guildScheduledEvent.listScheduledEventsForGuildAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	urlParams: {
 		withUserCount: boolean?,
 	}
-)
+): future.FutureLike<
+	string,
+	apiTypes.ListScheduledEventsForGuildResponse
+>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -39,13 +48,20 @@ function GuildScheduledEvent.listScheduledEventsForGuildAsync(
 	end) :: future.FutureLike<string, apiTypes.ListScheduledEventsForGuildResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild-scheduled-event#create-guild-scheduled-event
-function GuildScheduledEvent.createGuildScheduledEvent(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild-scheduled-event#create-guild-scheduled-event
+]=]
+function guildScheduledEvent.createGuildScheduledEvent(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	jsonParams: apiTypes.CreateGuildScheduledEventRequest,
 	auditLogReason: string?
-)
+): future.FutureLike<
+	string,
+	apiTypes.CreateGuildScheduledEventResponse
+>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -62,15 +78,22 @@ function GuildScheduledEvent.createGuildScheduledEvent(
 	end) :: future.FutureLike<string, apiTypes.CreateGuildScheduledEventResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild-scheduled-event#get-guild-scheduled-event
-function GuildScheduledEvent.getScheduledEventsForGuildAsync(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild-scheduled-event#get-guild-scheduled-event
+]=]
+function guildScheduledEvent.getScheduledEventsForGuildAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	scheduledEventId: apiTypes.Snowflake,
 	urlParams: {
 		withUserCount: boolean?,
 	}
-)
+): future.FutureLike<
+	string,
+	apiTypes.GetGuildScheduledEventResponse
+>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -90,14 +113,21 @@ function GuildScheduledEvent.getScheduledEventsForGuildAsync(
 	end) :: future.FutureLike<string, apiTypes.GetGuildScheduledEventResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild-scheduled-event#modify-guild-scheduled-event
-function GuildScheduledEvent.modifyGuildScheduledEvent(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild-scheduled-event#modify-guild-scheduled-event
+]=]
+function guildScheduledEvent.modifyGuildScheduledEvent(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	scheduledEventId: apiTypes.Snowflake,
 	jsonParams: apiTypes.ModifyGuildScheduledEventRequest,
 	auditLogReason: string?
-)
+): future.FutureLike<
+	string,
+	apiTypes.ModifyGuildScheduledEventResponse
+>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -114,12 +144,19 @@ function GuildScheduledEvent.modifyGuildScheduledEvent(
 	end) :: future.FutureLike<string, apiTypes.ModifyGuildScheduledEventResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild-scheduled-event#delete-guild-scheduled-event
-function GuildScheduledEvent.deleteGuildScheduledEvent(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild-scheduled-event#delete-guild-scheduled-event
+]=]
+function guildScheduledEvent.deleteGuildScheduledEvent(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	scheduledEventId: apiTypes.Snowflake
-)
+): future.FutureLike<
+	string,
+	apiTypes.DeleteGuildScheduledEventResponse
+>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -134,12 +171,19 @@ function GuildScheduledEvent.deleteGuildScheduledEvent(
 	end) :: future.FutureLike<string, apiTypes.DeleteGuildScheduledEventResponse>
 end
 
--- https://discord.com/developers/docs/resources/guild-scheduled-event#get-guild-scheduled-event-users
-function GuildScheduledEvent.getGuildScheduledEventUsers(
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/resources/guild-scheduled-event#get-guild-scheduled-event-users
+]=]
+function guildScheduledEvent.getGuildScheduledEventUsers(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	scheduledEventId: apiTypes.Snowflake
-)
+): future.FutureLike<
+	string,
+	apiTypes.GetGuildScheduledEventUsersResponse
+>
 	return future.Future.new(function()
 		instance:assertToken()
 
@@ -154,4 +198,4 @@ function GuildScheduledEvent.getGuildScheduledEventUsers(
 	end) :: future.FutureLike<string, apiTypes.GetGuildScheduledEventUsersResponse>
 end
 
-return GuildScheduledEvent
+return guildScheduledEvent

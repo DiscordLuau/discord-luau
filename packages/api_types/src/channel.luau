@@ -1,8 +1,12 @@
+--[=[
+	@class Types.channel
+]=]
+
 local util = require("../lune_packages/util")
 
 local apiTypes = require("./apiTypes")
 
-local ChannelTypes = table.freeze(util.table.reflect({
+local ChannelTypes = table.freeze(util.tableReflect({
 	GuildText = 0,
 	DM = 1,
 	GuildVoice = 2,
@@ -18,28 +22,28 @@ local ChannelTypes = table.freeze(util.table.reflect({
 	GuildMedia = 16,
 }))
 
-local MediaSortOrder = table.freeze(util.table.reflect({
+local MediaSortOrder = table.freeze(util.tableReflect({
 	LatestActivity = 0,
 	CreationDate = 1,
 }))
 
-local ForumSortOrder = table.freeze(util.table.reflect({
+local ForumSortOrder = table.freeze(util.tableReflect({
 	LatestActivity = 0,
 	CreationDate = 1,
 }))
 
-local ForumLayout = table.freeze(util.table.reflect({
+local ForumLayout = table.freeze(util.tableReflect({
 	NotSet = 0,
 	ListView = 1,
 	GalleryView = 2,
 }))
 
-local VideoQualityMode = table.freeze(util.table.reflect({
+local VideoQualityMode = table.freeze(util.tableReflect({
 	Auto = 1,
 	Full = 2,
 }))
 
-local SelectMenuType = table.freeze(util.table.reflect({
+local SelectMenuType = table.freeze(util.tableReflect({
 	String = 3,
 	Text = 4,
 	User = 5,

@@ -1,9 +1,12 @@
+--[=[
+	@class Utilities
+
+	Interface for the discord-luau Utilities package
+]=]
+
 return {
 	validateKebabCase = require("./validateKebabCase"),
 	createGuid = require("./createGuid"),
-	coroutine = require("./coroutine"),
-
-	table = {
-		reflect = require("./table/reflect"),
-	},
+	coroutineRun = require("./coroutine/run"),
+	tableReflect = require("./table/reflect"),
 }

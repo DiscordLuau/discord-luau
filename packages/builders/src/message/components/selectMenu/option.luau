@@ -1,20 +1,25 @@
---[[
-	Implementation of discords SelectMenu object as a Luau builder.	
+--[=[
+	@class Builders.Option
+	@__index Prototype
 
-	https://discord.com/developers/docs/interactions/message-components#SelectMenus
-]]
+	Implementation of discords Option object as a Luau builder.	
+
+	https://discord.com/developers/docs/interactions/message-components#Options
+]=]
 
 local emoji = require("../../../emoji")
 
-local SelectMenu = {}
+local Option = {}
 
-SelectMenu.Prototype = {}
-SelectMenu.Interface = {}
+Option.Prototype = {}
+Option.Interface = {}
 
---[[
-	
-]]
-function SelectMenu.Prototype.setLabel(self: SelectMenu, label: string): SelectMenu
+--[=[
+	@within Builders.Option
+
+	Sets the user-facing name of the option.
+]=]
+function Option.Prototype.setLabel(self: Option, label: string): Option
 	assert(#label <= 100, `Label must be less than 80 characters.`)
 	assert(#label > 0, `Label must be more than 0 characters.`)
 
@@ -23,10 +28,12 @@ function SelectMenu.Prototype.setLabel(self: SelectMenu, label: string): SelectM
 	return self
 end
 
---[[
-	
-]]
-function SelectMenu.Prototype.setValue(self: SelectMenu, value: string): SelectMenu
+--[=[
+	@within Builders.Option
+
+	Sets the dev-defined value of the option.
+]=]
+function Option.Prototype.setValue(self: Option, value: string): Option
 	assert(#value <= 100, `Value must be less than 80 characters.`)
 	assert(#value > 0, `Value must be more than 0 characters.`)
 
@@ -35,10 +42,12 @@ function SelectMenu.Prototype.setValue(self: SelectMenu, value: string): SelectM
 	return self
 end
 
---[[
-	
-]]
-function SelectMenu.Prototype.setDescription(self: SelectMenu, description: string): SelectMenu
+--[=[
+	@within Builders.Option
+
+	Sets an additional description of the option.
+]=]
+function Option.Prototype.setDescription(self: Option, description: string): Option
 	assert(#description <= 100, `Description( must be less than 80 characters.`)
 	assert(#description > 0, `Description( must be more than 0 characters.`)
 
@@ -47,28 +56,34 @@ function SelectMenu.Prototype.setDescription(self: SelectMenu, description: stri
 	return self
 end
 
---[[
-	
-]]
-function SelectMenu.Prototype.setEmoji(self: SelectMenu, emoji: emoji.JSON): SelectMenu
+--[=[
+	@within Builders.Option
+
+	Sets an emoji to display alongside the option.
+]=]
+function Option.Prototype.setEmoji(self: Option, emoji: emoji.JSON): Option
 	self.emoji = emoji
 
 	return self
 end
 
---[[
-	
-]]
-function SelectMenu.Prototype.setDefault(self: SelectMenu, default: boolean): SelectMenu
+--[=[
+	@within Builders.Option
+
+	Sets whether this option is selected by default.
+]=]
+function Option.Prototype.setDefault(self: Option, default: boolean): Option
 	self.default = default
 
 	return self
 end
 
---[[
-	Responsible for building the SelectMenu JSON that can be parsed by the Discord API.
-]]
-function SelectMenu.Prototype.build(self: SelectMenu): JSON
+--[=[
+	@within Builders.Option
+
+	Responsible for building the Option JSON that can be parsed by the Discord API.
+]=]
+function Option.Prototype.build(self: Option): JSON
 	assert(self.label, `Label is required`)
 	assert(self.value, `Value is required`)
 	assert(self.default ~= nil, `Default is required`)
@@ -82,23 +97,68 @@ function SelectMenu.Prototype.build(self: SelectMenu): JSON
 	}
 end
 
---[[
-	Responsible for creating a new SelectMenu.
+--[=[
+	@within Builders.Option
 
-	```lua
-	
+	Responsible for creating a new Option.
+
+	```luau
+	local option = Option.new({
+		label = "My Option",
+		value = "option_value",
+		description = "A description",
+		default = false
+	})
 	```
-]]
-function SelectMenu.Interface.new(resource: {
+]=]
+function Option.Interface.new(resource: {
 	label: string?,
 	value: string?,
 	description: string?,
 	emoji: emoji.JSON?,
 	default: boolean?,
-}): SelectMenu
-	local self = setmetatable({} :: SelectMenu, {
-		__index = SelectMenu.Prototype,
-	})
+}): Option
+	local self = setmetatable(
+		{
+			--[=[
+				@prop label string?
+				@within Builders.Option
+				The user-facing name of the option.
+			]=]
+			label = nil,
+
+			--[=[
+				@prop value string?
+				@within Builders.Option
+				The dev-defined value of the option.
+			]=]
+			value = nil,
+
+			--[=[
+				@prop description string?
+				@within Builders.Option
+				An additional description of the option.
+			]=]
+			description = nil,
+
+			--[=[
+				@prop emoji Builders.Emoji?
+				@within Builders.Option
+				The emoji to display alongside the option.
+			]=]
+			emoji = nil,
+
+			--[=[
+				@prop default boolean?
+				@within Builders.Option
+				Whether this option is selected by default.
+			]=]
+			default = nil,
+		} :: Option,
+		{
+			__index = Option.Prototype,
+		}
+	)
 
 	if resource then
 		if resource.label then
@@ -125,7 +185,7 @@ function SelectMenu.Interface.new(resource: {
 	return self
 end
 
-export type SelectMenu = typeof(SelectMenu.Prototype) & {
+export type Option = typeof(Option.Prototype) & {
 	label: string?,
 	value: string?,
 	description: string?,
@@ -133,6 +193,6 @@ export type SelectMenu = typeof(SelectMenu.Prototype) & {
 	default: boolean?,
 }
 
-export type JSON = typeof(SelectMenu.Prototype.build(nil :: any))
+export type JSON = typeof(Option.Prototype.build(nil :: any))
 
-return SelectMenu.Interface
+return Option.Interface

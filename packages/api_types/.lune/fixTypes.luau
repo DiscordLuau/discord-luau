@@ -57,4 +57,4 @@ for _, definitions in typesToAdd do
 	fileContent = `{definition}{fileContent}`
 end
 
-fs.writeFile("bundled.luau", `--!nonstrict\n\n{fileContent}`)
+fs.writeFile("bundled.luau", `--!nonstrict\n--# selene: allow(unused_variable)\n\n{fileContent}`)

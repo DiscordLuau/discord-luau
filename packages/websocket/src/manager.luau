@@ -1,3 +1,15 @@
+--[=[
+	@class WebSocket.Manager
+	@__index Prototype
+
+	Manages the connection and communication with the Discord Gateway using multiple shards.
+
+	This serves as the primary class for developers wanting to interact with the Discord Gateway, this class is
+	responsible for creating the required shards sending messages asynchronously through each shard.
+	
+	@external future https://yetanotherclown.github.io/luau-futures/
+]=]
+
 local stdPolyfills = require("../lune_packages/std_polyfills")
 
 local emitter = require("../luau_packages/emitter")
@@ -12,12 +24,78 @@ local shard = require("./shard")
 local CONCURRENT_IDENTIFY_YIELD = 5
 
 --[=[
-	@class Manager
-	@__index Prototype
+	@prop token Secret 
+	@within WebSocket.Manager
+]=]
 
-	@external future https://xyz.com/docs
+--[=[
+	@prop intents number
+	@within WebSocket.Manager
+]=]
 
-	EXAMPLE MANAGER DOCUMENTATION
+--[=[
+	@prop webSocketVersion number
+	@within WebSocket.Manager
+]=]
+
+--[=[
+	@prop largeThreshold number?
+	@within WebSocket.Manager
+]=]
+
+--[=[
+	@prop shouldReconnect boolean
+	@within WebSocket.Manager
+]=]
+
+--[=[
+	@prop ready boolean
+	@within WebSocket.Manager
+]=]
+
+--[=[
+	@prop shardIds { ShardId }
+	@within WebSocket.Manager
+]=]
+
+--[=[
+	@prop shards { [ShardId]: WebSocket.Shard }
+	@within WebSocket.Manager
+]=]
+
+--[=[
+	@prop logger Logger.Logger
+	@within WebSocket.Manager
+]=]
+
+--[=[
+	@prop onDisconnected Emitter<ShardPayload<{ errorCode: number? }>>
+	@within WebSocket.Manager
+]=]
+
+--[=[
+	@prop onDisconnected Emitter<ShardPayload<{}>>,
+	@within WebSocket.Manager
+]=]
+
+--[=[
+	@prop onDisconnected Emitter<ShardPayload<{}>>,
+	@within WebSocket.Manager
+]=]
+
+--[=[
+	@prop onDisconnected Emitter<ShardPayload<{ latency: number }>>,
+	@within WebSocket.Manager
+]=]
+
+--[=[
+	@prop onDisconnected Emitter<ShardPayload<{ shardId: number, event: apiTypes.ReceiveEvent, payload: apiTypes.Payload<unknown> }>>
+	@within WebSocket.Manager
+]=]
+
+--[=[
+	@prop onDisconnected Emitter<ShardPayload<{ shardId: number, payload: apiTypes.ReadyPayload }>>
+	@within WebSocket.Manager
 ]=]
 
 local Manager = {}
@@ -26,9 +104,10 @@ Manager.Interface = {}
 Manager.Prototype = {}
 
 --[=[
-	@within Manager
+	@within WebSocket.Manager
 
-	EXAMPLE CONNECT ASYNC DOCUMENTATION
+	Will create, as well as connect all of the shards this application requires in order to communicate
+	back and fourth between discords WebSocket
 ]=]
 function Manager.Prototype.connectAsync(
 	self: Manager,
@@ -125,9 +204,10 @@ function Manager.Prototype.connectAsync(
 end
 
 --[=[
-	@within Manager
+	@within WebSocket.Manager
 
-	EXAMPLE SEND ASYNC DOCUMENTATION
+	Will send a message through all shards this Manager is currently responsible for. This message is sent to the
+	discord WebSocket.
 ]=]
 function Manager.Prototype.sendAsync<T>(self: Manager, operation: apiTypes.Opcode, data: T)
 	return future.Future.new(function()
@@ -141,16 +221,21 @@ function Manager.Prototype.sendAsync<T>(self: Manager, operation: apiTypes.Opcod
 			-- fixme: should type this as shard!
 			local shardObject = shard :: any
 
-			table.insert(requests,  future.Future.new(function()
-				while not shardObject.socketIdentified do
-					stdPolyfills.task.wait(0.5)
-				end
-		
-				shardObject:sendAsync(stdPolyfills.serde.encode("json", {
-					["op"] = operation,
-					["d"] = data,
-				}, false)):await()
-			end))
+			table.insert(
+				requests,
+				future.Future.new(function()
+					while not shardObject.socketIdentified do
+						stdPolyfills.task.wait(0.5)
+					end
+
+					shardObject
+						:sendAsync(stdPolyfills.serde.encode("json", {
+							["op"] = operation,
+							["d"] = data,
+						}, false))
+						:await()
+				end)
+			)
 		end
 
 		for _, request in requests do
@@ -164,9 +249,9 @@ function Manager.Prototype.sendAsync<T>(self: Manager, operation: apiTypes.Opcod
 end
 
 --[=[
-	@within Manager
+	@within WebSocket.Manager
 
-	EXAMPLE CONNECT ASYNC DOCUMENTATION
+	Will instantiate a new Manager class.
 ]=]
 function Manager.Interface.new(settings: {
 	token: secret.Secret<string>,
@@ -211,12 +296,9 @@ export type Manager = typeof(Manager.Prototype) & {
 	largeThreshold: number?,
 	shouldReconnect: boolean,
 	ready: boolean,
-
 	shardIds: { ShardId },
 	shards: { [ShardId]: shard.Shard },
-
 	logger: logger.Logger,
-
 	onDisconnected: emitter.Emitter<ShardPayload<{ errorCode: number? }>>,
 	onReconnected: emitter.Emitter<ShardPayload<{}>>,
 	onConnected: emitter.Emitter<ShardPayload<{}>>,
@@ -226,7 +308,6 @@ export type Manager = typeof(Manager.Prototype) & {
 		event: apiTypes.ReceiveEvent,
 		payload: apiTypes.Payload<unknown>,
 	}>>,
-
 	onAllShardsReady: emitter.Emitter<ShardPayload<{
 		shardId: number,
 		payload: apiTypes.ReadyPayload,

@@ -10,7 +10,10 @@ local apiTypes = require("../lune_packages/api_types")
 
 local LIBRARY_IDENTIFIER = "DiscordLuau"
 
---[[
+--[=[
+	@class WebSocket.Shard
+	@__index Prototype
+
 	Shard is responsible for managing a single WebSocket connection to Discord's Gateway API.
 	Its key responsibilities include:
 
@@ -29,13 +32,172 @@ local LIBRARY_IDENTIFIER = "DiscordLuau"
 
 	The Shard module is crucial for maintaining real-time communication with Discord's Gateway,
 	ensuring the bot stays connected and can send and receive updates efficiently.
-]]
+]=]
+
+--[=[
+	@prop token Secret 
+	@within WebSocket.Shard
+]=]
+
+--[=[
+	@prop intents number
+	@within WebSocket.Shard
+]=]
+
+--[=[
+	@prop shardId number
+	@within WebSocket.Shard
+]=]
+
+--[=[
+	@prop shardCount number
+	@within WebSocket.Shard
+]=]
+
+--[=[
+	@prop shouldReconnect boolean
+	@within WebSocket.Shard
+]=]
+
+--[=[
+	@prop largeThreshold number?
+	@within WebSocket.Shard
+]=]
+
+--[=[
+	@prop zlibBuffer Buffer
+	@within WebSocket.Shard
+]=]
+
+--[=[
+	@prop onSocketConnected Emitter<()>
+	@within WebSocket.Shard
+]=]
+
+--[=[
+	@prop onSocketReconnected Emitter<number?>
+	@within WebSocket.Shard
+]=]
+
+--[=[
+	@prop onSocketDisconnected Emitter<number?, boolean?>
+	@within WebSocket.Shard
+]=]
+
+--[=[
+	@prop onSocketHeartbeat Emitter<number?>
+	@within WebSocket.Shard
+]=]
+
+--[=[
+	@prop onSocketDispatch Emitter<apiTypes.Payload<unknown>>
+	@within WebSocket.Shard
+]=]
+
+--[=[
+	@prop onSocketRawMessage Emitter<apiTypes.Payload<unknown>>
+	@within WebSocket.Shard
+]=]
+
+--[=[
+	@prop onSocketReady Emitter<()>
+	@within WebSocket.Shard
+]=]
+
+--[=[
+	@prop heartbeatAcknowledged boolean?
+	@within WebSocket.Shard
+]=]
+
+--[=[
+	@prop heartbeatClockTime number?
+	@within WebSocket.Shard
+]=]
+
+--[=[
+	@prop heartbeatInterval number?
+	@within WebSocket.Shard
+]=]
+
+--[=[
+	@prop heartbeatThread thread?
+	@within WebSocket.Shard
+]=]
+
+--[=[
+	@prop heartbeatPing number?
+	@within WebSocket.Shard
+]=]
+
+--[=[
+	@prop lastSequence number?
+	@within WebSocket.Shard
+]=]
+
+--[=[
+	@prop logger Logger
+	@within WebSocket.Shard
+]=]
+
+--[=[
+	@prop socketActive boolean
+	@within WebSocket.Shard
+]=]
+
+--[=[
+	@prop socketReconnecting boolean
+	@within WebSocket.Shard
+]=]
+
+--[=[
+	@prop socketDisconnecting boolean
+	@within WebSocket.Shard
+]=]
+
+--[=[
+	@prop socketIdentified boolean
+	@within WebSocket.Shard
+]=]
+
+--[=[
+	@prop sessionId string?
+	@within WebSocket.Shard
+]=]
+
+--[=[
+	@prop sessionGateway string?
+	@within WebSocket.Shard
+]=]
+
+--[=[
+	@prop socketVersion number?
+	@within WebSocket.Shard
+]=]
+
+--[=[
+	@prop socketUrl string?
+	@within WebSocket.Shard
+]=]
+
+--[=[
+	@prop socketInstance any?
+	@within WebSocket.Shard
+]=]
+
+--[=[
+	@prop socketThread thread?
+	@within WebSocket.Shard
+]=]
+
 local Shard = {}
 
 Shard.Interface = {}
 Shard.Prototype = {}
 
---[[
+--[=[
+	@within WebSocket.Shard
+	@private
+
 	Function responsible for handling incoming messages from the WebSocket connection.
 	
 	It performs the following steps:
@@ -47,7 +209,7 @@ Shard.Prototype = {}
 
 	Roughly based on the following documentation:
 	https://discord.com/developers/docs/topics/gateway#zlibstream
-]]
+]=]
 function Shard.Prototype._handleMessage(self: Shard, message: string): ()
 	local isJson, jsonContent = pcall(stdPolyfills.serde.decode, "json" :: any, message)
 
@@ -72,16 +234,16 @@ function Shard.Prototype._handleMessage(self: Shard, message: string): ()
 				self.logger:error(`failed to decode Shard JSON message: {response1}`)
 			end
 		else
-			self.logger:debug(
-				`received complete message: #{string.len(message)}, decompressing...`
-			)
+			self.logger:debug(`received complete message: #{string.len(message)}, decompressing...`)
 		end
 	end
 end
 
---[[
+--[=[
+	@within WebSocket.Shard
+
 	Sends a heartbeat to the Discord Gateway API.
-]]
+]=]
 function Shard.Prototype.heartbeatAsync(self: Shard, requested: boolean?)
 	return future.Future.new(function()
 		if not self.heartbeatAcknowledged and not requested then
@@ -102,9 +264,11 @@ function Shard.Prototype.heartbeatAsync(self: Shard, requested: boolean?)
 	end) :: future.FutureLike<string, nil>
 end
 
---[[
+--[=[
+	@within WebSocket.Shard
+
 	Identifies the current shard with the Discord Gateway.
-]]
+]=]
 function Shard.Prototype.identifyAsync(self: Shard)
 	return future.Future.new(function()
 		self.logger:info(`sending identify request`)
@@ -130,12 +294,14 @@ function Shard.Prototype.identifyAsync(self: Shard)
 	end) :: future.FutureLike<string, nil>
 end
 
---[[
+--[=[
+	@within WebSocket.Shard
+
 	Disconnects the Shard from the Discord Gateway.
 
 	Optionally, a WebSocket close code can be provided, websocket close code spec can be found here:
 	https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent/code
-]]
+]=]
 function Shard.Prototype.disconnectAsync(self: Shard, code: number?)
 	return future.Future.new(function()
 		self.logger:info(`requesting disconnect: {code or 0}`)
@@ -169,12 +335,14 @@ function Shard.Prototype.disconnectAsync(self: Shard, code: number?)
 		end
 
 		self.socketDisconnecting = false
-		
+
 		self.logger:info(`disconnected.`)
 	end) :: future.FutureLike<string, nil>
 end
 
---[[
+--[=[
+	@within WebSocket.Shard
+
 	Connects the shard to a Discord Gateway.
 
 	Expects both a Socket URL, and Socket Version to be provided. It will prepend the socket version
@@ -182,7 +350,7 @@ end
 
 	Also responsible for spawning the thread that will be responsible for
 	receiving messages from the socket.
-]]
+]=]
 function Shard.Prototype.connectAsync(self: Shard, socketUrl: string, socketVersion: number)
 	return future.Future.new(function()
 		assert(not self.socketActive, `Shard '{self.shardId}' already connected to a socket.`)
@@ -206,7 +374,7 @@ function Shard.Prototype.connectAsync(self: Shard, socketUrl: string, socketVers
 
 		self.logger:info(`has connected to: {socketUrl}, starting receive thread.`)
 
-		self.socketThread = util.coroutine.run(function()
+		self.socketThread = util.coroutineRun(function()
 			self.logger:info(`Receive thread started, awaiting messages.`)
 
 			self.onSocketConnected:invoke()
@@ -224,9 +392,7 @@ function Shard.Prototype.connectAsync(self: Shard, socketUrl: string, socketVers
 					if not self.socketActive then
 						continue
 					elseif not self.socketInstance then
-						self.logger:warn(
-							`- missing WebSocket: {response and response or "No error provided"}`
-						)
+						self.logger:warn(`- missing WebSocket: {response and response or "No error provided"}`)
 
 						self.socketActive = false
 					elseif success and response then
@@ -262,14 +428,15 @@ function Shard.Prototype.connectAsync(self: Shard, socketUrl: string, socketVers
 	end) :: future.FutureLike<string, nil>
 end
 
---[[
+--[=[
+	@within WebSocket.Shard
+
 	Resumes a shard session if for some reason the session has either become
 	zombified, or the session has been invalidated by Discord.
-]]
+]=]
 function Shard.Prototype.resumeAsync(self: Shard)
 	return future.Future.new(function()
-		local response = self:connectAsync(self.sessionGateway :: string, self.socketVersion :: number)
-			:await()
+		local response = self:connectAsync(self.sessionGateway :: string, self.socketVersion :: number):await()
 
 		if response:isOk() then
 			self.logger:notice(`waiting for ready..`)
@@ -291,9 +458,7 @@ function Shard.Prototype.resumeAsync(self: Shard)
 						if response:isOk() then
 							self.logger:notice(`has resumed!`)
 						else
-							self.logger:critical(
-								`failed to resume session: {response:unwrapErr()}`
-							)
+							self.logger:critical(`failed to resume session: {response:unwrapErr()}`)
 						end
 					end) :: future.FutureLike<string, nil>
 				end)
@@ -306,10 +471,12 @@ function Shard.Prototype.resumeAsync(self: Shard)
 	end) :: future.FutureLike<string, nil>
 end
 
---[[
+--[=[
+	@within WebSocket.Shard
+
 	Closes the websocket connection and reconnects the shard.
 	This is not a re-instantiation of the shard, but a re-connection of the shard.
-]]
+]=]
 function Shard.Prototype.reconnectAsync(self: Shard)
 	return future.Future.new(function()
 		if self.socketReconnecting then
@@ -330,14 +497,10 @@ function Shard.Prototype.reconnectAsync(self: Shard)
 				if response:isOk() then
 					self.logger:notice(`reconnection successful`)
 				else
-					self.logger:critical(
-						`failed to reconnect session: {response:unwrapErr()}`
-					)
+					self.logger:critical(`failed to reconnect session: {response:unwrapErr()}`)
 				end
 			else
-				self.logger:critical(
-					`failed to reconnect session: {response:unwrapErr()}`
-				)
+				self.logger:critical(`failed to reconnect session: {response:unwrapErr()}`)
 			end
 		else
 			self.logger:warn(`failed to reconnect! Re-instantiating instead!`)
@@ -349,11 +512,13 @@ function Shard.Prototype.reconnectAsync(self: Shard)
 	end) :: future.FutureLike<string, nil>
 end
 
---[[
+--[=[
+	@within WebSocket.Shard
+
 	Sends a message through the WebSocket to Discords Gateway.
 
 	NOTE: Messages are expected to be JSON encoded strings.
-]]
+]=]
 function Shard.Prototype.sendAsync(self: Shard, data: string)
 	local debugTraceback = debug.traceback()
 
@@ -368,13 +533,15 @@ function Shard.Prototype.sendAsync(self: Shard, data: string)
 			self.socketActive = false
 
 			self.logger:warn(`error during send: {response}\nTraceback: {debugTraceback}`)
-			
+
 			self.onSocketDisconnected:wait()
 		end
 	end) :: future.FutureLike<string, nil>
 end
 
---[[
+--[=[
+	@within WebSocket.Shard
+
 	Disconnects the Shard, and re-instantiats it.
 
 	Re-instantiation is the reconnection of the shard to the original socket passed, and not the
@@ -382,7 +549,7 @@ end
 
 	Any events between the initial disconnection and reconnection will not be recovered. If this is
 	what you intend to do, use `Shard:reconnectAsync` instead.
-]]
+]=]
 function Shard.Prototype.reinstantiateAsync(self: Shard, noFail: boolean?)
 	return future.Future.new(function()
 		self.logger:debug(`re-instantiation requested..`)
@@ -400,9 +567,7 @@ function Shard.Prototype.reinstantiateAsync(self: Shard, noFail: boolean?)
 		response = self:connectAsync(self.socketUrl :: string, self.socketVersion :: number):await()
 
 		if response:isOk() then
-			self.logger:warn(
-				`re-instantiation successful, shard {self.shardId} has recovered.`
-			)
+			self.logger:warn(`re-instantiation successful, shard {self.shardId} has recovered.`)
 		else
 			if noFail then
 				stdPolyfills.task.wait(1)
@@ -417,10 +582,12 @@ function Shard.Prototype.reinstantiateAsync(self: Shard, noFail: boolean?)
 	end) :: future.FutureLike<string, nil>
 end
 
---[[
+--[=[
+	@within WebSocket.Shard
+
 	Sends a heartbeat after `milliseconds` milliseconds, looping and continuing to heartbeat 
 	until the shard is disconnected.
-]]
+]=]
 function Shard.Prototype.heartbeatIn(self: Shard, milliseconds: number): ()
 	if self.heartbeatThread then
 		coroutine.close(self.heartbeatThread)
@@ -428,7 +595,7 @@ function Shard.Prototype.heartbeatIn(self: Shard, milliseconds: number): ()
 
 	self.logger:debug(`to heartbeat in '{milliseconds}' ms`)
 
-	self.heartbeatThread = util.coroutine.run(function()
+	self.heartbeatThread = util.coroutineRun(function()
 		stdPolyfills.task.wait(milliseconds / 1000)
 
 		self.heartbeatThread = nil
@@ -443,9 +610,11 @@ function Shard.Prototype.heartbeatIn(self: Shard, milliseconds: number): ()
 	end)
 end
 
---[[
-	Constructor function for Shard.
-]]
+--[=[
+	@within WebSocket.Shard
+
+	Will instantiate a new Shard class.
+]=]
 function Shard.Interface.new(settings: {
 	token: string,
 
@@ -533,9 +702,7 @@ function Shard.Interface.new(settings: {
 					end)
 					:poll()
 			else
-				self.logger:warn(
-					`unrecoverable error during connection, re-instantiating shard..`
-				)
+				self.logger:warn(`unrecoverable error during connection, re-instantiating shard..`)
 
 				self:reinstantiateAsync(self.shouldReconnect):poll()
 			end
@@ -564,8 +731,10 @@ function Shard.Interface.new(settings: {
 
 			self.heartbeatAcknowledged = true
 			self.heartbeatPing = os.clock() - self.heartbeatClockTime :: number
-			
-			self.logger:info(`received heartbeat acknowledgement, ping: '{string.sub(tostring(self.heartbeatPing), 1, 7)}'`)
+
+			self.logger:info(
+				`received heartbeat acknowledgement, ping: '{string.sub(tostring(self.heartbeatPing), 1, 7)}'`
+			)
 
 			self.onSocketHeartbeat:invoke(self.heartbeatPing)
 
@@ -580,9 +749,7 @@ function Shard.Interface.new(settings: {
 							if not result:isOk() then
 								self.socketIdentified = false
 
-								self.logger:critical(
-									`exception during initial identify: {result:unwrapErr()}`
-								)
+								self.logger:critical(`exception during initial identify: {result:unwrapErr()}`)
 							end
 						end) :: future.FutureLike<string, nil>
 					end)
@@ -609,9 +776,7 @@ function Shard.Interface.new(settings: {
 		self.sessionId = message.d.session_id
 
 		self.onSocketReady:invoke()
-		self.logger:info(
-			`ready! identified as {message.d.user.username}#{message.d.user.discriminator}`
-		)
+		self.logger:info(`ready! identified as {message.d.user.username}#{message.d.user.discriminator}`)
 	end)
 
 	self.onSocketDisconnected:listen(function(code, closedBySelf)
@@ -692,39 +857,28 @@ export type Shard = typeof(Shard.Prototype) & {
 	shardId: number,
 	shardCount: number,
 	shouldReconnect: boolean,
-
 	largeThreshold: number?,
-
 	zlibBuffer: buffer.Buffer,
-
 	onSocketConnected: emitter.Emitter<()>,
 	onSocketReconnected: emitter.Emitter<number?>,
 	onSocketDisconnected: emitter.Emitter<number?, boolean?>,
-
 	onSocketHeartbeat: emitter.Emitter<number?>,
-
 	onSocketDispatch: emitter.Emitter<apiTypes.Payload<unknown>>,
 	onSocketRawMessage: emitter.Emitter<apiTypes.Payload<unknown>>,
-	onSocketReady: emitter.Emitter<>,
-
+	onSocketReady: emitter.Emitter<()>,
 	heartbeatAcknowledged: boolean?,
 	heartbeatClockTime: number?,
 	heartbeatInterval: number?,
 	heartbeatThread: thread?,
 	heartbeatPing: number?,
-
 	lastSequence: number?,
-
 	logger: logger.Logger,
-
 	socketActive: boolean,
 	socketReconnecting: boolean,
 	socketDisconnecting: boolean,
 	socketIdentified: boolean,
-
 	sessionId: string?,
 	sessionGateway: string?,
-
 	socketVersion: number?,
 	socketUrl: string?,
 	socketInstance: any?,

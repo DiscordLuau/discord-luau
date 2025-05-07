@@ -1,17 +1,22 @@
---[[
+--[=[
+	@class Builders.Provider
+	@__index Prototype
+
 	Implementation of discords Provider object as a Luau builder.	
 
 	https://discord.com/developers/docs/resources/message#embed-object-embed-provider-structure
-]]
+]=]
 
 local Provider = {}
 
 Provider.Prototype = {}
 Provider.Interface = {}
 
---[[
+--[=[
+	@within Builders.Provider
+
 	Set the image url for this embed.
-]]
+]=]
 function Provider.Prototype.setName(self: Provider, name: string): Provider
 	assert(#name <= 256, "Name must be less than 256 characters")
 	assert(#name > 1, "Name must be greater than 1 characters")
@@ -21,18 +26,22 @@ function Provider.Prototype.setName(self: Provider, name: string): Provider
 	return self
 end
 
---[[
+--[=[
+	@within Builders.Provider
+
 	Set the image height for this embed.
-]]
+]=]
 function Provider.Prototype.setUrl(self: Provider, url: string): Provider
 	self.url = url
 
 	return self
 end
 
---[[
+--[=[
+	@within Builders.Provider
+
 	Responsible for building the Provider JSON that can be parsed by the Discord API.
-]]
+]=]
 function Provider.Prototype.build(self: Provider): JSON
 	return {
 		name = self.name,
@@ -40,20 +49,35 @@ function Provider.Prototype.build(self: Provider): JSON
 	}
 end
 
---[[
-	Responsible for creating a new Provider.
+--[=[
+	@within Builders.Provider
 
-	```lua
-	
-	```
-]]
+	Responsible for creating a new Provider.
+]=]
 function Provider.Interface.new(resource: {
 	name: string?,
 	url: string?,
 }?): Provider
-	local self = setmetatable({} :: Provider, {
-		__index = Provider.Prototype,
-	})
+	local self = setmetatable(
+		{
+			--[=[
+				@prop name string?
+				@within Builders.Provider
+				The name of the provider.
+			]=]
+			name = nil,
+
+			--[=[
+				@prop url string?
+				@within Builders.Provider
+				The url of the provider.
+			]=]
+			url = nil,
+		} :: Provider,
+		{
+			__index = Provider.Prototype,
+		}
+	)
 
 	if resource then
 		if resource.name then

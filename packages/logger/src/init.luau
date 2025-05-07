@@ -1,11 +1,14 @@
---[[
+--[=[
+	@class Logger
+	@__index Prototype
+
 	Logger, a simple logging implementation for Discord Luau.
 
 	This implementation is based on the following document:
 		- https://www.sumologic.com/glossary/log-levels/
 
 	Please defer to the above document for when it is appropriate to use each log level.
-]]
+]=]
 
 local stdPolyfills = require("../lune_packages/std_polyfills")
 
@@ -46,9 +49,11 @@ local Logger = {}
 Logger.Prototype = {}
 Logger.Interface = {}
 
---[[
+--[=[
+	@within Logger
+
 	Function responsible for parsing a varadic list of arguments into a string.
-]]
+]=]
 local function parseVaradic(args: { any }): string
 	local source = ""
 
@@ -60,10 +65,12 @@ local function parseVaradic(args: { any }): string
 	return source
 end
 
---[[
+--[=[
+	@within Logger
+
 	Function responsible for for setting the log level of the logger, for example - if the log level
 		is set to "Debug", then all log levels below, and "Debug" will be ignored.
-]]
+]=]
 function Logger.Prototype.setLogLevel(self: Logger, logLevel: LogLevel)
 	local logLevelIndex = table.find(LOGGER_LOG_LEVELS, logLevel)
 
@@ -72,16 +79,20 @@ function Logger.Prototype.setLogLevel(self: Logger, logLevel: LogLevel)
 	self.logLevel = logLevelIndex
 end
 
---[[
+--[=[
+	@within Logger
+
 	Function responsible for for getting the log level of the logger
-]]
+]=]
 function Logger.Prototype.getLogLevel(self: Logger): LogLevel
 	return LOGGER_LOG_LEVELS[self.logLevel] :: LogLevel
 end
 
---[[
+--[=[
+	@within Logger
+
 	Constructor for the Logger object.
-]]
+]=]
 function Logger.Interface.new(name: string, logLevel: LogLevel?): Logger
 	local logLevelIndex = logLevel and table.find(LOGGER_LOG_LEVELS, logLevel)
 

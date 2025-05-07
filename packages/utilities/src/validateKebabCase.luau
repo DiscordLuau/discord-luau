@@ -1,3 +1,14 @@
+--[=[
+	@function Utilities.validateKebabCase
+	@within Utilities
+
+	Will validate a string to ensure that it's kebab-case, discord is sometimes very specific about the casing of
+	text.
+
+	Will return either true/false, will not error.
+
+	@return thread
+]=]
 return function(source: string)
 	if source == "" then
 		return false

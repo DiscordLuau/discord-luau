@@ -1,3 +1,13 @@
+--[=[
+	@class Types
+
+	Responsible for handling all types in Discord-Luau, upon requiring this module you'll have access to two things:
+
+	- Types, for all requests, responses and iterations with the websocket, for the v10 discord API.
+	- A range of enums helping to map out discord status codes, messages and other information.
+		- Example, we map websocket operations so that the close code `4000` is known as `UnknownError`, which is clearer.
+]=]
+
 return {
 	user = require("./user"),
 	webhook = require("./webhook"),

@@ -1,17 +1,22 @@
---[[
+--[=[
+	@class Builders.Author
+	@__index Prototype
+
 	Implementation of discords Author object as a Luau builder.	
 
 	https://discord.com/developers/docs/resources/message#embed-object-embed-author-structure
-]]
+]=]
 
 local Author = {}
 
 Author.Prototype = {}
 Author.Interface = {}
 
---[[
+--[=[
+	@within Builders.Author
+
 	Set the image url for this embed.
-]]
+]=]
 function Author.Prototype.setName(self: Author, name: string): Author
 	assert(#name <= 256, "Name must be less than 256 characters")
 	assert(#name > 1, "Name must be greater than 1 characters")
@@ -21,18 +26,22 @@ function Author.Prototype.setName(self: Author, name: string): Author
 	return self
 end
 
---[[
+--[=[
+	@within Builders.Author
+
 	Set the image height for this embed.
-]]
+]=]
 function Author.Prototype.setUrl(self: Author, url: string): Author
 	self.url = url
 
 	return self
 end
 
---[[
+--[=[
+	@within Builders.Author
+
 	Set the image height for this embed.
-]]
+]=]
 function Author.Prototype.setIcon(self: Author, iconUrl: string, proxyIconUrl: string?): Author
 	self.iconUrl = iconUrl
 	self.proxyIconUrl = proxyIconUrl
@@ -40,9 +49,11 @@ function Author.Prototype.setIcon(self: Author, iconUrl: string, proxyIconUrl: s
 	return self
 end
 
---[[
+--[=[
+	@within Builders.Author
+
 	Responsible for building the Author JSON that can be parsed by the Discord API.
-]]
+]=]
 function Author.Prototype.build(self: Author): JSON
 	assert(self.name, `Author must have a name`)
 
@@ -54,22 +65,51 @@ function Author.Prototype.build(self: Author): JSON
 	}
 end
 
---[[
-	Responsible for creating a new Author.
+--[=[
+	@within Builders.Author
 
-	```lua
-	
-	```
-]]
+	Responsible for creating a new Author.
+]=]
 function Author.Interface.new(resource: {
 	name: string?,
 	url: string?,
 	iconUrl: string?,
 	proxyIconUrl: string?,
 }?): Author
-	local self = setmetatable({} :: Author, {
-		__index = Author.Prototype,
-	})
+	local self = setmetatable(
+		{
+			--[=[
+			`	@prop name string?
+				@within Builders.Author
+				The name of the author.
+			]=]
+			name = nil,
+
+			--[=[
+				@prop url string?
+				@within Builders.Author
+				The url of the author.
+			]=]
+			url = nil,
+
+			--[=[
+				@prop iconUrl string?
+				@within Builders.Author
+				The url of author's icon image.
+			]=]
+			iconUrl = nil,
+
+			--[=[
+				@prop proxyIconUrl string?
+				@within Builders.Author
+				A proxied url of author's icon image.
+			]=]
+			proxyIconUrl = nil,
+		} :: Author,
+		{
+			__index = Author.Prototype,
+		}
+	)
 
 	if resource then
 		if resource.name then
