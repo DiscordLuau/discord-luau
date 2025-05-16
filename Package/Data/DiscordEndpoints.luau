@@ -62,7 +62,7 @@ return {
 	BotDeleteAutomoderationRule = "guilds/%s/auto-moderation/rules/%s",
 
 	BotGetChannel = "channels/%s",
-	BotModifyGuildChannelPosition = "channels/%s/channels",
+	BotModifyGuildChannelPosition = "channels/%s",
 	BotCreateMessage = "channels/%s/messages",
 	BotGetChannelMessages = "channels/%s/messages",
 	BotGetChannelMessage = "channels/%s/messages/%s",
