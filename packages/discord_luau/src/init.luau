@@ -1,4 +1,4 @@
-local bot = require("./bot")
+local bot = require("@self/bot")
 
 --[=[
 	@class DiscordLuau

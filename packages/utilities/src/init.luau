@@ -5,8 +5,8 @@
 ]=]
 
 return {
-	validateKebabCase = require("./validateKebabCase"),
-	createGuid = require("./createGuid"),
-	coroutineRun = require("./coroutine/run"),
-	tableReflect = require("./table/reflect"),
+	validateKebabCase = require("@self/validateKebabCase"),
+	createGuid = require("@self/createGuid"),
+	coroutineRun = require("@self/coroutine/run"),
+	tableReflect = require("@self/table/reflect"),
 }
