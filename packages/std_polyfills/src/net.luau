@@ -2,7 +2,7 @@
 	@class StdPolyfills.net
 ]=]
 
-local runtime = require("runtime")
+local runtime = require("@self/runtime")
 
 local net = {}
 
@@ -15,7 +15,7 @@ function net.urlEncode(url: string, binary: boolean?): string
 	local target = runtime.assertRuntime()
 
 	if target == "Lune" then
-		return require("lune/net").urlEncode(url, binary)
+		return require("@self/lune/net").urlEncode(url, binary)
 	end
 
 	error(`Out of reach`)
@@ -33,7 +33,7 @@ function net.request(config: string | FetchParams): FetchResponse
 	local target = runtime.assertRuntime()
 
 	if target == "Lune" then
-		return require("lune/net").request(config)
+		return require("@self/lune/net").request(config)
 	end
 
 	error(`Out of reach`)
@@ -51,7 +51,7 @@ function net.tcpSocket(url: string)
 	local target = runtime.assertRuntime()
 
 	if target == "Lune" then
-		return require("lune/net").socket(url)
+		return require("@self/lune/net").socket(url)
 	end
 
 	error(`Out of reach`)

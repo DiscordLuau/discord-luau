@@ -2,7 +2,7 @@
 	@class StdPolyfills.process
 ]=]
 
-local runtime = require("runtime")
+local runtime = require("@self/runtime")
 
 local process = {}
 
@@ -15,7 +15,7 @@ function process.getPlatform(): OS
 	local target = runtime.assertRuntime()
 
 	if target == "Lune" then
-		return require("lune/process").os :: OS
+		return require("@self/lune/process").os :: OS
 	end
 
 	error(`Out of reach`)

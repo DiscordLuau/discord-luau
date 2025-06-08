@@ -2,7 +2,7 @@
 	@class StdPolyfills.serde
 ]=]
 
-local runtime = require("runtime")
+local runtime = require("@self/runtime")
 
 local serde = {}
 
