@@ -1,16 +1,16 @@
-local env = require(".env")
+local env = require("@self/.env")
 
 local discordLuau = require("./packages/discord_luau/src")
 local builders = require("./packages/builders/src")
 
 print(builders.intents.new({ "Guilds", "GuildMessages" }):build())
 
--- local discordBot = discordLuau.bot.new({
--- 	token = env.DISCORD_BOT_TOKEN,
--- 	intents = builders.intents.new({ "Guilds", "GuildMessages" }):build(),
--- 	reconnect = true,
--- 	logLevel = "Info",
--- })
+local discordBot = discordLuau.bot.new({
+	token = env.DISCORD_BOT_TOKEN,
+	intents = builders.intents.new({ "Guilds", "GuildMessages" }):build(),
+	reconnect = true,
+	logLevel = "Info",
+})
 
 -- discordBot.onAllShardsReady:listen(function()
 -- 	local channel = discordBot:getTextChannelAsync("1344070759722647654"):await():unwrapOk()
@@ -28,4 +28,4 @@ print(builders.intents.new({ "Guilds", "GuildMessages" }):build())
 -- 		:await()
 -- end)
 
--- discordBot:connectAsync():await()
+discordBot:connectAsync():await()
