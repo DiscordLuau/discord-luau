@@ -5,6 +5,7 @@
 
 local process = require("@lune/process")
 local stdio = require("@lune/stdio")
+local task = require("@lune/task")
 
 local Task = {}
 
@@ -34,21 +35,32 @@ end
 
 	Inherits the standard IO of the process.
 ]]
-function Task.Prototype.execute(self: Task): process.SpawnResult
-	local spawnResult = process.spawn(self.executable, self.arguments, {
+function Task.Prototype.execute(self: Task)
+	local spawnResult = process.create(self.executable, self.arguments, {
 		stdio = "forward",
 		cwd = self.cwd,
 	})
 
-	if not spawnResult.ok then
-		print(
-			`\n[{stdio.color("red")}error{stdio.color("reset")}] \`{self.executable}\` exited with code {spawnResult.code} `
-		)
+	local status = spawnResult:status()
 
-		process.exit(spawnResult.code)
+	while status.code == 0 do
+		task.wait()
+
+		status = spawnResult:status()
 	end
 
-	return spawnResult
+	if not status.ok then
+		-- ????
+		if status.code == 9 or status.code == 1 then
+			return
+		end
+
+		print(
+			`\n[{stdio.color("red")}error{stdio.color("reset")}] \`{self.executable}\` exited with code {status.code} `
+		)
+
+		process.exit(status.code)
+	end
 end
 
 --[[
