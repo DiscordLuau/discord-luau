@@ -36,7 +36,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Install pesde
-        uses: lumin-org/setup-pesde@v0.3.2
+        uses: lumin-org/setup-pesde@v0.4.1
         with:
           cache: true
       - name: Install tooling
@@ -58,7 +58,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Install pesde
-        uses: lumin-org/setup-pesde@v0.3.2
+        uses: lumin-org/setup-pesde@v0.4.1
         with:
           cache: true
       - name: Install tooling
