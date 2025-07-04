@@ -39,7 +39,7 @@ jobs:
         uses: lumin-org/setup-pesde@v0.4.1
         with:
           cache: true
-          version: v0.7.0-rc.6
+          version: v0.7.0-rc.6+registry.0.2.3-rc.3
       - name: Install tooling
         uses: CompeyDev/setup-rokit@v0.1.0
         with:
@@ -62,7 +62,7 @@ jobs:
         uses: lumin-org/setup-pesde@v0.4.1
         with:
           cache: true
-          version: v0.7.0-rc.6
+          version: v0.7.0-rc.6+registry.0.2.3-rc.3
       - name: Install tooling
         uses: CompeyDev/setup-rokit@v0.1.0
         with:
