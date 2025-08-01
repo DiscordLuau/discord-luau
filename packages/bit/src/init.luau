@@ -5,7 +5,7 @@
 	Primarily required in the calculation for snowflake IDs that the Discord API will give us.
 ]=]
 
-local Bit64 = require("./bit64")
+local Bit64 = require("@self/bit64")
 local Bit = {}
 
 --[=[

@@ -1,6 +1,6 @@
-local rest = require("./rest")
-local cache = require("./cache")
-local state = require("./state")
+local rest = require("@self/rest")
+local cache = require("@self/cache")
+local state = require("@self/state")
 
 export type State = state.State
 

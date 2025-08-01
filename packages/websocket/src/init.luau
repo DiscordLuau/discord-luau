@@ -1,5 +1,5 @@
-local manager = require("./manager")
-local shard = require("./shard")
+local manager = require("@self/manager")
+local shard = require("@self/shard")
 
 export type Manager = manager.Manager
 

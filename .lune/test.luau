@@ -5,7 +5,7 @@ local reporter = frktest._reporters.lune_console_reporter
 
 local requireTests = require("./task/requireTests")
 
-requireTests("packages")
+requireTests("./packages")
 
 reporter.init()
 

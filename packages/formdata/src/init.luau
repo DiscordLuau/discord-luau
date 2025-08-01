@@ -9,7 +9,7 @@
 	- https://xhr.spec.whatwg.org/#formdata
 ]=]
 
-local parser = require("./parser")
+local parser = require("@self/parser")
 
 local FILE_FORMATS = table.freeze({
 	jpg = "image/jpg",

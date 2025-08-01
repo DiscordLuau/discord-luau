@@ -1,8 +1,8 @@
-local task = require("./task")
-local serde = require("./serde")
-local process = require("./process")
-local datetime = require("./datetime")
-local net = require("./net")
+local task = require("@self/task")
+local serde = require("@self/serde")
+local process = require("@self/process")
+local datetime = require("@self/datetime")
+local net = require("@self/net")
 
 export type DateTime = datetime.DateTime
 

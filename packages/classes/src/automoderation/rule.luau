@@ -13,8 +13,8 @@ local state = require("../../lune_packages/state")
 local builders = require("../../lune_packages/builders")
 local rest = require("../../lune_packages/rest")
 
-local triggerMetadata = require("trigger/metadata")
-local action = require("action/action")
+local triggerMetadata = require("@self/trigger/metadata")
+local action = require("@self/action/action")
 
 local AutomoderationRule = {}
 

@@ -1,4 +1,4 @@
-require("luau-lsp").config({
+require("@self/luau-lsp").config({
 	server = {
 		settings = {
 			["luau-lsp"] = {

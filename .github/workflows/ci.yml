@@ -36,9 +36,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Install pesde
-        uses: lumin-org/setup-pesde@v0.3.2
+        uses: lumin-org/setup-pesde@v0.4.1
         with:
           cache: true
+          version: v0.7.0-rc.7+registry.0.2.3-rc.3
       - name: Install tooling
         uses: CompeyDev/setup-rokit@v0.1.0
         with:
@@ -58,9 +59,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Install pesde
-        uses: lumin-org/setup-pesde@v0.3.2
+        uses: lumin-org/setup-pesde@v0.4.1
         with:
           cache: true
+          version: v0.7.0-rc.7+registry.0.2.3-rc.3
       - name: Install tooling
         uses: CompeyDev/setup-rokit@v0.1.0
         with:

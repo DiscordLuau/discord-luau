@@ -2,7 +2,7 @@
 	@class StdPolyfills.task
 ]=]
 
-local runtime = require("runtime")
+local runtime = require("@self/runtime")
 
 local task = {}
 
@@ -15,7 +15,7 @@ function task.cancel(thread: thread)
 	local target = runtime.assertRuntime()
 
 	if target == "Lune" then
-		return require("lune/task").cancel(thread)
+		return require("@self/lune/task").cancel(thread)
 	end
 
 	error(`Out of reach`)
@@ -30,7 +30,7 @@ function task.defer<T...>(functionOrThread: thread | (T...) -> ...any, ...: T...
 	local target = runtime.assertRuntime()
 
 	if target == "Lune" then
-		return require("lune/task").defer(functionOrThread, ...)
+		return require("@self/lune/task").defer(functionOrThread, ...)
 	end
 
 	error(`Out of reach`)
@@ -45,7 +45,7 @@ function task.delay<T...>(duration: number, functionOrThread: thread | (T...) ->
 	local target = runtime.assertRuntime()
 
 	if target == "Lune" then
-		return require("lune/task").delay(duration, functionOrThread, ...)
+		return require("@self/lune/task").delay(duration, functionOrThread, ...)
 	end
 
 	error(`Out of reach`)
@@ -63,7 +63,7 @@ function task.spawn<T...>(functionOrThread: thread | (T...) -> ...any, ...: T...
 	local target = runtime.assertRuntime()
 
 	if target == "Lune" then
-		return require("lune/task").spawn(functionOrThread, ...)
+		return require("@self/lune/task").spawn(functionOrThread, ...)
 	end
 
 	error(`Out of reach`)
@@ -81,7 +81,7 @@ function task.wait(duration: number?): number
 	local target = runtime.assertRuntime()
 
 	if target == "Lune" then
-		return require("lune/task").wait(duration)
+		return require("@self/lune/task").wait(duration)
 	end
 
 	error(`Out of reach`)
