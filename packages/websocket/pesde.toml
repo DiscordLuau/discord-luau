@@ -1,0 +1,26 @@
+name = "discord_luau/websocket"
+version = "0.0.1"
+description = "Discord Luau Websocket - Implementation of the websocket for discord."
+license = "MIT"
+authors = ["Async Matrix <hi@asyncmatrix.dev>"]
+repository = "https://github.com/DiscordLuau/discord-luau/tree/Master/packages/websocket"
+pesde_version = "0.5.2"
+
+includes = ["src/**/*", "pesde.toml", "LICENSE", "CONTRIBUTING.md"]
+
+[target]
+environment = "lune"
+lib = "src/init.luau"
+
+[indices]
+default = "https://github.com/pesde-pkg/index"
+
+[dependencies]
+util = { workspace = "discord_luau/util" }
+std_polyfills = { workspace = "discord_luau/std_polyfills" }
+api_types = { workspace = "discord_luau/api_types" }
+future = { name = "yetanotherclown/luau_futures", target = "luau", version = "2.0.0-beta.3" }
+logger = { workspace = "discord_luau/logger" }
+emitter = { workspace = "discord_luau/emitter", target = "luau" }
+secret = { workspace = "discord_luau/secret", target = "luau" }
+buffer = { workspace = "discord_luau/buffer", target = "luau" }

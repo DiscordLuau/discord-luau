@@ -1,0 +1,21 @@
+name = "discord_luau/rest"
+version = "0.0.1"
+description = "Discord-Luau Rest - providing calls to the discord HTTP Rest API"
+license = "MIT"
+authors = ["Async Matrix <hi@asyncmatrix.dev>"]
+repository = "https://github.com/DiscordLuau/discord-luau/tree/Master/packages/rest"
+pesde_version = "0.5.2"
+
+includes = ["src/**/*", "pesde.toml", "LICENSE", "CONTRIBUTING.md"]
+
+[target]
+environment = "lune"
+lib = "src/init.luau"
+
+[indices]
+default = "https://github.com/pesde-pkg/index"
+
+[dependencies]
+std_polyfills = { workspace = "discord_luau/std_polyfills" }
+api_types = { workspace = "discord_luau/api_types" }
+future = { name = "yetanotherclown/luau_futures", target = "luau", version = "2.0.0-beta.3" }

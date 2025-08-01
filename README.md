@@ -1,39 +1,26 @@
-## [DiscordLuau is currently undergoing a rewrite](https://github.com/DiscordLuau/discord-luau/tree/refactor/monorepository-origin)
+<div align="center" id="toc">
+<p>
+	<img align="right" src="https://raw.githubusercontent.com/DiscordLuau/docs/master/src/assets/vector.svg" width="256" alt="discord-luau"/>
+</p>
+<div align="left">
+<ul style="list-style: none;">
+    <summary>
+      <h1>DiscordLuau</h1>
+    </summary>
+  </ul>
+</div>
+</div>
 
-## About
+<a href="https://discord.gg/DpQwdD8zD3"><img alt="Discord" src="https://img.shields.io/discord/385151591524597761?style=plastic&logo=discord&color=%235865F2"></a>
+<a href="https://discord-luau-docs.deno.dev"><img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/DiscordLuau/discord-luau/update-documentation.yml?style=plastic&logo=githubactions&label=docs&labelColor=%232a3036"></a>
+<a href="https://lune-org.github.io/docs"><img alt="Lune" src=".lune/assets/powered-by-lune.svg"></a>
 
-This is the **[Discord API](https://discord.com/developers/docs/intro) [Wrapper](https://rapidapi.com/blog/api-glossary/api-wrapper/)**, the resource that you'll be interacting with if you want to create a Discord Bot/Application! 🎉
 
-### Project Structure
+### Special Thanks
+A sub-section just to credit people who have committed to the Discord Luau project and cannot be represented through the GitHub contributors section.
 
-- `init.luau`: Requires Package/init.luau
-- `/Package`: The source code for the Discord-Luau package
-- - `/Package/Classes`: All Discord-Luau generated obejcts/classes that the user can interact with.
-- - `/Package/Data`: Internal library 'data' modules, consisting of generic lua datatypes, with string values.
-- - `/Package/Enums`: Internal library 'enum' files, consisting of string keys and values.
-- - `/Package/Std`: Standard libraries that this library uses, if Discord-Luau were to switch to another Runtime, we'd just need to modify the `/Package/Std` folder to support the standard libraries for another Runtime.
-- - `/Package/Types`: Some awkward types that we need support for in Discord Luau
-- - `/Package/Utils`: Utility functions Discord Luau uses
-- - `/Package/Vendor`: Vendor, external resources or packages that Discord Luau uses
-- - `/Package/init.luau`: Entrypoint for Discord Luau
-
-### Project Status
-
-At the moment, I *([AsynchronousMatrix](https://github.com/4x8Matrix))* will write to the Master branch every now and again, if I introduce breaking changes, I may put that into it's own branch, but at the moment, since there's no `0.1.0` version in sight, the Master branch is where I lurk, adding potentially breaking changes every now and again..!
-
-Pull Requests are welcome! But there's no guarntee that what has been written in that Pull Request will be merged..! 
-
-### Project Goals
-
-- Enabling developers to create a discord bot that connect to the Discord Websocket.
-- Send and recieve messages from a Discord websoket.
-- Take full advantage of the Discord REST Http Library.
-- Provide detailed and clear documentation on the Discord API Wrapper
-
-## Documentation
-
-Please head on over to the [Wiki](https://github.com/DiscordLuau/Discord-Luau/wiki) for further details, however, i'll soon enough set up a dedicated website for Discord Luau!
-
-## Examples
-
-Please take a look at the [/Examples](https://github.com/DiscordLuau/Discord-Luau/tree/Master/Examples) folder under the Master branch!
+#### Icon & Design
+- [Dekkonot](https://github.com/Dekkonot) - Tilt concept
+- [BlizzarBlitz](https://github.com/BizzarBlitz) - Figma troubleshooting & ideas
+- [kalrnlo](https://github.com/kalrnlo) - Red ping dot
+- [CompeyDev](https://github.com/CompeyDev) - Design prototype

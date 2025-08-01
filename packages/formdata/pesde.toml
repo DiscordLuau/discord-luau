@@ -1,0 +1,19 @@
+name = "discord_luau/formdata"
+version = "0.0.1"
+description = "Discord-Luau FormData - FormData implementation for luau."
+license = "MIT"
+authors = ["Async Matrix <hi@asyncmatrix.dev>"]
+repository = "https://github.com/DiscordLuau/discord-luau/tree/Master/packages/formdata"
+pesde_version = "0.5.2"
+
+includes = ["src/**/*", "pesde.toml", "LICENSE", "CONTRIBUTING.md"]
+
+[indices]
+default = "https://github.com/pesde-pkg/index"
+
+[target]
+environment = "luau"
+lib = "src/init.luau"
+
+[dependencies]
+stream = { workspace = "discord_luau/stream", target = "luau" }

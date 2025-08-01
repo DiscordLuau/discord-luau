@@ -1,0 +1,16 @@
+name = "discord_luau/stream"
+version = "0.0.1"
+description = "Discord-Luau Stream - stream implementation used to navigate through strings."
+license = "MIT"
+authors = ["Async Matrix <hi@asyncmatrix.dev>"]
+repository = "https://github.com/DiscordLuau/discord-luau/tree/Master/packages/stream"
+pesde_version = "0.5.2"
+
+includes = ["src/**/*", "pesde.toml", "LICENSE", "CONTRIBUTING.md"]
+
+[target]
+environment = "luau"
+lib = "src/init.luau"
+
+[indices]
+default = "https://github.com/pesde-pkg/index"

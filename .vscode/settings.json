@@ -1,27 +1,16 @@
 {
-  "luau-lsp.require.mode": "relativeToFile",
+  "editor.formatOnSave": true,
   "luau-lsp.inlayHints.variableTypes": true,
   "luau-lsp.inlayHints.functionReturnTypes": true,
   "luau-lsp.inlayHints.parameterNames": "all",
   "luau-lsp.inlayHints.parameterTypes": true,
   "luau-lsp.inlayHints.typeHintMaxLength": 50,
-  "luau-lsp.require.directoryAliases": {
-    "@lune/": "~/.lune/.typedefs/0.8.2/",
-
-    "@Builders": "Package/Classes/Builders",
-    "@Network": "Package/Classes/Network",
-    "@Objects": "Package/Classes/Objects",
-    "@Data": "Package/Data",
-    "@Enums": "Package/Enums",
-    "@Std": "Package/Std",
-    "@Utils": "Package/Utils",
-    "@Vendor": "Package/Vendor",
+  "luau-lsp.fflags.override": {
+    "LuauTarjanChildLimit": "0",
+    "LuauTypeInferIterationLimit": "0"
   },
-
-  "[lua]": {
-		"editor.formatOnSave": true
-	},
-	"[luau]": {
-		"editor.formatOnSave": true
-	},
+  "luau-lsp.require.mode": "relativeToFile",
+  "luau-lsp.require.directoryAliases": {
+    "@lune/": "~/.lune/.typedefs/0.9.3/"
+  }
 }

@@ -1,0 +1,26 @@
+name = "discord_luau/state"
+version = "0.0.1"
+description = "Discord-Luau State - contains the state for a discord bot."
+license = "MIT"
+authors = ["Async Matrix <hi@asyncmatrix.dev>"]
+repository = "https://github.com/DiscordLuau/discord-luau/tree/Master/packages/state"
+pesde_version = "0.5.2"
+
+includes = ["src/**/*", "pesde.toml", "LICENSE", "CONTRIBUTING.md"]
+
+[target]
+environment = "lune"
+lib = "src/init.luau"
+
+[indices]
+default = "https://github.com/pesde-pkg/index"
+
+[dependencies]
+std_polyfills = { workspace = "discord_luau/std_polyfills" }
+api_types = { workspace = "discord_luau/api_types" }
+utils = { workspace = "discord_luau/util" }
+websocket = { workspace = "discord_luau/websocket" }
+rest = { workspace = "discord_luau/rest" }
+secret = { workspace = "discord_luau/secret", target = "luau" }
+formdata = { workspace = "discord_luau/formdata", target = "luau" }
+logger = { workspace = "discord_luau/logger" }

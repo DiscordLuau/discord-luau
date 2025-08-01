@@ -1,23 +1,23 @@
-name: Update Documentation
+# name: Update Documentation
 
-on:
-  workflow_dispatch:
+# on:
+#   workflow_dispatch:
 
-  push:
-    branches:
-      - Master
+#   push:
+#     branches:
+#       - Master
 
-permissions:
-  contents: write
+# permissions:
+#   contents: write
 
-jobs:
-  update-documentation:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Dcumentation Dispatch
-        uses: peter-evans/repository-dispatch@v3
-        with:
-          token: ${{ secrets.PAT }}
-          repository: DiscordLuau/Discord-Luau-Site
-          event-type: update-ref
-          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
+# jobs:
+#   update-documentation:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Dcumentation Dispatch
+#         uses: peter-evans/repository-dispatch@v3
+#         with:
+#           token: ${{ secrets.PAT }}
+#           repository: DiscordLuau/docs
+#           event-type: update-ref
+#           client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'

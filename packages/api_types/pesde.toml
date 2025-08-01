@@ -1,0 +1,20 @@
+name = "discord_luau/api_types"
+version = "0.0.1"
+description = "Discord-Luau Types - API Types for the Discord API."
+license = "MIT"
+authors = ["Async Matrix <hi@asyncmatrix.dev>"]
+repository = "https://github.com/DiscordLuau/discord-luau/tree/Master/packages/api_types"
+pesde_version = "0.5.2"
+
+includes = ["bundled.luau", "pesde.toml", "LICENSE", "CONTRIBUTING.md"]
+
+[target]
+environment = "lune"
+lib = "bundled.luau"
+
+[indices]
+default = "https://github.com/pesde-pkg/index"
+
+[dependencies]
+util = { workspace = "discord_luau/util" }
+bit = { workspace = "discord_luau/bit", target = "luau" }
