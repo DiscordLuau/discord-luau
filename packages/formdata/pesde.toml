@@ -13,7 +13,7 @@ default = "https://github.com/pesde-pkg/index"
 
 [target]
 environment = "luau"
-lib = "src/init"
+lib = "src/init.luau"
 
 [dependencies]
 stream = { workspace = "discord_luau/stream" }
