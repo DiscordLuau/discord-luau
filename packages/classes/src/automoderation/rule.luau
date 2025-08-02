@@ -13,8 +13,8 @@ local state = require("../../luau_packages/state")
 local builders = require("../../luau_packages/builders")
 local rest = require("../../luau_packages/rest")
 
-local triggerMetadata = require("@self/trigger/metadata")
-local action = require("@self/action/action")
+local triggerMetadata = require("./trigger/metadata")
+local action = require("./action/action")
 
 local AutomoderationRule = {}
 
