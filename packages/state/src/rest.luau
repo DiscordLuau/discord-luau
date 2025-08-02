@@ -60,9 +60,9 @@
 local secret = require("../luau_packages/secret")
 local formdata = require("../luau_packages/formdata")
 local stdPolyfills = require("../lune_packages/std_polyfills")
-local utils = require("../lune_packages/utils")
-local rest = require("../lune_packages/rest")
-local logger = require("../lune_packages/logger")
+local utils = require("../luau_packages/utils")
+local rest = require("../luau_packages/rest")
+local logger = require("../luau_packages/logger")
 
 local PER_RESOURCE_COOLOFF_TIME = 1
 local WARN_AFTER = 5

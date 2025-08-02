@@ -2,7 +2,7 @@
 	@class Types.permission
 ]=]
 
-local util = require("../lune_packages/util")
+local util = require("../luau_packages/util")
 
 local bit = require("../luau_packages/bit")
 

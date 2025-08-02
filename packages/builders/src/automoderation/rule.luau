@@ -7,7 +7,7 @@
 	https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-rule-object
 ]=]
 
-local apiTypes = require("../../lune_packages/api_types")
+local apiTypes = require("../../luau_packages/api_types")
 local triggerMetadata = require("./trigger/metadata")
 local action = require("./action/action")
 

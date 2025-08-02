@@ -2,7 +2,7 @@
 	@class Types.sticker
 ]=]
 
-local util = require("../lune_packages/util")
+local util = require("../luau_packages/util")
 
 local StickerTypes = table.freeze(util.tableReflect({
 	Standard = 1,

@@ -8,8 +8,8 @@
 	 https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object
 ]=]
 
-local apiTypes = require("../../../lune_packages/api_types")
-local state = require("../../../lune_packages/state")
+local apiTypes = require("../../../luau_packages/api_types")
+local state = require("../../../luau_packages/state")
 
 local data = require("../data")
 local unavailableGuild = require("../../guild/unavailableGuild")

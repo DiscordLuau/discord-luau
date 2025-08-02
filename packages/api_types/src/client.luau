@@ -2,7 +2,7 @@
 	@class Types.client
 ]=]
 
-local util = require("../lune_packages/util")
+local util = require("../luau_packages/util")
 
 local ActivityType = table.freeze(util.tableReflect({
 	Game = 0,

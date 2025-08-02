@@ -10,7 +10,7 @@
 	Please defer to the above document for when it is appropriate to use each log level.
 ]=]
 
-local stdPolyfills = require("../lune_packages/std_polyfills")
+local stdPolyfills = require("@self/../lune_packages/std_polyfills")
 
 local DIM = "\27\91\50\109"
 local BOLD = "\27\91\49\109"
@@ -105,7 +105,7 @@ function Logger.Interface.new(name: string, logLevel: LogLevel?): Logger
 
 	-- this block of code will generate a function for each log level, and set it to the Logger object.
 	for logValue, logType in LOGGER_LOG_LEVELS do
-		local camelCaseMethod = `{string.lower(string.sub(logType, 1, 1))}{string.sub(logType, 2, #logType)}`;
+		local camelCaseMethod = `{string.lower(string.sub(logType, 1, 1))}{string.sub(logType, 2, #logType)}`
 
 		(self :: {})[camelCaseMethod] = function(_, ...)
 			if logValue < self.logLevel then

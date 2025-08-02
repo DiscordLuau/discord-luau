@@ -7,10 +7,10 @@
 	https://discord.com/developers/docs/resources/guild#guild-member-object
 ]=]
 
-local apiTypes = require("../../lune_packages/api_types")
-local rest = require("../../lune_packages/rest")
+local apiTypes = require("../../luau_packages/api_types")
+local rest = require("../../luau_packages/rest")
 local future = require("../../luau_packages/future")
-local state = require("../../lune_packages/state")
+local state = require("../../luau_packages/state")
 local stdPolyfills = require("../../lune_packages/std_polyfills")
 
 local user = require("../user")

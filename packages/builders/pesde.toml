@@ -3,20 +3,20 @@ version = "0.0.1"
 description = "Discord-Luau Builders - Builders used to generate payloads that the discord API can parse."
 license = "MIT"
 authors = ["Async Matrix <hi@asyncmatrix.dev>"]
-repository = "https://github.com/DiscordLuau/discord-luau/tree/Master/packages/builder"
-pesde_version = "0.5.2"
+repository = "https://github.com/DiscordLuau/discord-luau/tree/main/packages/builder"
+pesde_version = "0.7.0-rc.7"
 
 includes = ["src/**/*", "pesde.toml", "LICENSE", "CONTRIBUTING.md"]
 
 [target]
-environment = "lune"
-lib = "src/init.luau"
+environment = "luau"
+lib = "src/init"
 
 [indices]
 default = "https://github.com/pesde-pkg/index"
 
 [dependencies]
-std_polyfills = { workspace = "discord_luau/std_polyfills" }
+std_polyfills = { workspace = "discord_luau/std_polyfills", target = "lune" }
 api_types = { workspace = "discord_luau/api_types" }
 util = { workspace = "discord_luau/util" }
-bit = { workspace = "discord_luau/bit", target = "luau" }
+bit = { workspace = "discord_luau/bit" }

@@ -7,7 +7,7 @@
 	https://discord.com/developers/docs/resources/poll#poll-answer-object-poll-answer-object-structure
 ]=]
 
-local apiTypes = require("../../../lune_packages/api_types")
+local apiTypes = require("../../../luau_packages/api_types")
 
 local mediaObject = require("./mediaObject")
 

@@ -7,7 +7,7 @@
 	https://discord.com/developers/docs/events/gateway-events#update-presence
 ]=]
 
-local apiTypes = require("../lune_packages/api_types")
+local apiTypes = require("../luau_packages/api_types")
 
 local activity = require("./activity")
 

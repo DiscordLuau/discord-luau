@@ -12,7 +12,7 @@ authors = [
 workspace_members = ["packages/*"]
 
 [target]
-environment = "lune"
+environment = "luau"
 
 [indices]
 default = "https://github.com/pesde-pkg/index"

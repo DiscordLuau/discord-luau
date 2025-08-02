@@ -3,10 +3,10 @@ local stdPolyfills = require("../lune_packages/std_polyfills")
 local buffer = require("../luau_packages/buffer")
 local emitter = require("../luau_packages/emitter")
 local future = require("../luau_packages/future")
-local logger = require("../lune_packages/logger")
+local logger = require("../luau_packages/logger")
 
-local util = require("../lune_packages/util")
-local apiTypes = require("../lune_packages/api_types")
+local util = require("../luau_packages/util")
+local apiTypes = require("../luau_packages/api_types")
 
 local LIBRARY_IDENTIFIER = "DiscordLuau"
 

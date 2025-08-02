@@ -127,8 +127,8 @@
 	Bitrate of the voice channel in bits.
 ]=]
 
-local apiTypes = require("../lune_packages/api_types")
-local util = require("../lune_packages/util")
+local apiTypes = require("../luau_packages/api_types")
+local util = require("../luau_packages/util")
 
 local Channel = {}
 

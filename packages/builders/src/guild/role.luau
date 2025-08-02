@@ -7,8 +7,8 @@
 	https://discord.com/developers/docs/resources/guild#create-guild-role-json-params
 ]=]
 
-local apiTypes = require("../../lune_packages/api_types")
-local util = require("../../lune_packages/util")
+local apiTypes = require("../../luau_packages/api_types")
+local util = require("../../luau_packages/util")
 
 local bit = require("../../luau_packages/bit")
 

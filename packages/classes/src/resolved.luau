@@ -7,9 +7,9 @@
 	https://discord.com/developers/docs/resources/message#attachment-object
 ]=]
 
-local apiTypes = require("../lune_packages/api_types")
+local apiTypes = require("../luau_packages/api_types")
 
-local state = require("../lune_packages/state")
+local state = require("../luau_packages/state")
 
 local user = require("./user")
 local member = require("./guild/member")

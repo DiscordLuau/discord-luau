@@ -2,7 +2,7 @@
 	@class Types.embed
 ]=]
 
-local util = require("../lune_packages/util")
+local util = require("../luau_packages/util")
 
 local EmbedType = table.freeze(util.tableReflect({
 	Rich = "rich",

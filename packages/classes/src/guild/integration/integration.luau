@@ -7,9 +7,9 @@
 	https://discord.com/developers/docs/resources/integration#integration-object
 ]=]
 
-local apiTypes = require("../../../lune_packages/api_types")
-local state = require("../../../lune_packages/state")
-local rest = require("../../../lune_packages/rest")
+local apiTypes = require("../../../luau_packages/api_types")
+local state = require("../../../luau_packages/state")
+local rest = require("../../../luau_packages/rest")
 local stdPolyfills = require("../../../lune_packages/std_polyfills")
 local future = require("../../../luau_packages/future")
 

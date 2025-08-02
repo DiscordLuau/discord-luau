@@ -3,4 +3,4 @@
 format = 2
 name = "discord_luau/voice"
 version = "0.0.1"
-target = "lune"
+target = "luau"

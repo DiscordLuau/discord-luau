@@ -3,4 +3,4 @@
 format = 2
 name = "discord_luau/util"
 version = "0.0.1"
-target = "lune"
+target = "luau"

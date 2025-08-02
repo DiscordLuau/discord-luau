@@ -7,7 +7,7 @@
 	https://discord.com/developers/docs/resources/guild#welcome-screen-object-welcome-screen-channel-structure
 ]=]
 
-local apiTypes = require("../../lune_packages/api_types")
+local apiTypes = require("../../luau_packages/api_types")
 
 local WelcomeScreenChannel = {}
 

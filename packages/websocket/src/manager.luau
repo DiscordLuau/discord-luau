@@ -14,9 +14,9 @@ local stdPolyfills = require("../lune_packages/std_polyfills")
 
 local emitter = require("../luau_packages/emitter")
 local future = require("../luau_packages/future")
-local logger = require("../lune_packages/logger")
+local logger = require("../luau_packages/logger")
 
-local apiTypes = require("../lune_packages/api_types")
+local apiTypes = require("../luau_packages/api_types")
 local secret = require("../luau_packages/secret")
 
 local shard = require("./shard")

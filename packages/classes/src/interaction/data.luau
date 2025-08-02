@@ -7,9 +7,9 @@
 	https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-data
 ]=]
 
-local apiTypes = require("../../lune_packages/api_types")
+local apiTypes = require("../../luau_packages/api_types")
 
-local state = require("../../lune_packages/state")
+local state = require("../../luau_packages/state")
 
 local button = require("../message/components/button")
 local textInput = require("../message/components/textInput")

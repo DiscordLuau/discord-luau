@@ -1,6 +1,6 @@
 local invite = require("../src/invite")
 local frktest = require("../../../lune_packages/frktest")
-local apiTypes = require("../lune_packages/api_types")
+local apiTypes = require("../luau_packages/api_types")
 
 local Invite = invite
 local test = frktest.test

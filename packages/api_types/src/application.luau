@@ -2,7 +2,7 @@
 	@class Types.application
 ]=]
 
-local util = require("../lune_packages/util")
+local util = require("../luau_packages/util")
 
 local MembershipState = table.freeze(util.tableReflect({
 	Invited = 1,

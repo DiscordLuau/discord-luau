@@ -1,6 +1,6 @@
 -- selene: allow(unused_variable)
-local state = require("../../lune_packages/state")
-local apiTypes = require("../../lune_packages/api_types")
+local state = require("../../luau_packages/state")
+local apiTypes = require("../../luau_packages/api_types")
 
 local dmChannel = require("./types/dm")
 local groupDmChannel = require("./types/groupDm")

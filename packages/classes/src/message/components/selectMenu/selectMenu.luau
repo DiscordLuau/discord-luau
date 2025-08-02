@@ -7,7 +7,7 @@
 	https://discord.com/developers/docs/interactions/message-components#select-menu-object-select-menu-structure
 ]=]
 
-local apiTypes = require("../../../../lune_packages/api_types")
+local apiTypes = require("../../../../luau_packages/api_types")
 
 local option = require("./option")
 local defaultValue = require("./defaultValue")

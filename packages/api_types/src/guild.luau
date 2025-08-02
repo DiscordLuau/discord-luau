@@ -2,7 +2,7 @@
 	@class Types.guild
 ]=]
 
-local util = require("../lune_packages/util")
+local util = require("../luau_packages/util")
 
 local VerificationLevel = table.freeze(util.tableReflect({
 	None = 0,

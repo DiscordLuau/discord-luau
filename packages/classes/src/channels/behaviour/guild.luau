@@ -13,12 +13,12 @@
 	- Handling guild-specific channel properties
 ]=]
 
-local apiTypes = require("../../../lune_packages/api_types")
+local apiTypes = require("../../../luau_packages/api_types")
 local stdPolyfills = require("../../../lune_packages/std_polyfills")
 local future = require("../../../luau_packages/future")
-local rest = require("../../../lune_packages/rest")
-local state = require("../../../lune_packages/state")
-local builders = require("../../../lune_packages/builders")
+local rest = require("../../../luau_packages/rest")
+local state = require("../../../luau_packages/state")
+local builders = require("../../../luau_packages/builders")
 
 local overwrite = require("../overwrite")
 local invite = require("../../guild/invite")

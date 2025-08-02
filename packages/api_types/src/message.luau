@@ -2,7 +2,7 @@
 	@class Types.message
 ]=]
 
-local util = require("../lune_packages/util")
+local util = require("../luau_packages/util")
 
 local MessageType = table.freeze(util.tableReflect({
 	Default = 0,

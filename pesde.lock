@@ -3,10 +3,10 @@
 format = 2
 name = "discord_luau/root"
 version = "0.0.0"
-target = "lune"
+target = "luau"
 
 [workspace."discord_luau/api_types"]
-lune = "packages/api_types"
+luau = "packages/api_types"
 
 [workspace."discord_luau/bit"]
 luau = "packages/bit"
@@ -15,34 +15,37 @@ luau = "packages/bit"
 luau = "packages/buffer"
 
 [workspace."discord_luau/builders"]
-lune = "packages/builders"
+luau = "packages/builders"
 
 [workspace."discord_luau/classes"]
-lune = "packages/classes"
+luau = "packages/classes"
 
 [workspace."discord_luau/discord_luau"]
-lune = "packages/discord_luau"
+luau = "packages/discord_luau"
 
 [workspace."discord_luau/emitter"]
 luau = "packages/emitter"
+
+[workspace."discord_luau/example"]
+luau = "packages/example"
 
 [workspace."discord_luau/formdata"]
 luau = "packages/formdata"
 
 [workspace."discord_luau/logger"]
-lune = "packages/logger"
+luau = "packages/logger"
 
 [workspace."discord_luau/rest"]
-lune = "packages/rest"
+luau = "packages/rest"
 
 [workspace."discord_luau/secret"]
 luau = "packages/secret"
 
 [workspace."discord_luau/snowflake"]
-lune = "packages/snowflake"
+luau = "packages/snowflake"
 
 [workspace."discord_luau/state"]
-lune = "packages/state"
+luau = "packages/state"
 
 [workspace."discord_luau/std_polyfills"]
 lune = "packages/std_polyfills"
@@ -51,13 +54,13 @@ lune = "packages/std_polyfills"
 luau = "packages/stream"
 
 [workspace."discord_luau/util"]
-lune = "packages/utilities"
+luau = "packages/utilities"
 
 [workspace."discord_luau/voice"]
-lune = "packages/voice"
+luau = "packages/voice"
 
 [workspace."discord_luau/websocket"]
-lune = "packages/websocket"
+luau = "packages/websocket"
 
 [graph."itsfrank/frktest@0.0.2 lune"]
 direct = ["frktest", { name = "itsfrank/frktest", version = "^0.0.2", index = "default", target = "lune" }, "dev"]

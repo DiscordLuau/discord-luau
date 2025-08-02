@@ -8,10 +8,10 @@
 ]=]
 
 local future = require("../../luau_packages/future")
-local apiTypes = require("../../lune_packages/api_types")
-local state = require("../../lune_packages/state")
-local builders = require("../../lune_packages/builders")
-local rest = require("../../lune_packages/rest")
+local apiTypes = require("../../luau_packages/api_types")
+local state = require("../../luau_packages/state")
+local builders = require("../../luau_packages/builders")
+local rest = require("../../luau_packages/rest")
 
 local triggerMetadata = require("@self/trigger/metadata")
 local action = require("@self/action/action")

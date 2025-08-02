@@ -9,7 +9,7 @@
 
 local stdPolyfills = require("../lune_packages/std_polyfills")
 
-local apiTypes = require("../lune_packages/api_types")
+local apiTypes = require("../luau_packages/api_types")
 
 local Entitlement = {}
 

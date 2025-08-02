@@ -2,7 +2,7 @@
 	@class Types.entitlement
 ]=]
 
-local util = require("../lune_packages/util")
+local util = require("../luau_packages/util")
 
 local EntitlementType = table.freeze(util.tableReflect({
 	Purchase = 1,

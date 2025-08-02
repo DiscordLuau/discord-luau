@@ -2,7 +2,7 @@
 	@class Types.channel
 ]=]
 
-local util = require("../lune_packages/util")
+local util = require("../luau_packages/util")
 
 local apiTypes = require("./apiTypes")
 

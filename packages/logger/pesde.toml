@@ -3,17 +3,17 @@ version = "0.0.1"
 description = "Discord-Luau Logger - Logging implementation for Discord-Luau"
 license = "MIT"
 authors = ["Async Matrix <hi@asyncmatrix.dev>"]
-repository = "https://github.com/DiscordLuau/discord-luau/tree/Master/packages/logger"
-pesde_version = "0.5.2"
+repository = "https://github.com/DiscordLuau/discord-luau/tree/main/packages/logger"
+pesde_version = "0.7.0-rc.7"
 
 includes = ["src/**/*", "pesde.toml", "LICENSE", "CONTRIBUTING.md"]
 
 [target]
-environment = "lune"
-lib = "src/init.luau"
+environment = "luau"
+lib = "src/init"
 
 [indices]
 default = "https://github.com/pesde-pkg/index"
 
 [dependencies]
-std_polyfills = { workspace = "discord_luau/std_polyfills" }
+std_polyfills = { workspace = "discord_luau/std_polyfills", target = "lune" }

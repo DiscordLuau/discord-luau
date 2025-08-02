@@ -29,11 +29,11 @@
 	Whether this interaction has been deferred.
 ]=]
 
-local state = require("../../../lune_packages/state")
-local apiTypes = require("../../../lune_packages/api_types")
+local state = require("../../../luau_packages/state")
+local apiTypes = require("../../../luau_packages/api_types")
 local future = require("../../../luau_packages/future")
-local builders = require("../../../lune_packages/builders")
-local rest = require("../../../lune_packages/rest")
+local builders = require("../../../luau_packages/builders")
+local rest = require("../../../luau_packages/rest")
 
 local message = require("../../message/message")
 

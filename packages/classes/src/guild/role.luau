@@ -7,11 +7,11 @@
 	https://discord.com/developers/docs/topics/permissions#role-object
 ]=]
 
-local apiTypes = require("../../lune_packages/api_types")
+local apiTypes = require("../../luau_packages/api_types")
 local future = require("../../luau_packages/future")
-local state = require("../../lune_packages/state")
-local builders = require("../../lune_packages/builders")
-local rest = require("../../lune_packages/rest")
+local state = require("../../luau_packages/state")
+local builders = require("../../luau_packages/builders")
+local rest = require("../../luau_packages/rest")
 
 local roleBitflag = require("../bitflags/role")
 local permission = require("../permission")

@@ -11,10 +11,10 @@
 	- Handling group DM specific data (recipients, icon, owner, etc.)
 ]=]
 
-local apiTypes = require("../../../lune_packages/api_types")
+local apiTypes = require("../../../luau_packages/api_types")
 local future = require("../../../luau_packages/future")
-local rest = require("../../../lune_packages/rest")
-local state = require("../../../lune_packages/state")
+local rest = require("../../../luau_packages/rest")
+local state = require("../../../luau_packages/state")
 
 local user = require("../../user")
 

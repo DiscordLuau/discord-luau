@@ -1,12 +1,12 @@
 local future = require("../luau_packages/future")
 local stdPolyfills = require("../lune_packages/std_polyfills")
-local apiTypes = require("../lune_packages/api_types")
-local state = require("../lune_packages/state")
-local rest = require("../lune_packages/rest")
-local logger = require("../lune_packages/logger")
+local apiTypes = require("../luau_packages/api_types")
+local state = require("../luau_packages/state")
+local rest = require("../luau_packages/rest")
+local logger = require("../luau_packages/logger")
 local emitter = require("../luau_packages/emitter")
-local classes = require("../lune_packages/classes")
-local builders = require("../lune_packages/builders")
+local classes = require("../luau_packages/classes")
+local builders = require("../luau_packages/builders")
 
 local DISCORD_VERSION = 10
 

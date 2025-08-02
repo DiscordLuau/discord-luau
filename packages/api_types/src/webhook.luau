@@ -2,7 +2,7 @@
 	@class Types.webhook
 ]=]
 
-local util = require("../lune_packages/util")
+local util = require("../luau_packages/util")
 
 local WebhookType = table.freeze(util.tableReflect({
 	Incoming = 1,

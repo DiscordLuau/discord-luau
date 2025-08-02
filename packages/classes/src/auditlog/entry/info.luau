@@ -7,7 +7,7 @@
 	https://discord.com/developers/docs/resources/audit-log#audit-log-object-audit-log-structure
 ]=]
 
-local apiTypes = require("../../../lune_packages/api_types")
+local apiTypes = require("../../../luau_packages/api_types")
 
 local AuditLogEntryInfo = {}
 

@@ -7,8 +7,8 @@
 	https://discord.com/developers/docs/resources/audit-log#audit-log-object-audit-log-structure
 ]=]
 
-local apiTypes = require("../../lune_packages/api_types")
-local state = require("../../lune_packages/state")
+local apiTypes = require("../../luau_packages/api_types")
+local state = require("../../luau_packages/state")
 
 local command = require("../application/command/command")
 local rule = require("../automoderation/rule")

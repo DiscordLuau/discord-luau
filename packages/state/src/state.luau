@@ -55,9 +55,9 @@ local cache = require("./cache")
 local rest = require("./rest")
 
 local secret = require("../luau_packages/secret")
-local apiTypes = require("../lune_packages/api_types")
-local logger = require("../lune_packages/logger")
-local websocket = require("../lune_packages/websocket")
+local apiTypes = require("../luau_packages/api_types")
+local logger = require("../luau_packages/logger")
+local websocket = require("../luau_packages/websocket")
 
 local State = {}
 

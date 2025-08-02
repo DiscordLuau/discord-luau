@@ -2,7 +2,7 @@
 	@class Types.user
 ]=]
 
-local util = require("../lune_packages/util")
+local util = require("../luau_packages/util")
 
 local NitroType = table.freeze(util.tableReflect({
 	None = 0,

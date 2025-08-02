@@ -7,7 +7,7 @@
 	https://discord.com/developers/docs/resources/channel#thread-metadata-object
 ]=]
 
-local apiTypes = require("../../lune_packages/api_types")
+local apiTypes = require("../../luau_packages/api_types")
 local stdPolyfills = require("../../lune_packages/std_polyfills")
 
 local ThreadMetadata = {}
