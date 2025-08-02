@@ -1,0 +1,22 @@
+name = "discord_luau/example"
+private = true
+version = "0.0.1"
+description = "Discord-Luau Example - Example/Test scripts for discord-luau."
+license = "MIT"
+authors = ["Async Matrix <hi@asyncmatrix.dev>"]
+repository = "https://github.com/DiscordLuau/discord-luau/tree/main/packages/formdata"
+pesde_version = "0.7.0-rc.7"
+
+includes = ["src/**/*", "pesde.toml", "LICENSE", "CONTRIBUTING.md"]
+
+[indices]
+default = "https://github.com/pesde-pkg/index"
+
+[target]
+environment = "luau"
+lib = "src/init"
+
+[dependencies]
+discord = { workspace = "discord_luau/discord_luau" }
+builders = { workspace = "discord_luau/builders" }
+classes = { workspace = "discord_luau/classes" }
