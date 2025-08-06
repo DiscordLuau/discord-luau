@@ -150,9 +150,6 @@ function Manager.Prototype.connectAsync(
 				stdPolyfills.task.wait(CONCURRENT_IDENTIFY_YIELD)
 			end
 
-			self.logger:debug(`Connecting Shard '{shardIndex - 1}' to Discord Gateway`)
-
-			shardInstance:connectAsync(websocketUrl, self.webSocketVersion):await()
 			shardInstance.onSocketDispatch:listen(function(event)
 				self.onDispatch:invoke({
 					shardId = shardIndex - 1,
@@ -199,6 +196,10 @@ function Manager.Prototype.connectAsync(
 					errorCode = code,
 				})
 			end)
+
+			self.logger:debug(`Connecting Shard '{shardIndex - 1}' to Discord Gateway`)
+
+			shardInstance:connectAsync(websocketUrl, self.webSocketVersion):await()
 		end
 	end)
 end
