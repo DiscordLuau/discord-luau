@@ -106,7 +106,7 @@ function Button.Prototype.build(self: Button): JSON
 
 	return {
 		type = 2,
-		style = apiTypes.channel.ButtonStyle[self.style],
+		style = apiTypes.message.ButtonStyle[self.style],
 		label = self.label,
 		emoji = self.emoji,
 		custom_id = self.customId,
