@@ -52,8 +52,7 @@ function Interaction.Prototype.deferAsync(self: Interaction)
 
 		local response = rest.interaction
 			.createInteractionResponseAsync(request, self.id, self.token, {
-				type = 5,
-				data = {},
+				type = 5
 			}, {
 				withResponse = false,
 			})
