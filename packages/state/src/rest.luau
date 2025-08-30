@@ -227,7 +227,7 @@ function REST.Prototype.implementErrorHandlerFor(self: REST, request: rest.Reque
 			message = `Missing permissions - 403`
 		elseif data.statusCode == 401 then
 			success = false
-			message = `Missing authorization - 401`
+			message = `Missing authorization - 401 (are you using an incorrect bot token?)`
 		end
 
 		return success, message

@@ -188,7 +188,7 @@ function Request.Prototype.executeAsync<Resolve>(self: Request)
 				end
 			else
 				error(
-					`Hook: {debug.info(hook, "s")} returned false: '{response or `No reason provided`}', failed to send Network request!`
+					`Hook: {debug.info(hook, "sl")} returned false: '{response or `No reason provided`}', failed to send Network request!`
 				)
 			end
 		end

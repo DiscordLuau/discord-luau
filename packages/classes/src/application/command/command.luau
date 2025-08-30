@@ -59,7 +59,7 @@ function Command.Prototype.sync(self: Command, commandData: apiTypes.Application
 
 		The type of command this represents
 	]=]
-	self.type = apiTypes.application.ApplicationCommandType[commandData.type]
+	self.type = apiTypes.interaction.ApplicationCommandType[commandData.type]
 
 	--[=[
 		@prop applicationId string
