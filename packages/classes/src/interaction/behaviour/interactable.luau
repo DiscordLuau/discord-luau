@@ -52,8 +52,7 @@ function Interaction.Prototype.deferAsync(self: Interaction)
 
 		local response = rest.interaction
 			.createInteractionResponseAsync(request, self.id, self.token, {
-				type = 5,
-				data = {},
+				type = 5
 			}, {
 				withResponse = false,
 			})
@@ -140,7 +139,7 @@ function Interaction.Prototype.getResponseAsync(self: Interaction, threadId: str
 
 	return future.Future.new(function()
 		local response = rest.interaction
-			.getOriginalInteractionResponseAsync(request, self.id, self.token, {
+			.getOriginalInteractionResponseAsync(request, self.state.applicationId, self.token, {
 				threadId = threadId,
 			})
 			:await()
@@ -166,7 +165,7 @@ function Interaction.Prototype.editResponseAsync(
 		request:setFlag("FormdataRequest", true)
 
 		local response = rest.interaction
-			.editOriginalInteractionResponseAsync(request, self.id, self.token, messageJSON, {
+			.editOriginalInteractionResponseAsync(request, self.state.applicationId, self.token, messageJSON, {
 				threadId = threadId,
 			})
 			:await()
@@ -185,7 +184,7 @@ function Interaction.Prototype.deleteResponseAsync(self: Interaction)
 	local request = self.state.rest:newRequest()
 
 	return future.Future.new(function()
-		local response = rest.interaction.deleteOriginalInteractionResponseAsync(request, self.id, self.token):await()
+		local response = rest.interaction.deleteOriginalInteractionResponseAsync(request, self.state.applicationId, self.token):await()
 
 		assert(response:isOk(), tostring(response:unwrapErr()))
 
@@ -209,7 +208,7 @@ function Interaction.Prototype.createFollowupResponseAsync(
 		request:setFlag("FormdataRequest", true)
 
 		local response = rest.interaction
-			.createFollowupMessageAsync(request, self.id, self.token, messageJSON, {
+			.createFollowupMessageAsync(request, self.state.applicationId, self.token, messageJSON, {
 				wait = true,
 				threadId = threadId,
 			})
@@ -230,7 +229,7 @@ function Interaction.Prototype.getFollowupResponseAsync(self: Interaction, messa
 
 	return future.Future.new(function()
 		local response = rest.interaction
-			.getFollowupMessageAsync(request, self.id, self.token, messageId, {
+			.getFollowupMessageAsync(request, self.state.applicationId, self.token, messageId, {
 				threadId = threadId,
 			})
 			:await()
@@ -257,7 +256,7 @@ function Interaction.Prototype.editFollowupResponseAsync(
 		request:setFlag("FormdataRequest", true)
 
 		local response = rest.interaction
-			.editFollowupMessageAsync(request, self.id, self.token, messageId, messageJSON, {
+			.editFollowupMessageAsync(request, self.state.applicationId, self.token, messageId, messageJSON, {
 				threadId = threadId,
 			})
 			:await()
@@ -276,7 +275,7 @@ function Interaction.Prototype.deleteFollowupResponseAsync(self: Interaction, me
 	local request = self.state.rest:newRequest()
 
 	return future.Future.new(function()
-		local response = rest.interaction.deleteFollowupMessageAsync(request, self.id, self.token, messageId):await()
+		local response = rest.interaction.deleteFollowupMessageAsync(request, self.state.applicationId, self.token, messageId):await()
 
 		assert(response:isOk(), tostring(response:unwrapErr()))
 
