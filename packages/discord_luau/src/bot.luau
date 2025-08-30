@@ -75,7 +75,11 @@ function Bot.Prototype.connectAsync(self: Bot): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local gatewayInformation = self:queryGatewayInformation():await()
 
-		assert(gatewayInformation:isOk(), gatewayInformation:unwrapErr())
+		if not gatewayInformation:isOk() then
+			self.logger:Emergency(`Failed to retrieve gateway information: {gatewayInformation:unwrapErr()}`)
+
+			error(gatewayInformation:unwrapErr())
+		end
 
 		self.state.webSocketManager.onAllShardsReady:listen(function(data)
 			local application = classes.application.application.new(self.state, data.payload.d.application)
