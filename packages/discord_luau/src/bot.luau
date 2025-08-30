@@ -93,6 +93,14 @@ function Bot.Prototype.connectAsync(self: Bot): future.FutureLike<string, nil>
 			self.onAllShardsReady:invoke()
 		end)
 
+		self.state.webSocketManager.onDisconnected:listen(function(data)
+			self.onShardDisconnected:invoke(data.shardId, data.errorCode)
+		end)
+
+		self.state.webSocketManager.onReconnected:listen(function(data)
+			self.onShardReconnected:invoke(data.shardId)
+		end)
+
 		self.state.webSocketManager.onDispatch:listen(function(object: {
 			shardId: number,
 			event: apiTypes.ReceiveEvent,
@@ -768,6 +776,18 @@ export type Bot =
 			@within DiscordLuau.Bot
 		]=]
 		onAllShardsReady: emitter.Emitter<()>,
+
+		--[=[
+			@prop onShardDisconnected Emitter<number, string>
+			@within DiscordLuau.Bot
+		]=]
+		onShardDisconnected: emitter.Emitter<number, string>,
+
+		--[=[
+			@prop onShardReconnected Emitter<number>
+			@within DiscordLuau.Bot
+		]=]
+		onShardReconnected: emitter.Emitter<number>,
 
 		--[=[
 			@prop onMessage Emitter<Classes.Message>
