@@ -74,27 +74,27 @@ local CONCURRENT_IDENTIFY_YIELD = 5
 ]=]
 
 --[=[
-	@prop onDisconnected Emitter<ShardPayload<{}>>,
+	@prop onReconnected Emitter<ShardPayload<{}>>,
 	@within WebSocket.Manager
 ]=]
 
 --[=[
-	@prop onDisconnected Emitter<ShardPayload<{}>>,
+	@prop onConnected Emitter<ShardPayload<{}>>,
 	@within WebSocket.Manager
 ]=]
 
 --[=[
-	@prop onDisconnected Emitter<ShardPayload<{ latency: number }>>,
+	@prop onHeartbeat Emitter<ShardPayload<{ latency: number }>>,
 	@within WebSocket.Manager
 ]=]
 
 --[=[
-	@prop onDisconnected Emitter<ShardPayload<{ shardId: number, event: apiTypes.ReceiveEvent, payload: apiTypes.Payload<unknown> }>>
+	@prop onDispatch Emitter<ShardPayload<{ shardId: number, event: apiTypes.ReceiveEvent, payload: apiTypes.Payload<unknown> }>>
 	@within WebSocket.Manager
 ]=]
 
 --[=[
-	@prop onDisconnected Emitter<ShardPayload<{ shardId: number, payload: apiTypes.ReadyPayload }>>
+	@prop onAllShardsReady Emitter<ShardPayload<{ shardId: number, payload: apiTypes.ReadyPayload }>>
 	@within WebSocket.Manager
 ]=]
 
