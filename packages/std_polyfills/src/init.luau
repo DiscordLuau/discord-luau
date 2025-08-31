@@ -1,7 +1,9 @@
 local task = require("@self/task")
 local serde = require("@self/serde")
 local process = require("@self/process")
+local fileSystem = require("@self/fileSystem")
 local datetime = require("@self/datetime")
+local stdio = require("@self/stdio")
 local net = require("@self/net")
 
 export type DateTime = datetime.DateTime
@@ -57,4 +59,16 @@ return {
 		@within StdPolyfills
 	]=]
 	net = net,
+
+	--[=[
+		@prop net StdPolyfills.fileSystem 
+		@within StdPolyfills
+	]=]
+	fileSystem = fileSystem,
+
+	--[=[
+		@prop net StdPolyfills.fileSystem 
+		@within StdPolyfills
+	]=]
+	stdio = stdio,
 }
