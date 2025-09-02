@@ -33,7 +33,7 @@ function DataOption.Prototype.sync<T>(
 
 		The type of command option this represents. This determines how the option is displayed and handled in Discord.
 	]=]
-	self.type = apiTypes.application.ApplicationCommandOptionType[optionData.type]
+	self.type = apiTypes.interaction.ApplicationCommandOptionType[optionData.type]
 
 	for _, option in next, optionData.options or {} do
 		table.insert(optionArray, DataOption.Interface.new(option))

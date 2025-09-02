@@ -1,5 +1,6 @@
 local future = require("../luau_packages/future")
 local apiTypes = require("../luau_packages/api_types")
+local stdPolyfills = require("../lune_packages/std_polyfills")
 
 local request = require("./request")
 
@@ -61,7 +62,7 @@ function commands.createGlobalApplicationCommandAsync(
 
 		instance:setMethod("POST")
 		instance:setUrl(string.format(apiTypes.rest.endpoints.CreateGlobalApplicationCommand, applicationId))
-		instance:setBody(apiTypes.rest.endpoints.encode("json", jsonParams, true))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
 		local response = instance:executeAsync():await()
 
@@ -117,7 +118,7 @@ function commands.editGlobalApplicationCommandAsync(
 
 		instance:setMethod("PATCH")
 		instance:setUrl(string.format(apiTypes.rest.endpoints.EditGlobalApplicationCommand, applicationId, commandId))
-		instance:setBody(apiTypes.rest.endpoints.encode("json", jsonParams, true))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
 		local response = instance:executeAsync():await()
 
@@ -175,7 +176,7 @@ function commands.bulkOverwriteGlobalApplicationCommandsAsync(
 				instance:setUrl(
 					string.format(apiTypes.rest.endpoints.BulkOverwriteGlobalApplicationCommands, applicationId)
 				)
-				instance:setBody(apiTypes.rest.endpoints.encode("json", jsonParams, true))
+				instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
 				local response = instance:executeAsync():await()
 
@@ -237,7 +238,7 @@ function commands.createGuildApplicationCommandAsync(
 
 		instance:setMethod("POST")
 		instance:setUrl(string.format(apiTypes.rest.endpoints.CreateGuildApplicationCommand, applicationId, guildId))
-		instance:setBody(apiTypes.rest.endpoints.encode("json", jsonParams, true))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
 		local response = instance:executeAsync():await()
 
@@ -299,7 +300,7 @@ function commands.editGuildApplicationCommandAsync(
 		instance:setUrl(
 			string.format(apiTypes.rest.endpoints.EditGuildApplicationCommand, applicationId, guildId, commandId)
 		)
-		instance:setBody(apiTypes.rest.endpoints.encode("json", jsonParams, true))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
 		local response = instance:executeAsync():await()
 
@@ -361,7 +362,7 @@ function commands.bulkOverwriteGuildApplicationCommandsAsync(
 				instance:setUrl(
 					string.format(apiTypes.rest.endpoints.BulkOverwriteGuildApplicationCommands, applicationId, guildId)
 				)
-				instance:setBody(apiTypes.rest.endpoints.encode("json", jsonParams, true))
+				instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
 				local response = instance:executeAsync():await()
 
@@ -468,7 +469,7 @@ function commands.editApplicationCommandPermissionsAsync(
 						commandId
 					)
 				)
-				instance:setBody(apiTypes.rest.endpoints.encode("json", jsonParams, true))
+				instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
 				local response = instance:executeAsync():await()
 

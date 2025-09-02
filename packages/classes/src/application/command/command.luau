@@ -42,7 +42,7 @@ function Command.Prototype.sync(self: Command, commandData: apiTypes.Application
 
 	-- fixme: need to use `next` iterator here to avoid LSP errors.
 	for _, context in next, commandData.contexts or {} do
-		table.insert(integrationTypeArray, apiTypes.application.InteractionContextType[context])
+		table.insert(integrationTypeArray, apiTypes.interaction.InteractionContextType[context])
 	end
 
 	--[=[
