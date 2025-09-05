@@ -1,0 +1,25 @@
+return function()
+	local lines = {
+		"diff --git a/src/init.luau b/src/init.luau",
+		"index 1eaba03..94a8070 100644",
+		"--- a/src/init.luau",
+		"+++ b/src/init.luau",
+		"@@ -1,10 +1,10 @@",
+		'-local Poll = require("./Poll")',
+		'+local Poll = require("@self/Poll")',
+		" export type Poll<E, U...> = Poll.Poll<E, U...>",
+		"",
+		'-local Result = require("./Result")',
+		'+local Result = require("@self/Result")',
+		" export type Result<E, U...> = Result.Result<E, U...>",
+		"",
+		'-local Future = require("./Future") :: any',
+		'+local Future = require("@self/Future") :: any',
+		"",
+		" -- FUTURE: FutureLike<E, U...> = Future<E, U...> for backwards compatibility",
+		" -- This type should be used to typecheck function parameters,",
+	}
+
+	-- Join the lines together with CRLF endings to match the patch file format.
+	return table.concat(lines, "\r\n")
+end

@@ -22,11 +22,13 @@ local INFORMATION_TO_QUERY = table.freeze({
 	ProjectName = "What should this project be called?",
 	UseGit = "Should this project use Git?",
 	DiscordToken = "What is the discord bot token?",
+	License = "What is the projects license?",
 })
 
 local INFORMATION_QUERY_ORDER = table.freeze({
 	"ProjectName",
 	"UseGit",
+	"License",
 	"DiscordToken",
 })
 
@@ -113,9 +115,51 @@ local function verifyInformation(information: Information)
 	return answer == "y"
 end
 
+local function buildProjectMap(projectMap: VDirectory, path: string, information: Information)
+	for key, value in projectMap do
+		local typeValue = typeof(value)
+
+		if typeValue == "table" then
+			local directory = value :: VDirectory
+
+			StdPolyfills.fileSystem.writeDir(`{path}/{key}`)
+
+			buildProjectMap(directory, `{path}/{key}`, information)
+		else
+			local callback = value :: VFile
+
+			StdPolyfills.fileSystem.writeFile(`{path}/{key}`, callback(information))
+		end
+	end
+end
+
+local function setupProject(path: string, projectFile: string, information: Information)
+	if StdPolyfills.fileSystem.isDir(`{path}/{information.ProjectName}`) then
+		return Logger:error(`Directory '{path}/{information.ProjectName}' already exists - aborting project creation!`)
+	end
+
+	if StdPolyfills.fileSystem.isFile(`{path}/{information.ProjectName}`) then
+		return Logger:error(
+			`Directory '{path}/{information.ProjectName}' already exists (as a file) - aborting project creation!`
+		)
+	end
+
+	StdPolyfills.fileSystem.writeDir(`{path}/{information.ProjectName}`)
+
+	local projectMap: VDirectory = (require :: any)(`./../projects/{projectFile}`)
+
+	buildProjectMap(projectMap, `{path}/{information.ProjectName}`, information)
+
+	Logger:debug(`Finished setting up project in the following dir: '{`{path}/{information.ProjectName}`}'`)
+end
+
+type VFile = (information: Information) -> string
+type VDirectory = { [string]: VDirectory | VFile }
+
 type Information = {
 	ProjectName: string,
 	UseGit: string,
+	License: string,
 	DiscordToken: string,
 }
 
@@ -135,7 +179,7 @@ return command
 		local information = queryInformation()
 
 		if verifyInformation(information) then
-			print("create project!")
+			setupProject(targetDirectory, context.commandOptions.ide :: string, information)
 		else
 			print("exit!")
 		end

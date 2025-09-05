@@ -261,13 +261,6 @@ function REST.Prototype.implementAttachmentHandlerFor(_: REST, request: rest.Req
 
 				requestInfo.headers["content-type"] = `multipart/form-data; boundary={formdata:getHeader()}`
 
-				warn({
-					url = requestInfo.url,
-					method = requestInfo.method,
-					body = formdata:getBody(),
-					headers = requestInfo.headers,
-				})
-
 				return true,
 					{
 						url = requestInfo.url,
