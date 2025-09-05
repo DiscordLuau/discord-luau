@@ -1,0 +1,21 @@
+name = "discord_luau/classes"
+version = "0.0.1"
+description = "DiscordLuau - Create App, an interactive command-line tool to scaffold a new Discord bot project in Luau."
+license = "MIT"
+authors = ["Async Matrix <hi@asyncmatrix.dev>"]
+repository = "https://github.com/DiscordLuau/discord-luau/tree/main/packages/create_app"
+pesde_version = "0.7.0-rc.7"
+
+includes = ["src/**/*", "pesde.toml", "LICENSE", "CONTRIBUTING.md"]
+
+[target]
+environment = "luau"
+bin = "src/init.luau"
+
+[indices]
+default = "https://github.com/pesde-pkg/index"
+
+[dependencies]
+std_polyfills = { workspace = "discord_luau/std_polyfills", target = "lune" }
+logger = { workspace = "discord_luau/logger" }
+cli_builder = { name = "4x8matrix/cli_builder", version = "0.1.0-dev.1" }
