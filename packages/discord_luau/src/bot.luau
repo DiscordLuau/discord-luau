@@ -34,6 +34,262 @@ local DISCORD_VERSION = 10
 	print(`Bot has connected: '{discordBot.user.username}'`)
 	```
 ]=]
+
+--[=[
+	@prop state State.State
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop logger Logger
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop application Classes.Application?
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop user Classes.User?
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onReady Emitter<number>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onAllShardsReady Emitter<()>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onShardDisconnected Emitter<number, string>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onShardReconnected Emitter<number>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onMessage Emitter<Classes.Message>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onMessageChanged Emitter<Classes.Message>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onMessageDeleted Emitter<{ messageId: apiTypes.Snowflake, channelId: apiTypes.Snowflake, guildId: apiTypes.Snowflake }>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onMessageBulkDeleted Emitter<{ channelId: string, guildId: string, ids: { string } }>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onGroupDMChannelCreate Emitter<Classes.GroupDM>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onCategoryChannelCreate Emitter<Classes.GuildCategory>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onAnnouncementChannelCreate Emitter<Classes.GuildAnnouncement>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onDirectoryChannelCreate Emitter<Classes.GuildDirectory>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onDMChannelCreate Emitter<Classes.DM>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onTextChannelCreate Emitter<Classes.GuildText>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onVoiceChannelCreate Emitter<Classes.GuildVoice>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onStageVoiceChannelCreate Emitter<Classes.GuildStageVoice>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onGroupDMChannelUpdated Emitter<Classes.GroupDM>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onCategoryChannelUpdated Emitter<Classes.GuildCategory>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onAnnouncementChannelUpdated Emitter<Classes.GuildAnnouncement>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onDirectoryChannelUpdated Emitter<Classes.GuildDirectory>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onDMChannelUpdated Emitter<Classes.DM>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onTextChannelUpdated Emitter<Classes.GuildText>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onVoiceChannelUpdated Emitter<Classes.GuildVoice>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onStageVoiceChannelUpdated Emitter<Classes.GuildStageVoice>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onGroupDMChannelDeleted Emitter<Classes.GroupDM>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onCategoryChannelDeleted Emitter<Classes.GuildCategory>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onAnnouncementChannelDeleted Emitter<Classes.GuildAnnouncement>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onDirectoryChannelDeleted Emitter<Classes.GuildDirectory>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onDMChannelDeleted Emitter<Classes.DM>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onTextChannelDeleted Emitter<Classes.GuildText>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onVoiceChannelDeleted Emitter<Classes.GuildVoice>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onStageVoiceChannelDeleted Emitter<Classes.GuildStageVoice>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onUserUpdated Emitter<Classes.User>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onChannelPinsUpdate Emitter<{ guildId: string, channelId: string, lastPinTimestamp: stdPolyfills.DateTime? }>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onGuildCreate Emitter<classes.UnavailableGuild | classes.Guild>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onGuildUpdate Emitter<Classes.Guild>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onGuildDelete Emitter<Classes.UnavailableGuild>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onGuildMemberBanned Emitter<{ guildId: string, user: classes.User }>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onGuildMemberUnbanned Emitter<{ guildId: string, user: classes.User }>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onGuildMemberJoined Emitter<Classes.GuildMember & { guildId: string }>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onGuildMemberLeft Emitter<{ guildId: string, user: classes.User }>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onGuildMemberUpdated Emitter<{guildId: stringroles: { string },user: classes.User,nick: string?,avatar: string,joinedAt: stdPolyfills.DateTime,premiumSince: stdPolyfills.DateTime,deaf: boolean?,mute: boolean?,pending: boolean?,communicationDisabledUntil: stdPolyfills.DateTime?,}>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onPingInteraction Emitter<Classes.Ping>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onCommandInteraction Emitter<Classes.TypesCommand>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onComponentInteraction Emitter<Classes.Component>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onAutocompleteInteraction Emitter<Classes.Autocomplete>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onModalInteraction Emitter<Classes.Modal>
+	@within DiscordLuau.Bot
+]=]
+
 local Bot = {}
 
 Bot.Interface = {}
@@ -741,280 +997,96 @@ end
 export type Bot =
 	typeof(Bot.Prototype)
 	& {
-		--[=[
-			@prop state State.State
-			@within DiscordLuau.Bot
-		]=]
 		state: state.State,
 
-		--[=[
-			@prop logger Logger
-			@within DiscordLuau.Bot
-		]=]
 		logger: logger.Logger,
 
-		--[=[
-			@prop application Classes.Application?
-			@within DiscordLuau.Bot
-		]=]
 		application: classes.Application?,
 
-		--[=[
-			@prop user Classes.User?
-			@within DiscordLuau.Bot
-		]=]
 		user: classes.User?,
 
-		--[=[
-			@prop onReady Emitter<number>
-			@within DiscordLuau.Bot
-		]=]
 		onReady: emitter.Emitter<number>,
 
-		--[=[
-			@prop onAllShardsReady Emitter<()>
-			@within DiscordLuau.Bot
-		]=]
 		onAllShardsReady: emitter.Emitter<()>,
 
-		--[=[
-			@prop onShardDisconnected Emitter<number, string>
-			@within DiscordLuau.Bot
-		]=]
 		onShardDisconnected: emitter.Emitter<number, string>,
 
-		--[=[
-			@prop onShardReconnected Emitter<number>
-			@within DiscordLuau.Bot
-		]=]
 		onShardReconnected: emitter.Emitter<number>,
 
-		--[=[
-			@prop onMessage Emitter<Classes.Message>
-			@within DiscordLuau.Bot
-		]=]
 		onMessage: emitter.Emitter<classes.Message>,
 
-		--[=[
-			@prop onMessageChanged Emitter<Classes.Message>
-			@within DiscordLuau.Bot
-		]=]
 		onMessageChanged: emitter.Emitter<classes.Message>,
 
-		--[=[
-			@prop onMessageDeleted Emitter<{ messageId: apiTypes.Snowflake, channelId: apiTypes.Snowflake, guildId: apiTypes.Snowflake }>
-			@within DiscordLuau.Bot
-		]=]
 		onMessageDeleted: emitter.Emitter<{ messageId: apiTypes.Snowflake, channelId: apiTypes.Snowflake, guildId: apiTypes.Snowflake }>,
 
-		--[=[
-			@prop onMessageBulkDeleted Emitter<{ channelId: string, guildId: string, ids: { string } }>
-			@within DiscordLuau.Bot
-		]=]
 		onMessageBulkDeleted: emitter.Emitter<{ channelId: string, guildId: string, ids: { string } }>,
 
-		--[=[
-			@prop onGroupDMChannelCreate Emitter<Classes.GroupDM>
-			@within DiscordLuau.Bot
-		]=]
 		onGroupDMChannelCreate: emitter.Emitter<classes.GroupDM>,
 
-		--[=[
-			@prop onCategoryChannelCreate Emitter<Classes.GuildCategory>
-			@within DiscordLuau.Bot
-		]=]
 		onCategoryChannelCreate: emitter.Emitter<classes.GuildCategory>,
 
-		--[=[
-			@prop onAnnouncementChannelCreate Emitter<Classes.GuildAnnouncement>
-			@within DiscordLuau.Bot
-		]=]
 		onAnnouncementChannelCreate: emitter.Emitter<classes.GuildAnnouncement>,
 
-		--[=[
-			@prop onDirectoryChannelCreate Emitter<Classes.GuildDirectory>
-			@within DiscordLuau.Bot
-		]=]
 		onDirectoryChannelCreate: emitter.Emitter<classes.GuildDirectory>,
 
-		--[=[
-			@prop onDMChannelCreate Emitter<Classes.DM>
-			@within DiscordLuau.Bot
-		]=]
 		onDMChannelCreate: emitter.Emitter<classes.DM>,
 
-		--[=[
-			@prop onTextChannelCreate Emitter<Classes.GuildText>
-			@within DiscordLuau.Bot
-		]=]
 		onTextChannelCreate: emitter.Emitter<classes.GuildText>,
 
-		--[=[
-			@prop onVoiceChannelCreate Emitter<Classes.GuildVoice>
-			@within DiscordLuau.Bot
-		]=]
 		onVoiceChannelCreate: emitter.Emitter<classes.GuildVoice>,
 
-		--[=[
-			@prop onStageVoiceChannelCreate Emitter<Classes.GuildStageVoice>
-			@within DiscordLuau.Bot
-		]=]
 		onStageVoiceChannelCreate: emitter.Emitter<classes.GuildStageVoice>,
 
-		--[=[
-			@prop onGroupDMChannelUpdated Emitter<Classes.GroupDM>
-			@within DiscordLuau.Bot
-		]=]
 		onGroupDMChannelUpdated: emitter.Emitter<classes.GroupDM>,
 
-		--[=[
-			@prop onCategoryChannelUpdated Emitter<Classes.GuildCategory>
-			@within DiscordLuau.Bot
-		]=]
 		onCategoryChannelUpdated: emitter.Emitter<classes.GuildCategory>,
 
-		--[=[
-			@prop onAnnouncementChannelUpdated Emitter<Classes.GuildAnnouncement>
-			@within DiscordLuau.Bot
-		]=]
 		onAnnouncementChannelUpdated: emitter.Emitter<classes.GuildAnnouncement>,
 
-		--[=[
-			@prop onDirectoryChannelUpdated Emitter<Classes.GuildDirectory>
-			@within DiscordLuau.Bot
-		]=]
 		onDirectoryChannelUpdated: emitter.Emitter<classes.GuildDirectory>,
 
-		--[=[
-			@prop onDMChannelUpdated Emitter<Classes.DM>
-			@within DiscordLuau.Bot
-		]=]
 		onDMChannelUpdated: emitter.Emitter<classes.DM>,
 
-		--[=[
-			@prop onTextChannelUpdated Emitter<Classes.GuildText>
-			@within DiscordLuau.Bot
-		]=]
 		onTextChannelUpdated: emitter.Emitter<classes.GuildText>,
 
-		--[=[
-			@prop onVoiceChannelUpdated Emitter<Classes.GuildVoice>
-			@within DiscordLuau.Bot
-		]=]
 		onVoiceChannelUpdated: emitter.Emitter<classes.GuildVoice>,
 
-		--[=[
-			@prop onStageVoiceChannelUpdated Emitter<Classes.GuildStageVoice>
-			@within DiscordLuau.Bot
-		]=]
 		onStageVoiceChannelUpdated: emitter.Emitter<classes.GuildStageVoice>,
 
-		--[=[
-			@prop onGroupDMChannelDeleted Emitter<Classes.GroupDM>
-			@within DiscordLuau.Bot
-		]=]
 		onGroupDMChannelDeleted: emitter.Emitter<classes.GroupDM>,
 
-		--[=[
-			@prop onCategoryChannelDeleted Emitter<Classes.GuildCategory>
-			@within DiscordLuau.Bot
-		]=]
 		onCategoryChannelDeleted: emitter.Emitter<classes.GuildCategory>,
 
-		--[=[
-			@prop onAnnouncementChannelDeleted Emitter<Classes.GuildAnnouncement>
-			@within DiscordLuau.Bot
-		]=]
 		onAnnouncementChannelDeleted: emitter.Emitter<classes.GuildAnnouncement>,
 
-		--[=[
-			@prop onDirectoryChannelDeleted Emitter<Classes.GuildDirectory>
-			@within DiscordLuau.Bot
-		]=]
 		onDirectoryChannelDeleted: emitter.Emitter<classes.GuildDirectory>,
 
-		--[=[
-			@prop onDMChannelDeleted Emitter<Classes.DM>
-			@within DiscordLuau.Bot
-		]=]
 		onDMChannelDeleted: emitter.Emitter<classes.DM>,
 
-		--[=[
-			@prop onTextChannelDeleted Emitter<Classes.GuildText>
-			@within DiscordLuau.Bot
-		]=]
 		onTextChannelDeleted: emitter.Emitter<classes.GuildText>,
 
-		--[=[
-			@prop onVoiceChannelDeleted Emitter<Classes.GuildVoice>
-			@within DiscordLuau.Bot
-		]=]
 		onVoiceChannelDeleted: emitter.Emitter<classes.GuildVoice>,
 
-		--[=[
-			@prop onStageVoiceChannelDeleted Emitter<Classes.GuildStageVoice>
-			@within DiscordLuau.Bot
-		]=]
 		onStageVoiceChannelDeleted: emitter.Emitter<classes.GuildStageVoice>,
 
-		--[=[
-			@prop onUserUpdated Emitter<Classes.User>
-			@within DiscordLuau.Bot
-		]=]
 		onUserUpdated: emitter.Emitter<classes.User>,
 
-		--[=[
-			@prop onChannelPinsUpdate Emitter<{ guildId: string, channelId: string, lastPinTimestamp: stdPolyfills.DateTime? }>
-			@within DiscordLuau.Bot
-		]=]
 		onChannelPinsUpdate: emitter.Emitter<{ guildId: string, channelId: string, lastPinTimestamp: stdPolyfills.DateTime? }>,
 
-		--[=[
-			@prop onGuildCreate Emitter<classes.UnavailableGuild | classes.Guild>
-			@within DiscordLuau.Bot
-		]=]
 		onGuildCreate: emitter.Emitter<classes.UnavailableGuild | classes.Guild>,
 
-		--[=[
-			@prop onGuildUpdate Emitter<Classes.Guild>
-			@within DiscordLuau.Bot
-		]=]
 		onGuildUpdate: emitter.Emitter<classes.Guild>,
 
-		--[=[
-			@prop onGuildDelete Emitter<Classes.UnavailableGuild>
-			@within DiscordLuau.Bot
-		]=]
 		onGuildDelete: emitter.Emitter<classes.UnavailableGuild>,
 
-		--[=[
-			@prop onGuildMemberBanned Emitter<{ guildId: string, user: classes.User }>
-			@within DiscordLuau.Bot
-		]=]
 		onGuildMemberBanned: emitter.Emitter<{ guildId: string, user: classes.User }>,
 
-		--[=[
-			@prop onGuildMemberUnbanned Emitter<{ guildId: string, user: classes.User }>
-			@within DiscordLuau.Bot
-		]=]
 		onGuildMemberUnbanned: emitter.Emitter<{ guildId: string, user: classes.User }>,
 
-		--[=[
-			@prop onGuildMemberJoined Emitter<Classes.GuildMember & { guildId: string }>
-			@within DiscordLuau.Bot
-		]=]
 		onGuildMemberJoined: emitter.Emitter<classes.GuildMember & { guildId: string }>,
 
-		--[=[
-			@prop onGuildMemberLeft Emitter<{ guildId: string, user: classes.User }>
-			@within DiscordLuau.Bot
-		]=]
 		onGuildMemberLeft: emitter.Emitter<{ guildId: string, user: classes.User }>,
 
-		--[=[
-			@prop onGuildMemberUpdated Emitter<{guildId: stringroles: { string },user: classes.User,nick: string?,avatar: string,joinedAt: stdPolyfills.DateTime,premiumSince: stdPolyfills.DateTime,deaf: boolean?,mute: boolean?,pending: boolean?,communicationDisabledUntil: stdPolyfills.DateTime?,}>
-			@within DiscordLuau.Bot
-		]=]
 		onGuildMemberUpdated: emitter.Emitter<{
 			guildId: string,
 			roles: { string },
@@ -1029,34 +1101,14 @@ export type Bot =
 			communicationDisabledUntil: stdPolyfills.DateTime?,
 		}>,
 
-		--[=[
-			@prop onPingInteraction Emitter<Classes.Ping>
-			@within DiscordLuau.Bot
-		]=]
 		onPingInteraction: emitter.Emitter<classes.Ping>,
 
-		--[=[
-			@prop onCommandInteraction Emitter<Classes.TypesCommand>
-			@within DiscordLuau.Bot
-		]=]
 		onCommandInteraction: emitter.Emitter<classes.TypesCommand>,
 
-		--[=[
-			@prop onComponentInteraction Emitter<Classes.Component>
-			@within DiscordLuau.Bot
-		]=]
 		onComponentInteraction: emitter.Emitter<classes.Component>,
 
-		--[=[
-			@prop onAutocompleteInteraction Emitter<Classes.Autocomplete>
-			@within DiscordLuau.Bot
-		]=]
 		onAutocompleteInteraction: emitter.Emitter<classes.Autocomplete>,
 
-		--[=[
-			@prop onModalInteraction Emitter<Classes.Modal>
-			@within DiscordLuau.Bot
-		]=]
 		onModalInteraction: emitter.Emitter<classes.Modal>,
 	}
 
