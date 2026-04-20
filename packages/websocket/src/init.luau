@@ -9,16 +9,18 @@ export type Manager = manager.Manager
 	Interface for the discord-luau WebSocket package
 ]=]
 
+--[=[
+	@prop manager WebSocket.Manager  
+	@within WebSocket
+]=]
+
+--[=[
+	@prop shard WebSocket.Shard 
+	@within WebSocket
+]=]
+
 return {
-	--[=[
-		@prop manager WebSocket.Manager  
-		@within WebSocket
-	]=]
 	manager = manager,
 
-	--[=[
-		@prop shard WebSocket.Shard 
-		@within WebSocket
-	]=]
 	shard = shard,
 }

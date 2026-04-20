@@ -32,130 +32,151 @@ export type Request = request.Request
 	request to the discord API.
 ]=]
 
+--[=[
+	@prop interaction Rest.interaction
+	@within Rest
+]=]
+
+--[=[
+	@prop poll Rest.poll
+	@within Rest
+]=]
+
+--[=[
+	@prop voice Rest.voice
+	@within Rest
+]=]
+
+--[=[
+	@prop auditLog Rest.auditLog
+	@within Rest
+]=]
+
+--[=[
+	@prop autoModeration Rest.autoModeration
+	@within Rest
+]=]
+
+--[=[
+	@prop message Rest.message
+	@within Rest
+]=]
+
+--[=[
+	@prop request Rest.Request
+	@within Rest
+]=]
+
+--[=[
+	@prop guildScheduledEvent Rest.guildScheduledEvent
+	@within Rest
+]=]
+
+--[=[
+	@prop application Rest.application
+	@within Rest
+]=]
+
+--[=[
+	@prop channel Rest.channel
+	@within Rest
+]=]
+
+--[=[
+	@prop user Rest.user
+	@within Rest
+]=]
+
+--[=[
+	@prop guildTemplate Rest.guildTemplate
+	@within Rest
+]=]
+
+--[=[
+	@prop sticker Rest.sticker
+	@within Rest
+]=]
+
+--[=[
+	@prop commands Rest.commands
+	@within Rest
+]=]
+
+--[=[
+	@prop stageInstance Rest.stageInstance
+	@within Rest
+]=]
+
+--[=[
+	@prop webhook Rest.webhook
+	@within Rest
+]=]
+
+--[=[
+	@prop emoji Rest.emoji
+	@within Rest
+]=]
+
+--[=[
+	@prop gateway Rest.gateway
+	@within Rest
+]=]
+
+--[=[
+	@prop invite Rest.invite
+	@within Rest
+]=]
+
+--[=[
+	@prop applicationRoleConnectionMetadata Rest.applicationRoleConnectionMetadata
+	@within Rest
+]=]
+
+--[=[
+	@prop guild Rest.guild
+	@within Rest
+]=]
+
 return {
-	--[=[
-		@prop interaction Rest.interaction
-		@within Rest
-	]=]
 	interaction = interaction,
 
-	--[=[
-		@prop poll Rest.poll
-		@within Rest
-	]=]
 	poll = poll,
 
-	--[=[
-		@prop voice Rest.voice
-		@within Rest
-	]=]
 	voice = voice,
 
-	--[=[
-		@prop auditLog Rest.auditLog
-		@within Rest
-	]=]
 	auditLog = auditLog,
 
-	--[=[
-		@prop autoModeration Rest.autoModeration
-		@within Rest
-	]=]
 	autoModeration = autoModeration,
 
-	--[=[
-		@prop message Rest.message
-		@within Rest
-	]=]
 	message = message,
 
-	--[=[
-		@prop request Rest.Request
-		@within Rest
-	]=]
 	request = request,
 
-	--[=[
-		@prop guildScheduledEvent Rest.guildScheduledEvent
-		@within Rest
-	]=]
 	guildScheduledEvent = guildScheduledEvent,
 
-	--[=[
-		@prop application Rest.application
-		@within Rest
-	]=]
 	application = application,
 
-	--[=[
-		@prop channel Rest.channel
-		@within Rest
-	]=]
 	channel = channel,
 
-	--[=[
-		@prop user Rest.user
-		@within Rest
-	]=]
 	user = user,
 
-	--[=[
-		@prop guildTemplate Rest.guildTemplate
-		@within Rest
-	]=]
 	guildTemplate = guildTemplate,
 
-	--[=[
-		@prop sticker Rest.sticker
-		@within Rest
-	]=]
 	sticker = sticker,
 
-	--[=[
-		@prop commands Rest.commands
-		@within Rest
-	]=]
 	commands = commands,
 
-	--[=[
-		@prop stageInstance Rest.stageInstance
-		@within Rest
-	]=]
 	stageInstance = stageInstance,
 
-	--[=[
-		@prop webhook Rest.webhook
-		@within Rest
-	]=]
 	webhook = webhook,
 
-	--[=[
-		@prop emoji Rest.emoji
-		@within Rest
-	]=]
 	emoji = emoji,
 
-	--[=[
-		@prop gateway Rest.gateway
-		@within Rest
-	]=]
 	gateway = gateway,
 
-	--[=[
-		@prop invite Rest.invite
-		@within Rest
-	]=]
 	invite = invite,
 
-	--[=[
-		@prop applicationRoleConnectionMetadata Rest.applicationRoleConnectionMetadata
-		@within Rest
-	]=]
 	applicationRoleConnectionMetadata = applicationRoleConnectionMetadata,
 
-	--[=[
-		@prop guild Rest.guild
-		@within Rest
-	]=]
 	guild = guild,
 }
