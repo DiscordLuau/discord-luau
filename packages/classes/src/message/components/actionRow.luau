@@ -7,6 +7,20 @@
 	https://discord.com/developers/docs/resources/message#message-object-message-activity-structure
 ]=]
 
+--[=[
+	@prop type number
+	@within Classes.ActionRow
+
+	The type of component. For action rows, this will always be 1.
+]=]
+
+--[=[
+	@prop components {Classes.Button | Classes.TextInput | Classes.SelectMenu}
+	@within Classes.ActionRow
+
+	An array of components within this action row. Can contain buttons, text inputs, or select menus.
+]=]
+
 local apiTypes = require("../../../luau_packages/api_types")
 
 local button = require("./button")
@@ -26,12 +40,6 @@ ActionRow.Prototype = {}
 	created or updated.
 ]=]
 function ActionRow.Prototype.sync(self: ActionRow, activityObject: apiTypes.ActionRowComponentObject)
-	--[=[
-		@prop type number
-		@within Classes.ActionRow
-
-		The type of component. For action rows, this will always be 1.
-	]=]
 	local components: { button.Button | textInput.TextInput | selectMenu.SelectMenu } = {}
 
 	for _, componentData in activityObject.components do
@@ -58,12 +66,6 @@ function ActionRow.Prototype.sync(self: ActionRow, activityObject: apiTypes.Acti
 
 	self.type = activityObject.type
 
-	--[=[
-		@prop components {Classes.Button | Classes.TextInput | Classes.SelectMenu}
-		@within Classes.ActionRow
-
-		An array of components within this action row. Can contain buttons, text inputs, or select menus.
-	]=]
 	self.components = components
 end
 

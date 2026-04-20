@@ -7,6 +7,41 @@
 	https://discord.com/developers/docs/resources/guild#integration-application-object
 ]=]
 
+--[=[
+	@prop id string
+	@within Classes.IntegrationApplication
+
+	The unique identifier for this application
+]=]
+
+--[=[
+	@prop name string
+	@within Classes.IntegrationApplication
+
+	The name of the application
+]=]
+
+--[=[
+	@prop icon string?
+	@within Classes.IntegrationApplication
+
+	The icon hash of the application, if one exists
+]=]
+
+--[=[
+	@prop description string
+	@within Classes.IntegrationApplication
+
+	The description of the application
+]=]
+
+--[=[
+	@prop bot Classes.User?
+	@within Classes.IntegrationApplication
+
+	The bot user associated with this application, if it is a bot application
+]=]
+
 local apiTypes = require("../../../luau_packages/api_types")
 
 local user = require("../../user")
@@ -24,44 +59,14 @@ Application.Prototype = {}
 	created or updated.
 ]=]
 function Application.Prototype.sync(self: Application, applicationData: apiTypes.IntegrationApplicationObject)
-	--[=[
-		@prop id string
-		@within Classes.IntegrationApplication
-
-		The unique identifier for this application
-	]=]
 	self.id = applicationData.id
 
-	--[=[
-		@prop name string
-		@within Classes.IntegrationApplication
-
-		The name of the application
-	]=]
 	self.name = applicationData.name
 
-	--[=[
-		@prop icon string?
-		@within Classes.IntegrationApplication
-
-		The icon hash of the application, if one exists
-	]=]
 	self.icon = applicationData.icon
 
-	--[=[
-		@prop description string
-		@within Classes.IntegrationApplication
-
-		The description of the application
-	]=]
 	self.description = applicationData.description
 
-	--[=[
-		@prop bot Classes.User?
-		@within Classes.IntegrationApplication
-
-		The bot user associated with this application, if it is a bot application
-	]=]
 	self.bot = applicationData.bot and user.new(applicationData.bot)
 end
 

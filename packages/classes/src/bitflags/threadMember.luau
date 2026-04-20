@@ -9,6 +9,12 @@
 	⚠️ Discord currently doesn't provide any flag documentation for this class? Wack.
 ]=]
 
+--[=[
+	@prop flag number
+	@within Classes.ThreadMemberBitflag
+	The bitfield representing the thread member flags.
+]=]
+
 local ThreadMemberBitflag = {}
 
 ThreadMemberBitflag.Interface = {}
@@ -23,11 +29,6 @@ ThreadMemberBitflag.Prototype = {}
 function ThreadMemberBitflag.Interface.new(flag: number): ThreadMemberBitflag
 	local self = setmetatable(
 		{
-			--[=[
-				@prop flag number
-				@within Classes.ThreadMemberBitflag
-				The bitfield representing the thread member flags.
-			]=]
 			flag = flag,
 		} :: ThreadMemberBitflag,
 		{ __index = ThreadMemberBitflag.Prototype }

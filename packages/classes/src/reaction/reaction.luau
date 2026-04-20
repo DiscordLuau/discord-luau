@@ -7,6 +7,42 @@
 	https://discord.com/developers/docs/resources/message#reaction-object-reaction-structure
 ]=]
 
+--[=[
+	@prop count number
+	@within Classes.Reaction
+	The total number of times this reaction has been used.
+]=]
+
+--[=[
+	@prop countDetails Classes.CountDetails
+	@within Classes.Reaction
+	Detailed information about the reaction count.
+]=]
+
+--[=[
+	@prop me boolean
+	@within Classes.Reaction
+	Whether the current user has used this reaction.
+]=]
+
+--[=[
+	@prop meBurst boolean
+	@within Classes.Reaction
+	Whether the current user has used this reaction in burst mode.
+]=]
+
+--[=[
+	@prop emoji Emoji
+	@within Classes.Reaction
+	The emoji used for this reaction.
+]=]
+
+--[=[
+	@prop burstColors { string }
+	@within Classes.Reaction
+	The colors used for burst reactions.
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 
 local countDetails = require("./countDetails")
@@ -25,46 +61,16 @@ Reaction.Prototype = {}
 	created or updated.
 ]=]
 function Reaction.Prototype.sync(self: Reaction, reactionData: apiTypes.ReactionObject)
-	--[=[
-		@prop count number
-		@within Classes.Reaction
-		The total number of times this reaction has been used.
-	]=]
 	self.count = reactionData.count
 
-	--[=[
-		@prop countDetails Classes.CountDetails
-		@within Classes.Reaction
-		Detailed information about the reaction count.
-	]=]
 	self.countDetails = countDetails.new(reactionData.count_details)
 
-	--[=[
-		@prop me boolean
-		@within Classes.Reaction
-		Whether the current user has used this reaction.
-	]=]
 	self.me = reactionData.me
 
-	--[=[
-		@prop meBurst boolean
-		@within Classes.Reaction
-		Whether the current user has used this reaction in burst mode.
-	]=]
 	self.meBurst = reactionData.me_burst
 
-	--[=[
-		@prop emoji Emoji
-		@within Classes.Reaction
-		The emoji used for this reaction.
-	]=]
 	self.emoji = emoji.new(reactionData.emoji)
 
-	--[=[
-		@prop burstColors { string }
-		@within Classes.Reaction
-		The colors used for burst reactions.
-	]=]
 	self.burstColors = reactionData.burst_colors
 end
 

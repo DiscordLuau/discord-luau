@@ -12,6 +12,48 @@
 	- Managing thread ownership and parent relationships
 ]=]
 
+--[=[
+	@within Classes.ThreadBehaviour
+	@prop totalMessageSent number
+	The total number of messages sent in this thread.
+]=]
+
+--[=[
+	@within Classes.ThreadBehaviour
+	@prop member Classes.ThreadMember?
+	The current user's thread member object, if they are a member of this thread.
+]=]
+
+--[=[
+	@within Classes.ThreadBehaviour
+	@prop threadMetadata Classes.ThreadMetadata?
+	Metadata about the thread, including archive status and auto-archive duration.
+]=]
+
+--[=[
+	@within Classes.ThreadBehaviour
+	@prop memberCount number
+	The number of members in this thread.
+]=]
+
+--[=[
+	@within Classes.ThreadBehaviour
+	@prop messageCount number
+	The number of messages in this thread.
+]=]
+
+--[=[
+	@within Classes.ThreadBehaviour
+	@prop parentId string?
+	The ID of the parent channel this thread belongs to.
+]=]
+
+--[=[
+	@within Classes.ThreadBehaviour
+	@prop ownerId string
+	The ID of the user who created this thread.
+]=]
+
 local apiTypes = require("../../../luau_packages/api_types")
 local future = require("../../../luau_packages/future")
 local rest = require("../../../luau_packages/rest")
@@ -150,53 +192,18 @@ end
 	This is typically called during object creation or updates.
 ]=]
 function ThreadBehaviour.Interface.inheritProperties(class: any, channelData: apiTypes.ChannelObject)
-	--[=[
-		@within Classes.ThreadBehaviour
-		@prop totalMessageSent number
-		The total number of messages sent in this thread.
-	]=]
 	class.totalMessageSent = channelData.total_message_sent
 
-	--[=[
-		@within Classes.ThreadBehaviour
-		@prop member Classes.ThreadMember?
-		The current user's thread member object, if they are a member of this thread.
-	]=]
 	class.member = channelData.member and threadMember.new(class.state, class.guildId, channelData.member)
 
-	--[=[
-		@within Classes.ThreadBehaviour
-		@prop threadMetadata Classes.ThreadMetadata?
-		Metadata about the thread, including archive status and auto-archive duration.
-	]=]
 	class.threadMetadata = channelData.thread_metadata and threadMetadata.new(channelData.thread_metadata)
 
-	--[=[
-		@within Classes.ThreadBehaviour
-		@prop memberCount number
-		The number of members in this thread.
-	]=]
 	class.memberCount = channelData.member_count
 
-	--[=[
-		@within Classes.ThreadBehaviour
-		@prop messageCount number
-		The number of messages in this thread.
-	]=]
 	class.messageCount = channelData.message_count
 
-	--[=[
-		@within Classes.ThreadBehaviour
-		@prop parentId string?
-		The ID of the parent channel this thread belongs to.
-	]=]
 	class.parentId = channelData.parent_id
 
-	--[=[
-		@within Classes.ThreadBehaviour
-		@prop ownerId string
-		The ID of the user who created this thread.
-	]=]
 	class.ownerId = channelData.owner_id
 end
 

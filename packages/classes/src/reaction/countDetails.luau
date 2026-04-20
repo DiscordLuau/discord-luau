@@ -7,6 +7,18 @@
 	https://discord.com/developers/docs/resources/message#reaction-count-details-object
 ]=]
 
+--[=[
+	@prop burst number
+	@within Classes.CountDetails
+	The number of burst reactions.
+]=]
+
+--[=[
+	@prop normal number
+	@within Classes.CountDetails
+	The number of normal reactions.
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 
 local CountDetails = {}
@@ -22,18 +34,8 @@ CountDetails.Prototype = {}
 	created or updated.
 ]=]
 function CountDetails.Prototype.sync(self: CountDetails, reactionCountDetailsData: apiTypes.ReactionCountDetailsObject)
-	--[=[
-		@prop burst number
-		@within Classes.CountDetails
-		The number of burst reactions.
-	]=]
 	self.burst = reactionCountDetailsData.burst
 
-	--[=[
-		@prop normal number
-		@within Classes.CountDetails
-		The number of normal reactions.
-	]=]
 	self.normal = reactionCountDetailsData.normal
 end
 

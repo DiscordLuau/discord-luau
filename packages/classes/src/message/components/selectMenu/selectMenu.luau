@@ -7,6 +7,69 @@
 	https://discord.com/developers/docs/interactions/message-components#select-menu-object-select-menu-structure
 ]=]
 
+--[=[
+	@prop type number
+	@within Classes.SelectMenu
+
+	The type of select menu component. This will be a number that represents the type of select menu.
+]=]
+
+--[=[
+	@prop customId string
+	@within Classes.SelectMenu
+
+	A developer-defined identifier for the select menu, max 100 characters.
+]=]
+
+--[=[
+	@prop options {Classes.Option}?
+	@within Classes.SelectMenu
+
+	Array of select menu options that users can choose from. Maximum of 25 items.
+]=]
+
+--[=[
+	@prop apiTypes {api_types.ChannelType}?
+	@within Classes.SelectMenu
+
+	List of channel types to include in the select menu. Only applicable for channel select menus.
+]=]
+
+--[=[
+	@prop placeholder string?
+	@within Classes.SelectMenu
+
+	Custom placeholder text shown when no option is selected, max 150 characters.
+]=]
+
+--[=[
+	@prop defaultValues {Classes.DefaultValue}?
+	@within Classes.SelectMenu
+
+	Array of default values for auto-populated select menus.
+]=]
+
+--[=[
+	@prop minValues number?
+	@within Classes.SelectMenu
+
+	The minimum number of items that must be chosen. Default 1, min 0, max 25.
+]=]
+
+--[=[
+	@prop maxValues number?
+	@within Classes.SelectMenu
+
+	The maximum number of items that can be chosen. Default 1, max 25.
+]=]
+
+--[=[
+	@prop disabled boolean?
+	@within Classes.SelectMenu
+
+	Whether this select menu is disabled. Defaults to false if not set.
+]=]
+
 local apiTypes = require("../../../../luau_packages/api_types")
 
 local option = require("./option")
@@ -41,76 +104,22 @@ function SelectMenu.Prototype.sync(self: SelectMenu, selectMenuData: apiTypes.Se
 		table.insert(apiTypesArray, apiTypes.channel.ApiTypes[channelType])
 	end
 
-	--[=[
-		@prop type number
-		@within Classes.SelectMenu
-
-		The type of select menu component. This will be a number that represents the type of select menu.
-	]=]
 	self.type = selectMenuData.type
 
-	--[=[
-		@prop customId string
-		@within Classes.SelectMenu
-
-		A developer-defined identifier for the select menu, max 100 characters.
-	]=]
 	self.customId = selectMenuData.custom_id
 
-	--[=[
-		@prop options {Classes.Option}?
-		@within Classes.SelectMenu
-
-		Array of select menu options that users can choose from. Maximum of 25 items.
-	]=]
 	self.options = optionArray
 
-	--[=[
-		@prop apiTypes {api_types.ChannelType}?
-		@within Classes.SelectMenu
-
-		List of channel types to include in the select menu. Only applicable for channel select menus.
-	]=]
 	self.apiTypes = apiTypesArray
 
-	--[=[
-		@prop placeholder string?
-		@within Classes.SelectMenu
-
-		Custom placeholder text shown when no option is selected, max 150 characters.
-	]=]
 	self.placeholder = selectMenuData.placeholder
 
-	--[=[
-		@prop defaultValues {Classes.DefaultValue}?
-		@within Classes.SelectMenu
-
-		Array of default values for auto-populated select menus.
-	]=]
 	self.defaultValues = defaultValues
 
-	--[=[
-		@prop minValues number?
-		@within Classes.SelectMenu
-
-		The minimum number of items that must be chosen. Default 1, min 0, max 25.
-	]=]
 	self.minValues = selectMenuData.min_values
 
-	--[=[
-		@prop maxValues number?
-		@within Classes.SelectMenu
-
-		The maximum number of items that can be chosen. Default 1, max 25.
-	]=]
 	self.maxValues = selectMenuData.max_values
 
-	--[=[
-		@prop disabled boolean?
-		@within Classes.SelectMenu
-
-		Whether this select menu is disabled. Defaults to false if not set.
-	]=]
 	self.disabled = selectMenuData.disabled
 end
 

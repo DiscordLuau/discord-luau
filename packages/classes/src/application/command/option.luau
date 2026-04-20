@@ -7,6 +7,90 @@
 	https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-choice-structure
 ]=]
 
+--[=[
+	@prop type ApplicationCommandOptionType
+	@within Classes.CommandOption
+	The type of the option. This represents what kind of option it is, such as a string, number, or user input.
+]=]
+
+--[=[
+	@prop name string
+	@within Classes.CommandOption
+	The name of the command option. This is what users will see when using the command.
+]=]
+
+--[=[
+	@prop nameLocalizations { [LanguageLocales]: string }?
+	@within Classes.CommandOption
+	Localization dictionary for the name field. Values follow the same restrictions as name.
+]=]
+
+--[=[
+	@prop description string?
+	@within Classes.CommandOption
+	The description of the command option. Provides additional information about what the option does.
+]=]
+
+--[=[
+	@prop descriptionLocalizations { [LanguageLocales]: string }?
+	@within Classes.CommandOption
+	Localization dictionary for the description field. Values follow the same restrictions as description.
+]=]
+
+--[=[
+	@prop required boolean?
+	@within Classes.CommandOption
+	If the parameter is required or optional. Default false.
+]=]
+
+--[=[
+	@prop choices { Classes.Choice }?
+	@within Classes.CommandOption
+	Choices for the user to pick from. Only available for string and number option types.
+]=]
+
+--[=[
+	@prop options { Classes.CommandOption }?
+	@within Classes.CommandOption
+	Sub-options if this option is a subcommand or subcommand group type.
+]=]
+
+--[=[
+	@prop apiTypes { ChannelType }
+	@within Classes.CommandOption
+	If the option is a channel type, these are the allowed channel types that can be selected.
+]=]
+
+--[=[
+	@prop minValue number?
+	@within Classes.CommandOption
+	For integer or number options, the minimum value permitted.
+]=]
+
+--[=[
+	@prop maxValue number?
+	@within Classes.CommandOption
+	For integer or number options, the maximum value permitted.
+]=]
+
+--[=[
+	@prop minLength number?
+	@within Classes.CommandOption
+	For string options, the minimum allowed length.
+]=]
+
+--[=[
+	@prop maxLength number?
+	@within Classes.CommandOption
+	For string options, the maximum allowed length.
+]=]
+
+--[=[
+	@prop autocomplete boolean?
+	@within Classes.CommandOption
+	Enable autocomplete interactions for this option.
+]=]
+
 local apiTypes = require("../../../luau_packages/api_types")
 
 local choice = require("./choice")
@@ -44,102 +128,32 @@ function Option.Prototype.sync(self: Option, optionData: apiTypes.ApplicationCom
 		table.insert(channelTypeArray, apiTypes.channel.ChannelTypes[channelType])
 	end
 
-	--[=[
-		@prop type ApplicationCommandOptionType
-		@within Classes.CommandOption
-		The type of the option. This represents what kind of option it is, such as a string, number, or user input.
-	]=]
 	self.type = apiTypes.interaction.ApplicationCommandOptionType[optionData.type]
 
-	--[=[
-		@prop name string
-		@within Classes.CommandOption
-		The name of the command option. This is what users will see when using the command.
-	]=]
 	self.name = optionData.name
 
-	--[=[
-		@prop nameLocalizations { [LanguageLocales]: string }?
-		@within Classes.CommandOption
-		Localization dictionary for the name field. Values follow the same restrictions as name.
-	]=]
 	self.nameLocalizations = optionData.name_localizations
 
-	--[=[
-		@prop description string?
-		@within Classes.CommandOption
-		The description of the command option. Provides additional information about what the option does.
-	]=]
 	self.description = optionData.description
 
-	--[=[
-		@prop descriptionLocalizations { [LanguageLocales]: string }?
-		@within Classes.CommandOption
-		Localization dictionary for the description field. Values follow the same restrictions as description.
-	]=]
 	self.descriptionLocalizations = optionData.description_localizations
 
-	--[=[
-		@prop required boolean?
-		@within Classes.CommandOption
-		If the parameter is required or optional. Default false.
-	]=]
 	self.required = optionData.required
 
-	--[=[
-		@prop choices { Classes.Choice }?
-		@within Classes.CommandOption
-		Choices for the user to pick from. Only available for string and number option types.
-	]=]
 	self.choices = choiceArray
 
-	--[=[
-		@prop options { Classes.CommandOption }?
-		@within Classes.CommandOption
-		Sub-options if this option is a subcommand or subcommand group type.
-	]=]
 	self.options = optionArray
 
-	--[=[
-		@prop apiTypes { ChannelType }
-		@within Classes.CommandOption
-		If the option is a channel type, these are the allowed channel types that can be selected.
-	]=]
 	self.apiTypes = channelTypeArray
 
-	--[=[
-		@prop minValue number?
-		@within Classes.CommandOption
-		For integer or number options, the minimum value permitted.
-	]=]
 	self.minValue = optionData.min_value
 
-	--[=[
-		@prop maxValue number?
-		@within Classes.CommandOption
-		For integer or number options, the maximum value permitted.
-	]=]
 	self.maxValue = optionData.max_value
 
-	--[=[
-		@prop minLength number?
-		@within Classes.CommandOption
-		For string options, the minimum allowed length.
-	]=]
 	self.minLength = optionData.min_length
 
-	--[=[
-		@prop maxLength number?
-		@within Classes.CommandOption
-		For string options, the maximum allowed length.
-	]=]
 	self.maxLength = optionData.max_length
 
-	--[=[
-		@prop autocomplete boolean?
-		@within Classes.CommandOption
-		Enable autocomplete interactions for this option.
-	]=]
 	self.autocomplete = optionData.autocomplete
 end
 

@@ -7,6 +7,16 @@
 	https://discord.com/developers/docs/resources/application#install-params-object
 ]=]
 
+--[=[
+	@prop scopes { apiTypes.OAuth2Scopes }
+	@within Classes.InstallParams
+]=]
+
+--[=[
+	@prop permissions Classes.Permission
+	@within Classes.InstallParams
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 
 local permission = require("../permission")
@@ -24,16 +34,8 @@ InstallParams.Prototype = {}
 	created or updated.
 ]=]
 function InstallParams.Prototype.sync(self: InstallParams, installParamsData: apiTypes.InstallParamsObject)
-	--[=[
-		@prop scopes { apiTypes.OAuth2Scopes }
-		@within Classes.InstallParams
-	]=]
 	self.scopes = installParamsData.scopes
 
-	--[=[
-		@prop permissions Classes.Permission
-		@within Classes.InstallParams
-	]=]
 	self.permissions = permission.new(installParamsData.permissions)
 end
 

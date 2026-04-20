@@ -7,6 +7,55 @@
 	https://discord.com/developers/docs/resources/guild#guild-prompt-object-prompt-prompt-structure
 ]=]
 
+--[=[
+	@prop id string
+	@within Classes.Prompt
+
+	The unique identifier for this prompt
+]=]
+
+--[=[
+	@prop type apiTypes.OnboardingPromptType
+	@within Classes.Prompt
+
+	The type of prompt this is, determines how it is displayed to users
+]=]
+
+--[=[
+	@prop options { Classes.Option }
+	@within Classes.Prompt
+
+	Array of options that users can select from this prompt
+]=]
+
+--[=[
+	@prop title string?
+	@within Classes.Prompt
+
+	The title shown to users when displaying this prompt
+]=]
+
+--[=[
+	@prop singleSelect boolean?
+	@within Classes.Prompt
+
+	Whether users can only select one option from this prompt
+]=]
+
+--[=[
+	@prop required boolean?
+	@within Classes.Prompt
+
+	Whether this prompt is required to be answered by users
+]=]
+
+--[=[
+	@prop inOnboarding boolean?
+	@within Classes.Prompt
+
+	Whether this prompt is shown during the onboarding flow
+]=]
+
 local apiTypes = require("../../../luau_packages/api_types")
 
 local option = require("./option")
@@ -30,60 +79,18 @@ function Prompt.Prototype.sync(self: Prompt, promptData: apiTypes.OnboardingProm
 		table.insert(optionsArray, option.new(optionData))
 	end
 
-	--[=[
-		@prop id string
-		@within Classes.Prompt
-
-		The unique identifier for this prompt
-	]=]
 	self.id = promptData.id
 
-	--[=[
-		@prop type apiTypes.OnboardingPromptType
-		@within Classes.Prompt
-
-		The type of prompt this is, determines how it is displayed to users
-	]=]
 	self.type = apiTypes.guild.OnboardingPromptType[promptData.type]
 
-	--[=[
-		@prop options { Classes.Option }
-		@within Classes.Prompt
-
-		Array of options that users can select from this prompt
-	]=]
 	self.options = optionsArray
 
-	--[=[
-		@prop title string?
-		@within Classes.Prompt
-
-		The title shown to users when displaying this prompt
-	]=]
 	self.title = promptData.title
 
-	--[=[
-		@prop singleSelect boolean?
-		@within Classes.Prompt
-
-		Whether users can only select one option from this prompt
-	]=]
 	self.singleSelect = promptData.single_select
 
-	--[=[
-		@prop required boolean?
-		@within Classes.Prompt
-
-		Whether this prompt is required to be answered by users
-	]=]
 	self.required = promptData.required
 
-	--[=[
-		@prop inOnboarding boolean?
-		@within Classes.Prompt
-
-		Whether this prompt is shown during the onboarding flow
-	]=]
 	self.inOnboarding = promptData.in_onboarding
 end
 

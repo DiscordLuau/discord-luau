@@ -7,6 +7,11 @@
 	https://discord.com/developers/docs/resources/channel#channel-object
 ]=]
 
+--[=[
+	@prop state state.State
+	@within Classes.GuildAnnouncement
+]=]
+
 local apiTypes = require("../../../luau_packages/api_types")
 local state = require("../../../luau_packages/state")
 local future = require("../../../luau_packages/future")
@@ -88,10 +93,6 @@ end
 	Responsible for constructing this class.
 ]=]
 function GuildAnnouncement.Interface.new(state: state.State, channelData: apiTypes.ChannelObject): GuildAnnouncement
-	--[=[
-		@prop state state.State
-		@within Classes.GuildAnnouncement
-	]=]
 	local self = setmetatable(
 		{
 			state = state,

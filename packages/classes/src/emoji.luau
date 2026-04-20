@@ -7,6 +7,54 @@
 	https://discord.com/developers/docs/resources/emoji#emoji-resource
 ]=]
 
+--[=[
+	@prop roles { apiTypes.Snowflake }?
+	@within Classes.Emoji
+	The roles that can use this emoji.
+]=]
+
+--[=[
+	@prop id apiTypes.Snowflake?
+	@within Classes.Emoji
+	The unique identifier for this emoji.
+]=]
+
+--[=[
+	@prop name string?
+	@within Classes.Emoji
+	The name of this emoji.
+]=]
+
+--[=[
+	@prop user Classes.User?
+	@within Classes.Emoji
+	The user who created this emoji.
+]=]
+
+--[=[
+	@prop requireColons boolean?
+	@within Classes.Emoji
+	Whether this emoji requires colons to be used.
+]=]
+
+--[=[
+	@prop managed boolean?
+	@within Classes.Emoji
+	Whether this emoji is managed by an integration.
+]=]
+
+--[=[
+	@prop animated boolean?
+	@within Classes.Emoji
+	Whether this emoji is animated.
+]=]
+
+--[=[
+	@prop available boolean?
+	@within Classes.Emoji
+	Whether this emoji is available for use.
+]=]
+
 local apiTypes = require("../luau_packages/api_types")
 
 local user = require("./user")
@@ -24,60 +72,20 @@ Emoji.Prototype = {}
 	created or updated.
 ]=]
 function Emoji.Prototype.sync(self: Emoji, emojiData: apiTypes.EmojiObject)
-	--[=[
-		@prop roles { apiTypes.Snowflake }?
-		@within Classes.Emoji
-		The roles that can use this emoji.
-	]=]
 	self.roles = emojiData.roles
 
-	--[=[
-		@prop id apiTypes.Snowflake?
-		@within Classes.Emoji
-		The unique identifier for this emoji.
-	]=]
 	self.id = emojiData.id
 
-	--[=[
-		@prop name string?
-		@within Classes.Emoji
-		The name of this emoji.
-	]=]
 	self.name = emojiData.name
 
-	--[=[
-		@prop user Classes.User?
-		@within Classes.Emoji
-		The user who created this emoji.
-	]=]
 	self.user = emojiData.user and user.new(emojiData.user)
 
-	--[=[
-		@prop requireColons boolean?
-		@within Classes.Emoji
-		Whether this emoji requires colons to be used.
-	]=]
 	self.requireColons = emojiData.require_colons
 
-	--[=[
-		@prop managed boolean?
-		@within Classes.Emoji
-		Whether this emoji is managed by an integration.
-	]=]
 	self.managed = emojiData.managed
 
-	--[=[
-		@prop animated boolean?
-		@within Classes.Emoji
-		Whether this emoji is animated.
-	]=]
 	self.animated = emojiData.animated
 
-	--[=[
-		@prop available boolean?
-		@within Classes.Emoji
-		Whether this emoji is available for use.
-	]=]
 	self.available = emojiData.available
 end
 

@@ -7,6 +7,30 @@
 	https://discord.com/developers/docs/resources/message#embed-object-embed-author-structure
 ]=]
 
+--[=[
+	@prop name string
+	@within Classes.Author
+	The name of the author.
+]=]
+
+--[=[
+	@prop url string?
+	@within Classes.Author
+	The URL of the author's profile or website.
+]=]
+
+--[=[
+	@prop iconUrl string?
+	@within Classes.Author
+	The URL of the author's icon.
+]=]
+
+--[=[
+	@prop proxyIconUrl string?
+	@within Classes.Author
+	The proxied URL of the author's icon.
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 
 local Author = {}
@@ -22,32 +46,12 @@ Author.Prototype = {}
 	created or updated.
 ]=]
 function Author.Prototype.sync(self: Author, authorData: apiTypes.EmbedAuthorObject)
-	--[=[
-		@prop name string
-		@within Classes.Author
-		The name of the author.
-	]=]
 	self.name = authorData.name
 
-	--[=[
-		@prop url string?
-		@within Classes.Author
-		The URL of the author's profile or website.
-	]=]
 	self.url = authorData.url
 
-	--[=[
-		@prop iconUrl string?
-		@within Classes.Author
-		The URL of the author's icon.
-	]=]
 	self.iconUrl = authorData.icon_url
 
-	--[=[
-		@prop proxyIconUrl string?
-		@within Classes.Author
-		The proxied URL of the author's icon.
-	]=]
 	self.proxyIconUrl = authorData.proxy_icon_url
 end
 

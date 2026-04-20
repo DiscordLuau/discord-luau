@@ -7,6 +7,27 @@
 	https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-choice-structure
 ]=]
 
+--[=[
+	@prop name string
+	@within Classes.Choice
+
+	The name of the choice that will be displayed to users when selecting this option.
+]=]
+
+--[=[
+	@prop nameLocalizations { [apiTypes.LanguageLocales]: string }?
+	@within Classes.Choice
+
+	Dictionary of localization overrides for the choice name. Keys are valid locale identifiers, values are localized names.
+]=]
+
+--[=[
+	@prop value string | number
+	@within Classes.Choice
+
+	The value that will be sent to your application when this choice is selected by a user.
+]=]
+
 local apiTypes = require("../../../luau_packages/api_types")
 
 local Choice = {}
@@ -22,28 +43,10 @@ Choice.Prototype = {}
 	created or updated.
 ]=]
 function Choice.Prototype.sync(self: Choice, choiceData: apiTypes.ApplicationCommandOptionChoiceObject)
-	--[=[
-		@prop name string
-		@within Classes.Choice
-
-		The name of the choice that will be displayed to users when selecting this option.
-	]=]
 	self.name = choiceData.name
 
-	--[=[
-		@prop nameLocalizations { [apiTypes.LanguageLocales]: string }?
-		@within Classes.Choice
-
-		Dictionary of localization overrides for the choice name. Keys are valid locale identifiers, values are localized names.
-	]=]
 	self.nameLocalizations = choiceData.name_localizations
 
-	--[=[
-		@prop value string | number
-		@within Classes.Choice
-
-		The value that will be sent to your application when this choice is selected by a user.
-	]=]
 	self.value = choiceData.value
 end
 

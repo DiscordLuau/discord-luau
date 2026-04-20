@@ -7,6 +7,34 @@
 	https://discord.com/developers/docs/resources/message#embed-object-embed-image-structure
 ]=]
 
+--[=[
+	@prop url string
+	@within Classes.Image
+
+	The source URL of the image. Only supports HTTP(S).
+]=]
+
+--[=[
+	@prop proxyUrl string?
+	@within Classes.Image
+
+	A proxied URL of the image. This is used to prevent malicious images from being loaded directly.
+]=]
+
+--[=[
+	@prop height number?
+	@within Classes.Image
+
+	The height of the image in pixels.
+]=]
+
+--[=[
+	@prop width number?
+	@within Classes.Image
+
+	The width of the image in pixels.
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 
 local Image = {}
@@ -22,36 +50,12 @@ Image.Prototype = {}
 	created or updated.
 ]=]
 function Image.Prototype.sync(self: Image, imageData: apiTypes.EmbedImageObject)
-	--[=[
-		@prop url string
-		@within Classes.Image
-
-		The source URL of the image. Only supports HTTP(S).
-	]=]
 	self.url = imageData.url
 
-	--[=[
-		@prop proxyUrl string?
-		@within Classes.Image
-
-		A proxied URL of the image. This is used to prevent malicious images from being loaded directly.
-	]=]
 	self.proxyUrl = imageData.proxy_url
 
-	--[=[
-		@prop height number?
-		@within Classes.Image
-
-		The height of the image in pixels.
-	]=]
 	self.height = imageData.height
 
-	--[=[
-		@prop width number?
-		@within Classes.Image
-
-		The width of the image in pixels.
-	]=]
 	self.width = imageData.width
 end
 

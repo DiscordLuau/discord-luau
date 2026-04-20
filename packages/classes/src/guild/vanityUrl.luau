@@ -7,6 +7,20 @@
 	https://discord.com/developers/docs/resources/guild#get-guild-vanity-url
 ]=]
 
+--[=[
+	@prop code string
+	@within Classes.VanityUrl
+
+	The unique code for this vanity URL. This code appears in the URL that users can use to join the guild.
+]=]
+
+--[=[
+	@prop uses number
+	@within Classes.VanityUrl
+
+	The number of times this vanity URL has been used to join the guild.
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 
 local VanityUrl = {}
@@ -22,20 +36,8 @@ VanityUrl.Prototype = {}
 	created or updated.
 ]=]
 function VanityUrl.Prototype.sync(self: VanityUrl, vanityUrlData: apiTypes.GuildVanityUrl)
-	--[=[
-		@prop code string
-		@within Classes.VanityUrl
-
-		The unique code for this vanity URL. This code appears in the URL that users can use to join the guild.
-	]=]
 	self.code = vanityUrlData.code
 
-	--[=[
-		@prop uses number
-		@within Classes.VanityUrl
-
-		The number of times this vanity URL has been used to join the guild.
-	]=]
 	self.uses = vanityUrlData.uses
 end
 

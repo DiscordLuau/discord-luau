@@ -7,6 +7,12 @@
 	https://discord.com/developers/docs/topics/permissions
 ]=]
 
+--[=[
+	@prop permission number
+	@within Classes.Permission
+	The permission bitfield representing the permissions granted.
+]=]
+
 local apiTypes = require("../luau_packages/api_types")
 
 local bit = require("../luau_packages/bit")
@@ -57,11 +63,6 @@ end
 function Permission.Interface.new(permission: string): Permission
 	local self = setmetatable(
 		{
-			--[=[
-				@prop permission number
-				@within Classes.Permission
-				The permission bitfield representing the permissions granted.
-			]=]
 			permission = tonumber(permission),
 		} :: Permission,
 		{ __index = Permission.Prototype }

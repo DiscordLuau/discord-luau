@@ -7,6 +7,22 @@
 	https://discord.com/developers/docs/interactions/message-components#select-menu-object-select-default-value-structure
 ]=]
 
+--[=[
+	@prop id string
+	@within Classes.DefaultValue
+
+	The ID of the default value. This is typically a snowflake ID representing a user, role, channel or other Discord entity
+	depending on the select menu type.
+]=]
+
+--[=[
+	@prop type string
+	@within Classes.DefaultValue
+
+	The type of select menu option this default value represents. This corresponds to one of the SelectDefaultValueType
+	values and determines what kind of entity the ID refers to.
+]=]
+
 local apiTypes = require("../../../../luau_packages/api_types")
 
 local DefaultValue = {}
@@ -22,22 +38,8 @@ DefaultValue.Prototype = {}
 	created or updated.
 ]=]
 function DefaultValue.Prototype.sync(self: DefaultValue, valueData: apiTypes.SelectDefaultValueObject)
-	--[=[
-		@prop id string
-		@within Classes.DefaultValue
-
-		The ID of the default value. This is typically a snowflake ID representing a user, role, channel or other Discord entity
-		depending on the select menu type.
-	]=]
 	self.id = valueData.id
 
-	--[=[
-		@prop type string
-		@within Classes.DefaultValue
-
-		The type of select menu option this default value represents. This corresponds to one of the SelectDefaultValueType
-		values and determines what kind of entity the ID refers to.
-	]=]
 	self.type = apiTypes.message.SelectDefaultValueType[valueData.type]
 end
 --[=[

@@ -8,6 +8,11 @@
 	https://discord.com/developers/docs/resources/message#message-object-message-flags
 ]=]
 
+--[=[
+	@prop flag number
+	The raw bitflag value for the message.
+]=]
+
 local bit = require("../../luau_packages/bit")
 
 local MessageBitflag = {}
@@ -133,10 +138,6 @@ end
 function MessageBitflag.Interface.new(flag: number): MessageBitflag
 	local self = setmetatable(
 		{
-			--[=[
-				@prop flag number
-				The raw bitflag value for the message.
-			]=]
 			flag = flag,
 		} :: MessageBitflag,
 		{ __index = MessageBitflag.Prototype }

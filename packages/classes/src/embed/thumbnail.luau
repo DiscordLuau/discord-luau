@@ -7,6 +7,34 @@
 	https://discord.com/developers/docs/resources/message#embed-object-embed-thumbnail-structure
 ]=]
 
+--[=[
+	@prop url string
+	@within Classes.Thumbnail
+
+	The source URL of the thumbnail
+]=]
+
+--[=[
+	@prop proxyUrl string?
+	@within Classes.Thumbnail
+
+	A proxied URL of the thumbnail
+]=]
+
+--[=[
+	@prop height number?
+	@within Classes.Thumbnail
+
+	Height of the thumbnail
+]=]
+
+--[=[
+	@prop width number?
+	@within Classes.Thumbnail
+
+	Width of the thumbnail
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 
 local Thumbnail = {}
@@ -22,36 +50,12 @@ Thumbnail.Prototype = {}
 	created or updated.
 ]=]
 function Thumbnail.Prototype.sync(self: Thumbnail, thumbnailData: apiTypes.EmbedThumbnailObject)
-	--[=[
-		@prop url string
-		@within Classes.Thumbnail
-
-		The source URL of the thumbnail
-	]=]
 	self.url = thumbnailData.url
 
-	--[=[
-		@prop proxyUrl string?
-		@within Classes.Thumbnail
-
-		A proxied URL of the thumbnail
-	]=]
 	self.proxyUrl = thumbnailData.proxy_url
 
-	--[=[
-		@prop height number?
-		@within Classes.Thumbnail
-
-		Height of the thumbnail
-	]=]
 	self.height = thumbnailData.height
 
-	--[=[
-		@prop width number?
-		@within Classes.Thumbnail
-
-		Width of the thumbnail
-	]=]
 	self.width = thumbnailData.width
 end
 

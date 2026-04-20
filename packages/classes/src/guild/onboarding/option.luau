@@ -7,6 +7,42 @@
 	https://discord.com/developers/docs/resources/guild#guild-onboarding-object-option-option-structure
 ]=]
 
+--[=[
+	@prop id string?
+	@within Classes.OnboardingOption
+	The unique identifier of this option
+]=]
+
+--[=[
+	@prop channelIds {string}
+	@within Classes.OnboardingOption
+	Array of channel IDs that will be added to the member when this option is selected
+]=]
+
+--[=[
+	@prop roleIds {string}
+	@within Classes.OnboardingOption
+	Array of role IDs that will be added to the member when this option is selected
+]=]
+
+--[=[
+	@prop emoji Classes.Emoji?
+	@within Classes.OnboardingOption
+	The emoji displayed alongside this option
+]=]
+
+--[=[
+	@prop title string?
+	@within Classes.OnboardingOption
+	The title of this option that will be displayed to users
+]=]
+
+--[=[
+	@prop description string?
+	@within Classes.OnboardingOption
+	The description of this option that will be displayed to users
+]=]
+
 local apiTypes = require("../../../luau_packages/api_types")
 
 local emoji = require("../../emoji")
@@ -24,46 +60,16 @@ Option.Prototype = {}
 	created or updated.
 ]=]
 function Option.Prototype.sync(self: Option, optionData: apiTypes.PromptOptionObject)
-	--[=[
-		@prop id string?
-		@within Classes.OnboardingOption
-		The unique identifier of this option
-	]=]
 	self.id = optionData.id
 
-	--[=[
-		@prop channelIds {string}
-		@within Classes.OnboardingOption
-		Array of channel IDs that will be added to the member when this option is selected
-	]=]
 	self.channelIds = optionData.channel_ids
 
-	--[=[
-		@prop roleIds {string}
-		@within Classes.OnboardingOption
-		Array of role IDs that will be added to the member when this option is selected
-	]=]
 	self.roleIds = optionData.role_ids
 
-	--[=[
-		@prop emoji Classes.Emoji?
-		@within Classes.OnboardingOption
-		The emoji displayed alongside this option
-	]=]
 	self.emoji = optionData.emoji and emoji.new(optionData.emoji)
 
-	--[=[
-		@prop title string?
-		@within Classes.OnboardingOption
-		The title of this option that will be displayed to users
-	]=]
 	self.title = optionData.title
 
-	--[=[
-		@prop description string?
-		@within Classes.OnboardingOption
-		The description of this option that will be displayed to users
-	]=]
 	self.description = optionData.description
 end
 

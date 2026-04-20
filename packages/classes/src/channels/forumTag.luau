@@ -7,6 +7,41 @@
 	https://discord.com/developers/docs/resources/channel#forum-tag-object
 ]=]
 
+--[=[
+	@prop id string
+	@within Classes.ForumTag
+
+	The unique identifier for this forum tag
+]=]
+
+--[=[
+	@prop name string
+	@within Classes.ForumTag
+
+	The name of the forum tag
+]=]
+
+--[=[
+	@prop moderated boolean
+	@within Classes.ForumTag
+
+	Whether this tag can only be added to or removed by a moderator
+]=]
+
+--[=[
+	@prop emojiId string?
+	@within Classes.ForumTag
+
+	The id of the emoji used as the tag's icon, if the tag has a custom emoji
+]=]
+
+--[=[
+	@prop emojiName string?
+	@within Classes.ForumTag
+
+	The name of the emoji used as the tag's icon
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 
 local ForumTag = {}
@@ -22,44 +57,14 @@ ForumTag.Prototype = {}
 	created or updated.
 ]=]
 function ForumTag.Prototype.sync(self: ForumTag, forumTagData: apiTypes.ForumTagObject)
-	--[=[
-		@prop id string
-		@within Classes.ForumTag
-
-		The unique identifier for this forum tag
-	]=]
 	self.id = forumTagData.id
 
-	--[=[
-		@prop name string
-		@within Classes.ForumTag
-
-		The name of the forum tag
-	]=]
 	self.name = forumTagData.name
 
-	--[=[
-		@prop moderated boolean
-		@within Classes.ForumTag
-
-		Whether this tag can only be added to or removed by a moderator
-	]=]
 	self.moderated = forumTagData.moderated
 
-	--[=[
-		@prop emojiId string?
-		@within Classes.ForumTag
-
-		The id of the emoji used as the tag's icon, if the tag has a custom emoji
-	]=]
 	self.emojiId = forumTagData.emoji_id
 
-	--[=[
-		@prop emojiName string?
-		@within Classes.ForumTag
-
-		The name of the emoji used as the tag's icon
-	]=]
 	self.emojiName = forumTagData.emoji_name
 end
 

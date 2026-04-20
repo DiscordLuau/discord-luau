@@ -7,6 +7,102 @@
 	https://discord.com/developers/docs/resources/scheduledevent#scheduledevent-object
 ]=]
 
+--[=[
+	@prop id string
+	@within Classes.ScheduledEvent
+	The unique identifier for this scheduled event
+]=]
+
+--[=[
+	@prop guildId string
+	@within Classes.ScheduledEvent
+	The guild id which the scheduled event belongs to
+]=]
+
+--[=[
+	@prop channelId string?
+	@within Classes.ScheduledEvent
+	The channel id in which the scheduled event will be hosted, or null if scheduled entity type is EXTERNAL
+]=]
+
+--[=[
+	@prop creatorId string?
+	@within Classes.ScheduledEvent
+	The id of the user that created the scheduled event
+]=]
+
+--[=[
+	@prop name string
+	@within Classes.ScheduledEvent
+	The name of the scheduled event
+]=]
+
+--[=[
+	@prop description string?
+	@within Classes.ScheduledEvent
+	The description of the scheduled event
+]=]
+
+--[=[
+	@prop scheduledStartTime std_polyfills.DateTime
+	@within Classes.ScheduledEvent
+	The time the scheduled event will start
+]=]
+
+--[=[
+	@prop scheduledEndTime std_polyfills.DateTime?
+	@within Classes.ScheduledEvent
+	The time the scheduled event will end, if it has a scheduled end time
+]=]
+
+--[=[
+	@prop privacyLevel apiTypes.ScheduledEventPrivacyLevel
+	@within Classes.ScheduledEvent
+	The privacy level of the scheduled event
+]=]
+
+--[=[
+	@prop status apiTypes.SchedledEventStatus
+	@within Classes.ScheduledEvent
+	The status of the scheduled event
+]=]
+
+--[=[
+	@prop entityType apiTypes.SchedledEventEntityType
+	@within Classes.ScheduledEvent
+	The type of the scheduled event
+]=]
+
+--[=[
+	@prop entityId string?
+	@within Classes.ScheduledEvent
+	The id of an entity associated with the scheduled event
+]=]
+
+--[=[
+	@prop location string?
+	@within Classes.ScheduledEvent
+	Location of the scheduled event
+]=]
+
+--[=[
+	@prop creator Classes.User?
+	@within Classes.ScheduledEvent
+	The user that created the scheduled event
+]=]
+
+--[=[
+	@prop userCount number?
+	@within Classes.ScheduledEvent
+	The number of users subscribed to the scheduled event
+]=]
+
+--[=[
+	@prop image string?
+	@within Classes.ScheduledEvent
+	The cover image hash of the scheduled event
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 local stdPolyfills = require("../../lune_packages/std_polyfills")
 
@@ -25,117 +121,37 @@ ScheduledEvent.Prototype = {}
 	created or updated.
 ]=]
 function ScheduledEvent.Prototype.sync(self: ScheduledEvent, scheduledEventData: apiTypes.GuildScheduledEventObject)
-	--[=[
-		@prop id string
-		@within Classes.ScheduledEvent
-		The unique identifier for this scheduled event
-	]=]
 	self.id = scheduledEventData.id
 
-	--[=[
-		@prop guildId string
-		@within Classes.ScheduledEvent
-		The guild id which the scheduled event belongs to
-	]=]
 	self.guildId = scheduledEventData.guild_id
 
-	--[=[
-		@prop channelId string?
-		@within Classes.ScheduledEvent
-		The channel id in which the scheduled event will be hosted, or null if scheduled entity type is EXTERNAL
-	]=]
 	self.channelId = scheduledEventData.channel_id
 
-	--[=[
-		@prop creatorId string?
-		@within Classes.ScheduledEvent
-		The id of the user that created the scheduled event
-	]=]
 	self.creatorId = scheduledEventData.creator_id
 
-	--[=[
-		@prop name string
-		@within Classes.ScheduledEvent
-		The name of the scheduled event
-	]=]
 	self.name = scheduledEventData.name
 
-	--[=[
-		@prop description string?
-		@within Classes.ScheduledEvent
-		The description of the scheduled event
-	]=]
 	self.description = scheduledEventData.description
 
-	--[=[
-		@prop scheduledStartTime std_polyfills.DateTime
-		@within Classes.ScheduledEvent
-		The time the scheduled event will start
-	]=]
 	self.scheduledStartTime = stdPolyfills.datetime.fromIsoDate(scheduledEventData.scheduled_start_time)
 
-	--[=[
-		@prop scheduledEndTime std_polyfills.DateTime?
-		@within Classes.ScheduledEvent
-		The time the scheduled event will end, if it has a scheduled end time
-	]=]
 	self.scheduledEndTime = scheduledEventData.scheduled_end_time
 		and stdPolyfills.datetime.fromIsoDate(scheduledEventData.scheduled_end_time)
 
-	--[=[
-		@prop privacyLevel apiTypes.ScheduledEventPrivacyLevel
-		@within Classes.ScheduledEvent
-		The privacy level of the scheduled event
-	]=]
 	self.privacyLevel = apiTypes.guild.ScheduledEventPrivacyLevel[scheduledEventData.privacy_level]
 
-	--[=[
-		@prop status apiTypes.SchedledEventStatus
-		@within Classes.ScheduledEvent
-		The status of the scheduled event
-	]=]
 	self.status = apiTypes.guild.SchedledEventStatus[scheduledEventData.status + 1]
 
-	--[=[
-		@prop entityType apiTypes.SchedledEventEntityType
-		@within Classes.ScheduledEvent
-		The type of the scheduled event
-	]=]
 	self.entityType = apiTypes.guild.SchedledEventEntityType[scheduledEventData.entity_type + 1]
 
-	--[=[
-		@prop entityId string?
-		@within Classes.ScheduledEvent
-		The id of an entity associated with the scheduled event
-	]=]
 	self.entityId = scheduledEventData.entity_id
 
-	--[=[
-		@prop location string?
-		@within Classes.ScheduledEvent
-		Location of the scheduled event
-	]=]
 	self.location = scheduledEventData.entity_metadata and scheduledEventData.entity_metadata.location
 
-	--[=[
-		@prop creator Classes.User?
-		@within Classes.ScheduledEvent
-		The user that created the scheduled event
-	]=]
 	self.creator = scheduledEventData.creator and user.new(scheduledEventData.creator)
 
-	--[=[
-		@prop userCount number?
-		@within Classes.ScheduledEvent
-		The number of users subscribed to the scheduled event
-	]=]
 	self.userCount = scheduledEventData.user_count
 
-	--[=[
-		@prop image string?
-		@within Classes.ScheduledEvent
-		The cover image hash of the scheduled event
-	]=]
 	self.image = scheduledEventData.image
 end
 

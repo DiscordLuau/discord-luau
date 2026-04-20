@@ -7,6 +7,20 @@
 	https://discord.com/developers/docs/resources/channel#default-reaction-object
 ]=]
 
+--[=[
+	@prop emojiId string?
+	@within Classes.DefaultReaction
+
+	The ID of the emoji to use as the default reaction
+]=]
+
+--[=[
+	@prop emojiName string?
+	@within Classes.DefaultReaction
+
+	The name of the emoji to use as the default reaction
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 
 local DefaultReaction = {}
@@ -22,20 +36,8 @@ DefaultReaction.Prototype = {}
 	created or updated.
 ]=]
 function DefaultReaction.Prototype.sync(self: DefaultReaction, DefaultReactionData: apiTypes.DefaultReactionObject)
-	--[=[
-		@prop emojiId string?
-		@within Classes.DefaultReaction
-
-		The ID of the emoji to use as the default reaction
-	]=]
 	self.emojiId = DefaultReactionData.emoji_id
 
-	--[=[
-		@prop emojiName string?
-		@within Classes.DefaultReaction
-
-		The name of the emoji to use as the default reaction
-	]=]
 	self.emojiName = DefaultReactionData.emoji_name
 end
 

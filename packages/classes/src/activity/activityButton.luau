@@ -7,6 +7,20 @@
 	https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-buttons
 ]=]
 
+--[=[
+	@prop label string
+	@within Classes.ActivityButton
+
+	The text shown on the button (1-32 characters)
+]=]
+
+--[=[
+	@prop url string
+	@within Classes.ActivityButton
+
+	The url opened when clicking the button (1-512 characters)
+]=]
+
 local ActivityButton = {}
 
 ActivityButton.Interface = {}
@@ -21,20 +35,8 @@ ActivityButton.Prototype = {}
 function ActivityButton.Interface.new(label: string, url: string): ActivityButton
 	local self = setmetatable(
 		{
-			--[=[
-				@prop label string
-				@within Classes.ActivityButton
-
-				The text shown on the button (1-32 characters)
-			]=]
 			label = label,
 
-			--[=[
-				@prop url string
-				@within Classes.ActivityButton
-
-				The url opened when clicking the button (1-512 characters)
-			]=]
 			url = url,
 		} :: ActivityButton,
 		{ __index = ActivityButton.Prototype }

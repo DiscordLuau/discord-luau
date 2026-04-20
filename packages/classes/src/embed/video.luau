@@ -7,6 +7,30 @@
 	https://discord.com/developers/docs/resources/message#embed-object-embed-video-structure
 ]=]
 
+--[=[
+	@prop url string
+	@within Classes.Video
+	The source URL of the video
+]=]
+
+--[=[
+	@prop proxyUrl string?
+	@within Classes.Video
+	A proxied URL of the video
+]=]
+
+--[=[
+	@prop height number?
+	@within Classes.Video
+	Height of the video
+]=]
+
+--[=[
+	@prop width number?
+	@within Classes.Video
+	Width of the video
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 
 local Video = {}
@@ -22,32 +46,12 @@ Video.Prototype = {}
 	created or updated.
 ]=]
 function Video.Prototype.sync(self: Video, videoData: apiTypes.EmbedVideoObject)
-	--[=[
-		@prop url string
-		@within Classes.Video
-		The source URL of the video
-	]=]
 	self.url = videoData.url
 
-	--[=[
-		@prop proxyUrl string?
-		@within Classes.Video
-		A proxied URL of the video
-	]=]
 	self.proxyUrl = videoData.proxy_url
 
-	--[=[
-		@prop height number?
-		@within Classes.Video
-		Height of the video
-	]=]
 	self.height = videoData.height
 
-	--[=[
-		@prop width number?
-		@within Classes.Video
-		Width of the video
-	]=]
 	self.width = videoData.width
 end
 

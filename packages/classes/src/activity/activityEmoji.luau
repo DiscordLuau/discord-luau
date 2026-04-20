@@ -7,6 +7,25 @@
 	https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-emoji
 ]=]
 
+--[=[
+	@prop animated boolean?
+	@within Classes.ActivityEmoji
+	
+	Whether this emoji is animated. This is only present if the emoji is custom.
+]=]
+
+--[=[
+	@prop name string
+	@within Classes.ActivityEmoji
+	
+	The name of the emoji. For custom emojis this is the name of the emoji, for default emojis this is the unicode character.
+]=]
+
+--[=[
+	@prop id string
+	@within Classes.ActivityEmoji
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 
 local ActivityEmoji = {}
@@ -22,20 +41,8 @@ ActivityEmoji.Prototype = {}
 	created or updated.
 ]=]
 function ActivityEmoji.Prototype.sync(self: ActivityEmoji, emojiData: apiTypes.ActivityEmojiObject)
-	--[=[
-		@prop animated boolean?
-		@within Classes.ActivityEmoji
-		
-		Whether this emoji is animated. This is only present if the emoji is custom.
-	]=]
 	self.animated = emojiData.animated
 
-	--[=[
-		@prop name string
-		@within Classes.ActivityEmoji
-		
-		The name of the emoji. For custom emojis this is the name of the emoji, for default emojis this is the unicode character.
-	]=]
 	self.name = emojiData.name
 end
 
@@ -48,10 +55,6 @@ end
 function ActivityEmoji.Interface.new(id: apiTypes.Snowflake, emojiData: apiTypes.ActivityEmojiObject?): ActivityEmoji
 	local self = setmetatable(
 		{
-			--[=[
-				@prop id string
-				@within Classes.ActivityEmoji
-			]=]
 			id = id,
 		} :: ActivityEmoji,
 		{ __index = ActivityEmoji.Prototype }

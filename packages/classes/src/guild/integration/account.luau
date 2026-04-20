@@ -7,6 +7,20 @@
 	https://discord.com/developers/docs/resources/guild#integration-account-object
 ]=]
 
+--[=[
+	@prop id string
+	@within Classes.Account
+
+	The unique identifier for this integration account
+]=]
+
+--[=[
+	@prop name string
+	@within Classes.Account
+
+	The name of the integration account
+]=]
+
 local apiTypes = require("../../../luau_packages/api_types")
 
 local Account = {}
@@ -22,20 +36,8 @@ Account.Prototype = {}
 	created or updated.
 ]=]
 function Account.Prototype.sync(self: Account, accountData: apiTypes.IntegrationAccountObject)
-	--[=[
-		@prop id string
-		@within Classes.Account
-
-		The unique identifier for this integration account
-	]=]
 	self.id = accountData.id
 
-	--[=[
-		@prop name string
-		@within Classes.Account
-
-		The name of the integration account
-	]=]
 	self.name = accountData.name
 end
 

@@ -7,6 +7,20 @@
 	https://discord.com/developers/docs/resources/guild#guild-widget-settings-object
 ]=]
 
+--[=[
+	@prop enabled boolean?
+	@within Classes.WidgetSettings
+
+	Whether the widget is enabled for this guild
+]=]
+
+--[=[
+	@prop channelId string?
+	@within Classes.WidgetSettings
+
+	The channel id that the widget will generate an invite to, or null if set to no invite
+]=]
+
 local apiTypes = require("../../../luau_packages/api_types")
 
 local WidgetSettings = {}
@@ -22,20 +36,8 @@ WidgetSettings.Prototype = {}
 	created or updated.
 ]=]
 function WidgetSettings.Prototype.sync(self: WidgetSettings, widgetSettingsData: apiTypes.GuildWidgetSettingsObject)
-	--[=[
-		@prop enabled boolean?
-		@within Classes.WidgetSettings
-
-		Whether the widget is enabled for this guild
-	]=]
 	self.enabled = widgetSettingsData.enabled
 
-	--[=[
-		@prop channelId string?
-		@within Classes.WidgetSettings
-
-		The channel id that the widget will generate an invite to, or null if set to no invite
-	]=]
 	self.channelId = widgetSettingsData.channel_id
 end
 

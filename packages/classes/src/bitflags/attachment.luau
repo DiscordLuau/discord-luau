@@ -7,6 +7,12 @@
 	https://discord.com/developers/docs/resources/message#attachment-object-attachment-flags
 ]=]
 
+--[=[
+	@prop flag number
+	@within Classes.AttachmentBitflag
+	The bitfield representing the attachment flags.
+]=]
+
 local bit = require("../../luau_packages/bit")
 
 local AttachmentBitflag = {}
@@ -40,11 +46,6 @@ end
 function AttachmentBitflag.Interface.new(flag: number): AttachmentBitflag
 	local self = setmetatable(
 		{
-			--[=[
-				@prop flag number
-				@within Classes.AttachmentBitflag
-				The bitfield representing the attachment flags.
-			]=]
 			flag = flag,
 		} :: AttachmentBitflag,
 		{ __index = AttachmentBitflag.Prototype }

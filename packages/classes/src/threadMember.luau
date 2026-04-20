@@ -7,6 +7,36 @@
 	https://discord.com/developers/docs/resources/channel#thread-member-object
 ]=]
 
+--[=[
+	@prop joinTimestamp DateTime
+	@within Classes.ThreadMember
+	The timestamp when this user joined the thread.
+]=]
+
+--[=[
+	@prop flags ThreadMemberBitflag
+	@within Classes.ThreadMember
+	The flags that indicate various properties and states of this thread member.
+]=]
+
+--[=[
+	@prop member Member?
+	@within Classes.ThreadMember
+	The guild member object for this user, if they are a member of the guild.
+]=]
+
+--[=[
+	@prop id string?
+	@within Classes.ThreadMember
+	The unique identifier for this thread member.
+]=]
+
+--[=[
+	@prop userId string?
+	@within Classes.ThreadMember
+	The ID of the user who is a member of this thread.
+]=]
+
 local stdPolyfills = require("../lune_packages/std_polyfills")
 
 local apiTypes = require("../luau_packages/api_types")
@@ -28,39 +58,14 @@ ThreadMember.Prototype = {}
 	created or updated.
 ]=]
 function ThreadMember.Prototype.sync(self: ThreadMember, threadMemberData: apiTypes.ThreadMemberObject)
-	--[=[
-		@prop joinTimestamp DateTime
-		@within Classes.ThreadMember
-		The timestamp when this user joined the thread.
-	]=]
 	self.joinTimestamp = stdPolyfills.datetime.fromIsoDate(threadMemberData.join_timestamp)
 
-	--[=[
-		@prop flags ThreadMemberBitflag
-		@within Classes.ThreadMember
-		The flags that indicate various properties and states of this thread member.
-	]=]
 	self.flags = threadMemberData.flags and threadMemberBitflag.new(threadMemberData.flags)
 
-	--[=[
-		@prop member Member?
-		@within Classes.ThreadMember
-		The guild member object for this user, if they are a member of the guild.
-	]=]
 	self.member = threadMemberData.member and member.new(self.state, self.guildId, threadMemberData.member)
 
-	--[=[
-		@prop id string?
-		@within Classes.ThreadMember
-		The unique identifier for this thread member.
-	]=]
 	self.id = threadMemberData.id
 
-	--[=[
-		@prop userId string?
-		@within Classes.ThreadMember
-		The ID of the user who is a member of this thread.
-	]=]
 	self.userId = threadMemberData.user_id
 end
 

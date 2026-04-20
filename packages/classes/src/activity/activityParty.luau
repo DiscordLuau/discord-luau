@@ -7,6 +7,27 @@
 	https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-party
 ]=]
 
+--[=[
+	@prop id string
+	@within Classes.ActivityParty
+	
+	The unique identifier for this activity party
+]=]
+
+--[=[
+	@prop currentSize number
+	@within Classes.ActivityParty
+	
+	The current size of the party
+]=]
+
+--[=[
+	@prop maxSize number
+	@within Classes.ActivityParty
+	
+	The maximum size the party can be
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 
 local ActivityParty = {}
@@ -23,28 +44,10 @@ ActivityParty.Prototype = {}
 function ActivityParty.Interface.new(id: apiTypes.Snowflake, currentSize: number, maxSize: number): ActivityParty
 	local self = setmetatable(
 		{
-			--[=[
-				@prop id string
-				@within Classes.ActivityParty
-				
-				The unique identifier for this activity party
-			]=]
 			id = id,
 
-			--[=[
-				@prop currentSize number
-				@within Classes.ActivityParty
-				
-				The current size of the party
-			]=]
 			currentSize = currentSize,
 
-			--[=[
-				@prop maxSize number
-				@within Classes.ActivityParty
-				
-				The maximum size the party can be
-			]=]
 			maxSize = maxSize,
 		} :: ActivityParty,
 		{ __index = ActivityParty.Prototype }

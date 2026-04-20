@@ -7,6 +7,18 @@
 	https://discord.com/developers/docs/resources/poll#poll-answer-object-poll-answer-object-structure
 ]=]
 
+--[=[
+	@prop answerId number
+	@within Classes.Answer
+	The unique identifier for this poll answer option
+]=]
+
+--[=[
+	@prop pollMedia Classes.MediaObject
+	@within Classes.Answer
+	The media content representing this answer option
+]=]
+
 local apiTypes = require("../../../luau_packages/api_types")
 
 local mediaObject = require("./mediaObject")
@@ -24,18 +36,8 @@ Answer.Prototype = {}
 	created or updated.
 ]=]
 function Answer.Prototype.sync(self: Answer, answerData: apiTypes.PollAnswerObject)
-	--[=[
-		@prop answerId number
-		@within Classes.Answer
-		The unique identifier for this poll answer option
-	]=]
 	self.answerId = answerData.answer_id
 
-	--[=[
-		@prop pollMedia Classes.MediaObject
-		@within Classes.Answer
-		The media content representing this answer option
-	]=]
 	self.pollMedia = mediaObject.new(answerData.poll_media)
 end
 

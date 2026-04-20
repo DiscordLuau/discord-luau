@@ -7,6 +7,36 @@
 	https://discord.com/developers/docs/resources/guild#guild-onboarding-object
 ]=]
 
+--[=[
+	@prop guildId string
+	@within Classes.Onboarding
+	The unique identifier of the guild this onboarding object belongs to
+]=]
+
+--[=[
+	@prop prompts { Classes.Prompt }
+	@within Classes.Onboarding
+	Array of prompts shown during onboarding and in customize community
+]=]
+
+--[=[
+	@prop defaultChannelIds { string }
+	@within Classes.Onboarding
+	Array of channel IDs that members get opted into automatically
+]=]
+
+--[=[
+	@prop enabled boolean
+	@within Classes.Onboarding
+	Whether onboarding is enabled in the guild
+]=]
+
+--[=[
+	@prop mode apiTypes.OnboardingMode
+	@within Classes.Onboarding
+	Current mode of onboarding, determines what users can see and interact with
+]=]
+
 local apiTypes = require("../../../luau_packages/api_types")
 
 local prompt = require("./prompt")
@@ -30,39 +60,14 @@ function Onboarding.Prototype.sync(self: Onboarding, onboardingData: apiTypes.Gu
 		table.insert(promptArray, prompt.new(promptData))
 	end
 
-	--[=[
-		@prop guildId string
-		@within Classes.Onboarding
-		The unique identifier of the guild this onboarding object belongs to
-	]=]
 	self.guildId = onboardingData.guild_id
 
-	--[=[
-		@prop prompts { Classes.Prompt }
-		@within Classes.Onboarding
-		Array of prompts shown during onboarding and in customize community
-	]=]
 	self.prompts = promptArray
 
-	--[=[
-		@prop defaultChannelIds { string }
-		@within Classes.Onboarding
-		Array of channel IDs that members get opted into automatically
-	]=]
 	self.defaultChannelIds = onboardingData.default_channel_ids
 
-	--[=[
-		@prop enabled boolean
-		@within Classes.Onboarding
-		Whether onboarding is enabled in the guild
-	]=]
 	self.enabled = onboardingData.enabled
 
-	--[=[
-		@prop mode apiTypes.OnboardingMode
-		@within Classes.Onboarding
-		Current mode of onboarding, determines what users can see and interact with
-	]=]
 	self.mode = apiTypes.guild.OnboardingMode[onboardingData.mode]
 end
 

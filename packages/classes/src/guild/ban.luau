@@ -7,6 +7,31 @@
 	https://discord.com/developers/docs/resources/guild#ban-object
 ]=]
 
+--[=[
+	@prop reason string?
+	@within Classes.Ban
+	
+	The reason provided when banning the user. This field may be null if no reason was provided when creating
+	the ban.
+]=]
+
+--[=[
+	@prop user Classes.User
+	@within Classes.Ban
+	
+	The banned user object containing information about the user who was banned from the guild.
+]=]
+
+--[=[
+	@prop state lune.State
+	@within Classes.Ban
+]=]
+
+--[=[
+	@prop guildId string
+	@within Classes.Ban
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 local state = require("../../luau_packages/state")
 local future = require("../../luau_packages/future")
@@ -43,21 +68,8 @@ end
 	created or updated.
 ]=]
 function Ban.Prototype.sync(self: Ban, banData: apiTypes.BanObject)
-	--[=[
-		@prop reason string?
-		@within Classes.Ban
-		
-		The reason provided when banning the user. This field may be null if no reason was provided when creating
-		the ban.
-	]=]
 	self.reason = banData.reason
 
-	--[=[
-		@prop user Classes.User
-		@within Classes.Ban
-		
-		The banned user object containing information about the user who was banned from the guild.
-	]=]
 	self.user = user.new(banData.user)
 end
 
@@ -70,16 +82,8 @@ end
 function Ban.Interface.new(state: state.State, guildId: string, banData: apiTypes.BanObject): Ban
 	local self = setmetatable(
 		{
-			--[=[
-				@prop state lune.State
-				@within Classes.Ban
-			]=]
 			state = state,
 
-			--[=[
-				@prop guildId string
-				@within Classes.Ban
-			]=]
 			guildId = guildId,
 		} :: Ban,
 		{ __index = Ban.Prototype }

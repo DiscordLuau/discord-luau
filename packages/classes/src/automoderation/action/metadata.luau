@@ -7,6 +7,28 @@
 	https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-action-object-action-metadata
 ]=]
 
+--[=[
+	@prop channelId string
+	@within Classes.ActionMetadata
+
+	The ID of the channel to which content should be logged. This is required when the action type is set to
+	SEND_ALERT_MESSAGE.
+]=]
+
+--[=[
+	@prop durationSeconds number
+	@within Classes.ActionMetadata
+
+	The timeout duration in seconds. This is required when the action type is set to TIMEOUT.
+]=]
+
+--[=[
+	@prop customMessage string?
+	@within Classes.ActionMetadata
+
+	A custom message that will be displayed to members when their message is blocked. Maximum 150 characters.
+]=]
+
 local apiTypes = require("../../../luau_packages/api_types")
 
 local ActionMetadata = {}
@@ -25,29 +47,10 @@ function ActionMetadata.Prototype.sync(
 	self: ActionMetadata,
 	actionMetadataData: apiTypes.AutmoderationActionMetadataObject
 )
-	--[=[
-		@prop channelId string
-		@within Classes.ActionMetadata
-
-		The ID of the channel to which content should be logged. This is required when the action type is set to
-		SEND_ALERT_MESSAGE.
-	]=]
 	self.channelId = actionMetadataData.channel_id
 
-	--[=[
-		@prop durationSeconds number
-		@within Classes.ActionMetadata
-
-		The timeout duration in seconds. This is required when the action type is set to TIMEOUT.
-	]=]
 	self.durationSeconds = actionMetadataData.duration_seconds
 
-	--[=[
-		@prop customMessage string?
-		@within Classes.ActionMetadata
-
-		A custom message that will be displayed to members when their message is blocked. Maximum 150 characters.
-	]=]
 	self.customMessage = actionMetadataData.custom_message
 end
 

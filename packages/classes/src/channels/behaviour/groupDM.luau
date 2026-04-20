@@ -11,6 +11,36 @@
 	- Handling group DM specific data (recipients, icon, owner, etc.)
 ]=]
 
+--[=[
+	@within Classes.GroupDMBehaviour
+	@prop recipients { Classes.User }
+	The users in the Group DM channel.
+]=]
+
+--[=[
+	@within Classes.GroupDMBehaviour
+	@prop icon string?
+	The icon hash of the Group DM channel.
+]=]
+
+--[=[
+	@within Classes.GroupDMBehaviour
+	@prop ownerId string?
+	The ID of the user who created the Group DM channel.
+]=]
+
+--[=[
+	@within Classes.GroupDMBehaviour
+	@prop applicationId string?
+	The ID of the application that created the Group DM channel, if it was created by an application.
+]=]
+
+--[=[
+	@within Classes.GroupDMBehaviour
+	@prop managed boolean
+	Whether the Group DM channel is managed by an application.
+]=]
+
 local apiTypes = require("../../../luau_packages/api_types")
 local future = require("../../../luau_packages/future")
 local rest = require("../../../luau_packages/rest")
@@ -101,39 +131,14 @@ function GroupDMBehaviour.Interface.inheritProperties(class: any, channelData: a
 		table.insert(recipientArray, user.new(recipient))
 	end
 
-	--[=[
-		@within Classes.GroupDMBehaviour
-		@prop recipients { Classes.User }
-		The users in the Group DM channel.
-	]=]
 	class.recipients = recipientArray
 
-	--[=[
-		@within Classes.GroupDMBehaviour
-		@prop icon string?
-		The icon hash of the Group DM channel.
-	]=]
 	class.icon = channelData.icon
 
-	--[=[
-		@within Classes.GroupDMBehaviour
-		@prop ownerId string?
-		The ID of the user who created the Group DM channel.
-	]=]
 	class.ownerId = channelData.owner_id
 
-	--[=[
-		@within Classes.GroupDMBehaviour
-		@prop applicationId string?
-		The ID of the application that created the Group DM channel, if it was created by an application.
-	]=]
 	class.applicationId = channelData.application_id
 
-	--[=[
-		@within Classes.GroupDMBehaviour
-		@prop managed boolean
-		Whether the Group DM channel is managed by an application.
-	]=]
 	class.managed = channelData.managed
 end
 

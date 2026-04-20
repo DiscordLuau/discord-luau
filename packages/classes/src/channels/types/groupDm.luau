@@ -7,6 +7,11 @@
 	https://discord.com/developers/docs/resources/channel#channel-object
 ]=]
 
+--[=[
+	@prop state Classes.State
+	@within Classes.GroupDM
+]=]
+
 local apiTypes = require("../../../luau_packages/api_types")
 local state = require("../../../luau_packages/state")
 
@@ -47,10 +52,6 @@ end
 function GroupDM.Interface.new(state: state.State, channelData: apiTypes.ChannelObject): GroupDM
 	local self = setmetatable(
 		{
-			--[=[
-				@prop state Classes.State
-				@within Classes.GroupDM
-			]=]
 			state = state,
 		} :: GroupDM,
 		{ __index = GroupDM.Prototype }

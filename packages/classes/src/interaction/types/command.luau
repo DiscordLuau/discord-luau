@@ -6,6 +6,16 @@
 	@__index Command.Prototype
 ]=]
 
+--[=[
+	@prop state state.State
+	@within Command
+]=]
+
+--[=[
+	@prop isDeferred boolean
+	@within Command
+]=]
+
 -- selene: allow(unused_variable)
 local state = require("../../../luau_packages/state")
 local apiTypes = require("../../../luau_packages/api_types")
@@ -145,16 +155,8 @@ end
 function Command.Interface.new(state: state.State, interactionData: apiTypes.InteractionObject): Command
 	local self = setmetatable(
 		{
-			--[=[
-				@prop state state.State
-				@within Command
-			]=]
 			state = state,
 
-			--[=[
-				@prop isDeferred boolean
-				@within Command
-			]=]
 			isDeferred = false,
 		} :: Command,
 		{ __index = Command.Prototype }

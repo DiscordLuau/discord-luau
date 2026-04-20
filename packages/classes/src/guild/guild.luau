@@ -8,6 +8,252 @@
 	https://discord.com/developers/docs/resources/guild#guild-object
 ]=]
 
+--[=[
+	@within Classes.Guild
+	@prop stickers {Classes.Sticker}
+	Collection of stickers in the guild
+]=]
+
+--[=[
+	@within Classes.Guild
+	@prop roles {Classes.Role}
+	Collection of roles in the guild
+]=]
+
+--[=[
+	@within Classes.Guild
+	@prop emojis {Classes.Emoji}
+	Collection of emojis in the guild
+]=]
+
+--[=[
+	@within Classes.Guild
+	@prop verificationLevel string
+	Verification level required for the guild
+]=]
+
+--[=[
+	@within Classes.Guild
+	@prop defaultMessageNotifications string
+	Default message notifications level
+]=]
+
+--[=[
+	@within Classes.Guild
+	@prop explicitContentFilter string
+	Explicit content filter level
+]=]
+
+--[=[
+	@within Classes.Guild
+	@prop premiumTier string
+	Premium tier (Server Boost level)
+]=]
+
+--[=[
+	@within Classes.Guild
+	@prop nsfwLevel string
+	NSFW level of the guild
+]=]
+
+--[=[
+	@within Classes.Guild
+	@prop mfaLevel string
+	Required MFA level for the guild
+]=]
+
+--[=[
+	@within Classes.Guild
+	@prop systemChannelFlags Classes.SystemChannelBitflag
+	System channel flags
+]=]
+
+--[=[
+	@within Classes.Guild
+	@prop icon string?
+	Icon hash of the guild
+]=]
+
+--[=[
+	@within Classes.Guild
+	@prop iconHash string?
+	The hash of the guild's icon
+]=]
+
+--[=[
+	@within Classes.Guild
+	@prop name string?
+	The name of the guild
+]=]
+
+--[=[
+	@within Classes.Guild
+	@prop splash string?
+	Splash hash
+]=]
+
+--[=[
+	@within Classes.Guild
+	@prop discoverySplash string?
+	Discovery splash hash
+]=]
+
+--[=[
+	@within Classes.Guild
+	@prop owner boolean?
+	Whether the user is the owner of the guild
+]=]
+
+--[=[
+	@within Classes.Guild
+	@prop ownerId string?
+	ID of guild owner
+]=]
+
+--[=[
+	@within Classes.Guild
+	@prop permissions string?
+	Total permissions for the user in the guild (excludes overwrites)
+]=]
+
+--[=[
+	@within Classes.Guild
+	@prop region string?
+	Voice region id for the guild
+]=]
+
+--[=[
+	@within Classes.Guild
+	@prop afkChannelId string?
+	ID of AFK channel
+]=]
+
+--[=[
+	@within Classes.Guild
+	@prop afkTimeout number?
+	AFK timeout in seconds
+]=]
+
+--[=[
+	@within Classes.Guild
+	@prop widgetEnabled boolean?
+	Whether the server widget is enabled
+]=]
+
+--[=[
+	@within Classes.Guild
+	@prop widgetChannelId string?
+	The channel id that the widget will generate an invite to
+]=]
+
+--[=[
+	@within Classes.Guild
+	@prop features {string}?
+	Array of guild features
+]=]
+
+--[=[
+	@within Classes.Guild
+	@prop applicationId string?
+	Application ID of the guild creator if it is bot-created
+]=]
+
+--[=[
+	@within Classes.Guild
+	@prop systemChannelId string?
+	The id of the channel where guild notices are posted
+]=]
+
+--[=[
+	@within Classes.Guild
+	@prop rulesChannelId string?
+	ID of the rules channel
+]=]
+
+--[=[
+	@within Classes.Guild
+	@prop maxPresences number?
+	The maximum number of presences for the guild
+]=]
+
+--[=[
+	@within Classes.Guild
+	@prop maxMembers number?
+	The maximum number of members for the guild
+]=]
+
+--[=[
+	@within Classes.Guild
+	@prop vanityUrlCode string?
+	The vanity URL code for the guild
+]=]
+
+--[=[
+	@within Classes.Guild
+	@prop description string?
+	The description of the guild
+]=]
+
+--[=[
+	@within Classes.Guild
+	@prop banner string?
+	Banner hash
+]=]
+
+--[=[
+	@within Classes.Guild
+	@prop premiumSubscriptionCount number?
+	The number of boosts this guild currently has
+]=]
+
+--[=[
+	@within Classes.Guild
+	@prop preferredLocale string?
+	The preferred locale of a Community guild
+]=]
+
+--[=[
+	@within Classes.Guild
+	@prop publicUpdatesChannelId string?
+	The id of the channel where admins and moderators receive notices from Discord
+]=]
+
+--[=[
+	@within Classes.Guild
+	@prop maxVideoChannelUsers number?
+	The maximum amount of users in a video channel
+]=]
+
+--[=[
+	@within Classes.Guild
+	@prop maxStageVideoChannelUsers number?
+	The maximum amount of users in a stage video channel
+]=]
+
+--[=[
+	@within Classes.Guild
+	@prop approximateMemberCount number?
+	Approximate number of members in this guild
+]=]
+
+--[=[
+	@within Classes.Guild
+	@prop approximatePresenceCount number?
+	Approximate number of non-offline members in this guild
+]=]
+
+--[=[
+	@within Classes.Guild
+	@prop premiumProgressBarEnabled boolean?
+	Whether the guild has the boost progress bar enabled
+]=]
+
+--[=[
+	@within Classes.Guild
+	@prop safetyAlertsChannelId string?
+	The id of the channel where admins and moderators receive safety alerts from Discord
+]=]
+
 local future = require("../../luau_packages/future")
 local apiTypes = require("../../luau_packages/api_types")
 local state = require("../../luau_packages/state")
@@ -1304,293 +1550,88 @@ function Guild.Prototype.sync(self: Guild, guildData: apiTypes.GuildObject)
 		self.welcomeScreen = welcomeScreen.new(guildData.welcome_screen)
 	end
 
-	--[=[
-		@within Classes.Guild
-		@prop stickers {Classes.Sticker}
-		Collection of stickers in the guild
-	]=]
 	self.stickers = stickerArray
 
-	--[=[
-		@within Classes.Guild
-		@prop roles {Classes.Role}
-		Collection of roles in the guild
-	]=]
 	self.roles = rolesArray
 
-	--[=[
-		@within Classes.Guild
-		@prop emojis {Classes.Emoji}
-		Collection of emojis in the guild
-	]=]
 	self.emojis = emojiArray
 
-	--[=[
-		@within Classes.Guild
-		@prop verificationLevel string
-		Verification level required for the guild
-	]=]
 	self.verificationLevel = apiTypes.guild.VerificationLevel[guildData.verification_level]
 
-	--[=[
-		@within Classes.Guild
-		@prop defaultMessageNotifications string
-		Default message notifications level
-	]=]
 	self.defaultMessageNotifications =
 		apiTypes.guild.DefaultMessageNotification[guildData.default_message_notifications]
 
-	--[=[
-		@within Classes.Guild
-		@prop explicitContentFilter string
-		Explicit content filter level
-	]=]
 	self.explicitContentFilter = apiTypes.guild.ExplicitContentFilterLevel[guildData.explicit_content_filter]
 
-	--[=[
-		@within Classes.Guild
-		@prop premiumTier string
-		Premium tier (Server Boost level)
-	]=]
 	self.premiumTier = apiTypes.guild.PremiumTier[guildData.premium_tier]
 
-	--[=[
-		@within Classes.Guild
-		@prop nsfwLevel string
-		NSFW level of the guild
-	]=]
 	self.nsfwLevel = apiTypes.guild.NSFWLevel[guildData.nsfw_level]
 
-	--[=[
-		@within Classes.Guild
-		@prop mfaLevel string
-		Required MFA level for the guild
-	]=]
 	self.mfaLevel = apiTypes.guild.MFALevel[guildData.mfa_level]
 
-	--[=[
-		@within Classes.Guild
-		@prop systemChannelFlags Classes.SystemChannelBitflag
-		System channel flags
-	]=]
 	self.systemChannelFlags = guildData.system_channel_flags
 		and systemChannelBitflag.new(guildData.system_channel_flags)
 
-	--[=[
-		@within Classes.Guild
-		@prop icon string?
-		Icon hash of the guild
-	]=]
 	self.icon = guildData.icon
 
-	--[=[
-		@within Classes.Guild
-		@prop iconHash string?
-		The hash of the guild's icon
-	]=]
 	self.iconHash = guildData.icon_hash
 
-	--[=[
-		@within Classes.Guild
-		@prop name string?
-		The name of the guild
-	]=]
 	self.name = guildData.name
 
-	--[=[
-		@within Classes.Guild
-		@prop splash string?
-		Splash hash
-	]=]
 	self.splash = guildData.splash
 
-	--[=[
-		@within Classes.Guild
-		@prop discoverySplash string?
-		Discovery splash hash
-	]=]
 	self.discoverySplash = guildData.discovery_splash
 
-	--[=[
-		@within Classes.Guild
-		@prop owner boolean?
-		Whether the user is the owner of the guild
-	]=]
 	self.owner = guildData.owner
 
-	--[=[
-		@within Classes.Guild
-		@prop ownerId string?
-		ID of guild owner
-	]=]
 	self.ownerId = guildData.owner_id
 
-	--[=[
-		@within Classes.Guild
-		@prop permissions string?
-		Total permissions for the user in the guild (excludes overwrites)
-	]=]
 	self.permissions = guildData.permissions
 
-	--[=[
-		@within Classes.Guild
-		@prop region string?
-		Voice region id for the guild
-	]=]
 	self.region = guildData.region
 
-	--[=[
-		@within Classes.Guild
-		@prop afkChannelId string?
-		ID of AFK channel
-	]=]
 	self.afkChannelId = guildData.afk_channel_id
 
-	--[=[
-		@within Classes.Guild
-		@prop afkTimeout number?
-		AFK timeout in seconds
-	]=]
 	self.afkTimeout = guildData.afk_timeout
 
-	--[=[
-		@within Classes.Guild
-		@prop widgetEnabled boolean?
-		Whether the server widget is enabled
-	]=]
 	self.widgetEnabled = guildData.widget_enabled
 
-	--[=[
-		@within Classes.Guild
-		@prop widgetChannelId string?
-		The channel id that the widget will generate an invite to
-	]=]
 	self.widgetChannelId = guildData.widget_channel_id
 
-	--[=[
-		@within Classes.Guild
-		@prop features {string}?
-		Array of guild features
-	]=]
 	self.features = guildData.features
 
-	--[=[
-		@within Classes.Guild
-		@prop applicationId string?
-		Application ID of the guild creator if it is bot-created
-	]=]
 	self.applicationId = guildData.application_id
 
-	--[=[
-		@within Classes.Guild
-		@prop systemChannelId string?
-		The id of the channel where guild notices are posted
-	]=]
 	self.systemChannelId = guildData.system_channel_id
 
-	--[=[
-		@within Classes.Guild
-		@prop rulesChannelId string?
-		ID of the rules channel
-	]=]
 	self.rulesChannelId = guildData.rules_channel_id
 
-	--[=[
-		@within Classes.Guild
-		@prop maxPresences number?
-		The maximum number of presences for the guild
-	]=]
 	self.maxPresences = guildData.max_presences
 
-	--[=[
-		@within Classes.Guild
-		@prop maxMembers number?
-		The maximum number of members for the guild
-	]=]
 	self.maxMembers = guildData.max_members
 
-	--[=[
-		@within Classes.Guild
-		@prop vanityUrlCode string?
-		The vanity URL code for the guild
-	]=]
 	self.vanityUrlCode = guildData.vanity_url_code
 
-	--[=[
-		@within Classes.Guild
-		@prop description string?
-		The description of the guild
-	]=]
 	self.description = guildData.description
 
-	--[=[
-		@within Classes.Guild
-		@prop banner string?
-		Banner hash
-	]=]
 	self.banner = guildData.banner
 
-	--[=[
-		@within Classes.Guild
-		@prop premiumSubscriptionCount number?
-		The number of boosts this guild currently has
-	]=]
 	self.premiumSubscriptionCount = guildData.premium_subscription_count
 
-	--[=[
-		@within Classes.Guild
-		@prop preferredLocale string?
-		The preferred locale of a Community guild
-	]=]
 	self.preferredLocale = guildData.preferred_locale
 
-	--[=[
-		@within Classes.Guild
-		@prop publicUpdatesChannelId string?
-		The id of the channel where admins and moderators receive notices from Discord
-	]=]
 	self.publicUpdatesChannelId = guildData.public_updates_channel_id
 
-	--[=[
-		@within Classes.Guild
-		@prop maxVideoChannelUsers number?
-		The maximum amount of users in a video channel
-	]=]
 	self.maxVideoChannelUsers = guildData.max_video_channel_users
 
-	--[=[
-		@within Classes.Guild
-		@prop maxStageVideoChannelUsers number?
-		The maximum amount of users in a stage video channel
-	]=]
 	self.maxStageVideoChannelUsers = guildData.max_stage_video_channel_users
 
-	--[=[
-		@within Classes.Guild
-		@prop approximateMemberCount number?
-		Approximate number of members in this guild
-	]=]
 	self.approximateMemberCount = guildData.approximate_member_count
 
-	--[=[
-		@within Classes.Guild
-		@prop approximatePresenceCount number?
-		Approximate number of non-offline members in this guild
-	]=]
 	self.approximatePresenceCount = guildData.approximate_presence_count
 
-	--[=[
-		@within Classes.Guild
-		@prop premiumProgressBarEnabled boolean?
-		Whether the guild has the boost progress bar enabled
-	]=]
 	self.premiumProgressBarEnabled = guildData.premium_progress_bar_enabled
 
-	--[=[
-		@within Classes.Guild
-		@prop safetyAlertsChannelId string?
-		The id of the channel where admins and moderators receive safety alerts from Discord
-	]=]
 	self.safetyAlertsChannelId = guildData.safety_alerts_channel_id
 end
 

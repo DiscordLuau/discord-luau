@@ -7,6 +7,11 @@
 	https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-structure
 ]=]
 
+--[=[
+	@prop state State
+	@within Classes.Autocomplete
+]=]
+
 -- selene: allow(unused_variable)
 local state = require("../../../luau_packages/state")
 local apiTypes = require("../../../luau_packages/api_types")
@@ -44,10 +49,6 @@ end
 function Autocomplete.Interface.new(state: state.State, interactionData: apiTypes.InteractionObject): Autocomplete
 	local self = setmetatable(
 		{
-			--[=[
-				@prop state State
-				@within Classes.Autocomplete
-			]=]
 			state = state,
 		} :: Autocomplete,
 		{ __index = Autocomplete.Prototype }

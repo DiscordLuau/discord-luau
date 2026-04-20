@@ -7,6 +7,24 @@
 	https://discord.com/developers/docs/resources/message#embed-object-embed-field-structure
 ]=]
 
+--[=[
+	@prop name string
+	@within Classes.Field
+	The name of the field.
+]=]
+
+--[=[
+	@prop value string
+	@within Classes.Field
+	The value of the field.
+]=]
+
+--[=[
+	@prop inline boolean?
+	@within Classes.Field
+	Whether this field should be displayed inline with other fields.
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 
 local Field = {}
@@ -22,25 +40,10 @@ Field.Prototype = {}
 	created or updated.
 ]=]
 function Field.Prototype.sync(self: Field, fieldData: apiTypes.EmbedFieldObject)
-	--[=[
-		@prop name string
-		@within Classes.Field
-		The name of the field.
-	]=]
 	self.name = fieldData.name
 
-	--[=[
-		@prop value string
-		@within Classes.Field
-		The value of the field.
-	]=]
 	self.value = fieldData.value
 
-	--[=[
-		@prop inline boolean?
-		@within Classes.Field
-		Whether this field should be displayed inline with other fields.
-	]=]
 	self.inline = fieldData.inline
 end
 
