@@ -13,6 +13,60 @@
 	- Handling guild-specific channel properties
 ]=]
 
+--[=[
+	@within Classes.GuildBehaviour
+	@prop permissionOverwrites { Classes.Overwrite }
+	The permission overwrites for the channel.
+]=]
+
+--[=[
+	@within Classes.GuildBehaviour
+	@prop nsfw boolean
+	Whether the channel is marked as NSFW (Not Safe For Work).
+]=]
+
+--[=[
+	@within Classes.GuildBehaviour
+	@prop topic string?
+	The topic of the channel.
+]=]
+
+--[=[
+	@within Classes.GuildBehaviour
+	@prop guildId string
+	The ID of the guild this channel belongs to.
+]=]
+
+--[=[
+	@within Classes.GuildBehaviour
+	@prop position number
+	The position of the channel in the guild's channel list.
+]=]
+
+--[=[
+	@within Classes.GuildBehaviour
+	@prop parentId string?
+	The ID of the parent category channel, if this channel is in a category.
+]=]
+
+--[=[
+	@within Classes.GuildBehaviour
+	@prop permissions number
+	The computed permissions for the current user in this channel.
+]=]
+
+--[=[
+	@within Classes.GuildBehaviour
+	@prop defaultThreadRateLimitPerUser number
+	The default rate limit per user for threads in this channel.
+]=]
+
+--[=[
+	@within Classes.GuildBehaviour
+	@prop defaultAutoArchiveDuration number
+	The default duration after which threads are automatically archived.
+]=]
+
 local apiTypes = require("../../../luau_packages/api_types")
 local stdPolyfills = require("../../../lune_packages/std_polyfills")
 local future = require("../../../luau_packages/future")
@@ -327,67 +381,22 @@ function GuildBehaviour.Interface.inheritProperties(class: any, channelData: api
 		table.insert(permissionOverwriteArray, overwrite.new(overwriteData))
 	end
 
-	--[=[
-		@within Classes.GuildBehaviour
-		@prop permissionOverwrites { Classes.Overwrite }
-		The permission overwrites for the channel.
-	]=]
 	class.permissionOverwrites = permissionOverwriteArray
 
-	--[=[
-		@within Classes.GuildBehaviour
-		@prop nsfw boolean
-		Whether the channel is marked as NSFW (Not Safe For Work).
-	]=]
 	class.nsfw = channelData.nsfw
 
-	--[=[
-		@within Classes.GuildBehaviour
-		@prop topic string?
-		The topic of the channel.
-	]=]
 	class.topic = channelData.topic
 
-	--[=[
-		@within Classes.GuildBehaviour
-		@prop guildId string
-		The ID of the guild this channel belongs to.
-	]=]
 	class.guildId = channelData.guild_id
 
-	--[=[
-		@within Classes.GuildBehaviour
-		@prop position number
-		The position of the channel in the guild's channel list.
-	]=]
 	class.position = channelData.position
 
-	--[=[
-		@within Classes.GuildBehaviour
-		@prop parentId string?
-		The ID of the parent category channel, if this channel is in a category.
-	]=]
 	class.parentId = channelData.parent_id
 
-	--[=[
-		@within Classes.GuildBehaviour
-		@prop permissions number
-		The computed permissions for the current user in this channel.
-	]=]
 	class.permissions = channelData.permissions
 
-	--[=[
-		@within Classes.GuildBehaviour
-		@prop defaultThreadRateLimitPerUser number
-		The default rate limit per user for threads in this channel.
-	]=]
 	class.defaultThreadRateLimitPerUser = channelData.rate_limit_per_user
 
-	--[=[
-		@within Classes.GuildBehaviour
-		@prop defaultAutoArchiveDuration number
-		The default duration after which threads are automatically archived.
-	]=]
 	class.defaultAutoArchiveDuration = channelData.default_auto_archive_duration
 end
 

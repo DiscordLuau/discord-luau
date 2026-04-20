@@ -7,6 +7,31 @@
 	https://discord.com/developers/docs/resources/message#message-reference-structure
 ]=]
 
+--[=[
+	@prop type api_types.MessageReferenceType
+	The type of reference.
+]=]
+
+--[=[
+	@prop messageId string
+	The id of the originating message.
+]=]
+
+--[=[
+	@prop channelId string
+	The id of the originating message's channel.
+]=]
+
+--[=[
+	@prop guildId string
+	The id of the originating message's guild.
+]=]
+
+--[=[
+	@prop failIfNotExists boolean
+	When sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message.
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 
 local Reference = {}
@@ -98,30 +123,7 @@ function Reference.Interface.new(resource: {
 }?): Reference
 	local self = setmetatable(
 		{
-			--[=[
-				@prop type api_types.MessageReferenceType
-				The type of reference.
-			]=]
 
-			--[=[
-				@prop messageId string
-				The id of the originating message.
-			]=]
-
-			--[=[
-				@prop channelId string
-				The id of the originating message's channel.
-			]=]
-
-			--[=[
-				@prop guildId string
-				The id of the originating message's guild.
-			]=]
-
-			--[=[
-				@prop failIfNotExists boolean
-				When sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message.
-			]=]
 		} :: Reference,
 		{
 			__index = Reference.Prototype,

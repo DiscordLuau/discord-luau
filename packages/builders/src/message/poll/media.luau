@@ -7,6 +7,18 @@
 	https://discord.com/developers/docs/resources/poll#poll-media-object-poll-media-object-structure
 ]=]
 
+--[=[
+	@prop text string?
+	@within Builders.PollMedia
+	The text content of the poll media.
+]=]
+
+--[=[
+	@prop emoji Builders.Emoji?
+	@within Builders.PollMedia
+	The emoji associated with this poll media.
+]=]
+
 local emojiBuilder = require("../../emoji")
 
 local PollMedia = {}
@@ -66,18 +78,8 @@ function PollMedia.Interface.new(resource: {
 }?): PollMedia
 	local self = setmetatable(
 		{
-			--[=[
-				@prop text string?
-				@within Builders.PollMedia
-				The text content of the poll media.
-			]=]
 			text = nil,
 
-			--[=[
-				@prop emoji Builders.Emoji?
-				@within Builders.PollMedia
-				The emoji associated with this poll media.
-			]=]
 			emoji = nil,
 		} :: PollMedia,
 		{

@@ -6,6 +6,36 @@
 	and methods for a forum thread channel.
 ]=]
 
+--[=[
+	@prop availableTags { Classes.ForumTag }
+	@within Classes.ForumBehaviour
+	The tags that can be applied to posts in this forum channel.
+]=]
+
+--[=[
+	@prop appliedTags { string }
+	@within Classes.ForumBehaviour
+	The tags currently applied to this forum channel.
+]=]
+
+--[=[
+	@prop defaultReaction Classes.DefaultReaction?
+	@within Classes.ForumBehaviour
+	The default reaction that will be added to new posts in this forum channel.
+]=]
+
+--[=[
+	@prop defaultSortOrder apiTypes.ForumSortOrder
+	@within Classes.ForumBehaviour
+	The default sort order for posts in this forum channel.
+]=]
+
+--[=[
+	@prop defaultForumLayout apiTypes.ForumLayout
+	@within Classes.ForumBehaviour
+	The default layout for posts in this forum channel.
+]=]
+
 local apiTypes = require("../../../luau_packages/api_types")
 local future = require("../../../luau_packages/future")
 local rest = require("../../../luau_packages/rest")
@@ -51,11 +81,6 @@ end
 	@private
 ]=]
 function ForumBehaviour.Interface.inheritProperties(class: any, channelData: apiTypes.ChannelObject)
-	--[=[
-		@prop availableTags { Classes.ForumTag }
-		@within Classes.ForumBehaviour
-		The tags that can be applied to posts in this forum channel.
-	]=]
 	local forumTagArray = {}
 
 	-- fixme: need to use `next` iterator here to avoid LSP errors.
@@ -65,33 +90,13 @@ function ForumBehaviour.Interface.inheritProperties(class: any, channelData: api
 
 	class.availableTags = forumTagArray
 
-	--[=[
-		@prop appliedTags { string }
-		@within Classes.ForumBehaviour
-		The tags currently applied to this forum channel.
-	]=]
 	class.appliedTags = channelData.applied_tags
 
-	--[=[
-		@prop defaultReaction Classes.DefaultReaction?
-		@within Classes.ForumBehaviour
-		The default reaction that will be added to new posts in this forum channel.
-	]=]
 	class.defaultReaction = channelData.default_reaction_emoji
 		and defaultReaction.new(channelData.default_reaction_emoji)
 
-	--[=[
-		@prop defaultSortOrder apiTypes.ForumSortOrder
-		@within Classes.ForumBehaviour
-		The default sort order for posts in this forum channel.
-	]=]
 	class.defaultSortOrder = apiTypes.channel.ForumSortOrder[channelData.default_sort_order]
 
-	--[=[
-		@prop defaultForumLayout apiTypes.ForumLayout
-		@within Classes.ForumBehaviour
-		The default layout for posts in this forum channel.
-	]=]
 	class.defaultForumLayout = apiTypes.channel.ForumLayout[channelData.default_forum_layout]
 end
 

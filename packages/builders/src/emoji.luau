@@ -7,6 +7,18 @@
 	https://discord.com/developers/docs/resources/emoji#emoji-object
 ]=]
 
+--[=[
+	@prop emojiId string?
+	@within Builders.Emoji
+	The ID of the emoji.
+]=]
+
+--[=[
+	@prop emojiName string?
+	@within Builders.Emoji
+	The name of the emoji.
+]=]
+
 local util = require("../luau_packages/util")
 
 local Emoji = {}
@@ -71,18 +83,8 @@ function Emoji.Interface.new(resource: {
 }?): Emoji
 	local self = setmetatable(
 		{
-			--[=[
-				@prop emojiId string?
-				@within Builders.Emoji
-				The ID of the emoji.
-			]=]
 			emojiId = nil,
 
-			--[=[
-				@prop emojiName string?
-				@within Builders.Emoji
-				The name of the emoji.
-			]=]
 			emojiName = nil,
 		} :: Emoji,
 		{

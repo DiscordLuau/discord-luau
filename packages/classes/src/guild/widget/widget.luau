@@ -7,6 +7,36 @@
 	https://discord.com/developers/docs/resources/guild#guild-widget-settings-object
 ]=]
 
+--[=[
+	@prop id string
+	@within Classes.Widget
+	The unique identifier of this widget
+]=]
+
+--[=[
+	@prop name string
+	@within Classes.Widget
+	The name of the widget
+]=]
+
+--[=[
+	@prop instantInvite string?
+	@within Classes.Widget
+	The instant invite URL for this widget, if one exists
+]=]
+
+--[=[
+	@prop channels { Classes.Channel }
+	@within Classes.Widget
+	Array of channels that are shown in the widget
+]=]
+
+--[=[
+	@prop members { Classes.User }
+	@within Classes.Widget
+	Array of users that are shown in the widget
+]=]
+
 local apiTypes = require("../../../luau_packages/api_types")
 local state = require("../../../luau_packages/state")
 
@@ -38,39 +68,14 @@ function Widget.Prototype.sync(self: Widget, widgetData: apiTypes.GuildWidgetObj
 		table.insert(userArray, user.new(userData))
 	end
 
-	--[=[
-		@prop id string
-		@within Classes.Widget
-		The unique identifier of this widget
-	]=]
 	self.id = widgetData.id
 
-	--[=[
-		@prop name string
-		@within Classes.Widget
-		The name of the widget
-	]=]
 	self.name = widgetData.name
 
-	--[=[
-		@prop instantInvite string?
-		@within Classes.Widget
-		The instant invite URL for this widget, if one exists
-	]=]
 	self.instantInvite = widgetData.instant_invite
 
-	--[=[
-		@prop channels { Classes.Channel }
-		@within Classes.Widget
-		Array of channels that are shown in the widget
-	]=]
 	self.channels = channelArray
 
-	--[=[
-		@prop members { Classes.User }
-		@within Classes.Widget
-		Array of users that are shown in the widget
-	]=]
 	self.members = userArray
 end
 

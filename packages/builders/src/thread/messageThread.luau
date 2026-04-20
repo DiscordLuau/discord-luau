@@ -7,6 +7,24 @@
 	https://discord.com/developers/docs/resources/channel#start-thread-from-message-json-params
 ]=]
 
+--[=[
+	@prop name string?
+	@within Builders.MessageThread
+	The name of the thread that is displayed.
+]=]
+
+--[=[
+	@prop autoArchiveDuration number?
+	@within Builders.MessageThread
+	Duration in minutes to automatically archive the thread after recent activity.
+]=]
+
+--[=[
+	@prop rateLimitPerUser number?
+	@within Builders.MessageThread
+	Amount of seconds a user has to wait before sending another message.
+]=]
+
 local MessageThread = {}
 
 MessageThread.Prototype = {}
@@ -93,25 +111,10 @@ function MessageThread.Interface.new(resource: {
 }?): MessageThread
 	local self = setmetatable(
 		{
-			--[=[
-				@prop name string?
-				@within Builders.MessageThread
-				The name of the thread that is displayed.
-			]=]
 			name = nil,
 
-			--[=[
-				@prop autoArchiveDuration number?
-				@within Builders.MessageThread
-				Duration in minutes to automatically archive the thread after recent activity.
-			]=]
 			autoArchiveDuration = nil,
 
-			--[=[
-				@prop rateLimitPerUser number?
-				@within Builders.MessageThread
-				Amount of seconds a user has to wait before sending another message.
-			]=]
 			rateLimitPerUser = nil,
 		} :: MessageThread,
 		{

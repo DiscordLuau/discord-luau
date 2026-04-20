@@ -7,6 +7,41 @@
 	https://discord.com/developers/docs/resources/voice#voice-region-object
 ]=]
 
+--[=[
+	@prop id string
+	@within Classes.VoiceRegion
+
+	Unique ID for the voice region
+]=]
+
+--[=[
+	@prop name string
+	@within Classes.VoiceRegion
+
+	Name of the voice region
+]=]
+
+--[=[
+	@prop optimal boolean
+	@within Classes.VoiceRegion
+
+	True if this is an optimal voice region for the current user
+]=]
+
+--[=[
+	@prop deprecated boolean
+	@within Classes.VoiceRegion
+
+	Whether this is a deprecated voice region
+]=]
+
+--[=[
+	@prop custom boolean
+	@within Classes.VoiceRegion
+
+	Whether this is a custom voice region (used for events/etc)
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 
 local VoiceRegion = {}
@@ -22,44 +57,14 @@ VoiceRegion.Prototype = {}
 	created or updated.
 ]=]
 function VoiceRegion.Prototype.sync(self: VoiceRegion, voiceRegionData: apiTypes.VoiceRegionObject)
-	--[=[
-		@prop id string
-		@within Classes.VoiceRegion
-
-		Unique ID for the voice region
-	]=]
 	self.id = voiceRegionData.id
 
-	--[=[
-		@prop name string
-		@within Classes.VoiceRegion
-
-		Name of the voice region
-	]=]
 	self.name = voiceRegionData.name
 
-	--[=[
-		@prop optimal boolean
-		@within Classes.VoiceRegion
-
-		True if this is an optimal voice region for the current user
-	]=]
 	self.optimal = voiceRegionData.optimal
 
-	--[=[
-		@prop deprecated boolean
-		@within Classes.VoiceRegion
-
-		Whether this is a deprecated voice region
-	]=]
 	self.deprecated = voiceRegionData.deprecated
 
-	--[=[
-		@prop custom boolean
-		@within Classes.VoiceRegion
-
-		Whether this is a custom voice region (used for events/etc)
-	]=]
 	self.custom = voiceRegionData.custom
 end
 

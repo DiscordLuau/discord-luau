@@ -7,6 +7,96 @@
 	https://discord.com/developers/docs/resources/guild#guild-member-object
 ]=]
 
+--[=[
+	@within Classes.Member
+	@prop user Classes.User
+	The user this member represents.
+]=]
+
+--[=[
+	@within Classes.Member
+	@prop communicationDisabledUntil DateTime
+	When the member's communication is disabled until.
+]=]
+
+--[=[
+	@within Classes.Member
+	@prop avatarDecorationData Classes.AvatarDecoration
+	The member's avatar decoration data.
+]=]
+
+--[=[
+	@within Classes.Member
+	@prop flags Classes.GuildMemberBitflag
+	Member flags combined as a bitfield.
+]=]
+
+--[=[
+	@within Classes.Member
+	@prop joinedAt DateTime
+	When the member joined the guild.
+]=]
+
+--[=[
+	@within Classes.Member
+	@prop premiumSince DateTime
+	When the member started boosting the guild.
+]=]
+
+--[=[
+	@within Classes.Member
+	@prop nick string
+	The member's nickname.
+]=]
+
+--[=[
+	@within Classes.Member
+	@prop avatar string
+	The member's avatar hash.
+]=]
+
+--[=[
+	@within Classes.Member
+	@prop roles { string }
+	The member's role IDs.
+]=]
+
+--[=[
+	@within Classes.Member
+	@prop deaf boolean
+	Whether the member is deafened.
+]=]
+
+--[=[
+	@within Classes.Member
+	@prop mute boolean
+	Whether the member is muted.
+]=]
+
+--[=[
+	@within Classes.Member
+	@prop pending boolean
+	Whether the member has not yet passed the guild's Membership Screening requirements.
+]=]
+
+--[=[
+	@within Classes.Member
+	@prop permissions string
+	The member's permissions.
+]=]
+
+--[=[
+	@within Classes.Member
+	@prop state State
+	The state object for this member.
+]=]
+
+--[=[
+	@within Classes.Member
+	@prop guildId string
+	The ID of the guild this member belongs to.
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 local rest = require("../../luau_packages/rest")
 local future = require("../../luau_packages/future")
@@ -252,101 +342,36 @@ end
 	Synchronizes the member object with the data from the API.
 ]=]
 function Member.Prototype.sync(self: Member, guildMemberData: apiTypes.GuildMemberObject)
-	--[=[
-		@within Classes.Member
-		@prop user Classes.User
-		The user this member represents.
-	]=]
 	self.user = guildMemberData.user and user.new(guildMemberData.user)
 
-	--[=[
-		@within Classes.Member
-		@prop communicationDisabledUntil DateTime
-		When the member's communication is disabled until.
-	]=]
 	self.communicationDisabledUntil = guildMemberData.communication_disabled_until
 		and stdPolyfills.datetime.fromIsoDate(guildMemberData.communication_disabled_until)
 
-	--[=[
-		@within Classes.Member
-		@prop avatarDecorationData Classes.AvatarDecoration
-		The member's avatar decoration data.
-	]=]
 	self.avatarDecorationData = guildMemberData.avatar_decoration_data
 		and avatarDecoration.new(
 			guildMemberData.avatar_decoration_data.asset,
 			guildMemberData.avatar_decoration_data.sku_id
 		)
 
-	--[=[
-		@within Classes.Member
-		@prop flags Classes.GuildMemberBitflag
-		Member flags combined as a bitfield.
-	]=]
 	self.flags = guildMemberData.flags and guildMemberBitflag.new(guildMemberData.flags)
 
-	--[=[
-		@within Classes.Member
-		@prop joinedAt DateTime
-		When the member joined the guild.
-	]=]
 	self.joinedAt = stdPolyfills.datetime.fromIsoDate(guildMemberData.joined_at)
 
-	--[=[
-		@within Classes.Member
-		@prop premiumSince DateTime
-		When the member started boosting the guild.
-	]=]
 	self.premiumSince = guildMemberData.premium_since
 		and stdPolyfills.datetime.fromIsoDate(guildMemberData.premium_since)
 
-	--[=[
-		@within Classes.Member
-		@prop nick string
-		The member's nickname.
-	]=]
 	self.nick = guildMemberData.nick
 
-	--[=[
-		@within Classes.Member
-		@prop avatar string
-		The member's avatar hash.
-	]=]
 	self.avatar = guildMemberData.avatar
 
-	--[=[
-		@within Classes.Member
-		@prop roles { string }
-		The member's role IDs.
-	]=]
 	self.roles = guildMemberData.roles
 
-	--[=[
-		@within Classes.Member
-		@prop deaf boolean
-		Whether the member is deafened.
-	]=]
 	self.deaf = guildMemberData.deaf
 
-	--[=[
-		@within Classes.Member
-		@prop mute boolean
-		Whether the member is muted.
-	]=]
 	self.mute = guildMemberData.mute
 
-	--[=[
-		@within Classes.Member
-		@prop pending boolean
-		Whether the member has not yet passed the guild's Membership Screening requirements.
-	]=]
 	self.pending = guildMemberData.pending
 
-	--[=[
-		@within Classes.Member
-		@prop permissions string
-		The member's permissions.
-	]=]
 	self.permissions = guildMemberData.permissions
 end
 
@@ -362,18 +387,8 @@ function Member.Interface.new(
 ): Member
 	local self = setmetatable(
 		{
-			--[=[
-				@within Classes.Member
-				@prop state State
-				The state object for this member.
-			]=]
 			state = state,
 
-			--[=[
-				@within Classes.Member
-				@prop guildId string
-				The ID of the guild this member belongs to.
-			]=]
 			guildId = guildId,
 		} :: Member,
 		{ __index = Member.Prototype }

@@ -7,6 +7,24 @@
 	https://discord.com/developers/docs/resources/guild#unavailable-guild-object
 ]=]
 
+--[=[
+	@prop state Classes.State
+	@within Classes.UnavailableGuild
+	The state object that manages this guild's data and caching
+]=]
+
+--[=[
+	@prop id string
+	@within Classes.UnavailableGuild
+	The unique identifier for this guild as a Discord snowflake
+]=]
+
+--[=[
+	@prop isUnavailable boolean
+	@within Classes.UnavailableGuild
+	Indicates whether this guild is currently unavailable, typically due to an outage
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 local state = require("../../luau_packages/state")
 
@@ -24,25 +42,10 @@ UnavailableGuild.Prototype = {}
 function UnavailableGuild.Interface.new(state: state.State, id: apiTypes.Snowflake): UnavailableGuild
 	local self = setmetatable(
 		{
-			--[=[
-				@prop state Classes.State
-				@within Classes.UnavailableGuild
-				The state object that manages this guild's data and caching
-			]=]
 			state = state,
 
-			--[=[
-				@prop id string
-				@within Classes.UnavailableGuild
-				The unique identifier for this guild as a Discord snowflake
-			]=]
 			id = id,
 
-			--[=[
-				@prop isUnavailable boolean
-				@within Classes.UnavailableGuild
-				Indicates whether this guild is currently unavailable, typically due to an outage
-			]=]
 			isUnavailable = true,
 		} :: UnavailableGuild,
 		{ __index = UnavailableGuild.Prototype }

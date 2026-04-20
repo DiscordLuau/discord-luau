@@ -7,6 +7,18 @@
 	https://discord.com/developers/docs/resources/message#message-object-message-activity-structure
 ]=]
 
+--[=[
+	@prop type MessageAcitvityType
+	@within Classes.MessageActivity
+	Type of message activity, such as JOIN, SPECTATE, LISTEN, or JOIN_REQUEST
+]=]
+
+--[=[
+	@prop partyId string?
+	@within Classes.MessageActivity
+	Party ID associated with this activity, used for Rich Presence
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 
 local Activity = {}
@@ -22,18 +34,8 @@ Activity.Prototype = {}
 	created or updated.
 ]=]
 function Activity.Prototype.sync(self: Activity, activityData: apiTypes.MessageActivityObject)
-	--[=[
-		@prop type MessageAcitvityType
-		@within Classes.MessageActivity
-		Type of message activity, such as JOIN, SPECTATE, LISTEN, or JOIN_REQUEST
-	]=]
 	self.type = apiTypes.message.MessageAcitvityType[activityData.type]
 
-	--[=[
-		@prop partyId string?
-		@within Classes.MessageActivity
-		Party ID associated with this activity, used for Rich Presence
-	]=]
 	self.partyId = activityData.party_id
 end
 

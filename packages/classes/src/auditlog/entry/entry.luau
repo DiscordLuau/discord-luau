@@ -7,6 +7,55 @@
 	https://discord.com/developers/docs/resources/audit-log#audit-log-object-audit-log-structure
 ]=]
 
+--[=[
+	@prop changes { Classes.AuditLogChange }
+	@within Classes.AuditLogEntry
+
+	An array of audit log changes that occurred during this audit log entry
+]=]
+
+--[=[
+	@prop options { Classes.AuditLogEntryInfo }
+	@within Classes.AuditLogEntry
+
+	Additional information about the audit log entry
+]=]
+
+--[=[
+	@prop targetId string?
+	@within Classes.AuditLogEntry
+
+	ID of the affected entity (webhook, user, role, etc.)
+]=]
+
+--[=[
+	@prop userId string?
+	@within Classes.AuditLogEntry
+
+	The user who made the changes
+]=]
+
+--[=[
+	@prop id string
+	@within Classes.AuditLogEntry
+
+	Unique identifier for this entry
+]=]
+
+--[=[
+	@prop actionType apiTypes.AuditLogEvent
+	@within Classes.AuditLogEntry
+
+	Type of action that occurred
+]=]
+
+--[=[
+	@prop reason string?
+	@within Classes.AuditLogEntry
+
+	The reason for the change (0-512 characters)
+]=]
+
 local apiTypes = require("../../../luau_packages/api_types")
 
 local auditLogChange = require("../change")
@@ -40,60 +89,18 @@ function AuditLogEntry.Prototype.sync(self: AuditLogEntry, auditLogEntryData: ap
 		end
 	end
 
-	--[=[
-		@prop changes { Classes.AuditLogChange }
-		@within Classes.AuditLogEntry
-
-		An array of audit log changes that occurred during this audit log entry
-	]=]
 	self.changes = changes
 
-	--[=[
-		@prop options { Classes.AuditLogEntryInfo }
-		@within Classes.AuditLogEntry
-
-		Additional information about the audit log entry
-	]=]
 	self.options = options
 
-	--[=[
-		@prop targetId string?
-		@within Classes.AuditLogEntry
-
-		ID of the affected entity (webhook, user, role, etc.)
-	]=]
 	self.targetId = auditLogEntryData.target_id
 
-	--[=[
-		@prop userId string?
-		@within Classes.AuditLogEntry
-
-		The user who made the changes
-	]=]
 	self.userId = auditLogEntryData.user_id
 
-	--[=[
-		@prop id string
-		@within Classes.AuditLogEntry
-
-		Unique identifier for this entry
-	]=]
 	self.id = auditLogEntryData.id
 
-	--[=[
-		@prop actionType apiTypes.AuditLogEvent
-		@within Classes.AuditLogEntry
-
-		Type of action that occurred
-	]=]
 	self.actionType = apiTypes.guild.AuditLogEvent[auditLogEntryData.action_type]
 
-	--[=[
-		@prop reason string?
-		@within Classes.AuditLogEntry
-
-		The reason for the change (0-512 characters)
-	]=]
 	self.reason = auditLogEntryData.reason
 end
 

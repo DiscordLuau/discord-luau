@@ -9,6 +9,126 @@
 	https://discord.com/developers/docs/resources/guild
 ]=]
 
+--[=[
+	@prop name string?
+	@within Builders.Guild
+	The name of the guild.
+]=]
+
+--[=[
+	@prop verificationLevel Classes.VerificationLevel
+	@within Builders.Guild
+	Verification level setting for the guild.
+]=]
+
+--[=[
+	@prop defaultMessageNotifications Classes.DefaultMessageNotification
+	@within Builders.Guild
+	Default message notification level.
+]=]
+
+--[=[
+	@prop explicitContentFilter Classes.ExplicitContentFilterLevel
+	@within Builders.Guild
+	Explicit content filter level setting.
+]=]
+
+--[=[
+	@prop afkChannelId string?
+	@within Builders.Guild
+	ID of the AFK voice channel.
+]=]
+
+--[=[
+	@prop afkTimeout number?
+	@within Builders.Guild
+	AFK timeout duration in seconds.
+]=]
+
+--[=[
+	@prop icon string?
+	@within Builders.Guild
+	Base64 encoded icon for the guild.
+]=]
+
+--[=[
+	@prop ownerId string?
+	@within Builders.Guild
+	User ID of the owner of the guild.
+]=]
+
+--[=[
+	@prop splash string?
+	@within Builders.Guild
+	Base64 splash image for the guild.
+]=]
+
+--[=[
+	@prop discoverySplash string?
+	@within Builders.Guild
+	Base64 discovery splash image for the guild.
+]=]
+
+--[=[
+	@prop banner string?
+	@within Builders.Guild
+	Base64 banner image for the guild.
+]=]
+
+--[=[
+	@prop systemChannelId string?
+	@within Builders.Guild
+	ID of the system messages channel.
+]=]
+
+--[=[
+	@prop systemChannelFlags number?
+	@within Builders.Guild
+	Flags for the system channel.
+]=]
+
+--[=[
+	@prop rulesChannelId string?
+	@within Builders.Guild
+	ID of the rules channel.
+]=]
+
+--[=[
+	@prop publicUpdatesChannelId string?
+	@within Builders.Guild
+	ID of the public updates channel.
+]=]
+
+--[=[
+	@prop preferredLocale Classes.LanguageLocales?
+	@within Builders.Guild
+	Preferred language/locale for the guild.
+]=]
+
+--[=[
+	@prop features { Builders.GuildFeature }
+	@within Builders.Guild
+	List of enabled guild features.
+]=]
+
+--[=[
+	@prop description string?
+	@within Builders.Guild
+	Description of the guild.
+]=]
+
+--[=[
+	@prop premiumProgressBarEnabled boolean?
+	@within Builders.Guild
+	Whether boost progress bar is enabled.
+]=]
+
+--[=[
+	@prop safetyAlertsChannelId string?
+	@within Builders.Guild
+	ID of the safety alerts channel.
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 
 local Guild = {}
@@ -291,126 +411,9 @@ function Guild.Interface.new(resource: {
 }?): Guild
 	local self = setmetatable(
 		{
-			--[=[
-				@prop name string?
-				@within Builders.Guild
-				The name of the guild.
-			]=]
 
-			--[=[
-				@prop verificationLevel Classes.VerificationLevel
-				@within Builders.Guild
-				Verification level setting for the guild.
-			]=]
-
-			--[=[
-				@prop defaultMessageNotifications Classes.DefaultMessageNotification
-				@within Builders.Guild
-				Default message notification level.
-			]=]
-
-			--[=[
-				@prop explicitContentFilter Classes.ExplicitContentFilterLevel
-				@within Builders.Guild
-				Explicit content filter level setting.
-			]=]
-
-			--[=[
-				@prop afkChannelId string?
-				@within Builders.Guild
-				ID of the AFK voice channel.
-			]=]
-
-			--[=[
-				@prop afkTimeout number?
-				@within Builders.Guild
-				AFK timeout duration in seconds.
-			]=]
-
-			--[=[
-				@prop icon string?
-				@within Builders.Guild
-				Base64 encoded icon for the guild.
-			]=]
-
-			--[=[
-				@prop ownerId string?
-				@within Builders.Guild
-				User ID of the owner of the guild.
-			]=]
-
-			--[=[
-				@prop splash string?
-				@within Builders.Guild
-				Base64 splash image for the guild.
-			]=]
-
-			--[=[
-				@prop discoverySplash string?
-				@within Builders.Guild
-				Base64 discovery splash image for the guild.
-			]=]
-
-			--[=[
-				@prop banner string?
-				@within Builders.Guild
-				Base64 banner image for the guild.
-			]=]
-
-			--[=[
-				@prop systemChannelId string?
-				@within Builders.Guild
-				ID of the system messages channel.
-			]=]
-
-			--[=[
-				@prop systemChannelFlags number?
-				@within Builders.Guild
-				Flags for the system channel.
-			]=]
-
-			--[=[
-				@prop rulesChannelId string?
-				@within Builders.Guild
-				ID of the rules channel.
-			]=]
-
-			--[=[
-				@prop publicUpdatesChannelId string?
-				@within Builders.Guild
-				ID of the public updates channel.
-			]=]
-
-			--[=[
-				@prop preferredLocale Classes.LanguageLocales?
-				@within Builders.Guild
-				Preferred language/locale for the guild.
-			]=]
-
-			--[=[
-				@prop features { Builders.GuildFeature }
-				@within Builders.Guild
-				List of enabled guild features.
-			]=]
 			features = {},
 
-			--[=[
-				@prop description string?
-				@within Builders.Guild
-				Description of the guild.
-			]=]
-
-			--[=[
-				@prop premiumProgressBarEnabled boolean?
-				@within Builders.Guild
-				Whether boost progress bar is enabled.
-			]=]
-
-			--[=[
-				@prop safetyAlertsChannelId string?
-				@within Builders.Guild
-				ID of the safety alerts channel.
-			]=]
 		} :: Guild,
 		{ __index = Guild.Prototype }
 	)

@@ -17,22 +17,25 @@ export type State = state.State
 		discord-luau uses.
 ]=]
 
+--[=[
+	@prop state State.State 
+	@within State
+]=]
+
+--[=[
+	@prop cache State.Cache 
+	@within State
+]=]
+
+--[=[
+	@prop rest State.Rest 
+	@within State
+]=]
+
 return {
-	--[=[
-		@prop state State.State 
-		@within State
-	]=]
 	state = state,
 
-	--[=[
-		@prop cache State.Cache 
-		@within State
-	]=]
 	cache = cache,
 
-	--[=[
-		@prop rest State.Rest 
-		@within State
-	]=]
 	rest = rest,
 }

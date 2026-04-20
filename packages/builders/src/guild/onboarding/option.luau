@@ -7,6 +7,48 @@
 	https://discord.com/developers/docs/resources/guild#guild-onboarding-object-prompt-option-structure
 ]=]
 
+--[=[
+	@prop channelIds {string}
+	@within Builders.Onboarding.Option
+	Array of channel IDs that are associated with this option.
+]=]
+
+--[=[
+	@prop roleIds {string}
+	@within Builders.Onboarding.Option
+	Array of role IDs that are associated with this option.
+]=]
+
+--[=[
+	@prop emojiId string?
+	@within Builders.Onboarding.Option
+	The ID of the emoji used for this option.
+]=]
+
+--[=[
+	@prop emojiName string?
+	@within Builders.Onboarding.Option
+	The name of the emoji used for this option.
+]=]
+
+--[=[
+	@prop emojiAnimated boolean?
+	@within Builders.Onboarding.Option
+	Whether the emoji used for this option is animated.
+]=]
+
+--[=[
+	@prop title string
+	@within Builders.Onboarding.Option
+	The title displayed for this option.
+]=]
+
+--[=[
+	@prop description string?
+	@within Builders.Onboarding.Option
+	The description displayed for this option.
+]=]
+
 local Option = {}
 
 Option.Prototype = {}
@@ -105,49 +147,10 @@ function Option.Interface.new(resource: {
 }?): Option
 	local self = setmetatable(
 		{
-			--[=[
-				@prop channelIds {string}
-				@within Builders.Onboarding.Option
-				Array of channel IDs that are associated with this option.
-			]=]
 			channelIds = {},
 
-			--[=[
-				@prop roleIds {string}
-				@within Builders.Onboarding.Option
-				Array of role IDs that are associated with this option.
-			]=]
 			roleIds = {},
 
-			--[=[
-				@prop emojiId string?
-				@within Builders.Onboarding.Option
-				The ID of the emoji used for this option.
-			]=]
-
-			--[=[
-				@prop emojiName string?
-				@within Builders.Onboarding.Option
-				The name of the emoji used for this option.
-			]=]
-
-			--[=[
-				@prop emojiAnimated boolean?
-				@within Builders.Onboarding.Option
-				Whether the emoji used for this option is animated.
-			]=]
-
-			--[=[
-				@prop title string
-				@within Builders.Onboarding.Option
-				The title displayed for this option.
-			]=]
-
-			--[=[
-				@prop description string?
-				@within Builders.Onboarding.Option
-				The description displayed for this option.
-			]=]
 		} :: Option,
 		{
 			__index = Option.Prototype,

@@ -7,6 +7,24 @@
 	https://discord.com/developers/docs/topics/permissions#permissions
 ]=]
 
+--[=[
+	@prop addedPermissions { apiTypes.Permissions }
+	@within Builders.Permission
+	An array of permissions that have been added to this permission builder.
+]=]
+
+--[=[
+	@prop removedPermissions { apiTypes.Permissions }
+	@within Builders.Permission
+	An array of permissions that have been removed from this permission builder.
+]=]
+
+--[=[
+	@prop bitflag number
+	@within Builders.Permission
+	The numeric representation of the permission bitflag.
+]=]
+
 local apiTypes = require("../luau_packages/api_types")
 
 local bit = require("../luau_packages/bit")
@@ -82,25 +100,10 @@ function Permission.Interface.new(resource: {
 }?): Permission
 	local self = setmetatable(
 		{
-			--[=[
-				@prop addedPermissions { apiTypes.Permissions }
-				@within Builders.Permission
-				An array of permissions that have been added to this permission builder.
-			]=]
 			addedPermissions = {},
 
-			--[=[
-				@prop removedPermissions { apiTypes.Permissions }
-				@within Builders.Permission
-				An array of permissions that have been removed from this permission builder.
-			]=]
 			removedPermissions = {},
 
-			--[=[
-				@prop bitflag number
-				@within Builders.Permission
-				The numeric representation of the permission bitflag.
-			]=]
 			bitflag = 0,
 		} :: Permission,
 		{

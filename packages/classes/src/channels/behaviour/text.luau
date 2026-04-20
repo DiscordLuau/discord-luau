@@ -13,6 +13,24 @@
 	- Handling rate limits and message timestamps
 ]=]
 
+--[=[
+	@within Classes.TextBehaviour
+	@prop lastMessageId string?
+	The ID of the last message sent in this channel.
+]=]
+
+--[=[
+	@within Classes.TextBehaviour
+	@prop lastPinTimestamp DateTime?
+	The timestamp of the last pinned message in this channel.
+]=]
+
+--[=[
+	@within Classes.TextBehaviour
+	@prop rateLimitPerUser number
+	The rate limit per user for sending messages in this channel.
+]=]
+
 local apiTypes = require("../../../luau_packages/api_types")
 local stdPolyfills = require("../../../lune_packages/std_polyfills")
 local future = require("../../../luau_packages/future")
@@ -195,26 +213,11 @@ end
 	This is typically called during object creation or updates.
 ]=]
 function TextBehaviour.Interface.inheritProperties(class: any, channelData: apiTypes.ChannelObject)
-	--[=[
-		@within Classes.TextBehaviour
-		@prop lastMessageId string?
-		The ID of the last message sent in this channel.
-	]=]
 	class.lastMessageId = channelData.last_message_id
 
-	--[=[
-		@within Classes.TextBehaviour
-		@prop lastPinTimestamp DateTime?
-		The timestamp of the last pinned message in this channel.
-	]=]
 	class.lastPinTimestamp = channelData.last_pin_timestamp
 		and stdPolyfills.datetime.fromIsoDate(channelData.last_pin_timestamp)
 
-	--[=[
-		@within Classes.TextBehaviour
-		@prop rateLimitPerUser number
-		The rate limit per user for sending messages in this channel.
-	]=]
 	class.rateLimitPerUser = channelData.rate_limit_per_user
 end
 

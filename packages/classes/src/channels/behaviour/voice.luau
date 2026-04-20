@@ -6,6 +6,30 @@
 	and methods for a voice-able channels.
 ]=]
 
+--[=[
+	@prop videoQualityMode apiTypes.VideoQualityMode
+	@within Classes.VoiceBehaviour
+	The video quality mode for the voice channel, determining the quality of video streams.
+]=]
+
+--[=[
+	@prop bitrate number
+	@within Classes.VoiceBehaviour
+	The bitrate of the voice channel, determining the quality of audio transmission.
+]=]
+
+--[=[
+	@prop userLimit number
+	@within Classes.VoiceBehaviour
+	The maximum number of users that can join the voice channel.
+]=]
+
+--[=[
+	@prop rtcRegion string?
+	@within Classes.VoiceBehaviour
+	The RTC region for the voice channel, determining which server handles the voice connection.
+]=]
+
 local apiTypes = require("../../../luau_packages/api_types")
 local future = require("../../../luau_packages/future")
 
@@ -44,32 +68,12 @@ end
 	@private
 ]=]
 function VoiceBehaviour.Interface.inheritProperties(class: any, channelData: apiTypes.ChannelObject)
-	--[=[
-		@prop videoQualityMode apiTypes.VideoQualityMode
-		@within Classes.VoiceBehaviour
-		The video quality mode for the voice channel, determining the quality of video streams.
-	]=]
 	class.videoQualityMode = apiTypes.channel.VideoQualityMode[channelData.video_quality_mode]
 
-	--[=[
-		@prop bitrate number
-		@within Classes.VoiceBehaviour
-		The bitrate of the voice channel, determining the quality of audio transmission.
-	]=]
 	class.bitrate = channelData.bitrate
 
-	--[=[
-		@prop userLimit number
-		@within Classes.VoiceBehaviour
-		The maximum number of users that can join the voice channel.
-	]=]
 	class.userLimit = channelData.user_limit
 
-	--[=[
-		@prop rtcRegion string?
-		@within Classes.VoiceBehaviour
-		The RTC region for the voice channel, determining which server handles the voice connection.
-	]=]
 	class.rtcRegion = channelData.rtc_region
 end
 

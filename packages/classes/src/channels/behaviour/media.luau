@@ -5,6 +5,36 @@
 	Media Behaviour, responsible for implementing the various properties, and methods for a media thread channel.
 ]=]
 
+--[=[
+	@prop availableTags { Classes.ForumTag }
+	@within Classes.MediaBehaviour
+	The tags that can be applied to posts in this media channel.
+]=]
+
+--[=[
+	@prop defaultReaction Classes.DefaultReaction?
+	@within Classes.MediaBehaviour
+	The default reaction that will be added to new posts in this media channel.
+]=]
+
+--[=[
+	@prop defaultForumLayout string
+	@within Classes.MediaBehaviour
+	The default layout for posts in this media channel.
+]=]
+
+--[=[
+	@prop appliedTags { string }
+	@within Classes.MediaBehaviour
+	The tags currently applied to this media channel.
+]=]
+
+--[=[
+	@prop defaultSortOrder string
+	@within Classes.MediaBehaviour
+	The default sort order for posts in this media channel.
+]=]
+
 local apiTypes = require("../../../luau_packages/api_types")
 local future = require("../../../luau_packages/future")
 local rest = require("../../../luau_packages/rest")
@@ -50,11 +80,6 @@ end
 	@private
 ]=]
 function MediaBehaviour.Interface.inheritProperties(class: any, channelData: apiTypes.ChannelObject)
-	--[=[
-		@prop availableTags { Classes.ForumTag }
-		@within Classes.MediaBehaviour
-		The tags that can be applied to posts in this media channel.
-	]=]
 	local forumTagArray = {}
 
 	for _, mediaTagData in next, channelData.available_tags or {} do
@@ -63,33 +88,13 @@ function MediaBehaviour.Interface.inheritProperties(class: any, channelData: api
 
 	class.availableTags = forumTagArray
 
-	--[=[
-		@prop defaultReaction Classes.DefaultReaction?
-		@within Classes.MediaBehaviour
-		The default reaction that will be added to new posts in this media channel.
-	]=]
 	class.defaultReaction = channelData.default_reaction_emoji
 		and defaultReaction.new(channelData.default_reaction_emoji)
 
-	--[=[
-		@prop defaultForumLayout string
-		@within Classes.MediaBehaviour
-		The default layout for posts in this media channel.
-	]=]
 	class.defaultForumLayout = channelData.default_forum_layout
 
-	--[=[
-		@prop appliedTags { string }
-		@within Classes.MediaBehaviour
-		The tags currently applied to this media channel.
-	]=]
 	class.appliedTags = channelData.applied_tags
 
-	--[=[
-		@prop defaultSortOrder string
-		@within Classes.MediaBehaviour
-		The default sort order for posts in this media channel.
-	]=]
 	class.defaultSortOrder = apiTypes.channel.MediaSortOrder[channelData.default_sort_order]
 end
 

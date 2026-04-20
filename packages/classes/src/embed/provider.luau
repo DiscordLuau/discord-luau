@@ -7,6 +7,20 @@
 	https://discord.com/developers/docs/resources/message#embed-object-embed-provider-structure
 ]=]
 
+--[=[
+	@prop name string?
+	@within Classes.Provider
+
+	The name of the provider
+]=]
+
+--[=[
+	@prop url string?
+	@within Classes.Provider
+
+	The URL of the provider
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 
 local Provider = {}
@@ -22,20 +36,8 @@ Provider.Prototype = {}
 	created or updated.
 ]=]
 function Provider.Prototype.sync(self: Provider, providerData: apiTypes.EmbedProviderObject)
-	--[=[
-		@prop name string?
-		@within Classes.Provider
-
-		The name of the provider
-	]=]
 	self.name = providerData.name
 
-	--[=[
-		@prop url string?
-		@within Classes.Provider
-
-		The URL of the provider
-	]=]
 	self.url = providerData.url
 end
 

@@ -7,6 +7,24 @@
 	https://discord.com/developers/docs/resources/message#embed-object-embed-footer-structure
 ]=]
 
+--[=[
+	@prop text string
+	@within Classes.Footer
+	The text content of the footer
+]=]
+
+--[=[
+	@prop iconUrl string?
+	@within Classes.Footer
+	The URL of the footer icon
+]=]
+
+--[=[
+	@prop proxyIconUrl string?
+	@within Classes.Footer
+	The proxied URL of the footer icon
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 
 local Footer = {}
@@ -22,25 +40,10 @@ Footer.Prototype = {}
 	created or updated.
 ]=]
 function Footer.Prototype.sync(self: Footer, footerData: apiTypes.EmbedFooterObject)
-	--[=[
-		@prop text string
-		@within Classes.Footer
-		The text content of the footer
-	]=]
 	self.text = footerData.text
 
-	--[=[
-		@prop iconUrl string?
-		@within Classes.Footer
-		The URL of the footer icon
-	]=]
 	self.iconUrl = footerData.icon_url
 
-	--[=[
-		@prop proxyIconUrl string?
-		@within Classes.Footer
-		The proxied URL of the footer icon
-	]=]
 	self.proxyIconUrl = footerData.proxy_icon_url
 end
 

@@ -7,6 +7,90 @@
 	https://discord.com/developers/docs/resources/audit-log#audit-log-object-audit-log-structure
 ]=]
 
+--[=[
+	@prop applicationId string
+	@within Classes.AuditLogEntryInfo
+
+	The ID of the application that was affected by this audit log entry
+]=]
+
+--[=[
+	@prop autoModeartionRuleName string
+	@within Classes.AuditLogEntryInfo
+
+	The name of the auto moderation rule that was triggered
+]=]
+
+--[=[
+	@prop autoModerationRuleTriggerType string
+	@within Classes.AuditLogEntryInfo
+
+	The type of trigger that caused the auto moderation rule to activate
+]=]
+
+--[=[
+	@prop channelId string
+	@within Classes.AuditLogEntryInfo
+
+	The ID of the channel that was affected by this audit log entry
+]=]
+
+--[=[
+	@prop count string
+	@within Classes.AuditLogEntryInfo
+
+	The number of entities that were affected by this audit log entry
+]=]
+
+--[=[
+	@prop deleteMemberDays string
+	@within Classes.AuditLogEntryInfo
+
+	The number of days after which inactive members were kicked
+]=]
+
+--[=[
+	@prop id string
+	@within Classes.AuditLogEntryInfo
+
+	The unique identifier for this audit log entry info
+]=]
+
+--[=[
+	@prop membersRemoved string
+	@within Classes.AuditLogEntryInfo
+
+	The number of members that were removed in this action
+]=]
+
+--[=[
+	@prop messageId string
+	@within Classes.AuditLogEntryInfo
+
+	The ID of the message that was affected by this audit log entry
+]=]
+
+--[=[
+	@prop roleName string
+	@within Classes.AuditLogEntryInfo
+
+	The name of the role that was affected by this audit log entry
+]=]
+
+--[=[
+	@prop type string
+	@within Classes.AuditLogEntryInfo
+
+	The type of audit log entry info
+]=]
+
+--[=[
+	@prop integrationType string
+	@within Classes.AuditLogEntryInfo
+
+	The type of integration that was affected by this audit log entry
+]=]
+
 local apiTypes = require("../../../luau_packages/api_types")
 
 local AuditLogEntryInfo = {}
@@ -25,101 +109,29 @@ function AuditLogEntryInfo.Prototype.sync(
 	self: AuditLogEntryInfo,
 	auditLogInfoData: apiTypes.OptionalAuditEntryInfoObject
 )
-	--[=[
-		@prop applicationId string
-		@within Classes.AuditLogEntryInfo
-
-		The ID of the application that was affected by this audit log entry
-	]=]
 	self.applicationId = auditLogInfoData.application_id
 
-	--[=[
-		@prop autoModeartionRuleName string
-		@within Classes.AuditLogEntryInfo
-
-		The name of the auto moderation rule that was triggered
-	]=]
 	self.autoModeartionRuleName = auditLogInfoData.auto_moderation_rule_name
 
-	--[=[
-		@prop autoModerationRuleTriggerType string
-		@within Classes.AuditLogEntryInfo
-
-		The type of trigger that caused the auto moderation rule to activate
-	]=]
 	self.autoModerationRuleTriggerType = auditLogInfoData.auto_moderation_rule_trigger_type
 		and tostring(auditLogInfoData.auto_moderation_rule_trigger_type)
 
-	--[=[
-		@prop channelId string
-		@within Classes.AuditLogEntryInfo
-
-		The ID of the channel that was affected by this audit log entry
-	]=]
 	self.channelId = auditLogInfoData.channel_id
 
-	--[=[
-		@prop count string
-		@within Classes.AuditLogEntryInfo
-
-		The number of entities that were affected by this audit log entry
-	]=]
 	self.count = auditLogInfoData.count
 
-	--[=[
-		@prop deleteMemberDays string
-		@within Classes.AuditLogEntryInfo
-
-		The number of days after which inactive members were kicked
-	]=]
 	self.deleteMemberDays = auditLogInfoData.delete_member_days
 
-	--[=[
-		@prop id string
-		@within Classes.AuditLogEntryInfo
-
-		The unique identifier for this audit log entry info
-	]=]
 	self.id = auditLogInfoData.id
 
-	--[=[
-		@prop membersRemoved string
-		@within Classes.AuditLogEntryInfo
-
-		The number of members that were removed in this action
-	]=]
 	self.membersRemoved = auditLogInfoData.members_removed
 
-	--[=[
-		@prop messageId string
-		@within Classes.AuditLogEntryInfo
-
-		The ID of the message that was affected by this audit log entry
-	]=]
 	self.messageId = auditLogInfoData.message_id
 
-	--[=[
-		@prop roleName string
-		@within Classes.AuditLogEntryInfo
-
-		The name of the role that was affected by this audit log entry
-	]=]
 	self.roleName = auditLogInfoData.role_name
 
-	--[=[
-		@prop type string
-		@within Classes.AuditLogEntryInfo
-
-		The type of audit log entry info
-	]=]
 	self.type = auditLogInfoData.type
 
-	--[=[
-		@prop integrationType string
-		@within Classes.AuditLogEntryInfo
-
-		The type of integration that was affected by this audit log entry
-	]=]
 	self.integrationType = auditLogInfoData.integration_type and tostring(auditLogInfoData.integration_type)
 end
 

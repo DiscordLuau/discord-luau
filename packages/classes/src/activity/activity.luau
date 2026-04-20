@@ -7,6 +7,111 @@
 	https://discord.com/developers/docs/topics/gateway-events#activity-object
 ]=]
 
+--[=[
+	@prop name string
+	@within Classes.Activity
+
+	The name of the activity being performed
+]=]
+
+--[=[
+	@prop type ActivityType
+	@within Classes.Activity
+
+	The type of activity being performed
+]=]
+
+--[=[
+	@prop url string?
+	@within Classes.Activity
+
+	Stream URL, is validated when type is 1 (streaming)
+]=]
+
+--[=[
+	@prop createdAt number
+	@within Classes.Activity
+
+	Unix timestamp in milliseconds of when the activity was created
+]=]
+
+--[=[
+	@prop timestamps Classes.ActivityTimestamp
+	@within Classes.Activity
+
+	Unix timestamps for start and/or end of the game
+]=]
+
+--[=[
+	@prop applicationId string
+	@within Classes.Activity
+
+	Application ID for the game
+]=]
+
+--[=[
+	@prop details string?
+	@within Classes.Activity
+
+	What the player is currently doing
+]=]
+
+--[=[
+	@prop state string?
+	@within Classes.Activity
+
+	The user's current party status
+]=]
+
+--[=[
+	@prop emoji Classes.ActivityEmoji?
+	@within Classes.Activity
+
+	The emoji used for a custom status
+]=]
+
+--[=[
+	@prop party Classes.ActivityParty?
+	@within Classes.Activity
+
+	Information for the current party of the player
+]=]
+
+--[=[
+	@prop assets Classes.ActivityAssets?
+	@within Classes.Activity
+
+	Images for the presence and their hover texts
+]=]
+
+--[=[
+	@prop secrets Classes.ActivitySecrets?
+	@within Classes.Activity
+
+	Secrets for Rich Presence joining and spectating
+]=]
+
+--[=[
+	@prop instance boolean?
+	@within Classes.Activity
+
+	Whether or not the activity is an instanced game session
+]=]
+
+--[=[
+	@prop flags number?
+	@within Classes.Activity
+
+	Activity flags ORd together, describes what the payload includes
+]=]
+
+--[=[
+	@prop buttons {Classes.ActivityButton}
+	@within Classes.Activity
+
+	Custom buttons shown in the Rich Presence
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 
 local activityAssets = require("./activityAssets")
@@ -52,94 +157,28 @@ function Activity.Prototype.sync(self: Activity, activityData: apiTypes.Activity
 		activityType = "Competing"
 	end
 
-	--[=[
-		@prop name string
-		@within Classes.Activity
-
-		The name of the activity being performed
-	]=]
 	self.name = activityData.name
 
-	--[=[
-		@prop type ActivityType
-		@within Classes.Activity
-
-		The type of activity being performed
-	]=]
 	self.type = activityType
 
-	--[=[
-		@prop url string?
-		@within Classes.Activity
-
-		Stream URL, is validated when type is 1 (streaming)
-	]=]
 	self.url = activityData.url
 
-	--[=[
-		@prop createdAt number
-		@within Classes.Activity
-
-		Unix timestamp in milliseconds of when the activity was created
-	]=]
 	self.createdAt = activityData.created_at
 
-	--[=[
-		@prop timestamps Classes.ActivityTimestamp
-		@within Classes.Activity
-
-		Unix timestamps for start and/or end of the game
-	]=]
 	self.timestamps = activityData.timestamps
 		and activityTimestamp.new(activityData.timestamps.start, activityData.timestamps["end"])
 
-	--[=[
-		@prop applicationId string
-		@within Classes.Activity
-
-		Application ID for the game
-	]=]
 	self.applicationId = activityData.application_id
 
-	--[=[
-		@prop details string?
-		@within Classes.Activity
-
-		What the player is currently doing
-	]=]
 	self.details = activityData.details
 
-	--[=[
-		@prop state string?
-		@within Classes.Activity
-
-		The user's current party status
-	]=]
 	self.state = activityData.state
 
-	--[=[
-		@prop emoji Classes.ActivityEmoji?
-		@within Classes.Activity
-
-		The emoji used for a custom status
-	]=]
 	self.emoji = activityData.emoji and activityEmoji.new(activityData.emoji.id, activityData.emoji)
 
-	--[=[
-		@prop party Classes.ActivityParty?
-		@within Classes.Activity
-
-		Information for the current party of the player
-	]=]
 	self.party = activityData.party
 		and activityParty.new(activityData.party.id, activityData.party.size[1], activityData.party.size[2])
 
-	--[=[
-		@prop assets Classes.ActivityAssets?
-		@within Classes.Activity
-
-		Images for the presence and their hover texts
-	]=]
 	self.assets = activityData.assets
 		and activityAssets.new(
 			activityData.assets.large_image,
@@ -148,37 +187,13 @@ function Activity.Prototype.sync(self: Activity, activityData: apiTypes.Activity
 			activityData.assets.small_text
 		)
 
-	--[=[
-		@prop secrets Classes.ActivitySecrets?
-		@within Classes.Activity
-
-		Secrets for Rich Presence joining and spectating
-	]=]
 	self.secrets = activityData.secrets
 		and activitySecrets.new(activityData.secrets.join, activityData.secrets.spectate, activityData.secrets.match)
 
-	--[=[
-		@prop instance boolean?
-		@within Classes.Activity
-
-		Whether or not the activity is an instanced game session
-	]=]
 	self.instance = activityData.instance
 
-	--[=[
-		@prop flags number?
-		@within Classes.Activity
-
-		Activity flags ORd together, describes what the payload includes
-	]=]
 	self.flags = activityData.flags
 
-	--[=[
-		@prop buttons {Classes.ActivityButton}
-		@within Classes.Activity
-
-		Custom buttons shown in the Rich Presence
-	]=]
 	self.buttons = activityButtons
 end
 

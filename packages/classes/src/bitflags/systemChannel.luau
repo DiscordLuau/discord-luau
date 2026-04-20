@@ -7,6 +7,12 @@
 	https://discord.com/developers/docs/resources/guild#guild-object-system-channel-flags
 ]=]
 
+--[=[
+	@prop flag number
+	@within Classes.SystemChannelBitflag
+	The bitfield representing the system channel flags.
+]=]
+
 local bit = require("../../luau_packages/bit")
 
 local SystemChannelBitflag = {}
@@ -89,11 +95,6 @@ end
 function SystemChannelBitflag.Interface.new(flag: number): SystemChannelBitflag
 	local self = setmetatable(
 		{
-			--[=[
-				@prop flag number
-				@within Classes.SystemChannelBitflag
-				The bitfield representing the system channel flags.
-			]=]
 			flag = flag,
 		} :: SystemChannelBitflag,
 		{ __index = SystemChannelBitflag.Prototype }

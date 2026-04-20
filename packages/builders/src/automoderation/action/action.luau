@@ -5,6 +5,18 @@
 	Implementation of a discord automod action object as a luau builder.
 ]=]
 
+--[=[
+	@prop type apiTypes.ActionTypes
+	@within Builders.Action
+	The type of action to perform when a rule is triggered.
+]=]
+
+--[=[
+	@prop metadata Builders.ActionMetadata
+	@within Builders.Action
+	Additional metadata needed during execution for this specific action type.
+]=]
+
 local apiTypes = require("../../../luau_packages/api_types")
 local metadata = require("./metadata")
 
@@ -58,18 +70,8 @@ function Action.Interface.new(resource: {
 }?): Action
 	local self = setmetatable(
 		{
-			--[=[
-				@prop type apiTypes.ActionTypes
-				@within Builders.Action
-				The type of action to perform when a rule is triggered.
-			]=]
 			type = nil,
 
-			--[=[
-				@prop metadata Builders.ActionMetadata
-				@within Builders.Action
-				Additional metadata needed during execution for this specific action type.
-			]=]
 			metadata = nil,
 		} :: Action,
 		{

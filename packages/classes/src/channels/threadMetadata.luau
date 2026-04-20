@@ -7,6 +7,48 @@
 	https://discord.com/developers/docs/resources/channel#thread-metadata-object
 ]=]
 
+--[=[
+	@prop archiveTimestamp std_polyfills.DateTime
+	@within Classes.ThreadMetadata
+	
+	Timestamp for when the thread's archive status was last changed, used for calculating recent activity
+]=]
+
+--[=[
+	@prop createTimestamp std_polyfills.DateTime?
+	@within Classes.ThreadMetadata
+	
+	Timestamp for when the thread was created, null if thread was created before October 2021
+]=]
+
+--[=[
+	@prop archived boolean
+	@within Classes.ThreadMetadata
+	
+	Whether the thread is archived or not
+]=]
+
+--[=[
+	@prop autoArchiveDuration number
+	@within Classes.ThreadMetadata
+	
+	Duration in minutes to automatically archive the thread after recent activity
+]=]
+
+--[=[
+	@prop locked boolean
+	@within Classes.ThreadMetadata
+	
+	Whether the thread is locked or not
+]=]
+
+--[=[
+	@prop invitable boolean?
+	@within Classes.ThreadMetadata
+	
+	Whether non-moderators can add other non-moderators to a private thread
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 local stdPolyfills = require("../../lune_packages/std_polyfills")
 
@@ -23,53 +65,17 @@ ThreadMetadata.Prototype = {}
 	created or updated.
 ]=]
 function ThreadMetadata.Prototype.sync(self: ThreadMetadata, threadMetadataData: apiTypes.ThreadMetadataObject)
-	--[=[
-		@prop archiveTimestamp std_polyfills.DateTime
-		@within Classes.ThreadMetadata
-		
-		Timestamp for when the thread's archive status was last changed, used for calculating recent activity
-	]=]
 	self.archiveTimestamp = stdPolyfills.datetime.fromIsoDate(threadMetadataData.archive_timestamp)
 
-	--[=[
-		@prop createTimestamp std_polyfills.DateTime?
-		@within Classes.ThreadMetadata
-		
-		Timestamp for when the thread was created, null if thread was created before October 2021
-	]=]
 	self.createTimestamp = threadMetadataData.create_timestamp
 		and stdPolyfills.datetime.fromIsoDate(threadMetadataData.create_timestamp)
 
-	--[=[
-		@prop archived boolean
-		@within Classes.ThreadMetadata
-		
-		Whether the thread is archived or not
-	]=]
 	self.archived = threadMetadataData.archived
 
-	--[=[
-		@prop autoArchiveDuration number
-		@within Classes.ThreadMetadata
-		
-		Duration in minutes to automatically archive the thread after recent activity
-	]=]
 	self.autoArchiveDuration = threadMetadataData.auto_archive_duration
 
-	--[=[
-		@prop locked boolean
-		@within Classes.ThreadMetadata
-		
-		Whether the thread is locked or not
-	]=]
 	self.locked = threadMetadataData.locked
 
-	--[=[
-		@prop invitable boolean?
-		@within Classes.ThreadMetadata
-		
-		Whether non-moderators can add other non-moderators to a private thread
-	]=]
 	self.invitable = threadMetadataData.invitable
 end
 

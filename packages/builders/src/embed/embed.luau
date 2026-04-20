@@ -7,6 +7,84 @@
 	https://discord.com/developers/docs/resources/message#embed-object
 ]=]
 
+--[=[
+	@prop title string?
+	@within Builders.Embed
+	The title of the embed.
+]=]
+
+--[=[
+	@prop type apiTypes.EmbedType?
+	@within Builders.Embed
+	The type of embed.
+]=]
+
+--[=[
+	@prop description string?
+	@within Builders.Embed
+	The description of the embed.
+]=]
+
+--[=[
+	@prop url string?
+	@within Builders.Embed
+	The URL of the embed.
+]=]
+
+--[=[
+	@prop timestamp number?
+	@within Builders.Embed
+	The timestamp of the embed.
+]=]
+
+--[=[
+	@prop color number?
+	@within Builders.Embed
+	The color of the embed.
+]=]
+
+--[=[
+	@prop footer Builders.EmbedFooter?
+	@within Builders.Embed
+	The footer of the embed.
+]=]
+
+--[=[
+	@prop image Builders.EmbedImage?
+	@within Builders.Embed
+	The image of the embed.
+]=]
+
+--[=[
+	@prop thumbnail Builders.EmbedThumbnail?
+	@within Builders.Embed
+	The thumbnail of the embed.
+]=]
+
+--[=[
+	@prop video Builders.EmbedVideo?
+	@within Builders.Embed
+	The video of the embed.
+]=]
+
+--[=[
+	@prop provider Builders.EmbedProvider?
+	@within Builders.Embed
+	The provider of the embed.
+]=]
+
+--[=[
+	@prop author Builders.EmbedAuthor?
+	@within Builders.Embed
+	The author of the embed.
+]=]
+
+--[=[
+	@prop fields {Builders.EmbedField}
+	@within Builders.Embed
+	The fields in the embed.
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 
 local stdPolyfills = require("../../lune_packages/std_polyfills")
@@ -80,7 +158,7 @@ end
 	Set the timestamp of the embed, timestamps will exist at the bottom/footer of the embed.
 ]=]
 function Embed.Prototype.setTimestamp(self: Embed, timestamp: stdPolyfills.DateTime): Embed
-	self.timestamp = timestamp.unixTimestampMillis
+	self.timestamp = timestamp:toRfc3339()
 
 	return self
 end
@@ -173,7 +251,7 @@ end
 	Add a field to the embeds.
 ]=]
 function Embed.Prototype.addField(self: Embed, field: embedField.JSON): Embed
-	assert(#self.fields > 25, `Embeds can only house up to 25 embeds!`)
+	assert(#self.fields <= 25, `Embeds can only house up to 25 fields!`)
 
 	table.insert(self.fields, field)
 
@@ -193,7 +271,7 @@ function Embed.Prototype.build(self: Embed): JSON
 		type = apiTypes.embed.EmbedType[self.type],
 		description = self.description,
 		url = self.url,
-		timestamp = tostring(self.timestamp),
+		timestamp = self.timestamp,
 		color = self.color,
 		footer = self.footer,
 		image = self.image,
@@ -227,83 +305,7 @@ function Embed.Interface.new(resource: {
 }?): Embed
 	local self = setmetatable(
 		{
-			--[=[
-				@prop title string?
-				@within Builders.Embed
-				The title of the embed.
-			]=]
 
-			--[=[
-				@prop type apiTypes.EmbedType?
-				@within Builders.Embed
-				The type of embed.
-			]=]
-
-			--[=[
-				@prop description string?
-				@within Builders.Embed
-				The description of the embed.
-			]=]
-
-			--[=[
-				@prop url string?
-				@within Builders.Embed
-				The URL of the embed.
-			]=]
-
-			--[=[
-				@prop timestamp number?
-				@within Builders.Embed
-				The timestamp of the embed.
-			]=]
-
-			--[=[
-				@prop color number?
-				@within Builders.Embed
-				The color of the embed.
-			]=]
-
-			--[=[
-				@prop footer Builders.EmbedFooter?
-				@within Builders.Embed
-				The footer of the embed.
-			]=]
-
-			--[=[
-				@prop image Builders.EmbedImage?
-				@within Builders.Embed
-				The image of the embed.
-			]=]
-
-			--[=[
-				@prop thumbnail Builders.EmbedThumbnail?
-				@within Builders.Embed
-				The thumbnail of the embed.
-			]=]
-
-			--[=[
-				@prop video Builders.EmbedVideo?
-				@within Builders.Embed
-				The video of the embed.
-			]=]
-
-			--[=[
-				@prop provider Builders.EmbedProvider?
-				@within Builders.Embed
-				The provider of the embed.
-			]=]
-
-			--[=[
-				@prop author Builders.EmbedAuthor?
-				@within Builders.Embed
-				The author of the embed.
-			]=]
-
-			--[=[
-				@prop fields {Builders.EmbedField}
-				@within Builders.Embed
-				The fields in the embed.
-			]=]
 			fields = {},
 		} :: Embed,
 		{

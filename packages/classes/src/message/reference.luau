@@ -7,6 +7,36 @@
 	https://discord.com/developers/docs/resources/message#message-reference-structure
 ]=]
 
+--[=[
+	@prop type apiTypes.MessageReferenceType?
+	@within Classes.Reference
+	The type of message reference.
+]=]
+
+--[=[
+	@prop messageId apiTypes.Snowflake?
+	@within Classes.Reference
+	The ID of the referenced message.
+]=]
+
+--[=[
+	@prop guildId apiTypes.Snowflake?
+	@within Classes.Reference
+	The ID of the guild containing the referenced message.
+]=]
+
+--[=[
+	@prop channelId apiTypes.Snowflake?
+	@within Classes.Reference
+	The ID of the channel containing the referenced message.
+]=]
+
+--[=[
+	@prop failIfNotExists boolean?
+	@within Classes.Reference
+	Whether to fail if the referenced message does not exist.
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 
 local Reference = {}
@@ -22,39 +52,14 @@ Reference.Prototype = {}
 	created or updated.
 ]=]
 function Reference.Prototype.sync(self: Reference, referenceData: apiTypes.MessageReferenceObject)
-	--[=[
-		@prop type apiTypes.MessageReferenceType?
-		@within Classes.Reference
-		The type of message reference.
-	]=]
 	self.type = apiTypes.message.MessageReferenceType[referenceData.type]
 
-	--[=[
-		@prop messageId apiTypes.Snowflake?
-		@within Classes.Reference
-		The ID of the referenced message.
-	]=]
 	self.messageId = referenceData.message_id
 
-	--[=[
-		@prop guildId apiTypes.Snowflake?
-		@within Classes.Reference
-		The ID of the guild containing the referenced message.
-	]=]
 	self.guildId = referenceData.guild_id
 
-	--[=[
-		@prop channelId apiTypes.Snowflake?
-		@within Classes.Reference
-		The ID of the channel containing the referenced message.
-	]=]
 	self.channelId = referenceData.channel_id
 
-	--[=[
-		@prop failIfNotExists boolean?
-		@within Classes.Reference
-		Whether to fail if the referenced message does not exist.
-	]=]
 	self.failIfNotExists = referenceData.fail_if_not_exists
 end
 

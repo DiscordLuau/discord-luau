@@ -7,6 +7,104 @@
 	https://discord.com/developers/docs/resources/message#attachment-object
 ]=]
 
+--[=[
+	@prop id string
+	@within Classes.Attachment
+
+	The unique identifier for this attachment
+]=]
+
+--[=[
+	@prop filename string
+	@within Classes.Attachment
+
+	Name of the attached file
+]=]
+
+--[=[
+	@prop title string?
+	@within Classes.Attachment
+
+	Title of the attached file (if provided)
+]=]
+
+--[=[
+	@prop description string?
+	@within Classes.Attachment
+
+	Description of the attached file (if provided)
+]=]
+
+--[=[
+	@prop contentType string?
+	@within Classes.Attachment
+
+	The media type/MIME type of the file
+]=]
+
+--[=[
+	@prop size number
+	@within Classes.Attachment
+
+	Size of the file in bytes
+]=]
+
+--[=[
+	@prop url string
+	@within Classes.Attachment
+
+	Source URL of the file
+]=]
+
+--[=[
+	@prop proxyUrl string
+	@within Classes.Attachment
+
+	A proxied URL of the file
+]=]
+
+--[=[
+	@prop height number?
+	@within Classes.Attachment
+
+	Height of the file if it is an image
+]=]
+
+--[=[
+	@prop width number?
+	@within Classes.Attachment
+
+	Width of the file if it is an image
+]=]
+
+--[=[
+	@prop ephemeral boolean?
+	@within Classes.Attachment
+
+	Whether this attachment is ephemeral
+]=]
+
+--[=[
+	@prop durationSeconds number?
+	@within Classes.Attachment
+
+	Duration of the audio file in seconds
+]=]
+
+--[=[
+	@prop waveform string?
+	@within Classes.Attachment
+
+	Base64 encoded waveform data for audio files
+]=]
+
+--[=[
+	@prop flags Classes.AttachmentBitflag?
+	@within Classes.Attachment
+
+	Attachment flags that describe extra features or properties
+]=]
+
 local apiTypes = require("../luau_packages/api_types")
 
 local attachmentBitflag = require("./bitflags/attachment")
@@ -24,116 +122,32 @@ Attachment.Prototype = {}
 	created or updated.
 ]=]
 function Attachment.Prototype.sync(self: Attachment, attachmentData: apiTypes.AttachmentObject)
-	--[=[
-		@prop id string
-		@within Classes.Attachment
-
-		The unique identifier for this attachment
-	]=]
 	self.id = attachmentData.id
 
-	--[=[
-		@prop filename string
-		@within Classes.Attachment
-
-		Name of the attached file
-	]=]
 	self.filename = attachmentData.filename
 
-	--[=[
-		@prop title string?
-		@within Classes.Attachment
-
-		Title of the attached file (if provided)
-	]=]
 	self.title = attachmentData.title
 
-	--[=[
-		@prop description string?
-		@within Classes.Attachment
-
-		Description of the attached file (if provided)
-	]=]
 	self.description = attachmentData.description
 
-	--[=[
-		@prop contentType string?
-		@within Classes.Attachment
-
-		The media type/MIME type of the file
-	]=]
 	self.contentType = attachmentData.content_type
 
-	--[=[
-		@prop size number
-		@within Classes.Attachment
-
-		Size of the file in bytes
-	]=]
 	self.size = attachmentData.size
 
-	--[=[
-		@prop url string
-		@within Classes.Attachment
-
-		Source URL of the file
-	]=]
 	self.url = attachmentData.url
 
-	--[=[
-		@prop proxyUrl string
-		@within Classes.Attachment
-
-		A proxied URL of the file
-	]=]
 	self.proxyUrl = attachmentData.proxy_url
 
-	--[=[
-		@prop height number?
-		@within Classes.Attachment
-
-		Height of the file if it is an image
-	]=]
 	self.height = attachmentData.height
 
-	--[=[
-		@prop width number?
-		@within Classes.Attachment
-
-		Width of the file if it is an image
-	]=]
 	self.width = attachmentData.width
 
-	--[=[
-		@prop ephemeral boolean?
-		@within Classes.Attachment
-
-		Whether this attachment is ephemeral
-	]=]
 	self.ephemeral = attachmentData.ephemeral
 
-	--[=[
-		@prop durationSeconds number?
-		@within Classes.Attachment
-
-		Duration of the audio file in seconds
-	]=]
 	self.durationSeconds = attachmentData.duration_secs
 
-	--[=[
-		@prop waveform string?
-		@within Classes.Attachment
-
-		Base64 encoded waveform data for audio files
-	]=]
 	self.waveform = attachmentData.waveform
 
-	--[=[
-		@prop flags Classes.AttachmentBitflag?
-		@within Classes.Attachment
-
-		Attachment flags that describe extra features or properties
-	]=]
 	self.flags = attachmentData.flags and attachmentBitflag.new(attachmentData.flags)
 end
 

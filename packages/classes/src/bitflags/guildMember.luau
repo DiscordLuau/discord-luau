@@ -7,6 +7,11 @@
 	https://discord.com/developers/docs/resources/guild#guild-member-object-guild-member-flags
 ]=]
 
+--[=[
+	@prop flag number
+	@within Classes.GuildMemberBitflag
+]=]
+
 local bit = require("../../luau_packages/bit")
 
 local GuildMemberBitflag = {}
@@ -71,10 +76,6 @@ end
 function GuildMemberBitflag.Interface.new(flag: number): GuildMemberBitflag
 	local self = setmetatable(
 		{
-			--[=[
-				@prop flag number
-				@within Classes.GuildMemberBitflag
-			]=]
 			flag = flag,
 		} :: GuildMemberBitflag,
 		{ __index = GuildMemberBitflag.Prototype }

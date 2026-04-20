@@ -6,6 +6,30 @@
 	for a generic channel object.
 ]=]
 
+--[=[
+	@prop type string
+	@within Classes.Channel
+	The type of the channel, indicating its functionality and behavior.
+]=]
+
+--[=[
+	@prop id string
+	@within Classes.Channel
+	The unique identifier for this channel.
+]=]
+
+--[=[
+	@prop name string?
+	@within Classes.Channel
+	The name of the channel.
+]=]
+
+--[=[
+	@prop flags Classes.ChannelBitflag?
+	@within Classes.Channel
+	The flags that indicate various properties and states of the channel.
+]=]
+
 local apiTypes = require("../../../luau_packages/api_types")
 local future = require("../../../luau_packages/future")
 local rest = require("../../../luau_packages/rest")
@@ -81,32 +105,12 @@ function ChannelBehaviour.Prototype.modifyAsync<T>(self: Channel<T>, json: build
 end
 
 function ChannelBehaviour.Interface.inheritProperties(class: any, channelData: apiTypes.ChannelObject)
-	--[=[
-		@prop type string
-		@within Classes.Channel
-		The type of the channel, indicating its functionality and behavior.
-	]=]
 	class.type = apiTypes.channel.ChannelTypes[channelData.type]
 
-	--[=[
-		@prop id string
-		@within Classes.Channel
-		The unique identifier for this channel.
-	]=]
 	class.id = channelData.id
 
-	--[=[
-		@prop name string?
-		@within Classes.Channel
-		The name of the channel.
-	]=]
 	class.name = channelData.name
 
-	--[=[
-		@prop flags Classes.ChannelBitflag?
-		@within Classes.Channel
-		The flags that indicate various properties and states of the channel.
-	]=]
 	class.flags = channelData.flags and channelBitflags.new(channelData.flags)
 end
 

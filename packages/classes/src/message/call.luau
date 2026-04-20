@@ -7,6 +7,18 @@
 	https://discord.com/developers/docs/resources/message#message-call-object
 ]=]
 
+--[=[
+	@prop participants { Classes.User }
+	@within Classes.Call
+	Array of user objects that participated in the call
+]=]
+
+--[=[
+	@prop endedTimestamp DateTime
+	@within Classes.Call
+	When the call ended, stored as a DateTime object
+]=]
+
 local stdPolyfills = require("../../lune_packages/std_polyfills")
 
 local apiTypes = require("../../luau_packages/api_types")
@@ -26,11 +38,6 @@ Call.Prototype = {}
 	created or updated.
 ]=]
 function Call.Prototype.sync(self: Call, callData: apiTypes.MessageCallObject)
-	--[=[
-		@prop participants { Classes.User }
-		@within Classes.Call
-		Array of user objects that participated in the call
-	]=]
 	local userArray = {}
 
 	for _, userData in callData.participants do
@@ -39,11 +46,6 @@ function Call.Prototype.sync(self: Call, callData: apiTypes.MessageCallObject)
 
 	self.participants = userArray
 
-	--[=[
-		@prop endedTimestamp DateTime
-		@within Classes.Call
-		When the call ended, stored as a DateTime object
-	]=]
 	self.endedTimestamp = stdPolyfills.datetime.fromIsoDate(callData.ended_timestamp)
 end
 

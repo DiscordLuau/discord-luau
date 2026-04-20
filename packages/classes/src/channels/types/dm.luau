@@ -7,6 +7,11 @@
 	https://discord.com/developers/docs/resources/channel#channel-object
 ]=]
 
+--[=[
+	@prop state State
+	@within Classes.DM
+]=]
+
 local apiTypes = require("../../../luau_packages/api_types")
 local state = require("../../../luau_packages/state")
 
@@ -45,10 +50,6 @@ end
 function DM.Interface.new(state: state.State, channelData: apiTypes.ChannelObject): DM
 	local self = setmetatable(
 		{
-			--[=[
-				@prop state State
-				@within Classes.DM
-			]=]
 			state = state,
 		} :: DM,
 		{ __index = DM.Prototype }

@@ -7,6 +7,24 @@
 	https://discord.com/developers/docs/resources/sticker#sticker-item-object
 ]=]
 
+--[=[
+	@prop id string
+	@within Classes.StickerItem
+	The unique identifier for this sticker.
+]=]
+
+--[=[
+	@prop name string
+	@within Classes.StickerItem
+	The name of this sticker.
+]=]
+
+--[=[
+	@prop formatType string
+	@within Classes.StickerItem
+	The format type of this sticker.
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 
 local StickerItem = {}
@@ -22,25 +40,10 @@ StickerItem.Prototype = {}
 	created or updated.
 ]=]
 function StickerItem.Prototype.sync(self: StickerItem, stickerData: apiTypes.SitckerItemObject)
-	--[=[
-		@prop id string
-		@within Classes.StickerItem
-		The unique identifier for this sticker.
-	]=]
 	self.id = stickerData.id
 
-	--[=[
-		@prop name string
-		@within Classes.StickerItem
-		The name of this sticker.
-	]=]
 	self.name = stickerData.name
 
-	--[=[
-		@prop formatType string
-		@within Classes.StickerItem
-		The format type of this sticker.
-	]=]
 	self.formatType = apiTypes.sticker.StickerFormatTypes[stickerData.format_type]
 end
 

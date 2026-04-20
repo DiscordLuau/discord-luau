@@ -7,6 +7,54 @@
 	https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-rule-object
 ]=]
 
+--[=[
+	@prop name string
+	@within Builders.AutomoderationRule
+	The name of the automoderation rule.
+]=]
+
+--[=[
+	@prop eventType Builders.EventTypes
+	@within Builders.AutomoderationRule
+	The event type that will trigger the rule.
+]=]
+
+--[=[
+	@prop triggerType Builders.TriggerTypes
+	@within Builders.AutomoderationRule
+	The type of content which can trigger the rule.
+]=]
+
+--[=[
+	@prop triggerMetadata Builders.TriggerMetadata
+	@within Builders.AutomoderationRule
+	The trigger metadata for the rule.
+]=]
+
+--[=[
+	@prop actions {Builders.Action}
+	@within Builders.AutomoderationRule
+	The actions which will execute when the rule is triggered.
+]=]
+
+--[=[
+	@prop enabled boolean
+	@within Builders.AutomoderationRule
+	Whether the rule is enabled.
+]=]
+
+--[=[
+	@prop exemptRoles {string}
+	@within Builders.AutomoderationRule
+	The role ids that should not be affected by the rule.
+]=]
+
+--[=[
+	@prop exemptChannels {string}
+	@within Builders.AutomoderationRule
+	The channel ids that should not be affected by the rule.
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 local triggerMetadata = require("./trigger/metadata")
 local action = require("./action/action")
@@ -168,60 +216,20 @@ function AutomoderationRule.Interface.new(resource: {
 }?): AutomoderationRule
 	local self = setmetatable(
 		{
-			--[=[
-				@prop name string
-				@within Builders.AutomoderationRule
-				The name of the automoderation rule.
-			]=]
 			name = nil,
 
-			--[=[
-				@prop eventType Builders.EventTypes
-				@within Builders.AutomoderationRule
-				The event type that will trigger the rule.
-			]=]
 			eventType = nil,
 
-			--[=[
-				@prop triggerType Builders.TriggerTypes
-				@within Builders.AutomoderationRule
-				The type of content which can trigger the rule.
-			]=]
 			triggerType = nil,
 
-			--[=[
-				@prop triggerMetadata Builders.TriggerMetadata
-				@within Builders.AutomoderationRule
-				The trigger metadata for the rule.
-			]=]
 			triggerMetadata = nil,
 
-			--[=[
-				@prop actions {Builders.Action}
-				@within Builders.AutomoderationRule
-				The actions which will execute when the rule is triggered.
-			]=]
 			actions = nil,
 
-			--[=[
-				@prop enabled boolean
-				@within Builders.AutomoderationRule
-				Whether the rule is enabled.
-			]=]
 			enabled = nil,
 
-			--[=[
-				@prop exemptRoles {string}
-				@within Builders.AutomoderationRule
-				The role ids that should not be affected by the rule.
-			]=]
 			exemptRoles = nil,
 
-			--[=[
-				@prop exemptChannels {string}
-				@within Builders.AutomoderationRule
-				The channel ids that should not be affected by the rule.
-			]=]
 			exemptChannels = nil,
 		} :: AutomoderationRule,
 		{

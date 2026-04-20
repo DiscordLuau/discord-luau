@@ -7,6 +7,18 @@
 	https://discord.com/developers/docs/resources/poll#poll-results-object-poll-results-object-structure
 ]=]
 
+--[=[
+	@prop isFinalized boolean
+	@within Classes.Results
+	Whether the poll results are finalized and can no longer be updated
+]=]
+
+--[=[
+	@prop answerCounts { Classes.AnswerCount }
+	@within Classes.Results
+	Array of answer counts for each poll option
+]=]
+
 local apiTypes = require("../../../luau_packages/api_types")
 
 local answerCount = require("./answerCount")
@@ -30,18 +42,8 @@ function Results.Prototype.sync(self: Results, resultsData: apiTypes.PollResultO
 		table.insert(countArray, answerCount.new(answerCountData))
 	end
 
-	--[=[
-		@prop isFinalized boolean
-		@within Classes.Results
-		Whether the poll results are finalized and can no longer be updated
-	]=]
 	self.isFinalized = resultsData.is_finalized
 
-	--[=[
-		@prop answerCounts { Classes.AnswerCount }
-		@within Classes.Results
-		Array of answer counts for each poll option
-	]=]
 	self.answerCounts = countArray
 end
 

@@ -7,6 +7,34 @@
 	https://discord.com/developers/docs/topics/teams#data-models-team-object
 ]=]
 
+--[=[
+	@prop membershipState apiTypes.MembershipState
+	@within Classes.TeamMember
+
+	The state of the team member's membership. Represents the current status of this member within the team.
+]=]
+
+--[=[
+	@prop teamId string
+	@within Classes.TeamMember
+
+	The unique identifier of the team this member belongs to.
+]=]
+
+--[=[
+	@prop user Classes.User
+	@within Classes.TeamMember
+
+	The user object associated with this team member. Contains detailed information about the user's profile.
+]=]
+
+--[=[
+	@prop role apiTypes.TeamRole
+	@within Classes.TeamMember
+
+	The role assigned to this team member. Can be either Admin, Developer, or ReadOnly, determining their permissions.
+]=]
+
 local apiTypes = require("../../../luau_packages/api_types")
 
 local user = require("../../user")
@@ -24,36 +52,12 @@ Member.Prototype = {}
 	created or updated.
 ]=]
 function Member.Prototype.sync(self: Member, memberData: apiTypes.TeamMemberObject)
-	--[=[
-		@prop membershipState apiTypes.MembershipState
-		@within Classes.TeamMember
-
-		The state of the team member's membership. Represents the current status of this member within the team.
-	]=]
 	self.membershipState = apiTypes.application.MembershipState[memberData.membership_state]
 
-	--[=[
-		@prop teamId string
-		@within Classes.TeamMember
-
-		The unique identifier of the team this member belongs to.
-	]=]
 	self.teamId = memberData.team_id
 
-	--[=[
-		@prop user Classes.User
-		@within Classes.TeamMember
-
-		The user object associated with this team member. Contains detailed information about the user's profile.
-	]=]
 	self.user = user.new(memberData.user)
 
-	--[=[
-		@prop role apiTypes.TeamRole
-		@within Classes.TeamMember
-
-		The role assigned to this team member. Can be either Admin, Developer, or ReadOnly, determining their permissions.
-	]=]
 	self.role = (
 		memberData.role == "Admin" and "Admin"
 		or memberData.role == "Developer" and "Developer"

@@ -4,6 +4,7 @@ local buffer = require("../luau_packages/buffer")
 local emitter = require("../luau_packages/emitter")
 local future = require("../luau_packages/future")
 local logger = require("../luau_packages/logger")
+local secret = require("../luau_packages/secret")
 
 local util = require("../luau_packages/util")
 local apiTypes = require("../luau_packages/api_types")
@@ -276,7 +277,7 @@ function Shard.Prototype.identifyAsync(self: Shard)
 		self:sendAsync(stdPolyfills.serde.encode("json", {
 			["op"] = apiTypes.gateway.opcodes.Identify,
 			["d"] = {
-				["token"] = self.token,
+				["token"] = self.token.value,
 				["intents"] = self.intents,
 				["compress"] = true,
 				["large_threshold"] = self.largeThreshold or 250,
@@ -448,7 +449,7 @@ function Shard.Prototype.resumeAsync(self: Shard)
 			self:sendAsync(stdPolyfills.serde.encode("json", {
 				["op"] = apiTypes.gateway.opcodes.Resume,
 				["d"] = {
-					["token"] = self.token,
+					["token"] = self.token.value,
 					["session_id"] = self.sessionId,
 					["seq"] = self.lastSequence,
 				},
@@ -616,7 +617,7 @@ end
 	Will instantiate a new Shard class.
 ]=]
 function Shard.Interface.new(settings: {
-	token: string,
+	token: secret.Secret<string>,
 
 	intents: number,
 	shardId: number,
@@ -629,7 +630,7 @@ function Shard.Interface.new(settings: {
 }): Shard
 	local self = setmetatable(
 		{
-			token = settings.token, -- todo: hide this
+			token = settings.token,
 			intents = settings.intents,
 			shardId = settings.shardId,
 			shardCount = settings.shardCount,
@@ -852,7 +853,7 @@ function Shard.Interface.new(settings: {
 end
 
 export type Shard = typeof(Shard.Prototype) & {
-	token: string,
+	token: secret.Secret<string>,
 	intents: number,
 	shardId: number,
 	shardCount: number,

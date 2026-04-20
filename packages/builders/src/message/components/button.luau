@@ -7,6 +7,48 @@
 	https://discord.com/developers/docs/interactions/message-components#buttons
 ]=]
 
+--[=[
+	@prop style apiTypes.ButtonStyle
+	@within Builders.Button
+	The style of the button that determines its appearance and behavior.
+]=]
+
+--[=[
+	@prop label string?
+	@within Builders.Button
+	The text that appears on the button.
+]=]
+
+--[=[
+	@prop emoji Builders.Emoji?
+	@within Builders.Button
+	The emoji that appears on the button.
+]=]
+
+--[=[
+	@prop customId string?
+	@within Builders.Button
+	A developer-defined identifier for the button.
+]=]
+
+--[=[
+	@prop skuId string?
+	@within Builders.Button
+	The SKU ID for purchase buttons.
+]=]
+
+--[=[
+	@prop url string?
+	@within Builders.Button
+	The URL that the button will navigate to when clicked.
+]=]
+
+--[=[
+	@prop disabled boolean?
+	@within Builders.Button
+	Whether the button is disabled and cannot be clicked.
+]=]
+
 local apiTypes = require("../../../luau_packages/api_types")
 
 local emoji = require("../../emoji")
@@ -140,53 +182,18 @@ function Button.Interface.new(resource: {
 }?): Button
 	local self = setmetatable(
 		{
-			--[=[
-				@prop style apiTypes.ButtonStyle
-				@within Builders.Button
-				The style of the button that determines its appearance and behavior.
-			]=]
 			style = nil,
 
-			--[=[
-				@prop label string?
-				@within Builders.Button
-				The text that appears on the button.
-			]=]
 			label = nil,
 
-			--[=[
-				@prop emoji Builders.Emoji?
-				@within Builders.Button
-				The emoji that appears on the button.
-			]=]
 			emoji = nil,
 
-			--[=[
-				@prop customId string?
-				@within Builders.Button
-				A developer-defined identifier for the button.
-			]=]
 			customId = nil,
 
-			--[=[
-				@prop skuId string?
-				@within Builders.Button
-				The SKU ID for purchase buttons.
-			]=]
 			skuId = nil,
 
-			--[=[
-				@prop url string?
-				@within Builders.Button
-				The URL that the button will navigate to when clicked.
-			]=]
 			url = nil,
 
-			--[=[
-				@prop disabled boolean?
-				@within Builders.Button
-				Whether the button is disabled and cannot be clicked.
-			]=]
 			disabled = nil,
 		} :: Button,
 		{

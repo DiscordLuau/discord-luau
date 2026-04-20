@@ -7,6 +7,104 @@
 	https://discord.com/developers/docs/interactions/application-commands#application-command-object
 ]=]
 
+--[=[
+	@prop id string
+	@within Classes.Command
+
+	The unique identifier for this command
+]=]
+
+--[=[
+	@prop type apiTypes.ApplicationCommandType
+	@within Classes.Command
+
+	The type of command this represents
+]=]
+
+--[=[
+	@prop applicationId string
+	@within Classes.Command
+
+	The unique identifier of the parent application
+]=]
+
+--[=[
+	@prop guildId string?
+	@within Classes.Command
+
+	ID of the guild this command is registered to, if any
+]=]
+
+--[=[
+	@prop name string
+	@within Classes.Command
+
+	Name of the command
+]=]
+
+--[=[
+	@prop nameLocalizations { [apiTypes.LanguageLocales]: string }?
+	@within Classes.Command
+
+	Localization dictionary for the command name
+]=]
+
+--[=[
+	@prop description string
+	@within Classes.Command
+
+	Description of the command
+]=]
+
+--[=[
+	@prop descriptionLocalizations { [apiTypes.LanguageLocales]: string }?
+	@within Classes.Command
+
+	Localization dictionary for the command description
+]=]
+
+--[=[
+	@prop options { Classes.Option }
+	@within Classes.Command
+
+	The parameters for the command
+]=]
+
+--[=[
+	@prop defaultMemberPermissions Classes.Permission?
+	@within Classes.Command
+
+	Default required permissions to use this command
+]=]
+
+--[=[
+	@prop nsfw boolean?
+	@within Classes.Command
+
+	Whether this command is age-restricted
+]=]
+
+--[=[
+	@prop integrationTypes { apiTypes.IntegrationTypesConfig }
+	@within Classes.Command
+
+	The integration types this command supports
+]=]
+
+--[=[
+	@prop contexts { apiTypes.InteractionContextType }
+	@within Classes.Command
+
+	The contexts this command can be used in
+]=]
+
+--[=[
+	@prop version string
+	@within Classes.Command
+
+	Auto-incrementing version identifier updated during substantial record changes
+]=]
+
 local apiTypes = require("../../../luau_packages/api_types")
 
 local permission = require("../../permission")
@@ -42,120 +140,36 @@ function Command.Prototype.sync(self: Command, commandData: apiTypes.Application
 
 	-- fixme: need to use `next` iterator here to avoid LSP errors.
 	for _, context in next, commandData.contexts or {} do
-		table.insert(integrationTypeArray, apiTypes.application.InteractionContextType[context])
+		table.insert(integrationTypeArray, apiTypes.interaction.InteractionContextType[context])
 	end
 
-	--[=[
-		@prop id string
-		@within Classes.Command
-
-		The unique identifier for this command
-	]=]
 	self.id = commandData.id or "-1"
 
-	--[=[
-		@prop type apiTypes.ApplicationCommandType
-		@within Classes.Command
-
-		The type of command this represents
-	]=]
 	self.type = apiTypes.interaction.ApplicationCommandType[commandData.type]
 
-	--[=[
-		@prop applicationId string
-		@within Classes.Command
-
-		The unique identifier of the parent application
-	]=]
 	self.applicationId = commandData.application_id or "-1"
 
-	--[=[
-		@prop guildId string?
-		@within Classes.Command
-
-		ID of the guild this command is registered to, if any
-	]=]
 	self.guildId = commandData.guild_id
 
-	--[=[
-		@prop name string
-		@within Classes.Command
-
-		Name of the command
-	]=]
 	self.name = commandData.name
 
-	--[=[
-		@prop nameLocalizations { [apiTypes.LanguageLocales]: string }?
-		@within Classes.Command
-
-		Localization dictionary for the command name
-	]=]
 	self.nameLocalizations = commandData.name_localizations
 
-	--[=[
-		@prop description string
-		@within Classes.Command
-
-		Description of the command
-	]=]
 	self.description = commandData.description
 
-	--[=[
-		@prop descriptionLocalizations { [apiTypes.LanguageLocales]: string }?
-		@within Classes.Command
-
-		Localization dictionary for the command description
-	]=]
 	self.descriptionLocalizations = commandData.description_localizations
 
-	--[=[
-		@prop options { Classes.Option }
-		@within Classes.Command
-
-		The parameters for the command
-	]=]
 	self.options = optionArray
 
-	--[=[
-		@prop defaultMemberPermissions Classes.Permission?
-		@within Classes.Command
-
-		Default required permissions to use this command
-	]=]
 	self.defaultMemberPermissions = commandData.default_member_permissions
 		and permission.new(commandData.default_member_permissions)
 
-	--[=[
-		@prop nsfw boolean?
-		@within Classes.Command
-
-		Whether this command is age-restricted
-	]=]
 	self.nsfw = commandData.nsfw
 
-	--[=[
-		@prop integrationTypes { apiTypes.IntegrationTypesConfig }
-		@within Classes.Command
-
-		The integration types this command supports
-	]=]
 	self.integrationTypes = integrationTypeArray
 
-	--[=[
-		@prop contexts { apiTypes.InteractionContextType }
-		@within Classes.Command
-
-		The contexts this command can be used in
-	]=]
 	self.contexts = contextArray
 
-	--[=[
-		@prop version string
-		@within Classes.Command
-
-		Auto-incrementing version identifier updated during substantial record changes
-	]=]
 	self.version = commandData.version or "-1"
 end
 

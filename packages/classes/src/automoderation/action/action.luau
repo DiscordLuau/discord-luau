@@ -7,6 +7,24 @@
 	https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-action-object
 ]=]
 
+--[=[
+	@prop type apiTypes.ActionTypes
+	@within Classes.Action
+
+	The type of action to take when a rule is triggered. This can be one of the following:
+	* BLOCK_MESSAGE - Block the message from being sent
+	* SEND_ALERT_MESSAGE - Send an alert message to a specified channel
+	* TIMEOUT - Timeout the user for a specified duration
+]=]
+
+--[=[
+	@prop metadata Classes.ActionMetadata?
+	@within Classes.Action
+
+	Additional metadata needed during execution for this specific action type. Different action types may require different metadata properties.
+	Only present when an action requires additional configuration.
+]=]
+
 local apiTypes = require("../../../luau_packages/api_types")
 
 local metadata = require("./metadata")
@@ -24,24 +42,8 @@ Action.Prototype = {}
 	created or updated.
 ]=]
 function Action.Prototype.sync(self: Action, actionData: apiTypes.AutomoderationActionObject)
-	--[=[
-		@prop type apiTypes.ActionTypes
-		@within Classes.Action
-
-		The type of action to take when a rule is triggered. This can be one of the following:
-		* BLOCK_MESSAGE - Block the message from being sent
-		* SEND_ALERT_MESSAGE - Send an alert message to a specified channel
-		* TIMEOUT - Timeout the user for a specified duration
-	]=]
 	self.type = apiTypes.guild.ActionTypes[actionData.type]
 
-	--[=[
-		@prop metadata Classes.ActionMetadata?
-		@within Classes.Action
-
-		Additional metadata needed during execution for this specific action type. Different action types may require different metadata properties.
-		Only present when an action requires additional configuration.
-	]=]
 	self.metadata = actionData.metadata and metadata.new(actionData.metadata)
 end
 

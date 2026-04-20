@@ -7,6 +7,24 @@
 	https://discord.com/developers/docs/interactions/message-components#SelectMenus
 ]=]
 
+--[=[
+	@prop defaultValues {Builders.DefaultValue}
+	@within Builders.SelectMenu
+	Array of default values for auto-populated select menu components
+]=]
+
+--[=[
+	@prop options {Builders.Option}
+	@within Builders.SelectMenu
+	Array of select menu options
+]=]
+
+--[=[
+	@prop apiTypes {api_types.ChannelType}
+	@within Builders.SelectMenu
+	Array of channel types that can be selected
+]=]
+
 local apiTypes = require("../../../../luau_packages/api_types")
 
 local defaultValue = require("./defaultValue")
@@ -156,25 +174,10 @@ function SelectMenu.Interface.new(resource: {
 }?): SelectMenu
 	local self = setmetatable(
 		{
-			--[=[
-				@prop defaultValues {Builders.DefaultValue}
-				@within Builders.SelectMenu
-				Array of default values for auto-populated select menu components
-			]=]
 			defaultValues = {},
 
-			--[=[
-				@prop options {Builders.Option}
-				@within Builders.SelectMenu
-				Array of select menu options
-			]=]
 			options = {},
 
-			--[=[
-				@prop apiTypes {api_types.ChannelType}
-				@within Builders.SelectMenu
-				Array of channel types that can be selected
-			]=]
 			apiTypes = {},
 		} :: SelectMenu,
 		{

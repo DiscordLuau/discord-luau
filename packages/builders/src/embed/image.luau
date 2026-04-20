@@ -7,6 +7,30 @@
 	https://discord.com/developers/docs/resources/message#embed-object-embed-image-structure
 ]=]
 
+--[=[
+	@prop url string
+	@within Builders.Image
+	Source url of image (only supports http(s) and attachments)
+]=]
+
+--[=[
+	@prop proxyUrl string?
+	@within Builders.Image
+	A proxied url of the image
+]=]
+
+--[=[
+	@prop height number?
+	@within Builders.Image
+	Height of image
+]=]
+
+--[=[
+	@prop width number?
+	@within Builders.Image
+	Width of image
+]=]
+
 local Image = {}
 
 Image.Prototype = {}
@@ -81,32 +105,12 @@ function Image.Interface.new(resource: {
 }?): Image
 	local self = setmetatable(
 		{
-			--[=[
-				@prop url string
-				@within Builders.Image
-				Source url of image (only supports http(s) and attachments)
-			]=]
 			url = nil,
 
-			--[=[
-				@prop proxyUrl string?
-				@within Builders.Image
-				A proxied url of the image
-			]=]
 			proxyUrl = nil,
 
-			--[=[
-				@prop height number?
-				@within Builders.Image
-				Height of image
-			]=]
 			height = nil,
 
-			--[=[
-				@prop width number?
-				@within Builders.Image
-				Width of image
-			]=]
 			width = nil,
 		} :: Image,
 		{

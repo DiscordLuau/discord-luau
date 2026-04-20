@@ -7,6 +7,18 @@
 	https://discord.com/developers/docs/resources/user#avatar-decoration-data-object
 ]=]
 
+--[=[
+	@prop asset string
+	@within Classes.AvatarDecoration
+	The asset URL for this avatar decoration.
+]=]
+
+--[=[
+	@prop skuId Snowflake
+	@within Classes.AvatarDecoration
+	The SKU ID for this avatar decoration.
+]=]
+
 local apiTypes = require("../luau_packages/api_types")
 
 local AvatarDecoration = {}
@@ -23,18 +35,8 @@ AvatarDecoration.Prototype = {}
 function AvatarDecoration.Interface.new(asset: string, skuId: apiTypes.Snowflake): AvatarDecoration
 	local self = setmetatable(
 		{
-			--[=[
-				@prop asset string
-				@within Classes.AvatarDecoration
-				The asset URL for this avatar decoration.
-			]=]
 			asset = asset,
 
-			--[=[
-				@prop skuId Snowflake
-				@within Classes.AvatarDecoration
-				The SKU ID for this avatar decoration.
-			]=]
 			skuId = skuId,
 		} :: AvatarDecoration,
 		{ __index = AvatarDecoration.Prototype }

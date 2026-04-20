@@ -7,6 +7,42 @@
 	https://discord.com/developers/docs/topics/permissions#role-object-role-tags-structure
 ]=]
 
+--[=[
+	@prop botId string?
+	@within Classes.RoleTag
+	The ID of the bot this role belongs to
+]=]
+
+--[=[
+	@prop integrationId string?
+	@within Classes.RoleTag
+	The ID of the integration this role belongs to
+]=]
+
+--[=[
+	@prop premiumSubscriber nil?
+	@within Classes.RoleTag
+	Whether this is the guild's premium subscriber role
+]=]
+
+--[=[
+	@prop subscriptionListingId string?
+	@within Classes.RoleTag
+	The ID of the subscription listing this role is for
+]=]
+
+--[=[
+	@prop availableForPurchase nil?
+	@within Classes.RoleTag
+	Whether this role is available for purchase
+]=]
+
+--[=[
+	@prop guildConnections nil?
+	@within Classes.RoleTag
+	Whether this role is a guild's linked role
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 
 local RoleTag = {}
@@ -22,46 +58,16 @@ RoleTag.Prototype = {}
 	created or updated.
 ]=]
 function RoleTag.Prototype.sync(self: RoleTag, roleTagData: apiTypes.GuildRoleTagObject)
-	--[=[
-		@prop botId string?
-		@within Classes.RoleTag
-		The ID of the bot this role belongs to
-	]=]
 	self.botId = roleTagData.bot_id
 
-	--[=[
-		@prop integrationId string?
-		@within Classes.RoleTag
-		The ID of the integration this role belongs to
-	]=]
 	self.integrationId = roleTagData.integration_id
 
-	--[=[
-		@prop premiumSubscriber nil?
-		@within Classes.RoleTag
-		Whether this is the guild's premium subscriber role
-	]=]
 	self.premiumSubscriber = roleTagData.premium_subscriber
 
-	--[=[
-		@prop subscriptionListingId string?
-		@within Classes.RoleTag
-		The ID of the subscription listing this role is for
-	]=]
 	self.subscriptionListingId = roleTagData.subscription_listing_id
 
-	--[=[
-		@prop availableForPurchase nil?
-		@within Classes.RoleTag
-		Whether this role is available for purchase
-	]=]
 	self.availableForPurchase = roleTagData.available_for_purchase
 
-	--[=[
-		@prop guildConnections nil?
-		@within Classes.RoleTag
-		Whether this role is a guild's linked role
-	]=]
 	self.guildConnections = roleTagData.guild_connections
 end
 

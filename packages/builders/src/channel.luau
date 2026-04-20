@@ -8,6 +8,12 @@
 ]=]
 
 --[=[
+	@prop permissionOverwrites { Builders.OverwriteObject }
+	@within Builders.Channel
+	List of permission overwrites applied to the channel.
+]=]
+
+--[=[
 	@prop id string?
 	@within Builders.Channel
 	The id of the channel.
@@ -514,11 +520,6 @@ function Channel.Interface.new(resource: {
 }?): Channel
 	local self = setmetatable(
 		{
-			--[=[
-				@prop permissionOverwrites { Builders.OverwriteObject }
-				@within Builders.Channel
-				List of permission overwrites applied to the channel.
-			]=]
 			permissionOverwrites = {},
 		} :: Channel,
 		{ __index = Channel.Prototype }

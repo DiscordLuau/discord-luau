@@ -7,6 +7,30 @@
 	https://discord.com/developers/docs/resources/message#allowed-mentions-object
 ]=]
 
+--[=[
+	@prop parse { apiTypes.AllowedMentionTypes }
+	@within Builders.AllowedMention
+	An array of allowed mention types to parse from the content.
+]=]
+
+--[=[
+	@prop roles { string }
+	@within Builders.AllowedMention
+	Array of role_ids to mention (Max size of 100).
+]=]
+
+--[=[
+	@prop users { string }
+	@within Builders.AllowedMention
+	Array of user_ids to mention (Max size of 100).
+]=]
+
+--[=[
+	@prop repliedUser boolean?
+	@within Builders.AllowedMention
+	For replies, whether to mention the author of the message being replied to.
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 
 local AllowedMention = {}
@@ -103,32 +127,12 @@ function AllowedMention.Interface.new(resource: {
 }?): AllowedMention
 	local self = setmetatable(
 		{
-			--[=[
-				@prop parse { apiTypes.AllowedMentionTypes }
-				@within Builders.AllowedMention
-				An array of allowed mention types to parse from the content.
-			]=]
 			parse = {},
 
-			--[=[
-				@prop roles { string }
-				@within Builders.AllowedMention
-				Array of role_ids to mention (Max size of 100).
-			]=]
 			roles = {},
 
-			--[=[
-				@prop users { string }
-				@within Builders.AllowedMention
-				Array of user_ids to mention (Max size of 100).
-			]=]
 			users = {},
 
-			--[=[
-				@prop repliedUser boolean?
-				@within Builders.AllowedMention
-				For replies, whether to mention the author of the message being replied to.
-			]=]
 		} :: AllowedMention,
 		{
 			__index = AllowedMention.Prototype,

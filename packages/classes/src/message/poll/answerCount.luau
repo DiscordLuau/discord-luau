@@ -7,6 +7,24 @@
 	packages/classes/src/message/poll/results.luau
 ]=]
 
+--[=[
+	@prop id number
+	@within Classes.AnswerCount
+	The ID of the answer being counted
+]=]
+
+--[=[
+	@prop count number
+	@within Classes.AnswerCount
+	The number of votes for this answer
+]=]
+
+--[=[
+	@prop meVoted boolean
+	@within Classes.AnswerCount
+	Whether the current user has voted for this answer
+]=]
+
 local apiTypes = require("../../../luau_packages/api_types")
 
 local AnswerCount = {}
@@ -22,25 +40,10 @@ AnswerCount.Prototype = {}
 	created or updated.
 ]=]
 function AnswerCount.Prototype.sync(self: AnswerCount, answerCountData: apiTypes.PollAnswerCountObject)
-	--[=[
-		@prop id number
-		@within Classes.AnswerCount
-		The ID of the answer being counted
-	]=]
 	self.id = answerCountData.id
 
-	--[=[
-		@prop count number
-		@within Classes.AnswerCount
-		The number of votes for this answer
-	]=]
 	self.count = answerCountData.count
 
-	--[=[
-		@prop meVoted boolean
-		@within Classes.AnswerCount
-		Whether the current user has voted for this answer
-	]=]
 	self.meVoted = answerCountData.me_voted
 end
 

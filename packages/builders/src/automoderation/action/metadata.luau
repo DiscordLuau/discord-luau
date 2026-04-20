@@ -5,6 +5,24 @@
 	Implementation of a discord automoderation action metadata object as a luau builder.
 ]=]
 
+--[=[
+	@prop channelId string
+	@within Builders.ActionMetadata
+	The ID of the channel where the action should be taken.
+]=]
+
+--[=[
+	@prop durationSeconds number
+	@within Builders.ActionMetadata
+	The duration of the action in seconds.
+]=]
+
+--[=[
+	@prop customMessage string?
+	@within Builders.ActionMetadata
+	A custom message that will be shown to members when the action is taken.
+]=]
+
 local apiTypes = require("../../../luau_packages/api_types")
 
 local ActionMetadata = {}
@@ -78,25 +96,10 @@ function ActionMetadata.Interface.new(resource: {
 }?): ActionMetadata
 	local self = setmetatable(
 		{
-			--[=[
-				@prop channelId string
-				@within Builders.ActionMetadata
-				The ID of the channel where the action should be taken.
-			]=]
 			channelId = nil,
 
-			--[=[
-				@prop durationSeconds number
-				@within Builders.ActionMetadata
-				The duration of the action in seconds.
-			]=]
 			durationSeconds = nil,
 
-			--[=[
-				@prop customMessage string?
-				@within Builders.ActionMetadata
-				A custom message that will be shown to members when the action is taken.
-			]=]
 			customMessage = nil,
 		} :: ActionMetadata,
 		{

@@ -7,6 +7,36 @@
 	https://discord.com/developers/docs/interactions/message-components#select-menu-object-select-menu-structure
 ]=]
 
+--[=[
+	@prop label string
+	@within Classes.SelectMenuOption
+	The text that appears on the select menu option
+]=]
+
+--[=[
+	@prop value string
+	@within Classes.SelectMenuOption
+	The value that will be sent when this option is selected
+]=]
+
+--[=[
+	@prop description string?
+	@within Classes.SelectMenuOption
+	Additional descriptive text that appears below the label
+]=]
+
+--[=[
+	@prop emoji Classes.Emoji?
+	@within Classes.SelectMenuOption
+	The emoji that appears next to the option label
+]=]
+
+--[=[
+	@prop default boolean?
+	@within Classes.SelectMenuOption
+	Whether this option is selected by default
+]=]
+
 local apiTypes = require("../../../../luau_packages/api_types")
 
 local emoji = require("../../../emoji")
@@ -24,39 +54,14 @@ Option.Prototype = {}
 	created or updated.
 ]=]
 function Option.Prototype.sync(self: Option, optionData: apiTypes.SelectOptionObject)
-	--[=[
-		@prop label string
-		@within Classes.SelectMenuOption
-		The text that appears on the select menu option
-	]=]
 	self.label = optionData.label
 
-	--[=[
-		@prop value string
-		@within Classes.SelectMenuOption
-		The value that will be sent when this option is selected
-	]=]
 	self.value = optionData.value
 
-	--[=[
-		@prop description string?
-		@within Classes.SelectMenuOption
-		Additional descriptive text that appears below the label
-	]=]
 	self.description = optionData.description
 
-	--[=[
-		@prop emoji Classes.Emoji?
-		@within Classes.SelectMenuOption
-		The emoji that appears next to the option label
-	]=]
 	self.emoji = optionData.emoji and emoji.new(optionData.emoji)
 
-	--[=[
-		@prop default boolean?
-		@within Classes.SelectMenuOption
-		Whether this option is selected by default
-	]=]
 	self.default = optionData.default
 end
 

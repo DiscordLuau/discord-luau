@@ -7,6 +7,27 @@
 	https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-secrets
 ]=]
 
+--[=[
+	@prop join string?
+	@within Classes.ActivitySecrets
+
+	The secret for joining a party
+]=]
+
+--[=[
+	@prop spectate string?
+	@within Classes.ActivitySecrets
+
+	The secret for spectating a game
+]=]
+
+--[=[
+	@prop match string?
+	@within Classes.ActivitySecrets
+
+	The secret for a specific instanced match
+]=]
+
 local ActivitySecrets = {}
 
 ActivitySecrets.Interface = {}
@@ -21,28 +42,10 @@ ActivitySecrets.Prototype = {}
 function ActivitySecrets.Interface.new(join: string?, spectate: string?, match: string?): ActivitySecrets
 	local self = setmetatable(
 		{
-			--[=[
-				@prop join string?
-				@within Classes.ActivitySecrets
-
-				The secret for joining a party
-			]=]
 			join = join,
 
-			--[=[
-				@prop spectate string?
-				@within Classes.ActivitySecrets
-
-				The secret for spectating a game
-			]=]
 			spectate = spectate,
 
-			--[=[
-				@prop match string?
-				@within Classes.ActivitySecrets
-
-				The secret for a specific instanced match
-			]=]
 			match = match,
 		} :: ActivitySecrets,
 		{ __index = ActivitySecrets.Prototype }

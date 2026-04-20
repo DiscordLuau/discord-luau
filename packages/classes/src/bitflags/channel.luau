@@ -7,6 +7,11 @@
 	https://discord.com/developers/docs/resources/channel#channel-object-channel-flags
 ]=]
 
+--[=[
+	@prop flag number
+	@within Classes.ChannelBitflag
+]=]
+
 local bit = require("../../luau_packages/bit")
 
 local ChannelBitflag = {}
@@ -60,10 +65,6 @@ end
 function ChannelBitflag.Interface.new(flag: number): ChannelBitflag
 	local self = setmetatable(
 		{
-			--[=[
-				@prop flag number
-				@within Classes.ChannelBitflag
-			]=]
 			flag = flag,
 		} :: ChannelBitflag,
 		{ __index = ChannelBitflag.Prototype }

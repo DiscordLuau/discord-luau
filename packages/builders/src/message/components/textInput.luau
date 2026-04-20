@@ -7,6 +7,54 @@
 	https://discord.com/developers/docs/interactions/message-components#text-input-object-text-input-structure
 ]=]
 
+--[=[
+	@prop customId string?
+	@within Builders.TextInput
+	The custom identifier for the text input component.
+]=]
+
+--[=[
+	@prop style apiTypes.TextInputStyle?
+	@within Builders.TextInput
+	The style of the text input component.
+]=]
+
+--[=[
+	@prop label string?
+	@within Builders.TextInput
+	The label text that appears above the text input field.
+]=]
+
+--[=[
+	@prop minLength number?
+	@within Builders.TextInput
+	The minimum length of text that can be entered.
+]=]
+
+--[=[
+	@prop maxLength number?
+	@within Builders.TextInput
+	The maximum length of text that can be entered.
+]=]
+
+--[=[
+	@prop required boolean?
+	@within Builders.TextInput
+	Whether this text input field is required to be filled.
+]=]
+
+--[=[
+	@prop value string?
+	@within Builders.TextInput
+	The pre-filled value for the text input field.
+]=]
+
+--[=[
+	@prop placeholder string?
+	@within Builders.TextInput
+	The placeholder text that appears when no text is entered.
+]=]
+
 local apiTypes = require("../../../luau_packages/api_types")
 
 local TextInput = {}
@@ -150,60 +198,20 @@ function TextInput.Interface.new(resource: {
 }?): TextInput
 	local self = setmetatable(
 		{
-			--[=[
-				@prop customId string?
-				@within Builders.TextInput
-				The custom identifier for the text input component.
-			]=]
 			customId = nil,
 
-			--[=[
-				@prop style apiTypes.TextInputStyle?
-				@within Builders.TextInput
-				The style of the text input component.
-			]=]
 			style = nil,
 
-			--[=[
-				@prop label string?
-				@within Builders.TextInput
-				The label text that appears above the text input field.
-			]=]
 			label = nil,
 
-			--[=[
-				@prop minLength number?
-				@within Builders.TextInput
-				The minimum length of text that can be entered.
-			]=]
 			minLength = nil,
 
-			--[=[
-				@prop maxLength number?
-				@within Builders.TextInput
-				The maximum length of text that can be entered.
-			]=]
 			maxLength = nil,
 
-			--[=[
-				@prop required boolean?
-				@within Builders.TextInput
-				Whether this text input field is required to be filled.
-			]=]
 			required = nil,
 
-			--[=[
-				@prop value string?
-				@within Builders.TextInput
-				The pre-filled value for the text input field.
-			]=]
 			value = nil,
 
-			--[=[
-				@prop placeholder string?
-				@within Builders.TextInput
-				The placeholder text that appears when no text is entered.
-			]=]
 			placeholder = nil,
 		} :: TextInput,
 		{

@@ -9,6 +9,24 @@
 	Note: Only YouTube and Twitch URLs are allowed for streaming.
 ]=]
 
+--[=[
+	@prop name string
+	@within Builders.Activity
+	The name of the activity that is displayed.
+]=]
+
+--[=[
+	@prop activityType api_types.ActivityType
+	@within Builders.Activity
+	The type of activity being performed.
+]=]
+
+--[=[
+	@prop streamingURL string?
+	@within Builders.Activity
+	The URL of the stream, only YouTube and Twitch URLs are supported.
+]=]
+
 local apiTypes = require("../luau_packages/api_types")
 
 local Activity = {}
@@ -95,25 +113,10 @@ function Activity.Interface.new(resource: {
 }?): Activity
 	local self = setmetatable(
 		{
-			--[=[
-				@prop name string
-				@within Builders.Activity
-				The name of the activity that is displayed.
-			]=]
 			name = nil,
 
-			--[=[
-				@prop activityType api_types.ActivityType
-				@within Builders.Activity
-				The type of activity being performed.
-			]=]
 			activityType = nil,
 
-			--[=[
-				@prop streamingURL string?
-				@within Builders.Activity
-				The URL of the stream, only YouTube and Twitch URLs are supported.
-			]=]
 			streamingURL = nil,
 		} :: Activity,
 		{ __index = Activity.Prototype }

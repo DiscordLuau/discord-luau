@@ -7,6 +7,44 @@
 	https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-type
 ]=]
 
+--[=[
+	@prop type ApplicationCommandOptionType
+	@within Classes.DataOption
+
+	The type of command option this represents. This determines how the option is displayed and handled in Discord.
+]=]
+
+--[=[
+	@prop options {Classes.DataOption}?
+	@within Classes.DataOption
+
+	An array of additional options if this option is a subcommand group, subcommand, or group of choices.
+	Can be nil if this option has no sub-options.
+]=]
+
+--[=[
+	@prop name string
+	@within Classes.DataOption
+
+	The name of this command option as it appears in Discord. This is what users see when using the command.
+]=]
+
+--[=[
+	@prop value T?
+	@within Classes.DataOption
+
+	The value provided by the user for this option. The type varies based on the option type.
+	Can be nil if no value was provided.
+]=]
+
+--[=[
+	@prop focused boolean?
+	@within Classes.DataOption
+
+	Indicates whether this option is currently focused in the Discord client during autocomplete.
+	Only present for autocomplete interactions.
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 
 local DataOption = {}
@@ -27,51 +65,18 @@ function DataOption.Prototype.sync<T>(
 )
 	local optionArray = {}
 
-	--[=[
-		@prop type ApplicationCommandOptionType
-		@within Classes.DataOption
-
-		The type of command option this represents. This determines how the option is displayed and handled in Discord.
-	]=]
-	self.type = apiTypes.application.ApplicationCommandOptionType[optionData.type]
+	self.type = apiTypes.interaction.ApplicationCommandOptionType[optionData.type]
 
 	for _, option in next, optionData.options or {} do
 		table.insert(optionArray, DataOption.Interface.new(option))
 	end
 
-	--[=[
-		@prop options {Classes.DataOption}?
-		@within Classes.DataOption
-
-		An array of additional options if this option is a subcommand group, subcommand, or group of choices.
-		Can be nil if this option has no sub-options.
-	]=]
 	self.options = optionArray
 
-	--[=[
-		@prop name string
-		@within Classes.DataOption
-
-		The name of this command option as it appears in Discord. This is what users see when using the command.
-	]=]
 	self.name = optionData.name
 
-	--[=[
-		@prop value T?
-		@within Classes.DataOption
-
-		The value provided by the user for this option. The type varies based on the option type.
-		Can be nil if no value was provided.
-	]=]
 	self.value = (optionData.value :: any) :: T
 
-	--[=[
-		@prop focused boolean?
-		@within Classes.DataOption
-
-		Indicates whether this option is currently focused in the Discord client during autocomplete.
-		Only present for autocomplete interactions.
-	]=]
 	self.focused = optionData.focused
 end
 

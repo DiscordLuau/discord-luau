@@ -79,13 +79,21 @@ end
 function Emitter.Prototype.invoke<T...>(self: Emitter<T...>, ...: any): ()
 	local callback = coroutine.wrap(function(...)
 		for _, thread in self._yieldingThreads do
-			coroutine.resume(thread, ...)
+			local status, response = coroutine.resume(thread, ...)
+
+			if not status then
+				print(response)
+			end
 		end
 
 		self._yieldingThreads = {}
 
 		for _, thread in self._connectedThreads do
-			coroutine.resume(thread, ...)
+			local status, response = coroutine.resume(thread, ...)
+
+			if not status then
+				print(response)
+			end
 		end
 	end)
 

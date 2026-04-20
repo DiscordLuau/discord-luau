@@ -7,6 +7,11 @@
 	https://discord.com/developers/docs/topics/permissions#role-object-role-flags
 ]=]
 
+--[=[
+	@prop flag number
+	@within Classes.RoleBitflag
+]=]
+
 local bit = require("../../luau_packages/bit")
 
 local RoleBitflag = {}
@@ -35,10 +40,6 @@ end
 function RoleBitflag.Interface.new(flag: number): RoleBitflag
 	local self = setmetatable(
 		{
-			--[=[
-				@prop flag number
-				@within Classes.RoleBitflag
-			]=]
 			flag = flag,
 		} :: RoleBitflag,
 		{ __index = RoleBitflag.Prototype }

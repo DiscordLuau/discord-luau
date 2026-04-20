@@ -7,6 +7,18 @@
 	https://discord.com/developers/docs/resources/poll#poll-answer-object-poll-answer-object-structure
 ]=]
 
+--[=[
+	@prop answerId number?
+	@within Builders.PollAnswer
+	The ID of the poll answer.
+]=]
+
+--[=[
+	@prop pollMedia Builders.Media?
+	@within Builders.PollAnswer
+	The media attached to this poll answer.
+]=]
+
 local mediaBuilder = require("./media")
 
 local PollAnswer = {}
@@ -69,18 +81,8 @@ function PollAnswer.Interface.new(resource: {
 }?): PollAnswer
 	local self = setmetatable(
 		{
-			--[=[
-				@prop answerId number?
-				@within Builders.PollAnswer
-				The ID of the poll answer.
-			]=]
 			answerId = nil,
 
-			--[=[
-				@prop pollMedia Builders.Media?
-				@within Builders.PollAnswer
-				The media attached to this poll answer.
-			]=]
 			pollMedia = nil,
 		} :: PollAnswer,
 		{

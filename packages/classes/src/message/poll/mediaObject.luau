@@ -7,6 +7,18 @@
 	https://discord.com/developers/docs/resources/poll#poll-object
 ]=]
 
+--[=[
+	@prop text string?
+	@within Classes.MediaObject
+	The text content of the media object
+]=]
+
+--[=[
+	@prop emoji Classes.Emoji?
+	@within Classes.MediaObject
+	The emoji attached to the media object, if any
+]=]
+
 local apiTypes = require("../../../luau_packages/api_types")
 
 local emoji = require("../../emoji")
@@ -24,18 +36,8 @@ MediaObject.Prototype = {}
 	created or updated.
 ]=]
 function MediaObject.Prototype.sync(self: MediaObject, mediaData: apiTypes.PollMediaObject)
-	--[=[
-		@prop text string?
-		@within Classes.MediaObject
-		The text content of the media object
-	]=]
 	self.text = mediaData.text
 
-	--[=[
-		@prop emoji Classes.Emoji?
-		@within Classes.MediaObject
-		The emoji attached to the media object, if any
-	]=]
 	self.emoji = mediaData.emoji and emoji.new(mediaData.emoji)
 end
 

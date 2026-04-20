@@ -6,6 +6,12 @@
 	https://discord.com/developers/docs/resources/message#attachment-object
 ]=]
 
+--[=[
+	@within Builders.Attachment
+	@prop attachmentId string?
+	The ID of the attachment
+]=]
+
 local Attachment = {}
 
 Attachment.Prototype = {}
@@ -42,11 +48,6 @@ function Attachment.Interface.new(resource: {
 }?): Attachment
 	local self = setmetatable(
 		{
-			--[=[
-				@within Builders.Attachment
-				@prop attachmentId string?
-				The ID of the attachment
-			]=]
 		} :: Attachment,
 		{
 			__index = Attachment.Prototype,

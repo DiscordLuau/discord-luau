@@ -7,6 +7,24 @@
 	https://discord.com/developers/docs/interactions/message-components#text-input-object-text-input-structure
 ]=]
 
+--[=[
+	@prop customId string?
+	@within Builders.Modal
+	The custom identifier for the modal.
+]=]
+
+--[=[
+	@prop title string?
+	@within Builders.Modal
+	The title that appears at the top of the modal.
+]=]
+
+--[=[
+	@prop components { Builders.TextInput }?
+	@within Builders.Modal
+	The components that will be displayed in this modal.
+]=]
+
 local apiTypes = require("../../../luau_packages/api_types")
 
 local textInput = require("./textInput")
@@ -86,25 +104,10 @@ function Modal.Interface.new(resource: {
 }?): Modal
 	local self = setmetatable(
 		{
-			--[=[
-				@prop customId string?
-				@within Builders.Modal
-				The custom identifier for the modal.
-			]=]
 			customId = nil,
 
-			--[=[
-				@prop title string?
-				@within Builders.Modal
-				The title that appears at the top of the modal.
-			]=]
 			title = nil,
 
-			--[=[
-				@prop components { Builders.TextInput }?
-				@within Builders.Modal
-				The components that will be displayed in this modal.
-			]=]
 			components = nil,
 		} :: Modal,
 		{

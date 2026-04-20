@@ -7,6 +7,30 @@
 	https://discord.com/developers/docs/topics/gateway-events#update-presence
 ]=]
 
+--[=[
+	@prop since DateTime
+	@within Classes.Presence
+	The timestamp when this presence was last updated.
+]=]
+
+--[=[
+	@prop activities { Classes.Activity }
+	@within Classes.Presence
+	The activities this user is currently participating in.
+]=]
+
+--[=[
+	@prop status string
+	@within Classes.Presence
+	The current status of this user (online, idle, dnd, offline).
+]=]
+
+--[=[
+	@prop afk boolean
+	@within Classes.Presence
+	Whether this user is currently marked as AFK.
+]=]
+
 local stdPolyfills = require("../lune_packages/std_polyfills")
 
 local apiTypes = require("../luau_packages/api_types")
@@ -26,11 +50,6 @@ Presence.Prototype = {}
 	created or updated.
 ]=]
 function Presence.Prototype.sync(self: Presence, presenceData: apiTypes.PresenceObject)
-	--[=[
-		@prop since DateTime
-		@within Classes.Presence
-		The timestamp when this presence was last updated.
-	]=]
 	self.since = stdPolyfills.datetime.fromUnixTimestamp(presenceData.since)
 
 	local activities = {}
@@ -39,25 +58,10 @@ function Presence.Prototype.sync(self: Presence, presenceData: apiTypes.Presence
 		table.insert(activities, activity.new(activityData))
 	end
 
-	--[=[
-		@prop activities { Classes.Activity }
-		@within Classes.Presence
-		The activities this user is currently participating in.
-	]=]
 	self.activities = activities
 
-	--[=[
-		@prop status string
-		@within Classes.Presence
-		The current status of this user (online, idle, dnd, offline).
-	]=]
 	self.status = presenceData.status
 
-	--[=[
-		@prop afk boolean
-		@within Classes.Presence
-		Whether this user is currently marked as AFK.
-	]=]
 	self.afk = presenceData.afk
 end
 

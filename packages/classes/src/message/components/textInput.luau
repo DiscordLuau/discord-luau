@@ -7,6 +7,69 @@
 	https://discord.com/developers/docs/interactions/message-components#text-input-object-text-input-structure
 ]=]
 
+--[=[
+	@prop type number
+	@within Classes.TextInput
+
+	The type of component this is - for text inputs, this is always 4
+]=]
+
+--[=[
+	@prop customId string
+	@within Classes.TextInput
+
+	A developer-defined identifier for the text input, max 100 characters
+]=]
+
+--[=[
+	@prop style apiTypes.TextInputStyle
+	@within Classes.TextInput
+
+	The style of the text input field - can be single-line (SHORT) or multi-line (PARAGRAPH)
+]=]
+
+--[=[
+	@prop label string
+	@within Classes.TextInput
+
+	The label displayed above the text input field
+]=]
+
+--[=[
+	@prop minLength number?
+	@within Classes.TextInput
+
+	The minimum length of text the user must input (0-4000)
+]=]
+
+--[=[
+	@prop maxLength number?
+	@within Classes.TextInput
+
+	The maximum length of text the user can input (1-4000)
+]=]
+
+--[=[
+	@prop required boolean?
+	@within Classes.TextInput
+
+	Whether this text input is required to be filled before the form can be submitted
+]=]
+
+--[=[
+	@prop value string?
+	@within Classes.TextInput
+
+	Pre-filled value for the text input field
+]=]
+
+--[=[
+	@prop placeholder string?
+	@within Classes.TextInput
+
+	Custom placeholder text shown when the text input field is empty
+]=]
+
 local apiTypes = require("../../../luau_packages/api_types")
 
 local TextInput = {}
@@ -22,76 +85,22 @@ TextInput.Prototype = {}
 	created or updated.
 ]=]
 function TextInput.Prototype.sync(self: TextInput, textInputData: apiTypes.TextInputComponentObject)
-	--[=[
-		@prop type number
-		@within Classes.TextInput
-
-		The type of component this is - for text inputs, this is always 4
-	]=]
 	self.type = textInputData.type
 
-	--[=[
-		@prop customId string
-		@within Classes.TextInput
-
-		A developer-defined identifier for the text input, max 100 characters
-	]=]
 	self.customId = textInputData.custom_id
 
-	--[=[
-		@prop style apiTypes.TextInputStyle
-		@within Classes.TextInput
-
-		The style of the text input field - can be single-line (SHORT) or multi-line (PARAGRAPH)
-	]=]
 	self.style = apiTypes.message.TextInputStyle[textInputData.style]
 
-	--[=[
-		@prop label string
-		@within Classes.TextInput
-
-		The label displayed above the text input field
-	]=]
 	self.label = textInputData.label
 
-	--[=[
-		@prop minLength number?
-		@within Classes.TextInput
-
-		The minimum length of text the user must input (0-4000)
-	]=]
 	self.minLength = textInputData.min_length
 
-	--[=[
-		@prop maxLength number?
-		@within Classes.TextInput
-
-		The maximum length of text the user can input (1-4000)
-	]=]
 	self.maxLength = textInputData.max_length
 
-	--[=[
-		@prop required boolean?
-		@within Classes.TextInput
-
-		Whether this text input is required to be filled before the form can be submitted
-	]=]
 	self.required = textInputData.required
 
-	--[=[
-		@prop value string?
-		@within Classes.TextInput
-
-		Pre-filled value for the text input field
-	]=]
 	self.value = textInputData.value
 
-	--[=[
-		@prop placeholder string?
-		@within Classes.TextInput
-
-		Custom placeholder text shown when the text input field is empty
-	]=]
 	self.placeholder = textInputData.placeholder
 end
 

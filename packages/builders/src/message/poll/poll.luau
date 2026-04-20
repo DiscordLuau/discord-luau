@@ -7,6 +7,36 @@
 	https://discord.com/developers/docs/resources/poll#poll-object
 ]=]
 
+--[=[
+	@prop question Builders.Media
+	@within Builders.Poll
+	The question to be displayed in the poll.
+]=]
+
+--[=[
+	@prop answers {Builders.Answer}
+	@within Builders.Poll
+	The array of possible answers for the poll.
+]=]
+
+--[=[
+	@prop expiry string
+	@within Builders.Poll
+	The timestamp when the poll will expire.
+]=]
+
+--[=[
+	@prop allowMultiselect boolean
+	@within Builders.Poll
+	Whether users can select multiple answers.
+]=]
+
+--[=[
+	@prop layoutType api_types.PollLayoutType
+	@within Builders.Poll
+	The layout type of the poll display.
+]=]
+
 local stdPolyfills = require("../../../lune_packages/std_polyfills")
 
 local apiTypes = require("../../../luau_packages/api_types")
@@ -115,32 +145,7 @@ function Poll.Interface.new(resource: {
 }?): Poll
 	local self = setmetatable(
 		{
-			--[=[
-				@prop question Builders.Media
-				@within Builders.Poll
-				The question to be displayed in the poll.
-			]=]
-			--[=[
-				@prop answers {Builders.Answer}
-				@within Builders.Poll
-				The array of possible answers for the poll.
-			]=]
 			answers = {},
-			--[=[
-				@prop expiry string
-				@within Builders.Poll
-				The timestamp when the poll will expire.
-			]=]
-			--[=[
-				@prop allowMultiselect boolean
-				@within Builders.Poll
-				Whether users can select multiple answers.
-			]=]
-			--[=[
-				@prop layoutType api_types.PollLayoutType
-				@within Builders.Poll
-				The layout type of the poll display.
-			]=]
 		} :: Poll,
 		{
 			__index = Poll.Prototype,

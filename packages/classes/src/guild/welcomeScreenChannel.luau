@@ -7,6 +7,34 @@
 	https://discord.com/developers/docs/resources/guild#welcome-screen-object-welcome-screen-channel-structure
 ]=]
 
+--[=[
+	@prop channelId string
+	@within Classes.WelcomeScreenChannel
+
+	The id of the channel that is shown in the welcome screen
+]=]
+
+--[=[
+	@prop description string
+	@within Classes.WelcomeScreenChannel
+
+	The description shown for the channel in the welcome screen
+]=]
+
+--[=[
+	@prop emojiId string
+	@within Classes.WelcomeScreenChannel
+
+	The id of the emoji that is shown alongside the channel
+]=]
+
+--[=[
+	@prop emojiName string
+	@within Classes.WelcomeScreenChannel
+
+	The name of the emoji that is shown alongside the channel
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 
 local WelcomeScreenChannel = {}
@@ -25,36 +53,12 @@ function WelcomeScreenChannel.Prototype.sync(
 	self: WelcomeScreenChannel,
 	welcomeScreenData: apiTypes.WelcomeScreenChannelObject
 )
-	--[=[
-		@prop channelId string
-		@within Classes.WelcomeScreenChannel
-
-		The id of the channel that is shown in the welcome screen
-	]=]
 	self.channelId = welcomeScreenData.channel_id
 
-	--[=[
-		@prop description string
-		@within Classes.WelcomeScreenChannel
-
-		The description shown for the channel in the welcome screen
-	]=]
 	self.description = welcomeScreenData.description
 
-	--[=[
-		@prop emojiId string
-		@within Classes.WelcomeScreenChannel
-
-		The id of the emoji that is shown alongside the channel
-	]=]
 	self.emojiId = welcomeScreenData.emoji_id
 
-	--[=[
-		@prop emojiName string
-		@within Classes.WelcomeScreenChannel
-
-		The name of the emoji that is shown alongside the channel
-	]=]
 	self.emojiName = welcomeScreenData.emoji_name
 end
 

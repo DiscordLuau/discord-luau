@@ -7,6 +7,27 @@
 	https://discord.com/developers/docs/resources/audit-log#audit-log-change-object
 ]=]
 
+--[=[
+	@prop key string
+	@within Classes.AuditLogChange
+
+	The key that was changed in this audit log entry
+]=]
+
+--[=[
+	@prop newValue any
+	@within Classes.AuditLogChange
+
+	The new value of the key after the change was made
+]=]
+
+--[=[
+	@prop oldValue any
+	@within Classes.AuditLogChange
+
+	The previous value of the key before the change was made
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 
 local AuditLogChange = {}
@@ -22,28 +43,10 @@ AuditLogChange.Prototype = {}
 	created or updated.
 ]=]
 function AuditLogChange.Prototype.sync(self: AuditLogChange, auditLogChangeData: apiTypes.AuditLogChangeObject)
-	--[=[
-		@prop key string
-		@within Classes.AuditLogChange
-
-		The key that was changed in this audit log entry
-	]=]
 	self.key = auditLogChangeData.key
 
-	--[=[
-		@prop newValue any
-		@within Classes.AuditLogChange
-
-		The new value of the key after the change was made
-	]=]
 	self.newValue = auditLogChangeData.new_value
 
-	--[=[
-		@prop oldValue any
-		@within Classes.AuditLogChange
-
-		The previous value of the key before the change was made
-	]=]
 	self.oldValue = auditLogChangeData.old_value
 end
 

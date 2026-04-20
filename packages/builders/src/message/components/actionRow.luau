@@ -7,6 +7,12 @@
 	https://discord.com/developers/docs/interactions/message-components#action-rows
 ]=]
 
+--[=[
+	@prop components {Builders.Button | Builders.TextInput | Builders.SelectMenu}
+	@within Builders.ActionRow
+	The components that are part of this action row. Can include buttons, text inputs, and select menus.
+]=]
+
 local button = require("./button")
 local textInput = require("./textInput")
 local selectMenu = require("./selectMenu/selectMenu")
@@ -58,11 +64,6 @@ function ActionRow.Interface.new(resource: {
 }?): ActionRow
 	local self = setmetatable(
 		{
-			--[=[
-				@prop components {Builders.Button | Builders.TextInput | Builders.SelectMenu}
-				@within Builders.ActionRow
-				The components that are part of this action row. Can include buttons, text inputs, and select menus.
-			]=]
 			components = {},
 		} :: ActionRow,
 		{
