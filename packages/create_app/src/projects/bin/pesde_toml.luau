@@ -1,7 +1,7 @@
 local StdPolyfills = require("../../../lune_packages/std_polyfills")
 
 return function(projectName: string, license: string)
-	return [[name = "]]
+	return [[name = "discord_luau/]]
 		.. projectName
 		.. [["
 version = "0.1.0"
