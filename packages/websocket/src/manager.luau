@@ -130,7 +130,7 @@ function Manager.Prototype.connectAsync(
 			table.insert(
 				self.shards,
 				shard.new({
-					token = self.token.value,
+					token = self.token,
 					intents = self.intents,
 					largeThreshold = self.largeThreshold,
 					shouldReconnect = self.shouldReconnect,
