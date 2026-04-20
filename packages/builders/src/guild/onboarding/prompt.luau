@@ -7,6 +7,36 @@
 	https://discord.com/developers/docs/resources/guild#guild-onboarding-object-onboarding-prompt-structure
 ]=]
 
+--[=[
+	@prop options { Builders.Option }
+	@within Builders.Prompt
+	The array of options available within this prompt.
+]=]
+
+--[=[
+	@prop type apiTypes.OnboardingPromptType
+	@within Builders.Prompt
+	The type of prompt to display.
+]=]
+
+--[=[
+	@prop title string
+	@within Builders.Prompt
+	The title of the prompt to display.
+]=]
+
+--[=[
+	@prop singleSelect boolean
+	@within Builders.Prompt
+	Whether users can select only one option or multiple options.
+]=]
+
+--[=[
+	@prop required boolean
+	@within Builders.Prompt
+	Whether this prompt is required to be answered or not.
+]=]
+
 local apiTypes = require("../../../luau_packages/api_types")
 
 local option = require("./option")
@@ -103,39 +133,14 @@ function Prompt.Interface.new(resource: {
 }?): Prompt
 	local self = setmetatable(
 		{
-			--[=[
-				@prop options { Builders.Option }
-				@within Builders.Prompt
-				The array of options available within this prompt.
-			]=]
 			options = {},
 
-			--[=[
-				@prop type apiTypes.OnboardingPromptType
-				@within Builders.Prompt
-				The type of prompt to display.
-			]=]
 			type = resource and resource.type,
 
-			--[=[
-				@prop title string
-				@within Builders.Prompt
-				The title of the prompt to display.
-			]=]
 			title = resource and resource.title,
 
-			--[=[
-				@prop singleSelect boolean
-				@within Builders.Prompt
-				Whether users can select only one option or multiple options.
-			]=]
 			singleSelect = resource and resource.singleSelect,
 
-			--[=[
-				@prop required boolean
-				@within Builders.Prompt
-				Whether this prompt is required to be answered or not.
-			]=]
 			required = resource and resource.required,
 		} :: Prompt,
 		{

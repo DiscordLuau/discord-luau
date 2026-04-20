@@ -7,6 +7,12 @@
 	https://discord.com/developers/docs/topics/gateway#list-of-intents
 ]=]
 
+--[=[
+	@prop intents { apiTypes.Intent }
+	@within Builders.Intents
+	An array of intent flags that determine which gateway events your client will receive.
+]=]
+
 local apiTypes = require("../luau_packages/api_types")
 
 local bit = require("../luau_packages/bit")
@@ -64,11 +70,6 @@ end
 function Intents.Interface.new(intents: {}?): Intents
 	local self = setmetatable(
 		{
-			--[=[
-				@prop intents { apiTypes.Intent }
-				@within Builders.Intents
-				An array of intent flags that determine which gateway events your client will receive.
-			]=]
 			intents = intents or {},
 		} :: Intents,
 		{ __index = Intents.Prototype }

@@ -7,6 +7,24 @@
 	https://discord.com/developers/docs/resources/guild#modify-guild-welcome-screen-json-params
 ]=]
 
+--[=[
+	@prop enabled boolean?
+	@within Builders.WelcomeScreen
+	Whether the welcome screen is enabled or not.
+]=]
+
+--[=[
+	@prop description string?
+	@within Builders.WelcomeScreen
+	The server description shown in the welcome screen.
+]=]
+
+--[=[
+	@prop welcomeChannels { Builders.WelcomeScreenChannel }
+	@within Builders.WelcomeScreen
+	The channels shown in the welcome screen.
+]=]
+
 local WelcomeScreenChannel = require("./channel")
 
 local WelcomeScreen = {}
@@ -72,23 +90,7 @@ function WelcomeScreen.Interface.new(resource: {
 }?): WelcomeScreen
 	local self = setmetatable(
 		{
-			--[=[
-				@prop enabled boolean?
-				@within Builders.WelcomeScreen
-				Whether the welcome screen is enabled or not.
-			]=]
 
-			--[=[
-				@prop description string?
-				@within Builders.WelcomeScreen
-				The server description shown in the welcome screen.
-			]=]
-
-			--[=[
-				@prop welcomeChannels { Builders.WelcomeScreenChannel }
-				@within Builders.WelcomeScreen
-				The channels shown in the welcome screen.
-			]=]
 			welcomeChannels = {},
 		} :: WelcomeScreen,
 		{

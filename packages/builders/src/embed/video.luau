@@ -7,6 +7,30 @@
 	https://discord.com/developers/docs/resources/message#embed-object-embed-video-structure
 ]=]
 
+--[=[
+	@prop url string
+	@within Builders.Video
+	Source url of video
+]=]
+
+--[=[
+	@prop proxyUrl string?
+	@within Builders.Video
+	A proxied url of the video
+]=]
+
+--[=[
+	@prop height number?
+	@within Builders.Video
+	Height of video
+]=]
+
+--[=[
+	@prop width number?
+	@within Builders.Video
+	Width of video
+]=]
+
 local Video = {}
 
 Video.Prototype = {}
@@ -81,32 +105,12 @@ function Video.Interface.new(resource: {
 }?): Video
 	local self = setmetatable(
 		{
-			--[=[
-				@prop url string
-				@within Builders.Video
-				Source url of video
-			]=]
 			url = nil,
 
-			--[=[
-				@prop proxyUrl string?
-				@within Builders.Video
-				A proxied url of the video
-			]=]
 			proxyUrl = nil,
 
-			--[=[
-				@prop height number?
-				@within Builders.Video
-				Height of video
-			]=]
 			height = nil,
 
-			--[=[
-				@prop width number?
-				@within Builders.Video
-				Width of video
-			]=]
 			width = nil,
 		} :: Video,
 		{

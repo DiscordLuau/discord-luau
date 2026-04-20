@@ -7,6 +7,60 @@
 	https://discord.com/developers/docs/resources/message#message-object
 ]=]
 
+--[=[
+	@prop embeds { Builders.Embed }
+	@within Builders.Message
+	Embedded rich content (up to 10 embeds).
+]=]
+
+--[=[
+	@prop allowedMentions Builders.AllowedMention?
+	@within Builders.Message
+	Allowed mentions for the message.
+]=]
+
+--[=[
+	@prop messageReference Builders.Reference?
+	@within Builders.Message
+	Include to make your message a reply.
+]=]
+
+--[=[
+	@prop components { Builders.Button | Builders.TextInput | Builders.SelectMenu | Builders.ActionRow }
+	@within Builders.Message
+	Components to include with the message.
+]=]
+
+--[=[
+	@prop stickerIds { string }
+	@within Builders.Message
+	IDs of up to 3 stickers in the server to send in the message.
+]=]
+
+--[=[
+	@prop attachments { Attachment }
+	@within Builders.Message
+	Attachment objects with filename and description.
+]=]
+
+--[=[
+	@prop flags number?
+	@within Builders.Message
+	Message flags combined as a bitfield.
+]=]
+
+--[=[
+	@prop enforceNonce boolean?
+	@within Builders.Message
+	Whether to check nonce uniqueness.
+]=]
+
+--[=[
+	@prop poll Builders.Poll?
+	@within Builders.Message
+	Poll data for the message.
+]=]
+
 local embed = require("../embed/embed")
 local allowedMention = require("./allowedMention")
 local reference = require("./reference")
@@ -220,63 +274,14 @@ function Message.Interface.new(resource: {
 }?): Message
 	local self = setmetatable(
 		{
-			--[=[
-				@prop embeds { Builders.Embed }
-				@within Builders.Message
-				Embedded rich content (up to 10 embeds).
-			]=]
 			embeds = {},
 
-			--[=[
-				@prop allowedMentions Builders.AllowedMention?
-				@within Builders.Message
-				Allowed mentions for the message.
-			]=]
-
-			--[=[
-				@prop messageReference Builders.Reference?
-				@within Builders.Message
-				Include to make your message a reply.
-			]=]
-
-			--[=[
-				@prop components { Builders.Button | Builders.TextInput | Builders.SelectMenu | Builders.ActionRow }
-				@within Builders.Message
-				Components to include with the message.
-			]=]
 			components = {},
 
-			--[=[
-				@prop stickerIds { string }
-				@within Builders.Message
-				IDs of up to 3 stickers in the server to send in the message.
-			]=]
 			stickerIds = {},
 
-			--[=[
-				@prop attachments { Attachment }
-				@within Builders.Message
-				Attachment objects with filename and description.
-			]=]
 			attachments = {},
 
-			--[=[
-				@prop flags number?
-				@within Builders.Message
-				Message flags combined as a bitfield.
-			]=]
-
-			--[=[
-				@prop enforceNonce boolean?
-				@within Builders.Message
-				Whether to check nonce uniqueness.
-			]=]
-
-			--[=[
-				@prop poll Builders.Poll?
-				@within Builders.Message
-				Poll data for the message.
-			]=]
 		} :: Message,
 		{
 			__index = Message.Prototype,

@@ -7,6 +7,18 @@
 	https://discord.com/developers/docs/interactions/message-components#select-menu-object-select-default-value-structure
 ]=]
 
+--[=[
+	@prop id string
+	@within Builders.DefaultValue
+	The id of the default value.
+]=]
+
+--[=[
+	@prop type apiTypes.SelectDefaultValueType
+	@within Builders.DefaultValue
+	The type of the default value.
+]=]
+
 local apiTypes = require("../../../../luau_packages/api_types")
 
 local DefaultValue = {}
@@ -69,18 +81,8 @@ function DefaultValue.Interface.new(resource: {
 }?): DefaultValue
 	local self = setmetatable(
 		{
-			--[=[
-				@prop id string
-				@within Builders.DefaultValue
-				The id of the default value.
-			]=]
 			id = nil,
 
-			--[=[
-				@prop type apiTypes.SelectDefaultValueType
-				@within Builders.DefaultValue
-				The type of the default value.
-			]=]
 			type = nil,
 		} :: DefaultValue,
 		{

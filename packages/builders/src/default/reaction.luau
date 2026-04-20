@@ -9,6 +9,18 @@
 	https://discord.com/developers/docs/resources/channel#default-reaction-object
 ]=]
 
+--[=[
+	@prop emojiId string?
+	@within Builders.DefaultReaction
+	The id of a guild's custom emoji.
+]=]
+
+--[=[
+	@prop emojiName string?
+	@within Builders.DefaultReaction
+	The unicode character of the emoji.
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 
 local DefaultReaction = {}
@@ -43,18 +55,8 @@ function DefaultReaction.Interface.new(resource: {
 }): DefaultReaction
 	local self = setmetatable(
 		{
-			--[=[
-				@prop emojiId string?
-				@within Builders.DefaultReaction
-				The id of a guild's custom emoji.
-			]=]
 			emojiId = resource.emojiId,
 
-			--[=[
-				@prop emojiName string?
-				@within Builders.DefaultReaction
-				The unicode character of the emoji.
-			]=]
 			emojiName = resource.emojiName,
 		} :: DefaultReaction,
 		{ __index = DefaultReaction.Prototype }

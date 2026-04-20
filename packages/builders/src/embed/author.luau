@@ -7,6 +7,30 @@
 	https://discord.com/developers/docs/resources/message#embed-object-embed-author-structure
 ]=]
 
+--[=[
+`	@prop name string?
+	@within Builders.Author
+	The name of the author.
+]=]
+
+--[=[
+	@prop url string?
+	@within Builders.Author
+	The url of the author.
+]=]
+
+--[=[
+	@prop iconUrl string?
+	@within Builders.Author
+	The url of author's icon image.
+]=]
+
+--[=[
+	@prop proxyIconUrl string?
+	@within Builders.Author
+	A proxied url of author's icon image.
+]=]
+
 local Author = {}
 
 Author.Prototype = {}
@@ -78,32 +102,12 @@ function Author.Interface.new(resource: {
 }?): Author
 	local self = setmetatable(
 		{
-			--[=[
-			`	@prop name string?
-				@within Builders.Author
-				The name of the author.
-			]=]
 			name = nil,
 
-			--[=[
-				@prop url string?
-				@within Builders.Author
-				The url of the author.
-			]=]
 			url = nil,
 
-			--[=[
-				@prop iconUrl string?
-				@within Builders.Author
-				The url of author's icon image.
-			]=]
 			iconUrl = nil,
 
-			--[=[
-				@prop proxyIconUrl string?
-				@within Builders.Author
-				A proxied url of author's icon image.
-			]=]
 			proxyIconUrl = nil,
 		} :: Author,
 		{

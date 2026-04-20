@@ -5,6 +5,42 @@
 	Implementation of a discord auto moderation trigger metadata object as a luau builder.
 ]=]
 
+--[=[
+	@prop keywordFilter {string}
+	@within Builders.TriggerMetadata
+	Array of strings that represent keywords that will trigger the rule.
+]=]
+
+--[=[
+	@prop regexPatterns {string}
+	@within Builders.TriggerMetadata
+	Array of strings that represent regex patterns that will trigger the rule.
+]=]
+
+--[=[
+	@prop presets {api_types.KeywordPresetType}
+	@within Builders.TriggerMetadata
+	Array of preset keyword types that will trigger the rule.
+]=]
+
+--[=[
+	@prop allowList {string}
+	@within Builders.TriggerMetadata
+	Array of strings that represent keywords that should not trigger the rule.
+]=]
+
+--[=[
+	@prop mentionTotalLimit number
+	@within Builders.TriggerMetadata
+	Total number of unique role and user mentions allowed per message.
+]=]
+
+--[=[
+	@prop mentionRaidProtectionEnabled boolean
+	@within Builders.TriggerMetadata
+	Whether to automatically detect mention raids and remove them.
+]=]
+
 local apiTypes = require("../../../luau_packages/api_types")
 
 local TriggerMetadata = {}
@@ -131,46 +167,16 @@ function TriggerMetadata.Interface.new(resource: {
 }?): TriggerMetadata
 	local self = setmetatable(
 		{
-			--[=[
-				@prop keywordFilter {string}
-				@within Builders.TriggerMetadata
-				Array of strings that represent keywords that will trigger the rule.
-			]=]
 			keywordFilter = nil,
 
-			--[=[
-				@prop regexPatterns {string}
-				@within Builders.TriggerMetadata
-				Array of strings that represent regex patterns that will trigger the rule.
-			]=]
 			regexPatterns = nil,
 
-			--[=[
-				@prop presets {api_types.KeywordPresetType}
-				@within Builders.TriggerMetadata
-				Array of preset keyword types that will trigger the rule.
-			]=]
 			presets = nil,
 
-			--[=[
-				@prop allowList {string}
-				@within Builders.TriggerMetadata
-				Array of strings that represent keywords that should not trigger the rule.
-			]=]
 			allowList = nil,
 
-			--[=[
-				@prop mentionTotalLimit number
-				@within Builders.TriggerMetadata
-				Total number of unique role and user mentions allowed per message.
-			]=]
 			mentionTotalLimit = nil,
 
-			--[=[
-				@prop mentionRaidProtectionEnabled boolean
-				@within Builders.TriggerMetadata
-				Whether to automatically detect mention raids and remove them.
-			]=]
 			mentionRaidProtectionEnabled = nil,
 		} :: TriggerMetadata,
 		{

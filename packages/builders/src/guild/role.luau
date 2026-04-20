@@ -7,6 +7,48 @@
 	https://discord.com/developers/docs/resources/guild#create-guild-role-json-params
 ]=]
 
+--[=[
+	@prop name string?
+	@within Builders.Role
+	The name of the role.
+]=]
+
+--[=[
+	@prop permissionFlags { apiTypes.Permissions }
+	@within Builders.Role
+	The permissions assigned to the role.
+]=]
+
+--[=[
+	@prop color number?
+	@within Builders.Role
+	The color of the role represented as a hexadecimal number.
+]=]
+
+--[=[
+	@prop isHoisted boolean?
+	@within Builders.Role
+	Whether the role is displayed separately in the member list.
+]=]
+
+--[=[
+	@prop icon string?
+	@within Builders.Role
+	The icon of the role.
+]=]
+
+--[=[
+	@prop unicodeEmoji string?
+	@within Builders.Role
+	The unicode emoji of the role.
+]=]
+
+--[=[
+	@prop isMentionable boolean?
+	@within Builders.Role
+	Whether the role can be mentioned by users.
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 local util = require("../../luau_packages/util")
 
@@ -123,48 +165,9 @@ function Role.Interface.new(resource: {
 }?): Role
 	local self = setmetatable(
 		{
-			--[=[
-				@prop name string?
-				@within Builders.Role
-				The name of the role.
-			]=]
 
-			--[=[
-				@prop permissionFlags { apiTypes.Permissions }
-				@within Builders.Role
-				The permissions assigned to the role.
-			]=]
 			permissionFlags = {},
 
-			--[=[
-				@prop color number?
-				@within Builders.Role
-				The color of the role represented as a hexadecimal number.
-			]=]
-
-			--[=[
-				@prop isHoisted boolean?
-				@within Builders.Role
-				Whether the role is displayed separately in the member list.
-			]=]
-
-			--[=[
-				@prop icon string?
-				@within Builders.Role
-				The icon of the role.
-			]=]
-
-			--[=[
-				@prop unicodeEmoji string?
-				@within Builders.Role
-				The unicode emoji of the role.
-			]=]
-
-			--[=[
-				@prop isMentionable boolean?
-				@within Builders.Role
-				Whether the role can be mentioned by users.
-			]=]
 		} :: Role,
 		{ __index = Role.Prototype }
 	)

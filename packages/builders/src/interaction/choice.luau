@@ -7,6 +7,24 @@
 	https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-choice-structure
 ]=]
 
+--[=[
+	@prop name string
+	@within Builders.Choice
+	The name of the choice that is displayed to users.
+]=]
+
+--[=[
+	@prop nameLocalizations { [apiTypes.LanguageLocales]: string }
+	@within Builders.Choice
+	Dictionary of localization entries for the choice name.
+]=]
+
+--[=[
+	@prop value string | number
+	@within Builders.Choice
+	The value that is sent to your application when this choice is selected.
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 
 local util = require("../../luau_packages/util")
@@ -106,25 +124,10 @@ function Choice.Interface.new(resource: {
 }?): Choice
 	local self = setmetatable(
 		{
-			--[=[
-				@prop name string
-				@within Builders.Choice
-				The name of the choice that is displayed to users.
-			]=]
 			name = resource and resource.name,
 
-			--[=[
-				@prop nameLocalizations { [apiTypes.LanguageLocales]: string }
-				@within Builders.Choice
-				Dictionary of localization entries for the choice name.
-			]=]
 			nameLocalizations = {},
 
-			--[=[
-				@prop value string | number
-				@within Builders.Choice
-				The value that is sent to your application when this choice is selected.
-			]=]
 			value = resource and resource.value,
 		} :: Choice,
 		{ __index = Choice.Prototype }

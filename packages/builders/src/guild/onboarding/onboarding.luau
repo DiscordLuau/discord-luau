@@ -7,6 +7,30 @@
 	https://discord.com/developers/docs/resources/guild#modify-guild-onboarding-json-params
 ]=]
 
+--[=[
+	@prop prompts {Builders.Prompt}
+	@within Builders.Onboarding
+	Array of prompts shown during onboarding
+]=]
+
+--[=[
+	@prop defaultChannelIds {string}
+	@within Builders.Onboarding
+	Array of channel IDs that members get opted into automatically
+]=]
+
+--[=[
+	@prop enabled boolean
+	@within Builders.Onboarding
+	Whether onboarding is enabled in the guild
+]=]
+
+--[=[
+	@prop mode apiTypes.OnboardingMode
+	@within Builders.Onboarding
+	Current mode of onboarding
+]=]
+
 local apiTypes = require("../../../luau_packages/api_types")
 
 local prompt = require("./prompt")
@@ -87,31 +111,10 @@ function Onboarding.Interface.new(resource: {
 }?): Onboarding
 	local self = setmetatable(
 		{
-			--[=[
-				@prop prompts {Builders.Prompt}
-				@within Builders.Onboarding
-				Array of prompts shown during onboarding
-			]=]
 			prompts = {},
 
-			--[=[
-				@prop defaultChannelIds {string}
-				@within Builders.Onboarding
-				Array of channel IDs that members get opted into automatically
-			]=]
 			defaultChannelIds = {},
 
-			--[=[
-				@prop enabled boolean
-				@within Builders.Onboarding
-				Whether onboarding is enabled in the guild
-			]=]
-
-			--[=[
-				@prop mode apiTypes.OnboardingMode
-				@within Builders.Onboarding
-				Current mode of onboarding
-			]=]
 		} :: Onboarding,
 		{
 			__index = Onboarding.Prototype,

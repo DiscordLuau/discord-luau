@@ -7,6 +7,90 @@
 	https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure
 ]=]
 
+--[=[
+	@prop type apiTypes.ApplicationCommandOptionType?
+	@within Builders.Interaction.Option
+	The type of option (e.g., String, Integer, SubCommand).
+]=]
+
+--[=[
+	@prop name string?
+	@within Builders.Interaction.Option
+	The name of the option.
+]=]
+
+--[=[
+	@prop nameLocalizations { [apiTypes.LanguageLocales]: string }
+	@within Builders.Interaction.Option
+	Name localizations for different language locales.
+]=]
+
+--[=[
+	@prop description string?
+	@within Builders.Interaction.Option
+	The description of the option.
+]=]
+
+--[=[
+	@prop descriptionLocalizations { [apiTypes.LanguageLocales]: string }
+	@within Builders.Interaction.Option
+	Description localizations for different language locales.
+]=]
+
+--[=[
+	@prop required boolean?
+	@within Builders.Interaction.Option
+	Whether this option is required to be set by the user.
+]=]
+
+--[=[
+	@prop choices { Builders.Choice.JSON }
+	@within Builders.Interaction.Option
+	Possible choices for this option (String, Integer, or Number types only).
+]=]
+
+--[=[
+	@prop options { Builders.Interaction.Option.JSON }
+	@within Builders.Interaction.Option
+	Sub-options for this option (SubCommand or SubCommandGroup only).
+]=]
+
+--[=[
+	@prop apiTypes { apiTypes.ChannelType }
+	@within Builders.Interaction.Option
+	Supported channel types for Channel option type.
+]=]
+
+--[=[
+	@prop minValue number?
+	@within Builders.Interaction.Option
+	Minimum value allowed for the option (Integer/Number only).
+]=]
+
+--[=[
+	@prop maxValue number?
+	@within Builders.Interaction.Option
+	Maximum value allowed for the option (Integer/Number only).
+]=]
+
+--[=[
+	@prop minLength number?
+	@within Builders.Interaction.Option
+	Minimum string length for the option (String only).
+]=]
+
+--[=[
+	@prop maxLength number?
+	@within Builders.Interaction.Option
+	Maximum string length for the option (String only).
+]=]
+
+--[=[
+	@prop autocomplete boolean?
+	@within Builders.Interaction.Option
+	Whether autocomplete is enabled (String, Integer, or Number types only).
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 local interactionChoice = require("./choice")
 local util = require("../../luau_packages/util")
@@ -248,76 +332,6 @@ function Option.Interface.new(resource: {
 	maxLength: number?,
 	autocomplete: boolean?,
 }?): Option
-	--[=[
-		@prop type apiTypes.ApplicationCommandOptionType?
-		@within Builders.Interaction.Option
-		The type of option (e.g., String, Integer, SubCommand).
-	]=]
-	--[=[
-		@prop name string?
-		@within Builders.Interaction.Option
-		The name of the option.
-	]=]
-	--[=[
-		@prop nameLocalizations { [apiTypes.LanguageLocales]: string }
-		@within Builders.Interaction.Option
-		Name localizations for different language locales.
-	]=]
-	--[=[
-		@prop description string?
-		@within Builders.Interaction.Option
-		The description of the option.
-	]=]
-	--[=[
-		@prop descriptionLocalizations { [apiTypes.LanguageLocales]: string }
-		@within Builders.Interaction.Option
-		Description localizations for different language locales.
-	]=]
-	--[=[
-		@prop required boolean?
-		@within Builders.Interaction.Option
-		Whether this option is required to be set by the user.
-	]=]
-	--[=[
-		@prop choices { Builders.Choice.JSON }
-		@within Builders.Interaction.Option
-		Possible choices for this option (String, Integer, or Number types only).
-	]=]
-	--[=[
-		@prop options { Builders.Interaction.Option.JSON }
-		@within Builders.Interaction.Option
-		Sub-options for this option (SubCommand or SubCommandGroup only).
-	]=]
-	--[=[
-		@prop apiTypes { apiTypes.ChannelType }
-		@within Builders.Interaction.Option
-		Supported channel types for Channel option type.
-	]=]
-	--[=[
-		@prop minValue number?
-		@within Builders.Interaction.Option
-		Minimum value allowed for the option (Integer/Number only).
-	]=]
-	--[=[
-		@prop maxValue number?
-		@within Builders.Interaction.Option
-		Maximum value allowed for the option (Integer/Number only).
-	]=]
-	--[=[
-		@prop minLength number?
-		@within Builders.Interaction.Option
-		Minimum string length for the option (String only).
-	]=]
-	--[=[
-		@prop maxLength number?
-		@within Builders.Interaction.Option
-		Maximum string length for the option (String only).
-	]=]
-	--[=[
-		@prop autocomplete boolean?
-		@within Builders.Interaction.Option
-		Whether autocomplete is enabled (String, Integer, or Number types only).
-	]=]
 
 	local self = setmetatable(
 		{

@@ -7,6 +7,24 @@
 	https://discord.com/developers/docs/resources/message#embed-object-embed-footer-structure
 ]=]
 
+--[=[
+	@prop text string?
+	@within Builders.Footer
+	The text content that appears in the footer.
+]=]
+
+--[=[
+	@prop iconUrl string?
+	@within Builders.Footer
+	The URL of the footer icon.
+]=]
+
+--[=[
+	@prop proxyIconUrl string?
+	@within Builders.Footer
+	The proxied URL of the footer icon.
+]=]
+
 local Footer = {}
 
 Footer.Prototype = {}
@@ -72,25 +90,10 @@ function Footer.Interface.new(resource: {
 }?): Footer
 	local self = setmetatable(
 		{
-			--[=[
-				@prop text string?
-				@within Builders.Footer
-				The text content that appears in the footer.
-			]=]
 			text = nil,
 
-			--[=[
-				@prop iconUrl string?
-				@within Builders.Footer
-				The URL of the footer icon.
-			]=]
 			iconUrl = nil,
 
-			--[=[
-				@prop proxyIconUrl string?
-				@within Builders.Footer
-				The proxied URL of the footer icon.
-			]=]
 			proxyIconUrl = nil,
 		} :: Footer,
 		{

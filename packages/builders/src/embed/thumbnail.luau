@@ -7,6 +7,30 @@
 	https://discord.com/developers/docs/resources/message#embed-object-embed-thumbnail-structure
 ]=]
 
+--[=[
+	@prop url string
+	@within Builders.Thumbnail
+	The source url of the thumbnail.
+]=]
+
+--[=[
+	@prop proxyUrl string?
+	@within Builders.Thumbnail
+	A proxied url of the thumbnail.
+]=]
+
+--[=[
+	@prop height number?
+	@within Builders.Thumbnail
+	The height of the thumbnail.
+]=]
+
+--[=[
+	@prop width number?
+	@within Builders.Thumbnail
+	The width of the thumbnail.
+]=]
+
 local Thumbnail = {}
 
 Thumbnail.Prototype = {}
@@ -81,32 +105,12 @@ function Thumbnail.Interface.new(resource: {
 }?): Thumbnail
 	local self = setmetatable(
 		{
-			--[=[
-				@prop url string
-				@within Builders.Thumbnail
-				The source url of the thumbnail.
-			]=]
 			url = nil,
 
-			--[=[
-				@prop proxyUrl string?
-				@within Builders.Thumbnail
-				A proxied url of the thumbnail.
-			]=]
 			proxyUrl = nil,
 
-			--[=[
-				@prop height number?
-				@within Builders.Thumbnail
-				The height of the thumbnail.
-			]=]
 			height = nil,
 
-			--[=[
-				@prop width number?
-				@within Builders.Thumbnail
-				The width of the thumbnail.
-			]=]
 			width = nil,
 		} :: Thumbnail,
 		{

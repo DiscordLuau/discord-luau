@@ -7,6 +7,36 @@
 	https://discord.com/developers/docs/resources/channel#forum-tag-object
 ]=]
 
+--[=[
+	@prop name string
+	@within Builders.ForumTag
+	The name of the tag that is displayed.
+]=]
+
+--[=[
+	@prop moderated boolean
+	@within Builders.ForumTag
+	Whether this tag can only be added to or removed from threads by a member with the MANAGE_THREADS permission.
+]=]
+
+--[=[
+	@prop emojiId string?
+	@within Builders.ForumTag
+	The id of a guild's custom emoji.
+]=]
+
+--[=[
+	@prop emojiName string?
+	@within Builders.ForumTag
+	The unicode character of the emoji.
+]=]
+
+--[=[
+	@prop id string?
+	@within Builders.ForumTag
+	The id of the tag.
+]=]
+
 local apiTypes = require("../luau_packages/api_types")
 
 local util = require("../luau_packages/util")
@@ -89,32 +119,12 @@ function ForumTag.Interface.new(resource: {
 }): ForumTag
 	local self = setmetatable(
 		{
-			--[=[
-				@prop name string
-				@within Builders.ForumTag
-				The name of the tag that is displayed.
-			]=]
 			name = nil,
 
-			--[=[
-				@prop moderated boolean
-				@within Builders.ForumTag
-				Whether this tag can only be added to or removed from threads by a member with the MANAGE_THREADS permission.
-			]=]
 			moderated = nil,
 
-			--[=[
-				@prop emojiId string?
-				@within Builders.ForumTag
-				The id of a guild's custom emoji.
-			]=]
 			emojiId = nil,
 
-			--[=[
-				@prop emojiName string?
-				@within Builders.ForumTag
-				The unicode character of the emoji.
-			]=]
 			emojiName = nil,
 		} :: ForumTag,
 		{ __index = ForumTag.Prototype }
@@ -148,11 +158,6 @@ function ForumTag.Interface.fromId(resource: {
 }): ForumTag
 	local self = ForumTag.Interface.new(resource)
 
-	--[=[
-		@prop id string?
-		@within Builders.ForumTag
-		The id of the tag.
-	]=]
 	self.id = resource.tagId
 
 	return self

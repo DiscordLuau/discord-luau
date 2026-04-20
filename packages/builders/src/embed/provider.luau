@@ -7,6 +7,18 @@
 	https://discord.com/developers/docs/resources/message#embed-object-embed-provider-structure
 ]=]
 
+--[=[
+	@prop name string?
+	@within Builders.Provider
+	The name of the provider.
+]=]
+
+--[=[
+	@prop url string?
+	@within Builders.Provider
+	The url of the provider.
+]=]
+
 local Provider = {}
 
 Provider.Prototype = {}
@@ -60,18 +72,8 @@ function Provider.Interface.new(resource: {
 }?): Provider
 	local self = setmetatable(
 		{
-			--[=[
-				@prop name string?
-				@within Builders.Provider
-				The name of the provider.
-			]=]
 			name = nil,
 
-			--[=[
-				@prop url string?
-				@within Builders.Provider
-				The url of the provider.
-			]=]
 			url = nil,
 		} :: Provider,
 		{

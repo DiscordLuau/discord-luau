@@ -10,6 +10,30 @@
 	https://discord.com/developers/docs/resources/channel#overwrite-object
 ]=]
 
+--[=[
+	@prop allowedPermissionFlags {apiTypes.Permissions}
+	@within Builders.Overwrite
+	Array of permission flags that are allowed for this overwrite.
+]=]
+
+--[=[
+	@prop deniedPermissionFlags {apiTypes.Permissions}
+	@within Builders.Overwrite
+	Array of permission flags that are denied for this overwrite.
+]=]
+
+--[=[
+	@prop type PermissionOverwriteType
+	@within Builders.Overwrite
+	The type of overwrite, either "role" or "member".
+]=]
+
+--[=[
+	@prop id string
+	@within Builders.Overwrite
+	The ID of the role or user that the overwrite belongs to.
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 
 local bit = require("../../luau_packages/bit")
@@ -97,25 +121,10 @@ function Overwrite.Interface.new(resource: {
 }): Overwrite
 	local self = setmetatable(
 		{
-			--[=[
-				@prop allowedPermissionFlags {apiTypes.Permissions}
-				@within Builders.Overwrite
-				Array of permission flags that are allowed for this overwrite.
-			]=]
 			allowedPermissionFlags = resource.allowFlags or {},
 
-			--[=[
-				@prop deniedPermissionFlags {apiTypes.Permissions}
-				@within Builders.Overwrite
-				Array of permission flags that are denied for this overwrite.
-			]=]
 			deniedPermissionFlags = resource.denyFlags or {},
 
-			--[=[
-				@prop type PermissionOverwriteType
-				@within Builders.Overwrite
-				The type of overwrite, either "role" or "member".
-			]=]
 			type = resource.permissionType,
 		} :: Overwrite,
 		{
@@ -159,11 +168,6 @@ function Overwrite.Interface.fromId(resource: {
 }): Overwrite
 	local self = Overwrite.Interface.new(resource)
 
-	--[=[
-		@prop id string
-		@within Builders.Overwrite
-		The ID of the role or user that the overwrite belongs to.
-	]=]
 	self.id = resource.permissionId
 
 	return self

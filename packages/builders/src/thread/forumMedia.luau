@@ -7,6 +7,36 @@
 	https://discord.com/developers/docs/resources/channel#start-thread-without-message-json-params
 ]=]
 
+--[=[
+	@prop appliedTags { string }
+	@within Builders.ForumMediaThread
+	An array of tag IDs that have been applied to the thread.
+]=]
+
+--[=[
+	@prop name string?
+	@within Builders.ForumMediaThread
+	The name of the thread.
+]=]
+
+--[=[
+	@prop autoArchiveDuration number?
+	@within Builders.ForumMediaThread
+	Duration in minutes to automatically archive the thread after recent activity.
+]=]
+
+--[=[
+	@prop rateLimitPerUser number?
+	@within Builders.ForumMediaThread
+	Amount of seconds a user has to wait before sending another message.
+]=]
+
+--[=[
+	@prop message messageParams.JSON
+	@within Builders.ForumMediaThread
+	The message content for the forum thread.
+]=]
+
 local messageParams = require("./messageParams")
 
 local ForumMediaThread = {}
@@ -107,9 +137,6 @@ end
 
 	Responsible for creating a new ForumMediaThread.
 
-	
-	
-	
 ]=]
 function ForumMediaThread.Interface.new(resource: {
 	name: string?,
@@ -118,36 +145,8 @@ function ForumMediaThread.Interface.new(resource: {
 }?): ForumMediaThread
 	local self = setmetatable(
 		{
-			--[=[
-				@prop appliedTags { string }
-				@within Builders.ForumMediaThread
-				An array of tag IDs that have been applied to the thread.
-			]=]
 			appliedTags = {},
 
-			--[=[
-				@prop name string?
-				@within Builders.ForumMediaThread
-				The name of the thread.
-			]=]
-
-			--[=[
-				@prop autoArchiveDuration number?
-				@within Builders.ForumMediaThread
-				Duration in minutes to automatically archive the thread after recent activity.
-			]=]
-
-			--[=[
-				@prop rateLimitPerUser number?
-				@within Builders.ForumMediaThread
-				Amount of seconds a user has to wait before sending another message.
-			]=]
-
-			--[=[
-				@prop message messageParams.JSON
-				@within Builders.ForumMediaThread
-				The message content for the forum thread.
-			]=]
 		} :: ForumMediaThread,
 		{
 			__index = ForumMediaThread.Prototype,

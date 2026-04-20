@@ -7,6 +7,48 @@
 	https://discord.com/developers/docs/resources/channel#create-channel-invite-json-params
 ]=]
 
+--[=[
+	@prop maxAge number?
+	@within Builders.Invite
+	Duration in seconds after which the invite expires. Must be between 0 and 604800 seconds.
+]=]
+
+--[=[
+	@prop maxUses number?
+	@within Builders.Invite
+	Maximum number of times this invite can be used. Must be between 0 and 100.
+]=]
+
+--[=[
+	@prop temporary boolean?
+	@within Builders.Invite
+	Whether the invite grants temporary membership. Members are removed on disconnect unless granted a role.
+]=]
+
+--[=[
+	@prop unique boolean?
+	@within Builders.Invite
+	Whether this invite should be unique. If true, don't try to reuse a similar invite.
+]=]
+
+--[=[
+	@prop targetType api_types.InviteTargetType?
+	@within Builders.Invite
+	The type of target for this invite. Used for stream and embedded application invites.
+]=]
+
+--[=[
+	@prop targetUserId string?
+	@within Builders.Invite
+	The target user ID for this invite. Used to specify which user's stream to display.
+]=]
+
+--[=[
+	@prop targetApplicationId string?
+	@within Builders.Invite
+	The target application ID for this invite. Used to specify which embedded application to open.
+]=]
+
 local apiTypes = require("../luau_packages/api_types")
 
 local Invite = {}
@@ -139,47 +181,7 @@ function Invite.Interface.new(resource: {
 }?): Invite
 	local self = setmetatable(
 		{
-			--[=[
-				@prop maxAge number?
-				@within Builders.Invite
-				Duration in seconds after which the invite expires. Must be between 0 and 604800 seconds.
-			]=]
 
-			--[=[
-				@prop maxUses number?
-				@within Builders.Invite
-				Maximum number of times this invite can be used. Must be between 0 and 100.
-			]=]
-
-			--[=[
-				@prop temporary boolean?
-				@within Builders.Invite
-				Whether the invite grants temporary membership. Members are removed on disconnect unless granted a role.
-			]=]
-
-			--[=[
-				@prop unique boolean?
-				@within Builders.Invite
-				Whether this invite should be unique. If true, don't try to reuse a similar invite.
-			]=]
-
-			--[=[
-				@prop targetType api_types.InviteTargetType?
-				@within Builders.Invite
-				The type of target for this invite. Used for stream and embedded application invites.
-			]=]
-
-			--[=[
-				@prop targetUserId string?
-				@within Builders.Invite
-				The target user ID for this invite. Used to specify which user's stream to display.
-			]=]
-
-			--[=[
-				@prop targetApplicationId string?
-				@within Builders.Invite
-				The target application ID for this invite. Used to specify which embedded application to open.
-			]=]
 		} :: Invite,
 		{
 			__index = Invite.Prototype,

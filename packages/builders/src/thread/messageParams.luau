@@ -7,6 +7,48 @@
 	https://discord.com/developers/docs/resources/channel#start-thread-in-forum-or-media-channel-forum-and-media-thread-message-params-object
 ]=]
 
+--[=[
+	@prop content string?
+	@within Builders.MessageParams
+	The message content that will be sent.
+]=]
+
+--[=[
+	@prop embeds { Builders.Embed }
+	@within Builders.MessageParams
+	Array of embed objects that will be attached to the message.
+]=]
+
+--[=[
+	@prop allowedMentions Builders.AllowedMention
+	@within Builders.MessageParams
+	Controls the mentions that will ping in the message.
+]=]
+
+--[=[
+	@prop components { Builders.Button | Builders.TextInput | Builders.SelectMenu | Builders.ActionRow }
+	@within Builders.MessageParams
+	Array of message components that will be attached to the message.
+]=]
+
+--[=[
+	@prop stickerIds { string }
+	@within Builders.MessageParams
+	Array of sticker IDs that will be attached to the message.
+]=]
+
+--[=[
+	@prop attachments { Builders.Attachment }
+	@within Builders.MessageParams
+	Array of attachment objects that will be attached to the message.
+]=]
+
+--[=[
+	@prop flags number?
+	@within Builders.MessageParams
+	Message flags to be applied to the message.
+]=]
+
 local embed = require("../embed/embed")
 local allowedMention = require("../message/allowedMention")
 
@@ -153,50 +195,14 @@ function MessageParams.Interface.new(resource: {
 }?): MessageParams
 	local self = setmetatable(
 		{
-			--[=[
-				@prop content string?
-				@within Builders.MessageParams
-				The message content that will be sent.
-			]=]
-			--[=[
-				@prop embeds { Builders.Embed }
-				@within Builders.MessageParams
-				Array of embed objects that will be attached to the message.
-			]=]
 			embeds = {},
 
-			--[=[
-				@prop allowedMentions Builders.AllowedMention
-				@within Builders.MessageParams
-				Controls the mentions that will ping in the message.
-			]=]
-
-			--[=[
-				@prop components { Builders.Button | Builders.TextInput | Builders.SelectMenu | Builders.ActionRow }
-				@within Builders.MessageParams
-				Array of message components that will be attached to the message.
-			]=]
 			components = {},
 
-			--[=[
-				@prop stickerIds { string }
-				@within Builders.MessageParams
-				Array of sticker IDs that will be attached to the message.
-			]=]
 			stickerIds = {},
 
-			--[=[
-				@prop attachments { Builders.Attachment }
-				@within Builders.MessageParams
-				Array of attachment objects that will be attached to the message.
-			]=]
 			attachments = {},
 
-			--[=[
-				@prop flags number?
-				@within Builders.MessageParams
-				Message flags to be applied to the message.
-			]=]
 		} :: MessageParams,
 		{
 			__index = MessageParams.Prototype,

@@ -7,6 +7,30 @@
 	https://discord.com/developers/docs/events/gateway-events#update-presence
 ]=]
 
+--[=[
+	@prop activities { Classes.Activity }
+	@within Builders.Presence
+	An array of activity objects that represent what the client is currently doing.
+]=]
+
+--[=[
+	@prop since number?
+	@within Builders.Presence
+	Unix timestamp (in milliseconds) of when the client went idle, or null if the client is not idle.
+]=]
+
+--[=[
+	@prop afk boolean?
+	@within Builders.Presence
+	Whether or not the client is afk.
+]=]
+
+--[=[
+	@prop status string?
+	@within Builders.Presence
+	The user's current status. Can be "online", "dnd", "idle", "invisible", or "offline".
+]=]
+
 local apiTypes = require("../luau_packages/api_types")
 
 local activity = require("./activity")
@@ -98,30 +122,8 @@ function Presence.Interface.new(resource: {
 }?): Presence
 	local self = setmetatable(
 		{
-			--[=[
-				@prop activities { Classes.Activity }
-				@within Builders.Presence
-				An array of activity objects that represent what the client is currently doing.
-			]=]
 			activities = {},
 
-			--[=[
-				@prop since number?
-				@within Builders.Presence
-				Unix timestamp (in milliseconds) of when the client went idle, or null if the client is not idle.
-			]=]
-
-			--[=[
-				@prop afk boolean?
-				@within Builders.Presence
-				Whether or not the client is afk.
-			]=]
-
-			--[=[
-				@prop status string?
-				@within Builders.Presence
-				The user's current status. Can be "online", "dnd", "idle", "invisible", or "offline".
-			]=]
 		} :: Presence,
 		{ __index = Presence.Prototype }
 	)

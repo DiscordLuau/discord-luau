@@ -7,6 +7,18 @@
 	https://discord.com/developers/docs/resources/guild#guild-widget-settings-object
 ]=]
 
+--[=[
+	@prop enabled boolean?
+	@within Builders.WidgetSettings
+	Whether the widget is enabled for the guild.
+]=]
+
+--[=[
+	@prop channelId string?
+	@within Builders.WidgetSettings
+	The channel id that the widget will generate an invite to.
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 
 local WidgetSettings = {}
@@ -66,18 +78,8 @@ function WidgetSettings.Interface.new(resource: {
 }?): WidgetSettings
 	local self = setmetatable(
 		{
-			--[=[
-				@prop enabled boolean?
-				@within Builders.WidgetSettings
-				Whether the widget is enabled for the guild.
-			]=]
 			enabled = nil,
 
-			--[=[
-				@prop channelId string?
-				@within Builders.WidgetSettings
-				The channel id that the widget will generate an invite to.
-			]=]
 			channelId = nil,
 		} :: WidgetSettings,
 		{

@@ -7,6 +7,60 @@
 	https://discord.com/developers/docs/interactions/application-commands#edit-global-application-command-json-params
 ]=]
 
+--[=[
+	@prop name string
+	@within Builders.Interaction
+	The name of the command.
+]=]
+
+--[=[
+	@prop nameLocalizations { [package].LanguageLocales: string }
+	@within Builders.Interaction
+	Localization dictionary for the name field.
+]=]
+
+--[=[
+	@prop description string
+	@within Builders.Interaction
+	The description of the command.
+]=]
+
+--[=[
+	@prop descriptionLocalizations { [package].LanguageLocales: string }
+	@within Builders.Interaction
+	Localization dictionary for the description field.
+]=]
+
+--[=[
+	@prop options { package.option.JSON }
+	@within Builders.Interaction
+	A list of parameters/options for the command.
+]=]
+
+--[=[
+	@prop defaultMemberPermissions string?
+	@within Builders.Interaction
+	Permissions required to execute the command.
+]=]
+
+--[=[
+	@prop integrationTypes { package.api_types.IntegrationTypesConfig }
+	@within Builders.Interaction
+	Installation contexts the command is available to.
+]=]
+
+--[=[
+	@prop contexts { package.api_types.InteractionContextType }
+	@within Builders.Interaction
+	Interaction contexts where the command can be used.
+]=]
+
+--[=[
+	@prop nsfw boolean?
+	@within Builders.Interaction
+	Whether this command is age-restricted.
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 local interactionOption = require("./option")
 local util = require("../../luau_packages/util")
@@ -205,51 +259,6 @@ function Interaction.Interface.new(resource: {
 	contexts: { apiTypes.InteractionContextType }?,
 	nsfw: boolean?,
 }?): Interaction
-	--[=[
-		@prop name string
-		@within Builders.Interaction
-		The name of the command.
-	]=]
-	--[=[
-		@prop nameLocalizations { [package].LanguageLocales: string }
-		@within Builders.Interaction
-		Localization dictionary for the name field.
-	]=]
-	--[=[
-		@prop description string
-		@within Builders.Interaction
-		The description of the command.
-	]=]
-	--[=[
-		@prop descriptionLocalizations { [package].LanguageLocales: string }
-		@within Builders.Interaction
-		Localization dictionary for the description field.
-	]=]
-	--[=[
-		@prop options { package.option.JSON }
-		@within Builders.Interaction
-		A list of parameters/options for the command.
-	]=]
-	--[=[
-		@prop defaultMemberPermissions string?
-		@within Builders.Interaction
-		Permissions required to execute the command.
-	]=]
-	--[=[
-		@prop integrationTypes { package.api_types.IntegrationTypesConfig }
-		@within Builders.Interaction
-		Installation contexts the command is available to.
-	]=]
-	--[=[
-		@prop contexts { package.api_types.InteractionContextType }
-		@within Builders.Interaction
-		Interaction contexts where the command can be used.
-	]=]
-	--[=[
-		@prop nsfw boolean?
-		@within Builders.Interaction
-		Whether this command is age-restricted.
-	]=]
 	local self = setmetatable(
 		{
 			nameLocalizations = {},

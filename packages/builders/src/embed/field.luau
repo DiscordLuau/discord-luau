@@ -7,6 +7,24 @@
 	https://discord.com/developers/docs/resources/message#embed-object-embed-field-structure
 ]=]
 
+--[=[
+	@prop name string?
+	@within Builders.Field
+	The name of the field that is displayed.
+]=]
+
+--[=[
+	@prop value string?
+	@within Builders.Field
+	The value of the field that is displayed.
+]=]
+
+--[=[
+	@prop inline boolean?
+	@within Builders.Field
+	Whether or not this field should display inline.
+]=]
+
 local Field = {}
 
 Field.Prototype = {}
@@ -76,25 +94,10 @@ function Field.Interface.new(resource: {
 }?): Field
 	local self = setmetatable(
 		{
-			--[=[
-				@prop name string?
-				@within Builders.Field
-				The name of the field that is displayed.
-			]=]
 			name = nil,
 
-			--[=[
-				@prop value string?
-				@within Builders.Field
-				The value of the field that is displayed.
-			]=]
 			value = nil,
 
-			--[=[
-				@prop inline boolean?
-				@within Builders.Field
-				Whether or not this field should display inline.
-			]=]
 			inline = nil,
 		} :: Field,
 		{

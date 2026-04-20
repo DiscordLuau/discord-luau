@@ -7,6 +7,36 @@
 	https://discord.com/developers/docs/resources/channel#start-thread-without-message-json-params
 ]=]
 
+--[=[
+	@prop name string?
+	@within Builders.NoMessageThread
+	The name of the thread that is displayed.
+]=]
+
+--[=[
+	@prop autoArchiveDuration number?
+	@within Builders.NoMessageThread
+	Duration in minutes to automatically archive the thread after recent activity.
+]=]
+
+--[=[
+	@prop type api_types.ChannelType?
+	@within Builders.NoMessageThread
+	The type of thread channel.
+]=]
+
+--[=[
+	@prop invitable boolean?
+	@within Builders.NoMessageThread
+	Whether non-moderators can add other non-moderators to the thread.
+]=]
+
+--[=[
+	@prop rateLimitPerUser number?
+	@within Builders.NoMessageThread
+	Amount of seconds a user has to wait before sending another message.
+]=]
+
 local apiTypes = require("../../luau_packages/api_types")
 
 local NoMessageThread = {}
@@ -116,39 +146,14 @@ function NoMessageThread.Interface.new(resource: {
 }?): NoMessageThread
 	local self = setmetatable(
 		{
-			--[=[
-				@prop name string?
-				@within Builders.NoMessageThread
-				The name of the thread that is displayed.
-			]=]
 			name = nil,
 
-			--[=[
-				@prop autoArchiveDuration number?
-				@within Builders.NoMessageThread
-				Duration in minutes to automatically archive the thread after recent activity.
-			]=]
 			autoArchiveDuration = nil,
 
-			--[=[
-				@prop type api_types.ChannelType?
-				@within Builders.NoMessageThread
-				The type of thread channel.
-			]=]
 			type = nil,
 
-			--[=[
-				@prop invitable boolean?
-				@within Builders.NoMessageThread
-				Whether non-moderators can add other non-moderators to the thread.
-			]=]
 			invitable = nil,
 
-			--[=[
-				@prop rateLimitPerUser number?
-				@within Builders.NoMessageThread
-				Amount of seconds a user has to wait before sending another message.
-			]=]
 			rateLimitPerUser = nil,
 		} :: NoMessageThread,
 		{

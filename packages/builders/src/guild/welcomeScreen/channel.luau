@@ -7,6 +7,30 @@
 	https://discord.com/developers/docs/resources/guild#welcome-screen-object-welcome-screen-channel-structure
 ]=]
 
+--[=[
+	@prop channelId string?
+	@within Builders.WelcomeScreenChannel
+	The id of the channel shown in the welcome screen.
+]=]
+
+--[=[
+	@prop description string
+	@within Builders.WelcomeScreenChannel
+	The description shown for the channel in the welcome screen.
+]=]
+
+--[=[
+	@prop emojiId string?
+	@within Builders.WelcomeScreenChannel
+	The id of the emoji shown in the welcome screen channel.
+]=]
+
+--[=[
+	@prop emojiName string?
+	@within Builders.WelcomeScreenChannel
+	The name of the emoji shown in the welcome screen channel.
+]=]
+
 local apiTypes = require("../../../luau_packages/api_types")
 
 local WelcomeScreenChannel = {}
@@ -99,32 +123,12 @@ function WelcomeScreenChannel.Interface.new(resource: {
 }?): WelcomeScreenChannel
 	local self = setmetatable(
 		{
-			--[=[
-				@prop channelId string?
-				@within Builders.WelcomeScreenChannel
-				The id of the channel shown in the welcome screen.
-			]=]
 			channelId = nil,
 
-			--[=[
-				@prop description string
-				@within Builders.WelcomeScreenChannel
-				The description shown for the channel in the welcome screen.
-			]=]
 			description = nil,
 
-			--[=[
-				@prop emojiId string?
-				@within Builders.WelcomeScreenChannel
-				The id of the emoji shown in the welcome screen channel.
-			]=]
 			emojiId = nil,
 
-			--[=[
-				@prop emojiName string?
-				@within Builders.WelcomeScreenChannel
-				The name of the emoji shown in the welcome screen channel.
-			]=]
 			emojiName = nil,
 		} :: WelcomeScreenChannel,
 		{

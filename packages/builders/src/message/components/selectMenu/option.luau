@@ -7,6 +7,36 @@
 	https://discord.com/developers/docs/interactions/message-components#Options
 ]=]
 
+--[=[
+	@prop label string?
+	@within Builders.Option
+	The user-facing name of the option.
+]=]
+
+--[=[
+	@prop value string?
+	@within Builders.Option
+	The dev-defined value of the option.
+]=]
+
+--[=[
+	@prop description string?
+	@within Builders.Option
+	An additional description of the option.
+]=]
+
+--[=[
+	@prop emoji Builders.Emoji?
+	@within Builders.Option
+	The emoji to display alongside the option.
+]=]
+
+--[=[
+	@prop default boolean?
+	@within Builders.Option
+	Whether this option is selected by default.
+]=]
+
 local emoji = require("../../../emoji")
 
 local Option = {}
@@ -120,39 +150,14 @@ function Option.Interface.new(resource: {
 }): Option
 	local self = setmetatable(
 		{
-			--[=[
-				@prop label string?
-				@within Builders.Option
-				The user-facing name of the option.
-			]=]
 			label = nil,
 
-			--[=[
-				@prop value string?
-				@within Builders.Option
-				The dev-defined value of the option.
-			]=]
 			value = nil,
 
-			--[=[
-				@prop description string?
-				@within Builders.Option
-				An additional description of the option.
-			]=]
 			description = nil,
 
-			--[=[
-				@prop emoji Builders.Emoji?
-				@within Builders.Option
-				The emoji to display alongside the option.
-			]=]
 			emoji = nil,
 
-			--[=[
-				@prop default boolean?
-				@within Builders.Option
-				Whether this option is selected by default.
-			]=]
 			default = nil,
 		} :: Option,
 		{
