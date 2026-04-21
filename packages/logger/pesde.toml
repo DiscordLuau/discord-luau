@@ -16,4 +16,4 @@ lib = "src/init.luau"
 default = "https://github.com/pesde-pkg/index"
 
 [dependencies]
-std_polyfills = { workspace = "discord_luau/std_polyfills", target = "lune" }
+std_polyfills = { workspace = "discord_luau/std_polyfills" }

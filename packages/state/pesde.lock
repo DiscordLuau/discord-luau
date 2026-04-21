@@ -49,14 +49,14 @@ stream = [{ workspace = "discord_luau/stream", version = "^" }, "standard"]
 direct = ["logger", { workspace = "discord_luau/logger", version = "^" }, "standard"]
 
 [graph."discord_luau/logger@0.0.1 luau".dependencies]
-std_polyfills = ["discord_luau/std_polyfills@0.0.1 lune", "standard"]
+std_polyfills = ["discord_luau/std_polyfills@0.0.1 luau", "standard"]
 
 [graph."discord_luau/logger@0.0.1 luau".pkg_ref]
 ref_ty = "workspace"
 path = "packages/logger"
 
 [graph."discord_luau/logger@0.0.1 luau".pkg_ref.dependencies]
-std_polyfills = [{ workspace = "discord_luau/std_polyfills", version = "^", target = "lune" }, "standard"]
+std_polyfills = [{ workspace = "discord_luau/std_polyfills", version = "^" }, "standard"]
 
 [graph."discord_luau/rest@0.0.1 luau"]
 direct = ["rest", { workspace = "discord_luau/rest", version = "^" }, "standard"]
@@ -64,7 +64,7 @@ direct = ["rest", { workspace = "discord_luau/rest", version = "^" }, "standard"
 [graph."discord_luau/rest@0.0.1 luau".dependencies]
 api_types = ["discord_luau/api_types@0.0.1 luau", "standard"]
 future = ["yetanotherclown/luau_futures@2.0.0-beta.3 luau", "standard"]
-std_polyfills = ["discord_luau/std_polyfills@0.0.1 lune", "standard"]
+std_polyfills = ["discord_luau/std_polyfills@0.0.1 luau", "standard"]
 
 [graph."discord_luau/rest@0.0.1 luau".pkg_ref]
 ref_ty = "workspace"
@@ -73,7 +73,7 @@ path = "packages/rest"
 [graph."discord_luau/rest@0.0.1 luau".pkg_ref.dependencies]
 api_types = [{ workspace = "discord_luau/api_types", version = "^" }, "standard"]
 future = [{ name = "yetanotherclown/luau_futures", version = "^2.0.0-beta.3", index = "https://github.com/pesde-pkg/index" }, "standard"]
-std_polyfills = [{ workspace = "discord_luau/std_polyfills", version = "^", target = "lune" }, "standard"]
+std_polyfills = [{ workspace = "discord_luau/std_polyfills", version = "^" }, "standard"]
 
 [graph."discord_luau/secret@0.0.1 luau"]
 direct = ["secret", { workspace = "discord_luau/secret", version = "^" }, "standard"]
@@ -82,10 +82,10 @@ direct = ["secret", { workspace = "discord_luau/secret", version = "^" }, "stand
 ref_ty = "workspace"
 path = "packages/secret"
 
-[graph."discord_luau/std_polyfills@0.0.1 lune"]
-direct = ["std_polyfills", { workspace = "discord_luau/std_polyfills", version = "^", target = "lune" }, "standard"]
+[graph."discord_luau/std_polyfills@0.0.1 luau"]
+direct = ["std_polyfills", { workspace = "discord_luau/std_polyfills", version = "^" }, "standard"]
 
-[graph."discord_luau/std_polyfills@0.0.1 lune".pkg_ref]
+[graph."discord_luau/std_polyfills@0.0.1 luau".pkg_ref]
 ref_ty = "workspace"
 path = "packages/std_polyfills"
 
@@ -110,7 +110,7 @@ emitter = ["discord_luau/emitter@0.0.1 luau", "standard"]
 future = ["yetanotherclown/luau_futures@2.0.0-beta.3 luau", "standard"]
 logger = ["discord_luau/logger@0.0.1 luau", "standard"]
 secret = ["discord_luau/secret@0.0.1 luau", "standard"]
-std_polyfills = ["discord_luau/std_polyfills@0.0.1 lune", "standard"]
+std_polyfills = ["discord_luau/std_polyfills@0.0.1 luau", "standard"]
 util = ["discord_luau/util@0.0.1 luau", "standard"]
 
 [graph."discord_luau/websocket@0.0.1 luau".pkg_ref]
@@ -124,7 +124,7 @@ emitter = [{ workspace = "discord_luau/emitter", version = "^" }, "standard"]
 future = [{ name = "yetanotherclown/luau_futures", version = "^2.0.0-beta.3", index = "https://github.com/pesde-pkg/index" }, "standard"]
 logger = [{ workspace = "discord_luau/logger", version = "^" }, "standard"]
 secret = [{ workspace = "discord_luau/secret", version = "^" }, "standard"]
-std_polyfills = [{ workspace = "discord_luau/std_polyfills", version = "^", target = "lune" }, "standard"]
+std_polyfills = [{ workspace = "discord_luau/std_polyfills", version = "^" }, "standard"]
 util = [{ workspace = "discord_luau/util", version = "^" }, "standard"]
 
 [graph."yetanotherclown/luau_futures@2.0.0-beta.3 luau".pkg_ref]
