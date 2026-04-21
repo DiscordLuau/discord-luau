@@ -332,7 +332,7 @@ function Bot.Prototype.connectAsync(self: Bot): future.FutureLike<string, nil>
 		local gatewayInformation = self:queryGatewayInformation():await()
 
 		if not gatewayInformation:isOk() then
-			self.logger:Emergency(`Failed to retrieve gateway information: {gatewayInformation:unwrapErr()}`)
+			self.logger:emergency(`Failed to retrieve gateway information: {gatewayInformation:unwrapErr()}`)
 
 			error(gatewayInformation:unwrapErr())
 		end
