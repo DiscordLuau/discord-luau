@@ -17,7 +17,6 @@ local bot = discord.bot.new({
 	token = env.DISCORD_BOT_TOKEN,
 	intents = DISCORD_BOT_INTENTS,
 	reconnect = true,
-	logLevel = "Debug",
 })
 
 bot.onMessage:listen(function(message: classes.Message)
@@ -25,7 +24,7 @@ bot.onMessage:listen(function(message: classes.Message)
 end)
 
 bot.onAllShardsReady:listenOnce(function()
-	print(`Bot '{bot.application.name}' is online!`)
+	print(`Bot '{bot.user.username}' is online!`)
 end)
 
 bot:connectAsync():await()
