@@ -1,7 +1,4 @@
 return function()
-	-- Headers use LF only; content lines carry \r because the source file is CRLF.
-	-- Blank context lines are " \r" (space + CR) to match the source file's blank lines.
-	-- This exactly mirrors the reference patch in packages/example/patches/.
 	local lines = {
 		"diff --git a/src/init.luau b/src/init.luau",
 		"index 1eaba03..94a8070 100644",

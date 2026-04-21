@@ -1,4 +1,4 @@
-local StdPolyfills = require("../../../lune_packages/std_polyfills")
+local StdPolyfills = require("../../../luau_packages/std_polyfills")
 
 return function()
 	return StdPolyfills.serde.encode("toml", {
