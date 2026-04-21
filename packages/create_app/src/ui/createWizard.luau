@@ -194,7 +194,7 @@ return function(onBuild: (
 		table.insert(cursors, #field.default + 1)
 	end
 
-	local state = "prereqs"
+	local state = if allPrerequisitesMet then "wizard" else "prereqs"
 	local running = true
 
 	local information: Information? = nil
