@@ -667,6 +667,24 @@ end
 
 --[=[
 	@within Classes.Guild
+	Returns a map of role IDs to the number of members with the role. Does not include the @everyone role.
+]=]
+function Guild.Prototype.getRoleMemberCounts<T>(self: Guild)
+	return future.Future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local response = rest.guild.getGuildRoleMemberCounts(request, self.id):await()
+
+		assert(response:isOk(), tostring(response:unwrapErr()))
+
+		return response:unwrapOk() :: any
+	end) :: future.FutureLike<string, {
+		[string]: number,
+	}>
+end
+
+--[=[
+	@within Classes.Guild
 	Returns all active threads in the guild, including public and private threads.
 	Threads are ordered by their id, in descending order.
 
