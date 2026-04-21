@@ -11,7 +11,12 @@ local requireTests
 local requireFile
 
 function requireFile(fullPath: string)
-	local success, result = pcall(require, fullPath)
+	local path = string.split(fullPath, `/`)
+	local fileName = string.match(table.remove(path, #path) :: string, "^(.*)%.spec%.luau$")
+
+	table.remove(path, 1)
+
+	local success, result = pcall(require, `../../{table.concat(path, `/`)}/{fileName}.spec`)
 
 	if not success then
 		print(`\n{stdio.color("red")}Failed to require unit-test at \`{fullPath}\`, error:`)
