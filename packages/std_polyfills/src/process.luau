@@ -16,6 +16,8 @@ function process.getPlatform(): OS
 
 	if target == "Lune" then
 		return require("./lune/process").os :: OS
+	elseif target == "Zune" then
+		return require("./zune/process").os :: OS
 	end
 
 	error(`Out of reach`)
@@ -31,6 +33,8 @@ function process.getArgs(): { string }
 
 	if target == "Lune" then
 		return require("./lune/process").args :: { string }
+	elseif target == "Zune" then
+		return require("./zune/process").args :: { string }
 	end
 
 	error(`Out of reach`)
@@ -46,6 +50,8 @@ function process.getEnv(): { [string]: string }
 
 	if target == "Lune" then
 		return require("./lune/process").env :: { [string]: string }
+	elseif target == "Zune" then
+		return require("./zune/process").env :: { [string]: string }
 	end
 
 	error(`Out of reach`)
@@ -61,6 +67,8 @@ function process.getCwd(): string
 
 	if target == "Lune" then
 		return require("./lune/process").cwd :: string
+	elseif target == "Zune" then
+		return require("./zune/process").cwd :: string
 	end
 
 	error(`Out of reach`)

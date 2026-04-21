@@ -16,6 +16,8 @@ function net.urlEncode(url: string, binary: boolean?): string
 
 	if target == "Lune" then
 		return require("./lune/net").urlEncode(url, binary)
+	elseif target == "Zune" then
+		return require("./zune/net").urlEncode(url, binary)
 	end
 
 	error(`Out of reach`)
@@ -34,6 +36,8 @@ function net.request(config: string | FetchParams): FetchResponse
 
 	if target == "Lune" then
 		return require("./lune/net").request(config)
+	elseif target == "Zune" then
+		return require("./zune/net").request(config)
 	end
 
 	error(`Out of reach`)
@@ -52,6 +56,8 @@ function net.tcpSocket(url: string)
 
 	if target == "Lune" then
 		return require("./lune/net").socket(url)
+	elseif target == "Zune" then
+		return require("./zune/net").socket(url)
 	end
 
 	error(`Out of reach`)

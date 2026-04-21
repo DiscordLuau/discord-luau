@@ -16,6 +16,8 @@ function task.cancel(thread: thread)
 
 	if target == "Lune" then
 		return require("./lune/task").cancel(thread)
+	elseif target == "Zune" then
+		return require("./zune/task").cancel(thread)
 	end
 
 	error(`Out of reach`)
@@ -31,6 +33,8 @@ function task.defer<T...>(functionOrThread: thread | (T...) -> ...any, ...: T...
 
 	if target == "Lune" then
 		return require("./lune/task").defer(functionOrThread, ...)
+	elseif target == "Zune" then
+		return require("./zune/task").defer(functionOrThread, ...)
 	end
 
 	error(`Out of reach`)
@@ -46,6 +50,8 @@ function task.delay<T...>(duration: number, functionOrThread: thread | (T...) ->
 
 	if target == "Lune" then
 		return require("./lune/task").delay(duration, functionOrThread, ...)
+	elseif target == "Zune" then
+		return require("./zune/task").delay(duration, functionOrThread, ...)
 	end
 
 	error(`Out of reach`)
@@ -64,6 +70,8 @@ function task.spawn<T...>(functionOrThread: thread | (T...) -> ...any, ...: T...
 
 	if target == "Lune" then
 		return require("./lune/task").spawn(functionOrThread, ...)
+	elseif target == "Zune" then
+		return require("./zune/task").spawn(functionOrThread, ...)
 	end
 
 	error(`Out of reach`)
@@ -82,6 +90,8 @@ function task.wait(duration: number?): number
 
 	if target == "Lune" then
 		return require("./lune/task").wait(duration)
+	elseif target == "Zune" then
+		return require("./zune/task").wait(duration)
 	end
 
 	error(`Out of reach`)

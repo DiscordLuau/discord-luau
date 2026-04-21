@@ -16,6 +16,8 @@ function stdio.prompt(message: string?): string
 
 	if target == "Lune" then
 		return require("./lune/stdio").prompt(message)
+	elseif target == "Zune" then
+		return require("./zune/stdio").prompt(message)
 	end
 
 	error(`Out of reach`)
@@ -31,6 +33,8 @@ function stdio.write(source: string)
 
 	if target == "Lune" then
 		return require("./lune/stdio").write(source)
+	elseif target == "Zune" then
+		return require("./zune/stdio").write(source)
 	end
 
 	error(`Out of reach`)
