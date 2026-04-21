@@ -1,10 +1,10 @@
+-- selene: allow(undefined_variable)
 local CliBuilder = require("../../luau_packages/cli_builder")
-local StdPolyfills = require("../../lune_packages/std_polyfills")
+local StdPolyfills = require("../../luau_packages/std_polyfills")
 
 local Logger = require("../objects/logger")
 
 local command = CliBuilder.command
-local argument = CliBuilder.argument
 
 local OS_SLASH_MAP = table.freeze({
 	["linux"] = "/",
@@ -18,38 +18,60 @@ local OS_HOME_VARS = table.freeze({
 	["windows"] = "USERPROFILE",
 })
 
-local INFORMATION_TO_QUERY = table.freeze({
-	ProjectName = "What should this project be called?",
-	UseGit = "Should this project use Git?",
-	DiscordToken = "What is the discord bot token?",
-	License = "What is the projects license?",
-})
+type VFile = (information: Information) -> string
+type VDirectory = { [string]: VDirectory | VFile }
 
-local INFORMATION_QUERY_ORDER = table.freeze({
-	"ProjectName",
-	"UseGit",
-	"License",
-	"DiscordToken",
-})
+type Information = {
+	ProjectName: string,
+	IDE: string,
+	UseGit: string,
+	License: string,
+	DiscordToken: string,
+}
+
+local function stripBanners(output: string): string
+	local lines = {}
+	for line in string.gmatch(output .. "\n", "([^\n]*)\n") do
+		if not string.match(line, "^[%s]*┃") then
+			table.insert(lines, line)
+		end
+	end
+	while #lines > 0 and string.match(lines[#lines], "^%s*$") do
+		table.remove(lines)
+	end
+	return table.concat(lines, "\n")
+end
+
+local function processOutput(result: any): string
+	local parts = {}
+	local cleanStdout = stripBanners(result.stdout or "")
+	local cleanStderr = stripBanners(result.stderr or "")
+	if #cleanStdout > 0 then
+		table.insert(parts, cleanStdout)
+	end
+	if #cleanStderr > 0 then
+		table.insert(parts, cleanStderr)
+	end
+	return table.concat(parts, "\n")
+end
 
 local function resolveDirectory(directory: string?): string?
 	if not directory or directory == "." then
 		return StdPolyfills.process.getCwd()
 	end
 
-	local os = StdPolyfills.process.getPlatform()
-	local separator = OS_SLASH_MAP[os] or "/"
+	local platform = StdPolyfills.process.getPlatform()
+	local separator = OS_SLASH_MAP[platform] or "/"
 	local resolvedPath: string
 
 	if string.sub(directory, 1, 1) == "~" then
-		local homeVarName = OS_HOME_VARS[os]
+		local homeVarName = OS_HOME_VARS[platform]
 		local home = homeVarName and StdPolyfills.process.getEnv()[homeVarName]
 
 		if not home then
 			Logger:error(
-				`Unable to resolve ${OS_HOME_VARS[os]} environment variable! Does this environment variable exist?`
+				`Unable to resolve {OS_HOME_VARS[platform]} environment variable! Does this environment variable exist?`
 			)
-
 			return nil
 		end
 
@@ -61,7 +83,6 @@ local function resolveDirectory(directory: string?): string?
 			if string.sub(restOfPath, 1, 1) == "/" or string.sub(restOfPath, 1, 1) == "\\" then
 				restOfPath = string.sub(restOfPath, 2)
 			end
-
 			resolvedPath = home .. separator .. restOfPath
 		end
 	elseif (string.sub(directory, 1, 1) == "/") or (string.match(directory, "^%a:\\") ~= nil) then
@@ -78,96 +99,55 @@ local function resolveDirectory(directory: string?): string?
 	end
 end
 
-local function queryInformation(): Information
-	local information = {}
-
-	for _, enum in INFORMATION_QUERY_ORDER do
-		local question = INFORMATION_TO_QUERY[enum]
-
-		print(question)
-
-		local answer = StdPolyfills.stdio.prompt("> ")
-
-		StdPolyfills.stdio.write("\x1b[1A\x1b[2K")
-
-		information[enum] = answer
-	end
-
-	return information :: Information
-end
-
-local function verifyInformation(information: Information)
-	for _, enum in INFORMATION_QUERY_ORDER do
-		local question = INFORMATION_TO_QUERY[enum]
-
-		print(`"{question}" --> "{information[enum]}"`)
-	end
-
-	print("")
-	print("Do these answers look correct?")
-
-	local answer = StdPolyfills.stdio.prompt("> ")
-
-	for i = 1, 2 + #INFORMATION_QUERY_ORDER do
-		StdPolyfills.stdio.write("\x1b[1A\x1b[2K")
-	end
-
-	return answer == "y"
-end
-
 local function buildProjectMap(projectMap: VDirectory, path: string, information: Information)
 	for key, value in projectMap do
-		local typeValue = typeof(value)
-
-		if typeValue == "table" then
-			local directory = value :: VDirectory
-
+		if typeof(value) == "table" then
 			StdPolyfills.fileSystem.writeDir(`{path}/{key}`)
-
-			buildProjectMap(directory, `{path}/{key}`, information)
+			buildProjectMap(value :: VDirectory, `{path}/{key}`, information)
 		else
-			local callback = value :: VFile
-
-			StdPolyfills.fileSystem.writeFile(`{path}/{key}`, callback(information))
+			StdPolyfills.fileSystem.writeFile(`{path}/{key}`, (value :: VFile)(information))
 		end
 	end
 end
 
 local function setupProject(path: string, projectFile: string, information: Information)
-	if StdPolyfills.fileSystem.isDir(`{path}/{information.ProjectName}`) then
-		return Logger:error(`Directory '{path}/{information.ProjectName}' already exists - aborting project creation!`)
+	local directoryName = string.match(information.ProjectName, "[^/]+$") or information.ProjectName
+
+	if StdPolyfills.fileSystem.isDir(`{path}/{directoryName}`) then
+		return Logger:error(`Directory '{path}/{directoryName}' already exists - aborting project creation!`)
 	end
 
-	if StdPolyfills.fileSystem.isFile(`{path}/{information.ProjectName}`) then
+	if StdPolyfills.fileSystem.isFile(`{path}/{directoryName}`) then
 		return Logger:error(
-			`Directory '{path}/{information.ProjectName}' already exists (as a file) - aborting project creation!`
+			`Directory '{path}/{directoryName}' already exists (as a file) - aborting project creation!`
 		)
 	end
 
-	StdPolyfills.fileSystem.writeDir(`{path}/{information.ProjectName}`)
+	StdPolyfills.fileSystem.writeDir(`{path}/{directoryName}`)
 
 	local projectMap: VDirectory = (require :: any)(`./../projects/{projectFile}`)
 
-	buildProjectMap(projectMap, `{path}/{information.ProjectName}`, information)
+	buildProjectMap(projectMap, `{path}/{directoryName}`, information)
 
-	Logger:debug(`Finished setting up project in the following dir: '{`{path}/{information.ProjectName}`}'`)
+	Logger:debug(`Finished setting up project in the following dir: '{`{path}/{directoryName}`}'`)
 end
-
-type VFile = (information: Information) -> string
-type VDirectory = { [string]: VDirectory | VFile }
-
-type Information = {
-	ProjectName: string,
-	UseGit: string,
-	License: string,
-	DiscordToken: string,
-}
 
 return command
 	.new()
 	:setName("create")
-	:setDescription("Will create a discord-bot project")
+	:setDescription("Scaffold a new Discord bot project in Luau")
 	:setCallback(function(context)
+		local currentRuntime = StdPolyfills.runtime.getRuntime()
+
+		if currentRuntime ~= "Zune" then
+			Logger:error(
+				`create_app must be run with the Zune runtime (detected: '{currentRuntime}'). `
+					.. `Please run this tool via 'pesde x discord_luau/create_app', which will invoke Zune automatically.`
+			)
+
+			return
+		end
+
 		local targetDirectory = resolveDirectory(context.commandArguments.directory)
 
 		if not targetDirectory then
@@ -176,34 +156,54 @@ return command
 
 		Logger:debug(`Resolved path argument as the following directory; '{targetDirectory}'`)
 
-		local information = queryInformation()
+		require("../ui/createWizard")(function(info, setStatus, _setWarning)
+			local projectDirectoryName = string.match(info.ProjectName, "[^/]+$") or info.ProjectName
+			local projectPath = `{targetDirectory}/{projectDirectoryName}`
 
-		if verifyInformation(information) then
-			setupProject(targetDirectory, context.commandOptions.ide :: string, information)
-		else
-			print("exit!")
-		end
+			setStatus("Creating project structure…", 0.10)
+			setupProject(targetDirectory, info.IDE, info)
+
+			setStatus("Running rokit install…", 0.35)
+			local rokitResult = zune.process.run("rokit", { "install" }, { cwd = projectPath })
+
+			if not rokitResult.ok then
+				local output = processOutput(rokitResult)
+				error(`rokit install failed (exit {rokitResult.code}){if #output > 0 then "\n" .. output else ""}`)
+			end
+
+			setStatus("Running lune setup…", 0.55)
+			local luneSetupResult = zune.process.run("lune", { "setup" }, { cwd = projectPath })
+
+			if not luneSetupResult.ok then
+				local output = processOutput(luneSetupResult)
+				error(`lune setup failed (exit {luneSetupResult.code}){if #output > 0 then "\n" .. output else ""}`)
+			end
+
+			if info.UseGit == "Yes" then
+				setStatus("Running git init…", 0.65)
+				local gitInitResult = zune.process.run("git", { "init" }, { cwd = projectPath })
+
+				if not gitInitResult.ok then
+					local output = processOutput(gitInitResult)
+					error(`git init failed (exit {gitInitResult.code}){if #output > 0 then "\n" .. output else ""}`)
+				end
+			end
+
+			setStatus("Running pesde install…", 0.80)
+			local pesdeResult = zune.process.run("pesde", { "install" }, { cwd = projectPath })
+
+			if not pesdeResult.ok then
+				local output = processOutput(pesdeResult)
+				error(`pesde install failed (exit {pesdeResult.code}){if #output > 0 then "\n" .. output else ""}`)
+			end
+
+			return projectPath
+		end)
 	end)
 	:addArgument({
 		name = "directory",
 		type = "string",
 		required = false,
 		description = "The directory to build the project under.",
-	})
-	:addOption({
-		name = "ide",
-		type = "string",
-		defaultValue = "vscode",
-		description = "IDE the project will be setup for",
-		valueName = "vscode, nvim",
-		aliases = { "i" },
-	})
-	:addOption({
-		name = "runtime",
-		type = "string",
-		defaultValue = "Lune",
-		description = "IDE the project will be setup for",
-		valueName = "Lune, Roblox, Zune, Lute",
-		aliases = { "r" },
 	})
 	:build()
