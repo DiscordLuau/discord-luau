@@ -24,6 +24,7 @@ type VDirectory = { [string]: VDirectory | VFile }
 type Information = {
 	ProjectName: string,
 	IDE: string,
+	Runtime: string,
 	UseGit: string,
 	License: string,
 	DiscordToken: string,

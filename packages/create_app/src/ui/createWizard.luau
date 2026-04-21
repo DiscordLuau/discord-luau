@@ -23,10 +23,12 @@ local MIN_WIDTH = 80
 local MIN_HEIGHT = 17
 
 local VALID_IDES = { vscode = true, nvim = true, zed = true }
+local VALID_RUNTIMES = { zune = true, lune = true }
 
 type Information = {
 	ProjectName: string,
 	IDE: string,
+	Runtime: string,
 	UseGit: string,
 	License: string,
 	DiscordToken: string,
@@ -74,6 +76,23 @@ local FIELDS: { Field } = {
 		validate = function(value)
 			if not VALID_IDES[value] then
 				return "Invalid IDE. Expected one of: vscode, nvim, zed"
+			end
+			return nil
+		end,
+	},
+	{
+		key = "Runtime",
+		label = "Runtime",
+		question = "Which Luau runtime will you be using?  (zune / lune)",
+		mask = nil,
+		placeholder = "zune",
+		default = "zune",
+		normalise = function(value)
+			return string.lower(value)
+		end,
+		validate = function(value)
+			if not VALID_RUNTIMES[value] then
+				return "Invalid runtime. Expected one of: zune, lune"
 			end
 			return nil
 		end,
