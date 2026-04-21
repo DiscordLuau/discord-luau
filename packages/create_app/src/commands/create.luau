@@ -172,12 +172,13 @@ return command
 				error(`rokit install failed (exit {rokitResult.code}){if #output > 0 then "\n" .. output else ""}`)
 			end
 
-			setStatus("Running lune setup…", 0.55)
-			local luneSetupResult = zune.process.run("lune", { "setup" }, { cwd = projectPath })
+			local runtimeName = info.Runtime
+			setStatus(`Running {runtimeName} setup…`, 0.55)
+			local runtimeSetupResult = zune.process.run(runtimeName, { "setup" }, { cwd = projectPath })
 
-			if not luneSetupResult.ok then
-				local output = processOutput(luneSetupResult)
-				error(`lune setup failed (exit {luneSetupResult.code}){if #output > 0 then "\n" .. output else ""}`)
+			if not runtimeSetupResult.ok then
+				local output = processOutput(runtimeSetupResult)
+				error(`{runtimeName} setup failed (exit {runtimeSetupResult.code}){if #output > 0 then "\n" .. output else ""}`)
 			end
 
 			if info.UseGit == "Yes" then
