@@ -1,4 +1,4 @@
-local stdPolyfills = require("../lune_packages/std_polyfills")
+local stdPolyfills = require("../luau_packages/std_polyfills")
 
 local future = require("../luau_packages/future")
 local apiTypes = require("../luau_packages/api_types")
@@ -187,6 +187,29 @@ function guild.createGuildChannelAsync(
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.CreateGuildChannelResponse>
+end
+
+--[=[
+	@within Rest.application
+
+	https://docs.discord.com/developers/resources/guild#get-guild-role-member-counts
+]=]
+function guild.getGuildRoleMemberCounts(
+	instance: request.Request,
+	guildId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.GetGuildRoleMemberCountsResponse>
+	return future.Future.new(function()
+		instance:assertToken()
+
+		instance:setMethod("POST")
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetGuildRoleMemberCounts, guildId))
+
+		local response = instance:executeAsync():await()
+
+		assert(response:isOk(), tostring(response:unwrapErr()))
+
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.GetGuildRoleMemberCountsResponse>
 end
 
 --[=[
