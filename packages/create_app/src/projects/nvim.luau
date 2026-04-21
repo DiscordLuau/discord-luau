@@ -12,6 +12,7 @@ local gitignore = require("./bin/gitignore")
 type Information = {
 	ProjectName: string,
 	IDE: string,
+	Runtime: string,
 	UseGit: string,
 	License: string,
 	DiscordToken: string,
@@ -43,8 +44,8 @@ return {
 	["pesde.toml"] = function(information: Information)
 		return pesde_toml(information.ProjectName, information.License)
 	end,
-	["rokit.toml"] = function(_information: Information)
-		return rokit_toml()
+	["rokit.toml"] = function(information: Information)
+		return rokit_toml(information.Runtime)
 	end,
 	["selene.toml"] = function(_information: Information)
 		return selene_toml()
