@@ -1,12 +1,11 @@
 local CliBuilder = require("./luau_packages/cli_builder")
-local StdPolyfills = require("./lune_packages/std_polyfills")
+local StdPolyfills = require("./luau_packages/std_polyfills")
 
 local createCommand = require("@self/commands/create")
 
 local Logger = require("@self/objects/logger")
 
 local cli = CliBuilder.cli
-local option = CliBuilder.option
 
 local app = cli.new()
 	:setVersion("0.1.0")
@@ -17,7 +16,7 @@ local app = cli.new()
 	:setGitRepository("https://github.com/DiscordLuau/discord-luau/")
 	:setBugReportUrl("https://github.com/DiscordLuau/discord-luau/issues")
 	:setHomepage("https://discordluau.devcomp.xyz/")
-	:setEpilog("Example: pesde x DiscordLuau/create_app --ide=vscode ~/Projects/DiscordBot")
+	:setEpilog("Example: pesde x DiscordLuau/create_app create --ide=vscode ~/Projects/DiscordBot")
 	:addOption({
 		name = "verbose",
 		type = "boolean",
