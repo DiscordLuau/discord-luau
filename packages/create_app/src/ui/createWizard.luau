@@ -49,16 +49,16 @@ local FIELDS: { Field } = {
 	{
 		key = "ProjectName",
 		label = "Project Name",
-		question = "What should this project be called?  (scope/project-name)",
+		question = "What should this project be called?  (scope/project_name)",
 		mask = nil,
-		placeholder = "myusername/my-discord-bot",
+		placeholder = "myusername/my_discord_bot",
 		default = "",
 		validate = function(value)
 			if #value == 0 then
 				return "Project name cannot be empty."
 			end
-			if not string.match(value, "^[a-z0-9][a-z0-9%-]*/[a-z0-9][a-z0-9%-]*$") then
-				return "Project name must be in scope/project-name format using only lowercase letters, numbers, and hyphens."
+			if not string.match(value, "^[a-z0-9][a-z0-9_]*/[a-z0-9][a-z0-9_]*$") then
+				return "Project name must be in scope/project_name format using only lowercase letters, numbers, and underscores."
 			end
 			return nil
 		end,

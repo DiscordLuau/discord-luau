@@ -26,7 +26,13 @@ local function buildQueryString(query: { [string]: string | { string } }): strin
 	return table.concat(parts, "&")
 end
 
-function net.request(config: string | { url: string, method: string?, body: (string | buffer)?, query: { [string]: any }?, headers: { [string]: string }? })
+function net.request(config: string | {
+	url: string,
+	method: string?,
+	body: (string | buffer)?,
+	query: { [string]: any }?,
+	headers: { [string]: string }?,
+})
 	local url: string
 	local opts: { method: string?, headers: { [string]: string }?, body: (string | buffer)? } = {}
 
