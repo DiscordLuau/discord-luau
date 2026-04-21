@@ -65,8 +65,9 @@ function net.socket(url: string)
 	local value = { closeCode = nil :: number? }
 
 	local wsHandle = zuneNet.http.websocket(url, {
-		message = function(_ws, message: string)
-			table.insert(messageQueue, message)
+		message = function(_ws, message: string | buffer)
+			local messageStr: string = if type(message) == "buffer" then buffer.tostring(message) else message
+			table.insert(messageQueue, messageStr)
 			if waitingThread then
 				local co = waitingThread
 				waitingThread = nil
