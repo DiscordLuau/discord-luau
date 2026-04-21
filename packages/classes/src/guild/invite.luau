@@ -76,7 +76,7 @@
 local apiTypes = require("../../luau_packages/api_types")
 local state = require("../../luau_packages/state")
 local rest = require("../../luau_packages/rest")
-local stdPolyfills = require("../../lune_packages/std_polyfills")
+local stdPolyfills = require("../../luau_packages/std_polyfills")
 local future = require("../../luau_packages/future")
 
 local unavailableGuild = require("./unavailableGuild")

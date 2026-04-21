@@ -21,7 +21,7 @@
 	The end time of the activity. This represents when the activity will end.
 ]=]
 
-local stdPolyfills = require("../../lune_packages/std_polyfills")
+local stdPolyfills = require("../../luau_packages/std_polyfills")
 
 local ActivityTimestamp = {}
 

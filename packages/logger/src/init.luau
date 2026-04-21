@@ -10,7 +10,7 @@
 	Please defer to the above document for when it is appropriate to use each log level.
 ]=]
 
-local stdPolyfills = require("@self/../lune_packages/std_polyfills")
+local stdPolyfills = require("@self/../luau_packages/std_polyfills")
 
 local DIM = "\27\91\50\109"
 local BOLD = "\27\91\49\109"

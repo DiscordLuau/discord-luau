@@ -5,7 +5,7 @@
 	Wrapper around Discord snowflakes, allwowing developers to query information about a snowflake
 ]=]
 
-local stdPolyfills = require("../lune_packages/std_polyfills")
+local stdPolyfills = require("../luau_packages/std_polyfills")
 
 local bit = require("../luau_packages/bit")
 
