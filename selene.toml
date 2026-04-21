@@ -1,4 +1,4 @@
-std = "lune"
+std = "lune+zune"
 
 [lints]
 high_cyclomatic_complexity = "allow"

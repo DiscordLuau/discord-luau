@@ -20,6 +20,9 @@ luau = "packages/builders"
 [workspace."discord_luau/classes"]
 luau = "packages/classes"
 
+[workspace."discord_luau/create_app"]
+luau = "packages/create_app"
+
 [workspace."discord_luau/discord_luau"]
 luau = "packages/discord_luau"
 
@@ -48,7 +51,7 @@ luau = "packages/snowflake"
 luau = "packages/state"
 
 [workspace."discord_luau/std_polyfills"]
-lune = "packages/std_polyfills"
+luau = "packages/std_polyfills"
 
 [workspace."discord_luau/stream"]
 luau = "packages/stream"

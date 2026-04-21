@@ -8,5 +8,11 @@
   "luau-lsp.fflags.override": {
     "LuauTarjanChildLimit": "0",
     "LuauTypeInferIterationLimit": "0"
-  }
+  },
+  "luau-lsp.types.definitionFiles": {
+    "@zune": "/home/me/.zune/typedefs/global/zune.d.luau"
+  },
+  "luau-lsp.types.documentationFiles": [
+    "/home/me/.zune/typedefs/global/zune.d.json"
+  ],
 }
