@@ -178,7 +178,11 @@ return command
 
 			if not runtimeSetupResult.ok then
 				local output = processOutput(runtimeSetupResult)
-				error(`{runtimeName} setup failed (exit {runtimeSetupResult.code}){if #output > 0 then "\n" .. output else ""}`)
+				error(
+					`{runtimeName} setup failed (exit {runtimeSetupResult.code}){if #output > 0
+						then "\n" .. output
+						else ""}`
+				)
 			end
 
 			if info.UseGit == "Yes" then

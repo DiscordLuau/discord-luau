@@ -52,7 +52,7 @@ function Interaction.Prototype.deferAsync(self: Interaction)
 
 		local response = rest.interaction
 			.createInteractionResponseAsync(request, self.id, self.token, {
-				type = 5
+				type = 5,
 			}, {
 				withResponse = false,
 			})
@@ -184,7 +184,9 @@ function Interaction.Prototype.deleteResponseAsync(self: Interaction)
 	local request = self.state.rest:newRequest()
 
 	return future.Future.new(function()
-		local response = rest.interaction.deleteOriginalInteractionResponseAsync(request, self.state.applicationId, self.token):await()
+		local response = rest.interaction
+			.deleteOriginalInteractionResponseAsync(request, self.state.applicationId, self.token)
+			:await()
 
 		assert(response:isOk(), tostring(response:unwrapErr()))
 
@@ -275,7 +277,9 @@ function Interaction.Prototype.deleteFollowupResponseAsync(self: Interaction, me
 	local request = self.state.rest:newRequest()
 
 	return future.Future.new(function()
-		local response = rest.interaction.deleteFollowupMessageAsync(request, self.state.applicationId, self.token, messageId):await()
+		local response = rest.interaction
+			.deleteFollowupMessageAsync(request, self.state.applicationId, self.token, messageId)
+			:await()
 
 		assert(response:isOk(), tostring(response:unwrapErr()))
 

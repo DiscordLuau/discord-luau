@@ -114,7 +114,6 @@ function Onboarding.Interface.new(resource: {
 			prompts = {},
 
 			defaultChannelIds = {},
-
 		} :: Onboarding,
 		{
 			__index = Onboarding.Prototype,

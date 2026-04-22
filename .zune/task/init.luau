@@ -25,10 +25,6 @@ function Task.Prototype.execute(self: Task)
 	})
 
 	if not result.ok then
-		if result.code == 9 or result.code == 1 then
-			return
-		end
-
 		print(`\n[\27[31merror\27[0m] \`{self.executable}\` exited with code {result.code}`)
 
 		zune.process.exit(result.code)

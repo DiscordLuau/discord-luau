@@ -108,8 +108,7 @@ local FIELDS: { Field } = {
 			local lowercaseValue = string.lower(value)
 			if lowercaseValue == "y" then
 				return "Yes"
-			elseif lowercaseValue == "n" then
-				return "No"
+			elseif lowercaseValue == "n" then return "No"
 			end
 			return value
 		end,
@@ -444,7 +443,9 @@ return function(onBuild: (
 				:setBorderForegroundColor(GRAY)
 
 			local footerHint = if state == "prereqs"
-				then if allPrerequisitesMet then "Press any key to continue  ·  Ctrl+C  cancel" else "Press any key to exit"
+				then if allPrerequisitesMet
+					then "Press any key to continue  ·  Ctrl+C  cancel"
+					else "Press any key to exit"
 				elseif
 					state == "wizard"
 				then "↑ ↓  navigate  ·  Enter  advance  ·  ← →  move cursor  ·  Backspace  delete  ·  Ctrl+C  cancel"

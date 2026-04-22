@@ -876,7 +876,7 @@ export type CreateGuildChannelResponse = Response<objects.ChannelObject>
 
 -- https://docs.discord.com/developers/resources/guild#get-guild-role-member-counts
 export type GetGuildRoleMemberCountsResponse = Response<{
-	[string]: number
+	[string]: number,
 }>
 
 -- https://discord.com/developers/docs/resources/guild#modify-guild-channel-positions

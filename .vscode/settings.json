@@ -1,5 +1,5 @@
 {
-  "editor.formatOnSave": true,
+  // "editor.formatOnSave": true,
   "luau-lsp.inlayHints.variableTypes": true,
   "luau-lsp.inlayHints.functionReturnTypes": true,
   "luau-lsp.inlayHints.parameterNames": "all",
@@ -10,9 +10,9 @@
     "LuauTypeInferIterationLimit": "0"
   },
   "luau-lsp.types.definitionFiles": {
-    "@zune": "/home/me/.zune/typedefs/global/zune.d.luau"
+    "@zune": ".zune/zune.d.luau"
   },
   "luau-lsp.types.documentationFiles": [
-    "/home/me/.zune/typedefs/global/zune.d.json"
+    ".zune/zune.d.luau"
   ],
 }

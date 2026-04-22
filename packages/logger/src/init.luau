@@ -105,7 +105,7 @@ function Logger.Interface.new(name: string, logLevel: LogLevel?): Logger
 
 	-- this block of code will generate a function for each log level, and set it to the Logger object.
 	for logValue, logType in LOGGER_LOG_LEVELS do
-		local camelCaseMethod = `{string.lower(string.sub(logType, 1, 1))}{string.sub(logType, 2, #logType)}`
+		local camelCaseMethod = `{string.lower(string.sub(logType, 1, 1))}{string.sub(logType, 2, #logType)}`;
 
 		(self :: {})[camelCaseMethod] = function(_, ...)
 			if logValue < self.logLevel then

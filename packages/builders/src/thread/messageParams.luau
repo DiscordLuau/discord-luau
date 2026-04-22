@@ -202,7 +202,6 @@ function MessageParams.Interface.new(resource: {
 			stickerIds = {},
 
 			attachments = {},
-
 		} :: MessageParams,
 		{
 			__index = MessageParams.Prototype,

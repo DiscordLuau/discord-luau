@@ -7,9 +7,12 @@ task.new("luau-lsp")
 	:addArgument("--base-luaurc=.luaurc")
 	:addArgument("--settings=.vscode/settings.json")
 	:addArgument("--defs=globalTypes.d.luau")
+	:addArgument("--defs=.zune/zune.d.luau")
 	:addArgument("--ignore=**/luau_packages/**")
 	:addArgument("--ignore=**/lune_packages/**")
 	:addArgument("--ignore=**/.zune**")
 	:addArgument("--ignore=**/bundled.luau")
 	:addArgument("packages")
 	:execute()
+
+	

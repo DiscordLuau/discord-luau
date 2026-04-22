@@ -281,7 +281,6 @@ function Message.Interface.new(resource: {
 			stickerIds = {},
 
 			attachments = {},
-
 		} :: Message,
 		{
 			__index = Message.Prototype,

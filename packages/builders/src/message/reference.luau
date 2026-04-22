@@ -121,14 +121,9 @@ function Reference.Interface.new(resource: {
 	guildId: string?,
 	failIfNotExists: boolean?,
 }?): Reference
-	local self = setmetatable(
-		{
-
-		} :: Reference,
-		{
-			__index = Reference.Prototype,
-		}
-	)
+	local self = setmetatable({} :: Reference, {
+		__index = Reference.Prototype,
+	})
 
 	if resource then
 		if resource.type then
