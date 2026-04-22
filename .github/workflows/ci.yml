@@ -15,7 +15,7 @@ jobs:
         with:
           cache: true
       - name: Check formatting
-        run: lune run fmt
+        run: zune run .zune/fmt.luau
 
   lint:
     runs-on: ubuntu-latest
@@ -28,7 +28,7 @@ jobs:
         with:
           cache: true
       - name: Lint
-        run: lune run lint
+        run: zune run .zune/lint.luau
   typecheck:
     runs-on: ubuntu-latest
     needs: ["lint"]
@@ -44,14 +44,14 @@ jobs:
         uses: CompeyDev/setup-rokit@v0.1.0
         with:
           cache: true
-      - name: Setup lune typedefs
-        run: lune setup
+      - name: Setup zune typedefs
+        run: zune setup
       - name: Bundle api-types
-        run: lune run bundle
+        run: zune run .zune/bundle.luau
       - name: Install dependencies
         run: pesde install
       - name: Typecheck
-        run: lune run analyze
+        run: zune run .zune/analyze.luau
   test:
     runs-on: ubuntu-latest
     needs: ["typecheck"]
@@ -68,7 +68,7 @@ jobs:
         with:
           cache: true
       - name: Bundle api-types
-        run: lune run bundle
+        run: zune run .zune/bundle.luau
       - name: Install dependencies
         run: pesde install
       - name: Run unit-tests

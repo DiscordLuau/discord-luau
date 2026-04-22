@@ -1,7 +1,3 @@
--- selene: allow(undefined_variable)
-
--- NOTE: we're using the Zune runtime in the CI/CD environment
-
 local requireTests
 local requireFile
 

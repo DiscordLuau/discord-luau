@@ -1,5 +1,3 @@
--- selene: allow(undefined_variable)
-
 local frktest = require("../luau_packages/frktest")
 local reporter = frktest.reporters.console_reporter
 

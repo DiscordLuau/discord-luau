@@ -1,14 +1,14 @@
+-- selene: allow(undefined_variable)
+
 --> Task responsible for bundling the API-Types package, as well as fixing types for said package because at the moment
 --> types are not bundled via Darklua.
-
-local fs = require("@lune/fs")
 
 local CHARACTER_PRIORITY_MAP = table.freeze({
 	'"',
 	"{",
 })
 
-local fileContent = fs.readFile("bundled.luau")
+local fileContent = zune.fs.readFile("bundled.luau")
 local typesToAdd = {}
 
 for type, darkluaId in string.gmatch(fileContent, "type%s+(%w+)(_+DARKLUA_TYPE_[%w_]+)") do
@@ -43,7 +43,6 @@ for type, darkluaId in string.gmatch(fileContent, "type%s+(%w+)(_+DARKLUA_TYPE_[
 	})
 end
 
--- modify this!
 for _, definitions in typesToAdd do
 	table.sort(definitions, function(a, b)
 		local indexA = table.find(CHARACTER_PRIORITY_MAP, a.priority) or 1000
@@ -57,4 +56,4 @@ for _, definitions in typesToAdd do
 	fileContent = `{definition}{fileContent}`
 end
 
-fs.writeFile("bundled.luau", `--!nonstrict\n--# selene: allow(unused_variable)\n\n{fileContent}`)
+zune.fs.writeFile("bundled.luau", `--!nonstrict\n--# selene: allow(unused_variable)\n\n{fileContent}`)
