@@ -1,11 +1,11 @@
-local task = require("@self/task")
-local serde = require("@self/serde")
-local process = require("@self/process")
-local fileSystem = require("@self/fileSystem")
-local datetime = require("@self/datetime")
-local stdio = require("@self/stdio")
-local net = require("@self/net")
-local runtime = require("@self/runtime")
+local task = require("./task")
+local serde = require("./serde")
+local process = require("./process")
+local fileSystem = require("./fileSystem")
+local datetime = require("./datetime")
+local stdio = require("./stdio")
+local net = require("./net")
+local runtime = require("./runtime")
 
 export type DateTime = datetime.DateTime
 export type RuntimeValue = runtime.RuntimeValue
