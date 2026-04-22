@@ -1,5 +1,5 @@
 {
-  // "editor.formatOnSave": true,
+  "editor.formatOnSave": true,
   "luau-lsp.inlayHints.variableTypes": true,
   "luau-lsp.inlayHints.functionReturnTypes": true,
   "luau-lsp.inlayHints.parameterNames": "all",

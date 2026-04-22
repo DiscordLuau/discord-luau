@@ -108,7 +108,8 @@ local FIELDS: { Field } = {
 			local lowercaseValue = string.lower(value)
 			if lowercaseValue == "y" then
 				return "Yes"
-			elseif lowercaseValue == "n" then return "No"
+			elseif lowercaseValue == "n" then
+				return "No"
 			end
 			return value
 		end,
