@@ -72,4 +72,4 @@ jobs:
       - name: Install dependencies
         run: pesde install
       - name: Run unit-tests
-        run: lune run test
+        run: zune run .zune/test.luau

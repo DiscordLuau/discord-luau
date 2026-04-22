@@ -1,5 +1,5 @@
 local forumTag = require("../src/forumTag")
-local frktest = require("../../../lune_packages/frktest")
+local frktest = require("../../../luau_packages/frktest")
 
 local ForumTag = forumTag
 local test = frktest.test

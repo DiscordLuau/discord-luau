@@ -1,5 +1,5 @@
 local builders = require("../src")
-local frktest = require("../../../lune_packages/frktest")
+local frktest = require("../../../luau_packages/frktest")
 
 local builder = builders.channel
 

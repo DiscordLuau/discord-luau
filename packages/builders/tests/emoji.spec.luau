@@ -1,5 +1,5 @@
 local emoji = require("../src/emoji")
-local frktest = require("../../../lune_packages/frktest")
+local frktest = require("../../../luau_packages/frktest")
 
 local Emoji = emoji
 local test = frktest.test

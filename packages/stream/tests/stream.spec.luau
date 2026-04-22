@@ -1,5 +1,5 @@
 local stream = require("../src")
-local frktest = require("../../../lune_packages/frktest")
+local frktest = require("../../../luau_packages/frktest")
 
 local test = frktest.test
 local check = frktest.assert.check
