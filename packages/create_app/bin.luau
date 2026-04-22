@@ -1,5 +1,14 @@
 local process = require("@lune/process")
 
+local zuneFound, zuneResult = pcall(process.exec, "zune", { "--version" })
+if not zuneFound or not zuneResult.ok then
+	print(
+		"[ERROR] zune is not installed or not found in PATH. "
+			.. "Install via rokit: https://github.com/Scythe-Technology/zune"
+	)
+	process.exit(1)
+end
+
 local scriptSource: string = debug.info(1, "s")
 local packageDirectory: string = string.match(scriptSource, "^(.*)[/\\][^/\\]+$") or "."
 

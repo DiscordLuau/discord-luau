@@ -173,11 +173,12 @@ return function(onBuild: (
 	local allPrerequisitesMet = true
 
 	for _, tool in PREREQUISITES do
-		local result = zune.process.run(tool.name, { "--version" })
+		local ok, result = pcall(zune.process.run, tool.name, { "--version" })
+		local found = ok and result.ok
 
-		toolStatus[tool.name] = result.ok
+		toolStatus[tool.name] = found
 
-		if not result.ok then
+		if not found then
 			allPrerequisitesMet = false
 		end
 	end
@@ -271,7 +272,11 @@ return function(onBuild: (
 			end
 
 			if state == "prereqs" then
-				state = "wizard"
+				if allPrerequisitesMet then
+					state = "wizard"
+				else
+					running = false
+				end
 				continue
 			end
 
@@ -439,7 +444,7 @@ return function(onBuild: (
 				:setBorderForegroundColor(GRAY)
 
 			local footerHint = if state == "prereqs"
-				then "Press any key to continue  ·  Ctrl+C  cancel"
+				then if allPrerequisitesMet then "Press any key to continue  ·  Ctrl+C  cancel" else "Press any key to exit"
 				elseif
 					state == "wizard"
 				then "↑ ↓  navigate  ·  Enter  advance  ·  ← →  move cursor  ·  Backspace  delete  ·  Ctrl+C  cancel"
@@ -479,7 +484,7 @@ return function(onBuild: (
 					table.insert(lines, "All prerequisites met.  Press any key to begin.")
 				else
 					table.insert(lines, "One or more required tools are missing.")
-					table.insert(lines, "Install them and re-run, or press any key to continue anyway.")
+					table.insert(lines, "Please install the missing tools above, then re-run.")
 				end
 
 				local prerequisitesText = paragraph
