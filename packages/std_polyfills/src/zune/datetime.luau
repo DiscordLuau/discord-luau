@@ -7,7 +7,7 @@ local function wrapDateTime(dt)
 	return {
 		unixTimestamp = dt.timestamp,
 		unixTimestampMillis = dt.timestamp_millis,
-		toIsoDate = function(self)
+		toIsoDate = function(_self)
 			return dt:toIsoDate()
 		end,
 	}

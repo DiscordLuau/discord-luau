@@ -1,3 +1,4 @@
+--# selene: allow(bad_string_escape)
 -- selene: allow(undefined_variable)
 local zuneTask = zune.task
 local zuneIo = zune.io

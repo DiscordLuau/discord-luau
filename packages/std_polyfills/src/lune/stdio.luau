@@ -1,3 +1,4 @@
+--# selene: allow(bad_string_escape)
 local task = require("@lune/task")
 local stdio = setmetatable({}, { __index = require("@lune/stdio") })
 

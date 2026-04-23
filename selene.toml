@@ -1,4 +1,5 @@
 std = "lune+zune"
+exclude = ["packages/api_types/bundled.luau"]
 
 [lints]
 high_cyclomatic_complexity = "allow"
