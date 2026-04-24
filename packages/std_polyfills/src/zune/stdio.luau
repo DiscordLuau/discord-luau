@@ -1,28 +1,25 @@
 --# selene: allow(bad_string_escape)
 -- selene: allow(undefined_variable)
-local zuneTask = zune.task
-local zuneIo = zune.io
-
 local stdio = {}
 
 function stdio.write(source: string)
-	zuneIo.stdout:write(source)
+	zune.io.stdout:write(source)
 end
 
 function stdio.prompt(message: string?): string
-	zuneTask.defer(function()
-		zuneIo.stdout:write("\r\x1b[2K")
+	zune.task.defer(function()
+		zune.io.stdout:write("\r\x1b[2K")
 
 		if message then
-			zuneIo.stdout:write(message)
+			zune.io.stdout:write(message)
 		end
 	end)
 
-	local content = zuneIo.stdin:read() :: string
+	local content = zune.io.stdin:read() :: string
 
 	content = string.gsub(content, "\r?\n$", "")
 
-	zuneIo.stdout:write("\x1b[1A\x1b[2K")
+	zune.io.stdout:write("\x1b[1A\x1b[2K")
 
 	return content
 end

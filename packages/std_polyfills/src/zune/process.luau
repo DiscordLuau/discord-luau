@@ -8,4 +8,8 @@ process.args = table.move(rawArgs, 2, #rawArgs, 1, {})
 process.env = zune.process.env
 process.cwd = zune.process.cwd()
 
+function process.run(exec: string, args: { string }?, opts: { cwd: string?, env: { [string]: string }? }?)
+	return zune.process.run(exec, args, opts)
+end
+
 return process

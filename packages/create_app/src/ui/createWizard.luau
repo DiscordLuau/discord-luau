@@ -1,5 +1,5 @@
--- selene: allow(undefined_variable)
 local tui = require("../../luau_packages/cli_tui")
+local StdPolyfills = require("../../luau_packages/std_polyfills")
 
 local block = tui.block
 local paragraph = tui.paragraph
@@ -166,14 +166,11 @@ return function(onBuild: (
 	setStatus: (msg: string, progress: number) -> (),
 	setWarning: (msg: string) -> ()
 ) -> string)
-	local io = zune.io
-	local task = zune.task
-
 	local toolStatus: { [string]: boolean } = {}
 	local allPrerequisitesMet = true
 
 	for _, tool in PREREQUISITES do
-		local ok, result = pcall(zune.process.run, tool.name, { "--version" })
+		local ok, result = pcall(StdPolyfills.process.run, tool.name, { "--version" })
 		local found = ok and result.ok
 
 		toolStatus[tool.name] = found
@@ -183,8 +180,8 @@ return function(onBuild: (
 		end
 	end
 
-	io.terminal.enableRawMode()
-	io.stdout:writeSync("\27[?1049h\27[?25l")
+	StdPolyfills.io.terminal.enableRawMode()
+	StdPolyfills.io.stdoutWrite("\27[?1049h\27[?25l")
 
 	local fieldIndex = 1
 	local texts: { string } = {}
@@ -254,9 +251,9 @@ return function(onBuild: (
 		end
 	end
 
-	task.spawn(function()
+	StdPolyfills.task.spawn(function()
 		while running do
-			local character = io.stdin:read(1)
+			local character = StdPolyfills.io.stdinRead(1)
 			if not character or #character == 0 then
 				continue
 			end
@@ -288,10 +285,10 @@ return function(onBuild: (
 			end
 
 			if character == "\27" then
-				local nextEscapeCharacter = io.stdin:read(1)
+				local nextEscapeCharacter = StdPolyfills.io.stdinRead(1)
 
 				if nextEscapeCharacter == "[" then
-					local escapeCode = io.stdin:read(1)
+					local escapeCode = StdPolyfills.io.stdinRead(1)
 
 					if state == "wizard" then
 						if escapeCode == "C" then
@@ -396,11 +393,11 @@ return function(onBuild: (
 			end
 		end
 
-		local terminalWidth, terminalHeight = io.terminal.getSize()
+		local terminalWidth, terminalHeight = StdPolyfills.io.terminal.getSize()
 		local renderContext = { width = terminalWidth or 80, height = terminalHeight or 24 }
 
 		if (terminalWidth or 0) < MIN_WIDTH or (terminalHeight or 0) < MIN_HEIGHT then
-			io.stdout:writeSync(step(renderContext, function(fullArea)
+			StdPolyfills.io.stdoutWrite(step(renderContext, function(fullArea)
 				local tooSmallText = paragraph
 					.new()
 					:setText(
@@ -410,11 +407,11 @@ return function(onBuild: (
 					:setStyle(RED)
 				return { { widget = tooSmallText, area = fullArea } }
 			end))
-			task.wait(0.05)
+			StdPolyfills.task.wait(0.05)
 			continue
 		end
 
-		io.stdout:writeSync(step(renderContext, function(fullArea)
+		StdPolyfills.io.stdoutWrite(step(renderContext, function(fullArea)
 			local outerLayout = layout
 				.new()
 				:setDirection("vertical")
@@ -698,28 +695,20 @@ return function(onBuild: (
 			return widgets
 		end))
 
-		task.wait(0.05)
+		StdPolyfills.task.wait(0.05)
 	end
 
-	io.stdout:writeSync("\27[?1049l\27[?25h")
-	io.terminal.restoreMode()
+	StdPolyfills.io.stdoutWrite("\27[?1049l\27[?25h")
+	StdPolyfills.io.terminal.restoreMode()
 
 	if buildError then
-		io.stderr:writeSync(
-			"\n\27[1;31m── Build Error ──────────────────────────────────────\27[0m\n"
-		)
-		io.stderr:writeSync(buildError .. "\n")
-		io.stderr:writeSync(
-			"\27[1;31m─────────────────────────────────────────────────────\27[0m\n\n"
-		)
+		StdPolyfills.io.stderrWrite("\n\27[1;31m── Build Error ──────────────────────────────────────\27[0m\n")
+		StdPolyfills.io.stderrWrite(buildError .. "\n")
+		StdPolyfills.io.stderrWrite("\27[1;31m─────────────────────────────────────────────────────\27[0m\n\n")
 	end
 	if buildWarning then
-		io.stderr:writeSync(
-			"\n\27[1;33m── Warning ──────────────────────────────────────────\27[0m\n"
-		)
-		io.stderr:writeSync(buildWarning .. "\n")
-		io.stderr:writeSync(
-			"\27[1;33m─────────────────────────────────────────────────────\27[0m\n\n"
-		)
+		StdPolyfills.io.stderrWrite("\n\27[1;33m── Warning ──────────────────────────────────────────\27[0m\n")
+		StdPolyfills.io.stderrWrite(buildWarning .. "\n")
+		StdPolyfills.io.stderrWrite("\27[1;33m─────────────────────────────────────────────────────\27[0m\n\n")
 	end
 end

@@ -1,4 +1,3 @@
--- selene: allow(undefined_variable)
 local CliBuilder = require("../../luau_packages/cli_builder")
 local StdPolyfills = require("../../luau_packages/std_polyfills")
 
@@ -165,7 +164,7 @@ return command
 			setupProject(targetDirectory, info.IDE, info)
 
 			setStatus("Running rokit install…", 0.35)
-			local rokitResult = zune.process.run("rokit", { "install" }, { cwd = projectPath })
+			local rokitResult = StdPolyfills.process.run("rokit", { "install" }, { cwd = projectPath })
 
 			if not rokitResult.ok then
 				local output = processOutput(rokitResult)
@@ -174,7 +173,7 @@ return command
 
 			local runtimeName = info.Runtime
 			setStatus(`Running {runtimeName} setup…`, 0.55)
-			local runtimeSetupResult = zune.process.run(runtimeName, { "setup" }, { cwd = projectPath })
+			local runtimeSetupResult = StdPolyfills.process.run(runtimeName, { "setup" }, { cwd = projectPath })
 
 			if not runtimeSetupResult.ok then
 				local output = processOutput(runtimeSetupResult)
@@ -187,7 +186,7 @@ return command
 
 			if info.UseGit == "Yes" then
 				setStatus("Running git init…", 0.65)
-				local gitInitResult = zune.process.run("git", { "init" }, { cwd = projectPath })
+				local gitInitResult = StdPolyfills.process.run("git", { "init" }, { cwd = projectPath })
 
 				if not gitInitResult.ok then
 					local output = processOutput(gitInitResult)
@@ -196,7 +195,7 @@ return command
 			end
 
 			setStatus("Running pesde install…", 0.80)
-			local pesdeResult = zune.process.run("pesde", { "install" }, { cwd = projectPath })
+			local pesdeResult = StdPolyfills.process.run("pesde", { "install" }, { cwd = projectPath })
 
 			if not pesdeResult.ok then
 				local output = processOutput(pesdeResult)

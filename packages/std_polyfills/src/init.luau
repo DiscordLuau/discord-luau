@@ -4,6 +4,7 @@ local process = require("@self/process")
 local fileSystem = require("@self/fileSystem")
 local datetime = require("@self/datetime")
 local stdio = require("@self/stdio")
+local io = require("@self/io")
 local net = require("@self/net")
 local runtime = require("@self/runtime")
 
@@ -78,6 +79,12 @@ return {
 		@within StdPolyfills
 	]=]
 	stdio = stdio,
+
+	--[=[
+		@prop io StdPolyfills.io
+		@within StdPolyfills
+	]=]
+	io = io,
 
 	--[=[
 		@prop runtime StdPolyfills.runtime

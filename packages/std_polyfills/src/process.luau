@@ -74,6 +74,35 @@ function process.getCwd(): string
 	error(`Out of reach`)
 end
 
+--[=[
+	@within StdPolyfills.process
+
+	Runs a subprocess and returns the result. Only supported on Zune; calling from
+	Lune will raise an error explaining the requirement.
+]=]
+function process.run(
+	exec: string,
+	args: { string }?,
+	opts: { cwd: string?, env: { [string]: string }? }?
+): RunResult
+	local target = runtime.assertRuntime()
+
+	if target == "Lune" then
+		return require("./lune/process").exec(exec, args, opts) :: RunResult
+	elseif target == "Zune" then
+		return require("./zune/process").run(exec, args, opts) :: RunResult
+	end
+
+	error(`Out of reach`)
+end
+
 export type OS = "linux" | "macos" | "windows"
+
+export type RunResult = {
+	ok: boolean,
+	code: number,
+	stdout: string,
+	stderr: string,
+}
 
 return process
