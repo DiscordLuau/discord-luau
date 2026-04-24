@@ -6,7 +6,7 @@ authors = ["Async Matrix <hi@asyncmatrix.dev>"]
 repository = "https://github.com/DiscordLuau/discord-luau/tree/main/packages/voice"
 pesde_version = "0.7.0-rc.7"
 
-includes = ["src/**/*", "pesde.toml", "LICENSE", "CONTRIBUTING.md"]
+includes = ["src/**/*", "pesde.toml", "LICENSE", "README.md", "CONTRIBUTING.md"]
 
 [target]
 environment = "luau"

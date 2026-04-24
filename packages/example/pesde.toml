@@ -7,7 +7,7 @@ authors = ["Async Matrix <hi@asyncmatrix.dev>"]
 repository = "https://github.com/DiscordLuau/discord-luau/tree/main/packages/formdata"
 pesde_version = "0.7.1"
 
-includes = ["src/**/*", "pesde.toml", "LICENSE", "CONTRIBUTING.md"]
+includes = ["src/**/*", "pesde.toml", "LICENSE", "README.md", "CONTRIBUTING.md"]
 
 [indices]
 default = "https://github.com/pesde-pkg/index"

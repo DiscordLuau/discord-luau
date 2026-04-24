@@ -12,7 +12,9 @@ DiscordLuau - Create App is an interactive command-line tool to quickly scaffold
 
 Run the following in your command line
 
-> pesde x DiscordLuau/create_app
+> pesde x discord_luau/create_app --help
+
+> pesde x discord_luau/create_app create
 
 ### Contributing
 See the [Contributing Guide](CONTRIBUTING) for more information on how to contribute to this project.
