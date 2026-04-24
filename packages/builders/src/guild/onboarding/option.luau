@@ -150,7 +150,6 @@ function Option.Interface.new(resource: {
 			channelIds = {},
 
 			roleIds = {},
-
 		} :: Option,
 		{
 			__index = Option.Prototype,

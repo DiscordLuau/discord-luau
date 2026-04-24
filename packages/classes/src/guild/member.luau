@@ -101,7 +101,7 @@ local apiTypes = require("../../luau_packages/api_types")
 local rest = require("../../luau_packages/rest")
 local future = require("../../luau_packages/future")
 local state = require("../../luau_packages/state")
-local stdPolyfills = require("../../lune_packages/std_polyfills")
+local stdPolyfills = require("../../luau_packages/std_polyfills")
 
 local user = require("../user")
 local avatarDecoration = require("../avatarDecoration")

@@ -1,4 +1,4 @@
-local frktest = require("../../../lune_packages/frktest")
+local frktest = require("../../../luau_packages/frktest")
 
 local bit = require("../src")
 

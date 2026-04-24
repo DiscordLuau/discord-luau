@@ -1,5 +1,5 @@
 local future = require("../luau_packages/future")
-local stdPolyfills = require("../lune_packages/std_polyfills")
+local stdPolyfills = require("../luau_packages/std_polyfills")
 local apiTypes = require("../luau_packages/api_types")
 local state = require("../luau_packages/state")
 local rest = require("../luau_packages/rest")
@@ -332,7 +332,7 @@ function Bot.Prototype.connectAsync(self: Bot): future.FutureLike<string, nil>
 		local gatewayInformation = self:queryGatewayInformation():await()
 
 		if not gatewayInformation:isOk() then
-			self.logger:Emergency(`Failed to retrieve gateway information: {gatewayInformation:unwrapErr()}`)
+			self.logger:emergency(`Failed to retrieve gateway information: {gatewayInformation:unwrapErr()}`)
 
 			error(gatewayInformation:unwrapErr())
 		end

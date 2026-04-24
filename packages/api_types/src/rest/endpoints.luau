@@ -171,13 +171,13 @@ local endpoints = table.freeze({
 	TriggerTypingChannel = "/channels/%s/typing",
 
 	-- https://discord.com/developers/docs/resources/channel#get-pinned-messages
-	GetPinnedMessages = "/channels/%s/pins",
+	GetPinnedMessages = "/channels/%s/messages/pins",
 
 	-- https://discord.com/developers/docs/resources/channel#get-pinned-messages
-	PinMessage = "/channels/%s/pins/%s",
+	PinMessage = "/channels/%s/messages/pins/%s",
 
 	-- https://discord.com/developers/docs/resources/channel#unpin-message
-	UnpinMessage = "/channels/%s/pins/%s",
+	UnpinMessage = "/channels/%s/messages/pins/%s",
 
 	-- https://discord.com/developers/docs/resources/channel#group-dm-add-recipient
 	GroupDMAddRecipient = "/channels/%s/recipients/%s",
@@ -559,6 +559,9 @@ local endpoints = table.freeze({
 
 	-- https://discord.com/developers/docs/topics/oauth2#get-current-authorization-information
 	GetCurrentAuthorizationInformation = "/oauth2/@me",
+
+	-- https://docs.discord.com/developers/resources/guild#get-guild-role-member-counts
+	GetGuildRoleMemberCounts = "/guilds/%s/roles/member-counts",
 })
 
 export type Endpoint =
@@ -746,5 +749,6 @@ export type Endpoint =
 	| "GetGatewayBot"
 	| "GetCurrentBotApplicationInformation"
 	| "GetCurrentAuthorizationInformation"
+	| "GetGuildRoleMemberCounts"
 
 return endpoints

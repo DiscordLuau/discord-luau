@@ -179,14 +179,9 @@ function Invite.Interface.new(resource: {
 	targetUserId: string?,
 	targetApplicationId: string?,
 }?): Invite
-	local self = setmetatable(
-		{
-
-		} :: Invite,
-		{
-			__index = Invite.Prototype,
-		}
-	)
+	local self = setmetatable({} :: Invite, {
+		__index = Invite.Prototype,
+	})
 
 	if resource then
 		if resource.maxAge then

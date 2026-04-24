@@ -5,9 +5,9 @@ name = "discord_luau/logger"
 version = "0.0.1"
 target = "luau"
 
-[graph."discord_luau/std_polyfills@0.0.1 lune"]
-direct = ["std_polyfills", { workspace = "discord_luau/std_polyfills", version = "^", target = "lune" }, "standard"]
+[graph."discord_luau/std_polyfills@0.0.1 luau"]
+direct = ["std_polyfills", { workspace = "discord_luau/std_polyfills", version = "^" }, "standard"]
 
-[graph."discord_luau/std_polyfills@0.0.1 lune".pkg_ref]
+[graph."discord_luau/std_polyfills@0.0.1 luau".pkg_ref]
 ref_ty = "workspace"
 path = "packages/std_polyfills"

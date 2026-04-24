@@ -3,7 +3,7 @@
 ]=]
 
 local LUNE_STRING_MATCH = "(Lune) (%d+%.%d+%.%d+.*)+(%d+)"
-local ZUNE_STRING_MATCH = "(Zune) (%d+%.%d+%.%d+.*)+(%d+%.%d+)"
+local ZUNE_STRING_MATCH = "(zune) (%d+%.%d+%.%d+.*)+(%d+%.%d+)"
 
 local runtime = {}
 
@@ -43,7 +43,7 @@ end
 function runtime.assertRuntime(): RuntimeValue
 	local currentRuntime = runtime.getRuntime()
 
-	if currentRuntime ~= "Lune" then
+	if currentRuntime ~= "Lune" and currentRuntime ~= "Zune" then
 		error(`Discord-Luau currently doesn't support the '{currentRuntime}' runtime!`)
 	end
 

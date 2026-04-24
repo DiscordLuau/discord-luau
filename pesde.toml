@@ -18,7 +18,7 @@ environment = "luau"
 default = "https://github.com/pesde-pkg/index"
 
 [dev_dependencies]
-frktest = { name = "itsfrank/frktest", version = "^0.0.2", target = "lune" }
+frktest = { name = "itsfrank/frktest", version = "^0.0.4" }
 
 [scripts]
 build = ".lune/build.luau"

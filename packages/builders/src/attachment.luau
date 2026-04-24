@@ -46,13 +46,9 @@ end
 function Attachment.Interface.new(resource: {
 	attachmentId: string,
 }?): Attachment
-	local self = setmetatable(
-		{
-		} :: Attachment,
-		{
-			__index = Attachment.Prototype,
-		}
-	)
+	local self = setmetatable({} :: Attachment, {
+		__index = Attachment.Prototype,
+	})
 
 	if resource then
 		if resource.attachmentId then

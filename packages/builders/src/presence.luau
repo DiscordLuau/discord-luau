@@ -123,7 +123,6 @@ function Presence.Interface.new(resource: {
 	local self = setmetatable(
 		{
 			activities = {},
-
 		} :: Presence,
 		{ __index = Presence.Prototype }
 	)

@@ -1,4 +1,4 @@
-local stdPolyfills = require("../lune_packages/std_polyfills")
+local stdPolyfills = require("../luau_packages/std_polyfills")
 
 local buffer = require("../luau_packages/buffer")
 local emitter = require("../luau_packages/emitter")

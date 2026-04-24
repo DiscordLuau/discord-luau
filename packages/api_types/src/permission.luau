@@ -50,10 +50,14 @@ local Permissions = table.freeze(util.tableReflect({
 	ModerateMembers = bit.lshift(1, 40),
 	ViewCreatorMonetizationAnalytics = bit.lshift(1, 41),
 	UseSoundboard = bit.lshift(1, 42),
+	CreateGuildExpressions = bit.lshift(1, 43),
 	UseExternalSounds = bit.lshift(1, 45),
+	CreateEvents = bit.lshift(1, 44),
 	SendVoiceMessages = bit.lshift(1, 46),
 	SendPolls = bit.lshift(1, 49),
 	UseExternalApps = bit.lshift(1, 50),
+	PinMessages = bit.lshift(1, 51),
+	BypassSlowmode = bit.lshift(1, 52),
 }))
 
 export type Permissions =
@@ -106,6 +110,9 @@ export type Permissions =
 	| "SendVoiceMessages"
 	| "SendPolls"
 	| "UseExternalApps"
+	| "ManageGuildExpressions"
+	| "PinMessages"
+	| "BypassSlowmode"
 
 return {
 	Permissions = Permissions,

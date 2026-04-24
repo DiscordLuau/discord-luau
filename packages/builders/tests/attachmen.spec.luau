@@ -1,5 +1,5 @@
 local attachments = require("../src/attachment")
-local frktest = require("../../../lune_packages/frktest")
+local frktest = require("../../../luau_packages/frktest")
 
 local Attachment = attachments
 

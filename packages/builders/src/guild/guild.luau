@@ -413,7 +413,6 @@ function Guild.Interface.new(resource: {
 		{
 
 			features = {},
-
 		} :: Guild,
 		{ __index = Guild.Prototype }
 	)

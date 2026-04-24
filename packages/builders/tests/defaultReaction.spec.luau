@@ -1,5 +1,5 @@
 local defaultReaction = require("../src/default/reaction")
-local frktest = require("../../../lune_packages/frktest")
+local frktest = require("../../../luau_packages/frktest")
 
 local DefaultReaction = defaultReaction
 local test = frktest.test

@@ -167,7 +167,6 @@ function Role.Interface.new(resource: {
 		{
 
 			permissionFlags = {},
-
 		} :: Role,
 		{ __index = Role.Prototype }
 	)

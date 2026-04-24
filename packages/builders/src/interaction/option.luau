@@ -332,7 +332,6 @@ function Option.Interface.new(resource: {
 	maxLength: number?,
 	autocomplete: boolean?,
 }?): Option
-
 	local self = setmetatable(
 		{
 			type = resource and resource.type,

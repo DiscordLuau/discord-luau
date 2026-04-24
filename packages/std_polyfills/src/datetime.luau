@@ -16,6 +16,8 @@ function datetime.fromIsoDate(isoDate: string): DateTime
 
 	if target == "Lune" then
 		return require("./lune/datetime").fromIsoDate(isoDate) :: any
+	elseif target == "Zune" then
+		return require("./zune/datetime").fromIsoDate(isoDate) :: any
 	end
 
 	error(`Out of reach`)
@@ -33,6 +35,8 @@ function datetime.fromUnixTimestamp(unixTimestamp: number): DateTime
 
 	if target == "Lune" then
 		return require("./lune/datetime").fromUnixTimestamp(unixTimestamp) :: any
+	elseif target == "Zune" then
+		return require("./zune/datetime").fromUnixTimestamp(unixTimestamp) :: any
 	end
 
 	error(`Out of reach`)
@@ -48,6 +52,8 @@ function datetime.now(): DateTime
 
 	if target == "Lune" then
 		return require("./lune/datetime").now() :: any
+	elseif target == "Zune" then
+		return require("./zune/datetime").now() :: any
 	end
 
 	error(`Out of reach`)

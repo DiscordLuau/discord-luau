@@ -16,6 +16,8 @@ function serde.encode(format: EncodeDecodeFormat, value: any, pretty: boolean?):
 
 	if target == "Lune" then
 		return require("./lune/serde").encode(format, value, pretty)
+	elseif target == "Zune" then
+		return require("./zune/serde").encode(format, value, pretty)
 	end
 
 	error(`Out of reach`)
@@ -31,6 +33,8 @@ function serde.decode(format: EncodeDecodeFormat, encoded: buffer | string): any
 
 	if target == "Lune" then
 		return require("./lune/serde").decode(format, encoded)
+	elseif target == "Zune" then
+		return require("./zune/serde").decode(format, encoded)
 	end
 
 	error(`Out of reach`)
@@ -46,6 +50,8 @@ function serde.decompress(format: CompressDecompressFormat, s: buffer | string):
 
 	if target == "Lune" then
 		return require("./lune/serde").decompress(format, s)
+	elseif target == "Zune" then
+		return require("./zune/serde").decompress(format, s)
 	end
 
 	error(`Out of reach`)
@@ -61,6 +67,8 @@ function serde.compress(format: CompressDecompressFormat, s: buffer | string, le
 
 	if target == "Lune" then
 		return require("./lune/serde").compress(format, s, level)
+	elseif target == "Zune" then
+		return require("./zune/serde").compress(format, s, level)
 	end
 
 	error(`Out of reach`)

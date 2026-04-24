@@ -132,7 +132,6 @@ function AllowedMention.Interface.new(resource: {
 			roles = {},
 
 			users = {},
-
 		} :: AllowedMention,
 		{
 			__index = AllowedMention.Prototype,

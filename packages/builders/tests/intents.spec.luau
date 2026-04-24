@@ -1,5 +1,5 @@
 local intents = require("../src/intents")
-local frktest = require("../../../lune_packages/frktest")
+local frktest = require("../../../luau_packages/frktest")
 
 local Intents = intents
 local test = frktest.test

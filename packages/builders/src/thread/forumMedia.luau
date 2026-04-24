@@ -146,7 +146,6 @@ function ForumMediaThread.Interface.new(resource: {
 	local self = setmetatable(
 		{
 			appliedTags = {},
-
 		} :: ForumMediaThread,
 		{
 			__index = ForumMediaThread.Prototype,

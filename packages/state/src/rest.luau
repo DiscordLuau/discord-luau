@@ -59,7 +59,7 @@
 
 local secret = require("../luau_packages/secret")
 local formdata = require("../luau_packages/formdata")
-local stdPolyfills = require("../lune_packages/std_polyfills")
+local stdPolyfills = require("../luau_packages/std_polyfills")
 local utils = require("../luau_packages/utils")
 local rest = require("../luau_packages/rest")
 local logger = require("../luau_packages/logger")
@@ -260,13 +260,6 @@ function REST.Prototype.implementAttachmentHandlerFor(_: REST, request: rest.Req
 				end
 
 				requestInfo.headers["content-type"] = `multipart/form-data; boundary={formdata:getHeader()}`
-
-				warn({
-					url = requestInfo.url,
-					method = requestInfo.method,
-					body = formdata:getBody(),
-					headers = requestInfo.headers,
-				})
 
 				return true,
 					{

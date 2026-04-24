@@ -1,10 +1,14 @@
 local task = require("@self/task")
 local serde = require("@self/serde")
 local process = require("@self/process")
+local fileSystem = require("@self/fileSystem")
 local datetime = require("@self/datetime")
+local stdio = require("@self/stdio")
 local net = require("@self/net")
+local runtime = require("@self/runtime")
 
 export type DateTime = datetime.DateTime
+export type RuntimeValue = runtime.RuntimeValue
 
 export type WebSocket = net.WebSocket
 export type FetchResponse = net.FetchResponse
@@ -62,4 +66,22 @@ return {
 	datetime = datetime,
 
 	net = net,
+
+	--[=[
+		@prop net StdPolyfills.fileSystem 
+		@within StdPolyfills
+	]=]
+	fileSystem = fileSystem,
+
+	--[=[
+		@prop net StdPolyfills.fileSystem
+		@within StdPolyfills
+	]=]
+	stdio = stdio,
+
+	--[=[
+		@prop runtime StdPolyfills.runtime
+		@within StdPolyfills
+	]=]
+	runtime = runtime,
 }

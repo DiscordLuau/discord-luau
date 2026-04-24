@@ -10,7 +10,7 @@
 	@external future https://yetanotherclown.github.io/luau-futures/
 ]=]
 
-local stdPolyfills = require("../lune_packages/std_polyfills")
+local stdPolyfills = require("../luau_packages/std_polyfills")
 
 local emitter = require("../luau_packages/emitter")
 local future = require("../luau_packages/future")

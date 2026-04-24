@@ -1,5 +1,5 @@
 local forumMediaThread = require("../../src/thread/forumMedia")
-local frktest = require("../../../../lune_packages/frktest")
+local frktest = require("../../../../luau_packages/frktest")
 
 local ForumMediaThread = forumMediaThread
 local test = frktest.test
