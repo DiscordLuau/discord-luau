@@ -1,5 +1,5 @@
 --[=[
-	@class Builders.MessageThread
+	@class Builders.Thread.MessageThread
 	@__index Prototype
 
 	Implementation of discords MessageThread object as a Luau builder.	
@@ -9,19 +9,19 @@
 
 --[=[
 	@prop name string?
-	@within Builders.MessageThread
+	@within Builders.Thread.MessageThread
 	The name of the thread that is displayed.
 ]=]
 
 --[=[
 	@prop autoArchiveDuration number?
-	@within Builders.MessageThread
+	@within Builders.Thread.MessageThread
 	Duration in minutes to automatically archive the thread after recent activity.
 ]=]
 
 --[=[
 	@prop rateLimitPerUser number?
-	@within Builders.MessageThread
+	@within Builders.Thread.MessageThread
 	Amount of seconds a user has to wait before sending another message.
 ]=]
 
@@ -31,7 +31,7 @@ MessageThread.Prototype = {}
 MessageThread.Interface = {}
 
 --[=[
-	@within Builders.MessageThread
+	@within Builders.Thread.MessageThread
 
 	Sets the name of the thread.
 	Name must be between 1-100 characters.
@@ -46,7 +46,7 @@ function MessageThread.Prototype.setName(self: MessageThread, name: string): Mes
 end
 
 --[=[
-	@within Builders.MessageThread
+	@within Builders.Thread.MessageThread
 
 	Sets the duration in minutes before the thread is automatically archived.
 	Duration must be 60, 1440, 4320, or 10080.
@@ -63,7 +63,7 @@ function MessageThread.Prototype.setAutoArchiveDuration(self: MessageThread, dur
 end
 
 --[=[
-	@within Builders.MessageThread
+	@within Builders.Thread.MessageThread
 
 	Sets the rate limit per user in the thread.
 	Rate limit must be less than or equal to 21600 seconds.
@@ -77,7 +77,7 @@ function MessageThread.Prototype.setRateLimitPerUser(self: MessageThread, rateLi
 end
 
 --[=[
-	@within Builders.MessageThread
+	@within Builders.Thread.MessageThread
 
 	Responsible for building the MessageThread JSON that can be parsed by the Discord API.
 ]=]
@@ -92,7 +92,7 @@ function MessageThread.Prototype.build(self: MessageThread): JSON
 end
 
 --[=[
-	@within Builders.MessageThread
+	@within Builders.Thread.MessageThread
 
 	Responsible for creating a new MessageThread.
 

@@ -1,5 +1,5 @@
 --[=[
-	@class Builders.MessageParams
+	@class Builders.Thread.MessageParams
 	@__index Prototype
 
 	Implementation of discords MessageParams object as a Luau builder.	
@@ -9,43 +9,43 @@
 
 --[=[
 	@prop content string?
-	@within Builders.MessageParams
+	@within Builders.Thread.MessageParams
 	The message content that will be sent.
 ]=]
 
 --[=[
 	@prop embeds { Builders.Embed }
-	@within Builders.MessageParams
+	@within Builders.Thread.MessageParams
 	Array of embed objects that will be attached to the message.
 ]=]
 
 --[=[
-	@prop allowedMentions Builders.AllowedMention
-	@within Builders.MessageParams
+	@prop allowedMentions Builders.Message.AllowedMention
+	@within Builders.Thread.MessageParams
 	Controls the mentions that will ping in the message.
 ]=]
 
 --[=[
-	@prop components { Builders.Button | Builders.TextInput | Builders.SelectMenu | Builders.ActionRow }
-	@within Builders.MessageParams
+	@prop components { Builders.Message.Button | Builders.Message.TextInput | Builders.Message.SelectMenu | Builders.Message.ActionRow }
+	@within Builders.Thread.MessageParams
 	Array of message components that will be attached to the message.
 ]=]
 
 --[=[
 	@prop stickerIds { string }
-	@within Builders.MessageParams
+	@within Builders.Thread.MessageParams
 	Array of sticker IDs that will be attached to the message.
 ]=]
 
 --[=[
 	@prop attachments { Builders.Attachment }
-	@within Builders.MessageParams
+	@within Builders.Thread.MessageParams
 	Array of attachment objects that will be attached to the message.
 ]=]
 
 --[=[
 	@prop flags number?
-	@within Builders.MessageParams
+	@within Builders.Thread.MessageParams
 	Message flags to be applied to the message.
 ]=]
 
@@ -65,7 +65,7 @@ MessageParams.Prototype = {}
 MessageParams.Interface = {}
 
 --[=[
-	@within Builders.MessageParams
+	@within Builders.Thread.MessageParams
 
 	Sets the content of the message.
 ]=]
@@ -78,7 +78,7 @@ function MessageParams.Prototype.setContent(self: MessageParams, content: string
 end
 
 --[=[
-	@within Builders.MessageParams
+	@within Builders.Thread.MessageParams
 
 	Adds an embed to the message.
 ]=]
@@ -93,7 +93,7 @@ function MessageParams.Prototype.addEmbed(self: MessageParams, embedData: embed.
 end
 
 --[=[
-	@within Builders.MessageParams
+	@within Builders.Thread.MessageParams
 
 	Sets the allowed mentions for the message.
 ]=]
@@ -104,7 +104,7 @@ function MessageParams.Prototype.setAllowedMentions(self: MessageParams, mention
 end
 
 --[=[
-	@within Builders.MessageParams
+	@within Builders.Thread.MessageParams
 
 	Adds a component to the message.
 ]=]
@@ -122,7 +122,7 @@ function MessageParams.Prototype.addComponent(
 end
 
 --[=[
-	@within Builders.MessageParams
+	@within Builders.Thread.MessageParams
 
 	Adds a sticker ID to the message.
 ]=]
@@ -137,7 +137,7 @@ function MessageParams.Prototype.addStickerId(self: MessageParams, stickerId: st
 end
 
 --[=[
-	@within Builders.MessageParams
+	@within Builders.Thread.MessageParams
 
 	Adds an attachment to the message.
 ]=]
@@ -152,7 +152,7 @@ function MessageParams.Prototype.addAttachment(self: MessageParams, attachmentDa
 end
 
 --[=[
-	@within Builders.MessageParams
+	@within Builders.Thread.MessageParams
 
 	Sets the flags for the message.
 ]=]
@@ -163,7 +163,7 @@ function MessageParams.Prototype.setFlags(self: MessageParams, flags: number): M
 end
 
 --[=[
-	@within Builders.MessageParams
+	@within Builders.Thread.MessageParams
 
 	Responsible for building the MessageParams JSON that can be parsed by the Discord API.
 ]=]
@@ -180,7 +180,7 @@ function MessageParams.Prototype.build(self: MessageParams): JSON
 end
 
 --[=[
-	@within Builders.MessageParams
+	@within Builders.Thread.MessageParams
 
 	Responsible for creating a new MessageParams.
 ]=]

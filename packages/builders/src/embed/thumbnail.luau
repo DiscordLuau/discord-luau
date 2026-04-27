@@ -1,5 +1,5 @@
 --[=[
-	@class Builders.Thumbnail
+	@class Builders.Embed.Thumbnail
 	@__index Prototype
 
 	Implementation of discords Thumbnail object as a Luau builder.	
@@ -9,25 +9,25 @@
 
 --[=[
 	@prop url string
-	@within Builders.Thumbnail
+	@within Builders.Embed.Thumbnail
 	The source url of the thumbnail.
 ]=]
 
 --[=[
 	@prop proxyUrl string?
-	@within Builders.Thumbnail
+	@within Builders.Embed.Thumbnail
 	A proxied url of the thumbnail.
 ]=]
 
 --[=[
 	@prop height number?
-	@within Builders.Thumbnail
+	@within Builders.Embed.Thumbnail
 	The height of the thumbnail.
 ]=]
 
 --[=[
 	@prop width number?
-	@within Builders.Thumbnail
+	@within Builders.Embed.Thumbnail
 	The width of the thumbnail.
 ]=]
 
@@ -37,7 +37,7 @@ Thumbnail.Prototype = {}
 Thumbnail.Interface = {}
 
 --[=[
-	@within Builders.Thumbnail
+	@within Builders.Embed.Thumbnail
 
 	Set the image url for this embed.
 ]=]
@@ -49,7 +49,7 @@ function Thumbnail.Prototype.setUrl(self: Thumbnail, url: string, proxyUrl: stri
 end
 
 --[=[
-	@within Builders.Thumbnail
+	@within Builders.Embed.Thumbnail
 
 	Set the image height for this embed.
 ]=]
@@ -60,7 +60,7 @@ function Thumbnail.Prototype.setHeight(self: Thumbnail, height: number): Thumbna
 end
 
 --[=[
-	@within Builders.Thumbnail
+	@within Builders.Embed.Thumbnail
 
 	Set the image width for this embed.
 ]=]
@@ -71,7 +71,7 @@ function Thumbnail.Prototype.setWidth(self: Thumbnail, width: number): Thumbnail
 end
 
 --[=[
-	@within Builders.Thumbnail
+	@within Builders.Embed.Thumbnail
 
 	Responsible for building the Thumbnail JSON that can be parsed by the Discord API.
 ]=]
@@ -85,7 +85,7 @@ function Thumbnail.Prototype.build(self: Thumbnail): JSON
 end
 
 --[=[
-	@within Builders.Thumbnail
+	@within Builders.Embed.Thumbnail
 
 	Responsible for creating a new Thumbnail.
 

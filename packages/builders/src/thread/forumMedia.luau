@@ -1,5 +1,5 @@
 --[=[
-	@class Builders.ForumMediaThread
+	@class Builders.Thread.ForumMedia
 	@__index Prototype
 
 	Implementation of discords ForumMediaThread object as a Luau builder.	
@@ -9,31 +9,31 @@
 
 --[=[
 	@prop appliedTags { string }
-	@within Builders.ForumMediaThread
+	@within Builders.Thread.ForumMedia
 	An array of tag IDs that have been applied to the thread.
 ]=]
 
 --[=[
 	@prop name string?
-	@within Builders.ForumMediaThread
+	@within Builders.Thread.ForumMedia
 	The name of the thread.
 ]=]
 
 --[=[
 	@prop autoArchiveDuration number?
-	@within Builders.ForumMediaThread
+	@within Builders.Thread.ForumMedia
 	Duration in minutes to automatically archive the thread after recent activity.
 ]=]
 
 --[=[
 	@prop rateLimitPerUser number?
-	@within Builders.ForumMediaThread
+	@within Builders.Thread.ForumMedia
 	Amount of seconds a user has to wait before sending another message.
 ]=]
 
 --[=[
 	@prop message messageParams.JSON
-	@within Builders.ForumMediaThread
+	@within Builders.Thread.ForumMedia
 	The message content for the forum thread.
 ]=]
 
@@ -45,7 +45,7 @@ ForumMediaThread.Prototype = {}
 ForumMediaThread.Interface = {}
 
 --[=[
-	@within Builders.ForumMediaThread
+	@within Builders.Thread.ForumMedia
 
 	Sets the name of the forum thread.
 	Name must be between 1-100 characters.
@@ -60,7 +60,7 @@ function ForumMediaThread.Prototype.setName(self: ForumMediaThread, name: string
 end
 
 --[=[
-	@within Builders.ForumMediaThread
+	@within Builders.Thread.ForumMedia
 
 	Sets the duration after which the thread will automatically archive.
 	Duration must be one of: 60, 1440, 4320, or 10080 minutes.
@@ -77,7 +77,7 @@ function ForumMediaThread.Prototype.setAutoArchiveDuration(self: ForumMediaThrea
 end
 
 --[=[
-	@within Builders.ForumMediaThread
+	@within Builders.Thread.ForumMedia
 
 	Sets the rate limit per user for the thread in seconds.
 	Rate limit must not exceed 21600 seconds (6 hours).
@@ -91,7 +91,7 @@ function ForumMediaThread.Prototype.setRateLimitPerUser(self: ForumMediaThread, 
 end
 
 --[=[
-	@within Builders.ForumMediaThread
+	@within Builders.Thread.ForumMedia
 
 	Adds a tag to the forum thread.
 	Tags can be used to categorize or filter threads.
@@ -103,7 +103,7 @@ function ForumMediaThread.Prototype.addTag(self: ForumMediaThread, rateLimit: st
 end
 
 --[=[
-	@within Builders.ForumMediaThread
+	@within Builders.Thread.ForumMedia
 
 	Sets the initial message content for the forum thread.
 	The message must be a valid message parameters object.
@@ -115,7 +115,7 @@ function ForumMediaThread.Prototype.setMessage(self: ForumMediaThread, message: 
 end
 
 --[=[
-	@within Builders.ForumMediaThread
+	@within Builders.Thread.ForumMedia
 
 	Responsible for building the ForumMediaThread JSON that can be parsed by the Discord API.
 ]=]
@@ -133,7 +133,7 @@ function ForumMediaThread.Prototype.build(self: ForumMediaThread): JSON
 end
 
 --[=[
-	@within Builders.ForumMediaThread
+	@within Builders.Thread.ForumMedia
 
 	Responsible for creating a new ForumMediaThread.
 

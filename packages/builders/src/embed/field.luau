@@ -1,5 +1,5 @@
 --[=[
-	@class Builders.Field
+	@class Builders.Embed.Field
 	@__index Prototype
 
 	Implementation of discords Field object as a Luau builder.	
@@ -9,19 +9,19 @@
 
 --[=[
 	@prop name string?
-	@within Builders.Field
+	@within Builders.Embed.Field
 	The name of the field that is displayed.
 ]=]
 
 --[=[
 	@prop value string?
-	@within Builders.Field
+	@within Builders.Embed.Field
 	The value of the field that is displayed.
 ]=]
 
 --[=[
 	@prop inline boolean?
-	@within Builders.Field
+	@within Builders.Embed.Field
 	Whether or not this field should display inline.
 ]=]
 
@@ -31,7 +31,7 @@ Field.Prototype = {}
 Field.Interface = {}
 
 --[=[
-	@within Builders.Field
+	@within Builders.Embed.Field
 
 	Set the name of the field
 ]=]
@@ -45,7 +45,7 @@ function Field.Prototype.setName(self: Field, name: string): Field
 end
 
 --[=[
-	@within Builders.Field
+	@within Builders.Embed.Field
 
 	Set the value of the field
 ]=]
@@ -56,7 +56,7 @@ function Field.Prototype.setValue(self: Field, value: string): Field
 end
 
 --[=[
-	@within Builders.Field
+	@within Builders.Embed.Field
 
 	Set if the field is inline.
 ]=]
@@ -67,7 +67,7 @@ function Field.Prototype.setIsInline(self: Field, isInline: boolean): Field
 end
 
 --[=[
-	@within Builders.Field
+	@within Builders.Embed.Field
 
 	Responsible for building the Field JSON that can be parsed by the Discord API.
 ]=]
@@ -83,7 +83,7 @@ function Field.Prototype.build(self: Field): JSON
 end
 
 --[=[
-	@within Builders.Field
+	@within Builders.Embed.Field
 
 	Responsible for creating a new Field.
 ]=]
