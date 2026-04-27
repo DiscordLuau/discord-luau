@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.VoiceBehaviour
+	@class Classes.Channels.VoiceBehaviour
 	@__index Prototype
 
 	Implementation of the Discord Voice Behaviour class in Luau. Responsible for implementing the various properties, 
@@ -8,25 +8,25 @@
 
 --[=[
 	@prop videoQualityMode apiTypes.VideoQualityMode
-	@within Classes.VoiceBehaviour
+	@within Classes.Channels.VoiceBehaviour
 	The video quality mode for the voice channel, determining the quality of video streams.
 ]=]
 
 --[=[
 	@prop bitrate number
-	@within Classes.VoiceBehaviour
+	@within Classes.Channels.VoiceBehaviour
 	The bitrate of the voice channel, determining the quality of audio transmission.
 ]=]
 
 --[=[
 	@prop userLimit number
-	@within Classes.VoiceBehaviour
+	@within Classes.Channels.VoiceBehaviour
 	The maximum number of users that can join the voice channel.
 ]=]
 
 --[=[
 	@prop rtcRegion string?
-	@within Classes.VoiceBehaviour
+	@within Classes.Channels.VoiceBehaviour
 	The RTC region for the voice channel, determining which server handles the voice connection.
 ]=]
 
@@ -39,7 +39,7 @@ VoiceBehaviour.Interface = {}
 VoiceBehaviour.Prototype = {}
 
 --[=[
-	@within Classes.VoiceBehaviour
+	@within Classes.Channels.VoiceBehaviour
 	@private
 
 	Will connect the bot to this voice chat, will also set up the voice chat websocket and allow the developer
@@ -52,7 +52,7 @@ function VoiceBehaviour.Prototype.joinAsync()
 end
 
 --[=[
-	@within Classes.VoiceBehaviour
+	@within Classes.Channels.VoiceBehaviour
 	@private
 
 	Will leave the current voice chat, if there is one.
@@ -64,7 +64,7 @@ function VoiceBehaviour.Prototype.leaveAsync()
 end
 
 --[=[
-	@within Classes.VoiceBehaviour
+	@within Classes.Channels.VoiceBehaviour
 	@private
 ]=]
 function VoiceBehaviour.Interface.inheritProperties(class: any, channelData: apiTypes.ChannelObject)
@@ -78,7 +78,7 @@ function VoiceBehaviour.Interface.inheritProperties(class: any, channelData: api
 end
 
 --[=[
-	@within Classes.VoiceBehaviour
+	@within Classes.Channels.VoiceBehaviour
 	@private
 ]=]
 function VoiceBehaviour.Interface.inheritMethods(class: any)

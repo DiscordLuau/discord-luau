@@ -1,6 +1,10 @@
 --[=[
-	@class Classes.Public
+	@class Classes.Channels.PublicThread
 	@__index Prototype
+	@tag inherit:Classes.Channels.Channel
+	@tag inherit:Classes.Channels.GuildBehaviour
+	@tag inherit:Classes.Channels.ThreadBehaviour
+	@tag inherit:Classes.Channels.TextBehaviour
 
 	Implementation of the Discord Public class in Luau
 
@@ -9,7 +13,7 @@
 
 --[=[
 	@prop state Classes.State
-	@within Classes.Public
+	@within Classes.Channels.PublicThread
 ]=]
 
 local apiTypes = require("../../../luau_packages/api_types")
@@ -32,7 +36,7 @@ Public.Behaviours = {
 }
 
 --[=[
-	@within Classes.Public
+	@within Classes.Channels.PublicThread
 	@private
 
 	Responsible for syncing data to this public thread object. This is typically called by the API when this object is
@@ -46,7 +50,7 @@ function Public.Prototype.sync(self: Public, channelData: apiTypes.ChannelObject
 end
 
 --[=[
-	@within Classes.Public
+	@within Classes.Channels.PublicThread
 	@private
 
 	Responsible for constructing this class.

@@ -1,6 +1,8 @@
 --[=[
-	@class Classes.DM
+	@class Classes.Channels.DM
 	@__index Prototype
+	@tag inherit:Classes.Channels.Channel
+	@tag inherit:Classes.Channels.TextBehaviour
 
 	Implementation of the Discord DM class in Luau
 
@@ -9,7 +11,7 @@
 
 --[=[
 	@prop state State
-	@within Classes.DM
+	@within Classes.Channels.DM
 ]=]
 
 local apiTypes = require("../../../luau_packages/api_types")
@@ -28,7 +30,7 @@ DM.Behaviours = {
 }
 
 --[=[
-	@within Classes.DM
+	@within Classes.Channels.DM
 	@private
 
 	Responsible for syncing data to this DM object. This is typically called by the API when this object is
@@ -42,7 +44,7 @@ function DM.Prototype.sync(self: DM, channelData: apiTypes.ChannelObject)
 end
 
 --[=[
-	@within Classes.DM
+	@within Classes.Channels.DM
 	@private
 
 	Responsible for constructing this class.

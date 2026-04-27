@@ -1,37 +1,37 @@
 --[=[
-	@class Classes.MediaBehaviour
+	@class Classes.Channels.MediaBehaviour
 	@__index Prototype
 
 	Media Behaviour, responsible for implementing the various properties, and methods for a media thread channel.
 ]=]
 
 --[=[
-	@prop availableTags { Classes.ForumTag }
-	@within Classes.MediaBehaviour
+	@prop availableTags { Classes.Channels.ForumTag }
+	@within Classes.Channels.MediaBehaviour
 	The tags that can be applied to posts in this media channel.
 ]=]
 
 --[=[
-	@prop defaultReaction Classes.DefaultReaction?
-	@within Classes.MediaBehaviour
+	@prop defaultReaction Classes.Channels.DefaultReaction?
+	@within Classes.Channels.MediaBehaviour
 	The default reaction that will be added to new posts in this media channel.
 ]=]
 
 --[=[
 	@prop defaultForumLayout string
-	@within Classes.MediaBehaviour
+	@within Classes.Channels.MediaBehaviour
 	The default layout for posts in this media channel.
 ]=]
 
 --[=[
 	@prop appliedTags { string }
-	@within Classes.MediaBehaviour
+	@within Classes.Channels.MediaBehaviour
 	The tags currently applied to this media channel.
 ]=]
 
 --[=[
 	@prop defaultSortOrder string
-	@within Classes.MediaBehaviour
+	@within Classes.Channels.MediaBehaviour
 	The default sort order for posts in this media channel.
 ]=]
 
@@ -50,7 +50,7 @@ MediaBehaviour.Interface = {}
 MediaBehaviour.Prototype = {}
 
 --[=[
-	@within Classes.MediaBehaviour
+	@within Classes.Channels.MediaBehaviour
 	@private
 
 	Creates a new forum post (thread) in the channel. Returns the ID of the created thread.
@@ -76,7 +76,7 @@ function MediaBehaviour.Prototype.createPostAsync<T>(self: Channel<T>, post: bui
 end
 
 --[=[
-	@within Classes.MediaBehaviour
+	@within Classes.Channels.MediaBehaviour
 	@private
 ]=]
 function MediaBehaviour.Interface.inheritProperties(class: any, channelData: apiTypes.ChannelObject)
@@ -99,7 +99,7 @@ function MediaBehaviour.Interface.inheritProperties(class: any, channelData: api
 end
 
 --[=[
-	@within Classes.MediaBehaviour
+	@within Classes.Channels.MediaBehaviour
 	@private
 ]=]
 function MediaBehaviour.Interface.inheritMethods(class: any)

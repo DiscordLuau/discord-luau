@@ -1,6 +1,11 @@
 --[=[
-	@class Classes.Media
+	@class Classes.Channels.MediaThread
 	@__index Prototype
+	@tag inherit:Classes.Channels.Channel
+	@tag inherit:Classes.Channels.GuildBehaviour
+	@tag inherit:Classes.Channels.ThreadBehaviour
+	@tag inherit:Classes.Channels.MediaBehaviour
+	@tag inherit:Classes.Channels.TextBehaviour
 
 	Implementation of the Discord Media class in Luau
 
@@ -9,7 +14,7 @@
 
 --[=[
 	@prop state Classes.State
-	@within Classes.Media
+	@within Classes.Channels.MediaThread
 ]=]
 
 local apiTypes = require("../../../luau_packages/api_types")
@@ -34,7 +39,7 @@ Media.Behaviours = {
 }
 
 --[=[
-	@within Classes.Media
+	@within Classes.Channels.MediaThread
 	@private
 
 	Responsible for syncing data to this media object. This is typically called by the API when this object is
@@ -48,7 +53,7 @@ function Media.Prototype.sync(self: Media, channelData: apiTypes.ChannelObject)
 end
 
 --[=[
-	@within Classes.Media
+	@within Classes.Channels.MediaThread
 	@private
 
 	Responsible for constructing this class.

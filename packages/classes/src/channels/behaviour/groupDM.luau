@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.GroupDMBehaviour
+	@class Classes.Channels.GroupDMBehaviour
 	@__index Prototype
 
 	Behaviour class that implements the properties and methods specific to Group DM channels in Discord.
@@ -12,31 +12,31 @@
 ]=]
 
 --[=[
-	@within Classes.GroupDMBehaviour
+	@within Classes.Channels.GroupDMBehaviour
 	@prop recipients { Classes.User }
 	The users in the Group DM channel.
 ]=]
 
 --[=[
-	@within Classes.GroupDMBehaviour
+	@within Classes.Channels.GroupDMBehaviour
 	@prop icon string?
 	The icon hash of the Group DM channel.
 ]=]
 
 --[=[
-	@within Classes.GroupDMBehaviour
+	@within Classes.Channels.GroupDMBehaviour
 	@prop ownerId string?
 	The ID of the user who created the Group DM channel.
 ]=]
 
 --[=[
-	@within Classes.GroupDMBehaviour
+	@within Classes.Channels.GroupDMBehaviour
 	@prop applicationId string?
 	The ID of the application that created the Group DM channel, if it was created by an application.
 ]=]
 
 --[=[
-	@within Classes.GroupDMBehaviour
+	@within Classes.Channels.GroupDMBehaviour
 	@prop managed boolean
 	Whether the Group DM channel is managed by an application.
 ]=]
@@ -54,7 +54,7 @@ GroupDMBehaviour.Interface = {}
 GroupDMBehaviour.Prototype = {}
 
 --[=[
-	@within Classes.GroupDMBehaviour
+	@within Classes.Channels.GroupDMBehaviour
 	Adds a recipient to a Group DM using their access token.
 ]=]
 function GroupDMBehaviour.Prototype.addRecipient<T>(
@@ -80,7 +80,7 @@ function GroupDMBehaviour.Prototype.addRecipient<T>(
 end
 
 --[=[
-	@within Classes.GroupDMBehaviour
+	@within Classes.Channels.GroupDMBehaviour
 	Removes a recipient from a Group DM.
 ]=]
 function GroupDMBehaviour.Prototype.removeRecipient<T>(self: Channel<T>, userId: string)
@@ -96,7 +96,7 @@ function GroupDMBehaviour.Prototype.removeRecipient<T>(self: Channel<T>, userId:
 end
 
 --[=[
-	@within Classes.GroupDMBehaviour
+	@within Classes.Channels.GroupDMBehaviour
 	Sets the name of the Group DM channel.
 ]=]
 function GroupDMBehaviour.Prototype.setNameAsync<T>(self: Channel<T>, groupName: string)
@@ -106,7 +106,7 @@ function GroupDMBehaviour.Prototype.setNameAsync<T>(self: Channel<T>, groupName:
 end
 
 --[=[
-	@within Classes.GroupDMBehaviour
+	@within Classes.Channels.GroupDMBehaviour
 	Sets the icon of the Group DM channel using base64 encoded image data.
 ]=]
 function GroupDMBehaviour.Prototype.setIconAsync<T>(self: Channel<T>, iconData: string)
@@ -117,7 +117,7 @@ function GroupDMBehaviour.Prototype.setIconAsync<T>(self: Channel<T>, iconData: 
 end
 
 --[=[
-	@within Classes.GroupDMBehaviour
+	@within Classes.Channels.GroupDMBehaviour
 	@private
 
 	Inherits properties from the channel data into the class instance.
@@ -143,7 +143,7 @@ function GroupDMBehaviour.Interface.inheritProperties(class: any, channelData: a
 end
 
 --[=[
-	@within Classes.GroupDMBehaviour
+	@within Classes.Channels.GroupDMBehaviour
 	@private
 
 	Inherits methods from the GroupDMBehaviour prototype into the class instance.

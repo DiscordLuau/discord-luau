@@ -1,6 +1,11 @@
 --[=[
-	@class Classes.Forum
+	@class Classes.Channels.ForumThread
 	@__index Prototype
+	@tag inherit:Classes.Channels.Channel
+	@tag inherit:Classes.Channels.GuildBehaviour
+	@tag inherit:Classes.Channels.ThreadBehaviour
+	@tag inherit:Classes.Channels.ForumBehaviour
+	@tag inherit:Classes.Channels.TextBehaviour
 
 	Implementation of the Discord Forum class in Luau
 
@@ -9,7 +14,7 @@
 
 --[=[
 	@prop state Classes.State
-	@within Classes.Forum
+	@within Classes.Channels.ForumThread
 ]=]
 
 local apiTypes = require("../../../luau_packages/api_types")
@@ -34,7 +39,7 @@ Forum.Behaviours = {
 }
 
 --[=[
-	@within Classes.Forum
+	@within Classes.Channels.ForumThread
 	@private
 
 	Responsible for syncing data to this forum object. This is typically called by the API when this object is
@@ -48,7 +53,7 @@ function Forum.Prototype.sync(self: Forum, channelData: apiTypes.ChannelObject)
 end
 
 --[=[
-	@within Classes.Forum
+	@within Classes.Channels.ForumThread
 	@private
 
 	Responsible for constructing this class.

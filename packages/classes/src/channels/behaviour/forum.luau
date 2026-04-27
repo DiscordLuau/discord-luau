@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.ForumBehaviour
+	@class Classes.Channels.ForumBehaviour
 	@__index Prototype
 
 	Implementation of the Discord Forum Behaviour class in Luau. Responsible for implementing the various properties, 
@@ -7,32 +7,32 @@
 ]=]
 
 --[=[
-	@prop availableTags { Classes.ForumTag }
-	@within Classes.ForumBehaviour
+	@prop availableTags { Classes.Channels.ForumTag }
+	@within Classes.Channels.ForumBehaviour
 	The tags that can be applied to posts in this forum channel.
 ]=]
 
 --[=[
 	@prop appliedTags { string }
-	@within Classes.ForumBehaviour
+	@within Classes.Channels.ForumBehaviour
 	The tags currently applied to this forum channel.
 ]=]
 
 --[=[
-	@prop defaultReaction Classes.DefaultReaction?
-	@within Classes.ForumBehaviour
+	@prop defaultReaction Classes.Channels.DefaultReaction?
+	@within Classes.Channels.ForumBehaviour
 	The default reaction that will be added to new posts in this forum channel.
 ]=]
 
 --[=[
 	@prop defaultSortOrder apiTypes.ForumSortOrder
-	@within Classes.ForumBehaviour
+	@within Classes.Channels.ForumBehaviour
 	The default sort order for posts in this forum channel.
 ]=]
 
 --[=[
 	@prop defaultForumLayout apiTypes.ForumLayout
-	@within Classes.ForumBehaviour
+	@within Classes.Channels.ForumBehaviour
 	The default layout for posts in this forum channel.
 ]=]
 
@@ -51,7 +51,7 @@ ForumBehaviour.Interface = {}
 ForumBehaviour.Prototype = {}
 
 --[=[
-	@within Classes.ForumBehaviour
+	@within Classes.Channels.ForumBehaviour
 	@private
 
 	Creates a new forum post (thread) in the channel. Returns the ID of the created thread.
@@ -77,7 +77,7 @@ function ForumBehaviour.Prototype.createPostAsync<T>(self: Channel<T>, post: bui
 end
 
 --[=[
-	@within Classes.ForumBehaviour
+	@within Classes.Channels.ForumBehaviour
 	@private
 ]=]
 function ForumBehaviour.Interface.inheritProperties(class: any, channelData: apiTypes.ChannelObject)
@@ -101,7 +101,7 @@ function ForumBehaviour.Interface.inheritProperties(class: any, channelData: api
 end
 
 --[=[
-	@within Classes.ForumBehaviour
+	@within Classes.Channels.ForumBehaviour
 	@private
 ]=]
 function ForumBehaviour.Interface.inheritMethods(class: any)

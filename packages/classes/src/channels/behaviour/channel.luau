@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.Channel
+	@class Classes.Channels.Channel
 	@__index Prototype
 
 	Implementation of the Discord Channel class in Luau. Responsible for implementing the various properties, and methods
@@ -8,25 +8,25 @@
 
 --[=[
 	@prop type string
-	@within Classes.Channel
+	@within Classes.Channels.Channel
 	The type of the channel, indicating its functionality and behavior.
 ]=]
 
 --[=[
 	@prop id string
-	@within Classes.Channel
+	@within Classes.Channels.Channel
 	The unique identifier for this channel.
 ]=]
 
 --[=[
 	@prop name string?
-	@within Classes.Channel
+	@within Classes.Channels.Channel
 	The name of the channel.
 ]=]
 
 --[=[
-	@prop flags Classes.ChannelBitflag?
-	@within Classes.Channel
+	@prop flags Classes.Channels.ChannelBitflag?
+	@within Classes.Channels.Channel
 	The flags that indicate various properties and states of the channel.
 ]=]
 
@@ -44,7 +44,7 @@ ChannelBehaviour.Interface = {}
 ChannelBehaviour.Prototype = {}
 
 --[=[
-	@within Classes.Channel
+	@within Classes.Channels.Channel
 	@private
 
 	Delete a channel, or close a private message. Requires the MANAGE_CHANNELS permission for the guild, or MANAGE_THREADS
@@ -66,7 +66,7 @@ function ChannelBehaviour.Prototype.deleteChannelAsync<T>(self: Channel<T>)
 end
 
 --[=[
-	@within Classes.Channel
+	@within Classes.Channels.Channel
 
 	Post a typing indicator for the specified channel, which expires after 10 seconds.
 
@@ -86,7 +86,7 @@ function ChannelBehaviour.Prototype.triggerTypingIndicatorAsync<T>(self: Channel
 end
 
 --[=[
-	@within Classes.Channel
+	@within Classes.Channels.Channel
 
 	Lists all private archived threads that the current user has joined. Returns thread and member information.
 ]=]
@@ -115,7 +115,7 @@ function ChannelBehaviour.Interface.inheritProperties(class: any, channelData: a
 end
 
 --[=[
-	@within Classes.Channel
+	@within Classes.Channels.Channel
 	@private
 ]=]
 function ChannelBehaviour.Interface.inheritMethods(class: any)

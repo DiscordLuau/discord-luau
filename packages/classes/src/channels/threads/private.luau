@@ -1,6 +1,10 @@
 --[=[
-	@class Classes.Private
+	@class Classes.Channels.PrivateThread
 	@__index Prototype
+	@tag inherit:Classes.Channels.Channel
+	@tag inherit:Classes.Channels.GuildBehaviour
+	@tag inherit:Classes.Channels.ThreadBehaviour
+	@tag inherit:Classes.Channels.TextBehaviour
 
 	Implementation of the Discord Private class in Luau
 
@@ -9,7 +13,7 @@
 
 --[=[
 	@prop state Classes.State
-	@within Classes.Private
+	@within Classes.Channels.PrivateThread
 ]=]
 
 local apiTypes = require("../../../luau_packages/api_types")
@@ -32,7 +36,7 @@ Private.Behaviours = {
 }
 
 --[=[
-	@within Classes.Private
+	@within Classes.Channels.PrivateThread
 	@private
 
 	Responsible for syncing data to this private thread object. This is typically called by the API when this object is
@@ -46,7 +50,7 @@ function Private.Prototype.sync(self: Private, channelData: apiTypes.ChannelObje
 end
 
 --[=[
-	@within Classes.Private
+	@within Classes.Channels.PrivateThread
 	@private
 
 	Responsible for constructing this class.

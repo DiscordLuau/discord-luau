@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.GuildBehaviour
+	@class Classes.Channels.GuildBehaviour
 	@__index Prototype
 
 	Behaviour class that implements the properties and methods specific to guild channels in Discord.
@@ -14,55 +14,55 @@
 ]=]
 
 --[=[
-	@within Classes.GuildBehaviour
-	@prop permissionOverwrites { Classes.Overwrite }
+	@within Classes.Channels.GuildBehaviour
+	@prop permissionOverwrites { Classes.Channels.Overwrite }
 	The permission overwrites for the channel.
 ]=]
 
 --[=[
-	@within Classes.GuildBehaviour
+	@within Classes.Channels.GuildBehaviour
 	@prop nsfw boolean
 	Whether the channel is marked as NSFW (Not Safe For Work).
 ]=]
 
 --[=[
-	@within Classes.GuildBehaviour
+	@within Classes.Channels.GuildBehaviour
 	@prop topic string?
 	The topic of the channel.
 ]=]
 
 --[=[
-	@within Classes.GuildBehaviour
+	@within Classes.Channels.GuildBehaviour
 	@prop guildId string
 	The ID of the guild this channel belongs to.
 ]=]
 
 --[=[
-	@within Classes.GuildBehaviour
+	@within Classes.Channels.GuildBehaviour
 	@prop position number
 	The position of the channel in the guild's channel list.
 ]=]
 
 --[=[
-	@within Classes.GuildBehaviour
+	@within Classes.Channels.GuildBehaviour
 	@prop parentId string?
 	The ID of the parent category channel, if this channel is in a category.
 ]=]
 
 --[=[
-	@within Classes.GuildBehaviour
+	@within Classes.Channels.GuildBehaviour
 	@prop permissions number
 	The computed permissions for the current user in this channel.
 ]=]
 
 --[=[
-	@within Classes.GuildBehaviour
+	@within Classes.Channels.GuildBehaviour
 	@prop defaultThreadRateLimitPerUser number
 	The default rate limit per user for threads in this channel.
 ]=]
 
 --[=[
-	@within Classes.GuildBehaviour
+	@within Classes.Channels.GuildBehaviour
 	@prop defaultAutoArchiveDuration number
 	The default duration after which threads are automatically archived.
 ]=]
@@ -84,7 +84,7 @@ GuildBehaviour.Interface = {}
 GuildBehaviour.Prototype = {}
 
 --[=[
-	@within Classes.GuildBehaviour
+	@within Classes.Channels.GuildBehaviour
 	Sets the position of the channel in the guild's channel list.
 ]=]
 function GuildBehaviour.Prototype.setPositionAsync<T>(self: Channel<T>, position: number)
@@ -107,7 +107,7 @@ function GuildBehaviour.Prototype.setPositionAsync<T>(self: Channel<T>, position
 end
 
 --[=[
-	@within Classes.GuildBehaviour
+	@within Classes.Channels.GuildBehaviour
 	Sets the parent category of the channel and optionally syncs permissions with the parent.
 ]=]
 function GuildBehaviour.Prototype.setParentAsync<T>(self: Channel<T>, parentId: string, syncPermissions: boolean?)
@@ -131,7 +131,7 @@ function GuildBehaviour.Prototype.setParentAsync<T>(self: Channel<T>, parentId: 
 end
 
 --[=[
-	@within Classes.GuildBehaviour
+	@within Classes.Channels.GuildBehaviour
 	Sets the permissions for a role or member in the channel.
 ]=]
 function GuildBehaviour.Prototype.setPermissionsAsync<T>(
@@ -160,7 +160,7 @@ function GuildBehaviour.Prototype.setPermissionsAsync<T>(
 end
 
 --[=[
-	@within Classes.GuildBehaviour
+	@within Classes.Channels.GuildBehaviour
 	Deletes a permission overwrite for a role or member in the channel.
 ]=]
 function GuildBehaviour.Prototype.deletePermissionAsync<T>(
@@ -181,7 +181,7 @@ function GuildBehaviour.Prototype.deletePermissionAsync<T>(
 end
 
 --[=[
-	@within Classes.GuildBehaviour
+	@within Classes.Channels.GuildBehaviour
 	Gets a list of all invites for the channel.
 ]=]
 function GuildBehaviour.Prototype.getInvitesAsync<T>(self: Channel<T>)
@@ -203,7 +203,7 @@ function GuildBehaviour.Prototype.getInvitesAsync<T>(self: Channel<T>)
 end
 
 --[=[
-	@within Classes.GuildBehaviour
+	@within Classes.Channels.GuildBehaviour
 	Creates a new invite for the channel.
 ]=]
 function GuildBehaviour.Prototype.createInviteAsync<T>(self: Channel<T>, json: builders.inviteJSON, reason: string?)
@@ -219,7 +219,7 @@ function GuildBehaviour.Prototype.createInviteAsync<T>(self: Channel<T>, json: b
 end
 
 --[=[
-	@within Classes.GuildBehaviour
+	@within Classes.Channels.GuildBehaviour
 	Lists all public archived threads in the channel. Returns thread and member information.
 ]=]
 function GuildBehaviour.Prototype.listPublicArchivedThreadsAsync<T>(
@@ -265,7 +265,7 @@ function GuildBehaviour.Prototype.listPublicArchivedThreadsAsync<T>(
 end
 
 --[=[
-	@within Classes.GuildBehaviour
+	@within Classes.Channels.GuildBehaviour
 	Lists all private archived threads in the channel. Returns thread and member information.
 ]=]
 function GuildBehaviour.Prototype.listPrivateArchivedThreadsAsync<T>(
@@ -311,7 +311,7 @@ function GuildBehaviour.Prototype.listPrivateArchivedThreadsAsync<T>(
 end
 
 --[=[
-	@within Classes.GuildBehaviour
+	@within Classes.Channels.GuildBehaviour
 	Lists all private archived threads that the current user has joined. Returns thread and member information.
 ]=]
 function GuildBehaviour.Prototype.listJoinedPrivateArchivedThreadsAsync<T>(
@@ -357,7 +357,7 @@ function GuildBehaviour.Prototype.listJoinedPrivateArchivedThreadsAsync<T>(
 end
 
 --[=[
-	@within Classes.GuildBehaviour
+	@within Classes.Channels.GuildBehaviour
 	Sets the name of the channel.
 ]=]
 function GuildBehaviour.Prototype.setNameAsync<T>(self: Channel<T>, groupName: string)
@@ -367,7 +367,7 @@ function GuildBehaviour.Prototype.setNameAsync<T>(self: Channel<T>, groupName: s
 end
 
 --[=[
-	@within Classes.GuildBehaviour
+	@within Classes.Channels.GuildBehaviour
 	@private
 
 	Inherits properties from the channel data into the class instance.
@@ -401,7 +401,7 @@ function GuildBehaviour.Interface.inheritProperties(class: any, channelData: api
 end
 
 --[=[
-	@within Classes.GuildBehaviour
+	@within Classes.Channels.GuildBehaviour
 	@private
 
 	Inherits methods from the GuildBehaviour prototype into the class instance.

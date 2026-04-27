@@ -1,6 +1,9 @@
 --[=[
-	@class Classes.GuildAnnouncement
+	@class Classes.Channels.GuildAnnouncement
 	@__index Prototype
+	@tag inherit:Classes.Channels.Channel
+	@tag inherit:Classes.Channels.GuildBehaviour
+	@tag inherit:Classes.Channels.TextBehaviour
 
 	Implementation of the Discord GuildAnnouncement class in Luau
 
@@ -9,7 +12,7 @@
 
 --[=[
 	@prop state state.State
-	@within Classes.GuildAnnouncement
+	@within Classes.Channels.GuildAnnouncement
 ]=]
 
 local apiTypes = require("../../../luau_packages/api_types")
@@ -32,7 +35,7 @@ GuildAnnouncement.Behaviours = {
 }
 
 --[=[
-	@within Classes.GuildAnnouncement
+	@within Classes.Channels.GuildAnnouncement
 
 	Crosspost a message in an Announcement Channel to following channels. This endpoint requires the SEND_MESSAGES
 	permission, if the current user sent the message, or additionally the MANAGE_MESSAGES permission, for all
@@ -51,7 +54,7 @@ function GuildAnnouncement.Prototype.crosspostAsync(self: GuildAnnouncement, mes
 end
 
 --[=[
-	@within Classes.GuildAnnouncement
+	@within Classes.Channels.GuildAnnouncement
 
 	Follow an Announcement Channel to send messages to a target channel. Requires the MANAGE_WEBHOOKS permission
 	in the target channel. 
@@ -73,7 +76,7 @@ function GuildAnnouncement.Prototype.followAsync(self: GuildAnnouncement, target
 end
 
 --[=[
-	@within Classes.GuildAnnouncement
+	@within Classes.Channels.GuildAnnouncement
 	@private
 
 	Responsible for syncing data to this announcement channel object. This is typically called by the API when this object is
@@ -87,7 +90,7 @@ function GuildAnnouncement.Prototype.sync(self: GuildAnnouncement, channelData: 
 end
 
 --[=[
-	@within Classes.GuildAnnouncement
+	@within Classes.Channels.GuildAnnouncement
 	@private
 
 	Responsible for constructing this class.

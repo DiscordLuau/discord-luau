@@ -1,6 +1,9 @@
 --[=[
-	@class Classes.GuildText
+	@class Classes.Channels.GuildText
 	@__index Prototype
+	@tag inherit:Classes.Channels.Channel
+	@tag inherit:Classes.Channels.GuildBehaviour
+	@tag inherit:Classes.Channels.TextBehaviour
 
 	Implementation of the Discord GuildText class in Luau
 
@@ -9,7 +12,7 @@
 
 --[=[
 	@prop state state.State
-	@within Classes.GuildText
+	@within Classes.Channels.GuildText
 ]=]
 
 local apiTypes = require("../../../luau_packages/api_types")
@@ -30,7 +33,7 @@ GuildText.Behaviours = {
 }
 
 --[=[
-	@within Classes.GuildText
+	@within Classes.Channels.GuildText
 	@private
 
 	Responsible for syncing data to this guild text channel object. This is typically called by the API when this object is
@@ -44,7 +47,7 @@ function GuildText.Prototype.sync(self: GuildText, channelData: apiTypes.Channel
 end
 
 --[=[
-	@within Classes.GuildText
+	@within Classes.Channels.GuildText
 	@private
 
 	Responsible for constructing this class.

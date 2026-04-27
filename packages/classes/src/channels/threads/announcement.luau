@@ -1,6 +1,10 @@
 --[=[
-	@class Classes.Announcement
+	@class Classes.Channels.AnnouncementThread
 	@__index Prototype
+	@tag inherit:Classes.Channels.Channel
+	@tag inherit:Classes.Channels.GuildBehaviour
+	@tag inherit:Classes.Channels.ThreadBehaviour
+	@tag inherit:Classes.Channels.TextBehaviour
 
 	Implementation of the Discord Announcement class in Luau
 
@@ -9,7 +13,7 @@
 
 --[=[
 	@prop state Classes.State
-	@within Classes.Announcement
+	@within Classes.Channels.AnnouncementThread
 ]=]
 
 local apiTypes = require("../../../luau_packages/api_types")
@@ -32,7 +36,7 @@ Announcement.Behaviours = {
 }
 
 --[=[
-	@within Classes.Announcement
+	@within Classes.Channels.AnnouncementThread
 	@private
 
 	Responsible for syncing data to this announcement object. This is typically called by the API when this object is
@@ -46,7 +50,7 @@ function Announcement.Prototype.sync(self: Announcement, channelData: apiTypes.C
 end
 
 --[=[
-	@within Classes.Announcement
+	@within Classes.Channels.AnnouncementThread
 	@private
 
 	Responsible for constructing this class.

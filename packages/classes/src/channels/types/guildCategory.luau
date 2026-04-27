@@ -1,6 +1,8 @@
 --[=[
-	@class Classes.GuildCategory
+	@class Classes.Channels.GuildCategory
 	@__index Prototype
+	@tag inherit:Classes.Channels.Channel
+	@tag inherit:Classes.Channels.GuildBehaviour
 
 	Implementation of the Discord GuildCategory class in Luau
 
@@ -9,7 +11,7 @@
 
 --[=[
 	@prop state Classes.State
-	@within Classes.GuildCategory
+	@within Classes.Channels.GuildCategory
 ]=]
 
 local apiTypes = require("../../../luau_packages/api_types")
@@ -28,7 +30,7 @@ GuildCategory.Behaviours = {
 }
 
 --[=[
-	@within Classes.GuildCategory
+	@within Classes.Channels.GuildCategory
 	@private
 
 	Responsible for syncing data to this channel object. This is typically called by the API when this object is
@@ -42,7 +44,7 @@ function GuildCategory.Prototype.sync(self: GuildCategory, channelData: apiTypes
 end
 
 --[=[
-	@within Classes.GuildCategory
+	@within Classes.Channels.GuildCategory
 	@private
 
 	Responsible for constructing this class.

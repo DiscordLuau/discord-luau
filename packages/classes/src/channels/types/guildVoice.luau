@@ -1,6 +1,9 @@
 --[=[
-	@class Classes.GuildVoice
+	@class Classes.Channels.GuildVoice
 	@__index Prototype
+	@tag inherit:Classes.Channels.Channel
+	@tag inherit:Classes.Channels.GuildBehaviour
+	@tag inherit:Classes.Channels.VoiceBehaviour
 
 	Implementation of the Discord GuildVoice class in Luau
 
@@ -9,7 +12,7 @@
 
 --[=[
 	@prop state Classes.State
-	@within Classes.GuildVoice
+	@within Classes.Channels.GuildVoice
 ]=]
 
 local apiTypes = require("../../../luau_packages/api_types")
@@ -30,7 +33,7 @@ GuildVoice.Behaviours = {
 }
 
 --[=[
-	@within Classes.GuildVoice
+	@within Classes.Channels.GuildVoice
 	@private
 
 	Responsible for syncing data to this guild voice channel object. This is typically called by the API when this object is
@@ -44,7 +47,7 @@ function GuildVoice.Prototype.sync(self: GuildVoice, channelData: apiTypes.Chann
 end
 
 --[=[
-	@within Classes.GuildVoice
+	@within Classes.Channels.GuildVoice
 	@private
 
 	Responsible for constructing this class.

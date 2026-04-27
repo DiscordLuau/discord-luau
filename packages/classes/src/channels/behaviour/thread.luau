@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.ThreadBehaviour
+	@class Classes.Channels.ThreadBehaviour
 	@__index Prototype
 
 	Behaviour class that implements the properties and methods specific to thread channels in Discord.
@@ -13,43 +13,43 @@
 ]=]
 
 --[=[
-	@within Classes.ThreadBehaviour
+	@within Classes.Channels.ThreadBehaviour
 	@prop totalMessageSent number
 	The total number of messages sent in this thread.
 ]=]
 
 --[=[
-	@within Classes.ThreadBehaviour
-	@prop member Classes.ThreadMember?
+	@within Classes.Channels.ThreadBehaviour
+	@prop member Classes.Channels.ThreadMember?
 	The current user's thread member object, if they are a member of this thread.
 ]=]
 
 --[=[
-	@within Classes.ThreadBehaviour
-	@prop threadMetadata Classes.ThreadMetadata?
+	@within Classes.Channels.ThreadBehaviour
+	@prop threadMetadata Classes.Channels.ThreadMetadata?
 	Metadata about the thread, including archive status and auto-archive duration.
 ]=]
 
 --[=[
-	@within Classes.ThreadBehaviour
+	@within Classes.Channels.ThreadBehaviour
 	@prop memberCount number
 	The number of members in this thread.
 ]=]
 
 --[=[
-	@within Classes.ThreadBehaviour
+	@within Classes.Channels.ThreadBehaviour
 	@prop messageCount number
 	The number of messages in this thread.
 ]=]
 
 --[=[
-	@within Classes.ThreadBehaviour
+	@within Classes.Channels.ThreadBehaviour
 	@prop parentId string?
 	The ID of the parent channel this thread belongs to.
 ]=]
 
 --[=[
-	@within Classes.ThreadBehaviour
+	@within Classes.Channels.ThreadBehaviour
 	@prop ownerId string
 	The ID of the user who created this thread.
 ]=]
@@ -68,7 +68,7 @@ ThreadBehaviour.Interface = {}
 ThreadBehaviour.Prototype = {}
 
 --[=[
-	@within Classes.ThreadBehaviour
+	@within Classes.Channels.ThreadBehaviour
 	Adds the current user to a thread. Also requires the thread is not archived.
 ]=]
 function ThreadBehaviour.Prototype.joinAsync<T>(self: Channel<T>)
@@ -84,7 +84,7 @@ function ThreadBehaviour.Prototype.joinAsync<T>(self: Channel<T>)
 end
 
 --[=[
-	@within Classes.ThreadBehaviour
+	@within Classes.Channels.ThreadBehaviour
 	Adds another member to a thread. Requires the ability to send messages in the thread. Also requires the thread is not archived.
 ]=]
 function ThreadBehaviour.Prototype.addMemberAsync<T>(self: Channel<T>, userId: string)
@@ -100,7 +100,7 @@ function ThreadBehaviour.Prototype.addMemberAsync<T>(self: Channel<T>, userId: s
 end
 
 --[=[
-	@within Classes.ThreadBehaviour
+	@within Classes.Channels.ThreadBehaviour
 	Removes the current user from a thread.
 ]=]
 function ThreadBehaviour.Prototype.leaveAsync<T>(self: Channel<T>)
@@ -116,7 +116,7 @@ function ThreadBehaviour.Prototype.leaveAsync<T>(self: Channel<T>)
 end
 
 --[=[
-	@within Classes.ThreadBehaviour
+	@within Classes.Channels.ThreadBehaviour
 	Removes another member from a thread. Requires the ability to manage threads.
 ]=]
 function ThreadBehaviour.Prototype.removeMemberAsync<T>(self: Channel<T>, userId: string)
@@ -132,7 +132,7 @@ function ThreadBehaviour.Prototype.removeMemberAsync<T>(self: Channel<T>, userId
 end
 
 --[=[
-	@within Classes.ThreadBehaviour
+	@within Classes.Channels.ThreadBehaviour
 	Gets a thread member by their user ID. Can optionally include the member object.
 ]=]
 function ThreadBehaviour.Prototype.getMemberAsync<T>(self: Channel<T>, userId: string, withMember: boolean?)
@@ -152,7 +152,7 @@ function ThreadBehaviour.Prototype.getMemberAsync<T>(self: Channel<T>, userId: s
 end
 
 --[=[
-	@within Classes.ThreadBehaviour
+	@within Classes.Channels.ThreadBehaviour
 	Lists all members in a thread. Can optionally include member objects and use pagination.
 ]=]
 function ThreadBehaviour.Prototype.listMembersAsync<T>(
@@ -185,7 +185,7 @@ function ThreadBehaviour.Prototype.listMembersAsync<T>(
 end
 
 --[=[
-	@within Classes.ThreadBehaviour
+	@within Classes.Channels.ThreadBehaviour
 	@private
 
 	Inherits properties from the channel data into the class instance.
@@ -208,7 +208,7 @@ function ThreadBehaviour.Interface.inheritProperties(class: any, channelData: ap
 end
 
 --[=[
-	@within Classes.ThreadBehaviour
+	@within Classes.Channels.ThreadBehaviour
 	@private
 
 	Inherits methods from the ThreadBehaviour prototype into the class instance.

@@ -1,6 +1,9 @@
 --[=[
-	@class Classes.GuildStageVoice
+	@class Classes.Channels.GuildStageVoice
 	@__index Prototype
+	@tag inherit:Classes.Channels.Channel
+	@tag inherit:Classes.Channels.GuildBehaviour
+	@tag inherit:Classes.Channels.VoiceBehaviour
 
 	Implementation of the Discord GuildStageVoice class in Luau
 
@@ -9,7 +12,7 @@
 
 --[=[
 	@prop state Classes.State
-	@within Classes.GuildStageVoice
+	@within Classes.Channels.GuildStageVoice
 ]=]
 
 local apiTypes = require("../../../luau_packages/api_types")
@@ -30,7 +33,7 @@ GuildStageVoice.Behaviours = {
 }
 
 --[=[
-	@within Classes.GuildStageVoice
+	@within Classes.Channels.GuildStageVoice
 	@private
 
 	Responsible for syncing data to this guild stage voice object. This is typically called by the API when this object is
@@ -44,7 +47,7 @@ function GuildStageVoice.Prototype.sync(self: GuildStageVoice, channelData: apiT
 end
 
 --[=[
-	@within Classes.GuildStageVoice
+	@within Classes.Channels.GuildStageVoice
 	@private
 
 	Responsible for constructing this class.
