@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.ChannelBitflag
+	@class Classes.Channels.ChannelBitflag
 	@__index Prototype
 
 	Implementation of the Discord Role Bitflags in Luau
@@ -9,7 +9,7 @@
 
 --[=[
 	@prop flag number
-	@within Classes.ChannelBitflag
+	@within Classes.Channels.ChannelBitflag
 ]=]
 
 local bit = require("../../luau_packages/bit")
@@ -20,7 +20,7 @@ ChannelBitflag.Interface = {}
 ChannelBitflag.Prototype = {}
 
 --[=[
-	@within Classes.ChannelBitflag
+	@within Classes.Channels.ChannelBitflag
 	@private
 
 	if this thread is pinned to the top of its parent GUILD_FORUM or GUILD_MEDIA channel
@@ -32,7 +32,7 @@ function ChannelBitflag.Prototype.isPinned(self: ChannelBitflag)
 end
 
 --[=[
-	@within Classes.ChannelBitflag
+	@within Classes.Channels.ChannelBitflag
 	@private
 
 	whether a tag is required to be specified when creating a thread in a
@@ -45,7 +45,7 @@ function ChannelBitflag.Prototype.requiresTag(self: ChannelBitflag)
 end
 
 --[=[
-	@within Classes.ChannelBitflag
+	@within Classes.Channels.ChannelBitflag
 	@private
 
 	When set hides the embedded media download options. Available only for media channels
@@ -57,7 +57,7 @@ function ChannelBitflag.Prototype.hideMediaDownloadOptions(self: ChannelBitflag)
 end
 
 --[=[
-	@within Classes.ChannelBitflag
+	@within Classes.Channels.ChannelBitflag
 	@private
 
 	Responsible for constructing this class.

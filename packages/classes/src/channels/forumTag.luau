@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.ForumTag
+	@class Classes.Channels.ForumTag
 	@__index Prototype
 
 	Implementation of the Discord ForumTag class in Luau
@@ -9,35 +9,35 @@
 
 --[=[
 	@prop id string
-	@within Classes.ForumTag
+	@within Classes.Channels.ForumTag
 
 	The unique identifier for this forum tag
 ]=]
 
 --[=[
 	@prop name string
-	@within Classes.ForumTag
+	@within Classes.Channels.ForumTag
 
 	The name of the forum tag
 ]=]
 
 --[=[
 	@prop moderated boolean
-	@within Classes.ForumTag
+	@within Classes.Channels.ForumTag
 
 	Whether this tag can only be added to or removed by a moderator
 ]=]
 
 --[=[
 	@prop emojiId string?
-	@within Classes.ForumTag
+	@within Classes.Channels.ForumTag
 
 	The id of the emoji used as the tag's icon, if the tag has a custom emoji
 ]=]
 
 --[=[
 	@prop emojiName string?
-	@within Classes.ForumTag
+	@within Classes.Channels.ForumTag
 
 	The name of the emoji used as the tag's icon
 ]=]
@@ -50,7 +50,7 @@ ForumTag.Interface = {}
 ForumTag.Prototype = {}
 
 --[=[
-	@within Classes.ForumTag
+	@within Classes.Channels.ForumTag
 	@private
 
 	Responsible for syncing data to this forum tag object. This is typically called by the API when this object is
@@ -69,7 +69,7 @@ function ForumTag.Prototype.sync(self: ForumTag, forumTagData: apiTypes.ForumTag
 end
 
 --[=[
-	@within Classes.ForumTag
+	@within Classes.Channels.ForumTag
 	@private
 
 	Responsible for constructing this class.

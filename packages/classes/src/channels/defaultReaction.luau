@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.DefaultReaction
+	@class Classes.Channels.DefaultReaction
 	@__index Prototype
 
 	Implementation of the Discord DefaultReaction class in Luau
@@ -9,14 +9,14 @@
 
 --[=[
 	@prop emojiId string?
-	@within Classes.DefaultReaction
+	@within Classes.Channels.DefaultReaction
 
 	The ID of the emoji to use as the default reaction
 ]=]
 
 --[=[
 	@prop emojiName string?
-	@within Classes.DefaultReaction
+	@within Classes.Channels.DefaultReaction
 
 	The name of the emoji to use as the default reaction
 ]=]
@@ -29,7 +29,7 @@ DefaultReaction.Interface = {}
 DefaultReaction.Prototype = {}
 
 --[=[
-	@within Classes.DefaultReaction
+	@within Classes.Channels.DefaultReaction
 	@private
 
 	Responsible for syncing data to this default reaction object. This is typically called by the API when this object is
@@ -42,7 +42,7 @@ function DefaultReaction.Prototype.sync(self: DefaultReaction, DefaultReactionDa
 end
 
 --[=[
-	@within Classes.DefaultReaction
+	@within Classes.Channels.DefaultReaction
 	@private
 
 	Responsible for constructing this class.

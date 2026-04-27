@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.Overwrite
+	@class Classes.Channels.Overwrite
 	@__index Prototype
 
 	Implementation of the Discord Overwrite class in Luau
@@ -9,7 +9,7 @@
 
 --[=[
 	@prop type OverwriteType
-	@within Classes.Overwrite
+	@within Classes.Channels.Overwrite
 
 	The type of overwrite. Can be either "role" or "member" depending on whether this overwrite 
 	applies to a role or a specific member.
@@ -17,21 +17,21 @@
 
 --[=[
 	@prop id string
-	@within Classes.Overwrite
+	@within Classes.Channels.Overwrite
 
 	The role or user ID for this overwrite.
 ]=]
 
 --[=[
 	@prop allow string
-	@within Classes.Overwrite
+	@within Classes.Channels.Overwrite
 
 	The permissions that are explicitly allowed for this overwrite.
 ]=]
 
 --[=[
 	@prop deny string
-	@within Classes.Overwrite
+	@within Classes.Channels.Overwrite
 
 	The permissions that are explicitly denied for this overwrite.
 ]=]
@@ -44,7 +44,7 @@ Overwrite.Interface = {}
 Overwrite.Prototype = {}
 
 --[=[
-	@within Classes.Overwrite
+	@within Classes.Channels.Overwrite
 	@private
 
 	Responsible for syncing data to this overwrite object. This is typically called by the API when this object is
@@ -61,7 +61,7 @@ function Overwrite.Prototype.sync(self: Overwrite, overwriteData: apiTypes.Overw
 end
 
 --[=[
-	@within Classes.Overwrite
+	@within Classes.Channels.Overwrite
 	@private
 
 	Responsible for constructing this class.
