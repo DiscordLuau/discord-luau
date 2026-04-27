@@ -1,5 +1,5 @@
 --[=[
-	@class Builders.Role
+	@class Builders.Guild.Role
 	@__index Prototype
 
 	Implementation of a Discord Guild Role as a Luau builder.
@@ -9,43 +9,43 @@
 
 --[=[
 	@prop name string?
-	@within Builders.Role
+	@within Builders.Guild.Role
 	The name of the role.
 ]=]
 
 --[=[
 	@prop permissionFlags { apiTypes.Permissions }
-	@within Builders.Role
+	@within Builders.Guild.Role
 	The permissions assigned to the role.
 ]=]
 
 --[=[
 	@prop color number?
-	@within Builders.Role
+	@within Builders.Guild.Role
 	The color of the role represented as a hexadecimal number.
 ]=]
 
 --[=[
 	@prop isHoisted boolean?
-	@within Builders.Role
+	@within Builders.Guild.Role
 	Whether the role is displayed separately in the member list.
 ]=]
 
 --[=[
 	@prop icon string?
-	@within Builders.Role
+	@within Builders.Guild.Role
 	The icon of the role.
 ]=]
 
 --[=[
 	@prop unicodeEmoji string?
-	@within Builders.Role
+	@within Builders.Guild.Role
 	The unicode emoji of the role.
 ]=]
 
 --[=[
 	@prop isMentionable boolean?
-	@within Builders.Role
+	@within Builders.Guild.Role
 	Whether the role can be mentioned by users.
 ]=]
 
@@ -60,7 +60,7 @@ Role.Prototype = {}
 Role.Interface = {}
 
 --[=[
-	@within Builders.Role
+	@within Builders.Guild.Role
 
 	Sets the name of the role, optionally this could be defined when creating the Role Builder as well.
 ]=]
@@ -76,7 +76,7 @@ function Role.Prototype.setName(self: Role, roleName: string): Role
 end
 
 --[=[
-	@within Builders.Role
+	@within Builders.Guild.Role
 
 	Sets the permissions of the role, optionally this could be defined when creating the Role Builder as well.
 ]=]
@@ -89,7 +89,7 @@ function Role.Prototype.setPermissions(self: Role, ...: apiTypes.Permissions): R
 end
 
 --[=[
-	@within Builders.Role
+	@within Builders.Guild.Role
 
 	Sets the color of the role. Colors are presennted as a hexadecimal number.
 ]=]
@@ -100,7 +100,7 @@ function Role.Prototype.setColor(self: Role, color: number): Role
 end
 
 --[=[
-	@within Builders.Role
+	@within Builders.Guild.Role
 
 	Sets the role to be hoisted. A hoisted role is displayed in the user listing, vs's an unhoisted role which is not displayed at all.
 ]=]
@@ -111,7 +111,7 @@ function Role.Prototype.setHoisted(self: Role, isHoisted: boolean): Role
 end
 
 --[=[
-	@within Builders.Role
+	@within Builders.Guild.Role
 
 	Sets the role to be mentionable through the @ mention.
 ]=]
@@ -122,7 +122,7 @@ function Role.Prototype.setMentionable(self: Role, isMentionable: boolean): Role
 end
 
 --[=[
-	@within Builders.Role
+	@within Builders.Guild.Role
 
 	Responsible for buillding the role object that the Discord API can understand.
 ]=]
@@ -147,7 +147,7 @@ function Role.Prototype.build(self: Role): JSON
 end
 
 --[=[
-	@within Builders.Role
+	@within Builders.Guild.Role
 
 	Constructs a new Role Builder.
 

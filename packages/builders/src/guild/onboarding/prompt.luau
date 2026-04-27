@@ -1,5 +1,5 @@
 --[=[
-	@class Builders.Prompt
+	@class Builders.Guild.OnboardingPrompt
 	@__index Prototype
 
 	Implementation of discords Prompt object as a Luau builder.	
@@ -8,32 +8,32 @@
 ]=]
 
 --[=[
-	@prop options { Builders.Option }
-	@within Builders.Prompt
+	@prop options { Builders.Message.SelectMenuOption }
+	@within Builders.Guild.OnboardingPrompt
 	The array of options available within this prompt.
 ]=]
 
 --[=[
 	@prop type apiTypes.OnboardingPromptType
-	@within Builders.Prompt
+	@within Builders.Guild.OnboardingPrompt
 	The type of prompt to display.
 ]=]
 
 --[=[
 	@prop title string
-	@within Builders.Prompt
+	@within Builders.Guild.OnboardingPrompt
 	The title of the prompt to display.
 ]=]
 
 --[=[
 	@prop singleSelect boolean
-	@within Builders.Prompt
+	@within Builders.Guild.OnboardingPrompt
 	Whether users can select only one option or multiple options.
 ]=]
 
 --[=[
 	@prop required boolean
-	@within Builders.Prompt
+	@within Builders.Guild.OnboardingPrompt
 	Whether this prompt is required to be answered or not.
 ]=]
 
@@ -47,7 +47,7 @@ Prompt.Prototype = {}
 Prompt.Interface = {}
 
 --[=[
-	@within Builders.Prompt
+	@within Builders.Guild.OnboardingPrompt
 
 	Add an Option to this prompt
 ]=]
@@ -58,7 +58,7 @@ function Prompt.Prototype.addOption(self: Prompt, option: option.JSON): Prompt
 end
 
 --[=[
-	@within Builders.Prompt
+	@within Builders.Guild.OnboardingPrompt
 
 	Set the type of prompt.
 ]=]
@@ -69,7 +69,7 @@ function Prompt.Prototype.setType(self: Prompt, type: apiTypes.OnboardingPromptT
 end
 
 --[=[
-	@within Builders.Prompt
+	@within Builders.Guild.OnboardingPrompt
 
 	Set the title of this prompt
 ]=]
@@ -80,7 +80,7 @@ function Prompt.Prototype.setTitle(self: Prompt, title: string): Prompt
 end
 
 --[=[
-	@within Builders.Prompt
+	@within Builders.Guild.OnboardingPrompt
 
 	Set weather or not users can select one option, or multiple.
 ]=]
@@ -91,7 +91,7 @@ function Prompt.Prototype.setSingleSelect(self: Prompt, singleSelect: boolean): 
 end
 
 --[=[
-	@within Builders.Prompt
+	@within Builders.Guild.OnboardingPrompt
 
 	Set weather this option is required or not.
 ]=]
@@ -102,7 +102,7 @@ function Prompt.Prototype.setRequired(self: Prompt, required: boolean): Prompt
 end
 
 --[=[
-	@within Builders.Prompt
+	@within Builders.Guild.OnboardingPrompt
 
 	Responsible for building the PromptObject JSON that can be parsed by the Discord API.
 ]=]
@@ -120,7 +120,7 @@ function Prompt.Prototype.build(self: Prompt): JSON
 end
 
 --[=[
-	@within Builders.Prompt
+	@within Builders.Guild.OnboardingPrompt
 
 	Responsible for creating a new Prompt.
 ]=]

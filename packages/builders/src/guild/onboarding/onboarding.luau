@@ -1,5 +1,5 @@
 --[=[
-	@class Builders.Onboarding
+	@class Builders.Guild.Onboarding
 	@__index Prototype
 
 	Implementation of discords Onboarding object as a Luau builder.	
@@ -8,26 +8,26 @@
 ]=]
 
 --[=[
-	@prop prompts {Builders.Prompt}
-	@within Builders.Onboarding
+	@prop prompts {Builders.Guild.OnboardingPrompt}
+	@within Builders.Guild.Onboarding
 	Array of prompts shown during onboarding
 ]=]
 
 --[=[
 	@prop defaultChannelIds {string}
-	@within Builders.Onboarding
+	@within Builders.Guild.Onboarding
 	Array of channel IDs that members get opted into automatically
 ]=]
 
 --[=[
 	@prop enabled boolean
-	@within Builders.Onboarding
+	@within Builders.Guild.Onboarding
 	Whether onboarding is enabled in the guild
 ]=]
 
 --[=[
 	@prop mode apiTypes.OnboardingMode
-	@within Builders.Onboarding
+	@within Builders.Guild.Onboarding
 	Current mode of onboarding
 ]=]
 
@@ -41,7 +41,7 @@ Onboarding.Prototype = {}
 Onboarding.Interface = {}
 
 --[=[
-	@within Builders.Onboarding
+	@within Builders.Guild.Onboarding
 
 	Add a prompt to this onboarding
 ]=]
@@ -52,7 +52,7 @@ function Onboarding.Prototype.addPrompt(self: Onboarding, prompt: prompt.JSON): 
 end
 
 --[=[
-	@within Builders.Onboarding
+	@within Builders.Guild.Onboarding
 
 	Add a default channel to this onboarding
 ]=]
@@ -63,7 +63,7 @@ function Onboarding.Prototype.addDefaultChannelId(self: Onboarding, channelId: s
 end
 
 --[=[
-	@within Builders.Onboarding
+	@within Builders.Guild.Onboarding
 
 	Set weather this onboarding is enabled or not.	
 ]=]
@@ -74,7 +74,7 @@ function Onboarding.Prototype.setEnabled(self: Onboarding, enabled: boolean): On
 end
 
 --[=[
-	@within Builders.Onboarding
+	@within Builders.Guild.Onboarding
 
 	Set the mode of this onboarding.
 ]=]
@@ -85,7 +85,7 @@ function Onboarding.Prototype.setMode(self: Onboarding, mode: apiTypes.Onboardin
 end
 
 --[=[
-	@within Builders.Onboarding
+	@within Builders.Guild.Onboarding
 
 	Responsible for building the OnboardingObject JSON that can be parsed by the Discord API.
 ]=]
@@ -99,7 +99,7 @@ function Onboarding.Prototype.build(self: Onboarding): JSON
 end
 
 --[=[
-	@within Builders.Onboarding
+	@within Builders.Guild.Onboarding
 
 	Responsible for creating a new Onboarding.
 ]=]
