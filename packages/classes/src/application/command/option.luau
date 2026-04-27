@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.CommandOption
+	@class Classes.Application.CommandOption
 	@__index Prototype
 
 	Implementation of the Discord Option class in Luau
@@ -9,85 +9,85 @@
 
 --[=[
 	@prop type ApplicationCommandOptionType
-	@within Classes.CommandOption
+	@within Classes.Application.CommandOption
 	The type of the option. This represents what kind of option it is, such as a string, number, or user input.
 ]=]
 
 --[=[
 	@prop name string
-	@within Classes.CommandOption
+	@within Classes.Application.CommandOption
 	The name of the command option. This is what users will see when using the command.
 ]=]
 
 --[=[
 	@prop nameLocalizations { [LanguageLocales]: string }?
-	@within Classes.CommandOption
+	@within Classes.Application.CommandOption
 	Localization dictionary for the name field. Values follow the same restrictions as name.
 ]=]
 
 --[=[
 	@prop description string?
-	@within Classes.CommandOption
+	@within Classes.Application.CommandOption
 	The description of the command option. Provides additional information about what the option does.
 ]=]
 
 --[=[
 	@prop descriptionLocalizations { [LanguageLocales]: string }?
-	@within Classes.CommandOption
+	@within Classes.Application.CommandOption
 	Localization dictionary for the description field. Values follow the same restrictions as description.
 ]=]
 
 --[=[
 	@prop required boolean?
-	@within Classes.CommandOption
+	@within Classes.Application.CommandOption
 	If the parameter is required or optional. Default false.
 ]=]
 
 --[=[
-	@prop choices { Classes.Choice }?
-	@within Classes.CommandOption
+	@prop choices { Classes.Application.CommandChoice }?
+	@within Classes.Application.CommandOption
 	Choices for the user to pick from. Only available for string and number option types.
 ]=]
 
 --[=[
-	@prop options { Classes.CommandOption }?
-	@within Classes.CommandOption
+	@prop options { Classes.Application.CommandOption }?
+	@within Classes.Application.CommandOption
 	Sub-options if this option is a subcommand or subcommand group type.
 ]=]
 
 --[=[
 	@prop apiTypes { ChannelType }
-	@within Classes.CommandOption
+	@within Classes.Application.CommandOption
 	If the option is a channel type, these are the allowed channel types that can be selected.
 ]=]
 
 --[=[
 	@prop minValue number?
-	@within Classes.CommandOption
+	@within Classes.Application.CommandOption
 	For integer or number options, the minimum value permitted.
 ]=]
 
 --[=[
 	@prop maxValue number?
-	@within Classes.CommandOption
+	@within Classes.Application.CommandOption
 	For integer or number options, the maximum value permitted.
 ]=]
 
 --[=[
 	@prop minLength number?
-	@within Classes.CommandOption
+	@within Classes.Application.CommandOption
 	For string options, the minimum allowed length.
 ]=]
 
 --[=[
 	@prop maxLength number?
-	@within Classes.CommandOption
+	@within Classes.Application.CommandOption
 	For string options, the maximum allowed length.
 ]=]
 
 --[=[
 	@prop autocomplete boolean?
-	@within Classes.CommandOption
+	@within Classes.Application.CommandOption
 	Enable autocomplete interactions for this option.
 ]=]
 
@@ -101,7 +101,7 @@ Option.Interface = {}
 Option.Prototype = {}
 
 --[=[
-	@within Classes.CommandOption
+	@within Classes.Application.CommandOption
 	@private
 
 	Responsible for syncing data to this option object. This is typically called by the API when this object is
@@ -158,7 +158,7 @@ function Option.Prototype.sync(self: Option, optionData: apiTypes.ApplicationCom
 end
 
 --[=[
-	@within Classes.CommandOption
+	@within Classes.Application.CommandOption
 	@private
 
 	Responsible for constructing this class.

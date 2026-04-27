@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.Command
+	@class Classes.Application.Command
 	@__index Prototype
 
 	Implementation of the Discord Command class in Luau
@@ -9,98 +9,98 @@
 
 --[=[
 	@prop id string
-	@within Classes.Command
+	@within Classes.Application.Command
 
 	The unique identifier for this command
 ]=]
 
 --[=[
 	@prop type apiTypes.ApplicationCommandType
-	@within Classes.Command
+	@within Classes.Application.Command
 
 	The type of command this represents
 ]=]
 
 --[=[
 	@prop applicationId string
-	@within Classes.Command
+	@within Classes.Application.Command
 
 	The unique identifier of the parent application
 ]=]
 
 --[=[
 	@prop guildId string?
-	@within Classes.Command
+	@within Classes.Application.Command
 
 	ID of the guild this command is registered to, if any
 ]=]
 
 --[=[
 	@prop name string
-	@within Classes.Command
+	@within Classes.Application.Command
 
 	Name of the command
 ]=]
 
 --[=[
 	@prop nameLocalizations { [apiTypes.LanguageLocales]: string }?
-	@within Classes.Command
+	@within Classes.Application.Command
 
 	Localization dictionary for the command name
 ]=]
 
 --[=[
 	@prop description string
-	@within Classes.Command
+	@within Classes.Application.Command
 
 	Description of the command
 ]=]
 
 --[=[
 	@prop descriptionLocalizations { [apiTypes.LanguageLocales]: string }?
-	@within Classes.Command
+	@within Classes.Application.Command
 
 	Localization dictionary for the command description
 ]=]
 
 --[=[
 	@prop options { Classes.Option }
-	@within Classes.Command
+	@within Classes.Application.Command
 
 	The parameters for the command
 ]=]
 
 --[=[
 	@prop defaultMemberPermissions Classes.Permission?
-	@within Classes.Command
+	@within Classes.Application.Command
 
 	Default required permissions to use this command
 ]=]
 
 --[=[
 	@prop nsfw boolean?
-	@within Classes.Command
+	@within Classes.Application.Command
 
 	Whether this command is age-restricted
 ]=]
 
 --[=[
 	@prop integrationTypes { apiTypes.IntegrationTypesConfig }
-	@within Classes.Command
+	@within Classes.Application.Command
 
 	The integration types this command supports
 ]=]
 
 --[=[
 	@prop contexts { apiTypes.InteractionContextType }
-	@within Classes.Command
+	@within Classes.Application.Command
 
 	The contexts this command can be used in
 ]=]
 
 --[=[
 	@prop version string
-	@within Classes.Command
+	@within Classes.Application.Command
 
 	Auto-incrementing version identifier updated during substantial record changes
 ]=]
@@ -117,7 +117,7 @@ Command.Interface = {}
 Command.Prototype = {}
 
 --[=[
-	@within Classes.Command
+	@within Classes.Application.Command
 	@private
 
 	Responsible for syncing data to this command object. This is typically called by the API when this object is
@@ -174,7 +174,7 @@ function Command.Prototype.sync(self: Command, commandData: apiTypes.Application
 end
 
 --[=[
-	@within Classes.Command
+	@within Classes.Application.Command
 	@private
 
 	Responsible for constructing this class.

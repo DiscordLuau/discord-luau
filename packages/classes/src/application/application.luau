@@ -100,7 +100,7 @@
 
 --[=[
 	@within Classes.Application
-	@prop team Classes.Team?
+	@prop team Classes.Application.Team?
 	Information about the team that owns and manages this application. Teams allow multiple users to
 	collaborate on an application.
 ]=]
@@ -149,7 +149,7 @@
 
 --[=[
 	@within Classes.Application
-	@prop installParams Classes.InstallParams?
+	@prop installParams Classes.Application.InstallParams?
 	The default parameters used when installing the application. These parameters configure how the
 	application is set up when added to a server.
 ]=]

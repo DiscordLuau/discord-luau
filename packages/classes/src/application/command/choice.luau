@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.Choice
+	@class Classes.Application.CommandChoice
 	@__index Prototype
 
 	Implementation of the Discord Choice class in Luau
@@ -9,21 +9,21 @@
 
 --[=[
 	@prop name string
-	@within Classes.Choice
+	@within Classes.Application.CommandChoice
 
 	The name of the choice that will be displayed to users when selecting this option.
 ]=]
 
 --[=[
 	@prop nameLocalizations { [apiTypes.LanguageLocales]: string }?
-	@within Classes.Choice
+	@within Classes.Application.CommandChoice
 
 	Dictionary of localization overrides for the choice name. Keys are valid locale identifiers, values are localized names.
 ]=]
 
 --[=[
 	@prop value string | number
-	@within Classes.Choice
+	@within Classes.Application.CommandChoice
 
 	The value that will be sent to your application when this choice is selected by a user.
 ]=]
@@ -36,7 +36,7 @@ Choice.Interface = {}
 Choice.Prototype = {}
 
 --[=[
-	@within Classes.Choice
+	@within Classes.Application.CommandChoice
 	@private
 
 	Responsible for syncing data to this choice object. This is typically called by the API when this object is
@@ -51,7 +51,7 @@ function Choice.Prototype.sync(self: Choice, choiceData: apiTypes.ApplicationCom
 end
 
 --[=[
-	@within Classes.Choice
+	@within Classes.Application.CommandChoice
 	@private
 
 	Responsible for constructing this class.
