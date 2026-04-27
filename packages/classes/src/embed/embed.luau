@@ -50,49 +50,49 @@
 ]=]
 
 --[=[
-	@prop footer Classes.Footer?
+	@prop footer Classes.Embed.Footer?
 	@within Classes.Embed
 
 	Footer information for the embed
 ]=]
 
 --[=[
-	@prop image Classes.Image?
+	@prop image Classes.Embed.Image?
 	@within Classes.Embed
 
 	Image information for the embed
 ]=]
 
 --[=[
-	@prop thumbnail Classes.Thumbnail?
+	@prop thumbnail Classes.Embed.Thumbnail?
 	@within Classes.Embed
 
 	Thumbnail information for the embed
 ]=]
 
 --[=[
-	@prop video Classes.Video?
+	@prop video Classes.Embed.Video?
 	@within Classes.Embed
 
 	Video information for the embed
 ]=]
 
 --[=[
-	@prop provider Classes.Provider?
+	@prop provider Classes.Embed.Provider?
 	@within Classes.Embed
 
 	Provider information for the embed
 ]=]
 
 --[=[
-	@prop author Classes.Author?
+	@prop author Classes.Embed.Author?
 	@within Classes.Embed
 
 	Author information for the embed
 ]=]
 
 --[=[
-	@prop fields {Classes.Field}?
+	@prop fields {Classes.Embed.Field}?
 	@within Classes.Embed
 
 	Array of embed field objects

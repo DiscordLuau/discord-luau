@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.Author
+	@class Classes.Embed.Author
 	@__index Prototype
 
 	Implementation of the Discord Author class in Luau. This class represents the author of a Discord embed, which can include a name, URL, and icon.
@@ -9,25 +9,25 @@
 
 --[=[
 	@prop name string
-	@within Classes.Author
+	@within Classes.Embed.Author
 	The name of the author.
 ]=]
 
 --[=[
 	@prop url string?
-	@within Classes.Author
+	@within Classes.Embed.Author
 	The URL of the author's profile or website.
 ]=]
 
 --[=[
 	@prop iconUrl string?
-	@within Classes.Author
+	@within Classes.Embed.Author
 	The URL of the author's icon.
 ]=]
 
 --[=[
 	@prop proxyIconUrl string?
-	@within Classes.Author
+	@within Classes.Embed.Author
 	The proxied URL of the author's icon.
 ]=]
 
@@ -39,7 +39,7 @@ Author.Interface = {}
 Author.Prototype = {}
 
 --[=[
-	@within Classes.Author
+	@within Classes.Embed.Author
 	@private
 
 	Responsible for syncing data to this author object. This is typically called by the API when this object is
@@ -56,7 +56,7 @@ function Author.Prototype.sync(self: Author, authorData: apiTypes.EmbedAuthorObj
 end
 
 --[=[
-	@within Classes.Author
+	@within Classes.Embed.Author
 	@private
 
 	Responsible for constructing this class.

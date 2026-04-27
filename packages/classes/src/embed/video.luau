@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.Video
+	@class Classes.Embed.Video
 	@__index Prototype
 
 	Implementation of the Discord Video class in Luau
@@ -9,25 +9,25 @@
 
 --[=[
 	@prop url string
-	@within Classes.Video
+	@within Classes.Embed.Video
 	The source URL of the video
 ]=]
 
 --[=[
 	@prop proxyUrl string?
-	@within Classes.Video
+	@within Classes.Embed.Video
 	A proxied URL of the video
 ]=]
 
 --[=[
 	@prop height number?
-	@within Classes.Video
+	@within Classes.Embed.Video
 	Height of the video
 ]=]
 
 --[=[
 	@prop width number?
-	@within Classes.Video
+	@within Classes.Embed.Video
 	Width of the video
 ]=]
 
@@ -39,7 +39,7 @@ Video.Interface = {}
 Video.Prototype = {}
 
 --[=[
-	@within Classes.Video
+	@within Classes.Embed.Video
 	@private
 
 	Responsible for syncing data to this video object. This is typically called by the API when this object is
@@ -56,7 +56,7 @@ function Video.Prototype.sync(self: Video, videoData: apiTypes.EmbedVideoObject)
 end
 
 --[=[
-	@within Classes.Video
+	@within Classes.Embed.Video
 	@private
 
 	Responsible for constructing this class.

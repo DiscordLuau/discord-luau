@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.Image
+	@class Classes.Embed.Image
 	@__index Prototype
 
 	Implementation of the Discord Image class in Luau
@@ -9,28 +9,28 @@
 
 --[=[
 	@prop url string
-	@within Classes.Image
+	@within Classes.Embed.Image
 
 	The source URL of the image. Only supports HTTP(S).
 ]=]
 
 --[=[
 	@prop proxyUrl string?
-	@within Classes.Image
+	@within Classes.Embed.Image
 
 	A proxied URL of the image. This is used to prevent malicious images from being loaded directly.
 ]=]
 
 --[=[
 	@prop height number?
-	@within Classes.Image
+	@within Classes.Embed.Image
 
 	The height of the image in pixels.
 ]=]
 
 --[=[
 	@prop width number?
-	@within Classes.Image
+	@within Classes.Embed.Image
 
 	The width of the image in pixels.
 ]=]
@@ -43,7 +43,7 @@ Image.Interface = {}
 Image.Prototype = {}
 
 --[=[
-	@within Classes.Image
+	@within Classes.Embed.Image
 	@private
 
 	Responsible for syncing data to this image object. This is typically called by the API when this object is
@@ -60,7 +60,7 @@ function Image.Prototype.sync(self: Image, imageData: apiTypes.EmbedImageObject)
 end
 
 --[=[
-	@within Classes.Image
+	@within Classes.Embed.Image
 	@private
 
 	Responsible for constructing this class.

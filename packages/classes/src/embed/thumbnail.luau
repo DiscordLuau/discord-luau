@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.Thumbnail
+	@class Classes.Embed.Thumbnail
 	@__index Prototype
 
 	Implementation of the Discord Thumbnail class in Luau
@@ -9,28 +9,28 @@
 
 --[=[
 	@prop url string
-	@within Classes.Thumbnail
+	@within Classes.Embed.Thumbnail
 
 	The source URL of the thumbnail
 ]=]
 
 --[=[
 	@prop proxyUrl string?
-	@within Classes.Thumbnail
+	@within Classes.Embed.Thumbnail
 
 	A proxied URL of the thumbnail
 ]=]
 
 --[=[
 	@prop height number?
-	@within Classes.Thumbnail
+	@within Classes.Embed.Thumbnail
 
 	Height of the thumbnail
 ]=]
 
 --[=[
 	@prop width number?
-	@within Classes.Thumbnail
+	@within Classes.Embed.Thumbnail
 
 	Width of the thumbnail
 ]=]
@@ -43,7 +43,7 @@ Thumbnail.Interface = {}
 Thumbnail.Prototype = {}
 
 --[=[
-	@within Classes.Thumbnail
+	@within Classes.Embed.Thumbnail
 	@private
 
 	Responsible for syncing data to this thumbnail object. This is typically called by the API when this object is
@@ -60,7 +60,7 @@ function Thumbnail.Prototype.sync(self: Thumbnail, thumbnailData: apiTypes.Embed
 end
 
 --[=[
-	@within Classes.Thumbnail
+	@within Classes.Embed.Thumbnail
 	@private
 
 	Responsible for constructing this class.
