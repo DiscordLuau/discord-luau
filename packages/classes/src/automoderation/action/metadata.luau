@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.ActionMetadata
+	@class Classes.AutoModeration.ActionMetadata
 	@__index Prototype
 
 	Implementation of the Discord ActionMetadata class in Luau
@@ -9,7 +9,7 @@
 
 --[=[
 	@prop channelId string
-	@within Classes.ActionMetadata
+	@within Classes.AutoModeration.ActionMetadata
 
 	The ID of the channel to which content should be logged. This is required when the action type is set to
 	SEND_ALERT_MESSAGE.
@@ -17,14 +17,14 @@
 
 --[=[
 	@prop durationSeconds number
-	@within Classes.ActionMetadata
+	@within Classes.AutoModeration.ActionMetadata
 
 	The timeout duration in seconds. This is required when the action type is set to TIMEOUT.
 ]=]
 
 --[=[
 	@prop customMessage string?
-	@within Classes.ActionMetadata
+	@within Classes.AutoModeration.ActionMetadata
 
 	A custom message that will be displayed to members when their message is blocked. Maximum 150 characters.
 ]=]
@@ -37,7 +37,7 @@ ActionMetadata.Interface = {}
 ActionMetadata.Prototype = {}
 
 --[=[
-	@within Classes.ActionMetadata
+	@within Classes.AutoModeration.ActionMetadata
 	@private
 
 	Responsible for syncing data to this action metadata object. This is typically called by the API when this object is
@@ -55,7 +55,7 @@ function ActionMetadata.Prototype.sync(
 end
 
 --[=[
-	@within Classes.ActionMetadata
+	@within Classes.AutoModeration.ActionMetadata
 	@private
 
 	Responsible for constructing this class.
