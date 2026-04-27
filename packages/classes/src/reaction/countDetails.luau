@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.CountDetails
+	@class Classes.Reaction.CountDetails
 	@__index Prototype
 
 	Implementation of the Discord CountDetails class in Luau
@@ -9,13 +9,13 @@
 
 --[=[
 	@prop burst number
-	@within Classes.CountDetails
+	@within Classes.Reaction.CountDetails
 	The number of burst reactions.
 ]=]
 
 --[=[
 	@prop normal number
-	@within Classes.CountDetails
+	@within Classes.Reaction.CountDetails
 	The number of normal reactions.
 ]=]
 
@@ -27,7 +27,7 @@ CountDetails.Interface = {}
 CountDetails.Prototype = {}
 
 --[=[
-	@within Classes.CountDetails
+	@within Classes.Reaction.CountDetails
 	@private
 
 	Responsible for syncing data to this count details object. This is typically called by the API when this object is
@@ -40,7 +40,7 @@ function CountDetails.Prototype.sync(self: CountDetails, reactionCountDetailsDat
 end
 
 --[=[
-	@within Classes.CountDetails
+	@within Classes.Reaction.CountDetails
 	@private
 
 	Responsible for constructing this class.
