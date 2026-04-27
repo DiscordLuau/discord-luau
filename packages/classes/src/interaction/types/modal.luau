@@ -1,6 +1,8 @@
 --[=[
-	@class Classes.Modal
+	@class Classes.Interactions.Modal
 	@__index Prototype
+	@tag inherit:Classes.Interactions.InteractionBehaviour
+	@tag inherit:Classes.Interactions.Interactable
 
 	Implementation of the Discord Modal Interaction class in Luau
 
@@ -27,7 +29,7 @@ Modal.Behaviours = {
 }
 
 --[=[
-	@within Classes.Modal
+	@within Classes.Interactions.Modal
 	@private
 
 	Gets the content of a text input component with the specified custom ID.
@@ -49,7 +51,7 @@ function Modal.Prototype.getContent(self: Modal, customId: string): string?
 end
 
 --[=[
-	@within Classes.Modal
+	@within Classes.Interactions.Modal
 	@private
 
 	Responsible for syncing data to this modal interaction object. This is typically called by the API when this object is
@@ -63,7 +65,7 @@ function Modal.Prototype.sync(self: Modal, interactionData: apiTypes.Interaction
 end
 
 --[=[
-	@within Classes.Modal
+	@within Classes.Interactions.Modal
 	@private
 
 	Responsible for constructing this class.

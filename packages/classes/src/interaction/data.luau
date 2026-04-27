@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.Data
+	@class Classes.Interactions.Data
 	@__index Prototype
 
 	Implementation of the Discord Data class in Luau
@@ -9,70 +9,70 @@
 
 --[=[
 	@prop type string
-	@within Classes.Data
+	@within Classes.Interactions.Data
 
 	The type of interaction this data object represents. This is a string representation of the interaction type.
 ]=]
 
 --[=[
 	@prop id string
-	@within Classes.Data
+	@within Classes.Interactions.Data
 
 	The unique identifier for this interaction data object.
 ]=]
 
 --[=[
 	@prop name string
-	@within Classes.Data
+	@within Classes.Interactions.Data
 
 	The name of the interaction, typically representing the command or component name.
 ]=]
 
 --[=[
-	@prop options { Classes.DataOption }
-	@within Classes.Data
+	@prop options { Classes.Interactions.DataOption }
+	@within Classes.Interactions.Data
 
 	An array of data options associated with this interaction. Contains the parsed arguments or choices.
 ]=]
 
 --[=[
 	@prop resolved Classes.Resolved?
-	@within Classes.Data
+	@within Classes.Interactions.Data
 
 	Contains resolved objects from the interaction data, such as users, members, roles, or channels.
 ]=]
 
 --[=[
 	@prop guildId string?
-	@within Classes.Data
+	@within Classes.Interactions.Data
 
 	The ID of the guild where the interaction occurred. Will be nil for DM interactions.
 ]=]
 
 --[=[
 	@prop targetId string?
-	@within Classes.Data
+	@within Classes.Interactions.Data
 
 	The ID of the targeted entity in the interaction, if applicable.
 ]=]
 
 --[=[
 	@prop customId string?
-	@within Classes.Data
+	@within Classes.Interactions.Data
 
 	The custom identifier for this interaction, used primarily with message components.
 ]=]
 
 --[=[
 	@prop componentType string?
-	@within Classes.Data
+	@within Classes.Interactions.Data
 
 	The type of component this interaction represents, if it's a component interaction.
 ]=]
 
 --[=[
-	@prop components { Classes.Button | Classes.TextInput | Classes.SelectMenu | Classes.ActionRow }?
-	@within Classes.Data
+	@prop components { Classes.Message.Button | Classes.Message.TextInput | Classes.Message.SelectMenu | Classes.Message.ActionRow }?
+	@within Classes.Interactions.Data
 
 	An array of component objects that were included in this interaction.
 ]=]
@@ -95,7 +95,7 @@ Data.Interface = {}
 Data.Prototype = {}
 
 --[=[
-	@within Classes.Data
+	@within Classes.Interactions.Data
 	@private
 
 	Responsible for syncing data to this interaction data object. This is typically called by the API when this object is
@@ -153,7 +153,7 @@ function Data.Prototype.sync(self: Data, dataObject: apiTypes.InteractionDataObj
 end
 
 --[=[
-	@within Classes.Data
+	@within Classes.Interactions.Data
 	@private
 
 	Responsible for constructing this class.

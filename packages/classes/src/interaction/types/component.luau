@@ -1,6 +1,8 @@
 --[=[
-	@class Classes.Component
+	@class Classes.Interactions.Component
 	@__index Prototype
+	@tag inherit:Classes.Interactions.InteractionBehaviour
+	@tag inherit:Classes.Interactions.Interactable
 
 	Implementation of the Discord Component Interaction class in Luau
 
@@ -24,7 +26,7 @@ Component.Behaviours = {
 }
 
 --[=[
-	@within Classes.Component
+	@within Classes.Interactions.Component
 	@private
 
 	Responsible for syncing data to this component interaction object. This is typically called by the API when this object is
@@ -38,7 +40,7 @@ function Component.Prototype.sync(self: Component, interactionData: apiTypes.Int
 end
 
 --[=[
-	@within Classes.Component
+	@within Classes.Interactions.Component
 	@private
 
 	Responsible for constructing this class.
@@ -59,12 +61,12 @@ end
 
 --[=[
 	@prop isDeferred boolean
-	@within Classes.Component
+	@within Classes.Interactions.Component
 ]=]
 
 --[=[
 	@prop state State
-	@within Classes.Component
+	@within Classes.Interactions.Component
 ]=]
 
 export type Component = typeof(Component.Prototype) & {
