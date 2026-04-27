@@ -16,7 +16,7 @@
 
 --[=[
 	@within Classes.Guild
-	@prop roles {Classes.Role}
+	@prop roles {Classes.Guild.Role}
 	Collection of roles in the guild
 ]=]
 

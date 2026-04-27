@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.GuildPreview
+	@class Classes.Guild.Preview
 	@__index Prototype
 
 	Implementation of the Discord Guild Preview class in Luau
@@ -9,77 +9,77 @@
 
 --[=[
 	@prop id string
-	@within Classes.GuildPreview
+	@within Classes.Guild.Preview
 
 	The unique identifier for this guild preview
 ]=]
 
 --[=[
 	@prop name string
-	@within Classes.GuildPreview
+	@within Classes.Guild.Preview
 
 	The name of the guild
 ]=]
 
 --[=[
 	@prop icon string?
-	@within Classes.GuildPreview
+	@within Classes.Guild.Preview
 
 	The icon hash of the guild
 ]=]
 
 --[=[
 	@prop splash string?
-	@within Classes.GuildPreview
+	@within Classes.Guild.Preview
 
 	The splash hash of the guild
 ]=]
 
 --[=[
 	@prop discoverySplash string?
-	@within Classes.GuildPreview
+	@within Classes.Guild.Preview
 
 	The discovery splash hash of the guild
 ]=]
 
 --[=[
 	@prop emojis {Classes.Emoji}
-	@within Classes.GuildPreview
+	@within Classes.Guild.Preview
 
 	Array of custom emoji objects for this guild
 ]=]
 
 --[=[
 	@prop features {api_types.GuildFeature}
-	@within Classes.GuildPreview
+	@within Classes.Guild.Preview
 
 	Array of guild feature strings
 ]=]
 
 --[=[
 	@prop approximateMemberCount number
-	@within Classes.GuildPreview
+	@within Classes.Guild.Preview
 
 	Approximate number of members in this guild
 ]=]
 
 --[=[
 	@prop approximatePresenceCount number
-	@within Classes.GuildPreview
+	@within Classes.Guild.Preview
 
 	Approximate number of online members in this guild
 ]=]
 
 --[=[
 	@prop description string?
-	@within Classes.GuildPreview
+	@within Classes.Guild.Preview
 
 	The description of the guild
 ]=]
 
 --[=[
 	@prop stickers {Classes.Sticker}
-	@within Classes.GuildPreview
+	@within Classes.Guild.Preview
 
 	Array of custom sticker objects for this guild
 ]=]
@@ -95,7 +95,7 @@ Preview.Interface = {}
 Preview.Prototype = {}
 
 --[=[
-	@within Classes.GuildPreview
+	@within Classes.Guild.Preview
 	@private
 
 	Responsible for syncing data to this guild preview object. This is typically called by the API when this object is
@@ -137,7 +137,7 @@ function Preview.Prototype.sync(self: Preview, previewData: apiTypes.GuildPrevie
 end
 
 --[=[
-	@within Classes.GuildPreview
+	@within Classes.Guild.Preview
 	@private
 
 	Responsible for constructing this class.

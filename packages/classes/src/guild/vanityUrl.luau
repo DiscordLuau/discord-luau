@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.VanityUrl
+	@class Classes.Guild.VanityUrl
 	@__index Prototype
 
 	Implementation of the Discord VanityUrl class in Luau
@@ -9,14 +9,14 @@
 
 --[=[
 	@prop code string
-	@within Classes.VanityUrl
+	@within Classes.Guild.VanityUrl
 
 	The unique code for this vanity URL. This code appears in the URL that users can use to join the guild.
 ]=]
 
 --[=[
 	@prop uses number
-	@within Classes.VanityUrl
+	@within Classes.Guild.VanityUrl
 
 	The number of times this vanity URL has been used to join the guild.
 ]=]
@@ -29,7 +29,7 @@ VanityUrl.Interface = {}
 VanityUrl.Prototype = {}
 
 --[=[
-	@within Classes.VanityUrl
+	@within Classes.Guild.VanityUrl
 	@private
 
 	Responsible for syncing data to this vanity URL object. This is typically called by the API when this object is
@@ -42,7 +42,7 @@ function VanityUrl.Prototype.sync(self: VanityUrl, vanityUrlData: apiTypes.Guild
 end
 
 --[=[
-	@within Classes.VanityUrl
+	@within Classes.Guild.VanityUrl
 	@private
 
 	Responsible for constructing this class.

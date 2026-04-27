@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.VoiceRegion
+	@class Classes.Guild.VoiceRegion
 	@__index Prototype
 
 	Implementation of the Discord VoiceRegion class in Luau
@@ -9,35 +9,35 @@
 
 --[=[
 	@prop id string
-	@within Classes.VoiceRegion
+	@within Classes.Guild.VoiceRegion
 
 	Unique ID for the voice region
 ]=]
 
 --[=[
 	@prop name string
-	@within Classes.VoiceRegion
+	@within Classes.Guild.VoiceRegion
 
 	Name of the voice region
 ]=]
 
 --[=[
 	@prop optimal boolean
-	@within Classes.VoiceRegion
+	@within Classes.Guild.VoiceRegion
 
 	True if this is an optimal voice region for the current user
 ]=]
 
 --[=[
 	@prop deprecated boolean
-	@within Classes.VoiceRegion
+	@within Classes.Guild.VoiceRegion
 
 	Whether this is a deprecated voice region
 ]=]
 
 --[=[
 	@prop custom boolean
-	@within Classes.VoiceRegion
+	@within Classes.Guild.VoiceRegion
 
 	Whether this is a custom voice region (used for events/etc)
 ]=]
@@ -50,7 +50,7 @@ VoiceRegion.Interface = {}
 VoiceRegion.Prototype = {}
 
 --[=[
-	@within Classes.VoiceRegion
+	@within Classes.Guild.VoiceRegion
 	@private
 
 	Responsible for syncing data to this voice region object. This is typically called by the API when this object is
@@ -69,7 +69,7 @@ function VoiceRegion.Prototype.sync(self: VoiceRegion, voiceRegionData: apiTypes
 end
 
 --[=[
-	@within Classes.VoiceRegion
+	@within Classes.Guild.VoiceRegion
 	@private
 
 	Responsible for constructing this class.

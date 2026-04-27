@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.Ban
+	@class Classes.Guild.Ban
 	@__index Prototype
 
 	Implementation of the Discord Ban class in Luau
@@ -9,7 +9,7 @@
 
 --[=[
 	@prop reason string?
-	@within Classes.Ban
+	@within Classes.Guild.Ban
 	
 	The reason provided when banning the user. This field may be null if no reason was provided when creating
 	the ban.
@@ -17,19 +17,19 @@
 
 --[=[
 	@prop user Classes.User
-	@within Classes.Ban
+	@within Classes.Guild.Ban
 	
 	The banned user object containing information about the user who was banned from the guild.
 ]=]
 
 --[=[
 	@prop state lune.State
-	@within Classes.Ban
+	@within Classes.Guild.Ban
 ]=]
 
 --[=[
 	@prop guildId string
-	@within Classes.Ban
+	@within Classes.Guild.Ban
 ]=]
 
 local apiTypes = require("../../luau_packages/api_types")
@@ -45,7 +45,7 @@ Ban.Interface = {}
 Ban.Prototype = {}
 
 --[=[
-	@within Classes.Ban
+	@within Classes.Guild.Ban
 	Remove the ban for a user. Requires the BAN_MEMBERS permissions.
 ]=]
 function Ban.Prototype.removeAsync(self: Ban)
@@ -61,7 +61,7 @@ function Ban.Prototype.removeAsync(self: Ban)
 end
 
 --[=[
-	@within Classes.Ban
+	@within Classes.Guild.Ban
 	@private
 
 	Responsible for syncing data to this ban object. This is typically called by the API when this object is
@@ -74,7 +74,7 @@ function Ban.Prototype.sync(self: Ban, banData: apiTypes.BanObject)
 end
 
 --[=[
-	@within Classes.Ban
+	@within Classes.Guild.Ban
 	@private
 
 	Responsible for constructing this class.

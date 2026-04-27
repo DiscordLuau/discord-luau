@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.WelcomeScreen
+	@class Classes.Guild.WelcomeScreen
 	@__index Prototype
 
 	Implementation of the Discord WelcomeScreen class in Luau
@@ -8,8 +8,8 @@
 ]=]
 
 --[=[
-	@prop welcomeChannels { Classes.WelcomeScreenChannel }
-	@within Classes.WelcomeScreen
+	@prop welcomeChannels { Classes.Guild.WelcomeScreenChannel }
+	@within Classes.Guild.WelcomeScreen
 
 	An array of welcome screen channel objects linked to the guild's welcome screen. These channels are shown to new members
 	when they join the guild.
@@ -17,7 +17,7 @@
 
 --[=[
 	@prop description string?
-	@within Classes.WelcomeScreen
+	@within Classes.Guild.WelcomeScreen
 
 	The server description shown in the welcome screen. This description provides new members with information about
 	the guild when they first join.
@@ -33,7 +33,7 @@ WelcomeScreen.Interface = {}
 WelcomeScreen.Prototype = {}
 
 --[=[
-	@within Classes.WelcomeScreen
+	@within Classes.Guild.WelcomeScreen
 	@private
 
 	Responsible for syncing data to this welcome screen object. This is typically called by the API when this object is
@@ -52,7 +52,7 @@ function WelcomeScreen.Prototype.sync(self: WelcomeScreen, welcomeScreenData: ap
 end
 
 --[=[
-	@within Classes.WelcomeScreen
+	@within Classes.Guild.WelcomeScreen
 	@private
 
 	Responsible for constructing this class.

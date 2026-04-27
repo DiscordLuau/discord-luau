@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.RoleTag
+	@class Classes.Guild.RoleTag
 	@__index Prototype
 
 	Implementation of the Discord RoleTag class in Luau
@@ -9,37 +9,37 @@
 
 --[=[
 	@prop botId string?
-	@within Classes.RoleTag
+	@within Classes.Guild.RoleTag
 	The ID of the bot this role belongs to
 ]=]
 
 --[=[
 	@prop integrationId string?
-	@within Classes.RoleTag
+	@within Classes.Guild.RoleTag
 	The ID of the integration this role belongs to
 ]=]
 
 --[=[
 	@prop premiumSubscriber nil?
-	@within Classes.RoleTag
+	@within Classes.Guild.RoleTag
 	Whether this is the guild's premium subscriber role
 ]=]
 
 --[=[
 	@prop subscriptionListingId string?
-	@within Classes.RoleTag
+	@within Classes.Guild.RoleTag
 	The ID of the subscription listing this role is for
 ]=]
 
 --[=[
 	@prop availableForPurchase nil?
-	@within Classes.RoleTag
+	@within Classes.Guild.RoleTag
 	Whether this role is available for purchase
 ]=]
 
 --[=[
 	@prop guildConnections nil?
-	@within Classes.RoleTag
+	@within Classes.Guild.RoleTag
 	Whether this role is a guild's linked role
 ]=]
 
@@ -51,7 +51,7 @@ RoleTag.Interface = {}
 RoleTag.Prototype = {}
 
 --[=[
-	@within Classes.RoleTag
+	@within Classes.Guild.RoleTag
 	@private
 
 	Responsible for syncing data to this role tag object. This is typically called by the API when this object is
@@ -72,7 +72,7 @@ function RoleTag.Prototype.sync(self: RoleTag, roleTagData: apiTypes.GuildRoleTa
 end
 
 --[=[
-	@within Classes.RoleTag
+	@within Classes.Guild.RoleTag
 	@private
 
 	Responsible for constructing this class.

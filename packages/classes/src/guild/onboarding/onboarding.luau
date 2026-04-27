@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.Onboarding
+	@class Classes.Guild.Onboarding
 	@__index Prototype
 
 	Implementation of the Discord Onboarding class in Luau
@@ -9,31 +9,31 @@
 
 --[=[
 	@prop guildId string
-	@within Classes.Onboarding
+	@within Classes.Guild.Onboarding
 	The unique identifier of the guild this onboarding object belongs to
 ]=]
 
 --[=[
-	@prop prompts { Classes.Prompt }
-	@within Classes.Onboarding
+	@prop prompts { Classes.Guild.OnboardingPrompt }
+	@within Classes.Guild.Onboarding
 	Array of prompts shown during onboarding and in customize community
 ]=]
 
 --[=[
 	@prop defaultChannelIds { string }
-	@within Classes.Onboarding
+	@within Classes.Guild.Onboarding
 	Array of channel IDs that members get opted into automatically
 ]=]
 
 --[=[
 	@prop enabled boolean
-	@within Classes.Onboarding
+	@within Classes.Guild.Onboarding
 	Whether onboarding is enabled in the guild
 ]=]
 
 --[=[
 	@prop mode apiTypes.OnboardingMode
-	@within Classes.Onboarding
+	@within Classes.Guild.Onboarding
 	Current mode of onboarding, determines what users can see and interact with
 ]=]
 
@@ -47,7 +47,7 @@ Onboarding.Interface = {}
 Onboarding.Prototype = {}
 
 --[=[
-	@within Classes.Onboarding
+	@within Classes.Guild.Onboarding
 	@private
 
 	Responsible for syncing data to this onboarding object. This is typically called by the API when this object is
@@ -72,7 +72,7 @@ function Onboarding.Prototype.sync(self: Onboarding, onboardingData: apiTypes.Gu
 end
 
 --[=[
-	@within Classes.Onboarding
+	@within Classes.Guild.Onboarding
 	@private
 
 	Responsible for constructing this class.

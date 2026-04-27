@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.Account
+	@class Classes.Guild.IntegrationAccount
 	@__index Prototype
 
 	Implementation of the Discord Integration Account class in Luau
@@ -9,14 +9,14 @@
 
 --[=[
 	@prop id string
-	@within Classes.Account
+	@within Classes.Guild.IntegrationAccount
 
 	The unique identifier for this integration account
 ]=]
 
 --[=[
 	@prop name string
-	@within Classes.Account
+	@within Classes.Guild.IntegrationAccount
 
 	The name of the integration account
 ]=]
@@ -29,7 +29,7 @@ Account.Interface = {}
 Account.Prototype = {}
 
 --[=[
-	@within Classes.Account
+	@within Classes.Guild.IntegrationAccount
 	@private
 
 	Responsible for syncing data to this account object. This is typically called by the API when this object is
@@ -42,7 +42,7 @@ function Account.Prototype.sync(self: Account, accountData: apiTypes.Integration
 end
 
 --[=[
-	@within Classes.Account
+	@within Classes.Guild.IntegrationAccount
 	@private
 
 	Responsible for constructing this class.
