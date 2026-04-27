@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.AnswerCount
+	@class Classes.Message.PollAnswerCount
 	@__index Prototype
 
 	Implementation of the Discord AnswerCount class in Luau
@@ -9,19 +9,19 @@
 
 --[=[
 	@prop id number
-	@within Classes.AnswerCount
+	@within Classes.Message.PollAnswerCount
 	The ID of the answer being counted
 ]=]
 
 --[=[
 	@prop count number
-	@within Classes.AnswerCount
+	@within Classes.Message.PollAnswerCount
 	The number of votes for this answer
 ]=]
 
 --[=[
 	@prop meVoted boolean
-	@within Classes.AnswerCount
+	@within Classes.Message.PollAnswerCount
 	Whether the current user has voted for this answer
 ]=]
 
@@ -33,7 +33,7 @@ AnswerCount.Interface = {}
 AnswerCount.Prototype = {}
 
 --[=[
-	@within Classes.AnswerCount
+	@within Classes.Message.PollAnswerCount
 	@private
 
 	Responsible for syncing data to this answer count object. This is typically called by the API when this object is
@@ -48,7 +48,7 @@ function AnswerCount.Prototype.sync(self: AnswerCount, answerCountData: apiTypes
 end
 
 --[=[
-	@within Classes.AnswerCount
+	@within Classes.Message.PollAnswerCount
 	@private
 
 	Responsible for constructing this class.

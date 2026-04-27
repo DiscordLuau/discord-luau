@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.RoleSubscriptionData
+	@class Classes.Message.RoleSubscriptionData
 	@__index Prototype
 
 	Implementation of the Discord RoleSubscriptionData class in Luau
@@ -9,25 +9,25 @@
 
 --[=[
 	@prop roleSubscriptionListingId string
-	@within Classes.RoleSubscriptionData
+	@within Classes.Message.RoleSubscriptionData
 	The ID of the role subscription listing.
 ]=]
 
 --[=[
 	@prop tierName string
-	@within Classes.RoleSubscriptionData
+	@within Classes.Message.RoleSubscriptionData
 	The name of the subscription tier.
 ]=]
 
 --[=[
 	@prop totalMonthsSubscribed number
-	@within Classes.RoleSubscriptionData
+	@within Classes.Message.RoleSubscriptionData
 	The total number of months this user has been subscribed.
 ]=]
 
 --[=[
 	@prop isRenewal boolean
-	@within Classes.RoleSubscriptionData
+	@within Classes.Message.RoleSubscriptionData
 	Whether this is a renewal of an existing subscription.
 ]=]
 
@@ -39,7 +39,7 @@ RoleSubscriptionData.Interface = {}
 RoleSubscriptionData.Prototype = {}
 
 --[=[
-	@within Classes.RoleSubscriptionData
+	@within Classes.Message.RoleSubscriptionData
 	@private
 
 	Responsible for syncing data to this role subscription data object. This is typically called by the API when this object is
@@ -59,7 +59,7 @@ function RoleSubscriptionData.Prototype.sync(
 end
 
 --[=[
-	@within Classes.RoleSubscriptionData
+	@within Classes.Message.RoleSubscriptionData
 	@private
 
 	Responsible for constructing this class.

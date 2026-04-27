@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.SelectMenu
+	@class Classes.Message.SelectMenu
 	@__index Prototype
 
 	Implementation of the Discord SelectMenu class in Luau
@@ -9,63 +9,63 @@
 
 --[=[
 	@prop type number
-	@within Classes.SelectMenu
+	@within Classes.Message.SelectMenu
 
 	The type of select menu component. This will be a number that represents the type of select menu.
 ]=]
 
 --[=[
 	@prop customId string
-	@within Classes.SelectMenu
+	@within Classes.Message.SelectMenu
 
 	A developer-defined identifier for the select menu, max 100 characters.
 ]=]
 
 --[=[
 	@prop options {Classes.Option}?
-	@within Classes.SelectMenu
+	@within Classes.Message.SelectMenu
 
 	Array of select menu options that users can choose from. Maximum of 25 items.
 ]=]
 
 --[=[
 	@prop apiTypes {api_types.ChannelType}?
-	@within Classes.SelectMenu
+	@within Classes.Message.SelectMenu
 
 	List of channel types to include in the select menu. Only applicable for channel select menus.
 ]=]
 
 --[=[
 	@prop placeholder string?
-	@within Classes.SelectMenu
+	@within Classes.Message.SelectMenu
 
 	Custom placeholder text shown when no option is selected, max 150 characters.
 ]=]
 
 --[=[
-	@prop defaultValues {Classes.DefaultValue}?
-	@within Classes.SelectMenu
+	@prop defaultValues {Classes.Message.SelectMenuDefaultValue}?
+	@within Classes.Message.SelectMenu
 
 	Array of default values for auto-populated select menus.
 ]=]
 
 --[=[
 	@prop minValues number?
-	@within Classes.SelectMenu
+	@within Classes.Message.SelectMenu
 
 	The minimum number of items that must be chosen. Default 1, min 0, max 25.
 ]=]
 
 --[=[
 	@prop maxValues number?
-	@within Classes.SelectMenu
+	@within Classes.Message.SelectMenu
 
 	The maximum number of items that can be chosen. Default 1, max 25.
 ]=]
 
 --[=[
 	@prop disabled boolean?
-	@within Classes.SelectMenu
+	@within Classes.Message.SelectMenu
 
 	Whether this select menu is disabled. Defaults to false if not set.
 ]=]
@@ -81,7 +81,7 @@ SelectMenu.Interface = {}
 SelectMenu.Prototype = {}
 
 --[=[
-	@within Classes.SelectMenu
+	@within Classes.Message.SelectMenu
 	@private
 
 	Responsible for syncing data to this select menu object. This is typically called by the API when this object is
@@ -124,7 +124,7 @@ function SelectMenu.Prototype.sync(self: SelectMenu, selectMenuData: apiTypes.Se
 end
 
 --[=[
-	@within Classes.SelectMenu
+	@within Classes.Message.SelectMenu
 	@private
 
 	Responsible for constructing this class.

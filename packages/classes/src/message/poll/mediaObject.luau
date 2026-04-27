@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.MediaObject
+	@class Classes.Message.PollMediaObject
 	@__index Prototype
 
 	Implementation of the Discord MediaObject class in Luau
@@ -9,13 +9,13 @@
 
 --[=[
 	@prop text string?
-	@within Classes.MediaObject
+	@within Classes.Message.PollMediaObject
 	The text content of the media object
 ]=]
 
 --[=[
 	@prop emoji Classes.Emoji?
-	@within Classes.MediaObject
+	@within Classes.Message.PollMediaObject
 	The emoji attached to the media object, if any
 ]=]
 
@@ -29,7 +29,7 @@ MediaObject.Interface = {}
 MediaObject.Prototype = {}
 
 --[=[
-	@within Classes.MediaObject
+	@within Classes.Message.PollMediaObject
 	@private
 
 	Responsible for syncing data to this media object. This is typically called by the API when this object is
@@ -42,7 +42,7 @@ function MediaObject.Prototype.sync(self: MediaObject, mediaData: apiTypes.PollM
 end
 
 --[=[
-	@within Classes.MediaObject
+	@within Classes.Message.PollMediaObject
 	@private
 
 	Responsible for constructing this class.

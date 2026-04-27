@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.Poll
+	@class Classes.Message.Poll
 	@__index Prototype
 
 	Implementation of the Discord Poll class in Luau
@@ -8,38 +8,38 @@
 ]=]
 
 --[=[
-	@prop question Classes.MediaObject
-	@within Classes.Poll
+	@prop question Classes.Message.PollMediaObject
+	@within Classes.Message.Poll
 	The question being asked in the poll
 ]=]
 
 --[=[
-	@prop answers { Classes.Answer }
-	@within Classes.Poll
+	@prop answers { Classes.Message.PollAnswer }
+	@within Classes.Message.Poll
 	Array of possible answers for the poll
 ]=]
 
 --[=[
 	@prop expiry DateTime
-	@within Classes.Poll
+	@within Classes.Message.Poll
 	When the poll will expire and close for voting
 ]=]
 
 --[=[
 	@prop allowMultiselect boolean
-	@within Classes.Poll
+	@within Classes.Message.Poll
 	Whether users can select multiple answers
 ]=]
 
 --[=[
 	@prop layoutType Classes.PollLayoutType
-	@within Classes.Poll
+	@within Classes.Message.Poll
 	The layout style used to display the poll
 ]=]
 
 --[=[
-	@prop results Classes.Results
-	@within Classes.Poll
+	@prop results Classes.Message.PollResults
+	@within Classes.Message.Poll
 	The current results of the poll
 ]=]
 
@@ -57,7 +57,7 @@ Poll.Interface = {}
 Poll.Prototype = {}
 
 --[=[
-	@within Classes.Poll
+	@within Classes.Message.Poll
 	@private
 
 	Responsible for syncing data to this poll object. This is typically called by the API when this object is
@@ -84,7 +84,7 @@ function Poll.Prototype.sync(self: Poll, pollData: apiTypes.PollObject)
 end
 
 --[=[
-	@within Classes.Poll
+	@within Classes.Message.Poll
 	@private
 
 	Responsible for constructing this class.

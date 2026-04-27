@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.Results
+	@class Classes.Message.PollResults
 	@__index Prototype
 
 	Implementation of the Discord Results class in Luau
@@ -9,13 +9,13 @@
 
 --[=[
 	@prop isFinalized boolean
-	@within Classes.Results
+	@within Classes.Message.PollResults
 	Whether the poll results are finalized and can no longer be updated
 ]=]
 
 --[=[
-	@prop answerCounts { Classes.AnswerCount }
-	@within Classes.Results
+	@prop answerCounts { Classes.Message.PollAnswerCount }
+	@within Classes.Message.PollResults
 	Array of answer counts for each poll option
 ]=]
 
@@ -29,7 +29,7 @@ Results.Interface = {}
 Results.Prototype = {}
 
 --[=[
-	@within Classes.Results
+	@within Classes.Message.PollResults
 	@private
 
 	Responsible for syncing data to this results object. This is typically called by the API when this object is
@@ -48,7 +48,7 @@ function Results.Prototype.sync(self: Results, resultsData: apiTypes.PollResultO
 end
 
 --[=[
-	@within Classes.Results
+	@within Classes.Message.PollResults
 	@private
 
 	Responsible for constructing this class.

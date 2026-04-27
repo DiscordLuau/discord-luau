@@ -50,19 +50,19 @@
 ]=]
 
 --[=[
-	@prop mentionChannels { Classes.ChannelMention }
+	@prop mentionChannels { Classes.Channels.ChannelMention }
 	@within Classes.Message
 	Channels specifically mentioned in this message.
 ]=]
 
 --[=[
-	@prop mentionRoles { Classes.Role }
+	@prop mentionRoles { Classes.Guild.Role }
 	@within Classes.Message
 	Roles specifically mentioned in this message.
 ]=]
 
 --[=[
-	@prop mentionChannels { Classes.ChannelMention }
+	@prop mentionChannels { Classes.Channels.ChannelMention }
 	@within Classes.Message
 	Channels specifically mentioned in this message.
 ]=]
@@ -128,7 +128,7 @@
 ]=]
 
 --[=[
-	@prop messageReference Classes.Reference
+	@prop messageReference Classes.Message.Reference
 	@within Classes.Message
 	Reference data for crossposted messages and replies.
 ]=]
@@ -140,7 +140,7 @@
 ]=]
 
 --[=[
-	@prop interactionMetadata Classes.IneractionMetadata
+	@prop interactionMetadata Classes.Message.InteractionMetadata
 	@within Classes.Message
 	Metadata for interaction messages.
 ]=]
@@ -152,13 +152,13 @@
 ]=]
 
 --[=[
-	@prop components { Classes.TextInput | Classes.SelectMenu | Classes.ActionRow | Classes.Button }
+	@prop components { Classes.Message.TextInput | Classes.Message.SelectMenu | Classes.Message.ActionRow | Classes.Message.Button }
 	@within Classes.Message
 	Components attached to the message.
 ]=]
 
 --[=[
-	@prop stickerItems { Classes.StickerItem }
+	@prop stickerItems { Classes.Message.StickerItem }
 	@within Classes.Message
 	Stickers attached to the message.
 ]=]
@@ -170,19 +170,19 @@
 ]=]
 
 --[=[
-	@prop roleSubscriptionData Classes.RoleSubscriptionData
+	@prop roleSubscriptionData Classes.Message.RoleSubscriptionData
 	@within Classes.Message
 	Data for role subscription purchase or renewal notifications.
 ]=]
 
 --[=[
-	@prop poll Classes.Poll
+	@prop poll Classes.Message.Poll
 	@within Classes.Message
 	Poll attached to the message.
 ]=]
 
 --[=[
-	@prop call Classes.Call
+	@prop call Classes.Message.Call
 	@within Classes.Message
 	Call information if this message started a call.
 ]=]

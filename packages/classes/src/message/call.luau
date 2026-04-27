@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.Call
+	@class Classes.Message.Call
 	@__index Prototype
 
 	Implementation of the Discord Call class in Luau
@@ -9,13 +9,13 @@
 
 --[=[
 	@prop participants { Classes.User }
-	@within Classes.Call
+	@within Classes.Message.Call
 	Array of user objects that participated in the call
 ]=]
 
 --[=[
 	@prop endedTimestamp DateTime
-	@within Classes.Call
+	@within Classes.Message.Call
 	When the call ended, stored as a DateTime object
 ]=]
 
@@ -31,7 +31,7 @@ Call.Interface = {}
 Call.Prototype = {}
 
 --[=[
-	@within Classes.Call
+	@within Classes.Message.Call
 	@private
 
 	Responsible for syncing data to this call object. This is typically called by the API when this object is
@@ -50,7 +50,7 @@ function Call.Prototype.sync(self: Call, callData: apiTypes.MessageCallObject)
 end
 
 --[=[
-	@within Classes.Call
+	@within Classes.Message.Call
 	@private
 
 	Responsible for constructing this class.

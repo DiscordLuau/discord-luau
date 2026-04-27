@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.Button
+	@class Classes.Message.Button
 	@__index Prototype
 
 	Implementation of the Discord Button class in Luau
@@ -9,56 +9,56 @@
 
 --[=[
 	@prop style apiTypes.ButtonStyle
-	@within Classes.Button
+	@within Classes.Message.Button
 
 	The style of the button. This determines the button's appearance and behavior.
 ]=]
 
 --[=[
 	@prop type number
-	@within Classes.Button
+	@within Classes.Message.Button
 
 	The type of component. For buttons, this is always 2.
 ]=]
 
 --[=[
 	@prop label string?
-	@within Classes.Button
+	@within Classes.Message.Button
 
 	The text that appears on the button. Optional if an emoji is provided.
 ]=]
 
 --[=[
 	@prop emoji Classes.Emoji?
-	@within Classes.Button
+	@within Classes.Message.Button
 
 	The emoji displayed on the button. Can be used alongside or instead of a label.
 ]=]
 
 --[=[
 	@prop customId string?
-	@within Classes.Button
+	@within Classes.Message.Button
 
 	A developer-defined identifier for the button. Required for all button styles except LINK.
 ]=]
 
 --[=[
 	@prop skuId string?
-	@within Classes.Button
+	@within Classes.Message.Button
 
 	The unique identifier of a SKU. Used for purchase buttons.
 ]=]
 
 --[=[
 	@prop url string?
-	@within Classes.Button
+	@within Classes.Message.Button
 
 	The URL that the button leads to. Only valid for buttons with LINK style.
 ]=]
 
 --[=[
 	@prop disabled boolean?
-	@within Classes.Button
+	@within Classes.Message.Button
 
 	Whether the button is disabled. When true, the button cannot be interacted with.
 ]=]
@@ -73,7 +73,7 @@ Button.Interface = {}
 Button.Prototype = {}
 
 --[=[
-	@within Classes.Button
+	@within Classes.Message.Button
 	@private
 
 	Responsible for syncing data to this button object. This is typically called by the API when this object is
@@ -98,7 +98,7 @@ function Button.Prototype.sync(self: Button, buttonData: apiTypes.ButtonComponen
 end
 
 --[=[
-	@within Classes.Button
+	@within Classes.Message.Button
 	@private
 
 	Responsible for constructing this class.

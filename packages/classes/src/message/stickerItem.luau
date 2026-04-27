@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.StickerItem
+	@class Classes.Message.StickerItem
 	@__index Prototype
 
 	Implementation of the Discord StickerItem class in Luau
@@ -9,19 +9,19 @@
 
 --[=[
 	@prop id string
-	@within Classes.StickerItem
+	@within Classes.Message.StickerItem
 	The unique identifier for this sticker.
 ]=]
 
 --[=[
 	@prop name string
-	@within Classes.StickerItem
+	@within Classes.Message.StickerItem
 	The name of this sticker.
 ]=]
 
 --[=[
 	@prop formatType string
-	@within Classes.StickerItem
+	@within Classes.Message.StickerItem
 	The format type of this sticker.
 ]=]
 
@@ -33,7 +33,7 @@ StickerItem.Interface = {}
 StickerItem.Prototype = {}
 
 --[=[
-	@within Classes.StickerItem
+	@within Classes.Message.StickerItem
 	@private
 
 	Responsible for syncing data to this sticker item object. This is typically called by the API when this object is
@@ -48,7 +48,7 @@ function StickerItem.Prototype.sync(self: StickerItem, stickerData: apiTypes.Sit
 end
 
 --[=[
-	@within Classes.StickerItem
+	@within Classes.Message.StickerItem
 	@private
 
 	Responsible for constructing this class.

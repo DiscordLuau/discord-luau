@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.DefaultValue
+	@class Classes.Message.SelectMenuDefaultValue
 	@__index Prototype
 
 	Implementation of the Discord DefaultValue class in Luau
@@ -9,7 +9,7 @@
 
 --[=[
 	@prop id string
-	@within Classes.DefaultValue
+	@within Classes.Message.SelectMenuDefaultValue
 
 	The ID of the default value. This is typically a snowflake ID representing a user, role, channel or other Discord entity
 	depending on the select menu type.
@@ -17,7 +17,7 @@
 
 --[=[
 	@prop type string
-	@within Classes.DefaultValue
+	@within Classes.Message.SelectMenuDefaultValue
 
 	The type of select menu option this default value represents. This corresponds to one of the SelectDefaultValueType
 	values and determines what kind of entity the ID refers to.
@@ -31,7 +31,7 @@ DefaultValue.Interface = {}
 DefaultValue.Prototype = {}
 
 --[=[
-	@within Classes.DefaultValue
+	@within Classes.Message.SelectMenuDefaultValue
 	@private
 
 	Responsible for syncing data to this DefaultValue object. This is typically called by the API when this object is
@@ -43,7 +43,7 @@ function DefaultValue.Prototype.sync(self: DefaultValue, valueData: apiTypes.Sel
 	self.type = apiTypes.message.SelectDefaultValueType[valueData.type]
 end
 --[=[
-	@within Classes.DefaultValue
+	@within Classes.Message.SelectMenuDefaultValue
 	@private
 
 	Responsible for constructing this class.
