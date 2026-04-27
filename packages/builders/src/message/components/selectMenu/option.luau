@@ -1,5 +1,5 @@
 --[=[
-	@class Builders.Option
+	@class Builders.Message.SelectMenuOption
 	@__index Prototype
 
 	Implementation of discords Option object as a Luau builder.	
@@ -9,31 +9,31 @@
 
 --[=[
 	@prop label string?
-	@within Builders.Option
+	@within Builders.Message.SelectMenuOption
 	The user-facing name of the option.
 ]=]
 
 --[=[
 	@prop value string?
-	@within Builders.Option
+	@within Builders.Message.SelectMenuOption
 	The dev-defined value of the option.
 ]=]
 
 --[=[
 	@prop description string?
-	@within Builders.Option
+	@within Builders.Message.SelectMenuOption
 	An additional description of the option.
 ]=]
 
 --[=[
 	@prop emoji Builders.Emoji?
-	@within Builders.Option
+	@within Builders.Message.SelectMenuOption
 	The emoji to display alongside the option.
 ]=]
 
 --[=[
 	@prop default boolean?
-	@within Builders.Option
+	@within Builders.Message.SelectMenuOption
 	Whether this option is selected by default.
 ]=]
 
@@ -45,7 +45,7 @@ Option.Prototype = {}
 Option.Interface = {}
 
 --[=[
-	@within Builders.Option
+	@within Builders.Message.SelectMenuOption
 
 	Sets the user-facing name of the option.
 ]=]
@@ -59,7 +59,7 @@ function Option.Prototype.setLabel(self: Option, label: string): Option
 end
 
 --[=[
-	@within Builders.Option
+	@within Builders.Message.SelectMenuOption
 
 	Sets the dev-defined value of the option.
 ]=]
@@ -73,7 +73,7 @@ function Option.Prototype.setValue(self: Option, value: string): Option
 end
 
 --[=[
-	@within Builders.Option
+	@within Builders.Message.SelectMenuOption
 
 	Sets an additional description of the option.
 ]=]
@@ -87,7 +87,7 @@ function Option.Prototype.setDescription(self: Option, description: string): Opt
 end
 
 --[=[
-	@within Builders.Option
+	@within Builders.Message.SelectMenuOption
 
 	Sets an emoji to display alongside the option.
 ]=]
@@ -98,7 +98,7 @@ function Option.Prototype.setEmoji(self: Option, emoji: emoji.JSON): Option
 end
 
 --[=[
-	@within Builders.Option
+	@within Builders.Message.SelectMenuOption
 
 	Sets whether this option is selected by default.
 ]=]
@@ -109,7 +109,7 @@ function Option.Prototype.setDefault(self: Option, default: boolean): Option
 end
 
 --[=[
-	@within Builders.Option
+	@within Builders.Message.SelectMenuOption
 
 	Responsible for building the Option JSON that can be parsed by the Discord API.
 ]=]
@@ -128,7 +128,7 @@ function Option.Prototype.build(self: Option): JSON
 end
 
 --[=[
-	@within Builders.Option
+	@within Builders.Message.SelectMenuOption
 
 	Responsible for creating a new Option.
 

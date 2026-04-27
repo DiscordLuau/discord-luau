@@ -1,5 +1,5 @@
 --[=[
-	@class Builders.TextInput
+	@class Builders.Message.TextInput
 	@__index Prototype
 
 	Implementation of discords TextInput object as a Luau builder.	
@@ -9,49 +9,49 @@
 
 --[=[
 	@prop customId string?
-	@within Builders.TextInput
+	@within Builders.Message.TextInput
 	The custom identifier for the text input component.
 ]=]
 
 --[=[
 	@prop style apiTypes.TextInputStyle?
-	@within Builders.TextInput
+	@within Builders.Message.TextInput
 	The style of the text input component.
 ]=]
 
 --[=[
 	@prop label string?
-	@within Builders.TextInput
+	@within Builders.Message.TextInput
 	The label text that appears above the text input field.
 ]=]
 
 --[=[
 	@prop minLength number?
-	@within Builders.TextInput
+	@within Builders.Message.TextInput
 	The minimum length of text that can be entered.
 ]=]
 
 --[=[
 	@prop maxLength number?
-	@within Builders.TextInput
+	@within Builders.Message.TextInput
 	The maximum length of text that can be entered.
 ]=]
 
 --[=[
 	@prop required boolean?
-	@within Builders.TextInput
+	@within Builders.Message.TextInput
 	Whether this text input field is required to be filled.
 ]=]
 
 --[=[
 	@prop value string?
-	@within Builders.TextInput
+	@within Builders.Message.TextInput
 	The pre-filled value for the text input field.
 ]=]
 
 --[=[
 	@prop placeholder string?
-	@within Builders.TextInput
+	@within Builders.Message.TextInput
 	The placeholder text that appears when no text is entered.
 ]=]
 
@@ -63,7 +63,7 @@ TextInput.Prototype = {}
 TextInput.Interface = {}
 
 --[=[
-	@within Builders.TextInput
+	@within Builders.Message.TextInput
 
 	Sets the custom identifier for this text input component.
 ]=]
@@ -74,7 +74,7 @@ function TextInput.Prototype.setCustomId(self: TextInput, customId: string): Tex
 end
 
 --[=[
-	@within Builders.TextInput
+	@within Builders.Message.TextInput
 
 	Sets the style of the text input component.
 ]=]
@@ -85,7 +85,7 @@ function TextInput.Prototype.setStyle(self: TextInput, style: apiTypes.TextInput
 end
 
 --[=[
-	@within Builders.TextInput
+	@within Builders.Message.TextInput
 
 	Sets the label text that appears above the text input field.
 ]=]
@@ -96,7 +96,7 @@ function TextInput.Prototype.setLabel(self: TextInput, label: string): TextInput
 end
 
 --[=[
-	@within Builders.TextInput
+	@within Builders.Message.TextInput
 
 	Sets the minimum length of text that can be entered.
 ]=]
@@ -107,7 +107,7 @@ function TextInput.Prototype.setMinLength(self: TextInput, minLength: number): T
 end
 
 --[=[
-	@within Builders.TextInput
+	@within Builders.Message.TextInput
 
 	Sets the maximum length of text that can be entered.
 ]=]
@@ -118,7 +118,7 @@ function TextInput.Prototype.setMaxLength(self: TextInput, maxLength: number): T
 end
 
 --[=[
-	@within Builders.TextInput
+	@within Builders.Message.TextInput
 
 	Sets whether this text input field is required to be filled.
 ]=]
@@ -129,7 +129,7 @@ function TextInput.Prototype.setIsRequired(self: TextInput, isRequired: boolean)
 end
 
 --[=[
-	@within Builders.TextInput
+	@within Builders.Message.TextInput
 
 	Sets the pre-filled value for the text input field.
 ]=]
@@ -140,7 +140,7 @@ function TextInput.Prototype.setValue(self: TextInput, value: string): TextInput
 end
 
 --[=[
-	@within Builders.TextInput
+	@within Builders.Message.TextInput
 
 	Sets the placeholder text that appears when no text is entered.
 ]=]
@@ -151,7 +151,7 @@ function TextInput.Prototype.setPlaceholder(self: TextInput, placeholder: string
 end
 
 --[=[
-	@within Builders.TextInput
+	@within Builders.Message.TextInput
 
 	Responsible for building the TextInput JSON that can be parsed by the Discord API.
 ]=]
@@ -174,7 +174,7 @@ function TextInput.Prototype.build(self: TextInput): JSON
 end
 
 --[=[
-	@within Builders.TextInput
+	@within Builders.Message.TextInput
 
 	Responsible for creating a new TextInput.
 

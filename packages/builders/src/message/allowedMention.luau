@@ -1,5 +1,5 @@
 --[=[
-	@class Builders.AllowedMention
+	@class Builders.Message.AllowedMention
 	@__index Prototype
 
 	Implementation of discords AllowedMention object as a Luau builder.	
@@ -9,25 +9,25 @@
 
 --[=[
 	@prop parse { apiTypes.AllowedMentionTypes }
-	@within Builders.AllowedMention
+	@within Builders.Message.AllowedMention
 	An array of allowed mention types to parse from the content.
 ]=]
 
 --[=[
 	@prop roles { string }
-	@within Builders.AllowedMention
+	@within Builders.Message.AllowedMention
 	Array of role_ids to mention (Max size of 100).
 ]=]
 
 --[=[
 	@prop users { string }
-	@within Builders.AllowedMention
+	@within Builders.Message.AllowedMention
 	Array of user_ids to mention (Max size of 100).
 ]=]
 
 --[=[
 	@prop repliedUser boolean?
-	@within Builders.AllowedMention
+	@within Builders.Message.AllowedMention
 	For replies, whether to mention the author of the message being replied to.
 ]=]
 
@@ -39,7 +39,7 @@ AllowedMention.Prototype = {}
 AllowedMention.Interface = {}
 
 --[=[
-	@within Builders.AllowedMention
+	@within Builders.Message.AllowedMention
 
 	Add a user mention to the allowed mentions for this message.
 ]=]
@@ -54,7 +54,7 @@ function AllowedMention.Prototype.addUserMention(self: AllowedMention, userId: s
 end
 
 --[=[
-	@within Builders.AllowedMention
+	@within Builders.Message.AllowedMention
 
 	Add a role mention to the allowed mentions for this message.
 ]=]
@@ -69,7 +69,7 @@ function AllowedMention.Prototype.addRoleMention(self: AllowedMention, roleId: s
 end
 
 --[=[
-	@within Builders.AllowedMention
+	@within Builders.Message.AllowedMention
 
 	For replies, whether to mention the author of the message being replied to (default false)
 ]=]
@@ -80,7 +80,7 @@ function AllowedMention.Prototype.setRepliedUser(self: AllowedMention, repliedUs
 end
 
 --[=[
-	@within Builders.AllowedMention
+	@within Builders.Message.AllowedMention
 
 	Controls @everyone and @here mentions
 ]=]
@@ -101,7 +101,7 @@ function AllowedMention.Prototype.setMentionsEveryone(self: AllowedMention, ment
 end
 
 --[=[
-	@within Builders.AllowedMention
+	@within Builders.Message.AllowedMention
 
 	Responsible for building the AllowedMention JSON that can be parsed by the Discord API.
 ]=]
@@ -115,7 +115,7 @@ function AllowedMention.Prototype.build(self: AllowedMention): JSON
 end
 
 --[=[
-	@within Builders.AllowedMention
+	@within Builders.Message.AllowedMention
 
 	Responsible for creating a new AllowedMention.
 ]=]

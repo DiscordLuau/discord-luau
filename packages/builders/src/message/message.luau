@@ -14,19 +14,19 @@
 ]=]
 
 --[=[
-	@prop allowedMentions Builders.AllowedMention?
+	@prop allowedMentions Builders.Message.AllowedMention?
 	@within Builders.Message
 	Allowed mentions for the message.
 ]=]
 
 --[=[
-	@prop messageReference Builders.Reference?
+	@prop messageReference Builders.Message.Reference?
 	@within Builders.Message
 	Include to make your message a reply.
 ]=]
 
 --[=[
-	@prop components { Builders.Button | Builders.TextInput | Builders.SelectMenu | Builders.ActionRow }
+	@prop components { Builders.Message.Button | Builders.Message.TextInput | Builders.Message.SelectMenu | Builders.Message.ActionRow }
 	@within Builders.Message
 	Components to include with the message.
 ]=]
@@ -56,7 +56,7 @@
 ]=]
 
 --[=[
-	@prop poll Builders.Poll?
+	@prop poll Builders.Message.Poll?
 	@within Builders.Message
 	Poll data for the message.
 ]=]

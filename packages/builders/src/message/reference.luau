@@ -1,5 +1,5 @@
 --[=[
-	@class Builders.Reference
+	@class Builders.Message.Reference
 	@__index Prototype
 
 	Implementation of discords Reference object as a Luau builder.	
@@ -9,31 +9,31 @@
 
 --[=[
 	@prop type api_types.MessageReferenceType
-	@within Builders.Reference
+	@within Builders.Message.Reference
 	The type of reference.
 ]=]
 
 --[=[
 	@prop messageId string
-	@within Builders.Reference
+	@within Builders.Message.Reference
 	The id of the originating message.
 ]=]
 
 --[=[
 	@prop channelId string
-	@within Builders.Reference
+	@within Builders.Message.Reference
 	The id of the originating message's channel.
 ]=]
 
 --[=[
 	@prop guildId string
-	@within Builders.Reference
+	@within Builders.Message.Reference
 	The id of the originating message's guild.
 ]=]
 
 --[=[
 	@prop failIfNotExists boolean
-	@within Builders.Reference
+	@within Builders.Message.Reference
 	When sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message.
 ]=]
 
@@ -45,7 +45,7 @@ Reference.Prototype = {}
 Reference.Interface = {}
 
 --[=[
-	@within Builders.Reference
+	@within Builders.Message.Reference
 
 	The type of reference.
 ]=]
@@ -56,7 +56,7 @@ function Reference.Prototype.setType(self: Reference, type: apiTypes.MessageRefe
 end
 
 --[=[
-	@within Builders.Reference
+	@within Builders.Message.Reference
 
 	The id of the originating message.
 ]=]
@@ -67,7 +67,7 @@ function Reference.Prototype.setMessageId(self: Reference, messageId: string): R
 end
 
 --[=[
-	@within Builders.Reference
+	@within Builders.Message.Reference
 
 	The id of the originating message's channel.
 ]=]
@@ -78,7 +78,7 @@ function Reference.Prototype.setChannelId(self: Reference, channelId: string): R
 end
 
 --[=[
-	@within Builders.Reference
+	@within Builders.Message.Reference
 
 	The id of the originating message's guild.
 ]=]
@@ -89,7 +89,7 @@ function Reference.Prototype.setGuildId(self: Reference, guildId: string): Refer
 end
 
 --[=[
-	@within Builders.Reference
+	@within Builders.Message.Reference
 
 	When sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message, default true.
 ]=]
@@ -100,7 +100,7 @@ function Reference.Prototype.setFailIfNotExists(self: Reference, failIfNotExists
 end
 
 --[=[
-	@within Builders.Reference
+	@within Builders.Message.Reference
 
 	Responsible for building the Reference JSON that can be parsed by the Discord API.
 ]=]
@@ -115,7 +115,7 @@ function Reference.Prototype.build(self: Reference): JSON
 end
 
 --[=[
-	@within Builders.Reference
+	@within Builders.Message.Reference
 
 	Responsible for creating a new Reference.
 ]=]

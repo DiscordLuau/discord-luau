@@ -1,5 +1,5 @@
 --[=[
-	@class Builders.Button
+	@class Builders.Message.Button
 	@__index Prototype
 
 	Implementation of discords Button object as a Luau builder.	
@@ -9,43 +9,43 @@
 
 --[=[
 	@prop style apiTypes.ButtonStyle
-	@within Builders.Button
+	@within Builders.Message.Button
 	The style of the button that determines its appearance and behavior.
 ]=]
 
 --[=[
 	@prop label string?
-	@within Builders.Button
+	@within Builders.Message.Button
 	The text that appears on the button.
 ]=]
 
 --[=[
 	@prop emoji Builders.Emoji?
-	@within Builders.Button
+	@within Builders.Message.Button
 	The emoji that appears on the button.
 ]=]
 
 --[=[
 	@prop customId string?
-	@within Builders.Button
+	@within Builders.Message.Button
 	A developer-defined identifier for the button.
 ]=]
 
 --[=[
 	@prop skuId string?
-	@within Builders.Button
+	@within Builders.Message.Button
 	The SKU ID for purchase buttons.
 ]=]
 
 --[=[
 	@prop url string?
-	@within Builders.Button
+	@within Builders.Message.Button
 	The URL that the button will navigate to when clicked.
 ]=]
 
 --[=[
 	@prop disabled boolean?
-	@within Builders.Button
+	@within Builders.Message.Button
 	Whether the button is disabled and cannot be clicked.
 ]=]
 
@@ -59,7 +59,7 @@ Button.Prototype = {}
 Button.Interface = {}
 
 --[=[
-	@within Builders.Button
+	@within Builders.Message.Button
 
 	Sets the style of the button. This determines the button's appearance and behavior.
 ]=]
@@ -70,7 +70,7 @@ function Button.Prototype.setStyle(self: Button, buttonStyle: apiTypes.ButtonSty
 end
 
 --[=[
-	@within Builders.Button
+	@within Builders.Message.Button
 
 	Sets the text that appears on the button. Must be between 1-80 characters.
 ]=]
@@ -84,7 +84,7 @@ function Button.Prototype.setLabel(self: Button, label: string): Button
 end
 
 --[=[
-	@within Builders.Button
+	@within Builders.Message.Button
 
 	Sets the emoji that appears on the button.
 ]=]
@@ -95,7 +95,7 @@ function Button.Prototype.setEmoji(self: Button, emoji: emoji.JSON): Button
 end
 
 --[=[
-	@within Builders.Button
+	@within Builders.Message.Button
 
 	Sets a developer-defined identifier for the button that will be sent when the button is clicked.
 ]=]
@@ -106,7 +106,7 @@ function Button.Prototype.setCustomId(self: Button, customId: string): Button
 end
 
 --[=[
-	@within Builders.Button
+	@within Builders.Message.Button
 
 	Sets the SKU ID for the button, used for purchase buttons.
 ]=]
@@ -117,7 +117,7 @@ function Button.Prototype.setSkuId(self: Button, skuId: string): Button
 end
 
 --[=[
-	@within Builders.Button
+	@within Builders.Message.Button
 
 	Sets the URL that the button will navigate to when clicked.
 ]=]
@@ -128,7 +128,7 @@ function Button.Prototype.setUrl(self: Button, url: string): Button
 end
 
 --[=[
-	@within Builders.Button
+	@within Builders.Message.Button
 
 	Sets whether the button is disabled and cannot be clicked.
 ]=]
@@ -139,7 +139,7 @@ function Button.Prototype.setDisabled(self: Button, disabled: boolean): Button
 end
 
 --[=[
-	@within Builders.Button
+	@within Builders.Message.Button
 
 	Responsible for building the Button JSON that can be parsed by the Discord API.
 ]=]
@@ -159,7 +159,7 @@ function Button.Prototype.build(self: Button): JSON
 end
 
 --[=[
-	@within Builders.Button
+	@within Builders.Message.Button
 
 	Responsible for creating a new Button.
 

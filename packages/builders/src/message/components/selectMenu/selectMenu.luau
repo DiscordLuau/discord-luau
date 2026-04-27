@@ -1,5 +1,5 @@
 --[=[
-	@class Builders.SelectMenu
+	@class Builders.Message.SelectMenu
 	@__index Prototype
 
 	Implementation of discords SelectMenu object as a Luau builder.	
@@ -8,20 +8,20 @@
 ]=]
 
 --[=[
-	@prop defaultValues {Builders.DefaultValue}
-	@within Builders.SelectMenu
+	@prop defaultValues {Builders.Message.SelectMenuDefaultValue}
+	@within Builders.Message.SelectMenu
 	Array of default values for auto-populated select menu components
 ]=]
 
 --[=[
-	@prop options {Builders.Option}
-	@within Builders.SelectMenu
+	@prop options {Builders.Message.SelectMenuOption}
+	@within Builders.Message.SelectMenu
 	Array of select menu options
 ]=]
 
 --[=[
 	@prop apiTypes {api_types.ChannelType}
-	@within Builders.SelectMenu
+	@within Builders.Message.SelectMenu
 	Array of channel types that can be selected
 ]=]
 
@@ -36,7 +36,7 @@ SelectMenu.Prototype = {}
 SelectMenu.Interface = {}
 
 --[=[
-	@within Builders.SelectMenu
+	@within Builders.Message.SelectMenu
 
 	Sets the type of select menu component to be created.
 ]=]
@@ -47,7 +47,7 @@ function SelectMenu.Prototype.setType(self: SelectMenu, selectMenuType: apiTypes
 end
 
 --[=[
-	@within Builders.SelectMenu
+	@within Builders.Message.SelectMenu
 
 	Sets a developer-defined identifier for the select menu.
 ]=]
@@ -58,7 +58,7 @@ function SelectMenu.Prototype.setCustomId(self: SelectMenu, customId: string): S
 end
 
 --[=[
-	@within Builders.SelectMenu
+	@within Builders.Message.SelectMenu
 
 	Sets custom placeholder text shown when no option is selected.
 ]=]
@@ -69,7 +69,7 @@ function SelectMenu.Prototype.setPlaceholder(self: SelectMenu, placeholder: stri
 end
 
 --[=[
-	@within Builders.SelectMenu
+	@within Builders.Message.SelectMenu
 
 	Sets the minimum number of items that must be selected.
 ]=]
@@ -80,7 +80,7 @@ function SelectMenu.Prototype.setMinValues(self: SelectMenu, minValueCount: numb
 end
 
 --[=[
-	@within Builders.SelectMenu
+	@within Builders.Message.SelectMenu
 
 	Sets the maximum number of items that can be selected.
 ]=]
@@ -91,7 +91,7 @@ function SelectMenu.Prototype.setMaxValues(self: SelectMenu, maxValueCount: numb
 end
 
 --[=[
-	@within Builders.SelectMenu
+	@within Builders.Message.SelectMenu
 
 	Sets whether the select menu is disabled or not.
 ]=]
@@ -102,7 +102,7 @@ function SelectMenu.Prototype.setDisabled(self: SelectMenu, disabled: boolean): 
 end
 
 --[=[
-	@within Builders.SelectMenu
+	@within Builders.Message.SelectMenu
 
 	Adds a default value to the select menu.
 ]=]
@@ -113,7 +113,7 @@ function SelectMenu.Prototype.addDefaultValue(self: SelectMenu, defaultValue: de
 end
 
 --[=[
-	@within Builders.SelectMenu
+	@within Builders.Message.SelectMenu
 
 	Adds a channel type that can be selected in the menu.
 ]=]
@@ -124,7 +124,7 @@ function SelectMenu.Prototype.addChannelType(self: SelectMenu, channelType: apiT
 end
 
 --[=[
-	@within Builders.SelectMenu
+	@within Builders.Message.SelectMenu
 
 	Adds an option to the select menu.
 ]=]
@@ -135,7 +135,7 @@ function SelectMenu.Prototype.addOption(self: SelectMenu, option: option.JSON): 
 end
 
 --[=[
-	@within Builders.SelectMenu
+	@within Builders.Message.SelectMenu
 
 	Responsible for building the SelectMenu JSON that can be parsed by the Discord API.
 ]=]
@@ -157,7 +157,7 @@ function SelectMenu.Prototype.build(self: SelectMenu): JSON
 end
 
 --[=[
-	@within Builders.SelectMenu
+	@within Builders.Message.SelectMenu
 
 	Responsible for creating a new SelectMenu.
 ]=]

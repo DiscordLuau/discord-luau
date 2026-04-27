@@ -1,5 +1,5 @@
 --[=[
-	@class Builders.PollAnswer
+	@class Builders.Message.PollAnswer
 	@__index Prototype
 
 	Implementation of discords PollAnswer object as a Luau builder.	
@@ -9,13 +9,13 @@
 
 --[=[
 	@prop answerId number?
-	@within Builders.PollAnswer
+	@within Builders.Message.PollAnswer
 	The ID of the poll answer.
 ]=]
 
 --[=[
 	@prop pollMedia Builders.Media?
-	@within Builders.PollAnswer
+	@within Builders.Message.PollAnswer
 	The media attached to this poll answer.
 ]=]
 
@@ -27,7 +27,7 @@ PollAnswer.Prototype = {}
 PollAnswer.Interface = {}
 
 --[=[
-	@within Builders.PollAnswer
+	@within Builders.Message.PollAnswer
 
 	Sets the ID for the poll answer.
 ]=]
@@ -38,7 +38,7 @@ function PollAnswer.Prototype.setId(self: PollAnswer, id: number): PollAnswer
 end
 
 --[=[
-	@within Builders.PollAnswer
+	@within Builders.Message.PollAnswer
 
 	Sets the media for the poll answer.
 ]=]
@@ -49,7 +49,7 @@ function PollAnswer.Prototype.setMedia(self: PollAnswer, media: mediaBuilder.JSO
 end
 
 --[=[
-	@within Builders.PollAnswer
+	@within Builders.Message.PollAnswer
 
 	Responsible for building the PollAnswer JSON that can be parsed by the Discord API.
 ]=]
@@ -64,7 +64,7 @@ function PollAnswer.Prototype.build(self: PollAnswer): JSON
 end
 
 --[=[
-	@within Builders.PollAnswer
+	@within Builders.Message.PollAnswer
 
 	Responsible for creating a new PollAnswer.
 

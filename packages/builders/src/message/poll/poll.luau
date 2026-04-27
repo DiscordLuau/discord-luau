@@ -1,5 +1,5 @@
 --[=[
-	@class Builders.Poll
+	@class Builders.Message.Poll
 	@__index Prototype
 
 	Implementation of discords Poll object as a Luau builder.	
@@ -9,31 +9,31 @@
 
 --[=[
 	@prop question Builders.Media
-	@within Builders.Poll
+	@within Builders.Message.Poll
 	The question to be displayed in the poll.
 ]=]
 
 --[=[
 	@prop answers {Builders.Answer}
-	@within Builders.Poll
+	@within Builders.Message.Poll
 	The array of possible answers for the poll.
 ]=]
 
 --[=[
 	@prop expiry string
-	@within Builders.Poll
+	@within Builders.Message.Poll
 	The timestamp when the poll will expire.
 ]=]
 
 --[=[
 	@prop allowMultiselect boolean
-	@within Builders.Poll
+	@within Builders.Message.Poll
 	Whether users can select multiple answers.
 ]=]
 
 --[=[
 	@prop layoutType api_types.PollLayoutType
-	@within Builders.Poll
+	@within Builders.Message.Poll
 	The layout type of the poll display.
 ]=]
 
@@ -50,7 +50,7 @@ Poll.Prototype = {}
 Poll.Interface = {}
 
 --[=[
-	@within Builders.Poll
+	@within Builders.Message.Poll
 
 	Adds an answer to the poll.
 ]=]
@@ -61,7 +61,7 @@ function Poll.Prototype.addAnswer(self: Poll, answer: answerBuilder.JSON): Poll
 end
 
 --[=[
-	@within Builders.Poll
+	@within Builders.Message.Poll
 
 	Sets the question for the poll.
 ]=]
@@ -72,7 +72,7 @@ function Poll.Prototype.setQuestion(self: Poll, question: mediaBuilder.JSON): Po
 end
 
 --[=[
-	@within Builders.Poll
+	@within Builders.Message.Poll
 
 	Sets the expiry time for the poll.
 ]=]
@@ -89,7 +89,7 @@ function Poll.Prototype.setExpiry(self: Poll, expiry: string | number | stdPolyf
 end
 
 --[=[
-	@within Builders.Poll
+	@within Builders.Message.Poll
 
 	Sets whether the poll allows multiple selections.
 ]=]
@@ -100,7 +100,7 @@ function Poll.Prototype.setMultiselect(self: Poll, multiselect: boolean): Poll
 end
 
 --[=[
-	@within Builders.Poll
+	@within Builders.Message.Poll
 
 	Sets the layout type for the poll.
 ]=]
@@ -111,7 +111,7 @@ function Poll.Prototype.setLayoutType(self: Poll, layoutType: apiTypes.PollLayou
 end
 
 --[=[
-	@within Builders.Poll
+	@within Builders.Message.Poll
 
 	Builds and returns the Poll JSON that can be parsed by the Discord API.
 ]=]
@@ -132,7 +132,7 @@ function Poll.Prototype.build(self: Poll): JSON
 end
 
 --[=[
-	@within Builders.Poll
+	@within Builders.Message.Poll
 
 	Responsible for creating a new Poll.
 ]=]

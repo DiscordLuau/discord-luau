@@ -1,5 +1,5 @@
 --[=[
-	@class Builders.DefaultValue
+	@class Builders.Message.SelectMenuDefaultValue
 	@__index Prototype
 
 	Implementation of discords DefaultValue object as a Luau builder.	
@@ -9,13 +9,13 @@
 
 --[=[
 	@prop id string
-	@within Builders.DefaultValue
+	@within Builders.Message.SelectMenuDefaultValue
 	The id of the default value.
 ]=]
 
 --[=[
 	@prop type apiTypes.SelectDefaultValueType
-	@within Builders.DefaultValue
+	@within Builders.Message.SelectMenuDefaultValue
 	The type of the default value.
 ]=]
 
@@ -27,7 +27,7 @@ DefaultValue.Prototype = {}
 DefaultValue.Interface = {}
 
 --[=[
-	@within Builders.DefaultValue
+	@within Builders.Message.SelectMenuDefaultValue
 
 	Sets the id of the default value.
 ]=]
@@ -38,7 +38,7 @@ function DefaultValue.Prototype.setId(self: DefaultValue, id: string): DefaultVa
 end
 
 --[=[
-	@within Builders.DefaultValue
+	@within Builders.Message.SelectMenuDefaultValue
 
 	Sets the type of the default value.
 ]=]
@@ -49,7 +49,7 @@ function DefaultValue.Prototype.setType(self: DefaultValue, type: apiTypes.Selec
 end
 
 --[=[
-	@within Builders.DefaultValue
+	@within Builders.Message.SelectMenuDefaultValue
 
 	Responsible for building the DefaultValue JSON that can be parsed by the Discord API.
 ]=]
@@ -64,7 +64,7 @@ function DefaultValue.Prototype.build(self: DefaultValue): JSON
 end
 
 --[=[
-	@within Builders.DefaultValue
+	@within Builders.Message.SelectMenuDefaultValue
 
 	Responsible for creating a new DefaultValue.
 
