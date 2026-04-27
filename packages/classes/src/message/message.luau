@@ -195,6 +195,7 @@
 
 --[=[
 	@prop state State
+	@within Classes.Message
 	The state object for this message.
 ]=]
 

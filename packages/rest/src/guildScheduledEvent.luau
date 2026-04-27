@@ -15,7 +15,7 @@ local request = require("./request")
 local guildScheduledEvent = {}
 
 --[=[
-	@within Rest.application
+	@within Rest.guildScheduledEvent
 
 	https://discord.com/developers/docs/resources/guild-scheduled-event#list-scheduled-events-for-guild
 ]=]
@@ -49,7 +49,7 @@ function guildScheduledEvent.listScheduledEventsForGuildAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.guildScheduledEvent
 
 	https://discord.com/developers/docs/resources/guild-scheduled-event#create-guild-scheduled-event
 ]=]
@@ -79,7 +79,7 @@ function guildScheduledEvent.createGuildScheduledEvent(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.guildScheduledEvent
 
 	https://discord.com/developers/docs/resources/guild-scheduled-event#get-guild-scheduled-event
 ]=]
@@ -114,7 +114,7 @@ function guildScheduledEvent.getScheduledEventsForGuildAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.guildScheduledEvent
 
 	https://discord.com/developers/docs/resources/guild-scheduled-event#modify-guild-scheduled-event
 ]=]
@@ -145,7 +145,7 @@ function guildScheduledEvent.modifyGuildScheduledEvent(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.guildScheduledEvent
 
 	https://discord.com/developers/docs/resources/guild-scheduled-event#delete-guild-scheduled-event
 ]=]
@@ -172,7 +172,7 @@ function guildScheduledEvent.deleteGuildScheduledEvent(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.guildScheduledEvent
 
 	https://discord.com/developers/docs/resources/guild-scheduled-event#get-guild-scheduled-event-users
 ]=]

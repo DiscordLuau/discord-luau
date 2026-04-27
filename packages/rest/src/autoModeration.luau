@@ -15,7 +15,7 @@ local request = require("./request")
 local autoModeration = {}
 
 --[=[
-	@within Rest.application
+	@within Rest.autoModeration
 
 	https://discord.com/developers/docs/resources/auto-moderation#list-auto-moderation-rules-for-guild
 ]=]
@@ -43,7 +43,7 @@ function autoModeration.listAutoModerationRulesForGuildAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.autoModeration
 
 	https://discord.com/developers/docs/resources/auto-moderation#get-auto-moderation-rule
 ]=]
@@ -70,7 +70,7 @@ function autoModeration.getAutoModerationRuleForGuildAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.autoModeration
 
 	https://discord.com/developers/docs/resources/auto-moderation#create-auto-moderation-rule
 ]=]
@@ -100,7 +100,7 @@ function autoModeration.createAutoModerationRuleAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.autoModeration
 
 	https://discord.com/developers/docs/resources/auto-moderation#modify-auto-moderation-rule
 ]=]
@@ -131,7 +131,7 @@ function autoModeration.modifyAutoModerationRuleAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.autoModeration
 
 	https://discord.com/developers/docs/resources/auto-moderation#delete-auto-moderation-rule
 ]=]

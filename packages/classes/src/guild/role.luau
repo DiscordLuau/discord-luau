@@ -81,11 +81,13 @@
 
 --[=[
 	@prop state State
+	@within Classes.Role
 	The state object for this role.
 ]=]
 
 --[=[
 	@prop guildId string
+	@within Classes.Role
 	The ID of the guild this role belongs to.
 ]=]
 

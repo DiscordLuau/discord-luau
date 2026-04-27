@@ -15,7 +15,7 @@ local request = require("./request")
 local sticker = {}
 
 --[=[
-	@within Rest.application
+	@within Rest.sticker
 
 	https://discord.com/developers/docs/resources/sticker#get-sticker
 ]=]
@@ -40,7 +40,7 @@ function sticker.getStickerAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.sticker
 
 	https://discord.com/developers/docs/resources/sticker#list-sticker-packs
 ]=]
@@ -62,7 +62,7 @@ function sticker.listStickerPacksAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.sticker
 
 	https://discord.com/developers/docs/resources/sticker#list-guild-stickers
 ]=]
@@ -85,7 +85,7 @@ function sticker.listGuildStickersAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.sticker
 
 	https://discord.com/developers/docs/resources/sticker#get-guild-sticker
 ]=]
@@ -109,7 +109,7 @@ function sticker.getGuildStickerAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.sticker
 
 	https://discord.com/developers/docs/resources/sticker#create-guild-sticker
 ]=]
@@ -136,7 +136,7 @@ function sticker.createGuildStickerAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.sticker
 
 	https://discord.com/developers/docs/resources/sticker#modify-guild-sticker
 ]=]
@@ -164,7 +164,7 @@ function sticker.modifyGuildStickerAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.sticker
 
 	https://discord.com/developers/docs/resources/sticker#delete-guild-sticker
 ]=]

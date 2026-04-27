@@ -13,7 +13,7 @@ local request = require("./request")
 local poll = {}
 
 --[=[
-	@within Rest.application
+	@within Rest.poll
 
 	https://discord.com/developers/docs/resources/poll#get-answer-voters
 ]=]
@@ -45,7 +45,7 @@ function poll.getAnswerVotersAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.poll
 
 	https://discord.com/developers/docs/resources/poll#end-poll
 ]=]

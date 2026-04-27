@@ -13,7 +13,7 @@ local request = require("./request")
 local invite = {}
 
 --[=[
-	@within Rest.application
+	@within Rest.invite
 
 	https://discord.com/developers/docs/resources/invite#get-invite
 ]=]
@@ -49,7 +49,7 @@ function invite.getInviteAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.invite
 
 	https://discord.com/developers/docs/resources/invite#delete-invite
 ]=]

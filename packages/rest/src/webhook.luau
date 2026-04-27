@@ -15,7 +15,7 @@ local request = require("./request")
 local webhook = {}
 
 --[=[
-	@within Rest.application
+	@within Rest.webhook
 
 	https://discord.com/developers/docs/resources/webhook#create-webhook
 ]=]
@@ -42,7 +42,7 @@ function webhook.createWebhookAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.webhook
 
 	https://discord.com/developers/docs/resources/webhook#get-channel-webhooks
 ]=]
@@ -65,7 +65,7 @@ function webhook.getChannelWebhooksAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.webhook
 
 	https://discord.com/developers/docs/resources/webhook#get-guild-webhooks
 ]=]
@@ -88,7 +88,7 @@ function webhook.getGuildWebhooksAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.webhook
 
 	https://discord.com/developers/docs/resources/webhook#get-webhook
 ]=]
@@ -111,7 +111,7 @@ function webhook.getWebhookAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.webhook
 
 	https://discord.com/developers/docs/resources/webhook#get-webhook-with-token
 ]=]
@@ -135,7 +135,7 @@ function webhook.getWebhookWithTokenAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.webhook
 
 	https://discord.com/developers/docs/resources/webhook#modify-webhook
 ]=]
@@ -162,7 +162,7 @@ function webhook.modifyWebhookAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.webhook
 
 	https://discord.com/developers/docs/resources/webhook#modify-webhook-with-token
 ]=]
@@ -190,7 +190,7 @@ function webhook.modifyWebhookWithTokenAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.webhook
 
 	https://discord.com/developers/docs/resources/webhook#delete-webhook
 ]=]
@@ -215,7 +215,7 @@ function webhook.deleteWebhookAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.webhook
 
 	https://discord.com/developers/docs/resources/webhook#delete-webhook-with-token
 ]=]
@@ -241,7 +241,7 @@ function webhook.deleteWebhookWithTokenAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.webhook
 
 	https://discord.com/developers/docs/resources/webhook#execute-webhook
 ]=]
@@ -274,7 +274,7 @@ function webhook.executeWebhookAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.webhook
 
 	https://discord.com/developers/docs/resources/webhook#get-webhook-message
 ]=]
@@ -304,7 +304,7 @@ function webhook.getWebhookMessageAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.webhook
 
 	https://discord.com/developers/docs/resources/webhook#edit-webhook-message
 ]=]
@@ -336,7 +336,7 @@ function webhook.editWebhookMessageAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.webhook
 
 	https://discord.com/developers/docs/resources/webhook#delete-webhook-message
 ]=]

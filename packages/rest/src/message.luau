@@ -15,7 +15,7 @@ local request = require("./request")
 local message = {}
 
 --[=[
-	@within Rest.application
+	@within Rest.message
 
 	https://discord.com/developers/docs/resources/message#get-channel-messages
 ]=]
@@ -49,7 +49,7 @@ function message.getChannelMessagesAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.message
 
 	https://discord.com/developers/docs/resources/message#get-channel-message
 ]=]
@@ -73,7 +73,7 @@ function message.getChannelMessageAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.message
 
 	https://discord.com/developers/docs/resources/message#create-message
 ]=]
@@ -98,7 +98,7 @@ function message.createMessageAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.message
 
 	https://discord.com/developers/docs/resources/message#crosspost-message
 ]=]
@@ -122,7 +122,7 @@ function message.crosspostMessageAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.message
 
 	https://discord.com/developers/docs/resources/message#create-reaction
 ]=]
@@ -154,7 +154,7 @@ function message.createReactionAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.message
 
 	https://discord.com/developers/docs/resources/message#delete-own-reaction
 ]=]
@@ -186,7 +186,7 @@ function message.deleteOwnReactionAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.message
 
 	https://discord.com/developers/docs/resources/message#delete-user-reaction
 ]=]
@@ -220,7 +220,7 @@ function message.deleteUserReactionAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.message
 
 	https://discord.com/developers/docs/resources/message#get-reactions
 ]=]
@@ -256,7 +256,7 @@ function message.getReactionsAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.message
 
 	https://discord.com/developers/docs/resources/message#delete-all-reactions
 ]=]
@@ -280,7 +280,7 @@ function message.deleteAllReactionsAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.message
 
 	https://discord.com/developers/docs/resources/message#delete-all-reactions-for-emoji
 ]=]
@@ -312,7 +312,7 @@ function message.deleteAllReactionsForEmojiAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.message
 
 	https://discord.com/developers/docs/resources/message#edit-message
 ]=]
@@ -338,7 +338,7 @@ function message.editMessageAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.message
 
 	https://discord.com/developers/docs/resources/message#delete-message
 ]=]
@@ -364,7 +364,7 @@ function message.deleteMessageAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.message
 
 	https://discord.com/developers/docs/resources/message#bulk-delete-messages
 ]=]

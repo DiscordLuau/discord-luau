@@ -15,7 +15,7 @@ local request = require("./request")
 local interaction = {}
 
 --[=[
-	@within Rest.application
+	@within Rest.interaction
 
 	https://discord.com/developers/docs/interactions/receiving-and-responding#create-interaction-response
 ]=]
@@ -51,7 +51,7 @@ function interaction.createInteractionResponseAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.interaction
 
 	https://discord.com/developers/docs/interactions/receiving-and-responding#get-original-interaction-response
 ]=]
@@ -85,7 +85,7 @@ function interaction.getOriginalInteractionResponseAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.interaction
 
 	https://discord.com/developers/docs/interactions/receiving-and-responding#edit-original-interaction-response
 ]=]
@@ -121,7 +121,7 @@ function interaction.editOriginalInteractionResponseAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.interaction
 
 	https://discord.com/developers/docs/interactions/receiving-and-responding#delete-original-interaction-response
 ]=]
@@ -150,7 +150,7 @@ function interaction.deleteOriginalInteractionResponseAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.interaction
 
 	https://discord.com/developers/docs/interactions/receiving-and-responding#create-followup-message
 ]=]
@@ -183,7 +183,7 @@ function interaction.createFollowupMessageAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.interaction
 
 	https://discord.com/developers/docs/interactions/receiving-and-responding#get-followup-message
 ]=]
@@ -215,7 +215,7 @@ function interaction.getFollowupMessageAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.interaction
 
 	https://discord.com/developers/docs/interactions/receiving-and-responding#edit-followup-message
 ]=]
@@ -249,7 +249,7 @@ function interaction.editFollowupMessageAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.interaction
 
 	https://discord.com/developers/docs/interactions/receiving-and-responding#delete-followup-message
 ]=]

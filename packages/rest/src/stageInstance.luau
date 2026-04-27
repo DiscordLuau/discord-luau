@@ -15,7 +15,7 @@ local request = require("./request")
 local stageInstance = {}
 
 --[=[
-	@within Rest.application
+	@within Rest.stageInstance
 
 	https://discord.com/developers/docs/resources/stage-instance#create-stage-instance
 ]=]
@@ -41,7 +41,7 @@ function stageInstance.createStageInstanceAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.stageInstance
 
 	https://discord.com/developers/docs/resources/stage-instance#get-stage-instance
 ]=]
@@ -64,7 +64,7 @@ function stageInstance.getStageInstanceAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.stageInstance
 
 	https://discord.com/developers/docs/resources/stage-instance#modify-stage-instance
 ]=]
@@ -91,7 +91,7 @@ function stageInstance.modifyStageInstanceAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.stageInstance
 
 	https://discord.com/developers/docs/resources/stage-instance#delete-stage-instance
 ]=]

@@ -10,6 +10,7 @@
 
 --[=[
 	@prop flag number
+	@within Classes.MessageBitflag
 	The raw bitflag value for the message.
 ]=]
 

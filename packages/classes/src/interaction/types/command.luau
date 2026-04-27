@@ -1,5 +1,5 @@
 --[=[
-	@class Command
+	@class Classes.CommandInteraction
 	Implementation of the Discord Command Interaction class in Luau
 
 	https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-structure
@@ -8,12 +8,12 @@
 
 --[=[
 	@prop state state.State
-	@within Command
+	@within Classes.CommandInteraction
 ]=]
 
 --[=[
 	@prop isDeferred boolean
-	@within Command
+	@within Classes.CommandInteraction
 ]=]
 
 -- selene: allow(unused_variable)
@@ -35,7 +35,7 @@ Command.Behaviours = {
 }
 
 --[=[
-	@within Command
+	@within Classes.CommandInteraction
 	Returns a list of users who have been mentioned in this interaction
 ]=]
 function Command.Prototype.getUsers(self: Command): { user.User }
@@ -53,7 +53,7 @@ function Command.Prototype.getUsers(self: Command): { user.User }
 end
 
 --[=[
-	@within Command
+	@within Classes.CommandInteraction
 	Returns a list of members who have been mentioned in this interaction
 ]=]
 function Command.Prototype.getMembers(self: Command)
@@ -71,7 +71,7 @@ function Command.Prototype.getMembers(self: Command)
 end
 
 --[=[
-	@within Command
+	@within Classes.CommandInteraction
 	Returns a list of roles which have been mentioned in this interaction
 ]=]
 function Command.Prototype.getRoles(self: Command)
@@ -89,7 +89,7 @@ function Command.Prototype.getRoles(self: Command)
 end
 
 --[=[
-	@within Command
+	@within Classes.CommandInteraction
 	Returns a list of channels which have been mentioned in this interaction
 ]=]
 function Command.Prototype.getChannels(_self: Command)
@@ -97,7 +97,7 @@ function Command.Prototype.getChannels(_self: Command)
 end
 
 --[=[
-	@within Command
+	@within Classes.CommandInteraction
 	Returns a list of messages which have been mentioned in this interaction
 ]=]
 function Command.Prototype.getMessages(self: Command)
@@ -115,7 +115,7 @@ function Command.Prototype.getMessages(self: Command)
 end
 
 --[=[
-	@within Command
+	@within Classes.CommandInteraction
 	Returns a list of attachments which have been mentioned in this interaction
 ]=]
 function Command.Prototype.getAttachments(self: Command)
@@ -133,7 +133,7 @@ function Command.Prototype.getAttachments(self: Command)
 end
 
 --[=[
-	@within Command
+	@within Classes.CommandInteraction
 	@private
 
 	Responsible for syncing data to this component interaction object. This is typically called by the API when this object is
@@ -147,7 +147,7 @@ function Command.Prototype.sync(self: Command, interactionData: apiTypes.Interac
 end
 
 --[=[
-	@within Command
+	@within Classes.CommandInteraction
 	@private
 
 	Responsible for constructing this class.

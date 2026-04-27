@@ -13,7 +13,7 @@ local request = require("./request")
 local gateway = {}
 
 --[=[
-	@within Rest.application
+	@within Rest.gateway
 
 	https://discord.com/developers/docs/topics/gateway#get-gateway
 ]=]
@@ -31,7 +31,7 @@ function gateway.getGatewayAsync(instance: request.Request): future.FutureLike<s
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.gateway
 
 	https://discord.com/developers/docs/topics/gateway#get-gateway-bot
 ]=]

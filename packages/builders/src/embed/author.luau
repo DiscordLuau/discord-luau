@@ -8,7 +8,7 @@
 ]=]
 
 --[=[
-`	@prop name string?
+	@prop name string?
 	@within Builders.Author
 	The name of the author.
 ]=]
