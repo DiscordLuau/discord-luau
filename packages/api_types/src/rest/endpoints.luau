@@ -1,5 +1,5 @@
 --[=[
-	@class StdPolyfills.rest.endpoints
+	@class Types.rest.endpoints
 
 	Mapping out all discord V10 endpoints.
 ]=]
