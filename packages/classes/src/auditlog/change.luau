@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.AuditLogChange
+	@class Classes.AuditLog.Change
 	@__index Prototype
 
 	Implementation of the Discord AuditLogChange class in Luau
@@ -9,21 +9,21 @@
 
 --[=[
 	@prop key string
-	@within Classes.AuditLogChange
+	@within Classes.AuditLog.Change
 
 	The key that was changed in this audit log entry
 ]=]
 
 --[=[
 	@prop newValue any
-	@within Classes.AuditLogChange
+	@within Classes.AuditLog.Change
 
 	The new value of the key after the change was made
 ]=]
 
 --[=[
 	@prop oldValue any
-	@within Classes.AuditLogChange
+	@within Classes.AuditLog.Change
 
 	The previous value of the key before the change was made
 ]=]
@@ -36,7 +36,7 @@ AuditLogChange.Interface = {}
 AuditLogChange.Prototype = {}
 
 --[=[
-	@within Classes.AuditLogChange
+	@within Classes.AuditLog.Change
 	@private
 
 	Responsible for syncing data to this audit log change object. This is typically called by the API when this object is
@@ -51,7 +51,7 @@ function AuditLogChange.Prototype.sync(self: AuditLogChange, auditLogChangeData:
 end
 
 --[=[
-	@within Classes.AuditLogChange
+	@within Classes.AuditLog.Change
 	@private
 
 	Responsible for constructing this class.

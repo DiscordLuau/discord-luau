@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.AuditLogEntry
+	@class Classes.AuditLog.Entry
 	@__index Prototype
 
 	Implementation of the Discord AuditLog class in Luau
@@ -8,50 +8,50 @@
 ]=]
 
 --[=[
-	@prop changes { Classes.AuditLogChange }
-	@within Classes.AuditLogEntry
+	@prop changes { Classes.AuditLog.Change }
+	@within Classes.AuditLog.Entry
 
 	An array of audit log changes that occurred during this audit log entry
 ]=]
 
 --[=[
-	@prop options { Classes.AuditLogEntryInfo }
-	@within Classes.AuditLogEntry
+	@prop options { Classes.AuditLog.EntryInfo }
+	@within Classes.AuditLog.Entry
 
 	Additional information about the audit log entry
 ]=]
 
 --[=[
 	@prop targetId string?
-	@within Classes.AuditLogEntry
+	@within Classes.AuditLog.Entry
 
 	ID of the affected entity (webhook, user, role, etc.)
 ]=]
 
 --[=[
 	@prop userId string?
-	@within Classes.AuditLogEntry
+	@within Classes.AuditLog.Entry
 
 	The user who made the changes
 ]=]
 
 --[=[
 	@prop id string
-	@within Classes.AuditLogEntry
+	@within Classes.AuditLog.Entry
 
 	Unique identifier for this entry
 ]=]
 
 --[=[
 	@prop actionType apiTypes.AuditLogEvent
-	@within Classes.AuditLogEntry
+	@within Classes.AuditLog.Entry
 
 	Type of action that occurred
 ]=]
 
 --[=[
 	@prop reason string?
-	@within Classes.AuditLogEntry
+	@within Classes.AuditLog.Entry
 
 	The reason for the change (0-512 characters)
 ]=]
@@ -67,7 +67,7 @@ AuditLogEntry.Interface = {}
 AuditLogEntry.Prototype = {}
 
 --[=[
-	@within Classes.AuditLogEntry
+	@within Classes.AuditLog.Entry
 	@private
 
 	Responsible for syncing data to this audit log entry object. This is typically called by the API when this object is
@@ -105,7 +105,7 @@ function AuditLogEntry.Prototype.sync(self: AuditLogEntry, auditLogEntryData: ap
 end
 
 --[=[
-	@within Classes.AuditLogEntry
+	@within Classes.AuditLog.Entry
 	@private
 
 	Responsible for constructing this class.

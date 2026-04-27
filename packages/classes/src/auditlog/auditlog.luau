@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.AuditLogs
+	@class Classes.AuditLog
 	@__index Prototype
 
 	Implementation of the Discord AuditLog class in Luau
@@ -9,63 +9,63 @@
 
 --[=[
 	@prop state state.State
-	@within Classes.AuditLogs
+	@within Classes.AuditLog
 
 	The state object that contains all the cache and client information.
 ]=]
 
 --[=[
-	@prop applicationCommands { Classes.Command }
-	@within Classes.AuditLogs
+	@prop applicationCommands { Classes.Application.Command }
+	@within Classes.AuditLog
 
 	Array of application commands found in the audit log.
 ]=]
 
 --[=[
-	@prop auditLogEntries { Classes.AuditLogEntry }
-	@within Classes.AuditLogs
+	@prop auditLogEntries { Classes.AuditLog.Entry }
+	@within Classes.AuditLog
 
 	Array of audit log entries containing information about various changes made in the guild.
 ]=]
 
 --[=[
-	@prop autoModerationRules { Classes.AutomoderationRule }
-	@within Classes.AuditLogs
+	@prop autoModerationRules { Classes.AutoModeration.Rule }
+	@within Classes.AuditLog
 
 	Array of auto moderation rules that have been created, updated, or deleted in the guild.
 ]=]
 
 --[=[
-	@prop guildScheduledEvents { Classes.ScheduledEvent }
-	@within Classes.AuditLogs
+	@prop guildScheduledEvents { Classes.Guild.ScheduledEvent }
+	@within Classes.AuditLog
 
 	Array of scheduled events that have been created, updated, or deleted in the guild.
 ]=]
 
 --[=[
-	@prop integrations { Classes.Integration }
-	@within Classes.AuditLogs
+	@prop integrations { Classes.Guild.Integration }
+	@within Classes.AuditLog
 
 	Array of integrations that have been created, updated, or deleted in the guild.
 ]=]
 
 --[=[
-	@prop threads { Classes.Public }
-	@within Classes.AuditLogs
+	@prop threads { Classes.Channels.PublicThread }
+	@within Classes.AuditLog
 
 	Array of threads that have been created, updated, or deleted in the guild.
 ]=]
 
 --[=[
 	@prop users { Classes.User }
-	@within Classes.AuditLogs
+	@within Classes.AuditLog
 
 	Array of users that are referenced in the audit log entries.
 ]=]
 
 --[=[
 	@prop webhooks { Classes.Webhook }
-	@within Classes.AuditLogs
+	@within Classes.AuditLog
 
 	Array of webhooks that have been created, updated, or deleted in the guild.
 ]=]
@@ -88,7 +88,7 @@ AuditLogs.Interface = {}
 AuditLogs.Prototype = {}
 
 --[=[
-	@within Classes.AuditLogs
+	@within Classes.AuditLog
 	@private
 
 	Responsible for syncing data to this audit logs object. This is typically called by the API when this object is
@@ -129,7 +129,7 @@ function AuditLogs.Prototype.sync(self: AuditLogs, auditLogsData: apiTypes.Audit
 end
 
 --[=[
-	@within Classes.AuditLogs
+	@within Classes.AuditLog
 	@private
 
 	Responsible for constructing this class.
