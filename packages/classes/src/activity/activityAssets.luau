@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.ActivityAssets
+	@class Classes.Activity.Assets
 	@__index Prototype
 
 	Implementation of the Discord ActivityAssets class in Luau
@@ -9,28 +9,28 @@
 
 --[=[
 	@prop largeImage string
-	@within Classes.ActivityAssets
+	@within Classes.Activity.Assets
 
 	The key for the large asset of the activity, usually a snowflake representing a custom image
 ]=]
 
 --[=[
 	@prop largeText string
-	@within Classes.ActivityAssets
+	@within Classes.Activity.Assets
 
 	Text displayed when hovering over the large image of the activity
 ]=]
 
 --[=[
 	@prop smallImage string
-	@within Classes.ActivityAssets
+	@within Classes.Activity.Assets
 
 	The key for the small asset of the activity, usually a snowflake representing a custom image
 ]=]
 
 --[=[
 	@prop smallText string
-	@within Classes.ActivityAssets
+	@within Classes.Activity.Assets
 
 	Text displayed when hovering over the small image of the activity
 ]=]
@@ -41,7 +41,7 @@ ActivityAssets.Interface = {}
 ActivityAssets.Prototype = {}
 
 --[=[
-	@within Classes.ActivityAssets
+	@within Classes.Activity.Assets
 	@private
 
 	Responsible for constructing this class.

@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.ActivityButton
+	@class Classes.Activity.Button
 	@__index Prototype
 
 	Implementation of the Discord ActivityButton class in Luau
@@ -9,14 +9,14 @@
 
 --[=[
 	@prop label string
-	@within Classes.ActivityButton
+	@within Classes.Activity.Button
 
 	The text shown on the button (1-32 characters)
 ]=]
 
 --[=[
 	@prop url string
-	@within Classes.ActivityButton
+	@within Classes.Activity.Button
 
 	The url opened when clicking the button (1-512 characters)
 ]=]
@@ -27,7 +27,7 @@ ActivityButton.Interface = {}
 ActivityButton.Prototype = {}
 
 --[=[
-	@within Classes.ActivityButton
+	@within Classes.Activity.Button
 	@private
 
 	Responsible for constructing this class.

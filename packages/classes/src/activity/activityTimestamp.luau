@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.ActivityTimestamp
+	@class Classes.Activity.Timestamp
 	@__index Prototype
 
 	Implementation of the Discord ActivityTimestamps class in Luau
@@ -9,14 +9,14 @@
 
 --[=[
 	@prop startTime std_polyfills.DateTime
-	@within Classes.ActivityTimestamp
+	@within Classes.Activity.Timestamp
 
 	The start time of the activity. This represents when the activity began.
 ]=]
 
 --[=[
 	@prop endTime std_polyfills.DateTime
-	@within Classes.ActivityTimestamp
+	@within Classes.Activity.Timestamp
 
 	The end time of the activity. This represents when the activity will end.
 ]=]
@@ -29,7 +29,7 @@ ActivityTimestamp.Interface = {}
 ActivityTimestamp.Prototype = {}
 
 --[=[
-	@within Classes.ActivityTimestamp
+	@within Classes.Activity.Timestamp
 	@private
 
 	Responsible for constructing this class.

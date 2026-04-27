@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.ActivityParty
+	@class Classes.Activity.Party
 	@__index Prototype
 
 	Implementation of the Discord ActivityParty class in Luau
@@ -9,21 +9,21 @@
 
 --[=[
 	@prop id string
-	@within Classes.ActivityParty
+	@within Classes.Activity.Party
 	
 	The unique identifier for this activity party
 ]=]
 
 --[=[
 	@prop currentSize number
-	@within Classes.ActivityParty
+	@within Classes.Activity.Party
 	
 	The current size of the party
 ]=]
 
 --[=[
 	@prop maxSize number
-	@within Classes.ActivityParty
+	@within Classes.Activity.Party
 	
 	The maximum size the party can be
 ]=]
@@ -36,7 +36,7 @@ ActivityParty.Interface = {}
 ActivityParty.Prototype = {}
 
 --[=[
-	@within Classes.ActivityParty
+	@within Classes.Activity.Party
 	@private
 
 	Responsible for constructing this class.
