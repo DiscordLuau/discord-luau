@@ -1,5 +1,5 @@
 --[=[
-	@class Builders.DefaultReaction
+	@class Builders.Channel.DefaultReaction
 	@__index Prototype
 
 	Implementation of a discord default reaction object as a luau builder.	
@@ -11,13 +11,13 @@
 
 --[=[
 	@prop emojiId string?
-	@within Builders.DefaultReaction
+	@within Builders.Channel.DefaultReaction
 	The id of a guild's custom emoji.
 ]=]
 
 --[=[
 	@prop emojiName string?
-	@within Builders.DefaultReaction
+	@within Builders.Channel.DefaultReaction
 	The unicode character of the emoji.
 ]=]
 
@@ -29,7 +29,7 @@ DefaultReaction.Prototype = {}
 DefaultReaction.Interface = {}
 
 --[=[
-	@within Builders.DefaultReaction
+	@within Builders.Channel.DefaultReaction
 
 	Responsible for buillding the default reaction object that the Discord API can understand.
 ]=]
@@ -41,7 +41,7 @@ function DefaultReaction.Prototype.build(self: DefaultReaction): JSON
 end
 
 --[=[
-	@within Builders.DefaultReaction
+	@within Builders.Channel.DefaultReaction
 
 	Constructor for the Discord Default Reaction Builder.
 

@@ -1,5 +1,5 @@
 --[=[
-	@class Builders.Choice
+	@class Builders.Interaction.Choice
 	@__index Prototype
 
 	Implementation of the Application Command Option Choice Structure in Luau.
@@ -9,19 +9,19 @@
 
 --[=[
 	@prop name string
-	@within Builders.Choice
+	@within Builders.Interaction.Choice
 	The name of the choice that is displayed to users.
 ]=]
 
 --[=[
 	@prop nameLocalizations { [apiTypes.LanguageLocales]: string }
-	@within Builders.Choice
+	@within Builders.Interaction.Choice
 	Dictionary of localization entries for the choice name.
 ]=]
 
 --[=[
 	@prop value string | number
-	@within Builders.Choice
+	@within Builders.Interaction.Choice
 	The value that is sent to your application when this choice is selected.
 ]=]
 
@@ -35,7 +35,7 @@ Choice.Prototype = {}
 Choice.Interface = {}
 
 --[=[
-	@within Builders.Choice
+	@within Builders.Interaction.Choice
 
 	Responsible for setting the name of the choice. Name must be kebab case, with 1-100 characters.
 ]=]
@@ -51,7 +51,7 @@ function Choice.Prototype.setName(self: Choice, name: string): Choice
 end
 
 --[=[
-	@within Builders.Choice
+	@within Builders.Interaction.Choice
 
 	Adding localization to the Name of the choice, enabling developers to create milti-language support.
 ]=]
@@ -71,7 +71,7 @@ function Choice.Prototype.setNameLocalization(
 end
 
 --[=[
-	@within Builders.Choice
+	@within Builders.Interaction.Choice
 
 	Set the value of the choice, value can only be either a string or number.
 ]=]
@@ -90,7 +90,7 @@ function Choice.Prototype.setValue(self: Choice, value: string | number): Choice
 end
 
 --[=[
-	@within Builders.Choice
+	@within Builders.Interaction.Choice
 
 	Responsible for buillding the default reaction object that the Discord API can understand.
 ]=]
@@ -106,7 +106,7 @@ function Choice.Prototype.build(self: Choice): JSON
 end
 
 --[=[
-	@within Builders.Choice
+	@within Builders.Interaction.Choice
 
 	Constructor for the Discord Default Reaction Builder.
 

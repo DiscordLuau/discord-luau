@@ -44,7 +44,7 @@
 ]=]
 
 --[=[
-	@prop choices { Builders.Choice.JSON }
+	@prop choices { Builders.Interaction.Choice.JSON }
 	@within Builders.Interaction.Option
 	Possible choices for this option (String, Integer, or Number types only).
 ]=]

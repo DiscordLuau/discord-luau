@@ -1,5 +1,5 @@
 --[=[
-	@class Builders.TriggerMetadata
+	@class Builders.AutoModeration.TriggerMetadata
 	@__index Prototype
 
 	Implementation of a discord auto moderation trigger metadata object as a luau builder.
@@ -7,37 +7,37 @@
 
 --[=[
 	@prop keywordFilter {string}
-	@within Builders.TriggerMetadata
+	@within Builders.AutoModeration.TriggerMetadata
 	Array of strings that represent keywords that will trigger the rule.
 ]=]
 
 --[=[
 	@prop regexPatterns {string}
-	@within Builders.TriggerMetadata
+	@within Builders.AutoModeration.TriggerMetadata
 	Array of strings that represent regex patterns that will trigger the rule.
 ]=]
 
 --[=[
 	@prop presets {api_types.KeywordPresetType}
-	@within Builders.TriggerMetadata
+	@within Builders.AutoModeration.TriggerMetadata
 	Array of preset keyword types that will trigger the rule.
 ]=]
 
 --[=[
 	@prop allowList {string}
-	@within Builders.TriggerMetadata
+	@within Builders.AutoModeration.TriggerMetadata
 	Array of strings that represent keywords that should not trigger the rule.
 ]=]
 
 --[=[
 	@prop mentionTotalLimit number
-	@within Builders.TriggerMetadata
+	@within Builders.AutoModeration.TriggerMetadata
 	Total number of unique role and user mentions allowed per message.
 ]=]
 
 --[=[
 	@prop mentionRaidProtectionEnabled boolean
-	@within Builders.TriggerMetadata
+	@within Builders.AutoModeration.TriggerMetadata
 	Whether to automatically detect mention raids and remove them.
 ]=]
 
@@ -49,7 +49,7 @@ TriggerMetadata.Prototype = {}
 TriggerMetadata.Interface = {}
 
 --[=[
-	@within Builders.TriggerMetadata
+	@within Builders.AutoModeration.TriggerMetadata
 
 	Sets the list of keywords to match.
 ]=]
@@ -60,7 +60,7 @@ function TriggerMetadata.Prototype.setKeywordFilter(self: TriggerMetadata, keywo
 end
 
 --[=[
-	@within Builders.TriggerMetadata
+	@within Builders.AutoModeration.TriggerMetadata
 
 	Sets the list of regular expressions to match.
 ]=]
@@ -71,7 +71,7 @@ function TriggerMetadata.Prototype.setRegexPatterns(self: TriggerMetadata, regex
 end
 
 --[=[
-	@within Builders.TriggerMetadata
+	@within Builders.AutoModeration.TriggerMetadata
 
 	Sets the list of preset keywords to match.
 ]=]
@@ -85,7 +85,7 @@ function TriggerMetadata.Prototype.setPresets(
 end
 
 --[=[
-	@within Builders.TriggerMetadata
+	@within Builders.AutoModeration.TriggerMetadata
 
 	Sets the list of allowed keywords.
 ]=]
@@ -96,7 +96,7 @@ function TriggerMetadata.Prototype.setAllowList(self: TriggerMetadata, allowList
 end
 
 --[=[
-	@within Builders.TriggerMetadata
+	@within Builders.AutoModeration.TriggerMetadata
 
 	Sets the maximum number of mentions allowed.
 ]=]
@@ -110,7 +110,7 @@ function TriggerMetadata.Prototype.setMentionTotalLimit(
 end
 
 --[=[
-	@within Builders.TriggerMetadata
+	@within Builders.AutoModeration.TriggerMetadata
 
 	Sets whether raid protection is enabled.
 ]=]
@@ -124,7 +124,7 @@ function TriggerMetadata.Prototype.setMentionRaidProtectionEnabled(
 end
 
 --[=[
-	@within Builders.TriggerMetadata
+	@within Builders.AutoModeration.TriggerMetadata
 
 	Builds the trigger metadata object.
 ]=]
@@ -146,7 +146,7 @@ function TriggerMetadata.Prototype.build(self: TriggerMetadata): JSON
 end
 
 --[=[
-	@within Builders.TriggerMetadata
+	@within Builders.AutoModeration.TriggerMetadata
 
 	Responsible for creating a new TriggerMetadata.
 

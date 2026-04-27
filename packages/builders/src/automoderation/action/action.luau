@@ -1,5 +1,5 @@
 --[=[
-	@class Builders.Action
+	@class Builders.AutoModeration.Action
 	@__index Prototype
 
 	Implementation of a discord automod action object as a luau builder.
@@ -7,13 +7,13 @@
 
 --[=[
 	@prop type apiTypes.ActionTypes
-	@within Builders.Action
+	@within Builders.AutoModeration.Action
 	The type of action to perform when a rule is triggered.
 ]=]
 
 --[=[
-	@prop metadata Builders.ActionMetadata
-	@within Builders.Action
+	@prop metadata Builders.AutoModeration.ActionMetadata
+	@within Builders.AutoModeration.Action
 	Additional metadata needed during execution for this specific action type.
 ]=]
 
@@ -26,7 +26,7 @@ Action.Prototype = {}
 Action.Interface = {}
 
 --[=[
-	@within Builders.Action
+	@within Builders.AutoModeration.Action
 
 	Sets the type of the action.
 ]=]
@@ -37,7 +37,7 @@ function Action.Prototype.setType(self: Action, type: apiTypes.ActionTypes): Act
 end
 
 --[=[
-	@within Builders.Action
+	@within Builders.AutoModeration.Action
 
 	Sets the action metadata.
 ]=]
@@ -48,7 +48,7 @@ function Action.Prototype.setMetadata(self: Action, metadata: metadata.JSON): Ac
 end
 
 --[=[
-	@within Builders.Action
+	@within Builders.AutoModeration.Action
 
 	Builds the action object.
 ]=]
@@ -60,7 +60,7 @@ function Action.Prototype.build(self: Action): JSON
 end
 
 --[=[
-	@within Builders.Action
+	@within Builders.AutoModeration.Action
 
 	Responsible for creating a new Action.
 ]=]
