@@ -302,7 +302,7 @@ Guild.Prototype = {}
 	@within Classes.Guild
 	Creates a guild Slash command for the application.
 ]=]
-function Guild.Prototype.createSlashCommandAsync(self: Guild, slashCommand: builders.interactionJSON)
+function Guild.Prototype.createSlashCommandAsync(self: Guild, slashCommand: builders.interactionJSON): future.FutureLike<string, commandObject.Command>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -320,7 +320,7 @@ end
 	@within Classes.Guild
 	Delete an existing guild application command.
 ]=]
-function Guild.Prototype.deleteSlashCommandAsync(self: Guild, slashCommandId: apiTypes.Snowflake)
+function Guild.Prototype.deleteSlashCommandAsync(self: Guild, slashCommandId: apiTypes.Snowflake): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -342,7 +342,7 @@ function Guild.Prototype.editSlashCommandAsync(
 	self: Guild,
 	slashCommandId: apiTypes.Snowflake,
 	slashCommand: builders.interactionJSON
-)
+): future.FutureLike<string, commandObject.Command>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -360,7 +360,7 @@ end
 	@within Classes.Guild
 	Get a list of guild application commands.
 ]=]
-function Guild.Prototype.getSlashCommandsAsync(self: Guild, withLocalizations: boolean?)
+function Guild.Prototype.getSlashCommandsAsync(self: Guild, withLocalizations: boolean?): future.FutureLike<string, { commandObject.Command }>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -387,7 +387,7 @@ end
 	Overwrite all guild application commands. This will skip over commands that are the same as the current commands,
 	and will not remove any existing commands.
 ]=]
-function Guild.Prototype.overwriteSlashCommandsAsync(self: Guild, slashCommands: { builders.interactionJSON })
+function Guild.Prototype.overwriteSlashCommandsAsync(self: Guild, slashCommands: { builders.interactionJSON }): future.FutureLike<string, { commandObject.Command }>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -413,7 +413,7 @@ end
 	Returns the guild preview object for the given id. If the user is not in the guild, then the guild must be
 	discoverable.
 ]=]
-function Guild.Prototype.getPreviewAsync(self: Guild)
+function Guild.Prototype.getPreviewAsync(self: Guild): future.FutureLike<string, preview.Preview>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -431,7 +431,7 @@ end
 	Modify a guild's settings. Requires the MANAGE_GUILD permission.
 	Returns the updated guild object on success. Fires a Guild Update Gateway event.
 ]=]
-function Guild.Prototype.modifyAsync(self: Guild, json: builders.guildJSON, reason: string?)
+function Guild.Prototype.modifyAsync(self: Guild, json: builders.guildJSON, reason: string?): future.FutureLike<string, Guild>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -451,7 +451,7 @@ end
 	Delete a guild permanently. User must be owner.
 	Returns 204 No Content on success. Fires a Guild Delete Gateway event.
 ]=]
-function Guild.Prototype.deleteAsync(self: Guild)
+function Guild.Prototype.deleteAsync(self: Guild): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -472,7 +472,7 @@ end
 
 	Please use explicit functions for specific channel types, for example: getTextChannelsAsync, getVoiceChannelsAsync, etc.
 ]=]
-function Guild.Prototype.getChannelsAsync(self: Guild)
+function Guild.Prototype.getChannelsAsync(self: Guild): future.FutureLike<string, { apiTypes.AbstractChannel }>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -494,7 +494,7 @@ end
 	@within Classes.Guild
 	Returns a list of guild text channel objects.
 ]=]
-function Guild.Prototype.getTextChannelsAsync(self: Guild)
+function Guild.Prototype.getTextChannelsAsync(self: Guild): future.FutureLike<string, { guildText.GuildText }>
 	return future.Future.new(function()
 		local channels = self:getChannelsAsync():await()
 
@@ -520,7 +520,7 @@ end
 	@within Classes.Guild
 	Returns a list of guild voice channel objects.
 ]=]
-function Guild.Prototype.getVoiceChannelsAsync(self: Guild)
+function Guild.Prototype.getVoiceChannelsAsync(self: Guild): future.FutureLike<string, { guildVoice.GuildVoice }>
 	return future.Future.new(function()
 		local channels = self:getChannelsAsync():await()
 
@@ -546,7 +546,7 @@ end
 	@within Classes.Guild
 	Returns a list of guild category channel objects.
 ]=]
-function Guild.Prototype.getCategoryChannelsAsync(self: Guild)
+function Guild.Prototype.getCategoryChannelsAsync(self: Guild): future.FutureLike<string, { guildCategory.GuildCategory }>
 	return future.Future.new(function()
 		local channels = self:getChannelsAsync():await()
 
@@ -572,7 +572,7 @@ end
 	@within Classes.Guild
 	Returns a list of guild announcement channel objects.
 ]=]
-function Guild.Prototype.getAnnouncementChannelsAsync(self: Guild)
+function Guild.Prototype.getAnnouncementChannelsAsync(self: Guild): future.FutureLike<string, { guildAnnouncement.GuildAnnouncement }>
 	return future.Future.new(function()
 		local channels = self:getChannelsAsync():await()
 
@@ -598,7 +598,7 @@ end
 	@within Classes.Guild
 	Returns a list of guild stage voice channel objects.
 ]=]
-function Guild.Prototype.getStageVoiceChannelsAsync(self: Guild)
+function Guild.Prototype.getStageVoiceChannelsAsync(self: Guild): future.FutureLike<string, { guildStageVoice.GuildStageVoice }>
 	return future.Future.new(function()
 		local channels = self:getChannelsAsync():await()
 
@@ -624,7 +624,7 @@ end
 	@within Classes.Guild
 	Returns a list of guild directory channel objects.
 ]=]
-function Guild.Prototype.getDirectoryChannelsAsync(self: Guild)
+function Guild.Prototype.getDirectoryChannelsAsync(self: Guild): future.FutureLike<string, { guildDirectory.GuildDirectory }>
 	return future.Future.new(function()
 		local channels = self:getChannelsAsync():await()
 
@@ -653,7 +653,7 @@ end
 	Setting MANAGE_ROLES permission in channels is only possible for guild administrators.
 	Returns the new channel object on success. Fires a Channel Create Gateway event.
 ]=]
-function Guild.Prototype.createChannelAsync<T>(self: Guild, json: builders.channelJSON, reason: string?)
+function Guild.Prototype.createChannelAsync<T>(self: Guild, json: builders.channelJSON, reason: string?): future.FutureLike<string, { apiTypes.AbstractChannel }>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -669,7 +669,7 @@ end
 	@within Classes.Guild
 	Returns a map of role IDs to the number of members with the role. Does not include the @everyone role.
 ]=]
-function Guild.Prototype.getRoleMemberCounts<T>(self: Guild)
+function Guild.Prototype.getRoleMemberCounts<T>(self: Guild): future.FutureLike<string, { [string]: number }>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -693,7 +693,7 @@ end
 
 	Please use explicit functions for specific channel types, for example: getMediaThreadsAsync, getAnnouncementThreadsAsync, etc.
 ]=]
-function Guild.Prototype.getThreadsAsync(self: Guild)
+function Guild.Prototype.getThreadsAsync(self: Guild): future.FutureLike<string, { publicThread.Public | privateThread.Private }>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -715,7 +715,7 @@ end
 	@within Classes.Guild
 	Returns a list of guild announcement thread objects.
 ]=]
-function Guild.Prototype.getAnnouncementThreadsAsync(self: Guild)
+function Guild.Prototype.getAnnouncementThreadsAsync(self: Guild): future.FutureLike<string, { announcementThread.Announcement }>
 	return future.Future.new(function()
 		local channels = self:getChannelsAsync():await()
 
@@ -741,7 +741,7 @@ end
 	@within Classes.Guild
 	Returns a list of public guild thread objects.
 ]=]
-function Guild.Prototype.getPublicThreadsAsync(self: Guild)
+function Guild.Prototype.getPublicThreadsAsync(self: Guild): future.FutureLike<string, { publicThread.Public }>
 	return future.Future.new(function()
 		local channels = self:getChannelsAsync():await()
 
@@ -767,7 +767,7 @@ end
 	@within Classes.Guild
 	Returns a list of private guild thread objects.
 ]=]
-function Guild.Prototype.getPrivateThreadsAsync(self: Guild)
+function Guild.Prototype.getPrivateThreadsAsync(self: Guild): future.FutureLike<string, { privateThread.Private }>
 	return future.Future.new(function()
 		local channels = self:getChannelsAsync():await()
 
@@ -793,7 +793,7 @@ end
 	@within Classes.Guild
 	Returns a guild member object for the specified user.
 ]=]
-function Guild.Prototype.getMemberAsync(self: Guild, userId: string)
+function Guild.Prototype.getMemberAsync(self: Guild, userId: string): future.FutureLike<string, member.Member>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -810,7 +810,7 @@ end
 	@within Classes.Guild
 	Returns a list of guild member objects that are members of the guild.
 ]=]
-function Guild.Prototype.listMembersAsync(self: Guild, lastSnowflake: string?, limit: number?)
+function Guild.Prototype.listMembersAsync(self: Guild, lastSnowflake: string?, limit: number?): future.FutureLike<string, { member.Member }>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -837,7 +837,7 @@ end
 	@within Classes.Guild
 	Returns a list of guild member objects whose username or nickname starts with a provided string.
 ]=]
-function Guild.Prototype.searchMembersAsync(self: Guild, query: string, limit: number?)
+function Guild.Prototype.searchMembersAsync(self: Guild, query: string, limit: number?): future.FutureLike<string, { member.Member }>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -876,7 +876,7 @@ function Guild.Prototype.addMemberAsync(
 	roles: { apiTypes.Snowflake }?,
 	muted: boolean?,
 	deafened: boolean?
-)
+): future.FutureLike<string, member.Member?>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -906,7 +906,7 @@ end
 	@within Classes.Guild
 	Removes a role from a guild member. Requires the MANAGE_ROLES permission.
 ]=]
-function Guild.Prototype.kickMemberAsync(self: Guild, userId: apiTypes.Snowflake, reason: string?)
+function Guild.Prototype.kickMemberAsync(self: Guild, userId: apiTypes.Snowflake, reason: string?): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -928,7 +928,7 @@ function Guild.Prototype.banMemberAsync(
 	reason: string?,
 	deleteMessageDays: number?,
 	deleteMessageSeconds: number?
-)
+): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -1006,7 +1006,7 @@ function Guild.Prototype.getBansAsync(
 	limit: number?,
 	before: apiTypes.Snowflake?,
 	after: apiTypes.Snowflake?
-)
+): future.FutureLike<string, { ban.Ban }>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -1034,7 +1034,7 @@ end
 	@within Classes.Guild
 	Returns a ban object for the given user or a 404 not found if the ban cannot be found.
 ]=]
-function Guild.Prototype.getBanAsync(self: Guild, userId: apiTypes.Snowflake)
+function Guild.Prototype.getBanAsync(self: Guild, userId: apiTypes.Snowflake): future.FutureLike<string, ban.Ban?>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -1056,7 +1056,7 @@ end
 	@within Classes.Guild
 	Returns a list of role objects for the guild.
 ]=]
-function Guild.Prototype.getRolesAsync(self: Guild)
+function Guild.Prototype.getRolesAsync(self: Guild): future.FutureLike<string, { role.Role }>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -1080,7 +1080,7 @@ end
 	@within Classes.Guild
 	Returns a role object for the specified role.
 ]=]
-function Guild.Prototype.getRoleAsync(self: Guild, roleId: apiTypes.Snowflake)
+function Guild.Prototype.getRoleAsync(self: Guild, roleId: apiTypes.Snowflake): future.FutureLike<string, role.Role>
 	return future.Future.new(function()
 		local cachedRoleData = self.state.cache.roles:get(roleId)
 
@@ -1107,7 +1107,7 @@ end
 	Create a new role for the guild. Requires the MANAGE_ROLES permission.
 	Returns the new role object on success.
 ]=]
-function Guild.Prototype.createRoleAsync(self: Guild, roleJson: builders.roleJSON, reason: string?)
+function Guild.Prototype.createRoleAsync(self: Guild, roleJson: builders.roleJSON, reason: string?): future.FutureLike<string, role.Role>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -1123,7 +1123,7 @@ end
 	@within Classes.Guild
 	Modify a guild's MFA level. Requires guild ownership. Returns the updated level on success.
 ]=]
-function Guild.Prototype.setMFALevelAsync(self: Guild, mfaLevel: apiTypes.MFALevel, reason: string?)
+function Guild.Prototype.setMFALevelAsync(self: Guild, mfaLevel: apiTypes.MFALevel, reason: string?): future.FutureLike<string, apiTypes.MFALevel>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -1148,7 +1148,7 @@ end
 	providing the include_roles parameter. Any inactive user that has a subset of the provided role(s) will be
 	counted in the prune and users with additional roles will not.
 ]=]
-function Guild.Prototype.getPruneCountAsync(self: Guild, days: number?, includedRoles: { apiTypes.Snowflake }?)
+function Guild.Prototype.getPruneCountAsync(self: Guild, days: number?, includedRoles: { apiTypes.Snowflake }?): future.FutureLike<string, number>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -1182,7 +1182,7 @@ function Guild.Prototype.beginPruneAsync(
 	returnPruneCount: boolean?,
 	includedRoles: { apiTypes.Snowflake }?,
 	reason: string?
-)
+): future.FutureLike<string, number>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -1209,7 +1209,7 @@ end
 	@within Classes.Guild
 	Returns an array of voice region objects that can be used when setting a voice or stage channel's rtc_region.
 ]=]
-function Guild.Prototype.getVoiceRegionsAsync(self: Guild)
+function Guild.Prototype.getVoiceRegionsAsync(self: Guild): future.FutureLike<string, { voiceRegion.VoiceRegion }>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -1231,7 +1231,7 @@ end
 	@within Classes.Guild
 	Returns a list of invite objects (with invite metadata) for the guild. Requires the MANAGE_GUILD permission.
 ]=]
-function Guild.Prototype.getInvitesAsync(self: Guild)
+function Guild.Prototype.getInvitesAsync(self: Guild): future.FutureLike<string, { invite.Invite }>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -1253,7 +1253,7 @@ end
 	@within Classes.Guild
 	Returns a list of integration objects for the guild. Requires the MANAGE_GUILD permission.
 ]=]
-function Guild.Prototype.getIntegrationsAsync(self: Guild)
+function Guild.Prototype.getIntegrationsAsync(self: Guild): future.FutureLike<string, { integration.Integration }>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -1278,7 +1278,7 @@ end
 	
 	Requires the MANAGE_GUILD permission.
 ]=]
-function Guild.Prototype.deleteIntegrationAsync(self: Guild, integrationId: string)
+function Guild.Prototype.deleteIntegrationAsync(self: Guild, integrationId: string): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -1294,7 +1294,7 @@ end
 	@within Classes.Guild
 	Returns a guild widget settings object. Requires the MANAGE_GUILD permission.
 ]=]
-function Guild.Prototype.getWidgetSettingsAsync(self: Guild)
+function Guild.Prototype.getWidgetSettingsAsync(self: Guild): future.FutureLike<string, widgetSettings.WidgetSettings>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -1311,7 +1311,7 @@ end
 	Modify a guild widget settings object for the guild. All attributes may be passed in with JSON and modified.
 	Requires the MANAGE_GUILD permission. Returns the updated guild widget settings object. 
 ]=]
-function Guild.Prototype.modifyWidgetAsync(self: Guild, json: builders.widgetSettingsJSON, reason: string?)
+function Guild.Prototype.modifyWidgetAsync(self: Guild, json: builders.widgetSettingsJSON, reason: string?): future.FutureLike<string, widgetSettings.WidgetSettings>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -1328,7 +1328,7 @@ end
 	Returns the widget for the guild. Fires an Invite Create Gateway event when an invite channel is defined
 	and a new Invite is generated.
 ]=]
-function Guild.Prototype.getWidgetAsync(self: Guild)
+function Guild.Prototype.getWidgetAsync(self: Guild): future.FutureLike<string, widget.Widget>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -1345,7 +1345,7 @@ end
 	Returns a partial invite object for guilds with that feature enabled. Requires the MANAGE_GUILD permission.
 	code will be null if a vanity url for the guild is not set.
 ]=]
-function Guild.Prototype.getVanityUrlAsync(self: Guild)
+function Guild.Prototype.getVanityUrlAsync(self: Guild): future.FutureLike<string, vanityUrl.VanityUrl>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -1364,7 +1364,7 @@ end
 function Guild.Prototype.getWidgetImageAsync(
 	self: Guild,
 	style: "shield" | "banner1" | "banner2" | "banner3" | "banner4"
-)
+): future.FutureLike<string, string>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -1386,7 +1386,7 @@ end
 	
 	the MANAGE_GUILD permission is required.
 ]=]
-function Guild.Prototype.getWelcomeScreenAsync(self: Guild)
+function Guild.Prototype.getWelcomeScreenAsync(self: Guild): future.FutureLike<string, welcomeScreen.WelcomeScreen>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -1402,7 +1402,7 @@ end
 	@within Classes.Guild
 	Modify the guild's Welcome Screen. Requires the MANAGE_GUILD permission.
 ]=]
-function Guild.Prototype.modifyWelcomeScreenAsync(self: Guild, json: builders.welcomeScreenJSON, reason: string?)
+function Guild.Prototype.modifyWelcomeScreenAsync(self: Guild, json: builders.welcomeScreenJSON, reason: string?): future.FutureLike<string, welcomeScreen.WelcomeScreen>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -1418,7 +1418,7 @@ end
 	@within Classes.Guild
 	Returns the Onboarding object for the guild.
 ]=]
-function Guild.Prototype.getOnboardingAsync(self: Guild)
+function Guild.Prototype.getOnboardingAsync(self: Guild): future.FutureLike<string, onboarding.Onboarding>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -1435,7 +1435,7 @@ end
 	Modifies the onboarding configuration of the guild. Returns a 200 with the Onboarding object for the guild.
 	Requires the MANAGE_GUILD and MANAGE_ROLES permissions.
 ]=]
-function Guild.Prototype.modifyOnboardingAsync(self: Guild, json: builders.onboardingJSON, reason: string?)
+function Guild.Prototype.modifyOnboardingAsync(self: Guild, json: builders.onboardingJSON, reason: string?): future.FutureLike<string, onboarding.Onboarding>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -1464,7 +1464,7 @@ function Guild.Prototype.getGuildAuditLogAsync(
 	before: apiTypes.Snowflake?,
 	after: apiTypes.Snowflake?,
 	limit: number?
-)
+): future.FutureLike<string, auditlog.AuditLogs>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -1488,7 +1488,7 @@ end
 	@within Classes.Guild
 	Get a list of all rules currently configured for the guild. Returns a list of auto moderation rule objects for the given guild.
 ]=]
-function Guild.Prototype.listAutomoderationRulesAsync(self: Guild)
+function Guild.Prototype.listAutomoderationRulesAsync(self: Guild): future.FutureLike<string, { automoderationRule.AutomoderationRule }>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -1510,7 +1510,7 @@ end
 	@within Classes.Guild
 	Get a single rule. Returns an auto moderation rule object.
 ]=]
-function Guild.Prototype.getAutomoderationRuleAsync(self: Guild, ruleId: apiTypes.Snowflake)
+function Guild.Prototype.getAutomoderationRuleAsync(self: Guild, ruleId: apiTypes.Snowflake): future.FutureLike<string, automoderationRule.AutomoderationRule>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -1530,7 +1530,7 @@ function Guild.Prototype.createAutomoderationRuleAsync(
 	self: Guild,
 	ruleJSON: builders.AutomoderationRuleJSON,
 	reason: string?
-)
+): future.FutureLike<string, automoderationRule.AutomoderationRule>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
