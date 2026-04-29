@@ -107,7 +107,7 @@ function AutomoderationRule.Prototype.modifyAsync(
 	self: AutomoderationRule,
 	automoderationRuleJSON: builders.AutomoderationRuleJSON,
 	auditLogReason: string?
-)
+): future.FutureLike<string, AutomoderationRule>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -128,7 +128,7 @@ end
 
 	Deletes an automoderation rule.
 ]=]
-function AutomoderationRule.Prototype.deleteAsync(self: AutomoderationRule, auditLogReason: string?)
+function AutomoderationRule.Prototype.deleteAsync(self: AutomoderationRule, auditLogReason: string?): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -151,7 +151,7 @@ end
 function AutomoderationRule.Prototype.sync(
 	self: AutomoderationRule,
 	automoderationData: apiTypes.AutomoderationRuleObject
-)
+): nil
 	local actions = {}
 
 	for _, actionData in automoderationData.actions do
