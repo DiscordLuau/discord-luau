@@ -110,7 +110,7 @@ Role.Prototype = {}
 	@within Classes.Guild.Role
 	Delete a guild role. Requires the MANAGE_ROLES permission.
 ]=]
-function Role.Prototype.deleteAsync(self: Role, reason: string?)
+function Role.Prototype.deleteAsync(self: Role, reason: string?): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -126,7 +126,7 @@ end
 	@within Classes.Guild.Role
 	Modify a guild role. Requires the MANAGE_ROLES permission. Returns the updated role on success.
 ]=]
-function Role.Prototype.modifyAsync(self: Role, json: builders.roleJSON, reason: string?)
+function Role.Prototype.modifyAsync(self: Role, json: builders.roleJSON, reason: string?): future.FutureLike<string, Role>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -144,7 +144,7 @@ end
 	@within Classes.Guild.Role
 	Modify the positions of a set of role objects for the guild. Requires the MANAGE_ROLES permission.
 ]=]
-function Role.Prototype.modifyPositionAsync(self: Role, position: number, reason: string?)
+function Role.Prototype.modifyPositionAsync(self: Role, position: number, reason: string?): future.FutureLike<string, { Role }>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -171,7 +171,7 @@ end
 	@within Classes.Guild.Role
 	Sets the name of the role.
 ]=]
-function Role.Prototype.setNameAsync(self: Role, name: string, reason: string?)
+function Role.Prototype.setNameAsync(self: Role, name: string, reason: string?): future.FutureLike<string, Role>
 	return self:modifyAsync({
 		name = name,
 	}, reason)
@@ -181,7 +181,7 @@ end
 	@within Classes.Guild.Role
 	Adds a permission to the role's current permission set.
 ]=]
-function Role.Prototype.addPermissionAsync(self: Role, permission: apiTypes.Permissions, reason: string?)
+function Role.Prototype.addPermissionAsync(self: Role, permission: apiTypes.Permissions, reason: string?): future.FutureLike<string, Role>
 	local permissionBuilder = builders.permission.fromPermissions(self.permissions:toList())
 
 	permissionBuilder:addPermission(permission)
@@ -195,7 +195,7 @@ end
 	@within Classes.Guild.Role
 	Removes a permission from the role's current permission set.
 ]=]
-function Role.Prototype.removePermissionAsync(self: Role, permission: apiTypes.Permissions, reason: string?)
+function Role.Prototype.removePermissionAsync(self: Role, permission: apiTypes.Permissions, reason: string?): future.FutureLike<string, Role>
 	local permissionBuilder = builders.permission.fromPermissions(self.permissions:toList())
 
 	permissionBuilder:removePermission(permission)
@@ -209,7 +209,7 @@ end
 	@within Classes.Guild.Role
 	Sets the color of the role.
 ]=]
-function Role.Prototype.setColorAsync(self: Role, color: number, reason: string?)
+function Role.Prototype.setColorAsync(self: Role, color: number, reason: string?): future.FutureLike<string, Role>
 	return self:modifyAsync({
 		color = color,
 	}, reason)
@@ -219,7 +219,7 @@ end
 	@within Classes.Guild.Role
 	Sets whether the role should be displayed separately in the member list.
 ]=]
-function Role.Prototype.setHoistedAsync(self: Role, hoisted: boolean, reason: string?)
+function Role.Prototype.setHoistedAsync(self: Role, hoisted: boolean, reason: string?): future.FutureLike<string, Role>
 	return self:modifyAsync({
 		hoist = hoisted,
 	}, reason)
@@ -229,7 +229,7 @@ end
 	@within Classes.Guild.Role
 	Sets the icon image for the role.
 ]=]
-function Role.Prototype.setIconAsync(self: Role, iconData: string, reason: string?)
+function Role.Prototype.setIconAsync(self: Role, iconData: string, reason: string?): future.FutureLike<string, Role>
 	return self:modifyAsync({
 		icon = iconData,
 	}, reason)
@@ -239,7 +239,7 @@ end
 	@within Classes.Guild.Role
 	Sets the unicode emoji for the role.
 ]=]
-function Role.Prototype.setEmojiAsync(self: Role, emoji: string, reason: string?)
+function Role.Prototype.setEmojiAsync(self: Role, emoji: string, reason: string?): future.FutureLike<string, Role>
 	return self:modifyAsync({
 		emoji = emoji,
 	}, reason)
@@ -249,7 +249,7 @@ end
 	@within Classes.Guild.Role
 	Sets the role to be mentionable through the @ mention.
 ]=]
-function Role.Prototype.setMentionableAsync(self: Role, mentionable: boolean, reason: string?)
+function Role.Prototype.setMentionableAsync(self: Role, mentionable: boolean, reason: string?): future.FutureLike<string, Role>
 	return self:modifyAsync({
 		mentionable = mentionable,
 	}, reason)
@@ -260,7 +260,7 @@ end
 	@private
 	Synchronizes the role object with the data from the API.
 ]=]
-function Role.Prototype.sync(self: Role, roleData: apiTypes.GuildRoleObject)
+function Role.Prototype.sync(self: Role, roleData: apiTypes.GuildRoleObject): nil
 	local tagArray = {}
 
 	-- fixme: need to use `next` iterator here to avoid LSP errors.

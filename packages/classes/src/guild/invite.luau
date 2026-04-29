@@ -97,7 +97,7 @@ Invite.Prototype = {}
 	Delete the attached integration object for the guild. Deletes any associated webhooks and kicks the associated bot
 	if there is one. Requires the MANAGE_GUILD permission.
 ]=]
-function Invite.Prototype.deleteAsync(self: Invite, reason: string?)
+function Invite.Prototype.deleteAsync(self: Invite, reason: string?): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -116,7 +116,7 @@ end
 	Responsible for syncing data to this invite object. This is typically called by the API when this object is
 	created or updated.
 ]=]
-function Invite.Prototype.sync(self: Invite, inviteData: apiTypes.InviteObject)
+function Invite.Prototype.sync(self: Invite, inviteData: apiTypes.InviteObject): nil
 	if inviteData.channel then
 		local channel = _require("../channels/construct")(self.state, inviteData.channel)
 		self.channel = channel :: apiTypes.AbstractChannel

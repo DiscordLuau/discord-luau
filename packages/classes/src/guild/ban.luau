@@ -48,7 +48,7 @@ Ban.Prototype = {}
 	@within Classes.Guild.Ban
 	Remove the ban for a user. Requires the BAN_MEMBERS permissions.
 ]=]
-function Ban.Prototype.removeAsync(self: Ban)
+function Ban.Prototype.removeAsync(self: Ban): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -67,7 +67,7 @@ end
 	Responsible for syncing data to this ban object. This is typically called by the API when this object is
 	created or updated.
 ]=]
-function Ban.Prototype.sync(self: Ban, banData: apiTypes.BanObject)
+function Ban.Prototype.sync(self: Ban, banData: apiTypes.BanObject): nil
 	self.reason = banData.reason
 
 	self.user = user.new(banData.user)

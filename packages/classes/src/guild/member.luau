@@ -121,7 +121,7 @@ function Member.Prototype.banAsync(
 	reason: string?,
 	deleteMessageDays: number?,
 	deleteMessageSeconds: number?
-)
+): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -154,7 +154,7 @@ end
 	@within Classes.Guild.Member
 	Removes a role from a guild member. Requires the MANAGE_ROLES permission.
 ]=]
-function Member.Prototype.kickAsync(self: Member, reason: string?)
+function Member.Prototype.kickAsync(self: Member, reason: string?): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -184,7 +184,7 @@ function Member.Prototype.modifyAsync(
 		communicationDisabledUntil: string?,
 	},
 	reason: string?
-)
+): future.FutureLike<string, Member>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -213,7 +213,7 @@ end
 	@within Classes.Guild.Member
 	Will mute the user in voice channels the user is in. Returns the updated Member.
 ]=]
-function Member.Prototype.muteAsync(self: Member, reason: string?)
+function Member.Prototype.muteAsync(self: Member, reason: string?): future.FutureLike<string, Member>
 	return self:modifyAsync({
 		muted = true,
 	}, reason)
@@ -223,7 +223,7 @@ end
 	@within Classes.Guild.Member
 	Will unmute the user in voice channels the user is in. Returns the updated Member.
 ]=]
-function Member.Prototype.unmuteAsync(self: Member, reason: string?)
+function Member.Prototype.unmuteAsync(self: Member, reason: string?): future.FutureLike<string, Member>
 	return self:modifyAsync({
 		muted = false,
 	}, reason)
@@ -233,7 +233,7 @@ end
 	@within Classes.Guild.Member
 	Will deafen the user in voice channels the user is in. Returns the updated Member.
 ]=]
-function Member.Prototype.deafenAsync(self: Member, reason: string?)
+function Member.Prototype.deafenAsync(self: Member, reason: string?): future.FutureLike<string, Member>
 	return self:modifyAsync({
 		deaf = true,
 	}, reason)
@@ -243,7 +243,7 @@ end
 	@within Classes.Guild.Member
 	Will undeafen the user in voice channels the user is in. Returns the updated Member.
 ]=]
-function Member.Prototype.undeafenAsync(self: Member, reason: string?)
+function Member.Prototype.undeafenAsync(self: Member, reason: string?): future.FutureLike<string, Member>
 	return self:modifyAsync({
 		deaf = false,
 	}, reason)
@@ -253,7 +253,7 @@ end
 	@within Classes.Guild.Member
 	Will set the nickname of the user. Returns the updated Member.
 ]=]
-function Member.Prototype.setNicknameAsync(self: Member, nickname: string, reason: string?)
+function Member.Prototype.setNicknameAsync(self: Member, nickname: string, reason: string?): future.FutureLike<string, Member>
 	return self:modifyAsync({
 		nickname = nickname,
 	}, reason)
@@ -263,7 +263,7 @@ end
 	@within Classes.Guild.Member
 	Will set all roles that the user has in this guild. Returns the updated Member.
 ]=]
-function Member.Prototype.setRolesAsync(self: Member, roles: { apiTypes.Snowflake }, reason: string?)
+function Member.Prototype.setRolesAsync(self: Member, roles: { apiTypes.Snowflake }, reason: string?): future.FutureLike<string, Member>
 	return self:modifyAsync({
 		roles = roles,
 	}, reason)
@@ -273,7 +273,7 @@ end
 	@within Classes.Guild.Member
 	Will move the user between different voice channels. Returns the updated Member.
 ]=]
-function Member.Prototype.moveVoiceChannelAsync(self: Member, channelId: apiTypes.Snowflake, reason: string?)
+function Member.Prototype.moveVoiceChannelAsync(self: Member, channelId: apiTypes.Snowflake, reason: string?): future.FutureLike<string, Member>
 	return self:modifyAsync({
 		channelId = channelId,
 	}, reason)
@@ -283,7 +283,7 @@ end
 	@within Classes.Guild.Member
 	Will disconnect the user from voice channels the user is in. Returns the updated Member.
 ]=]
-function Member.Prototype.disconnectFromVoiceChannelAsync(self: Member, reason: string?)
+function Member.Prototype.disconnectFromVoiceChannelAsync(self: Member, reason: string?): future.FutureLike<string, Member>
 	return self:modifyAsync({
 		channelId = false,
 	}, reason)
@@ -293,7 +293,7 @@ end
 	@within Classes.Guild.Member
 	Disables the users communication up to a specific time. Returns the updated Member.
 ]=]
-function Member.Prototype.disableAsync(self: Member, disabledUntil: stdPolyfills.DateTime, reason: string?)
+function Member.Prototype.disableAsync(self: Member, disabledUntil: stdPolyfills.DateTime, reason: string?): future.FutureLike<string, Member>
 	return self:modifyAsync({
 		communicationDisabledUntil = disabledUntil:toIsoDate(),
 	}, reason)
@@ -303,7 +303,7 @@ end
 	@within Classes.Guild.Member
 	Add a role to a guild member.
 ]=]
-function Member.Prototype.addRoleAsync(self: Member, roleId: apiTypes.Snowflake, reason: string?)
+function Member.Prototype.addRoleAsync(self: Member, roleId: apiTypes.Snowflake, reason: string?): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -321,7 +321,7 @@ end
 	@within Classes.Guild.Member
 	Remove a role from a guild member.
 ]=]
-function Member.Prototype.removeRoleAsync(self: Member, roleId: apiTypes.Snowflake, reason: string?)
+function Member.Prototype.removeRoleAsync(self: Member, roleId: apiTypes.Snowflake, reason: string?): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -341,7 +341,7 @@ end
 	@private
 	Synchronizes the member object with the data from the API.
 ]=]
-function Member.Prototype.sync(self: Member, guildMemberData: apiTypes.GuildMemberObject)
+function Member.Prototype.sync(self: Member, guildMemberData: apiTypes.GuildMemberObject): nil
 	self.user = guildMemberData.user and user.new(guildMemberData.user)
 
 	self.communicationDisabledUntil = guildMemberData.communication_disabled_until

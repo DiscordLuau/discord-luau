@@ -124,7 +124,7 @@ Integration.Prototype = {}
 	Delete the attached integration object for the guild. Deletes any associated webhooks and kicks the associated bot
 	if there is one. Requires the MANAGE_GUILD permission.
 ]=]
-function Integration.Prototype.deleteAsync(self: Integration, reason: string?)
+function Integration.Prototype.deleteAsync(self: Integration, reason: string?): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -142,7 +142,7 @@ end
 	@within Classes.Guild.Integration
 	@private
 ]=]
-function Integration.Prototype.sync(self: Integration, integrationData: apiTypes.IntegrationObject)
+function Integration.Prototype.sync(self: Integration, integrationData: apiTypes.IntegrationObject): nil
 	self.id = integrationData.id
 
 	self.name = integrationData.name
