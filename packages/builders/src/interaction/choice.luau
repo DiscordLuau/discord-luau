@@ -100,7 +100,7 @@ function Choice.Prototype.build(self: Choice): JSON
 
 	return {
 		name = self.name,
-		name_localizations = self.nameLocalizations,
+		name_localizations = next(self.nameLocalizations) and self.nameLocalizations or nil,
 		value = self.value,
 	}
 end
