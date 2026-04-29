@@ -31,7 +31,7 @@ AttachmentBitflag.Prototype = {}
 
 	This attachment has been edited using the remix feature on mobile
 ]=]
-function AttachmentBitflag.Prototype.isRemix(self: AttachmentBitflag)
+function AttachmentBitflag.Prototype.isRemix(self: AttachmentBitflag): boolean
 	local targetBit = bit.lshift(1, 2)
 
 	return bit.band(self.flag, targetBit) == targetBit
