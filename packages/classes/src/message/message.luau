@@ -246,7 +246,7 @@ function Message.Prototype.startThreadAsync(
 	threadName: string,
 	autoArchiveDuration: number,
 	rateLimitPerUser: number?
-)
+): future.FutureLike<string, apiTypes.AbstractChannel>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -269,7 +269,7 @@ end
 	@within Classes.Message
 	Add a reaction to a message. Requires READ_MESSAGE_HISTORY and ADD_REACTIONS permissions.
 ]=]
-function Message.Prototype.addReactionAsync(self: Message, emoji: builders.emojiJSON | string)
+function Message.Prototype.addReactionAsync(self: Message, emoji: builders.emojiJSON | string): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 		local emojiObject = emoji :: string
@@ -293,7 +293,7 @@ end
 	@within Classes.Message
 	Remove the current user's reaction from a message
 ]=]
-function Message.Prototype.removeOwnReactionAsync(self: Message, emoji: builders.emojiJSON | string)
+function Message.Prototype.removeOwnReactionAsync(self: Message, emoji: builders.emojiJSON | string): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 		local emojiObject = emoji :: string
@@ -321,7 +321,7 @@ function Message.Prototype.deleteUserReactionAsync(
 	self: Message,
 	emoji: builders.emojiJSON | string,
 	userId: apiTypes.Snowflake
-)
+): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 		local emojiObject = emoji :: string
@@ -352,7 +352,7 @@ function Message.Prototype.getReactionsAsync(
 	reactionType: apiTypes.ReactionType?,
 	afterUserId: apiTypes.Snowflake?,
 	limit: number?
-)
+): future.FutureLike<string, user.User>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 		local emojiObject = emoji :: string
@@ -388,7 +388,7 @@ end
 	@within Classes.Message
 	Remove all reactions from a message. Requires MANAGE_MESSAGES permission.
 ]=]
-function Message.Prototype.deleteAllReactionsAsync(self: Message)
+function Message.Prototype.deleteAllReactionsAsync(self: Message): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -404,7 +404,7 @@ end
 	@within Classes.Message
 	Remove all reactions of a specific emoji from a message. Requires MANAGE_MESSAGES permission.
 ]=]
-function Message.Prototype.deleteAllReactionsForEmojiAsync(self: Message, emoji: builders.emojiJSON | string)
+function Message.Prototype.deleteAllReactionsForEmojiAsync(self: Message, emoji: builders.emojiJSON | string): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 		local emojiObject = emoji :: string
@@ -429,7 +429,7 @@ end
 	@within Classes.Message
 	Edit a message. The current user must be the author of the message.
 ]=]
-function Message.Prototype.editAsync(self: Message, message: builders.messageJSON)
+function Message.Prototype.editAsync(self: Message, message: builders.messageJSON): future.FutureLike<string, Message>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -459,7 +459,7 @@ end
 	Delete a message. If operating on a guild channel and trying to delete a message that was not sent by the current user,
 	this endpoint requires the MANAGE_MESSAGES permission.
 ]=]
-function Message.Prototype.deleteAsync(self: Message, reason: string?)
+function Message.Prototype.deleteAsync(self: Message, reason: string?): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -475,7 +475,7 @@ end
 	@within Classes.Message
 	Reply to a message by creating a new message that references this one.
 ]=]
-function Message.Prototype.replyAsync(self: Message, message: builders.messageJSON)
+function Message.Prototype.replyAsync(self: Message, message: builders.messageJSON): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -502,7 +502,7 @@ end
 	@within Classes.Message
 	Pin this message to the channel. Requires MANAGE_MESSAGES permission.
 ]=]
-function Message.Prototype.pinAsync(self: Message)
+function Message.Prototype.pinAsync(self: Message): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -520,7 +520,7 @@ end
 	@within Classes.Message
 	Unpin this message from the channel. Requires MANAGE_MESSAGES permission.
 ]=]
-function Message.Prototype.unpinAsync(self: Message)
+function Message.Prototype.unpinAsync(self: Message): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -539,7 +539,7 @@ end
 	@private
 	Synchronizes the message object with the data from the API.
 ]=]
-function Message.Prototype.sync(self: Message, messageData: apiTypes.MessageObject)
+function Message.Prototype.sync(self: Message, messageData: apiTypes.MessageObject): nil
 	self.type = apiTypes.message.MessageType[messageData.type]
 
 	local mentionArray = {}
