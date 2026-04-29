@@ -106,7 +106,7 @@ end
 ]=]
 function Reference.Prototype.build(self: Reference): JSON
 	return {
-		type = apiTypes.channel.MessageType[self.type],
+		type = apiTypes.message.MessageReferenceType[self.type],
 		message_id = self.messageId,
 		channel_id = self.channelId,
 		guild_id = self.guildId,

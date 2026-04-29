@@ -123,10 +123,10 @@ function Poll.Prototype.build(self: Poll): JSON
 
 	return {
 		question = self.question,
-		answers = self.answers,
+		answers = #self.answers > 0 and self.answers or nil,
 		expiry = self.expiry,
 		allow_multiselect = self.allowMultiselect,
-		layout_type = apiTypes.channel.PollLayoutType[self.layoutType],
+		layout_type = apiTypes.message.PollLayoutType[self.layoutType],
 		results = nil,
 	}
 end
