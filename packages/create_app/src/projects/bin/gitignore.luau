@@ -1,5 +1,5 @@
 return function()
-	return [[# Environment — contains secrets, do not commit
+	return [[# Environment - contains secrets, do not commit
 .env.luau
 
 # Dependency directories

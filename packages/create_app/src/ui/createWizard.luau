@@ -475,7 +475,7 @@ return function(onBuild: (
 				for _, tool in PREREQUISITES do
 					local isInstalled = toolStatus[tool.name]
 					local prefix = if isInstalled then "✓  " else "✗  "
-					local status = if isInstalled then "installed" else `not found  —  install from: {tool.url}`
+					local status = if isInstalled then "installed" else `not found  -  install from: {tool.url}`
 					table.insert(lines, prefix .. tool.name .. string.rep(" ", math.max(1, 10 - #tool.name)) .. status)
 				end
 				table.insert(lines, "")
