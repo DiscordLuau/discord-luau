@@ -109,7 +109,7 @@ end
 function Prompt.Prototype.build(self: Prompt): JSON
 	return {
 		type = apiTypes.guild.OnboardingPromptType[self.type],
-		options = self.options,
+		options = #self.options > 0 and self.options or nil,
 		title = self.title,
 		single_select = self.singleSelect,
 		required = self.required,

@@ -91,8 +91,8 @@ end
 ]=]
 function Onboarding.Prototype.build(self: Onboarding): JSON
 	return {
-		prompts = self.prompts,
-		default_channel_ids = self.defaultChannelIds,
+		prompts = #self.prompts > 0 and self.prompts or nil,
+		default_channel_ids = #self.defaultChannelIds > 0 and self.defaultChannelIds or nil,
 		enabled = self.enabled,
 		mode = self.mode,
 	}

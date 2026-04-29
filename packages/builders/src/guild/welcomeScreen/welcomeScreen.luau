@@ -74,7 +74,7 @@ function WelcomeScreen.Prototype.build(self: WelcomeScreen): JSON
 	return {
 		enabled = self.enabled,
 		description = self.description,
-		welcome_channels = self.welcomeChannels,
+		welcome_channels = #self.welcomeChannels > 0 and self.welcomeChannels or nil,
 	}
 end
 

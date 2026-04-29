@@ -102,7 +102,7 @@ end
 function Presence.Prototype.build(self: Presence): JSON
 	return {
 		since = self.since or 0,
-		activities = self.activities,
+		activities = #self.activities > 0 and self.activities or nil,
 		afk = self.afk or false,
 		status = self.status and apiTypes.client.Status[self.status] or "online",
 	}

@@ -146,10 +146,10 @@ function SelectMenu.Prototype.build(self: SelectMenu): JSON
 	return {
 		type = apiTypes.channel.SelectMenuType[self.type],
 		custom_id = self.customId,
-		options = self.options,
-		channel_types = self.apiTypes,
+		options = #self.options > 0 and self.options or nil,
+		channel_types = #self.apiTypes > 0 and self.apiTypes or nil,
 		placeholder = self.placeholder,
-		default_values = self.defaultValues,
+		default_values = #self.defaultValues > 0 and self.defaultValues or nil,
 		min_values = self.minValues,
 		max_values = self.maxValues,
 		disabled = self.disabled,
