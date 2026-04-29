@@ -57,7 +57,7 @@ end
 	Responsible for syncing data to this modal interaction object. This is typically called by the API when this object is
 	created or updated.
 ]=]
-function Modal.Prototype.sync(self: Modal, interactionData: apiTypes.InteractionObject)
+function Modal.Prototype.sync(self: Modal, interactionData: apiTypes.InteractionObject): nil
 	for _, behaviour in Modal.Behaviours do
 		behaviour.inheritMethods(self)
 		behaviour.inheritProperties(self, interactionData)

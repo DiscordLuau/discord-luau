@@ -29,7 +29,7 @@ Ping.Behaviours = {
 	
 	Acknowledge an interaction ping
 ]=]
-function Ping.Prototype.pongAsync(self: Ping)
+function Ping.Prototype.pongAsync(self: Ping): future.FutureLike<string, nil>
 	local request = self.state.rest:newRequest()
 
 	return future.Future.new(function()
@@ -55,7 +55,7 @@ end
 	Responsible for syncing data to this interaction object. This is typically called by the API when this object is
 	created or updated.
 ]=]
-function Ping.Prototype.sync(self: Ping, interactionData: apiTypes.InteractionObject)
+function Ping.Prototype.sync(self: Ping, interactionData: apiTypes.InteractionObject): nil
 	for _, behaviour in Ping.Behaviours do
 		behaviour.inheritMethods(self)
 		behaviour.inheritProperties(self, interactionData)
