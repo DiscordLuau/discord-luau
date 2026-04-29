@@ -220,7 +220,7 @@ function Interaction.Prototype.build(self: Interaction): JSON
 	end
 
 	for _, interactionType in self.integrationTypes do
-		table.insert(integrationTypeArray, apiTypes.interaction.IntegrationTypesConfig[interactionType])
+		table.insert(integrationTypeArray, apiTypes.application.IntegrationTypesConfig[interactionType])
 	end
 
 	return {
@@ -229,10 +229,10 @@ function Interaction.Prototype.build(self: Interaction): JSON
 		version = nil :: any,
 		guild_id = nil :: any,
 		name = self.name,
-		name_localizations = self.nameLocalizations,
+		name_localizations = next(self.nameLocalizations) and self.nameLocalizations or nil,
 		description = self.description,
-		description_localizations = self.descriptionLocalizations,
-		options = self.options,
+		description_localizations = next(self.descriptionLocalizations) and self.descriptionLocalizations or nil,
+		options = #self.options > 0 and self.options or nil,
 		default_member_permissions = self.defaultMemberPermissions,
 		dm_permission = nil :: any,
 		default_permission = nil :: any,
