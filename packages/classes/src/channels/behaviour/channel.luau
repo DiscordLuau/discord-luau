@@ -51,7 +51,7 @@ ChannelBehaviour.Prototype = {}
 	if the channel is a thread. Deleting a category does not delete its child channels; they will have their parent_id
 	removed and a Channel Update Gateway event will fire for each of them.
 ]=]
-function ChannelBehaviour.Prototype.deleteChannelAsync<T>(self: Channel<T>)
+function ChannelBehaviour.Prototype.deleteChannelAsync<T>(self: Channel<T>): future.FutureLike<string, Channel<T>>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -73,7 +73,7 @@ end
 	Generally bots should not use this route. However, if a bot is responding to a command and expects the computation to
 	take a few seconds, this endpoint may be called to let the user know that the bot is processing their message.
 ]=]
-function ChannelBehaviour.Prototype.triggerTypingIndicatorAsync<T>(self: Channel<T>)
+function ChannelBehaviour.Prototype.triggerTypingIndicatorAsync<T>(self: Channel<T>): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -88,9 +88,9 @@ end
 --[=[
 	@within Classes.Channels.Channel
 
-	Lists all private archived threads that the current user has joined. Returns thread and member information.
+	Modifies the channel's settings using the provided JSON data. Optionally accepts an audit log reason.
 ]=]
-function ChannelBehaviour.Prototype.modifyAsync<T>(self: Channel<T>, json: builders.channelJSON, reason: string?)
+function ChannelBehaviour.Prototype.modifyAsync<T>(self: Channel<T>, json: builders.channelJSON, reason: string?): future.FutureLike<string, Channel<T>>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 

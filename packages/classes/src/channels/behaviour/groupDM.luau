@@ -62,7 +62,7 @@ function GroupDMBehaviour.Prototype.addRecipient<T>(
 	accessToken: string,
 	userId: string,
 	nickname: string
-)
+): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -83,7 +83,7 @@ end
 	@within Classes.Channels.GroupDMBehaviour
 	Removes a recipient from a Group DM.
 ]=]
-function GroupDMBehaviour.Prototype.removeRecipient<T>(self: Channel<T>, userId: string)
+function GroupDMBehaviour.Prototype.removeRecipient<T>(self: Channel<T>, userId: string): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -99,7 +99,7 @@ end
 	@within Classes.Channels.GroupDMBehaviour
 	Sets the name of the Group DM channel.
 ]=]
-function GroupDMBehaviour.Prototype.setNameAsync<T>(self: Channel<T>, groupName: string)
+function GroupDMBehaviour.Prototype.setNameAsync<T>(self: Channel<T>, groupName: string): future.FutureLike<string, Channel<T>>
 	return self:modifyAsync({
 		name = groupName,
 	}) :: future.FutureLike<string, Channel<T>>
@@ -109,7 +109,7 @@ end
 	@within Classes.Channels.GroupDMBehaviour
 	Sets the icon of the Group DM channel using base64 encoded image data.
 ]=]
-function GroupDMBehaviour.Prototype.setIconAsync<T>(self: Channel<T>, iconData: string)
+function GroupDMBehaviour.Prototype.setIconAsync<T>(self: Channel<T>, iconData: string): future.FutureLike<string, Channel<T>>
 	return self:modifyAsync({
 		name = self.name,
 		icon = iconData,

@@ -39,7 +39,7 @@ GroupDM.Behaviours = {
 	Responsible for syncing data to this group DM object. This is typically called by the API when this object is
 	created or updated.
 ]=]
-function GroupDM.Prototype.sync(self: GroupDM, channelData: apiTypes.ChannelObject)
+function GroupDM.Prototype.sync(self: GroupDM, channelData: apiTypes.ChannelObject): nil
 	for _, behaviour in GroupDM.Behaviours do
 		behaviour.inheritMethods(self)
 		behaviour.inheritProperties(self, channelData)

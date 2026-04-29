@@ -71,7 +71,7 @@ ThreadBehaviour.Prototype = {}
 	@within Classes.Channels.ThreadBehaviour
 	Adds the current user to a thread. Also requires the thread is not archived.
 ]=]
-function ThreadBehaviour.Prototype.joinAsync<T>(self: Channel<T>)
+function ThreadBehaviour.Prototype.joinAsync<T>(self: Channel<T>): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -87,7 +87,7 @@ end
 	@within Classes.Channels.ThreadBehaviour
 	Adds another member to a thread. Requires the ability to send messages in the thread. Also requires the thread is not archived.
 ]=]
-function ThreadBehaviour.Prototype.addMemberAsync<T>(self: Channel<T>, userId: string)
+function ThreadBehaviour.Prototype.addMemberAsync<T>(self: Channel<T>, userId: string): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -103,7 +103,7 @@ end
 	@within Classes.Channels.ThreadBehaviour
 	Removes the current user from a thread.
 ]=]
-function ThreadBehaviour.Prototype.leaveAsync<T>(self: Channel<T>)
+function ThreadBehaviour.Prototype.leaveAsync<T>(self: Channel<T>): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -119,7 +119,7 @@ end
 	@within Classes.Channels.ThreadBehaviour
 	Removes another member from a thread. Requires the ability to manage threads.
 ]=]
-function ThreadBehaviour.Prototype.removeMemberAsync<T>(self: Channel<T>, userId: string)
+function ThreadBehaviour.Prototype.removeMemberAsync<T>(self: Channel<T>, userId: string): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -135,7 +135,7 @@ end
 	@within Classes.Channels.ThreadBehaviour
 	Gets a thread member by their user ID. Can optionally include the member object.
 ]=]
-function ThreadBehaviour.Prototype.getMemberAsync<T>(self: Channel<T>, userId: string, withMember: boolean?)
+function ThreadBehaviour.Prototype.getMemberAsync<T>(self: Channel<T>, userId: string, withMember: boolean?): future.FutureLike<string, threadMember.ThreadMember>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -160,7 +160,7 @@ function ThreadBehaviour.Prototype.listMembersAsync<T>(
 	withMember: boolean?,
 	after: string?,
 	limit: number?
-)
+): future.FutureLike<string, { threadMember.ThreadMember }>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 

@@ -36,7 +36,7 @@ DM.Behaviours = {
 	Responsible for syncing data to this DM object. This is typically called by the API when this object is
 	created or updated.
 ]=]
-function DM.Prototype.sync(self: DM, channelData: apiTypes.ChannelObject)
+function DM.Prototype.sync(self: DM, channelData: apiTypes.ChannelObject): nil
 	for _, behaviour in DM.Behaviours do
 		behaviour.inheritMethods(self)
 		behaviour.inheritProperties(self, channelData)

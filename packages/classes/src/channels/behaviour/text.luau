@@ -50,7 +50,7 @@ TextBehaviour.Prototype = {}
 	Delete multiple messages in a single request. This endpoint can only be used on guild channels and requires the
 	MANAGE_MESSAGES permission.
 ]=]
-function TextBehaviour.Prototype.bulkDeleteMessagesAsync<T>(self: Channel<T>, messageIds: { string }, reason: string?)
+function TextBehaviour.Prototype.bulkDeleteMessagesAsync<T>(self: Channel<T>, messageIds: { string }, reason: string?): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -76,7 +76,7 @@ function TextBehaviour.Prototype.getMessagesAsync<T>(
 	before: apiTypes.Snowflake?,
 	after: apiTypes.Snowflake?,
 	limit: number?
-)
+): future.FutureLike<string, { message.Message }>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -105,7 +105,7 @@ end
 	@within Classes.Channels.TextBehaviour
 	Gets a specific message from a channel using its ID. Returns a message object.
 ]=]
-function TextBehaviour.Prototype.getMessageAsync<T>(self: Channel<T>, messageId: apiTypes.Snowflake)
+function TextBehaviour.Prototype.getMessageAsync<T>(self: Channel<T>, messageId: apiTypes.Snowflake): future.FutureLike<string, message.Message>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -121,7 +121,7 @@ end
 	@within Classes.Channels.TextBehaviour
 	Creates a new message in the channel. Returns the created message object.
 ]=]
-function TextBehaviour.Prototype.createMessageAsync<T>(self: Channel<T>, json: builders.messageJSON)
+function TextBehaviour.Prototype.createMessageAsync<T>(self: Channel<T>, json: builders.messageJSON): future.FutureLike<string, message.Message>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -139,7 +139,7 @@ end
 	@within Classes.Channels.TextBehaviour
 	Gets all pinned messages in the channel. Returns an array of message objects.
 ]=]
-function TextBehaviour.Prototype.getPinnedMessagesAsync<T>(self: Channel<T>)
+function TextBehaviour.Prototype.getPinnedMessagesAsync<T>(self: Channel<T>): future.FutureLike<string, { message.Message }>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -161,7 +161,7 @@ end
 	@within Classes.Channels.TextBehaviour
 	Pins a message in the channel.
 ]=]
-function TextBehaviour.Prototype.pinMessageAsync<T>(self: Channel<T>, messageId: string)
+function TextBehaviour.Prototype.pinMessageAsync<T>(self: Channel<T>, messageId: string): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -177,7 +177,7 @@ end
 	@within Classes.Channels.TextBehaviour
 	Unpins a message from the channel.
 ]=]
-function TextBehaviour.Prototype.unpinMessageAsync<T>(self: Channel<T>, messageId: string, reason: string?)
+function TextBehaviour.Prototype.unpinMessageAsync<T>(self: Channel<T>, messageId: string, reason: string?): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -193,7 +193,7 @@ end
 	@within Classes.Channels.TextBehaviour
 	Starts a new thread in the channel without an associated message. Returns the thread ID.
 ]=]
-function TextBehaviour.Prototype.startThread<T>(self: Channel<T>, json: builders.noMessageThreadJSON)
+function TextBehaviour.Prototype.startThread<T>(self: Channel<T>, json: builders.noMessageThreadJSON): future.FutureLike<string, apiTypes.Snowflake>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
