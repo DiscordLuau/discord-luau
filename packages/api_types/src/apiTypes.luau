@@ -1343,7 +1343,7 @@ export type AuditLogObject = {
 export type InviteObject = {
 	type: InviteTypes, -- the type of invite
 	code: string, -- the invite code (unique ID)
-	guild: GuildObject?, -- the guild this invite is for
+	guild: InviteGuildObject?, -- the guild this invite is for
 	channel: ChannelObject?, -- the channel this invite is for
 	inviter: UserObject?, -- the user who created the invite
 	target_type: InviteTargetTypes, -- the type of target for this voice channel invite
