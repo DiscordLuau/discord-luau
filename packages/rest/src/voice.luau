@@ -30,7 +30,7 @@ function voice.listVoiceRegionsAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.ListVoiceRegionsResponse>
@@ -53,7 +53,7 @@ function voice.getCurrentUserVoiceStateAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetCurrentUserVoiceStateResponse>
@@ -77,7 +77,7 @@ function voice.getUserVoiceStateAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetUserVoiceStateResponse>
@@ -102,7 +102,7 @@ function voice.modifyCurrentUserVoiceStateAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.ModifyCurrentUserVoiceStateResponse>
@@ -128,7 +128,7 @@ function voice.modifyUserVoiceStateAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.ModifyUserVoiceStateResponse>

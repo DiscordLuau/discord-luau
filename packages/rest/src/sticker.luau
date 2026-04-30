@@ -31,7 +31,7 @@ function sticker.getStickerAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		local object: apiTypes.GetStickerResponse = response:unwrapOk().body
 
@@ -55,7 +55,7 @@ function sticker.listStickerPacksAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.ListStickerPacksResponse>
@@ -78,7 +78,7 @@ function sticker.listGuildStickersAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.ListGuildStickersResponse>
@@ -102,7 +102,7 @@ function sticker.getGuildStickerAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetGuildStickerResponse>
@@ -129,7 +129,7 @@ function sticker.createGuildStickerAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.CreateGuildStickerResponse>
@@ -157,7 +157,7 @@ function sticker.modifyGuildStickerAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.ModifyGuildStickerResponse>
@@ -183,7 +183,7 @@ function sticker.deleteGuildStickerAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.DeleteGuildStickerResponse>

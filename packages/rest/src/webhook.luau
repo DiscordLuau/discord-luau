@@ -35,7 +35,7 @@ function webhook.createWebhookAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return response:unwrapOk().body
 	end) :: any
@@ -58,7 +58,7 @@ function webhook.getChannelWebhooksAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return response:unwrapOk().body
 	end) :: any
@@ -81,7 +81,7 @@ function webhook.getGuildWebhooksAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return response:unwrapOk().body
 	end) :: any
@@ -104,7 +104,7 @@ function webhook.getWebhookAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return response:unwrapOk().body
 	end) :: any
@@ -128,7 +128,7 @@ function webhook.getWebhookWithTokenAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return response:unwrapOk().body
 	end) :: any
@@ -155,7 +155,7 @@ function webhook.modifyWebhookAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return response:unwrapOk().body
 	end) :: any
@@ -183,7 +183,7 @@ function webhook.modifyWebhookWithTokenAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return response:unwrapOk().body
 	end) :: any
@@ -208,7 +208,7 @@ function webhook.deleteWebhookAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return response:unwrapOk().body
 	end) :: any
@@ -234,7 +234,7 @@ function webhook.deleteWebhookWithTokenAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return response:unwrapOk().body
 	end) :: any
@@ -267,7 +267,7 @@ function webhook.executeWebhookAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return response:unwrapOk().body
 	end) :: any
@@ -297,7 +297,7 @@ function webhook.getWebhookMessageAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return response:unwrapOk().body
 	end) :: any
@@ -329,7 +329,7 @@ function webhook.editWebhookMessageAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return response:unwrapOk().body
 	end) :: any
@@ -359,7 +359,7 @@ function webhook.deleteWebhookMessageAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return response:unwrapOk().body
 	end) :: any
