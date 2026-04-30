@@ -174,8 +174,9 @@ end
 	Set if the option is required, will not work on SubCommand or SubCommandGroup options.
 ]=]
 function Option.Prototype.setRequired(self: Option, isRequired: boolean): Option
+	assert(self.type, "type must be set before calling setRequired")
 	assert(
-		self.type == "SubCommand" or self.type == "SubCommandGroup",
+		self.type ~= "SubCommand" and self.type ~= "SubCommandGroup",
 		`Required cannot be set on SubCommands, or SubCommandGroups`
 	)
 	self.required = isRequired
@@ -192,6 +193,7 @@ function Option.Prototype.addChoice(self: Option, choice: interactionChoice.JSON
 		self.type == "String" or self.type == "Integer" or self.type == "Number",
 		"Choices can only be added to String, Integer, or Number options"
 	)
+	assert(#self.choices < 25, "options cannot have more than 25 choices")
 	table.insert(self.choices, choice)
 	return self
 end
@@ -206,6 +208,10 @@ function Option.Prototype.addOption(self: Option, option: JSON): Option
 		self.type == "SubCommand" or self.type == "SubCommandGroup",
 		`Options can only be added to SubCommands, or SubCommandGroups`
 	)
+	assert(#self.options < 25, "subcommands cannot have more than 25 options")
+	if self.type == "SubCommandGroup" then
+		assert(option.type == apiTypes.interaction.ApplicationCommandOptionType.SubCommand, "SubCommandGroups can only contain SubCommand options")
+	end
 	table.insert(self.options, option)
 	return self
 end
@@ -238,7 +244,7 @@ end
 	Set the max value of this option, will only work on Integer or Number options.
 ]=]
 function Option.Prototype.setMaxValue(self: Option, value: number): Option
-	assert(self.type == "Integer" or self.type == "Number", "Min values can only be set on Integer or Number options")
+	assert(self.type == "Integer" or self.type == "Number", "Max values can only be set on Integer or Number options")
 	self.maxValue = value
 	return self
 end
@@ -250,6 +256,7 @@ end
 ]=]
 function Option.Prototype.setMinLength(self: Option, value: number): Option
 	assert(self.type == "String", "Min values can only be set on String options")
+	assert(value >= 0 and value <= 6000, "min_length must be between 0 and 6000")
 	self.minLength = value
 	return self
 end
@@ -261,6 +268,7 @@ end
 ]=]
 function Option.Prototype.setMaxLength(self: Option, value: number): Option
 	assert(self.type == "String", "Max values can only be set on String options")
+	assert(value >= 1 and value <= 6000, "max_length must be between 1 and 6000")
 	self.maxLength = value
 	return self
 end
@@ -275,6 +283,9 @@ function Option.Prototype.setAutocompleteEnabled(self: Option, autocompleteEnabl
 		self.type == "String" or self.type == "Integer" or self.type == "Number",
 		`Autocomplete can only be set on String, Integer, or Number options`
 	)
+	if autocompleteEnabled then
+		assert(#self.choices == 0, "autocomplete cannot be enabled when choices are present")
+	end
 	self.autocomplete = autocompleteEnabled
 	return self
 end
@@ -285,6 +296,7 @@ end
 	Responsible for building the option object that the Discord API can understand.
 ]=]
 function Option.Prototype.build(self: Option): JSON
+	assert(self.type, "type must be set before building an option")
 	local channelTypeArray = {}
 	for _, channelType in self.apiTypes do
 		table.insert(channelTypeArray, apiTypes.channel.ChannelTypes[channelType])

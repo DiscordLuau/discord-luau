@@ -43,8 +43,6 @@ function Choice.Prototype.setName(self: Choice, name: string): Choice
 	assert(#name <= 100, "name must be less than 100 characters")
 	assert(#name >= 1, "name must be at least 1 character")
 
-	assert(util.validateKebabCase(name), `name must be kebab case`)
-
 	self.name = name
 
 	return self
@@ -63,8 +61,6 @@ function Choice.Prototype.setNameLocalization(
 	assert(#name <= 100, "name must be less than 100 characters")
 	assert(#name >= 1, "name must be at least 1 character")
 
-	assert(util.validateKebabCase(name), `name must be kebab case`)
-
 	self.nameLocalizations[localization] = name
 
 	return self
@@ -81,6 +77,7 @@ function Choice.Prototype.setValue(self: Choice, value: string | number): Choice
 	assert(typeofValue == "string" or typeofValue == "number", "value must be a string or number")
 
 	if typeofValue == "string" then
+		assert(#(value :: string) >= 1, "value must be at least 1 character")
 		assert(#(value :: string) <= 100, "value must be less than 100 characters")
 	end
 
@@ -96,7 +93,7 @@ end
 ]=]
 function Choice.Prototype.build(self: Choice): JSON
 	assert(self.name, `Missing name for choice: {self.name}`)
-	assert(self.value, `Missing value for choice: {self.name}`)
+	assert(self.value ~= nil, `Missing value for choice: {self.name}`)
 
 	return {
 		name = self.name,

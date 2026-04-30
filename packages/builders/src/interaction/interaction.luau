@@ -153,6 +153,7 @@ end
 	The parameters for the command
 ]=]
 function Interaction.Prototype.addOption(self: Interaction, option: interactionOption.JSON): Interaction
+	assert(#self.options < 25, "commands cannot have more than 25 options")
 	table.insert(self.options, option)
 
 	return self
@@ -209,6 +210,11 @@ end
 ]=]
 function Interaction.Prototype.build(self: Interaction): JSON
 	assert(self.name, "name must be set")
+	if self.type == nil or self.type == "ChatInput" then
+		assert(self.description and #self.description >= 1, "CHAT_INPUT commands must have a description")
+	else
+		assert(not self.description or #self.description == 0, "USER and MESSAGE commands must not have a description")
+	end
 	assert(#self.integrationTypes > 0, `must have one or more integration types set`)
 	assert(#self.contexts > 0, `must have one or more contexts set`)
 
