@@ -100,6 +100,9 @@ end
 	Sets a developer-defined identifier for the button that will be sent when the button is clicked.
 ]=]
 function Button.Prototype.setCustomId(self: Button, customId: string): Button
+	assert(#customId >= 1, "customId must be at least 1 character")
+	assert(#customId <= 100, "customId must be at most 100 characters")
+
 	self.customId = customId
 
 	return self
@@ -145,6 +148,21 @@ end
 ]=]
 function Button.Prototype.build(self: Button): JSON
 	assert(self.style, `Button style is required.`)
+
+	if self.style ~= "Link" and self.style ~= "Premium" then
+		assert(self.customId, "non-link buttons require a customId")
+		assert(not self.url, "non-link buttons must not have a url")
+	end
+	if self.style == "Link" then
+		assert(self.url, "link buttons require a url")
+		assert(not self.customId, "link buttons must not have a customId")
+	end
+	if self.style == "Premium" then
+		assert(self.skuId, "premium buttons require a skuId")
+		assert(not self.customId, "premium buttons must not have a customId")
+		assert(not self.label, "premium buttons must not have a label")
+		assert(not self.emoji, "premium buttons must not have an emoji")
+	end
 
 	return {
 		type = 2,

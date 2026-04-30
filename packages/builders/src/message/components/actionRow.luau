@@ -31,6 +31,9 @@ function ActionRow.Prototype.addComponent(
 	self: ActionRow,
 	component: button.JSON | textInput.JSON | selectMenu.JSON | JSON
 ): ActionRow
+	assert(#self.components < 5, "action rows cannot have more than 5 components")
+	assert(component.type ~= 1, "action rows cannot contain another action row")
+
 	table.insert(self.components, component)
 
 	return self
@@ -42,6 +45,8 @@ end
 	Responsible for building the ActionRow JSON that can be parsed by the Discord API.
 ]=]
 function ActionRow.Prototype.build(self: ActionRow): JSON
+	assert(#self.components > 0, "action rows must have at least one component")
+
 	return {
 		type = 1,
 		components = #self.components > 0 and self.components or nil,

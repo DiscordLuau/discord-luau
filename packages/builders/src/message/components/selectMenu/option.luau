@@ -50,7 +50,7 @@ Option.Interface = {}
 	Sets the user-facing name of the option.
 ]=]
 function Option.Prototype.setLabel(self: Option, label: string): Option
-	assert(#label <= 100, `Label must be less than 80 characters.`)
+	assert(#label <= 100, `Label must be at most 100 characters.`)
 	assert(#label > 0, `Label must be more than 0 characters.`)
 
 	self.label = label
@@ -64,7 +64,7 @@ end
 	Sets the dev-defined value of the option.
 ]=]
 function Option.Prototype.setValue(self: Option, value: string): Option
-	assert(#value <= 100, `Value must be less than 80 characters.`)
+	assert(#value <= 100, `Value must be at most 100 characters.`)
 	assert(#value > 0, `Value must be more than 0 characters.`)
 
 	self.value = value
@@ -78,8 +78,8 @@ end
 	Sets an additional description of the option.
 ]=]
 function Option.Prototype.setDescription(self: Option, description: string): Option
-	assert(#description <= 100, `Description( must be less than 80 characters.`)
-	assert(#description > 0, `Description( must be more than 0 characters.`)
+	assert(#description <= 100, `Description must be at most 100 characters.`)
+	assert(#description > 0, `Description must be more than 0 characters.`)
 
 	self.description = description
 
@@ -116,7 +116,6 @@ end
 function Option.Prototype.build(self: Option): JSON
 	assert(self.label, `Label is required`)
 	assert(self.value, `Value is required`)
-	assert(self.default ~= nil, `Default is required`)
 
 	return {
 		label = self.label,

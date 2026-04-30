@@ -59,7 +59,7 @@ function DefaultValue.Prototype.build(self: DefaultValue): JSON
 
 	return {
 		id = self.id,
-		type = self.type,
+		type = apiTypes.message.SelectDefaultValueType[self.type],
 	}
 end
 

@@ -52,6 +52,9 @@ end
 	Sets a developer-defined identifier for the select menu.
 ]=]
 function SelectMenu.Prototype.setCustomId(self: SelectMenu, customId: string): SelectMenu
+	assert(#customId >= 1, "customId must be at least 1 character")
+	assert(#customId <= 100, "customId must be at most 100 characters")
+
 	self.customId = customId
 
 	return self
@@ -63,6 +66,8 @@ end
 	Sets custom placeholder text shown when no option is selected.
 ]=]
 function SelectMenu.Prototype.setPlaceholder(self: SelectMenu, placeholder: string): SelectMenu
+	assert(#placeholder <= 150, "placeholder must be at most 150 characters")
+
 	self.placeholder = placeholder
 
 	return self
@@ -74,6 +79,8 @@ end
 	Sets the minimum number of items that must be selected.
 ]=]
 function SelectMenu.Prototype.setMinValues(self: SelectMenu, minValueCount: number): SelectMenu
+	assert(minValueCount >= 0 and minValueCount <= 25, "minValues must be between 0 and 25")
+
 	self.minValues = minValueCount
 
 	return self
@@ -85,6 +92,8 @@ end
 	Sets the maximum number of items that can be selected.
 ]=]
 function SelectMenu.Prototype.setMaxValues(self: SelectMenu, maxValueCount: number): SelectMenu
+	assert(maxValueCount >= 1 and maxValueCount <= 25, "maxValues must be between 1 and 25")
+
 	self.maxValues = maxValueCount
 
 	return self
@@ -142,6 +151,10 @@ end
 function SelectMenu.Prototype.build(self: SelectMenu): JSON
 	assert(self.type, "SelectMenu type is required")
 	assert(self.customId, "SelectMenu customId is required")
+
+	if self.minValues and self.maxValues then
+		assert(self.maxValues >= self.minValues, "maxValues must be >= minValues")
+	end
 
 	return {
 		type = apiTypes.channel.SelectMenuType[self.type],

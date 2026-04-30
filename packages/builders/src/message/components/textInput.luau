@@ -68,6 +68,9 @@ TextInput.Interface = {}
 	Sets the custom identifier for this text input component.
 ]=]
 function TextInput.Prototype.setCustomId(self: TextInput, customId: string): TextInput
+	assert(#customId >= 1, "customId must be at least 1 character")
+	assert(#customId <= 100, "customId must be at most 100 characters")
+
 	self.customId = customId
 
 	return self
@@ -90,6 +93,9 @@ end
 	Sets the label text that appears above the text input field.
 ]=]
 function TextInput.Prototype.setLabel(self: TextInput, label: string): TextInput
+	assert(#label >= 1, "label must be at least 1 character")
+	assert(#label <= 45, "label must be at most 45 characters")
+
 	self.label = label
 
 	return self
@@ -101,6 +107,8 @@ end
 	Sets the minimum length of text that can be entered.
 ]=]
 function TextInput.Prototype.setMinLength(self: TextInput, minLength: number): TextInput
+	assert(minLength >= 0 and minLength <= 4000, "minLength must be between 0 and 4000")
+
 	self.minLength = minLength
 
 	return self
@@ -112,6 +120,8 @@ end
 	Sets the maximum length of text that can be entered.
 ]=]
 function TextInput.Prototype.setMaxLength(self: TextInput, maxLength: number): TextInput
+	assert(maxLength >= 1 and maxLength <= 4000, "maxLength must be between 1 and 4000")
+
 	self.maxLength = maxLength
 
 	return self
@@ -159,6 +169,16 @@ function TextInput.Prototype.build(self: TextInput): JSON
 	assert(self.customId, `TextInput.customId is required.`)
 	assert(self.style, `TextInput.style is required.`)
 	assert(self.label, `TextInput.label is required.`)
+
+	if self.minLength and self.maxLength then
+		assert(self.maxLength >= self.minLength, "maxLength must be >= minLength")
+	end
+	if self.value then
+		assert(#self.value <= 4000, "value must be at most 4000 characters")
+	end
+	if self.placeholder then
+		assert(#self.placeholder <= 100, "placeholder must be at most 100 characters")
+	end
 
 	return {
 		type = 4,
