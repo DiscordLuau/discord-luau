@@ -487,4 +487,11 @@ export type MessagePollVoteRemove = Payload<{
 	answer_id: number, -- ID of the answer
 }>
 
+-- https://discord.com/developers/docs/events/gateway-events#rate-limited
+export type RateLimitedPayload = Payload<{
+	opcode: number, -- Gateway opcode of the event that was rate limited
+	retry_after: number, -- Seconds to wait before sending the opcode again
+	meta: { guild_id: objects.Snowflake, nonce: string? }?, -- Opcode-specific metadata (present for op 8)
+}>
+
 return "DISCORD_V10_PAYLOAD_TYPES"

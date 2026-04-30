@@ -77,6 +77,7 @@ local ReceiveEvents = table.freeze({
 	WebhooksUpdate = "WEBHOOKS_UPDATE",
 	MessagePollVoteAdd = "MESSAGE_POLL_VOTE_ADD",
 	MessagePollVoteRemove = "MESSAGE_POLL_VOTE_REMOVE",
+	RateLimited = "RATE_LIMITED",
 })
 
 export type ReceiveEvent =
@@ -149,5 +150,6 @@ export type ReceiveEvent =
 	| "WebhooksUpdate"
 	| "MessagePollVoteAdd"
 	| "MessagePollVoteRemove"
+	| "RateLimited"
 
 return ReceiveEvents
