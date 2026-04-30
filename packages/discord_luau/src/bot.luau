@@ -932,6 +932,8 @@ function Bot.Interface.new(options: {
 
 			onReady = emitter.new(),
 			onAllShardsReady = emitter.new(),
+			onShardDisconnected = emitter.new(),
+			onShardReconnected = emitter.new(),
 			onMessage = emitter.new(),
 			onMessageChanged = emitter.new(),
 			onMessageDeleted = emitter.new(),
