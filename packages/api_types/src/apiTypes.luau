@@ -439,6 +439,33 @@ export type GuildRoleObject = {
 	flags: number, -- role flags combined as a bitfield
 }
 
+-- https://discord.com/developers/docs/resources/invite#invite-object
+export type PartialGuildRoleObject = {
+	id: Snowflake, -- role id
+	name: string, -- role name
+	position: number, -- position of this role (roles with the same position are sorted by id)
+	color: number, -- Deprecated integer representation of hexadecimal color code
+	colors: { [string]: number }?, -- the role's colors
+	icon: string?, -- role icon hash
+	unicode_emoji: string?, -- role unicode emoji
+}
+
+-- https://discord.com/developers/docs/resources/guild#guild-object
+export type InviteGuildObject = {
+	id: Snowflake, -- guild id
+	name: string, -- guild name (2-100 characters, excluding trailing and leading whitespace)
+	splash: string?, -- splash hash
+	banner: string?, -- banner hash
+	description: string?, -- the description of a guild
+	icon: string?, -- icon hash
+	features: { GuildFeature }, -- enabled guild features
+	verification_level: VerificationLevel?, -- verification level required for the guild
+	vanity_url_code: string?, -- the vanity url code for the guild
+	nsfw_level: number?, -- guild age-restriction level
+	premium_subscription_count: number?, -- the number of boosts this guild currently has
+	roles: { PartialGuildRoleObject }?, -- roles in the guild
+}
+
 -- https://discord.com/developers/docs/resources/emoji#emoji-object
 export type EmojiObject = {
 	id: Snowflake?, -- 	emoji id
