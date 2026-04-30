@@ -1168,6 +1168,7 @@ export type MessageObject = {
 	message_reference: MessageReferenceObject?, -- data showing the source of a crosspost, channel follow add, pin, or reply message
 	flags: number?, -- message flags combined as a bitfield
 	referenced_message: MessageObject?, -- the message associated with the message_reference
+	message_snapshots: { MessageSnapshotObject }?, -- forwarded message snapshots
 	interaction_metadata: MessageInteractionMetadatObject?, -- In preview. Sent if the message is sent as a result of an interaction
 	interaction: MessageInteractionObject?, -- Deprecated in favor of interaction_metadata; sent if the message is a response to an interaction
 	thread: ChannelObject?, -- the thread that was started from this message, includes thread member object
