@@ -138,8 +138,15 @@
 --[=[
 	@prop authorizingIntegrationOwners {[string]: string}
 	@within Classes.Interactions.InteractionBehaviour
-	
+
 	The mapping of integration types to their respective owners.
+]=]
+
+--[=[
+	@prop attachmentSizeLimit number?
+	@within Classes.Interactions.InteractionBehaviour
+
+	The maximum attachment size in bytes for this interaction, varies by guild boost tier and the invoking user's Nitro status.
 ]=]
 
 local apiTypes = require("../../../luau_packages/api_types")
@@ -217,6 +224,8 @@ function Interaction.Interface.inheritProperties(class: any, interactionData: ap
 	class.entitlements = entitlementArray
 
 	class.authorizingIntegrationOwners = authorizingIntegrationOwners
+
+	class.attachmentSizeLimit = interactionData.attachment_size_limit
 end
 
 --[=[
@@ -256,6 +265,7 @@ export type InteractionProperties = {
 		[apiTypes.IntegrationTypesConfig]: apiTypes.Snowflake,
 	},
 	context: apiTypes.InteractionContextType?,
+	attachmentSizeLimit: number?,
 }
 
 export type Interaction = InteractionMethods & InteractionProperties
