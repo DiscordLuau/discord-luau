@@ -116,7 +116,7 @@ function Role.Prototype.deleteAsync(self: Role, reason: string?): future.FutureL
 
 		local response = rest.guild.deleteGuildRoleAsync(request, self.guildId, self.id, reason):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -126,13 +126,17 @@ end
 	@within Classes.Guild.Role
 	Modify a guild role. Requires the MANAGE_ROLES permission. Returns the updated role on success.
 ]=]
-function Role.Prototype.modifyAsync(self: Role, json: builders.roleJSON, reason: string?): future.FutureLike<string, Role>
+function Role.Prototype.modifyAsync(
+	self: Role,
+	json: builders.roleJSON,
+	reason: string?
+): future.FutureLike<string, Role>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local response = rest.guild.modifyGuildRoleAsync(request, self.guildId, self.id, json, reason):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		self:sync(response:unwrapOk())
 
@@ -144,7 +148,11 @@ end
 	@within Classes.Guild.Role
 	Modify the positions of a set of role objects for the guild. Requires the MANAGE_ROLES permission.
 ]=]
-function Role.Prototype.modifyPositionAsync(self: Role, position: number, reason: string?): future.FutureLike<string, { Role }>
+function Role.Prototype.modifyPositionAsync(
+	self: Role,
+	position: number,
+	reason: string?
+): future.FutureLike<string, { Role }>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -155,7 +163,7 @@ function Role.Prototype.modifyPositionAsync(self: Role, position: number, reason
 			}, reason)
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		local guildRoles = {}
 
@@ -181,7 +189,11 @@ end
 	@within Classes.Guild.Role
 	Adds a permission to the role's current permission set.
 ]=]
-function Role.Prototype.addPermissionAsync(self: Role, permission: apiTypes.Permissions, reason: string?): future.FutureLike<string, Role>
+function Role.Prototype.addPermissionAsync(
+	self: Role,
+	permission: apiTypes.Permissions,
+	reason: string?
+): future.FutureLike<string, Role>
 	local permissionBuilder = builders.permission.fromPermissions(self.permissions:toList())
 
 	permissionBuilder:addPermission(permission)
@@ -195,7 +207,11 @@ end
 	@within Classes.Guild.Role
 	Removes a permission from the role's current permission set.
 ]=]
-function Role.Prototype.removePermissionAsync(self: Role, permission: apiTypes.Permissions, reason: string?): future.FutureLike<string, Role>
+function Role.Prototype.removePermissionAsync(
+	self: Role,
+	permission: apiTypes.Permissions,
+	reason: string?
+): future.FutureLike<string, Role>
 	local permissionBuilder = builders.permission.fromPermissions(self.permissions:toList())
 
 	permissionBuilder:removePermission(permission)
@@ -249,7 +265,11 @@ end
 	@within Classes.Guild.Role
 	Sets the role to be mentionable through the @ mention.
 ]=]
-function Role.Prototype.setMentionableAsync(self: Role, mentionable: boolean, reason: string?): future.FutureLike<string, Role>
+function Role.Prototype.setMentionableAsync(
+	self: Role,
+	mentionable: boolean,
+	reason: string?
+): future.FutureLike<string, Role>
 	return self:modifyAsync({
 		mentionable = mentionable,
 	}, reason)

@@ -103,7 +103,7 @@ function Invite.Prototype.deleteAsync(self: Invite, reason: string?): future.Fut
 
 		local response = rest.invite.deleteInviteAsync(request, self.code, reason):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return nil
 	end) :: future.FutureLike<string, nil>

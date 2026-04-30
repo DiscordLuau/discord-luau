@@ -54,7 +54,7 @@ function Ban.Prototype.removeAsync(self: Ban): future.FutureLike<string, nil>
 
 		local response = rest.guild.removeGuildBanAsync(request, self.guildId, self.user.id):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return
 	end) :: future.FutureLike<string, nil>

@@ -144,7 +144,7 @@ function Member.Prototype.banAsync(
 			}, reason)
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -162,7 +162,7 @@ function Member.Prototype.kickAsync(self: Member, reason: string?): future.Futur
 
 		local response = rest.guild.removeGuildMemberAsync(request, self.guildId, self.user.id, reason):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -201,7 +201,7 @@ function Member.Prototype.modifyAsync(
 			}, reason)
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		self:sync(response:unwrapOk())
 
@@ -253,7 +253,11 @@ end
 	@within Classes.Guild.Member
 	Will set the nickname of the user. Returns the updated Member.
 ]=]
-function Member.Prototype.setNicknameAsync(self: Member, nickname: string, reason: string?): future.FutureLike<string, Member>
+function Member.Prototype.setNicknameAsync(
+	self: Member,
+	nickname: string,
+	reason: string?
+): future.FutureLike<string, Member>
 	return self:modifyAsync({
 		nickname = nickname,
 	}, reason)
@@ -263,7 +267,11 @@ end
 	@within Classes.Guild.Member
 	Will set all roles that the user has in this guild. Returns the updated Member.
 ]=]
-function Member.Prototype.setRolesAsync(self: Member, roles: { apiTypes.Snowflake }, reason: string?): future.FutureLike<string, Member>
+function Member.Prototype.setRolesAsync(
+	self: Member,
+	roles: { apiTypes.Snowflake },
+	reason: string?
+): future.FutureLike<string, Member>
 	return self:modifyAsync({
 		roles = roles,
 	}, reason)
@@ -273,7 +281,11 @@ end
 	@within Classes.Guild.Member
 	Will move the user between different voice channels. Returns the updated Member.
 ]=]
-function Member.Prototype.moveVoiceChannelAsync(self: Member, channelId: apiTypes.Snowflake, reason: string?): future.FutureLike<string, Member>
+function Member.Prototype.moveVoiceChannelAsync(
+	self: Member,
+	channelId: apiTypes.Snowflake,
+	reason: string?
+): future.FutureLike<string, Member>
 	return self:modifyAsync({
 		channelId = channelId,
 	}, reason)
@@ -283,7 +295,10 @@ end
 	@within Classes.Guild.Member
 	Will disconnect the user from voice channels the user is in. Returns the updated Member.
 ]=]
-function Member.Prototype.disconnectFromVoiceChannelAsync(self: Member, reason: string?): future.FutureLike<string, Member>
+function Member.Prototype.disconnectFromVoiceChannelAsync(
+	self: Member,
+	reason: string?
+): future.FutureLike<string, Member>
 	return self:modifyAsync({
 		channelId = false,
 	}, reason)
@@ -293,7 +308,11 @@ end
 	@within Classes.Guild.Member
 	Disables the users communication up to a specific time. Returns the updated Member.
 ]=]
-function Member.Prototype.disableAsync(self: Member, disabledUntil: stdPolyfills.DateTime, reason: string?): future.FutureLike<string, Member>
+function Member.Prototype.disableAsync(
+	self: Member,
+	disabledUntil: stdPolyfills.DateTime,
+	reason: string?
+): future.FutureLike<string, Member>
 	return self:modifyAsync({
 		communicationDisabledUntil = disabledUntil:toIsoDate(),
 	}, reason)
@@ -303,7 +322,11 @@ end
 	@within Classes.Guild.Member
 	Add a role to a guild member.
 ]=]
-function Member.Prototype.addRoleAsync(self: Member, roleId: apiTypes.Snowflake, reason: string?): future.FutureLike<string, nil>
+function Member.Prototype.addRoleAsync(
+	self: Member,
+	roleId: apiTypes.Snowflake,
+	reason: string?
+): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -311,7 +334,7 @@ function Member.Prototype.addRoleAsync(self: Member, roleId: apiTypes.Snowflake,
 
 		local response = rest.guild.addGuildMemberRoleAsync(request, self.guildId, self.user.id, roleId, reason):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -321,7 +344,11 @@ end
 	@within Classes.Guild.Member
 	Remove a role from a guild member.
 ]=]
-function Member.Prototype.removeRoleAsync(self: Member, roleId: apiTypes.Snowflake, reason: string?): future.FutureLike<string, nil>
+function Member.Prototype.removeRoleAsync(
+	self: Member,
+	roleId: apiTypes.Snowflake,
+	reason: string?
+): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -330,7 +357,7 @@ function Member.Prototype.removeRoleAsync(self: Member, roleId: apiTypes.Snowfla
 		local response =
 			rest.guild.removeGuildMemberRoleAsync(request, self.guildId, self.user.id, roleId, reason):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return nil
 	end) :: future.FutureLike<string, nil>

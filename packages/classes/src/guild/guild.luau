@@ -302,7 +302,10 @@ Guild.Prototype = {}
 	@within Classes.Guild
 	Creates a guild Slash command for the application.
 ]=]
-function Guild.Prototype.createSlashCommandAsync(self: Guild, slashCommand: builders.interactionJSON): future.FutureLike<string, commandObject.Command>
+function Guild.Prototype.createSlashCommandAsync(
+	self: Guild,
+	slashCommand: builders.interactionJSON
+): future.FutureLike<string, commandObject.Command>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -310,7 +313,7 @@ function Guild.Prototype.createSlashCommandAsync(self: Guild, slashCommand: buil
 			.createGuildApplicationCommandAsync(request, self.state.applicationId, self.id, slashCommand)
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return commandObject.new(response:unwrapOk())
 	end) :: future.FutureLike<string, commandObject.Command>
@@ -320,7 +323,10 @@ end
 	@within Classes.Guild
 	Delete an existing guild application command.
 ]=]
-function Guild.Prototype.deleteSlashCommandAsync(self: Guild, slashCommandId: apiTypes.Snowflake): future.FutureLike<string, nil>
+function Guild.Prototype.deleteSlashCommandAsync(
+	self: Guild,
+	slashCommandId: apiTypes.Snowflake
+): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -328,7 +334,7 @@ function Guild.Prototype.deleteSlashCommandAsync(self: Guild, slashCommandId: ap
 			.deleteGuildApplicationCommandAsync(request, self.state.applicationId, self.id, slashCommandId)
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -350,7 +356,7 @@ function Guild.Prototype.editSlashCommandAsync(
 			.editGuildApplicationCommandAsync(request, self.state.applicationId, self.id, slashCommandId, slashCommand)
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return commandObject.new(response:unwrapOk())
 	end) :: future.FutureLike<string, commandObject.Command>
@@ -360,7 +366,10 @@ end
 	@within Classes.Guild
 	Get a list of guild application commands.
 ]=]
-function Guild.Prototype.getSlashCommandsAsync(self: Guild, withLocalizations: boolean?): future.FutureLike<string, { commandObject.Command }>
+function Guild.Prototype.getSlashCommandsAsync(
+	self: Guild,
+	withLocalizations: boolean?
+): future.FutureLike<string, { commandObject.Command }>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -370,7 +379,7 @@ function Guild.Prototype.getSlashCommandsAsync(self: Guild, withLocalizations: b
 			})
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		local commands = {}
 
@@ -387,7 +396,10 @@ end
 	Overwrite all guild application commands. This will skip over commands that are the same as the current commands,
 	and will not remove any existing commands.
 ]=]
-function Guild.Prototype.overwriteSlashCommandsAsync(self: Guild, slashCommands: { builders.interactionJSON }): future.FutureLike<string, { commandObject.Command }>
+function Guild.Prototype.overwriteSlashCommandsAsync(
+	self: Guild,
+	slashCommands: { builders.interactionJSON }
+): future.FutureLike<string, { commandObject.Command }>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -396,7 +408,7 @@ function Guild.Prototype.overwriteSlashCommandsAsync(self: Guild, slashCommands:
 			.bulkOverwriteGuildApplicationCommandsAsync(request, self.state.applicationId, self.id, slashCommands :: any)
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		local commands = {}
 
@@ -420,7 +432,7 @@ function Guild.Prototype.getPreviewAsync(self: Guild): future.FutureLike<string,
 		-- fixme: casted this as any, the command object itself has extra fields as required by the other APIs
 		local response = rest.guild.getGuildPreviewAsync(request, self.id):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return preview.new(response:unwrapOk())
 	end) :: future.FutureLike<string, preview.Preview>
@@ -431,14 +443,18 @@ end
 	Modify a guild's settings. Requires the MANAGE_GUILD permission.
 	Returns the updated guild object on success. Fires a Guild Update Gateway event.
 ]=]
-function Guild.Prototype.modifyAsync(self: Guild, json: builders.guildJSON, reason: string?): future.FutureLike<string, Guild>
+function Guild.Prototype.modifyAsync(
+	self: Guild,
+	json: builders.guildJSON,
+	reason: string?
+): future.FutureLike<string, Guild>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		-- fixme: casted this as any, the command object itself has extra fields as required by the other APIs
 		local response = rest.guild.modifyGuildAsync(request, self.id, json, reason):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		self:sync(response:unwrapOk())
 
@@ -457,7 +473,7 @@ function Guild.Prototype.deleteAsync(self: Guild): future.FutureLike<string, nil
 
 		local response = rest.guild.deleteGuildAsync(request, self.id):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -478,7 +494,7 @@ function Guild.Prototype.getChannelsAsync(self: Guild): future.FutureLike<string
 
 		local response = rest.guild.getGuildChannelsAsync(request, self.id):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		local channels: { unknown } = {}
 
@@ -546,7 +562,9 @@ end
 	@within Classes.Guild
 	Returns a list of guild category channel objects.
 ]=]
-function Guild.Prototype.getCategoryChannelsAsync(self: Guild): future.FutureLike<string, { guildCategory.GuildCategory }>
+function Guild.Prototype.getCategoryChannelsAsync(
+	self: Guild
+): future.FutureLike<string, { guildCategory.GuildCategory }>
 	return future.Future.new(function()
 		local channels = self:getChannelsAsync():await()
 
@@ -572,7 +590,10 @@ end
 	@within Classes.Guild
 	Returns a list of guild announcement channel objects.
 ]=]
-function Guild.Prototype.getAnnouncementChannelsAsync(self: Guild): future.FutureLike<string, { guildAnnouncement.GuildAnnouncement }>
+function Guild.Prototype.getAnnouncementChannelsAsync(self: Guild): future.FutureLike<
+	string,
+	{ guildAnnouncement.GuildAnnouncement }
+>
 	return future.Future.new(function()
 		local channels = self:getChannelsAsync():await()
 
@@ -598,7 +619,9 @@ end
 	@within Classes.Guild
 	Returns a list of guild stage voice channel objects.
 ]=]
-function Guild.Prototype.getStageVoiceChannelsAsync(self: Guild): future.FutureLike<string, { guildStageVoice.GuildStageVoice }>
+function Guild.Prototype.getStageVoiceChannelsAsync(
+	self: Guild
+): future.FutureLike<string, { guildStageVoice.GuildStageVoice }>
 	return future.Future.new(function()
 		local channels = self:getChannelsAsync():await()
 
@@ -624,7 +647,9 @@ end
 	@within Classes.Guild
 	Returns a list of guild directory channel objects.
 ]=]
-function Guild.Prototype.getDirectoryChannelsAsync(self: Guild): future.FutureLike<string, { guildDirectory.GuildDirectory }>
+function Guild.Prototype.getDirectoryChannelsAsync(
+	self: Guild
+): future.FutureLike<string, { guildDirectory.GuildDirectory }>
 	return future.Future.new(function()
 		local channels = self:getChannelsAsync():await()
 
@@ -653,13 +678,17 @@ end
 	Setting MANAGE_ROLES permission in channels is only possible for guild administrators.
 	Returns the new channel object on success. Fires a Channel Create Gateway event.
 ]=]
-function Guild.Prototype.createChannelAsync<T>(self: Guild, json: builders.channelJSON, reason: string?): future.FutureLike<string, { apiTypes.AbstractChannel }>
+function Guild.Prototype.createChannelAsync<T>(
+	self: Guild,
+	json: builders.channelJSON,
+	reason: string?
+): future.FutureLike<string, { apiTypes.AbstractChannel }>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local response = rest.guild.createGuildChannelAsync(request, self.id, json, reason):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return constructChannelFromData(self.state, response:unwrapOk()) :: any
 	end) :: future.FutureLike<string, { apiTypes.AbstractChannel }>
@@ -675,7 +704,7 @@ function Guild.Prototype.getRoleMemberCounts<T>(self: Guild): future.FutureLike<
 
 		local response = rest.guild.getGuildRoleMemberCounts(request, self.id):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return response:unwrapOk() :: any
 	end) :: future.FutureLike<string, {
@@ -693,13 +722,15 @@ end
 
 	Please use explicit functions for specific channel types, for example: getMediaThreadsAsync, getAnnouncementThreadsAsync, etc.
 ]=]
-function Guild.Prototype.getThreadsAsync(self: Guild): future.FutureLike<string, { publicThread.Public | privateThread.Private }>
+function Guild.Prototype.getThreadsAsync(
+	self: Guild
+): future.FutureLike<string, { publicThread.Public | privateThread.Private }>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local response = rest.guild.listActiveGuildThreadsAsync(request, self.id):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		local channels: { unknown } = {}
 
@@ -715,7 +746,9 @@ end
 	@within Classes.Guild
 	Returns a list of guild announcement thread objects.
 ]=]
-function Guild.Prototype.getAnnouncementThreadsAsync(self: Guild): future.FutureLike<string, { announcementThread.Announcement }>
+function Guild.Prototype.getAnnouncementThreadsAsync(
+	self: Guild
+): future.FutureLike<string, { announcementThread.Announcement }>
 	return future.Future.new(function()
 		local channels = self:getChannelsAsync():await()
 
@@ -800,7 +833,7 @@ function Guild.Prototype.getMemberAsync(self: Guild, userId: string): future.Fut
 		-- fixme: casted this as any, the command object itself has extra fields as required by the other APIs
 		local response = rest.guild.getGuildMemberAsync(request, self.id, userId):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return member.new(self.state, self.id, response:unwrapOk())
 	end) :: future.FutureLike<string, member.Member>
@@ -810,7 +843,11 @@ end
 	@within Classes.Guild
 	Returns a list of guild member objects that are members of the guild.
 ]=]
-function Guild.Prototype.listMembersAsync(self: Guild, lastSnowflake: string?, limit: number?): future.FutureLike<string, { member.Member }>
+function Guild.Prototype.listMembersAsync(
+	self: Guild,
+	lastSnowflake: string?,
+	limit: number?
+): future.FutureLike<string, { member.Member }>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -821,7 +858,7 @@ function Guild.Prototype.listMembersAsync(self: Guild, lastSnowflake: string?, l
 			})
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		local members = {}
 
@@ -837,7 +874,11 @@ end
 	@within Classes.Guild
 	Returns a list of guild member objects whose username or nickname starts with a provided string.
 ]=]
-function Guild.Prototype.searchMembersAsync(self: Guild, query: string, limit: number?): future.FutureLike<string, { member.Member }>
+function Guild.Prototype.searchMembersAsync(
+	self: Guild,
+	query: string,
+	limit: number?
+): future.FutureLike<string, { member.Member }>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -848,7 +889,7 @@ function Guild.Prototype.searchMembersAsync(self: Guild, query: string, limit: n
 			})
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		local members = {}
 
@@ -890,7 +931,7 @@ function Guild.Prototype.addMemberAsync(
 			})
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		local data = response:unwrapOk()
 
@@ -906,13 +947,17 @@ end
 	@within Classes.Guild
 	Removes a role from a guild member. Requires the MANAGE_ROLES permission.
 ]=]
-function Guild.Prototype.kickMemberAsync(self: Guild, userId: apiTypes.Snowflake, reason: string?): future.FutureLike<string, nil>
+function Guild.Prototype.kickMemberAsync(
+	self: Guild,
+	userId: apiTypes.Snowflake,
+	reason: string?
+): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local response = rest.guild.removeGuildMemberAsync(request, self.id, userId, reason):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -949,7 +994,7 @@ function Guild.Prototype.banMemberAsync(
 			}, reason)
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -984,7 +1029,7 @@ function Guild.Prototype.bulkBanAsync(
 					}, reason)
 					:await()
 
-				assert(response:isOk(), tostring(response:unwrapErr()))
+				assert(response:isOk(), `{response:unwrapErr()}`)
 
 				local data = response:unwrapOk()
 				local returnedValue = {}
@@ -1018,7 +1063,7 @@ function Guild.Prototype.getBansAsync(
 			})
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		local bans = {}
 
@@ -1040,7 +1085,7 @@ function Guild.Prototype.getBanAsync(self: Guild, userId: apiTypes.Snowflake): f
 
 		local response = rest.guild.getGuildBanAsync(request, self.id, userId):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		local data = response:unwrapOk()
 
@@ -1062,7 +1107,7 @@ function Guild.Prototype.getRolesAsync(self: Guild): future.FutureLike<string, {
 
 		local response = rest.guild.getGuildRolesAsync(request, self.id):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		local roles = {}
 
@@ -1092,7 +1137,7 @@ function Guild.Prototype.getRoleAsync(self: Guild, roleId: apiTypes.Snowflake): 
 
 		local response = rest.guild.getGuildRoleAsync(request, self.id, roleId):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		local data = response:unwrapOk()
 
@@ -1107,13 +1152,17 @@ end
 	Create a new role for the guild. Requires the MANAGE_ROLES permission.
 	Returns the new role object on success.
 ]=]
-function Guild.Prototype.createRoleAsync(self: Guild, roleJson: builders.roleJSON, reason: string?): future.FutureLike<string, role.Role>
+function Guild.Prototype.createRoleAsync(
+	self: Guild,
+	roleJson: builders.roleJSON,
+	reason: string?
+): future.FutureLike<string, role.Role>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local response = rest.guild.createGuildRoleAsync(request, self.id, roleJson, reason):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return role.new(self.state, self.id, response:unwrapOk())
 	end) :: future.FutureLike<string, role.Role>
@@ -1123,7 +1172,11 @@ end
 	@within Classes.Guild
 	Modify a guild's MFA level. Requires guild ownership. Returns the updated level on success.
 ]=]
-function Guild.Prototype.setMFALevelAsync(self: Guild, mfaLevel: apiTypes.MFALevel, reason: string?): future.FutureLike<string, apiTypes.MFALevel>
+function Guild.Prototype.setMFALevelAsync(
+	self: Guild,
+	mfaLevel: apiTypes.MFALevel,
+	reason: string?
+): future.FutureLike<string, apiTypes.MFALevel>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -1133,7 +1186,7 @@ function Guild.Prototype.setMFALevelAsync(self: Guild, mfaLevel: apiTypes.MFALev
 			}, reason)
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return apiTypes.guild.MFALevel[response:unwrapOk()]
 	end) :: future.FutureLike<string, apiTypes.MFALevel>
@@ -1148,7 +1201,11 @@ end
 	providing the include_roles parameter. Any inactive user that has a subset of the provided role(s) will be
 	counted in the prune and users with additional roles will not.
 ]=]
-function Guild.Prototype.getPruneCountAsync(self: Guild, days: number?, includedRoles: { apiTypes.Snowflake }?): future.FutureLike<string, number>
+function Guild.Prototype.getPruneCountAsync(
+	self: Guild,
+	days: number?,
+	includedRoles: { apiTypes.Snowflake }?
+): future.FutureLike<string, number>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -1159,7 +1216,7 @@ function Guild.Prototype.getPruneCountAsync(self: Guild, days: number?, included
 			})
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return response:unwrapOk().pruned
 	end) :: future.FutureLike<string, number>
@@ -1195,7 +1252,7 @@ function Guild.Prototype.beginPruneAsync(
 			})
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		if returnPruneCount then
 			return response:unwrapOk().pruned
@@ -1215,7 +1272,7 @@ function Guild.Prototype.getVoiceRegionsAsync(self: Guild): future.FutureLike<st
 
 		local response = rest.guild.getGuildVoiceRegionsAsync(request, self.id):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		local voiceRegions = {}
 
@@ -1237,7 +1294,7 @@ function Guild.Prototype.getInvitesAsync(self: Guild): future.FutureLike<string,
 
 		local response = rest.guild.getGuildInvitesAsync(request, self.id):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		local invites = {}
 
@@ -1259,7 +1316,7 @@ function Guild.Prototype.getIntegrationsAsync(self: Guild): future.FutureLike<st
 
 		local response = rest.guild.getGuildIntegrationsAsync(request, self.id):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		local integrations = {}
 
@@ -1284,7 +1341,7 @@ function Guild.Prototype.deleteIntegrationAsync(self: Guild, integrationId: stri
 
 		local response = rest.guild.deleteGuildIntegrationAsync(request, self.id, integrationId):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -1300,7 +1357,7 @@ function Guild.Prototype.getWidgetSettingsAsync(self: Guild): future.FutureLike<
 
 		local response = rest.guild.getGuildWidgetSettingsAsync(request, self.id):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return widgetSettings.new(response:unwrapOk())
 	end) :: future.FutureLike<string, widgetSettings.WidgetSettings>
@@ -1311,13 +1368,17 @@ end
 	Modify a guild widget settings object for the guild. All attributes may be passed in with JSON and modified.
 	Requires the MANAGE_GUILD permission. Returns the updated guild widget settings object. 
 ]=]
-function Guild.Prototype.modifyWidgetAsync(self: Guild, json: builders.widgetSettingsJSON, reason: string?): future.FutureLike<string, widgetSettings.WidgetSettings>
+function Guild.Prototype.modifyWidgetAsync(
+	self: Guild,
+	json: builders.widgetSettingsJSON,
+	reason: string?
+): future.FutureLike<string, widgetSettings.WidgetSettings>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local response = rest.guild.modifyGuildWidgetAsync(request, self.id, json, reason):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return widgetSettings.new(response:unwrapOk())
 	end) :: future.FutureLike<string, widgetSettings.WidgetSettings>
@@ -1334,7 +1395,7 @@ function Guild.Prototype.getWidgetAsync(self: Guild): future.FutureLike<string, 
 
 		local response = rest.guild.getGuildWidgetAsync(request, self.id):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return widget.new(self.state, response:unwrapOk())
 	end) :: future.FutureLike<string, widget.Widget>
@@ -1351,7 +1412,7 @@ function Guild.Prototype.getVanityUrlAsync(self: Guild): future.FutureLike<strin
 
 		local response = rest.guild.getGuildVanityURLAsync(request, self.id):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return vanityUrl.new(response:unwrapOk())
 	end) :: future.FutureLike<string, vanityUrl.VanityUrl>
@@ -1374,7 +1435,7 @@ function Guild.Prototype.getWidgetImageAsync(
 			})
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return response:unwrapOk()
 	end) :: future.FutureLike<string, string>
@@ -1392,7 +1453,7 @@ function Guild.Prototype.getWelcomeScreenAsync(self: Guild): future.FutureLike<s
 
 		local response = rest.guild.getGuildWelcomeScreenAsync(request, self.id):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return welcomeScreen.new(response:unwrapOk())
 	end) :: future.FutureLike<string, welcomeScreen.WelcomeScreen>
@@ -1402,13 +1463,17 @@ end
 	@within Classes.Guild
 	Modify the guild's Welcome Screen. Requires the MANAGE_GUILD permission.
 ]=]
-function Guild.Prototype.modifyWelcomeScreenAsync(self: Guild, json: builders.welcomeScreenJSON, reason: string?): future.FutureLike<string, welcomeScreen.WelcomeScreen>
+function Guild.Prototype.modifyWelcomeScreenAsync(
+	self: Guild,
+	json: builders.welcomeScreenJSON,
+	reason: string?
+): future.FutureLike<string, welcomeScreen.WelcomeScreen>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local response = rest.guild.modifyGuildWelcomeScreenAsync(request, self.id, json, reason):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return welcomeScreen.new(response:unwrapOk())
 	end) :: future.FutureLike<string, welcomeScreen.WelcomeScreen>
@@ -1424,7 +1489,7 @@ function Guild.Prototype.getOnboardingAsync(self: Guild): future.FutureLike<stri
 
 		local response = rest.guild.getGuildOnboardingAsync(request, self.id):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return onboarding.new(response:unwrapOk())
 	end) :: future.FutureLike<string, onboarding.Onboarding>
@@ -1435,13 +1500,17 @@ end
 	Modifies the onboarding configuration of the guild. Returns a 200 with the Onboarding object for the guild.
 	Requires the MANAGE_GUILD and MANAGE_ROLES permissions.
 ]=]
-function Guild.Prototype.modifyOnboardingAsync(self: Guild, json: builders.onboardingJSON, reason: string?): future.FutureLike<string, onboarding.Onboarding>
+function Guild.Prototype.modifyOnboardingAsync(
+	self: Guild,
+	json: builders.onboardingJSON,
+	reason: string?
+): future.FutureLike<string, onboarding.Onboarding>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local response = rest.guild.modifyGuildOnboardingAsync(request, self.id, json, reason):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return onboarding.new(response:unwrapOk())
 	end) :: future.FutureLike<string, onboarding.Onboarding>
@@ -1478,7 +1547,7 @@ function Guild.Prototype.getGuildAuditLogAsync(
 			})
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return auditlog.new(self.state, response:unwrapOk())
 	end) :: future.FutureLike<string, auditlog.AuditLogs>
@@ -1488,13 +1557,16 @@ end
 	@within Classes.Guild
 	Get a list of all rules currently configured for the guild. Returns a list of auto moderation rule objects for the given guild.
 ]=]
-function Guild.Prototype.listAutomoderationRulesAsync(self: Guild): future.FutureLike<string, { automoderationRule.AutomoderationRule }>
+function Guild.Prototype.listAutomoderationRulesAsync(self: Guild): future.FutureLike<
+	string,
+	{ automoderationRule.AutomoderationRule }
+>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local response = rest.autoModeration.listAutoModerationRulesForGuildAsync(request, self.id):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		local automoderationRules = {}
 
@@ -1510,13 +1582,16 @@ end
 	@within Classes.Guild
 	Get a single rule. Returns an auto moderation rule object.
 ]=]
-function Guild.Prototype.getAutomoderationRuleAsync(self: Guild, ruleId: apiTypes.Snowflake): future.FutureLike<string, automoderationRule.AutomoderationRule>
+function Guild.Prototype.getAutomoderationRuleAsync(
+	self: Guild,
+	ruleId: apiTypes.Snowflake
+): future.FutureLike<string, automoderationRule.AutomoderationRule>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local response = rest.autoModeration.getAutoModerationRuleForGuildAsync(request, self.id, ruleId):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return automoderationRule.new(self.state, response:unwrapOk())
 	end) :: future.FutureLike<string, automoderationRule.AutomoderationRule>
@@ -1536,7 +1611,7 @@ function Guild.Prototype.createAutomoderationRuleAsync(
 
 		local response = rest.autoModeration.createAutoModerationRuleAsync(request, self.id, ruleJSON, reason):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return automoderationRule.new(self.state, response:unwrapOk())
 	end) :: future.FutureLike<string, automoderationRule.AutomoderationRule>

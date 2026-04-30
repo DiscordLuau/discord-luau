@@ -132,7 +132,7 @@ function Integration.Prototype.deleteAsync(self: Integration, reason: string?): 
 
 		local response = rest.guild.deleteGuildIntegrationAsync(request, self.guildId, self.id, reason):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return nil
 	end) :: future.FutureLike<string, nil>
