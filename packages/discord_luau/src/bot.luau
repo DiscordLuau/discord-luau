@@ -309,7 +309,7 @@ function Bot.Prototype.queryGatewayInformation(self: Bot): future.FutureLike<str
 
 		local response = rest.gateway.getGatewayBotAsync(request):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return response:unwrapOk()
 	end) :: future.FutureLike<string, apiTypes.GetGatewayBotResponse>
@@ -622,7 +622,7 @@ function Bot.Prototype.getGuildAsync(
 			})
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return classes.guild.guild.new(self.state, response:unwrapOk())
 	end) :: future.FutureLike<string, classes.Guild>
@@ -648,7 +648,7 @@ function Bot.Prototype.getChannelAsync<T>(self: Bot, channelId: string): future.
 
 		local response = rest.channel.getChannelAsync(request, channelId):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return classes.channels.construct(self.state, response:unwrapOk()) :: any
 	end) :: future.FutureLike<string, classes.Channel>
@@ -826,7 +826,7 @@ function Bot.Prototype.getUserAsync(self: Bot, userId: string): future.FutureLik
 
 		local response = rest.user.getUserAsync(request, userId):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		local data = response:unwrapOk()
 
@@ -852,7 +852,7 @@ function Bot.Prototype.createGuildAsync(
 
 		local response = rest.guild.createGuildAsync(request, guildData :: any):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return classes.guild.guild.new(self.state, response:unwrapOk()) :: any
 	end) :: future.FutureLike<string, classes.Guild>
