@@ -163,7 +163,7 @@ function TextInput.Prototype.build(self: TextInput): JSON
 	return {
 		type = 4,
 		custom_id = self.customId,
-		style = apiTypes.message.MessageType[self.style],
+		style = apiTypes.message.TextInputStyle[self.style],
 		label = self.label,
 		min_length = self.minLength,
 		max_length = self.maxLength,
