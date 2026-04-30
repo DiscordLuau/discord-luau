@@ -109,7 +109,7 @@ end
 function Prompt.Prototype.build(self: Prompt): JSON
 	return {
 		type = apiTypes.guild.OnboardingPromptType[self.type],
-		options = self.options,
+		options = #self.options > 0 and self.options or nil,
 		title = self.title,
 		single_select = self.singleSelect,
 		required = self.required,
@@ -150,7 +150,7 @@ function Prompt.Interface.new(resource: {
 
 	if resource then
 		if resource.type then
-			self:setTitle(resource.type)
+			self:setType(resource.type)
 		end
 
 		if resource.options then

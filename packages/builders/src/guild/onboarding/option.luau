@@ -118,8 +118,8 @@ end
 ]=]
 function Option.Prototype.build(self: Option): JSON
 	return {
-		channel_ids = self.channelIds,
-		role_ids = self.roleIds,
+		channel_ids = #self.channelIds > 0 and self.channelIds or nil,
+		role_ids = #self.roleIds > 0 and self.roleIds or nil,
 		emoji_id = self.emojiId,
 		emoji_name = self.emojiName,
 		emoji_animated = self.emojiAnimated,
