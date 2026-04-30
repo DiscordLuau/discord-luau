@@ -10,7 +10,7 @@ DiscordLuau - Buffer, not to be confused with the Luau buffer datatype, this lib
 
 ### Installation
 
-To use DiscordLuaus Bit, add it to your project using the pesde package manager:
+To use DiscordLuaus Buffer, add it to your project using the pesde package manager:
 
 ```bash
 pesde add discord_luau/buffer
