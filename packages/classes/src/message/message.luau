@@ -715,7 +715,7 @@ export type Message = typeof(Message.Prototype) & {
 	applicationId: apiTypes.Snowflake?,
 	flags: messageBitflag.MessageBitflag?,
 	messageReference: reference.Reference?,
-	-- messageSnapshots: unknown?, -- todo: add support for message snapshots
+	messageSnapshots: { snapshot.Snapshot },
 	referencedMessage: Message?,
 	interactionMetadata: interactionMetadata.IneractionMetadata?,
 	interaction: interaction.Interaction?,
