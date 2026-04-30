@@ -79,7 +79,7 @@ local rest = require("../../luau_packages/rest")
 local stdPolyfills = require("../../luau_packages/std_polyfills")
 local future = require("../../luau_packages/future")
 
-local unavailableGuild = require("./unavailableGuild")
+local inviteGuild = require("./inviteGuild")
 local scheduledEvent = require("./scheduledEvent")
 
 local user = require("../user")
@@ -126,7 +126,7 @@ function Invite.Prototype.sync(self: Invite, inviteData: apiTypes.InviteObject):
 
 	self.code = inviteData.code
 
-	self.guild = inviteData.guild and unavailableGuild.new(self.state, inviteData.guild.id :: string)
+	self.guild = inviteData.guild and inviteGuild.new(inviteData.guild)
 
 	self.inviter = inviteData.inviter and user.new(inviteData.inviter)
 
@@ -167,7 +167,7 @@ export type Invite = typeof(Invite.Prototype) & {
 
 	type: apiTypes.InviteType,
 	code: string,
-	guild: unavailableGuild.UnavailableGuild?,
+	guild: inviteGuild.InviteGuild?,
 	channel: apiTypes.AbstractChannel,
 	inviter: user.User?,
 	targetType: apiTypes.InviteTargetType?,
