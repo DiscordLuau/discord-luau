@@ -506,6 +506,24 @@ function Bot.Prototype.connectAsync(self: Bot): future.FutureLike<string, nil>
 
 					self.state.cache.guilds:set(typedObject.d.id :: apiTypes.Snowflake, guildData)
 
+					if guildData.roles then
+						for _, roleData in guildData.roles do
+							self.state.cache.roles:set(roleData.id :: apiTypes.Snowflake, roleData)
+						end
+					end
+
+					if guildData.channels then
+						for _, channelData in guildData.channels do
+							self.state.cache.channels:set(channelData.id :: apiTypes.Snowflake, channelData)
+						end
+					end
+
+					if guildData.threads then
+						for _, threadData in guildData.threads do
+							self.state.cache.channels:set(threadData.id :: apiTypes.Snowflake, threadData)
+						end
+					end
+
 					self.onGuildCreate:invoke(classes.guild.guild.new(self.state, guildData))
 				end
 			elseif object.event == apiTypes.gateway.receiveEvents["GuildUpdate"] then
