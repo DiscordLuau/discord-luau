@@ -36,8 +36,8 @@ Footer.Interface = {}
 	Sets the footer text content.
 ]=]
 function Footer.Prototype.setText(self: Footer, text: string): Footer
-	assert(#text <= 2048, "Name must be less than 2048 characters")
-	assert(#text > 1, "Name must be greater than 1 characters")
+	assert(#text <= 2048, "text must be at most 2048 characters")
+	assert(#text >= 1, "text must be at least 1 character")
 
 	self.text = text
 

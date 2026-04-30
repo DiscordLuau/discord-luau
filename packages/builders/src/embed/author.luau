@@ -43,7 +43,7 @@ Author.Interface = {}
 ]=]
 function Author.Prototype.setName(self: Author, name: string): Author
 	assert(#name <= 256, "Name must be less than 256 characters")
-	assert(#name > 1, "Name must be greater than 1 characters")
+	assert(#name >= 1, "name must be at least 1 character")
 
 	self.name = name
 

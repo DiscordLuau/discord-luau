@@ -109,7 +109,7 @@ Embed.Interface = {}
 ]=]
 function Embed.Prototype.setTitle(self: Embed, title: string): Embed
 	assert(#title <= 256, "Title must be less than 256 characters")
-	assert(#title > 1, "Title must be greater than 1 characters")
+	assert(#title >= 1, "title must be at least 1 character")
 
 	self.title = title
 
@@ -134,7 +134,7 @@ end
 ]=]
 function Embed.Prototype.setDescription(self: Embed, description: string): Embed
 	assert(#description <= 4096, "Description must be less than 4096 characters")
-	assert(#description > 1, "Description must be greater than 1 characters")
+	assert(#description >= 1, "description must be at least 1 character")
 
 	self.description = description
 
@@ -251,7 +251,7 @@ end
 	Add a field to the embeds.
 ]=]
 function Embed.Prototype.addField(self: Embed, field: embedField.JSON): Embed
-	assert(#self.fields <= 25, `Embeds can only house up to 25 fields!`)
+	assert(#self.fields < 25, "embeds cannot have more than 25 fields")
 
 	table.insert(self.fields, field)
 

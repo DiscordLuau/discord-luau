@@ -95,6 +95,9 @@ end
 	Sets the title of this option.
 ]=]
 function Option.Prototype.setTitle(self: Option, title: string): Option
+	assert(#title >= 1, "title must be at least 1 character")
+	assert(#title <= 50, "title must be at most 50 characters")
+
 	self.title = title
 
 	return self
@@ -106,6 +109,9 @@ end
 	Sets the description of this option.
 ]=]
 function Option.Prototype.setDescription(self: Option, description: string): Option
+	assert(#description >= 1, "description must be at least 1 character")
+	assert(#description <= 100, "description must be at most 100 characters")
+
 	self.description = description
 
 	return self
@@ -117,6 +123,8 @@ end
 	Responsible for building the OptionObject JSON that can be parsed by the Discord API.
 ]=]
 function Option.Prototype.build(self: Option): JSON
+	assert(self.title, "title must be set before building an option")
+
 	return {
 		channel_ids = #self.channelIds > 0 and self.channelIds or nil,
 		role_ids = #self.roleIds > 0 and self.roleIds or nil,

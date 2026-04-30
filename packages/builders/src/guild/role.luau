@@ -66,9 +66,7 @@ Role.Interface = {}
 ]=]
 function Role.Prototype.setName(self: Role, roleName: string): Role
 	assert(#roleName <= 100, `Role name must be less than 100 characters.`)
-	assert(#roleName > 1, `Role name must be more than 1 characters.`)
-
-	assert(util.validateKebabCase(roleName), `Tag name must be kebab-case.`)
+	assert(#roleName >= 1, "role name must be at least 1 character")
 
 	self.name = roleName
 

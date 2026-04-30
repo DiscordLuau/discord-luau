@@ -37,7 +37,7 @@ Field.Interface = {}
 ]=]
 function Field.Prototype.setName(self: Field, name: string): Field
 	assert(#name <= 256, "Name must be less than 256 characters")
-	assert(#name > 1, "Name must be greater than 1 characters")
+	assert(#name >= 1, "name must be at least 1 character")
 
 	self.name = name
 
@@ -50,6 +50,9 @@ end
 	Set the value of the field
 ]=]
 function Field.Prototype.setValue(self: Field, value: string): Field
+	assert(#value >= 1, "value must be at least 1 character")
+	assert(#value <= 1024, "value must be at most 1024 characters")
+
 	self.value = value
 
 	return self

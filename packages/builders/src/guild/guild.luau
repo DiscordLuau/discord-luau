@@ -142,7 +142,7 @@ Guild.Interface = {}
 ]=]
 function Guild.Prototype.setName(self: Guild, name: string): Guild
 	assert(#name <= 100, "Name must be less than 100 characters")
-	assert(#name > 1, "Name must be greater than 1 characters")
+	assert(#name > 1, "name must be at least 2 characters")
 
 	self.name = name
 
@@ -209,6 +209,9 @@ end
 	Set the AFK timeout in seconds. Can be one of: 60, 300, 900, 1800, 3600.
 ]=]
 function Guild.Prototype.setAfkTimeout(self: Guild, afkTimeout: number): Guild
+	local validTimeouts = { [60] = true, [300] = true, [900] = true, [1800] = true, [3600] = true }
+	assert(validTimeouts[afkTimeout], "afkTimeout must be one of: 60, 300, 900, 1800, or 3600 seconds")
+
 	self.afkTimeout = afkTimeout
 
 	return self

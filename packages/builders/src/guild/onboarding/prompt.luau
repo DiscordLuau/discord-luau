@@ -52,6 +52,7 @@ Prompt.Interface = {}
 	Add an Option to this prompt
 ]=]
 function Prompt.Prototype.addOption(self: Prompt, option: option.JSON): Prompt
+	assert(#self.options < 50, "prompts cannot have more than 50 options")
 	table.insert(self.options, option)
 
 	return self
@@ -74,6 +75,9 @@ end
 	Set the title of this prompt
 ]=]
 function Prompt.Prototype.setTitle(self: Prompt, title: string): Prompt
+	assert(#title >= 1, "title must be at least 1 character")
+	assert(#title <= 100, "title must be at most 100 characters")
+
 	self.title = title
 
 	return self
@@ -107,6 +111,11 @@ end
 	Responsible for building the PromptObject JSON that can be parsed by the Discord API.
 ]=]
 function Prompt.Prototype.build(self: Prompt): JSON
+	assert(self.type, "type must be set before building a prompt")
+	assert(self.title, "title must be set before building a prompt")
+	assert(self.singleSelect ~= nil, "singleSelect must be set before building a prompt")
+	assert(self.required ~= nil, "required must be set before building a prompt")
+
 	return {
 		type = apiTypes.guild.OnboardingPromptType[self.type],
 		options = #self.options > 0 and self.options or nil,
