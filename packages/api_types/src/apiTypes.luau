@@ -1123,6 +1123,25 @@ export type MessageCallObject = {
 	ended_timestamp: string, -- time when call ended
 }
 
+-- https://discord.com/developers/docs/resources/message#message-snapshot-object
+export type MessageSnapshotContentObject = {
+	type: MessageType, -- type of message
+	content: string, -- contents of the message
+	embeds: { EmbedObject }, -- any embedded content
+	attachments: { AttachmentObject }, -- any attached files
+	timestamp: string, -- when this message was sent
+	edited_timestamp: string?, -- when this message was edited (or null if never)
+	flags: number?, -- message flags combined as a bitfield
+	mentions: { UserObject }, -- users specifically mentioned in the message
+	mention_roles: { Snowflake }, -- roles specifically mentioned in this message
+	sticker_items: { SitckerItemObject }?, -- sent if the message contains stickers
+	components: { ComponentObjects }?, -- sent if the message contains components like buttons, action rows, or other interactive components
+}
+
+export type MessageSnapshotObject = {
+	message: MessageSnapshotContentObject, -- minimal subset of fields in the forwarded message
+}
+
 -- https://discord.com/developers/docs/resources/channel#message-object
 export type MessageObject = {
 	id: Snowflake?, -- id of the message
