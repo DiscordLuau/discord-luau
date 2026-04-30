@@ -115,7 +115,7 @@ function AutomoderationRule.Prototype.modifyAsync(
 			.modifyAutoModerationRuleAsync(request, self.guildId, self.id, automoderationRuleJSON, auditLogReason)
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		self:sync(response:unwrapOk())
 
@@ -128,14 +128,17 @@ end
 
 	Deletes an automoderation rule.
 ]=]
-function AutomoderationRule.Prototype.deleteAsync(self: AutomoderationRule, auditLogReason: string?): future.FutureLike<string, nil>
+function AutomoderationRule.Prototype.deleteAsync(
+	self: AutomoderationRule,
+	auditLogReason: string?
+): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local response =
 			rest.autoModeration.deleteAutoModerationRuleAsync(request, self.guildId, self.id, auditLogReason):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return
 	end) :: future.FutureLike<string, nil>

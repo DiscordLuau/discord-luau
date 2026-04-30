@@ -193,13 +193,16 @@ Application.Prototype = {}
 
 	For testing/building commands, it's advised you use guild commands, which do not suffer the same constraints.
 ]=]
-function Application.Prototype.createSlashCommandAsync(self: Application, slashCommand: builders.interactionJSON): future.FutureLike<string, commandObject.Command>
+function Application.Prototype.createSlashCommandAsync(
+	self: Application,
+	slashCommand: builders.interactionJSON
+): future.FutureLike<string, commandObject.Command>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local response = rest.commands.createGlobalApplicationCommandAsync(request, self.id, slashCommand):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return commandObject.new(response:unwrapOk())
 	end) :: future.FutureLike<string, commandObject.Command>
@@ -209,13 +212,16 @@ end
 	@within Classes.Application
 	Delete an existing global application command.
 ]=]
-function Application.Prototype.deleteSlashCommandAsync(self: Application, slashCommandId: apiTypes.Snowflake): future.FutureLike<string, nil>
+function Application.Prototype.deleteSlashCommandAsync(
+	self: Application,
+	slashCommandId: apiTypes.Snowflake
+): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
 		local response = rest.commands.deleteGlobalApplicationCommandAsync(request, self.id, slashCommandId):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -236,7 +242,7 @@ function Application.Prototype.editSlashCommandAsync(
 		local response =
 			rest.commands.editGlobalApplicationCommandAsync(request, self.id, slashCommandId, slashCommand):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return commandObject.new(response:unwrapOk())
 	end) :: future.FutureLike<string, commandObject.Command>
@@ -246,7 +252,10 @@ end
 	@within Classes.Application
 	Get a list of global application commands.
 ]=]
-function Application.Prototype.getSlashCommandsAsync(self: Application, withLocalizations: boolean?): future.FutureLike<string, { commandObject.Command }>
+function Application.Prototype.getSlashCommandsAsync(
+	self: Application,
+	withLocalizations: boolean?
+): future.FutureLike<string, { commandObject.Command }>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -256,7 +265,7 @@ function Application.Prototype.getSlashCommandsAsync(self: Application, withLoca
 			})
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		local commands = {}
 
@@ -282,7 +291,7 @@ function Application.Prototype.overwriteSlashCommandsAsync(
 		local response =
 			rest.commands.bulkOverwriteGlobalApplicationCommandsAsync(request, self.id, slashCommands):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		local commands = {}
 
