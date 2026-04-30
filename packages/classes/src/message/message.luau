@@ -223,6 +223,7 @@ local roleSubscriptionData = require("./roleSubscriptionData")
 local member = require("../guild/member")
 local poll = require("./poll/poll")
 local call = require("./call")
+local snapshot = require("./snapshot")
 local messageBitflag = require("../bitflags/message")
 
 local textInputComponent = require("./components/textInput")
