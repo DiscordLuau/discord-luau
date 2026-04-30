@@ -70,7 +70,7 @@ function ForumBehaviour.Prototype.createPostAsync<T>(self: Channel<T>, post: bui
 
 		local response = rest.channel.startThreadInForumOrMediaChannelAsync(request, self.id, post, reason):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return response:unwrapOk().id :: any
 	end) :: future.FutureLike<string, apiTypes.Snowflake>

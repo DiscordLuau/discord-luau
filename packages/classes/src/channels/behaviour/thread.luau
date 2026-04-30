@@ -77,7 +77,7 @@ function ThreadBehaviour.Prototype.joinAsync<T>(self: Channel<T>): future.Future
 
 		local response = rest.channel.joinThreadAsync(request, self.id):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -93,7 +93,7 @@ function ThreadBehaviour.Prototype.addMemberAsync<T>(self: Channel<T>, userId: s
 
 		local response = rest.channel.addThreadMemberAsync(request, self.id, userId):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -109,7 +109,7 @@ function ThreadBehaviour.Prototype.leaveAsync<T>(self: Channel<T>): future.Futur
 
 		local response = rest.channel.leaveThreadAsync(request, self.id):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -125,7 +125,7 @@ function ThreadBehaviour.Prototype.removeMemberAsync<T>(self: Channel<T>, userId
 
 		local response = rest.channel.removeThreadMemberAsync(request, self.id, userId):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -135,7 +135,11 @@ end
 	@within Classes.Channels.ThreadBehaviour
 	Gets a thread member by their user ID. Can optionally include the member object.
 ]=]
-function ThreadBehaviour.Prototype.getMemberAsync<T>(self: Channel<T>, userId: string, withMember: boolean?): future.FutureLike<string, threadMember.ThreadMember>
+function ThreadBehaviour.Prototype.getMemberAsync<T>(
+	self: Channel<T>,
+	userId: string,
+	withMember: boolean?
+): future.FutureLike<string, threadMember.ThreadMember>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -145,7 +149,7 @@ function ThreadBehaviour.Prototype.getMemberAsync<T>(self: Channel<T>, userId: s
 			})
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return threadMember.new(self.state, self.guildId, response:unwrapOk())
 	end) :: future.FutureLike<string, threadMember.ThreadMember>
@@ -172,7 +176,7 @@ function ThreadBehaviour.Prototype.listMembersAsync<T>(
 			})
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		local threadMembers = {}
 

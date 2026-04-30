@@ -47,7 +47,7 @@ function GuildAnnouncement.Prototype.crosspostAsync(self: GuildAnnouncement, mes
 
 		local response = rest.message.crosspostMessageAsync(request, self.id, messageId):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return response:unwrapOk().id :: any
 	end) :: future.FutureLike<string, string>
@@ -69,7 +69,7 @@ function GuildAnnouncement.Prototype.followAsync(self: GuildAnnouncement, target
 			})
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return response:unwrapOk().webhook_id
 	end) :: future.FutureLike<string, string>

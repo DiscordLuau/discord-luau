@@ -100,7 +100,7 @@ function GuildBehaviour.Prototype.setPositionAsync<T>(self: Channel<T>, position
 			})
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -124,7 +124,7 @@ function GuildBehaviour.Prototype.setParentAsync<T>(self: Channel<T>, parentId: 
 			})
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -153,7 +153,7 @@ function GuildBehaviour.Prototype.setPermissionsAsync<T>(
 			}, auditLogReason)
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -174,7 +174,7 @@ function GuildBehaviour.Prototype.deletePermissionAsync<T>(
 
 		local response = rest.channel.deleteChannelPermissionAsync(request, self.guildId, overwriteId, reason):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -190,7 +190,7 @@ function GuildBehaviour.Prototype.getInvitesAsync<T>(self: Channel<T>): future.F
 
 		local response = rest.channel.getChannelInvitesAsync(request, self.id):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		local invites = {}
 
@@ -212,7 +212,7 @@ function GuildBehaviour.Prototype.createInviteAsync<T>(self: Channel<T>, json: b
 
 		local response = rest.channel.createChannelInviteAsync(request, self.id, json, reason):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return invite.new(self.state, response:unwrapOk())
 	end) :: future.FutureLike<string, invite.Invite>
@@ -237,7 +237,7 @@ function GuildBehaviour.Prototype.listPublicArchivedThreadsAsync<T>(
 			})
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		local data = response:unwrapOk()
 		local returnedValue = {
@@ -283,7 +283,7 @@ function GuildBehaviour.Prototype.listPrivateArchivedThreadsAsync<T>(
 			})
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		local data = response:unwrapOk()
 		local returnedValue = {
@@ -329,7 +329,7 @@ function GuildBehaviour.Prototype.listJoinedPrivateArchivedThreadsAsync<T>(
 			})
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		local data = response:unwrapOk()
 		local returnedValue = {

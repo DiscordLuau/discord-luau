@@ -57,7 +57,7 @@ function ChannelBehaviour.Prototype.deleteChannelAsync<T>(self: Channel<T>): fut
 
 		local response = rest.channel.deleteOrCloseChannelAsync(request, self.id):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		self:sync(response:unwrapOk())
 
@@ -79,7 +79,7 @@ function ChannelBehaviour.Prototype.triggerTypingIndicatorAsync<T>(self: Channel
 
 		local response = rest.channel.triggerTypingIndicatorAsync(request, self.id):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -96,7 +96,7 @@ function ChannelBehaviour.Prototype.modifyAsync<T>(self: Channel<T>, json: build
 
 		local response = rest.channel.modifyChannelAsync(request, self.id, json, reason):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		self:sync(response:unwrapOk())
 
