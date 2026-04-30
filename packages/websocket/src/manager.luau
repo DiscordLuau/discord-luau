@@ -98,6 +98,11 @@ local CONCURRENT_IDENTIFY_YIELD = 5
 	@within WebSocket.Manager
 ]=]
 
+--[=[
+	@prop onRateLimited Emitter<ShardPayload<{ opcode: number, retryAfter: number, guildId: string? }>>
+	@within WebSocket.Manager
+]=]
+
 local Manager = {}
 
 Manager.Interface = {}
@@ -197,6 +202,15 @@ function Manager.Prototype.connectAsync(
 				})
 			end)
 
+			shardInstance.onSocketRateLimited:listen(function(data)
+				self.onRateLimited:invoke({
+					shardId = shardIndex - 1,
+					opcode = data.opcode,
+					retryAfter = data.retryAfter,
+					guildId = data.guildId,
+				})
+			end)
+
 			self.logger:debug(`Connecting Shard '{shardIndex - 1}' to Discord Gateway`)
 
 			shardInstance:connectAsync(websocketUrl, self.webSocketVersion):after(function(result)
@@ -292,6 +306,7 @@ function Manager.Interface.new(settings: {
 			onConnected = emitter.new(),
 			onHeartbeat = emitter.new(),
 			onDispatch = emitter.new(),
+			onRateLimited = emitter.new(),
 
 			onAllShardsReady = emitter.new(),
 		} :: Manager,
@@ -321,6 +336,7 @@ export type Manager = typeof(Manager.Prototype) & {
 		event: apiTypes.ReceiveEvent,
 		payload: apiTypes.Payload<unknown>,
 	}>>,
+	onRateLimited: emitter.Emitter<ShardPayload<{ opcode: number, retryAfter: number, guildId: string? }>>,
 	onAllShardsReady: emitter.Emitter<ShardPayload<{
 		shardId: number,
 		payload: apiTypes.ReadyPayload,

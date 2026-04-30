@@ -106,6 +106,11 @@ local LIBRARY_IDENTIFIER = "DiscordLuau"
 ]=]
 
 --[=[
+	@prop onSocketRateLimited Emitter<{ opcode: number, retryAfter: number, guildId: string? }>
+	@within WebSocket.Shard
+]=]
+
+--[=[
 	@prop heartbeatAcknowledged boolean?
 	@within WebSocket.Shard
 ]=]
@@ -681,6 +686,7 @@ function Shard.Interface.new(settings: {
 			onSocketDispatch = emitter.new(),
 			onSocketRawMessage = emitter.new(),
 			onSocketReady = emitter.new(),
+			onSocketRateLimited = emitter.new(),
 
 			logger = logger.new(`Shard<{settings.shardId}>`, settings.logLevel),
 
@@ -688,6 +694,8 @@ function Shard.Interface.new(settings: {
 			socketReconnecting = false,
 			socketDisconnecting = false,
 			socketIdentified = false,
+
+			rateLimitedGuilds = {},
 		} :: Shard,
 		{ __index = Shard.Prototype }
 	)
@@ -700,6 +708,39 @@ function Shard.Interface.new(settings: {
 			self.logger:debug(`received dispatch message: {payload.t}`)
 
 			self.lastSequence = payload.s
+
+			if payload.t == apiTypes.gateway.receiveEvents.RateLimited then
+				local messageObject = payload :: apiTypes.RateLimitedPayload
+
+				self.logger:warn(
+					`gateway rate limited on opcode {messageObject.d.opcode}, retry after {messageObject.d.retry_after}s`
+				)
+
+				local guildId: string? = nil
+
+				if messageObject.d.opcode == apiTypes.gateway.opcodes.RequestGuildMembers then
+					guildId = messageObject.d.meta and messageObject.d.meta.guild_id or nil
+
+					if guildId then
+						local retryAfter = messageObject.d.retry_after
+
+						self.rateLimitedGuilds[guildId] = true
+
+						util.coroutineRun(function()
+							stdPolyfills.task.wait(retryAfter)
+							self.rateLimitedGuilds[guildId :: string] = nil
+						end)
+					end
+				end
+
+				self.onSocketRateLimited:invoke({
+					opcode = messageObject.d.opcode,
+					retryAfter = messageObject.d.retry_after,
+					guildId = guildId,
+				})
+
+				return
+			end
 
 			self.onSocketDispatch:invoke(payload)
 		elseif payload.op == apiTypes.gateway.opcodes.Heartbeat then
@@ -903,6 +944,7 @@ export type Shard = typeof(Shard.Prototype) & {
 	onSocketDispatch: emitter.Emitter<apiTypes.Payload<unknown>>,
 	onSocketRawMessage: emitter.Emitter<apiTypes.Payload<unknown>>,
 	onSocketReady: emitter.Emitter<()>,
+	onSocketRateLimited: emitter.Emitter<{ opcode: number, retryAfter: number, guildId: string? }>,
 	heartbeatAcknowledged: boolean?,
 	heartbeatClockTime: number?,
 	heartbeatInterval: number?,
@@ -914,6 +956,7 @@ export type Shard = typeof(Shard.Prototype) & {
 	socketReconnecting: boolean,
 	socketDisconnecting: boolean,
 	socketIdentified: boolean,
+	rateLimitedGuilds: { [string]: boolean },
 	sessionId: string?,
 	sessionGateway: string?,
 	socketVersion: number?,
