@@ -142,7 +142,7 @@ end
 	Adds an attachment to the message.
 ]=]
 function MessageParams.Prototype.addAttachment(self: MessageParams, attachmentData: attachment.JSON): MessageParams
-	local attachments = (self.components or {}) :: { attachment.JSON }
+	local attachments = (self.attachments or {}) :: { attachment.JSON }
 
 	table.insert(attachments, attachmentData)
 
