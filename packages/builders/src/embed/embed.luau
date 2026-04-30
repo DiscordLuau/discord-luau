@@ -279,7 +279,7 @@ function Embed.Prototype.build(self: Embed): JSON
 		video = self.video,
 		provider = self.provider,
 		author = self.author,
-		fields = self.fields,
+		fields = #self.fields > 0 and self.fields or nil,
 	}
 end
 
