@@ -1219,6 +1219,7 @@ export type InteractionObject = {
 	entitlements: { EntitlementObject }, -- For monetized apps, any entitlements for the invoking user, representing access to premium SKUs
 	authorizing_integration_owners: { IntegrationType }, -- Mapping of installation contexts that the interaction was authorized for to related user or guild IDs. See Authorizing Integration Owners Object for details
 	context: InteractionContextType, -- Context where the interaction was triggered from
+	attachment_size_limit: number?, -- Maximum attachment size in bytes for this interaction, varies by guild boost tier and invoking user's Nitro status
 }
 
 -- https://discord.com/developers/docs/resources/application-role-connection-metadata#application-role-connection-metadata-object
