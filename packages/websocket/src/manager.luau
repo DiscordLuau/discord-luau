@@ -199,7 +199,11 @@ function Manager.Prototype.connectAsync(
 
 			self.logger:debug(`Connecting Shard '{shardIndex - 1}' to Discord Gateway`)
 
-			shardInstance:connectAsync(websocketUrl, self.webSocketVersion):await()
+			shardInstance:connectAsync(websocketUrl, self.webSocketVersion):after(function(result)
+				if result:isErr() then
+					self.logger:warn(`shard has run into an error during gateway connection: {result:unwrapErr()}`)
+				end
+			end)
 		end
 	end)
 end
@@ -234,7 +238,11 @@ function Manager.Prototype.sendAsync<T>(self: Manager, operation: apiTypes.Opcod
 							["op"] = operation,
 							["d"] = data,
 						}, false))
-						:await()
+						:after(function(result)
+							if result:isErr() then
+								self.logger:warn(`shard has run into an error during message dispatch: {result:unwrapErr()}`)
+							end
+						end)
 				end)
 			)
 		end
@@ -244,7 +252,11 @@ function Manager.Prototype.sendAsync<T>(self: Manager, operation: apiTypes.Opcod
 		end
 
 		for _, request in requests do
-			request:await()
+			request:after(function(result)
+				if result:isErr() then
+					self.logger:warn(`shard has run into an error during send request: {result:unwrapErr()}`)
+				end
+			end)
 		end
 	end)
 end

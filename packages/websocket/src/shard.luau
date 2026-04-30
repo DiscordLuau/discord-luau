@@ -250,7 +250,11 @@ function Shard.Prototype.heartbeatAsync(self: Shard, requested: boolean?)
 		if not self.heartbeatAcknowledged and not requested then
 			self.logger:warn(`discord WebSocket state has become Zombified, reconnecting...`)
 
-			self:reconnectAsync():await()
+			self:reconnectAsync():after(function(result)
+				if result:isErr() then
+					self.logger:warn(`shard has run into an error during zombified reconnect: {result:unwrapErr()}`)
+				end
+			end)
 		end
 
 		self.heartbeatClockTime = os.clock()
@@ -261,7 +265,11 @@ function Shard.Prototype.heartbeatAsync(self: Shard, requested: boolean?)
 		self:sendAsync(stdPolyfills.serde.encode("json", {
 			["op"] = apiTypes.gateway.opcodes.Heartbeat,
 			["d"] = self.lastSequence or false,
-		}, true)):await()
+		}, true)):after(function(result)
+			if result:isErr() then
+				self.logger:warn(`shard has run into an error during heartbeat send: {result:unwrapErr()}`)
+			end
+		end)
 	end) :: future.FutureLike<string, nil>
 end
 
@@ -291,7 +299,11 @@ function Shard.Prototype.identifyAsync(self: Shard)
 					["device"] = LIBRARY_IDENTIFIER,
 				},
 			},
-		}, true)):await()
+		}, true)):after(function(result)
+			if result:isErr() then
+				self.logger:warn(`shard has run into an error during identify send: {result:unwrapErr()}`)
+			end
+		end)
 	end) :: future.FutureLike<string, nil>
 end
 
@@ -463,11 +475,19 @@ function Shard.Prototype.resumeAsync(self: Shard)
 						end
 					end) :: future.FutureLike<string, nil>
 				end)
-				:await()
+				:after(function(result)
+					if result:isErr() then
+						self.logger:warn(`shard has run into an error during session resume: {result:unwrapErr()}`)
+					end
+				end)
 		else
 			self.logger:warn(`failed to resume session: {response:unwrapErr()}, will try to re-instantiate!`)
 
-			self:reinstantiateAsync(self.shouldReconnect):await()
+			self:reinstantiateAsync(self.shouldReconnect):after(function(result)
+				if result:isErr() then
+					self.logger:warn(`shard has run into an error during re-instantiation after failed resume: {result:unwrapErr()}`)
+				end
+			end)
 		end
 	end) :: future.FutureLike<string, nil>
 end
@@ -506,7 +526,11 @@ function Shard.Prototype.reconnectAsync(self: Shard)
 		else
 			self.logger:warn(`failed to reconnect! Re-instantiating instead!`)
 
-			self:reinstantiateAsync(self.shouldReconnect):await()
+			self:reinstantiateAsync(self.shouldReconnect):after(function(result)
+				if result:isErr() then
+					self.logger:warn(`shard has run into an error during re-instantiation after failed reconnect: {result:unwrapErr()}`)
+				end
+			end)
 		end
 
 		self.socketReconnecting = false
@@ -573,7 +597,11 @@ function Shard.Prototype.reinstantiateAsync(self: Shard, noFail: boolean?)
 			if noFail then
 				stdPolyfills.task.wait(1)
 
-				self:reinstantiateAsync(noFail):await()
+				self:reinstantiateAsync(noFail):after(function(result)
+					if result:isErr() then
+						self.logger:warn(`shard has run into an error during re-instantiation retry: {result:unwrapErr()}`)
+					end
+				end)
 			else
 				self.logger:emergency(
 					`exception during re-instantiation, shard {self.shardId} is now dead! \n{response:unwrapErr()}`
@@ -607,7 +635,11 @@ function Shard.Prototype.heartbeatIn(self: Shard, milliseconds: number): ()
 					self:heartbeatIn(milliseconds)
 				end) :: future.FutureLike<string, nil>
 			end)
-			:await()
+			:after(function(result)
+				if result:isErr() then
+					self.logger:warn(`shard has run into an error during heartbeat loop: {result:unwrapErr()}`)
+				end
+			end)
 	end)
 end
 
@@ -698,7 +730,11 @@ function Shard.Interface.new(settings: {
 								`unrecoverable error during reconnection, re-instantiating shard.. \n{result:unwrapErr()}`
 							)
 
-							self:reinstantiateAsync(self.shouldReconnect):await()
+							self:reinstantiateAsync(self.shouldReconnect):after(function(result)
+								if result:isErr() then
+									self.logger:warn(`shard has run into an error during re-instantiation after invalid session: {result:unwrapErr()}`)
+								end
+							end)
 						end) :: future.FutureLike<string, nil>
 					end)
 					:poll()
