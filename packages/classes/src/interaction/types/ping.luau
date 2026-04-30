@@ -42,7 +42,7 @@ function Ping.Prototype.pongAsync(self: Ping): future.FutureLike<string, nil>
 			})
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return nil
 	end) :: future.FutureLike<string, nil>

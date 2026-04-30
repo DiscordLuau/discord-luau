@@ -269,7 +269,10 @@ end
 	@within Classes.Message
 	Add a reaction to a message. Requires READ_MESSAGE_HISTORY and ADD_REACTIONS permissions.
 ]=]
-function Message.Prototype.addReactionAsync(self: Message, emoji: builders.emojiJSON | string): future.FutureLike<string, nil>
+function Message.Prototype.addReactionAsync(
+	self: Message,
+	emoji: builders.emojiJSON | string
+): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 		local emojiObject = emoji :: string
@@ -283,7 +286,7 @@ function Message.Prototype.addReactionAsync(self: Message, emoji: builders.emoji
 
 		local response = rest.message.createReactionAsync(request, self.channelId, self.id, emojiObject):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -293,7 +296,10 @@ end
 	@within Classes.Message
 	Remove the current user's reaction from a message
 ]=]
-function Message.Prototype.removeOwnReactionAsync(self: Message, emoji: builders.emojiJSON | string): future.FutureLike<string, nil>
+function Message.Prototype.removeOwnReactionAsync(
+	self: Message,
+	emoji: builders.emojiJSON | string
+): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 		local emojiObject = emoji :: string
@@ -307,7 +313,7 @@ function Message.Prototype.removeOwnReactionAsync(self: Message, emoji: builders
 
 		local response = rest.message.deleteOwnReactionAsync(request, self.channelId, self.id, emojiObject):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -336,7 +342,7 @@ function Message.Prototype.deleteUserReactionAsync(
 		local response =
 			rest.message.deleteUserReactionAsync(request, self.channelId, self.id, emojiObject, userId):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -372,7 +378,7 @@ function Message.Prototype.getReactionsAsync(
 			})
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		local users = {}
 
@@ -394,7 +400,7 @@ function Message.Prototype.deleteAllReactionsAsync(self: Message): future.Future
 
 		local response = rest.message.deleteAllReactionsAsync(request, self.channelId, self.id):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -404,7 +410,10 @@ end
 	@within Classes.Message
 	Remove all reactions of a specific emoji from a message. Requires MANAGE_MESSAGES permission.
 ]=]
-function Message.Prototype.deleteAllReactionsForEmojiAsync(self: Message, emoji: builders.emojiJSON | string): future.FutureLike<string, nil>
+function Message.Prototype.deleteAllReactionsForEmojiAsync(
+	self: Message,
+	emoji: builders.emojiJSON | string
+): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 		local emojiObject = emoji :: string
@@ -419,7 +428,7 @@ function Message.Prototype.deleteAllReactionsForEmojiAsync(self: Message, emoji:
 		local response =
 			rest.message.deleteAllReactionsForEmojiAsync(request, self.channelId, self.id, emojiObject):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -446,7 +455,7 @@ function Message.Prototype.editAsync(self: Message, message: builders.messageJSO
 			})
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		self:sync(response:unwrapOk())
 
@@ -465,7 +474,7 @@ function Message.Prototype.deleteAsync(self: Message, reason: string?): future.F
 
 		local response = rest.message.deleteMessageAsync(request, self.channelId, self.id, reason):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -490,7 +499,7 @@ function Message.Prototype.replyAsync(self: Message, message: builders.messageJS
 
 		local response = rest.message.createMessageAsync(request, self.channelId, message):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		self.pinned = true
 
@@ -508,7 +517,7 @@ function Message.Prototype.pinAsync(self: Message): future.FutureLike<string, ni
 
 		local response = rest.channel.pinMessageAsync(request, self.channelId, self.id):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		self.pinned = true
 
@@ -526,7 +535,7 @@ function Message.Prototype.unpinAsync(self: Message): future.FutureLike<string, 
 
 		local response = rest.channel.unpinMessageAsync(request, self.channelId, self.id):await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		self.pinned = false
 

@@ -60,7 +60,7 @@ function Interaction.Prototype.deferAsync(self: Interaction): future.FutureLike<
 
 		self.isDeferred = true
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -89,7 +89,7 @@ function Interaction.Prototype.messageAsync(
 			})
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		local data = response:unwrapOk()
 
@@ -105,7 +105,11 @@ end
 	@within Classes.Interactions.Interactable
 	Respond to this interaction with a modal.
 ]=]
-function Interaction.Prototype.modalAsync(self: Interaction, modalJSON: builders.ModalJSON, responseMessage: boolean?): future.FutureLike<string, message.Message?>
+function Interaction.Prototype.modalAsync(
+	self: Interaction,
+	modalJSON: builders.ModalJSON,
+	responseMessage: boolean?
+): future.FutureLike<string, message.Message?>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -118,7 +122,7 @@ function Interaction.Prototype.modalAsync(self: Interaction, modalJSON: builders
 			})
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		local data = response:unwrapOk()
 
@@ -134,7 +138,10 @@ end
 	@within Classes.Interactions.Interactable
 	Get the response created by this interaction.
 ]=]
-function Interaction.Prototype.getResponseAsync(self: Interaction, threadId: string?): future.FutureLike<string, message.Message>
+function Interaction.Prototype.getResponseAsync(
+	self: Interaction,
+	threadId: string?
+): future.FutureLike<string, message.Message>
 	local request = self.state.rest:newRequest()
 
 	return future.Future.new(function()
@@ -144,7 +151,7 @@ function Interaction.Prototype.getResponseAsync(self: Interaction, threadId: str
 			})
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return message.new(self.state, response:unwrapOk())
 	end) :: future.FutureLike<string, message.Message>
@@ -170,7 +177,7 @@ function Interaction.Prototype.editResponseAsync(
 			})
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return message.new(self.state, response:unwrapOk())
 	end) :: future.FutureLike<string, message.Message>
@@ -188,7 +195,7 @@ function Interaction.Prototype.deleteResponseAsync(self: Interaction): future.Fu
 			.deleteOriginalInteractionResponseAsync(request, self.state.applicationId, self.token)
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -216,7 +223,7 @@ function Interaction.Prototype.createFollowupResponseAsync(
 			})
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return message.new(self.state, response:unwrapOk())
 	end) :: future.FutureLike<string, message.Message>
@@ -226,7 +233,11 @@ end
 	@within Classes.Interactions.Interactable
 	Get the followup response created by this interaction.
 ]=]
-function Interaction.Prototype.getFollowupResponseAsync(self: Interaction, messageId: string, threadId: string?): future.FutureLike<string, message.Message>
+function Interaction.Prototype.getFollowupResponseAsync(
+	self: Interaction,
+	messageId: string,
+	threadId: string?
+): future.FutureLike<string, message.Message>
 	local request = self.state.rest:newRequest()
 
 	return future.Future.new(function()
@@ -236,7 +247,7 @@ function Interaction.Prototype.getFollowupResponseAsync(self: Interaction, messa
 			})
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return message.new(self.state, response:unwrapOk())
 	end) :: future.FutureLike<string, message.Message>
@@ -263,7 +274,7 @@ function Interaction.Prototype.editFollowupResponseAsync(
 			})
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return message.new(self.state, response:unwrapOk())
 	end) :: future.FutureLike<string, message.Message>
@@ -273,7 +284,10 @@ end
 	@within Classes.Interactions.Interactable
 	Delete the followup response created by this interaction.
 ]=]
-function Interaction.Prototype.deleteFollowupResponseAsync(self: Interaction, messageId: string): future.FutureLike<string, nil>
+function Interaction.Prototype.deleteFollowupResponseAsync(
+	self: Interaction,
+	messageId: string
+): future.FutureLike<string, nil>
 	local request = self.state.rest:newRequest()
 
 	return future.Future.new(function()
@@ -281,7 +295,7 @@ function Interaction.Prototype.deleteFollowupResponseAsync(self: Interaction, me
 			.deleteFollowupMessageAsync(request, self.state.applicationId, self.token, messageId)
 			:await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return nil
 	end) :: future.FutureLike<string, nil>
