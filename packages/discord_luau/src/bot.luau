@@ -451,6 +451,8 @@ function Bot.Prototype.connectAsync(self: Bot): future.FutureLike<string, nil>
 			elseif object.event == apiTypes.gateway.receiveEvents["ChannelDelete"] then
 				local typedObject = object.payload :: apiTypes.DeleteChannelPayload
 
+				self.state.cache.channels:remove(typedObject.d.id :: apiTypes.Snowflake)
+
 				if typedObject.d.type == 0 then
 					self.onTextChannelDeleted:invoke(classes.channels.types.guildText.new(self.state, typedObject.d))
 				elseif typedObject.d.type == 1 then
@@ -514,6 +516,8 @@ function Bot.Prototype.connectAsync(self: Bot): future.FutureLike<string, nil>
 				self.onGuildUpdate:invoke(classes.guild.guild.new(self.state, typedObject.d))
 			elseif object.event == apiTypes.gateway.receiveEvents["GuildDelete"] then
 				local typedObject = object.payload :: apiTypes.GuildDeletePayload
+
+				self.state.cache.guilds:remove(typedObject.d.id :: apiTypes.Snowflake)
 
 				self.onGuildDelete:invoke(classes.guild.unavailableGuild.new(self.state, typedObject.d.id))
 			elseif object.event == apiTypes.gateway.receiveEvents["GuildBanAdd"] then
