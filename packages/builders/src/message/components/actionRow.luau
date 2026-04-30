@@ -44,7 +44,7 @@ end
 function ActionRow.Prototype.build(self: ActionRow): JSON
 	return {
 		type = 1,
-		components = self.components,
+		components = #self.components > 0 and self.components or nil,
 	}
 end
 

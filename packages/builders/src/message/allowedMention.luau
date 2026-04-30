@@ -107,9 +107,9 @@ end
 ]=]
 function AllowedMention.Prototype.build(self: AllowedMention): JSON
 	return {
-		parse = self.parse,
-		roles = self.roles,
-		users = self.users,
+		parse = #self.parse > 0 and self.parse or nil,
+		roles = #self.roles > 0 and self.roles or nil,
+		users = #self.users > 0 and self.users or nil,
 		replied_user = self.repliedUser,
 	}
 end
