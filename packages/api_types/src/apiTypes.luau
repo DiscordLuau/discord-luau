@@ -426,7 +426,8 @@ export type GuildRoleTagObject = {
 export type GuildRoleObject = {
 	id: Snowflake?, -- role id
 	name: string, -- role name
-	color: number, -- integer representation of hexadecimal color code
+	color: number, -- Deprecated integer representation of hexadecimal color code
+	colors: { [string]: number }?, -- the role's colors
 	hoist: boolean, -- if this role is pinned in the user listing
 	icon: string?, -- role icon hash
 	unicode_emoji: string?, -- role unicode emoji
