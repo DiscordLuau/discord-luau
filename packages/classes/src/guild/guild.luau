@@ -499,6 +499,8 @@ function Guild.Prototype.getChannelsAsync(self: Guild): future.FutureLike<string
 		local channels: { unknown } = {}
 
 		for _, channelData in next, response:unwrapOk() do
+			self.state.cache.channels:set(channelData.id :: apiTypes.Snowflake, channelData)
+
 			table.insert(channels, constructChannelFromData(self.state, channelData))
 		end
 
