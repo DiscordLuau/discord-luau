@@ -35,7 +35,7 @@ function autoModeration.listAutoModerationRulesForGuildAsync(
 
 				local response = instance:executeAsync():await()
 
-				assert(response:isOk(), tostring(response:unwrapErr()))
+				assert(response:isOk(), `{response:unwrapErr()}`)
 
 				return response:unwrapOk().body
 			end
@@ -63,7 +63,7 @@ function autoModeration.getAutoModerationRuleForGuildAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.GetAutoModerationRuleResponse>
@@ -93,7 +93,7 @@ function autoModeration.createAutoModerationRuleAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.CreateAutoModerationRuleResponse>
@@ -124,7 +124,7 @@ function autoModeration.modifyAutoModerationRuleAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.ModifyAutoModerationRuleResponse>
@@ -153,7 +153,7 @@ function autoModeration.deleteAutoModerationRuleAsync(
 
 		local response = instance:executeAsync():await()
 
-		assert(response:isOk(), tostring(response:unwrapErr()))
+		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.DeleteAutoModerationRuleResponse>
