@@ -255,6 +255,7 @@ return function(onBuild: (
 		while running do
 			local character = StdPolyfills.io.stdinRead(1)
 			if not character or #character == 0 then
+				StdPolyfills.task.wait(0.01)
 				continue
 			end
 
@@ -322,7 +323,7 @@ return function(onBuild: (
 				if lowercaseCharacter == "y" then
 					state = "loading"
 
-					task.spawn(function()
+					StdPolyfills.task.spawn(function()
 						local buildSucceeded, buildResult =
 							pcall(onBuild, information :: Information, setStatus, setWarning)
 
