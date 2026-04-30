@@ -221,7 +221,6 @@ export type WebhooksUpdatePayload = WebhooksUpdatePayload__DARKLUA_TYPE_h0
 export type MessageReactionRemovePayload = MessageReactionRemovePayload__DARKLUA_TYPE_hQ
 export type Endpoint = Endpoint__DARKLUA_TYPE_cP
 export type MessagePollVoteRemove = MessagePollVoteRemove__DARKLUA_TYPE_h2
-export type RateLimitedPayload = RateLimitedPayload__DARKLUA_TYPE_h3
 export type CreateInteractionResponse = CreateInteractionResponse__DARKLUA_TYPE_gG
 export type IntegrationApplicationObject = IntegrationApplicationObject__DARKLUA_TYPE_ct
 export type GetFollowupMessageResponse = GetFollowupMessageResponse__DARKLUA_TYPE_gL
@@ -764,7 +763,6 @@ export type WebhooksUpdatePayload = WebhooksUpdatePayload__DARKLUA_TYPE_h0
 export type MessageReactionRemovePayload = MessageReactionRemovePayload__DARKLUA_TYPE_hQ
 export type Endpoint = Endpoint__DARKLUA_TYPE_cP
 export type MessagePollVoteRemove = MessagePollVoteRemove__DARKLUA_TYPE_h2
-export type RateLimitedPayload = RateLimitedPayload__DARKLUA_TYPE_h3
 export type CreateInteractionResponse = CreateInteractionResponse__DARKLUA_TYPE_gG
 export type IntegrationApplicationObject = IntegrationApplicationObject__DARKLUA_TYPE_ct
 export type GetFollowupMessageResponse = GetFollowupMessageResponse__DARKLUA_TYPE_gL
@@ -1307,7 +1305,6 @@ export type WebhooksUpdatePayload = WebhooksUpdatePayload__DARKLUA_TYPE_h0
 export type MessageReactionRemovePayload = MessageReactionRemovePayload__DARKLUA_TYPE_hQ
 export type Endpoint = Endpoint__DARKLUA_TYPE_cP
 export type MessagePollVoteRemove = MessagePollVoteRemove__DARKLUA_TYPE_h2
-export type RateLimitedPayload = RateLimitedPayload__DARKLUA_TYPE_h3
 export type CreateInteractionResponse = CreateInteractionResponse__DARKLUA_TYPE_gG
 export type IntegrationApplicationObject = IntegrationApplicationObject__DARKLUA_TYPE_ct
 export type GetFollowupMessageResponse = GetFollowupMessageResponse__DARKLUA_TYPE_gL
@@ -1850,7 +1847,6 @@ export type WebhooksUpdatePayload = WebhooksUpdatePayload__DARKLUA_TYPE_h0
 export type MessageReactionRemovePayload = MessageReactionRemovePayload__DARKLUA_TYPE_hQ
 export type Endpoint = Endpoint__DARKLUA_TYPE_cP
 export type MessagePollVoteRemove = MessagePollVoteRemove__DARKLUA_TYPE_h2
-export type RateLimitedPayload = RateLimitedPayload__DARKLUA_TYPE_h3
 export type CreateInteractionResponse = CreateInteractionResponse__DARKLUA_TYPE_gG
 export type IntegrationApplicationObject = IntegrationApplicationObject__DARKLUA_TYPE_ct
 export type GetFollowupMessageResponse = GetFollowupMessageResponse__DARKLUA_TYPE_gL
@@ -2393,7 +2389,6 @@ export type WebhooksUpdatePayload = WebhooksUpdatePayload__DARKLUA_TYPE_h0
 export type MessageReactionRemovePayload = MessageReactionRemovePayload__DARKLUA_TYPE_hQ
 export type Endpoint = Endpoint__DARKLUA_TYPE_cP
 export type MessagePollVoteRemove = MessagePollVoteRemove__DARKLUA_TYPE_h2
-export type RateLimitedPayload = RateLimitedPayload__DARKLUA_TYPE_h3
 export type CreateInteractionResponse = CreateInteractionResponse__DARKLUA_TYPE_gG
 export type IntegrationApplicationObject = IntegrationApplicationObject__DARKLUA_TYPE_ct
 export type GetFollowupMessageResponse = GetFollowupMessageResponse__DARKLUA_TYPE_gL
@@ -2936,7 +2931,6 @@ export type WebhooksUpdatePayload = WebhooksUpdatePayload__DARKLUA_TYPE_h0
 export type MessageReactionRemovePayload = MessageReactionRemovePayload__DARKLUA_TYPE_hQ
 export type Endpoint = Endpoint__DARKLUA_TYPE_cP
 export type MessagePollVoteRemove = MessagePollVoteRemove__DARKLUA_TYPE_h2
-export type RateLimitedPayload = RateLimitedPayload__DARKLUA_TYPE_h3
 export type CreateInteractionResponse = CreateInteractionResponse__DARKLUA_TYPE_gG
 export type IntegrationApplicationObject = IntegrationApplicationObject__DARKLUA_TYPE_ct
 export type GetFollowupMessageResponse = GetFollowupMessageResponse__DARKLUA_TYPE_gL
@@ -3479,7 +3473,6 @@ export type WebhooksUpdatePayload = WebhooksUpdatePayload__DARKLUA_TYPE_h0
 export type MessageReactionRemovePayload = MessageReactionRemovePayload__DARKLUA_TYPE_hQ
 export type Endpoint = Endpoint__DARKLUA_TYPE_cP
 export type MessagePollVoteRemove = MessagePollVoteRemove__DARKLUA_TYPE_h2
-export type RateLimitedPayload = RateLimitedPayload__DARKLUA_TYPE_h3
 export type CreateInteractionResponse = CreateInteractionResponse__DARKLUA_TYPE_gG
 export type IntegrationApplicationObject = IntegrationApplicationObject__DARKLUA_TYPE_ct
 export type GetFollowupMessageResponse = GetFollowupMessageResponse__DARKLUA_TYPE_gL
@@ -7153,12 +7146,6 @@ type MessagePollVoteRemove__DARKLUA_TYPE_h2 = Payload__DARKLUA_TYPE_gT<{
 	message_id: Snowflake__DARKLUA_TYPE_R,
 	guild_id: Snowflake__DARKLUA_TYPE_R?,
 	answer_id: number,
-}>
-
-type RateLimitedPayload__DARKLUA_TYPE_h3 = Payload__DARKLUA_TYPE_gT<{
-	opcode: number,
-	retry_after: number,
-	meta: { guild_id: Snowflake__DARKLUA_TYPE_R, nonce: string? }?,
 }>
 local a
 a = {
