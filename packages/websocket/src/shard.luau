@@ -9,6 +9,12 @@ local secret = require("../luau_packages/secret")
 local util = require("../luau_packages/util")
 local apiTypes = require("../luau_packages/api_types")
 
+-- https://discord.com/developers/docs/topics/gateway#rate-limiting
+local GATEWAY_SEND_LIMIT = 120
+local GATEWAY_SEND_WINDOW_SECONDS = 60
+local GATEWAY_SEND_SAFE_LIMIT = GATEWAY_SEND_LIMIT - 2
+local GATEWAY_SEND_WARN_AFTER_SECONDS = 5
+
 local LIBRARY_IDENTIFIER = "DiscordLuau"
 
 --[=[
@@ -195,6 +201,13 @@ local LIBRARY_IDENTIFIER = "DiscordLuau"
 	@within WebSocket.Shard
 ]=]
 
+--[=[
+	@prop gatewaySendTimestamps { number }
+	@within WebSocket.Shard
+
+	Rolling log of `os.clock()` timestamps for every non-heartbeat send, used to enforce Discord's 120-events-per-60s gateway send rate limit.
+]=]
+
 local Shard = {}
 
 Shard.Interface = {}
@@ -270,7 +283,7 @@ function Shard.Prototype.heartbeatAsync(self: Shard, requested: boolean?)
 		self:sendAsync(stdPolyfills.serde.encode("json", {
 			["op"] = apiTypes.gateway.opcodes.Heartbeat,
 			["d"] = self.lastSequence or false,
-		}, true)):after(function(result)
+		}, true), true):after(function(result)
 			if result:isErr() then
 				self.logger:warn(`shard has run into an error during heartbeat send: {result:unwrapErr()}`)
 			end
@@ -548,12 +561,50 @@ end
 	Sends a message through the WebSocket to Discords Gateway.
 
 	NOTE: Messages are expected to be JSON encoded strings.
+
+	Pass `ignoreRateLimit = true` to bypass the 120-events-per-60s send rate limit tracking.
+	This should only be used for op 1 (Heartbeat) sends, which Discord explicitly exempts.
 ]=]
-function Shard.Prototype.sendAsync(self: Shard, data: string)
+function Shard.Prototype.sendAsync(self: Shard, data: string, ignoreRateLimit: boolean?)
 	local debugTraceback = debug.traceback()
 
 	return future.Future.new(function()
 		assert(self.socketActive and self.socketInstance, `Shard '{self.shardId}' not connected to a socket.`)
+
+		if not ignoreRateLimit then
+			local timeWaited = 0
+			local hasWarned = false
+
+			repeat
+				local cutoff = os.clock() - GATEWAY_SEND_WINDOW_SECONDS
+				local writeIndex = 1
+
+				for _, timestamp in self.gatewaySendTimestamps do
+					if timestamp >= cutoff then
+						self.gatewaySendTimestamps[writeIndex] = timestamp
+						writeIndex += 1
+					end
+				end
+
+				for pruneIndex = writeIndex, #self.gatewaySendTimestamps do
+					self.gatewaySendTimestamps[pruneIndex] = nil
+				end
+
+				if #self.gatewaySendTimestamps >= GATEWAY_SEND_SAFE_LIMIT then
+					timeWaited += stdPolyfills.task.wait(0.5)
+
+					if timeWaited > GATEWAY_SEND_WARN_AFTER_SECONDS and not hasWarned then
+						hasWarned = true
+
+						self.logger:warn(
+							`gateway send rate limit reached ({GATEWAY_SEND_SAFE_LIMIT}/{GATEWAY_SEND_LIMIT} events in {GATEWAY_SEND_WINDOW_SECONDS}s window), yielding until window clears`
+						)
+					end
+				end
+			until #self.gatewaySendTimestamps < GATEWAY_SEND_SAFE_LIMIT
+
+			table.insert(self.gatewaySendTimestamps, os.clock())
+		end
 
 		self.logger:debug(`sending message of length: {string.len(data)}`)
 
@@ -696,6 +747,7 @@ function Shard.Interface.new(settings: {
 			socketIdentified = false,
 
 			rateLimitedGuilds = {},
+			gatewaySendTimestamps = {} :: { number },
 		} :: Shard,
 		{ __index = Shard.Prototype }
 	)
@@ -957,6 +1009,7 @@ export type Shard = typeof(Shard.Prototype) & {
 	socketDisconnecting: boolean,
 	socketIdentified: boolean,
 	rateLimitedGuilds: { [string]: boolean },
+	gatewaySendTimestamps: { number },
 	sessionId: string?,
 	sessionGateway: string?,
 	socketVersion: number?,
