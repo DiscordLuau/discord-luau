@@ -203,7 +203,7 @@ function Manager.Prototype.connectAsync(
 				if result:isErr() then
 					self.logger:warn(`shard has run into an error during gateway connection: {result:unwrapErr()}`)
 				end
-			end)
+			end):await()
 		end
 	end)
 end
@@ -242,7 +242,7 @@ function Manager.Prototype.sendAsync<T>(self: Manager, operation: apiTypes.Opcod
 							if result:isErr() then
 								self.logger:warn(`shard has run into an error during message dispatch: {result:unwrapErr()}`)
 							end
-						end)
+						end):await()
 				end)
 			)
 		end
@@ -256,7 +256,7 @@ function Manager.Prototype.sendAsync<T>(self: Manager, operation: apiTypes.Opcod
 				if result:isErr() then
 					self.logger:warn(`shard has run into an error during send request: {result:unwrapErr()}`)
 				end
-			end)
+			end):await()
 		end
 	end)
 end

@@ -254,7 +254,7 @@ function Shard.Prototype.heartbeatAsync(self: Shard, requested: boolean?)
 				if result:isErr() then
 					self.logger:warn(`shard has run into an error during zombified reconnect: {result:unwrapErr()}`)
 				end
-			end)
+			end):await()
 		end
 
 		self.heartbeatClockTime = os.clock()
@@ -269,7 +269,7 @@ function Shard.Prototype.heartbeatAsync(self: Shard, requested: boolean?)
 			if result:isErr() then
 				self.logger:warn(`shard has run into an error during heartbeat send: {result:unwrapErr()}`)
 			end
-		end)
+		end):await()
 	end) :: future.FutureLike<string, nil>
 end
 
@@ -303,7 +303,7 @@ function Shard.Prototype.identifyAsync(self: Shard)
 			if result:isErr() then
 				self.logger:warn(`shard has run into an error during identify send: {result:unwrapErr()}`)
 			end
-		end)
+		end):await()
 	end) :: future.FutureLike<string, nil>
 end
 
@@ -479,7 +479,7 @@ function Shard.Prototype.resumeAsync(self: Shard)
 					if result:isErr() then
 						self.logger:warn(`shard has run into an error during session resume: {result:unwrapErr()}`)
 					end
-				end)
+				end):await()
 		else
 			self.logger:warn(`failed to resume session: {response:unwrapErr()}, will try to re-instantiate!`)
 
@@ -487,7 +487,7 @@ function Shard.Prototype.resumeAsync(self: Shard)
 				if result:isErr() then
 					self.logger:warn(`shard has run into an error during re-instantiation after failed resume: {result:unwrapErr()}`)
 				end
-			end)
+			end):await()
 		end
 	end) :: future.FutureLike<string, nil>
 end
@@ -530,7 +530,7 @@ function Shard.Prototype.reconnectAsync(self: Shard)
 				if result:isErr() then
 					self.logger:warn(`shard has run into an error during re-instantiation after failed reconnect: {result:unwrapErr()}`)
 				end
-			end)
+			end):await()
 		end
 
 		self.socketReconnecting = false
@@ -601,7 +601,7 @@ function Shard.Prototype.reinstantiateAsync(self: Shard, noFail: boolean?)
 					if result:isErr() then
 						self.logger:warn(`shard has run into an error during re-instantiation retry: {result:unwrapErr()}`)
 					end
-				end)
+				end):await()
 			else
 				self.logger:emergency(
 					`exception during re-instantiation, shard {self.shardId} is now dead! \n{response:unwrapErr()}`
@@ -639,7 +639,7 @@ function Shard.Prototype.heartbeatIn(self: Shard, milliseconds: number): ()
 				if result:isErr() then
 					self.logger:warn(`shard has run into an error during heartbeat loop: {result:unwrapErr()}`)
 				end
-			end)
+			end):await()
 	end)
 end
 
@@ -734,7 +734,7 @@ function Shard.Interface.new(settings: {
 								if result:isErr() then
 									self.logger:warn(`shard has run into an error during re-instantiation after invalid session: {result:unwrapErr()}`)
 								end
-							end)
+							end):await()
 						end) :: future.FutureLike<string, nil>
 					end)
 					:poll()
