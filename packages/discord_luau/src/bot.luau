@@ -588,6 +588,30 @@ function Bot.Prototype.connectAsync(self: Bot): future.FutureLike<string, nil>
 					communicationDisabledUntil = typedObject.d.communication_disabled_until
 						and stdPolyfills.datetime.fromIsoDate(typedObject.d.communication_disabled_until),
 				})
+			elseif object.event == apiTypes.gateway.receiveEvents["GuildRoleCreate"] then
+				local typedObject = object.payload :: apiTypes.GuildRoleCreatePayload
+
+				self.state.cache.roles:set(typedObject.d.role.id :: apiTypes.Snowflake, typedObject.d.role)
+			elseif object.event == apiTypes.gateway.receiveEvents["GuildRoleUpdate"] then
+				local typedObject = object.payload :: apiTypes.GuildRoleUpdatePayload
+
+				self.state.cache.roles:set(typedObject.d.role.id :: apiTypes.Snowflake, typedObject.d.role)
+			elseif object.event == apiTypes.gateway.receiveEvents["GuildRoleDelete"] then
+				local typedObject = object.payload :: apiTypes.GuildRoleDeletePayload
+
+				self.state.cache.roles:remove(typedObject.d.role_id :: apiTypes.Snowflake)
+			elseif object.event == apiTypes.gateway.receiveEvents["ThreadCreate"] then
+				local typedObject = object.payload :: apiTypes.CreateThreadPayload
+
+				self.state.cache.channels:set(typedObject.d.id :: apiTypes.Snowflake, typedObject.d)
+			elseif object.event == apiTypes.gateway.receiveEvents["ThreadUpdate"] then
+				local typedObject = object.payload :: apiTypes.UpdateThreadPayload
+
+				self.state.cache.channels:set(typedObject.d.id :: apiTypes.Snowflake, typedObject.d)
+			elseif object.event == apiTypes.gateway.receiveEvents["ThreadDelete"] then
+				local typedObject = object.payload :: apiTypes.DeleteThreadPayload
+
+				self.state.cache.channels:remove(typedObject.d.id :: apiTypes.Snowflake)
 			elseif object.event == apiTypes.gateway.receiveEvents["InteractionCreate"] then
 				local typedObject = object.payload :: apiTypes.InteractionCreatePayload
 
