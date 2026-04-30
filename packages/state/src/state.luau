@@ -113,10 +113,10 @@ function State.Interface.new(settings: {
 			version = settings.version,
 
 			cache = {
-				guilds = cache.new(1 * 60 * 60),
-				users = cache.new(1 * 60 * 60),
-				channels = cache.new(1 * 60 * 60),
-				roles = cache.new(1 * 60 * 60),
+				guilds = cache.new(),
+				users = cache.new(),
+				channels = cache.new(),
+				roles = cache.new(),
 			},
 		} :: State,
 		{
