@@ -57,6 +57,10 @@ function PollAnswer.Prototype.build(self: PollAnswer): JSON
 	assert(self.answerId, "answerId must be set")
 	assert(self.pollMedia, "pollMedia must be set")
 
+	if self.pollMedia and self.pollMedia.text then
+		assert(#self.pollMedia.text <= 55, "poll answer text must be at most 55 characters")
+	end
+
 	return {
 		answer_id = self.answerId,
 		poll_media = self.pollMedia,

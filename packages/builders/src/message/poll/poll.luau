@@ -55,6 +55,7 @@ Poll.Interface = {}
 	Adds an answer to the poll.
 ]=]
 function Poll.Prototype.addAnswer(self: Poll, answer: answerBuilder.JSON): Poll
+	assert(#self.answers < 10, "polls cannot have more than 10 answers")
 	table.insert(self.answers, answer)
 
 	return self
@@ -117,8 +118,9 @@ end
 ]=]
 function Poll.Prototype.build(self: Poll): JSON
 	assert(self.question, "Poll question is required")
-	assert(self.answers, "Poll answers are required")
-	assert(self.allowMultiselect, "Poll multiselect is required")
+	assert(self.answers and #self.answers >= 1, "polls must have at least 1 answer")
+	assert(#self.answers <= 10, "polls cannot have more than 10 answers")
+	assert(self.allowMultiselect ~= nil, "allowMultiselect must be set before building a poll")
 	assert(self.layoutType, "Poll layout type is required")
 
 	return {

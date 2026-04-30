@@ -44,9 +44,7 @@ AllowedMention.Interface = {}
 	Add a user mention to the allowed mentions for this message.
 ]=]
 function AllowedMention.Prototype.addUserMention(self: AllowedMention, userId: string): AllowedMention
-	if not table.find(self.parse, "users") then
-		table.insert(self.parse, "users")
-	end
+	assert(#self.users < 100, "allowed mention users cannot exceed 100 entries")
 
 	table.insert(self.users, userId)
 
@@ -59,9 +57,7 @@ end
 	Add a role mention to the allowed mentions for this message.
 ]=]
 function AllowedMention.Prototype.addRoleMention(self: AllowedMention, roleId: string): AllowedMention
-	if not table.find(self.parse, "roles") then
-		table.insert(self.parse, "roles")
-	end
+	assert(#self.roles < 100, "allowed mention roles cannot exceed 100 entries")
 
 	table.insert(self.roles, roleId)
 

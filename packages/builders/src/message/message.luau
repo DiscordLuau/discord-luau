@@ -83,7 +83,7 @@ Message.Interface = {}
 	Sets the content of the message.
 ]=]
 function Message.Prototype.setContent(self: Message, content: string): Message
-	assert(#content < 2000, `Message content must be less than 2000 characters.`)
+	assert(#content <= 2000, "content must be at most 2000 characters")
 
 	self.content = content
 
@@ -96,7 +96,7 @@ end
 	Sets the nonce of the message.
 ]=]
 function Message.Prototype.setNonce(self: Message, nonce: string): Message
-	assert(#nonce < 25, `Message nonse must be less than 25 characters.`)
+	assert(#nonce <= 25, "nonce must be at most 25 characters")
 
 	self.nonce = nonce
 
@@ -121,6 +121,8 @@ end
 ]=]
 function Message.Prototype.addEmbed(self: Message, embedData: embed.JSON): Message
 	local embeds = self.embeds or {}
+
+	assert(#embeds < 10, "messages cannot have more than 10 embeds")
 
 	table.insert(embeds, embedData)
 
@@ -176,6 +178,8 @@ end
 ]=]
 function Message.Prototype.addStickerId(self: Message, stickerId: string): Message
 	local stickerIds = self.stickerIds or {}
+
+	assert(#stickerIds < 3, "messages cannot have more than 3 sticker IDs")
 
 	table.insert(stickerIds, stickerId)
 

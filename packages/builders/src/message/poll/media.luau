@@ -32,6 +32,8 @@ PollMedia.Interface = {}
 	Sets the text for the PollMedia.
 ]=]
 function PollMedia.Prototype.setText(self: PollMedia, text: string): PollMedia
+	assert(#text <= 300, "poll media text must be at most 300 characters")
+
 	self.text = text
 
 	return self
