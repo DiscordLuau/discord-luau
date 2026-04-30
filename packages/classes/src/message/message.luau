@@ -643,6 +643,12 @@ function Message.Prototype.sync(self: Message, messageData: apiTypes.MessageObje
 	self.referencedMessage = messageData.referenced_message
 		and Message.Interface.new(self.state, messageData.referenced_message)
 
+	local snapshotArray = {}
+	for _, snapshotData in next, messageData.message_snapshots or {} do
+		table.insert(snapshotArray, snapshot.new(snapshotData))
+	end
+	self.messageSnapshots = snapshotArray
+
 	self.interactionMetadata = messageData.interaction_metadata
 		and interactionMetadata.new(messageData.interaction_metadata)
 
