@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.AutomoderationRule
+	@class Classes.AutoModeration.Rule
 	@__index Prototype
 
 	Implementation of the Discord AutomoderationRule class in Luau
@@ -9,77 +9,77 @@
 
 --[=[
 	@prop id string
-	@within Classes.AutomoderationRule
+	@within Classes.AutoModeration.Rule
 
 	The unique identifier for this automoderation rule.
 ]=]
 
 --[=[
 	@prop guildId string
-	@within Classes.AutomoderationRule
+	@within Classes.AutoModeration.Rule
 
 	The ID of the guild this automoderation rule belongs to.
 ]=]
 
 --[=[
 	@prop name string
-	@within Classes.AutomoderationRule
+	@within Classes.AutoModeration.Rule
 
 	The name of this automoderation rule.
 ]=]
 
 --[=[
 	@prop creatorId string
-	@within Classes.AutomoderationRule
+	@within Classes.AutoModeration.Rule
 
 	The ID of the user who created this automoderation rule.
 ]=]
 
 --[=[
 	@prop eventType apiTypes.EventTypes
-	@within Classes.AutomoderationRule
+	@within Classes.AutoModeration.Rule
 
 	The type of event that triggers this automoderation rule.
 ]=]
 
 --[=[
 	@prop triggerType apiTypes.TriggerTypes
-	@within Classes.AutomoderationRule
+	@within Classes.AutoModeration.Rule
 
 	The type of trigger that activates this automoderation rule.
 ]=]
 
 --[=[
-	@prop triggerMetadata Classes.TriggerMetadata?
-	@within Classes.AutomoderationRule
+	@prop triggerMetadata Classes.AutoModeration.TriggerMetadata?
+	@within Classes.AutoModeration.Rule
 
 	Additional metadata about the trigger conditions for this automoderation rule.
 ]=]
 
 --[=[
-	@prop actions {Classes.Action}
-	@within Classes.AutomoderationRule
+	@prop actions {Classes.AutoModeration.Action}
+	@within Classes.AutoModeration.Rule
 
 	Array of actions to be executed when the rule is triggered.
 ]=]
 
 --[=[
 	@prop enabled boolean?
-	@within Classes.AutomoderationRule
+	@within Classes.AutoModeration.Rule
 
 	Whether this automoderation rule is enabled.
 ]=]
 
 --[=[
 	@prop exemptRoles {string}?
-	@within Classes.AutomoderationRule
+	@within Classes.AutoModeration.Rule
 
 	Array of role IDs that are exempt from this automoderation rule.
 ]=]
 
 --[=[
 	@prop exemptChannels {string}?
-	@within Classes.AutomoderationRule
+	@within Classes.AutoModeration.Rule
 
 	Array of channel IDs that are exempt from this automoderation rule.
 ]=]
@@ -99,7 +99,7 @@ AutomoderationRule.Interface = {}
 AutomoderationRule.Prototype = {}
 
 --[=[
-	@within Classes.AutomoderationRule
+	@within Classes.AutoModeration.Rule
 
 	Modify an existing rule. Returns an auto moderation rule on success.
 ]=]
@@ -107,7 +107,7 @@ function AutomoderationRule.Prototype.modifyAsync(
 	self: AutomoderationRule,
 	automoderationRuleJSON: builders.AutomoderationRuleJSON,
 	auditLogReason: string?
-)
+): future.FutureLike<string, AutomoderationRule>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -124,11 +124,11 @@ function AutomoderationRule.Prototype.modifyAsync(
 end
 
 --[=[
-	@within Classes.AutomoderationRule
+	@within Classes.AutoModeration.Rule
 
 	Deletes an automoderation rule.
 ]=]
-function AutomoderationRule.Prototype.deleteAsync(self: AutomoderationRule, auditLogReason: string?)
+function AutomoderationRule.Prototype.deleteAsync(self: AutomoderationRule, auditLogReason: string?): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -142,7 +142,7 @@ function AutomoderationRule.Prototype.deleteAsync(self: AutomoderationRule, audi
 end
 
 --[=[
-	@within Classes.AutomoderationRule
+	@within Classes.AutoModeration.Rule
 	@private
 
 	Responsible for syncing data to this automoderation rule object. This is typically called by the API when this object is
@@ -151,7 +151,7 @@ end
 function AutomoderationRule.Prototype.sync(
 	self: AutomoderationRule,
 	automoderationData: apiTypes.AutomoderationRuleObject
-)
+): nil
 	local actions = {}
 
 	for _, actionData in automoderationData.actions do
@@ -183,7 +183,7 @@ function AutomoderationRule.Prototype.sync(
 end
 
 --[=[
-	@within Classes.AutomoderationRule
+	@within Classes.AutoModeration.Rule
 	@private
 
 	Responsible for constructing this class.

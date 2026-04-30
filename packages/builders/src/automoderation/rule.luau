@@ -1,5 +1,5 @@
 --[=[
-	@class Builders.AutomoderationRule
+	@class Builders.AutoModeration.Rule
 	@__index Prototype
 
 	Implementation of a discord automoderation rule object as a luau builder.
@@ -9,49 +9,49 @@
 
 --[=[
 	@prop name string
-	@within Builders.AutomoderationRule
+	@within Builders.AutoModeration.Rule
 	The name of the automoderation rule.
 ]=]
 
 --[=[
 	@prop eventType Builders.EventTypes
-	@within Builders.AutomoderationRule
+	@within Builders.AutoModeration.Rule
 	The event type that will trigger the rule.
 ]=]
 
 --[=[
 	@prop triggerType Builders.TriggerTypes
-	@within Builders.AutomoderationRule
+	@within Builders.AutoModeration.Rule
 	The type of content which can trigger the rule.
 ]=]
 
 --[=[
-	@prop triggerMetadata Builders.TriggerMetadata
-	@within Builders.AutomoderationRule
+	@prop triggerMetadata Builders.AutoModeration.TriggerMetadata
+	@within Builders.AutoModeration.Rule
 	The trigger metadata for the rule.
 ]=]
 
 --[=[
-	@prop actions {Builders.Action}
-	@within Builders.AutomoderationRule
+	@prop actions {Builders.AutoModeration.Action}
+	@within Builders.AutoModeration.Rule
 	The actions which will execute when the rule is triggered.
 ]=]
 
 --[=[
 	@prop enabled boolean
-	@within Builders.AutomoderationRule
+	@within Builders.AutoModeration.Rule
 	Whether the rule is enabled.
 ]=]
 
 --[=[
 	@prop exemptRoles {string}
-	@within Builders.AutomoderationRule
+	@within Builders.AutoModeration.Rule
 	The role ids that should not be affected by the rule.
 ]=]
 
 --[=[
 	@prop exemptChannels {string}
-	@within Builders.AutomoderationRule
+	@within Builders.AutoModeration.Rule
 	The channel ids that should not be affected by the rule.
 ]=]
 
@@ -65,7 +65,7 @@ AutomoderationRule.Prototype = {}
 AutomoderationRule.Interface = {}
 
 --[=[
-	@within Builders.AutomoderationRule
+	@within Builders.AutoModeration.Rule
 
 	Sets the name of the automoderation rule.
 ]=]
@@ -76,7 +76,7 @@ function AutomoderationRule.Prototype.setName(self: AutomoderationRule, name: st
 end
 
 --[=[
-	@within Builders.AutomoderationRule
+	@within Builders.AutoModeration.Rule
 
 	Sets the event type for the automoderation rule.
 ]=]
@@ -90,7 +90,7 @@ function AutomoderationRule.Prototype.setEventType(
 end
 
 --[=[
-	@within Builders.AutomoderationRule
+	@within Builders.AutoModeration.Rule
 
 	Sets the trigger type for the automoderation rule.
 ]=]
@@ -104,7 +104,7 @@ function AutomoderationRule.Prototype.setTriggerType(
 end
 
 --[=[
-	@within Builders.AutomoderationRule
+	@within Builders.AutoModeration.Rule
 
 	Sets the trigger metadata for the automoderation rule.
 ]=]
@@ -118,7 +118,7 @@ function AutomoderationRule.Prototype.setTriggerMetadata(
 end
 
 --[=[
-	@within Builders.AutomoderationRule
+	@within Builders.AutoModeration.Rule
 
 	Sets the actions for the automoderation rule.
 ]=]
@@ -129,7 +129,7 @@ function AutomoderationRule.Prototype.setActions(self: AutomoderationRule, actio
 end
 
 --[=[
-	@within Builders.AutomoderationRule
+	@within Builders.AutoModeration.Rule
 
 	Sets whether the automoderation rule is enabled.
 ]=]
@@ -140,7 +140,7 @@ function AutomoderationRule.Prototype.setEnabled(self: AutomoderationRule, enabl
 end
 
 --[=[
-	@within Builders.AutomoderationRule
+	@within Builders.AutoModeration.Rule
 
 	Sets the exempt roles for the automoderation rule.
 ]=]
@@ -154,7 +154,7 @@ function AutomoderationRule.Prototype.setExemptRoles(
 end
 
 --[=[
-	@within Builders.AutomoderationRule
+	@within Builders.AutoModeration.Rule
 
 	Sets the exempt channels for the automoderation rule.
 ]=]
@@ -168,7 +168,7 @@ function AutomoderationRule.Prototype.setExemptChannels(
 end
 
 --[=[
-	@within Builders.AutomoderationRule
+	@within Builders.AutoModeration.Rule
 
 	Builds the automoderation rule object.
 ]=]
@@ -186,7 +186,7 @@ function AutomoderationRule.Prototype.build(self: AutomoderationRule): JSON
 end
 
 --[=[
-	@within Builders.AutomoderationRule
+	@within Builders.AutoModeration.Rule
 
 	Constructs a new automoderation rule builder.
 

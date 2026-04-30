@@ -1,5 +1,5 @@
 --[=[
-	@class Builders.Onboarding.Option
+	@class Builders.Guild.OnboardingOption
 	@__index Prototype
 
 	Implementation of discords Option object as a Luau builder.	
@@ -9,43 +9,43 @@
 
 --[=[
 	@prop channelIds {string}
-	@within Builders.Onboarding.Option
+	@within Builders.Guild.OnboardingOption
 	Array of channel IDs that are associated with this option.
 ]=]
 
 --[=[
 	@prop roleIds {string}
-	@within Builders.Onboarding.Option
+	@within Builders.Guild.OnboardingOption
 	Array of role IDs that are associated with this option.
 ]=]
 
 --[=[
 	@prop emojiId string?
-	@within Builders.Onboarding.Option
+	@within Builders.Guild.OnboardingOption
 	The ID of the emoji used for this option.
 ]=]
 
 --[=[
 	@prop emojiName string?
-	@within Builders.Onboarding.Option
+	@within Builders.Guild.OnboardingOption
 	The name of the emoji used for this option.
 ]=]
 
 --[=[
 	@prop emojiAnimated boolean?
-	@within Builders.Onboarding.Option
+	@within Builders.Guild.OnboardingOption
 	Whether the emoji used for this option is animated.
 ]=]
 
 --[=[
 	@prop title string
-	@within Builders.Onboarding.Option
+	@within Builders.Guild.OnboardingOption
 	The title displayed for this option.
 ]=]
 
 --[=[
 	@prop description string?
-	@within Builders.Onboarding.Option
+	@within Builders.Guild.OnboardingOption
 	The description displayed for this option.
 ]=]
 
@@ -55,7 +55,7 @@ Option.Prototype = {}
 Option.Interface = {}
 
 --[=[
-	@within Builders.Onboarding.Option
+	@within Builders.Guild.OnboardingOption
 
 	Add a Channel to this option
 ]=]
@@ -66,7 +66,7 @@ function Option.Prototype.addChannelId(self: Option, channelId: string): Option
 end
 
 --[=[
-	@within Builders.Onboarding.Option
+	@within Builders.Guild.OnboardingOption
 
 	Add a Role to this option
 ]=]
@@ -77,7 +77,7 @@ function Option.Prototype.addRoleId(self: Option, roleId: string): Option
 end
 
 --[=[
-	@within Builders.Onboarding.Option
+	@within Builders.Guild.OnboardingOption
 
 	Sets the emoji of this option.
 ]=]
@@ -90,7 +90,7 @@ function Option.Prototype.setEmoji(self: Option, emojiId: string, emojiName: str
 end
 
 --[=[
-	@within Builders.Onboarding.Option
+	@within Builders.Guild.OnboardingOption
 
 	Sets the title of this option.
 ]=]
@@ -101,7 +101,7 @@ function Option.Prototype.setTitle(self: Option, title: string): Option
 end
 
 --[=[
-	@within Builders.Onboarding.Option
+	@within Builders.Guild.OnboardingOption
 
 	Sets the description of this option.
 ]=]
@@ -112,7 +112,7 @@ function Option.Prototype.setDescription(self: Option, description: string): Opt
 end
 
 --[=[
-	@within Builders.Onboarding.Option
+	@within Builders.Guild.OnboardingOption
 
 	Responsible for building the OptionObject JSON that can be parsed by the Discord API.
 ]=]
@@ -132,7 +132,7 @@ function Option.Prototype.build(self: Option): JSON
 end
 
 --[=[
-	@within Builders.Onboarding.Option
+	@within Builders.Guild.OnboardingOption
 
 	Responsible for creating a new Option.
 ]=]

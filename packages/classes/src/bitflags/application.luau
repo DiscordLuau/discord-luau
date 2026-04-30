@@ -19,7 +19,7 @@ ApplicationBitflag.Prototype = {}
 	@within Classes.ApplicationBitflag
 	Indicates if an app uses the Auto Moderation API
 ]=]
-function ApplicationBitflag.Prototype.applicationAutoModerationRoleCreateBadge(self: ApplicationBitflag)
+function ApplicationBitflag.Prototype.applicationAutoModerationRoleCreateBadge(self: ApplicationBitflag): boolean
 	local targetBit = bit.lshift(1, 6)
 
 	return bit.band(self.flag, targetBit) == targetBit
@@ -29,7 +29,7 @@ end
 	@within Classes.ApplicationBitflag
 	Intent required for bots in 100 or more servers to receive presence_update events
 ]=]
-function ApplicationBitflag.Prototype.gatewayPresence(self: ApplicationBitflag)
+function ApplicationBitflag.Prototype.gatewayPresence(self: ApplicationBitflag): boolean
 	local targetBit = bit.lshift(1, 12)
 
 	return bit.band(self.flag, targetBit) == targetBit
@@ -40,7 +40,7 @@ end
 	Intent required for bots in under 100 servers to receive presence_update events,
 	found on the Bot page in your app's settings
 ]=]
-function ApplicationBitflag.Prototype.gatewayPresenceLimited(self: ApplicationBitflag)
+function ApplicationBitflag.Prototype.gatewayPresenceLimited(self: ApplicationBitflag): boolean
 	local targetBit = bit.lshift(1, 13)
 
 	return bit.band(self.flag, targetBit) == targetBit
@@ -51,7 +51,7 @@ end
 	Intent required for bots in 100 or more servers to receive member-related events like
 	guild_member_add. See the list of member-related events under GUILD_MEMBERS
 ]=]
-function ApplicationBitflag.Prototype.gatewayGuildMembers(self: ApplicationBitflag)
+function ApplicationBitflag.Prototype.gatewayGuildMembers(self: ApplicationBitflag): boolean
 	local targetBit = bit.lshift(1, 14)
 
 	return bit.band(self.flag, targetBit) == targetBit
@@ -64,7 +64,7 @@ end
 
 	See the list of member-related events under GUILD_MEMBERS
 ]=]
-function ApplicationBitflag.Prototype.gatewayGuildMembersLimited(self: ApplicationBitflag)
+function ApplicationBitflag.Prototype.gatewayGuildMembersLimited(self: ApplicationBitflag): boolean
 	local targetBit = bit.lshift(1, 15)
 
 	return bit.band(self.flag, targetBit) == targetBit
@@ -74,7 +74,7 @@ end
 	@within Classes.ApplicationBitflag
 	Indicates unusual growth of an app that prevents verification
 ]=]
-function ApplicationBitflag.Prototype.verificationPendingGuildLimit(self: ApplicationBitflag)
+function ApplicationBitflag.Prototype.verificationPendingGuildLimit(self: ApplicationBitflag): boolean
 	local targetBit = bit.lshift(1, 16)
 
 	return bit.band(self.flag, targetBit) == targetBit
@@ -84,7 +84,7 @@ end
 	@within Classes.ApplicationBitflag
 	Indicates if an app is embedded within the Discord client (currently unavailable publicly)
 ]=]
-function ApplicationBitflag.Prototype.embedded(self: ApplicationBitflag)
+function ApplicationBitflag.Prototype.embedded(self: ApplicationBitflag): boolean
 	local targetBit = bit.lshift(1, 17)
 
 	return bit.band(self.flag, targetBit) == targetBit
@@ -94,7 +94,7 @@ end
 	@within Classes.ApplicationBitflag
 	Intent required for bots in 100 or more servers to receive message content
 ]=]
-function ApplicationBitflag.Prototype.gatewayMessageContent(self: ApplicationBitflag)
+function ApplicationBitflag.Prototype.gatewayMessageContent(self: ApplicationBitflag): boolean
 	local targetBit = bit.lshift(1, 18)
 
 	return bit.band(self.flag, targetBit) == targetBit
@@ -105,7 +105,7 @@ end
 	Intent required for bots in under 100 servers to receive message content,
 	found on the Bot page in your app's settings
 ]=]
-function ApplicationBitflag.Prototype.gatewayMessageContentLimited(self: ApplicationBitflag)
+function ApplicationBitflag.Prototype.gatewayMessageContentLimited(self: ApplicationBitflag): boolean
 	local targetBit = bit.lshift(1, 19)
 
 	return bit.band(self.flag, targetBit) == targetBit
@@ -115,7 +115,7 @@ end
 	@within Classes.ApplicationBitflag
 	Indicates if an app has registered global application commands
 ]=]
-function ApplicationBitflag.Prototype.applicationCommandBadge(self: ApplicationBitflag)
+function ApplicationBitflag.Prototype.applicationCommandBadge(self: ApplicationBitflag): boolean
 	local targetBit = bit.lshift(1, 23)
 
 	return bit.band(self.flag, targetBit) == targetBit

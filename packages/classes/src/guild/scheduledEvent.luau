@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.ScheduledEvent
+	@class Classes.Guild.ScheduledEvent
 	@__index Prototype
 
 	Implementation of the Discord ScheduledEvent class in Luau
@@ -9,97 +9,97 @@
 
 --[=[
 	@prop id string
-	@within Classes.ScheduledEvent
+	@within Classes.Guild.ScheduledEvent
 	The unique identifier for this scheduled event
 ]=]
 
 --[=[
 	@prop guildId string
-	@within Classes.ScheduledEvent
+	@within Classes.Guild.ScheduledEvent
 	The guild id which the scheduled event belongs to
 ]=]
 
 --[=[
 	@prop channelId string?
-	@within Classes.ScheduledEvent
+	@within Classes.Guild.ScheduledEvent
 	The channel id in which the scheduled event will be hosted, or null if scheduled entity type is EXTERNAL
 ]=]
 
 --[=[
 	@prop creatorId string?
-	@within Classes.ScheduledEvent
+	@within Classes.Guild.ScheduledEvent
 	The id of the user that created the scheduled event
 ]=]
 
 --[=[
 	@prop name string
-	@within Classes.ScheduledEvent
+	@within Classes.Guild.ScheduledEvent
 	The name of the scheduled event
 ]=]
 
 --[=[
 	@prop description string?
-	@within Classes.ScheduledEvent
+	@within Classes.Guild.ScheduledEvent
 	The description of the scheduled event
 ]=]
 
 --[=[
 	@prop scheduledStartTime std_polyfills.DateTime
-	@within Classes.ScheduledEvent
+	@within Classes.Guild.ScheduledEvent
 	The time the scheduled event will start
 ]=]
 
 --[=[
 	@prop scheduledEndTime std_polyfills.DateTime?
-	@within Classes.ScheduledEvent
+	@within Classes.Guild.ScheduledEvent
 	The time the scheduled event will end, if it has a scheduled end time
 ]=]
 
 --[=[
 	@prop privacyLevel apiTypes.ScheduledEventPrivacyLevel
-	@within Classes.ScheduledEvent
+	@within Classes.Guild.ScheduledEvent
 	The privacy level of the scheduled event
 ]=]
 
 --[=[
 	@prop status apiTypes.SchedledEventStatus
-	@within Classes.ScheduledEvent
+	@within Classes.Guild.ScheduledEvent
 	The status of the scheduled event
 ]=]
 
 --[=[
 	@prop entityType apiTypes.SchedledEventEntityType
-	@within Classes.ScheduledEvent
+	@within Classes.Guild.ScheduledEvent
 	The type of the scheduled event
 ]=]
 
 --[=[
 	@prop entityId string?
-	@within Classes.ScheduledEvent
+	@within Classes.Guild.ScheduledEvent
 	The id of an entity associated with the scheduled event
 ]=]
 
 --[=[
 	@prop location string?
-	@within Classes.ScheduledEvent
+	@within Classes.Guild.ScheduledEvent
 	Location of the scheduled event
 ]=]
 
 --[=[
 	@prop creator Classes.User?
-	@within Classes.ScheduledEvent
+	@within Classes.Guild.ScheduledEvent
 	The user that created the scheduled event
 ]=]
 
 --[=[
 	@prop userCount number?
-	@within Classes.ScheduledEvent
+	@within Classes.Guild.ScheduledEvent
 	The number of users subscribed to the scheduled event
 ]=]
 
 --[=[
 	@prop image string?
-	@within Classes.ScheduledEvent
+	@within Classes.Guild.ScheduledEvent
 	The cover image hash of the scheduled event
 ]=]
 
@@ -114,7 +114,7 @@ ScheduledEvent.Interface = {}
 ScheduledEvent.Prototype = {}
 
 --[=[
-	@within Classes.ScheduledEvent
+	@within Classes.Guild.ScheduledEvent
 	@private
 
 	Responsible for syncing data to this scheduled event object. This is typically called by the API when this object is
@@ -156,7 +156,7 @@ function ScheduledEvent.Prototype.sync(self: ScheduledEvent, scheduledEventData:
 end
 
 --[=[
-	@within Classes.ScheduledEvent
+	@within Classes.Guild.ScheduledEvent
 	@private
 
 	Responsible for constructing this class.

@@ -1,5 +1,5 @@
 --[=[
-	@class Builders.Image
+	@class Builders.Embed.Image
 	@__index Prototype
 
 	Implementation of discords Image object as a Luau builder.	
@@ -9,25 +9,25 @@
 
 --[=[
 	@prop url string
-	@within Builders.Image
+	@within Builders.Embed.Image
 	Source url of image (only supports http(s) and attachments)
 ]=]
 
 --[=[
 	@prop proxyUrl string?
-	@within Builders.Image
+	@within Builders.Embed.Image
 	A proxied url of the image
 ]=]
 
 --[=[
 	@prop height number?
-	@within Builders.Image
+	@within Builders.Embed.Image
 	Height of image
 ]=]
 
 --[=[
 	@prop width number?
-	@within Builders.Image
+	@within Builders.Embed.Image
 	Width of image
 ]=]
 
@@ -37,7 +37,7 @@ Image.Prototype = {}
 Image.Interface = {}
 
 --[=[
-	@within Builders.Image
+	@within Builders.Embed.Image
 
 	Set the image url for this embed.
 ]=]
@@ -49,7 +49,7 @@ function Image.Prototype.setUrl(self: Image, url: string, proxyUrl: string?): Im
 end
 
 --[=[
-	@within Builders.Image
+	@within Builders.Embed.Image
 
 	Set the image height for this embed.
 ]=]
@@ -60,7 +60,7 @@ function Image.Prototype.setHeight(self: Image, height: number): Image
 end
 
 --[=[
-	@within Builders.Image
+	@within Builders.Embed.Image
 
 	Set the image width for this embed.
 ]=]
@@ -71,7 +71,7 @@ function Image.Prototype.setWidth(self: Image, width: number): Image
 end
 
 --[=[
-	@within Builders.Image
+	@within Builders.Embed.Image
 
 	Responsible for building the JSON that can be parsed by the Discord API.
 ]=]
@@ -85,7 +85,7 @@ function Image.Prototype.build(self: Image): JSON
 end
 
 --[=[
-	@within Builders.Image
+	@within Builders.Embed.Image
 
 	Responsible for creating a new Image.
 

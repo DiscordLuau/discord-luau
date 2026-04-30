@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.Role
+	@class Classes.Guild.Role
 	@__index Role.Prototype
 	
 	Implementation of the Discord Role class in Luau
@@ -8,84 +8,86 @@
 ]=]
 
 --[=[
-	@within Classes.Role
+	@within Classes.Guild.Role
 	@prop flags Classes.RoleBitflag
 	Role flags combined as a bitfield.
 ]=]
 
 --[=[
-	@within Classes.Role
-	@prop tags { Classes.RoleTag }
+	@within Classes.Guild.Role
+	@prop tags { Classes.Guild.RoleTag }
 	Tags associated with this role.
 ]=]
 
 --[=[
-	@within Classes.Role
+	@within Classes.Guild.Role
 	@prop id string
 	The ID of the role.
 ]=]
 
 --[=[
-	@within Classes.Role
+	@within Classes.Guild.Role
 	@prop name string
 	The name of the role.
 ]=]
 
 --[=[
-	@within Classes.Role
+	@within Classes.Guild.Role
 	@prop color number
 	The color of the role.
 ]=]
 
 --[=[
-	@within Classes.Role
+	@within Classes.Guild.Role
 	@prop hoist boolean
 	Whether the role is displayed separately in the member list.
 ]=]
 
 --[=[
-	@within Classes.Role
+	@within Classes.Guild.Role
 	@prop icon string
 	The icon hash of the role.
 ]=]
 
 --[=[
-	@within Classes.Role
+	@within Classes.Guild.Role
 	@prop unicodeEmoji string
 	The unicode emoji of the role.
 ]=]
 
 --[=[
-	@within Classes.Role
+	@within Classes.Guild.Role
 	@prop position number
 	The position of the role.
 ]=]
 
 --[=[
-	@within Classes.Role
+	@within Classes.Guild.Role
 	@prop permissions Classes.Permission
 	The permissions of the role.
 ]=]
 
 --[=[
-	@within Classes.Role
+	@within Classes.Guild.Role
 	@prop managed boolean
 	Whether the role is managed by an integration.
 ]=]
 
 --[=[
-	@within Classes.Role
+	@within Classes.Guild.Role
 	@prop mentionable boolean
 	Whether the role is mentionable.
 ]=]
 
 --[=[
 	@prop state State
+	@within Classes.Guild.Role
 	The state object for this role.
 ]=]
 
 --[=[
 	@prop guildId string
+	@within Classes.Guild.Role
 	The ID of the guild this role belongs to.
 ]=]
 
@@ -105,10 +107,10 @@ Role.Interface = {}
 Role.Prototype = {}
 
 --[=[
-	@within Classes.Role
+	@within Classes.Guild.Role
 	Delete a guild role. Requires the MANAGE_ROLES permission.
 ]=]
-function Role.Prototype.deleteAsync(self: Role, reason: string?)
+function Role.Prototype.deleteAsync(self: Role, reason: string?): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -121,10 +123,10 @@ function Role.Prototype.deleteAsync(self: Role, reason: string?)
 end
 
 --[=[
-	@within Classes.Role
+	@within Classes.Guild.Role
 	Modify a guild role. Requires the MANAGE_ROLES permission. Returns the updated role on success.
 ]=]
-function Role.Prototype.modifyAsync(self: Role, json: builders.roleJSON, reason: string?)
+function Role.Prototype.modifyAsync(self: Role, json: builders.roleJSON, reason: string?): future.FutureLike<string, Role>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -139,10 +141,10 @@ function Role.Prototype.modifyAsync(self: Role, json: builders.roleJSON, reason:
 end
 
 --[=[
-	@within Classes.Role
+	@within Classes.Guild.Role
 	Modify the positions of a set of role objects for the guild. Requires the MANAGE_ROLES permission.
 ]=]
-function Role.Prototype.modifyPositionAsync(self: Role, position: number, reason: string?)
+function Role.Prototype.modifyPositionAsync(self: Role, position: number, reason: string?): future.FutureLike<string, { Role }>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -166,20 +168,20 @@ function Role.Prototype.modifyPositionAsync(self: Role, position: number, reason
 end
 
 --[=[
-	@within Classes.Role
+	@within Classes.Guild.Role
 	Sets the name of the role.
 ]=]
-function Role.Prototype.setNameAsync(self: Role, name: string, reason: string?)
+function Role.Prototype.setNameAsync(self: Role, name: string, reason: string?): future.FutureLike<string, Role>
 	return self:modifyAsync({
 		name = name,
 	}, reason)
 end
 
 --[=[
-	@within Classes.Role
+	@within Classes.Guild.Role
 	Adds a permission to the role's current permission set.
 ]=]
-function Role.Prototype.addPermissionAsync(self: Role, permission: apiTypes.Permissions, reason: string?)
+function Role.Prototype.addPermissionAsync(self: Role, permission: apiTypes.Permissions, reason: string?): future.FutureLike<string, Role>
 	local permissionBuilder = builders.permission.fromPermissions(self.permissions:toList())
 
 	permissionBuilder:addPermission(permission)
@@ -190,10 +192,10 @@ function Role.Prototype.addPermissionAsync(self: Role, permission: apiTypes.Perm
 end
 
 --[=[
-	@within Classes.Role
+	@within Classes.Guild.Role
 	Removes a permission from the role's current permission set.
 ]=]
-function Role.Prototype.removePermissionAsync(self: Role, permission: apiTypes.Permissions, reason: string?)
+function Role.Prototype.removePermissionAsync(self: Role, permission: apiTypes.Permissions, reason: string?): future.FutureLike<string, Role>
 	local permissionBuilder = builders.permission.fromPermissions(self.permissions:toList())
 
 	permissionBuilder:removePermission(permission)
@@ -204,61 +206,61 @@ function Role.Prototype.removePermissionAsync(self: Role, permission: apiTypes.P
 end
 
 --[=[
-	@within Classes.Role
+	@within Classes.Guild.Role
 	Sets the color of the role.
 ]=]
-function Role.Prototype.setColorAsync(self: Role, color: number, reason: string?)
+function Role.Prototype.setColorAsync(self: Role, color: number, reason: string?): future.FutureLike<string, Role>
 	return self:modifyAsync({
 		color = color,
 	}, reason)
 end
 
 --[=[
-	@within Classes.Role
+	@within Classes.Guild.Role
 	Sets whether the role should be displayed separately in the member list.
 ]=]
-function Role.Prototype.setHoistedAsync(self: Role, hoisted: boolean, reason: string?)
+function Role.Prototype.setHoistedAsync(self: Role, hoisted: boolean, reason: string?): future.FutureLike<string, Role>
 	return self:modifyAsync({
 		hoist = hoisted,
 	}, reason)
 end
 
 --[=[
-	@within Classes.Role
+	@within Classes.Guild.Role
 	Sets the icon image for the role.
 ]=]
-function Role.Prototype.setIconAsync(self: Role, iconData: string, reason: string?)
+function Role.Prototype.setIconAsync(self: Role, iconData: string, reason: string?): future.FutureLike<string, Role>
 	return self:modifyAsync({
 		icon = iconData,
 	}, reason)
 end
 
 --[=[
-	@within Classes.Role
+	@within Classes.Guild.Role
 	Sets the unicode emoji for the role.
 ]=]
-function Role.Prototype.setEmojiAsync(self: Role, emoji: string, reason: string?)
+function Role.Prototype.setEmojiAsync(self: Role, emoji: string, reason: string?): future.FutureLike<string, Role>
 	return self:modifyAsync({
 		emoji = emoji,
 	}, reason)
 end
 
 --[=[
-	@within Classes.Role
+	@within Classes.Guild.Role
 	Sets the role to be mentionable through the @ mention.
 ]=]
-function Role.Prototype.setMentionableAsync(self: Role, mentionable: boolean, reason: string?)
+function Role.Prototype.setMentionableAsync(self: Role, mentionable: boolean, reason: string?): future.FutureLike<string, Role>
 	return self:modifyAsync({
 		mentionable = mentionable,
 	}, reason)
 end
 
 --[=[
-	@within Classes.Role
+	@within Classes.Guild.Role
 	@private
 	Synchronizes the role object with the data from the API.
 ]=]
-function Role.Prototype.sync(self: Role, roleData: apiTypes.GuildRoleObject)
+function Role.Prototype.sync(self: Role, roleData: apiTypes.GuildRoleObject): nil
 	local tagArray = {}
 
 	-- fixme: need to use `next` iterator here to avoid LSP errors.
@@ -293,7 +295,7 @@ end
 
 --[=[
 	@private
-	@within Classes.Role
+	@within Classes.Guild.Role
 	Creates a new Role instance with the specified role data.
 ]=]
 function Role.Interface.new(state: state.State, guildId: apiTypes.Snowflake, roleData: apiTypes.GuildRoleObject): Role

@@ -1,6 +1,9 @@
 --[=[
-	@class Classes.GroupDM
+	@class Classes.Channels.GroupDM
 	@__index Prototype
+	@tag inherit:Classes.Channels.Channel
+	@tag inherit:Classes.Channels.GroupDMBehaviour
+	@tag inherit:Classes.Channels.TextBehaviour
 
 	Implementation of the Discord GroupDM class in Luau
 
@@ -9,7 +12,7 @@
 
 --[=[
 	@prop state Classes.State
-	@within Classes.GroupDM
+	@within Classes.Channels.GroupDM
 ]=]
 
 local apiTypes = require("../../../luau_packages/api_types")
@@ -30,13 +33,13 @@ GroupDM.Behaviours = {
 }
 
 --[=[
-	@within Classes.GroupDM
+	@within Classes.Channels.GroupDM
 	@private
 
 	Responsible for syncing data to this group DM object. This is typically called by the API when this object is
 	created or updated.
 ]=]
-function GroupDM.Prototype.sync(self: GroupDM, channelData: apiTypes.ChannelObject)
+function GroupDM.Prototype.sync(self: GroupDM, channelData: apiTypes.ChannelObject): nil
 	for _, behaviour in GroupDM.Behaviours do
 		behaviour.inheritMethods(self)
 		behaviour.inheritProperties(self, channelData)
@@ -44,7 +47,7 @@ function GroupDM.Prototype.sync(self: GroupDM, channelData: apiTypes.ChannelObje
 end
 
 --[=[
-	@within Classes.GroupDM
+	@within Classes.Channels.GroupDM
 	@private
 
 	Responsible for constructing this class.

@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.ThreadMemberBitflag
+	@class Classes.Channels.ThreadMemberBitflag
 	@__index Prototype
 
 	Implementation of the Discord Thread Member Bitflags in Luau. This class represents various flags that can be set on a thread member in a Discord channel.
@@ -11,7 +11,7 @@
 
 --[=[
 	@prop flag number
-	@within Classes.ThreadMemberBitflag
+	@within Classes.Channels.ThreadMemberBitflag
 	The bitfield representing the thread member flags.
 ]=]
 
@@ -21,7 +21,7 @@ ThreadMemberBitflag.Interface = {}
 ThreadMemberBitflag.Prototype = {}
 
 --[=[
-	@within Classes.ThreadMemberBitflag
+	@within Classes.Channels.ThreadMemberBitflag
 	@private
 
 	Responsible for constructing this class.

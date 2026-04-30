@@ -15,7 +15,7 @@ local request = require("./request")
 local guildTemplate = {}
 
 --[=[
-	@within Rest.application
+	@within Rest.guildTemplate
 
 	https://discord.com/developers/docs/resources/guild-template#get-guild-template
 ]=]
@@ -38,7 +38,7 @@ function guildTemplate.getGuildTemplateAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.guildTemplate
 
 	https://discord.com/developers/docs/resources/guild-template#create-guild-from-guild-template
 ]=]
@@ -66,7 +66,7 @@ function guildTemplate.createGuildFromGuildTemplateAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.guildTemplate
 
 	https://discord.com/developers/docs/resources/guild-template#get-guild-templates
 ]=]
@@ -89,7 +89,7 @@ function guildTemplate.getGuildTemplatesAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.guildTemplate
 
 	https://discord.com/developers/docs/resources/guild-template#create-guild-template
 ]=]
@@ -114,7 +114,7 @@ function guildTemplate.createGuildTemplateAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.guildTemplate
 
 	https://discord.com/developers/docs/resources/guild-template#sync-guild-template
 ]=]
@@ -138,7 +138,7 @@ function guildTemplate.syncGuildTemplateAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.guildTemplate
 
 	https://discord.com/developers/docs/resources/guild-template#modify-guild-template
 ]=]
@@ -164,7 +164,7 @@ function guildTemplate.modifyGuildTemplateAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.guildTemplate
 
 	https://discord.com/developers/docs/resources/guild-template#delete-guild-template
 ]=]

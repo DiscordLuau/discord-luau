@@ -1,5 +1,5 @@
 --[=[
-	@class Builders.Footer
+	@class Builders.Embed.Footer
 	@__index Prototype
 
 	Implementation of discords Footer object as a Luau builder.	
@@ -9,19 +9,19 @@
 
 --[=[
 	@prop text string?
-	@within Builders.Footer
+	@within Builders.Embed.Footer
 	The text content that appears in the footer.
 ]=]
 
 --[=[
 	@prop iconUrl string?
-	@within Builders.Footer
+	@within Builders.Embed.Footer
 	The URL of the footer icon.
 ]=]
 
 --[=[
 	@prop proxyIconUrl string?
-	@within Builders.Footer
+	@within Builders.Embed.Footer
 	The proxied URL of the footer icon.
 ]=]
 
@@ -31,7 +31,7 @@ Footer.Prototype = {}
 Footer.Interface = {}
 
 --[=[
-	@within Builders.Footer
+	@within Builders.Embed.Footer
 
 	Sets the footer text content.
 ]=]
@@ -45,7 +45,7 @@ function Footer.Prototype.setText(self: Footer, text: string): Footer
 end
 
 --[=[
-	@within Builders.Footer
+	@within Builders.Embed.Footer
 
 	Sets the footer icon URL and optional proxy icon URL.
 ]=]
@@ -57,7 +57,7 @@ function Footer.Prototype.setIcon(self: Footer, iconUrl: string, proxyIconUrl: s
 end
 
 --[=[
-	@within Builders.Footer
+	@within Builders.Embed.Footer
 
 	Responsible for building the Footer JSON that can be parsed by the Discord API.
 ]=]
@@ -72,7 +72,7 @@ function Footer.Prototype.build(self: Footer): JSON
 end
 
 --[=[
-	@within Builders.Footer
+	@within Builders.Embed.Footer
 
 	Responsible for creating a new Footer.
 

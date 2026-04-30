@@ -1,6 +1,7 @@
 --[=[
-	@class Classes.Autocomplete
+	@class Classes.Interactions.Autocomplete
 	@__index Prototype
+	@tag inherit:Classes.Interactions.InteractionBehaviour
 
 	Implementation of the Discord Autocomplete Interaction class in Luau
 
@@ -9,7 +10,7 @@
 
 --[=[
 	@prop state State
-	@within Classes.Autocomplete
+	@within Classes.Interactions.Autocomplete
 ]=]
 
 -- selene: allow(unused_variable)
@@ -27,7 +28,7 @@ Autocomplete.Behaviours = {
 }
 
 --[=[
-	@within Classes.Autocomplete
+	@within Classes.Interactions.Autocomplete
 	@private
 
 	Responsible for syncing data to this interaction object. This is typically called by the API when this object is
@@ -41,7 +42,7 @@ function Autocomplete.Prototype.sync(self: Autocomplete, interactionData: apiTyp
 end
 
 --[=[
-	@within Classes.Autocomplete
+	@within Classes.Interactions.Autocomplete
 	@private
 
 	Responsible for constructing this class.

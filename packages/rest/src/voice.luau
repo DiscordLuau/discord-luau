@@ -15,7 +15,7 @@ local request = require("./request")
 local voice = {}
 
 --[=[
-	@within Rest.application
+	@within Rest.voice
 
 	https://discord.com/developers/docs/resources/voice#list-voice-regions
 ]=]
@@ -37,7 +37,7 @@ function voice.listVoiceRegionsAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.voice
 
 	https://discord.com/developers/docs/resources/voice#get-current-user-voice-state
 ]=]
@@ -60,7 +60,7 @@ function voice.getCurrentUserVoiceStateAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.voice
 
 	https://discord.com/developers/docs/resources/voice#get-user-voice-state
 ]=]
@@ -84,7 +84,7 @@ function voice.getUserVoiceStateAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.voice
 
 	https://discord.com/developers/docs/resources/voice#modify-current-user-voice-state
 ]=]
@@ -109,7 +109,7 @@ function voice.modifyCurrentUserVoiceStateAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.voice
 
 	https://discord.com/developers/docs/resources/voice#modify-user-voice-state
 ]=]

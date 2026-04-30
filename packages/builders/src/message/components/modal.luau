@@ -1,5 +1,5 @@
 --[=[
-	@class Builders.Modal
+	@class Builders.Message.Modal
 	@__index Prototype
 
 	Implementation of discords Modal object as a Luau builder.	
@@ -9,19 +9,19 @@
 
 --[=[
 	@prop customId string?
-	@within Builders.Modal
+	@within Builders.Message.Modal
 	The custom identifier for the modal.
 ]=]
 
 --[=[
 	@prop title string?
-	@within Builders.Modal
+	@within Builders.Message.Modal
 	The title that appears at the top of the modal.
 ]=]
 
 --[=[
-	@prop components { Builders.TextInput }?
-	@within Builders.Modal
+	@prop components { Builders.Message.TextInput }?
+	@within Builders.Message.Modal
 	The components that will be displayed in this modal.
 ]=]
 
@@ -35,7 +35,7 @@ Modal.Prototype = {}
 Modal.Interface = {}
 
 --[=[
-	@within Builders.Modal
+	@within Builders.Message.Modal
 
 	Sets the custom ID for this modal. This is required for the Discord API to identify this modal.
 ]=]
@@ -46,7 +46,7 @@ function Modal.Prototype.setCustomId(self: Modal, customId: string): Modal
 end
 
 --[=[
-	@within Builders.Modal
+	@within Builders.Message.Modal
 
 	Sets the title that appears at the top of the modal.
 ]=]
@@ -57,7 +57,7 @@ function Modal.Prototype.setTitle(self: Modal, title: string): Modal
 end
 
 --[=[
-	@within Builders.Modal
+	@within Builders.Message.Modal
 
 	Sets the components that will be displayed in this modal. These must be text input components.
 ]=]
@@ -68,7 +68,7 @@ function Modal.Prototype.setComponents(self: Modal, components: { textInput.JSON
 end
 
 --[=[
-	@within Builders.Modal
+	@within Builders.Message.Modal
 
 	Responsible for building the Modal JSON that can be parsed by the Discord API.
 ]=]
@@ -85,7 +85,7 @@ function Modal.Prototype.build(self: Modal): JSON
 end
 
 --[=[
-	@within Builders.Modal
+	@within Builders.Message.Modal
 
 	Responsible for creating a new Modal.
 

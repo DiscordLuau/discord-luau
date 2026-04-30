@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.ThreadMember
+	@class Classes.Channels.ThreadMember
 	@__index Prototype
 
 	Implementation of the Discord ThreadMember class in Luau
@@ -9,31 +9,31 @@
 
 --[=[
 	@prop joinTimestamp DateTime
-	@within Classes.ThreadMember
+	@within Classes.Channels.ThreadMember
 	The timestamp when this user joined the thread.
 ]=]
 
 --[=[
 	@prop flags ThreadMemberBitflag
-	@within Classes.ThreadMember
+	@within Classes.Channels.ThreadMember
 	The flags that indicate various properties and states of this thread member.
 ]=]
 
 --[=[
 	@prop member Member?
-	@within Classes.ThreadMember
+	@within Classes.Channels.ThreadMember
 	The guild member object for this user, if they are a member of the guild.
 ]=]
 
 --[=[
 	@prop id string?
-	@within Classes.ThreadMember
+	@within Classes.Channels.ThreadMember
 	The unique identifier for this thread member.
 ]=]
 
 --[=[
 	@prop userId string?
-	@within Classes.ThreadMember
+	@within Classes.Channels.ThreadMember
 	The ID of the user who is a member of this thread.
 ]=]
 
@@ -51,7 +51,7 @@ ThreadMember.Interface = {}
 ThreadMember.Prototype = {}
 
 --[=[
-	@within Classes.ThreadMember
+	@within Classes.Channels.ThreadMember
 	@private
 
 	Responsible for syncing data to this thread member object. This is typically called by the API when this object is
@@ -70,7 +70,7 @@ function ThreadMember.Prototype.sync(self: ThreadMember, threadMemberData: apiTy
 end
 
 --[=[
-	@within Classes.ThreadMember
+	@within Classes.Channels.ThreadMember
 	@private
 
 	Responsible for constructing this class.

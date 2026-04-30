@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.ThreadMetadata
+	@class Classes.Channels.ThreadMetadata
 	@__index Prototype
 
 	Implementation of the Discord ThreadMetadata class in Luau
@@ -9,42 +9,42 @@
 
 --[=[
 	@prop archiveTimestamp std_polyfills.DateTime
-	@within Classes.ThreadMetadata
+	@within Classes.Channels.ThreadMetadata
 	
 	Timestamp for when the thread's archive status was last changed, used for calculating recent activity
 ]=]
 
 --[=[
 	@prop createTimestamp std_polyfills.DateTime?
-	@within Classes.ThreadMetadata
+	@within Classes.Channels.ThreadMetadata
 	
 	Timestamp for when the thread was created, null if thread was created before October 2021
 ]=]
 
 --[=[
 	@prop archived boolean
-	@within Classes.ThreadMetadata
+	@within Classes.Channels.ThreadMetadata
 	
 	Whether the thread is archived or not
 ]=]
 
 --[=[
 	@prop autoArchiveDuration number
-	@within Classes.ThreadMetadata
+	@within Classes.Channels.ThreadMetadata
 	
 	Duration in minutes to automatically archive the thread after recent activity
 ]=]
 
 --[=[
 	@prop locked boolean
-	@within Classes.ThreadMetadata
+	@within Classes.Channels.ThreadMetadata
 	
 	Whether the thread is locked or not
 ]=]
 
 --[=[
 	@prop invitable boolean?
-	@within Classes.ThreadMetadata
+	@within Classes.Channels.ThreadMetadata
 	
 	Whether non-moderators can add other non-moderators to a private thread
 ]=]
@@ -58,7 +58,7 @@ ThreadMetadata.Interface = {}
 ThreadMetadata.Prototype = {}
 
 --[=[
-	@within Classes.ThreadMetadata
+	@within Classes.Channels.ThreadMetadata
 	@private
 
 	Responsible for syncing data to this thread metadata object. This is typically called by the API when this object is
@@ -80,7 +80,7 @@ function ThreadMetadata.Prototype.sync(self: ThreadMetadata, threadMetadataData:
 end
 
 --[=[
-	@within Classes.ThreadMetadata
+	@within Classes.Channels.ThreadMetadata
 	@private
 
 	Responsible for constructing this class.

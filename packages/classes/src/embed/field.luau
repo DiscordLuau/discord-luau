@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.Field
+	@class Classes.Embed.Field
 	@__index Prototype
 
 	Implementation of the Discord Field class in Luau. This class represents a field in a Discord embed, which can contain a name, value, and whether it should be displayed inline.
@@ -9,19 +9,19 @@
 
 --[=[
 	@prop name string
-	@within Classes.Field
+	@within Classes.Embed.Field
 	The name of the field.
 ]=]
 
 --[=[
 	@prop value string
-	@within Classes.Field
+	@within Classes.Embed.Field
 	The value of the field.
 ]=]
 
 --[=[
 	@prop inline boolean?
-	@within Classes.Field
+	@within Classes.Embed.Field
 	Whether this field should be displayed inline with other fields.
 ]=]
 
@@ -33,7 +33,7 @@ Field.Interface = {}
 Field.Prototype = {}
 
 --[=[
-	@within Classes.Field
+	@within Classes.Embed.Field
 	@private
 
 	Responsible for syncing data to this field object. This is typically called by the API when this object is
@@ -48,7 +48,7 @@ function Field.Prototype.sync(self: Field, fieldData: apiTypes.EmbedFieldObject)
 end
 
 --[=[
-	@within Classes.Field
+	@within Classes.Embed.Field
 	@private
 
 	Responsible for constructing this class.

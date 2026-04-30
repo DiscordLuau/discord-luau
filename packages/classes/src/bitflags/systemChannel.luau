@@ -25,7 +25,7 @@ SystemChannelBitflag.Prototype = {}
 
 	Returns if the system channel has the suppress join notifications bitflag set.
 ]=]
-function SystemChannelBitflag.Prototype.suppressJoinNotifications(self: SystemChannelBitflag)
+function SystemChannelBitflag.Prototype.suppressJoinNotifications(self: SystemChannelBitflag): boolean
 	local targetBit = bit.lshift(1, 0)
 
 	return bit.band(self.flag, targetBit) == targetBit
@@ -36,7 +36,7 @@ end
 
 	Returns if the system channel has the suppress premium subscriptions bitflag set.
 ]=]
-function SystemChannelBitflag.Prototype.suppressPremiumSubscriptions(self: SystemChannelBitflag)
+function SystemChannelBitflag.Prototype.suppressPremiumSubscriptions(self: SystemChannelBitflag): boolean
 	local targetBit = bit.lshift(1, 1)
 
 	return bit.band(self.flag, targetBit) == targetBit
@@ -47,7 +47,7 @@ end
 
 	Returns if the system channel has the suppress guild reminder notifications bitflag set.
 ]=]
-function SystemChannelBitflag.Prototype.suppressGuildReminderNotifications(self: SystemChannelBitflag)
+function SystemChannelBitflag.Prototype.suppressGuildReminderNotifications(self: SystemChannelBitflag): boolean
 	local targetBit = bit.lshift(1, 2)
 
 	return bit.band(self.flag, targetBit) == targetBit
@@ -58,7 +58,7 @@ end
 
 	Returns if the system channel has the suppress join notification replies bitflag set.
 ]=]
-function SystemChannelBitflag.Prototype.suppressJoinNotificationReplies(self: SystemChannelBitflag)
+function SystemChannelBitflag.Prototype.suppressJoinNotificationReplies(self: SystemChannelBitflag): boolean
 	local targetBit = bit.lshift(1, 3)
 
 	return bit.band(self.flag, targetBit) == targetBit
@@ -69,7 +69,7 @@ end
 
 	Returns if the system channel has the suppress role subscriptions purchase notifications bitflag set.
 ]=]
-function SystemChannelBitflag.Prototype.suppressRoleSubscriptionPurchaseNotifications(self: SystemChannelBitflag)
+function SystemChannelBitflag.Prototype.suppressRoleSubscriptionPurchaseNotifications(self: SystemChannelBitflag): boolean
 	local targetBit = bit.lshift(1, 4)
 
 	return bit.band(self.flag, targetBit) == targetBit
@@ -80,7 +80,7 @@ end
 
 	Returns if the system channel has the suppress role subscriptions purchase notification replies bitflag set.
 ]=]
-function SystemChannelBitflag.Prototype.suppressRoleSubscriptionPurchaseNotificationReplies(self: SystemChannelBitflag)
+function SystemChannelBitflag.Prototype.suppressRoleSubscriptionPurchaseNotificationReplies(self: SystemChannelBitflag): boolean
 	local targetBit = bit.lshift(1, 5)
 
 	return bit.band(self.flag, targetBit) == targetBit

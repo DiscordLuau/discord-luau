@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.IneractionMetadata
+	@class Classes.Message.InteractionMetadata
 	@__index Prototype
 
 	Implementation of the Discord IneractionMetadata class in Luau. This class represents metadata about an interaction that occurred with a message.
@@ -9,43 +9,43 @@
 
 --[=[
 	@prop type apiTypes.InteractionType
-	@within Classes.IneractionMetadata
+	@within Classes.Message.InteractionMetadata
 	The type of interaction that occurred with the message.
 ]=]
 
 --[=[
 	@prop user Classes.User
-	@within Classes.IneractionMetadata
+	@within Classes.Message.InteractionMetadata
 	The user who triggered the interaction.
 ]=]
 
 --[=[
 	@prop id apiTypes.Snowflake
-	@within Classes.IneractionMetadata
+	@within Classes.Message.InteractionMetadata
 	The unique identifier for the interaction.
 ]=]
 
 --[=[
 	@prop authorizingIntegrationOwners { [apiTypes.IntegrationTypesConfig]: apiTypes.Snowflake }
-	@within Classes.IneractionMetadata
+	@within Classes.Message.InteractionMetadata
 	The mapping of integration types to their respective owners.
 ]=]
 
 --[=[
 	@prop originalResponseMessageId apiTypes.Snowflake?
-	@within Classes.IneractionMetadata
+	@within Classes.Message.InteractionMetadata
 	The ID of the original response message for this interaction.
 ]=]
 
 --[=[
 	@prop interactedMessageId apiTypes.Snowflake?
-	@within Classes.IneractionMetadata
+	@within Classes.Message.InteractionMetadata
 	The ID of the message that was interacted with.
 ]=]
 
 --[=[
-	@prop triggeringInteractionMetadata Classes.IneractionMetadata
-	@within Classes.IneractionMetadata
+	@prop triggeringInteractionMetadata Classes.Message.InteractionMetadata
+	@within Classes.Message.InteractionMetadata
 	The metadata of the interaction that triggered this interaction.
 ]=]
 
@@ -59,7 +59,7 @@ IneractionMetadata.Interface = {}
 IneractionMetadata.Prototype = {}
 
 --[=[
-	@within Classes.IneractionMetadata
+	@within Classes.Message.InteractionMetadata
 	@private
 
 	Responsible for syncing data to this interaction metadata object. This is typically called by the API when this object is
@@ -97,7 +97,7 @@ function IneractionMetadata.Prototype.sync(
 end
 
 --[=[
-	@within Classes.IneractionMetadata
+	@within Classes.Message.InteractionMetadata
 	@private
 
 	Responsible for constructing this class.

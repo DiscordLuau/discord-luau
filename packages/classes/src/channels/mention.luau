@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.ChannelMention
+	@class Classes.Channels.ChannelMention
 	@__index Prototype
 
 	Implementation of the Discord ChannelMention class in Luau
@@ -9,28 +9,28 @@
 
 --[=[
 	@prop type Classes.ChannelType
-	@within Classes.ChannelMention
+	@within Classes.Channels.ChannelMention
 	
 	The type of channel that was mentioned. This represents the channel's type as defined in Discord's API.
 ]=]
 
 --[=[
 	@prop id string
-	@within Classes.ChannelMention
+	@within Classes.Channels.ChannelMention
 	
 	The unique identifier of the mentioned channel. This is a Discord snowflake ID.
 ]=]
 
 --[=[
 	@prop name string
-	@within Classes.ChannelMention
+	@within Classes.Channels.ChannelMention
 	
 	The name of the mentioned channel. This is the channel's display name without the # prefix.
 ]=]
 
 --[=[
 	@prop guildId string
-	@within Classes.ChannelMention
+	@within Classes.Channels.ChannelMention
 	
 	The ID of the guild (server) that the mentioned channel belongs to. This is a Discord snowflake ID.
 ]=]
@@ -43,7 +43,7 @@ ChannelMention.Interface = {}
 ChannelMention.Prototype = {}
 
 --[=[
-	@within Classes.ChannelMention
+	@within Classes.Channels.ChannelMention
 	@private
 
 	Responsible for syncing data to this channel mention object. This is typically called by the API when this object is
@@ -60,7 +60,7 @@ function ChannelMention.Prototype.sync(self: ChannelMention, mentionData: apiTyp
 end
 
 --[=[
-	@within Classes.ChannelMention
+	@within Classes.Channels.ChannelMention
 	@private
 
 	Responsible for constructing this class.

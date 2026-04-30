@@ -13,7 +13,7 @@ local request = require("./request")
 local auditLog = {}
 
 --[=[
-	@within Rest.application
+	@within Rest.auditLog
 
 	https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log
 ]=]

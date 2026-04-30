@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.Team
+	@class Classes.Application.Team
 	@__index Prototype
 
 	Implementation of the Discord Team class in Luau
@@ -9,31 +9,31 @@
 
 --[=[
 	@prop icon string?
-	@within Classes.Team
+	@within Classes.Application.Team
 	The icon hash of the team
 ]=]
 
 --[=[
 	@prop id string
-	@within Classes.Team
+	@within Classes.Application.Team
 	The unique identifier of the team
 ]=]
 
 --[=[
-	@prop members { Classes.TeamMember }
-	@within Classes.Team
+	@prop members { Classes.Application.TeamMember }
+	@within Classes.Application.Team
 	Array of team members in this team
 ]=]
 
 --[=[
 	@prop name string
-	@within Classes.Team
+	@within Classes.Application.Team
 	The name of the team
 ]=]
 
 --[=[
 	@prop ownerUserId string
-	@within Classes.Team
+	@within Classes.Application.Team
 	The user ID of the team owner
 ]=]
 
@@ -47,7 +47,7 @@ Team.Interface = {}
 Team.Prototype = {}
 
 --[=[
-	@within Classes.Team
+	@within Classes.Application.Team
 	@private
 
 	Responsible for syncing data to this team object. This is typically called by the API when this object is
@@ -72,7 +72,7 @@ function Team.Prototype.sync(self: Team, teamData: apiTypes.TeamObject)
 end
 
 --[=[
-	@within Classes.Team
+	@within Classes.Application.Team
 	@private
 
 	Responsible for constructing this class.

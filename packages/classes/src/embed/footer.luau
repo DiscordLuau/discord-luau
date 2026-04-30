@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.Footer
+	@class Classes.Embed.Footer
 	@__index Prototype
 
 	Implementation of the Discord Footer class in Luau
@@ -9,19 +9,19 @@
 
 --[=[
 	@prop text string
-	@within Classes.Footer
+	@within Classes.Embed.Footer
 	The text content of the footer
 ]=]
 
 --[=[
 	@prop iconUrl string?
-	@within Classes.Footer
+	@within Classes.Embed.Footer
 	The URL of the footer icon
 ]=]
 
 --[=[
 	@prop proxyIconUrl string?
-	@within Classes.Footer
+	@within Classes.Embed.Footer
 	The proxied URL of the footer icon
 ]=]
 
@@ -33,7 +33,7 @@ Footer.Interface = {}
 Footer.Prototype = {}
 
 --[=[
-	@within Classes.Footer
+	@within Classes.Embed.Footer
 	@private
 
 	Responsible for syncing data to this footer object. This is typically called by the API when this object is
@@ -48,7 +48,7 @@ function Footer.Prototype.sync(self: Footer, footerData: apiTypes.EmbedFooterObj
 end
 
 --[=[
-	@within Classes.Footer
+	@within Classes.Embed.Footer
 	@private
 
 	Responsible for constructing this class.

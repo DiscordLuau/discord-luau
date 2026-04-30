@@ -1,5 +1,5 @@
 --[=[
-	@class Builders.Video
+	@class Builders.Embed.Video
 	@__index Prototype
 
 	Implementation of discords Video object as a Luau builder.	
@@ -9,25 +9,25 @@
 
 --[=[
 	@prop url string
-	@within Builders.Video
+	@within Builders.Embed.Video
 	Source url of video
 ]=]
 
 --[=[
 	@prop proxyUrl string?
-	@within Builders.Video
+	@within Builders.Embed.Video
 	A proxied url of the video
 ]=]
 
 --[=[
 	@prop height number?
-	@within Builders.Video
+	@within Builders.Embed.Video
 	Height of video
 ]=]
 
 --[=[
 	@prop width number?
-	@within Builders.Video
+	@within Builders.Embed.Video
 	Width of video
 ]=]
 
@@ -37,7 +37,7 @@ Video.Prototype = {}
 Video.Interface = {}
 
 --[=[
-	@within Builders.Video
+	@within Builders.Embed.Video
 
 	Set the image url for this embed.
 ]=]
@@ -49,7 +49,7 @@ function Video.Prototype.setUrl(self: Video, url: string, proxyUrl: string?): Vi
 end
 
 --[=[
-	@within Builders.Video
+	@within Builders.Embed.Video
 
 	Set the image height for this embed.
 ]=]
@@ -60,7 +60,7 @@ function Video.Prototype.setHeight(self: Video, height: number): Video
 end
 
 --[=[
-	@within Builders.Video
+	@within Builders.Embed.Video
 
 	Set the image width for this embed.
 ]=]
@@ -71,7 +71,7 @@ function Video.Prototype.setWidth(self: Video, width: number): Video
 end
 
 --[=[
-	@within Builders.Video
+	@within Builders.Embed.Video
 
 	Responsible for building the Video JSON that can be parsed by the Discord API.
 ]=]
@@ -85,7 +85,7 @@ function Video.Prototype.build(self: Video): JSON
 end
 
 --[=[
-	@within Builders.Video
+	@within Builders.Embed.Video
 
 	Responsible for creating a new Video.
 

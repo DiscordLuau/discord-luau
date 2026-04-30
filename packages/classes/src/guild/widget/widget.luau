@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.Widget
+	@class Classes.Guild.Widget
 	@__index Prototype
 
 	Implementation of the Discord Widget class in Luau
@@ -9,31 +9,31 @@
 
 --[=[
 	@prop id string
-	@within Classes.Widget
+	@within Classes.Guild.Widget
 	The unique identifier of this widget
 ]=]
 
 --[=[
 	@prop name string
-	@within Classes.Widget
+	@within Classes.Guild.Widget
 	The name of the widget
 ]=]
 
 --[=[
 	@prop instantInvite string?
-	@within Classes.Widget
+	@within Classes.Guild.Widget
 	The instant invite URL for this widget, if one exists
 ]=]
 
 --[=[
-	@prop channels { Classes.Channel }
-	@within Classes.Widget
+	@prop channels { Classes.Channels.Channel }
+	@within Classes.Guild.Widget
 	Array of channels that are shown in the widget
 ]=]
 
 --[=[
 	@prop members { Classes.User }
-	@within Classes.Widget
+	@within Classes.Guild.Widget
 	Array of users that are shown in the widget
 ]=]
 
@@ -50,7 +50,7 @@ Widget.Interface = {}
 Widget.Prototype = {}
 
 --[=[
-	@within Classes.Widget
+	@within Classes.Guild.Widget
 	@private
 
 	Responsible for syncing data to this widget object. This is typically called by the API when this object is
@@ -80,7 +80,7 @@ function Widget.Prototype.sync(self: Widget, widgetData: apiTypes.GuildWidgetObj
 end
 
 --[=[
-	@within Classes.Widget
+	@within Classes.Guild.Widget
 	@private
 
 	Responsible for constructing this class.

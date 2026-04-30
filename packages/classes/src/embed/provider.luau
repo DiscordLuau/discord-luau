@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.Provider
+	@class Classes.Embed.Provider
 	@__index Prototype
 
 	Implementation of the Discord Provider class in Luau
@@ -9,14 +9,14 @@
 
 --[=[
 	@prop name string?
-	@within Classes.Provider
+	@within Classes.Embed.Provider
 
 	The name of the provider
 ]=]
 
 --[=[
 	@prop url string?
-	@within Classes.Provider
+	@within Classes.Embed.Provider
 
 	The URL of the provider
 ]=]
@@ -29,7 +29,7 @@ Provider.Interface = {}
 Provider.Prototype = {}
 
 --[=[
-	@within Classes.Provider
+	@within Classes.Embed.Provider
 	@private
 
 	Responsible for syncing data to this provider object. This is typically called by the API when this object is
@@ -42,7 +42,7 @@ function Provider.Prototype.sync(self: Provider, providerData: apiTypes.EmbedPro
 end
 
 --[=[
-	@within Classes.Provider
+	@within Classes.Embed.Provider
 	@private
 
 	Responsible for constructing this class.

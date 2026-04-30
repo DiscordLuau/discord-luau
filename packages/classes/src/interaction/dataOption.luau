@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.DataOption
+	@class Classes.Interactions.DataOption
 	@__index Prototype
 
 	Implementation of the Discord DataOption class in Luau
@@ -9,14 +9,14 @@
 
 --[=[
 	@prop type ApplicationCommandOptionType
-	@within Classes.DataOption
+	@within Classes.Interactions.DataOption
 
 	The type of command option this represents. This determines how the option is displayed and handled in Discord.
 ]=]
 
 --[=[
-	@prop options {Classes.DataOption}?
-	@within Classes.DataOption
+	@prop options {Classes.Interactions.DataOption}?
+	@within Classes.Interactions.DataOption
 
 	An array of additional options if this option is a subcommand group, subcommand, or group of choices.
 	Can be nil if this option has no sub-options.
@@ -24,14 +24,14 @@
 
 --[=[
 	@prop name string
-	@within Classes.DataOption
+	@within Classes.Interactions.DataOption
 
 	The name of this command option as it appears in Discord. This is what users see when using the command.
 ]=]
 
 --[=[
 	@prop value T?
-	@within Classes.DataOption
+	@within Classes.Interactions.DataOption
 
 	The value provided by the user for this option. The type varies based on the option type.
 	Can be nil if no value was provided.
@@ -39,7 +39,7 @@
 
 --[=[
 	@prop focused boolean?
-	@within Classes.DataOption
+	@within Classes.Interactions.DataOption
 
 	Indicates whether this option is currently focused in the Discord client during autocomplete.
 	Only present for autocomplete interactions.
@@ -53,7 +53,7 @@ DataOption.Interface = {}
 DataOption.Prototype = {}
 
 --[=[
-	@within Classes.DataOption
+	@within Classes.Interactions.DataOption
 	@private
 
 	Responsible for syncing data to this DataOption object. This is typically called by the API when this object is
@@ -81,7 +81,7 @@ function DataOption.Prototype.sync<T>(
 end
 
 --[=[
-	@within Classes.DataOption
+	@within Classes.Interactions.DataOption
 	@private
 
 	Responsible for constructing this class.

@@ -36,7 +36,7 @@
 ]=]
 
 --[=[
-	@prop timestamps Classes.ActivityTimestamp
+	@prop timestamps Classes.Activity.Timestamp
 	@within Classes.Activity
 
 	Unix timestamps for start and/or end of the game
@@ -64,28 +64,28 @@
 ]=]
 
 --[=[
-	@prop emoji Classes.ActivityEmoji?
+	@prop emoji Classes.Activity.Emoji?
 	@within Classes.Activity
 
 	The emoji used for a custom status
 ]=]
 
 --[=[
-	@prop party Classes.ActivityParty?
+	@prop party Classes.Activity.Party?
 	@within Classes.Activity
 
 	Information for the current party of the player
 ]=]
 
 --[=[
-	@prop assets Classes.ActivityAssets?
+	@prop assets Classes.Activity.Assets?
 	@within Classes.Activity
 
 	Images for the presence and their hover texts
 ]=]
 
 --[=[
-	@prop secrets Classes.ActivitySecrets?
+	@prop secrets Classes.Activity.Secrets?
 	@within Classes.Activity
 
 	Secrets for Rich Presence joining and spectating
@@ -106,7 +106,7 @@
 ]=]
 
 --[=[
-	@prop buttons {Classes.ActivityButton}
+	@prop buttons {Classes.Activity.Button}
 	@within Classes.Activity
 
 	Custom buttons shown in the Rich Presence

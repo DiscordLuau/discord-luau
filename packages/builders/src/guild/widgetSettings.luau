@@ -1,5 +1,5 @@
 --[=[
-	@class Builders.WidgetSettings
+	@class Builders.Guild.WidgetSettings
 	@__index Prototype
 
 	Implementation of discords WidgetSettings object as a Luau builder.	
@@ -9,13 +9,13 @@
 
 --[=[
 	@prop enabled boolean?
-	@within Builders.WidgetSettings
+	@within Builders.Guild.WidgetSettings
 	Whether the widget is enabled for the guild.
 ]=]
 
 --[=[
 	@prop channelId string?
-	@within Builders.WidgetSettings
+	@within Builders.Guild.WidgetSettings
 	The channel id that the widget will generate an invite to.
 ]=]
 
@@ -27,7 +27,7 @@ WidgetSettings.Prototype = {}
 WidgetSettings.Interface = {}
 
 --[=[
-	@within Builders.WidgetSettings
+	@within Builders.Guild.WidgetSettings
 
 	Set whether the widget is enabled
 ]=]
@@ -38,7 +38,7 @@ function WidgetSettings.Prototype.setEnabled(self: WidgetSettings, enabled: bool
 end
 
 --[=[
-	@within Builders.WidgetSettings
+	@within Builders.Guild.WidgetSettings
 
 	Set the widget channel id
 ]=]
@@ -49,7 +49,7 @@ function WidgetSettings.Prototype.setChannelId(self: WidgetSettings, channelId: 
 end
 
 --[=[
-	@within Builders.WidgetSettings
+	@within Builders.Guild.WidgetSettings
 
 	Responsible for building the WidgetSettingsObject JSON that can be parsed by the Discord API.
 ]=]
@@ -61,7 +61,7 @@ function WidgetSettings.Prototype.build(self: WidgetSettings): JSON
 end
 
 --[=[
-	@within Builders.WidgetSettings
+	@within Builders.Guild.WidgetSettings
 
 	Responsible for creating a new WidgetSettings.
 

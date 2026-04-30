@@ -1,5 +1,5 @@
 --[=[
-	@class Builders.Author
+	@class Builders.Embed.Author
 	@__index Prototype
 
 	Implementation of discords Author object as a Luau builder.	
@@ -8,26 +8,26 @@
 ]=]
 
 --[=[
-`	@prop name string?
-	@within Builders.Author
+	@prop name string?
+	@within Builders.Embed.Author
 	The name of the author.
 ]=]
 
 --[=[
 	@prop url string?
-	@within Builders.Author
+	@within Builders.Embed.Author
 	The url of the author.
 ]=]
 
 --[=[
 	@prop iconUrl string?
-	@within Builders.Author
+	@within Builders.Embed.Author
 	The url of author's icon image.
 ]=]
 
 --[=[
 	@prop proxyIconUrl string?
-	@within Builders.Author
+	@within Builders.Embed.Author
 	A proxied url of author's icon image.
 ]=]
 
@@ -37,7 +37,7 @@ Author.Prototype = {}
 Author.Interface = {}
 
 --[=[
-	@within Builders.Author
+	@within Builders.Embed.Author
 
 	Set the image url for this embed.
 ]=]
@@ -51,7 +51,7 @@ function Author.Prototype.setName(self: Author, name: string): Author
 end
 
 --[=[
-	@within Builders.Author
+	@within Builders.Embed.Author
 
 	Set the image height for this embed.
 ]=]
@@ -62,7 +62,7 @@ function Author.Prototype.setUrl(self: Author, url: string): Author
 end
 
 --[=[
-	@within Builders.Author
+	@within Builders.Embed.Author
 
 	Set the image height for this embed.
 ]=]
@@ -74,7 +74,7 @@ function Author.Prototype.setIcon(self: Author, iconUrl: string, proxyIconUrl: s
 end
 
 --[=[
-	@within Builders.Author
+	@within Builders.Embed.Author
 
 	Responsible for building the Author JSON that can be parsed by the Discord API.
 ]=]
@@ -90,7 +90,7 @@ function Author.Prototype.build(self: Author): JSON
 end
 
 --[=[
-	@within Builders.Author
+	@within Builders.Embed.Author
 
 	Responsible for creating a new Author.
 ]=]

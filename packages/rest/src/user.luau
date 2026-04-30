@@ -15,7 +15,7 @@ local request = require("./request")
 local user = {}
 
 --[=[
-	@within Rest.application
+	@within Rest.user
 
 	https://discord.com/developers/docs/resources/user#get-current-user
 ]=]
@@ -35,7 +35,7 @@ function user.getCurrentUserAsync(instance: request.Request): future.FutureLike<
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.user
 
 	https://discord.com/developers/docs/resources/user#get-user
 ]=]
@@ -58,7 +58,7 @@ function user.getUserAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.user
 
 	https://discord.com/developers/docs/resources/user#modify-current-user
 ]=]
@@ -82,7 +82,7 @@ function user.modifyCurrentUserAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.user
 
 	https://discord.com/developers/docs/resources/user#get-current-user-guilds
 ]=]
@@ -115,7 +115,7 @@ function user.getCurrentUserGuildsAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.user
 
 	https://discord.com/developers/docs/resources/user#get-current-user-guild-member
 ]=]
@@ -138,7 +138,7 @@ function user.getCurrentUserGuildMember(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.user
 
 	https://discord.com/developers/docs/resources/user#leave-guild
 ]=]
@@ -161,7 +161,7 @@ function user.leaveGuildAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.user
 
 	https://discord.com/developers/docs/resources/user#create-dm
 ]=]
@@ -185,7 +185,7 @@ function user.createDMAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.user
 
 	https://discord.com/developers/docs/resources/user#create-group-dm
 ]=]
@@ -209,7 +209,7 @@ function user.createGroupDMAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.user
 
 	https://discord.com/developers/docs/resources/user#get-current-user-connections
 ]=]
@@ -231,7 +231,7 @@ function user.getCurrentUserConnectionsAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.user
 
 	https://discord.com/developers/docs/resources/user#get-current-user-application-role-connection
 ]=]
@@ -261,7 +261,7 @@ function user.getCurrentUserApplicationRoleConnectionAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.user
 
 	https://discord.com/developers/docs/resources/user#update-current-user-application-role-connection
 ]=]

@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.AuditLogEntryInfo
+	@class Classes.AuditLog.EntryInfo
 	@__index Prototype
 
 	Implementation of the Discord AuditLog class in Luau
@@ -9,84 +9,84 @@
 
 --[=[
 	@prop applicationId string
-	@within Classes.AuditLogEntryInfo
+	@within Classes.AuditLog.EntryInfo
 
 	The ID of the application that was affected by this audit log entry
 ]=]
 
 --[=[
 	@prop autoModeartionRuleName string
-	@within Classes.AuditLogEntryInfo
+	@within Classes.AuditLog.EntryInfo
 
 	The name of the auto moderation rule that was triggered
 ]=]
 
 --[=[
 	@prop autoModerationRuleTriggerType string
-	@within Classes.AuditLogEntryInfo
+	@within Classes.AuditLog.EntryInfo
 
 	The type of trigger that caused the auto moderation rule to activate
 ]=]
 
 --[=[
 	@prop channelId string
-	@within Classes.AuditLogEntryInfo
+	@within Classes.AuditLog.EntryInfo
 
 	The ID of the channel that was affected by this audit log entry
 ]=]
 
 --[=[
 	@prop count string
-	@within Classes.AuditLogEntryInfo
+	@within Classes.AuditLog.EntryInfo
 
 	The number of entities that were affected by this audit log entry
 ]=]
 
 --[=[
 	@prop deleteMemberDays string
-	@within Classes.AuditLogEntryInfo
+	@within Classes.AuditLog.EntryInfo
 
 	The number of days after which inactive members were kicked
 ]=]
 
 --[=[
 	@prop id string
-	@within Classes.AuditLogEntryInfo
+	@within Classes.AuditLog.EntryInfo
 
 	The unique identifier for this audit log entry info
 ]=]
 
 --[=[
 	@prop membersRemoved string
-	@within Classes.AuditLogEntryInfo
+	@within Classes.AuditLog.EntryInfo
 
 	The number of members that were removed in this action
 ]=]
 
 --[=[
 	@prop messageId string
-	@within Classes.AuditLogEntryInfo
+	@within Classes.AuditLog.EntryInfo
 
 	The ID of the message that was affected by this audit log entry
 ]=]
 
 --[=[
 	@prop roleName string
-	@within Classes.AuditLogEntryInfo
+	@within Classes.AuditLog.EntryInfo
 
 	The name of the role that was affected by this audit log entry
 ]=]
 
 --[=[
 	@prop type string
-	@within Classes.AuditLogEntryInfo
+	@within Classes.AuditLog.EntryInfo
 
 	The type of audit log entry info
 ]=]
 
 --[=[
 	@prop integrationType string
-	@within Classes.AuditLogEntryInfo
+	@within Classes.AuditLog.EntryInfo
 
 	The type of integration that was affected by this audit log entry
 ]=]
@@ -99,7 +99,7 @@ AuditLogEntryInfo.Interface = {}
 AuditLogEntryInfo.Prototype = {}
 
 --[=[
-	@within Classes.AuditLogEntryInfo
+	@within Classes.AuditLog.EntryInfo
 	@private
 
 	Responsible for syncing data to this audit log entry info object. This is typically called by the API when this object is
@@ -136,7 +136,7 @@ function AuditLogEntryInfo.Prototype.sync(
 end
 
 --[=[
-	@within Classes.AuditLogEntryInfo
+	@within Classes.AuditLog.EntryInfo
 	@private
 
 	Responsible for constructing this class.

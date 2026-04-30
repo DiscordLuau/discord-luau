@@ -1,5 +1,5 @@
 --[=[
-	@class Builders.Overwrite
+	@class Builders.Guild.Overwrite
 	@__index Prototype
 
 	Implementation of discords Permission Overwrite object as a Luau builder.	
@@ -12,25 +12,25 @@
 
 --[=[
 	@prop allowedPermissionFlags {apiTypes.Permissions}
-	@within Builders.Overwrite
+	@within Builders.Guild.Overwrite
 	Array of permission flags that are allowed for this overwrite.
 ]=]
 
 --[=[
 	@prop deniedPermissionFlags {apiTypes.Permissions}
-	@within Builders.Overwrite
+	@within Builders.Guild.Overwrite
 	Array of permission flags that are denied for this overwrite.
 ]=]
 
 --[=[
 	@prop type PermissionOverwriteType
-	@within Builders.Overwrite
+	@within Builders.Guild.Overwrite
 	The type of overwrite, either "role" or "member".
 ]=]
 
 --[=[
 	@prop id string
-	@within Builders.Overwrite
+	@within Builders.Guild.Overwrite
 	The ID of the role or user that the overwrite belongs to.
 ]=]
 
@@ -44,7 +44,7 @@ Overwrite.Prototype = {}
 Overwrite.Interface = {}
 
 --[=[
-	@within Builders.Overwrite
+	@within Builders.Guild.Overwrite
 
 	Responsible for allowing specific permissions to be set on either a Role of a Member.
 ]=]
@@ -57,7 +57,7 @@ function Overwrite.Prototype.allowPermissions(self: Overwrite, ...: apiTypes.Per
 end
 
 --[=[
-	@within Builders.Overwrite
+	@within Builders.Guild.Overwrite
 
 	Responsible for denying specific permissions to be set on either a Role of a Member.
 ]=]
@@ -70,7 +70,7 @@ function Overwrite.Prototype.denyPermissions(self: Overwrite, ...: apiTypes.Perm
 end
 
 --[=[
-	@within Builders.Overwrite
+	@within Builders.Guild.Overwrite
 
 	Sets the permission type for this builder.
 ]=]
@@ -81,7 +81,7 @@ function Overwrite.Prototype.setPermissionType(self: Overwrite, type: Permission
 end
 
 --[=[
-	@within Builders.Overwrite
+	@within Builders.Guild.Overwrite
 
 	Responsible for building the OverwriteObject JSON that can be parsed by the Discord API.
 ]=]
@@ -110,7 +110,7 @@ function Overwrite.Prototype.build(self: Overwrite): JSON
 end
 
 --[=[
-	@within Builders.Overwrite
+	@within Builders.Guild.Overwrite
 
 	Responsible for creating a new Overwrite.
 ]=]
@@ -154,7 +154,7 @@ function Overwrite.Interface.new(resource: {
 end
 
 --[=[
-	@within Builders.Overwrite
+	@within Builders.Guild.Overwrite
 
 	Responsible for creating a new Overwrite from an existing ID/Object.
 

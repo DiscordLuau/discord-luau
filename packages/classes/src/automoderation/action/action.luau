@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.Action
+	@class Classes.AutoModeration.Action
 	@__index Prototype
 
 	Implementation of the Discord Action class in Luau
@@ -9,7 +9,7 @@
 
 --[=[
 	@prop type apiTypes.ActionTypes
-	@within Classes.Action
+	@within Classes.AutoModeration.Action
 
 	The type of action to take when a rule is triggered. This can be one of the following:
 	* BLOCK_MESSAGE - Block the message from being sent
@@ -18,8 +18,8 @@
 ]=]
 
 --[=[
-	@prop metadata Classes.ActionMetadata?
-	@within Classes.Action
+	@prop metadata Classes.AutoModeration.ActionMetadata?
+	@within Classes.AutoModeration.Action
 
 	Additional metadata needed during execution for this specific action type. Different action types may require different metadata properties.
 	Only present when an action requires additional configuration.
@@ -35,7 +35,7 @@ Action.Interface = {}
 Action.Prototype = {}
 
 --[=[
-	@within Classes.Action
+	@within Classes.AutoModeration.Action
 	@private
 
 	Responsible for syncing data to this action object. This is typically called by the API when this object is
@@ -48,7 +48,7 @@ function Action.Prototype.sync(self: Action, actionData: apiTypes.Automoderation
 end
 
 --[=[
-	@within Classes.Action
+	@within Classes.AutoModeration.Action
 	@private
 
 	Responsible for constructing this class.

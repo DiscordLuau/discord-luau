@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.ActivitySecrets
+	@class Classes.Activity.Secrets
 	@__index Prototype
 
 	Implementation of the Discord ActivitySecrets class in Luau
@@ -9,21 +9,21 @@
 
 --[=[
 	@prop join string?
-	@within Classes.ActivitySecrets
+	@within Classes.Activity.Secrets
 
 	The secret for joining a party
 ]=]
 
 --[=[
 	@prop spectate string?
-	@within Classes.ActivitySecrets
+	@within Classes.Activity.Secrets
 
 	The secret for spectating a game
 ]=]
 
 --[=[
 	@prop match string?
-	@within Classes.ActivitySecrets
+	@within Classes.Activity.Secrets
 
 	The secret for a specific instanced match
 ]=]
@@ -34,7 +34,7 @@ ActivitySecrets.Interface = {}
 ActivitySecrets.Prototype = {}
 
 --[=[
-	@within Classes.ActivitySecrets
+	@within Classes.Activity.Secrets
 	@private
 
 	Responsible for constructing this class.

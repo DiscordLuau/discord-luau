@@ -14,13 +14,13 @@
 ]=]
 
 --[=[
-	@prop members { [string]: Classes.Member }
+	@prop members { [string]: Classes.Guild.Member }
 	@within Classes.Resolved
 	A dictionary of guild member objects, keyed by user ID
 ]=]
 
 --[=[
-	@prop roles { [string]: Classes.Role }
+	@prop roles { [string]: Classes.Guild.Role }
 	@within Classes.Resolved
 	A dictionary of role objects, keyed by role ID
 ]=]

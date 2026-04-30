@@ -1,5 +1,5 @@
 --[=[
-	@class Builders.ActionMetadata
+	@class Builders.AutoModeration.ActionMetadata
 	@__index Prototype
 
 	Implementation of a discord automoderation action metadata object as a luau builder.
@@ -7,19 +7,19 @@
 
 --[=[
 	@prop channelId string
-	@within Builders.ActionMetadata
+	@within Builders.AutoModeration.ActionMetadata
 	The ID of the channel where the action should be taken.
 ]=]
 
 --[=[
 	@prop durationSeconds number
-	@within Builders.ActionMetadata
+	@within Builders.AutoModeration.ActionMetadata
 	The duration of the action in seconds.
 ]=]
 
 --[=[
 	@prop customMessage string?
-	@within Builders.ActionMetadata
+	@within Builders.AutoModeration.ActionMetadata
 	A custom message that will be shown to members when the action is taken.
 ]=]
 
@@ -31,7 +31,7 @@ ActionMetadata.Prototype = {}
 ActionMetadata.Interface = {}
 
 --[=[
-	@within Builders.ActionMetadata
+	@within Builders.AutoModeration.ActionMetadata
 
 	Sets the ID of the channel where the action should be taken.
 ]=]
@@ -42,7 +42,7 @@ function ActionMetadata.Prototype.setChannelId(self: ActionMetadata, channelId: 
 end
 
 --[=[
-	@within Builders.ActionMetadata
+	@within Builders.AutoModeration.ActionMetadata
 
 	Sets the duration of the action in seconds.
 ]=]
@@ -53,7 +53,7 @@ function ActionMetadata.Prototype.setDurationSeconds(self: ActionMetadata, durat
 end
 
 --[=[
-	@within Builders.ActionMetadata
+	@within Builders.AutoModeration.ActionMetadata
 
 	Sets a custom message to be sent with the action.
 ]=]
@@ -64,7 +64,7 @@ function ActionMetadata.Prototype.setCustomMessage(self: ActionMetadata, customM
 end
 
 --[=[
-	@within Builders.ActionMetadata
+	@within Builders.AutoModeration.ActionMetadata
 
 	Builds the action metadata object.
 ]=]
@@ -77,7 +77,7 @@ function ActionMetadata.Prototype.build(self: ActionMetadata): JSON
 end
 
 --[=[
-	@within Builders.ActionMetadata
+	@within Builders.AutoModeration.ActionMetadata
 
 	Responsible for creating a new ActionMetadata.
 

@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.TriggerMetadata
+	@class Classes.AutoModeration.TriggerMetadata
 	@__index Prototype
 
 	Implementation of the Discord TriggerMetadata class in Luau
@@ -9,31 +9,31 @@
 
 --[=[
 	@prop keywordFilter { string }
-	@within Classes.TriggerMetadata
+	@within Classes.AutoModeration.TriggerMetadata
 	List of strings that will trigger the rule. Each keyword can be up to 60 characters in length and can include spaces.
 ]=]
 
 --[=[
 	@prop regexPatterns { string }
-	@within Classes.TriggerMetadata
+	@within Classes.AutoModeration.TriggerMetadata
 	Array of regular expression patterns that will trigger the rule. Each regex pattern can be up to 260 characters in length.
 ]=]
 
 --[=[
 	@prop presets { apiTypes.KeywordPresetType }
-	@within Classes.TriggerMetadata
+	@within Classes.AutoModeration.TriggerMetadata
 	The internally pre-defined wordsets that will trigger the rule. These are managed by Discord and cannot be modified.
 ]=]
 
 --[=[
 	@prop allowList { string }
-	@within Classes.TriggerMetadata
+	@within Classes.AutoModeration.TriggerMetadata
 	Substrings that should not trigger the rule. Each string can be up to 60 characters in length and can include spaces.
 ]=]
 
 --[=[
 	@prop mentionRaidProtectionEnabled boolean
-	@within Classes.TriggerMetadata
+	@within Classes.AutoModeration.TriggerMetadata
 	Whether to automatically detect mention raids and apply the rule action. Only available for mention spam trigger type.
 ]=]
 
@@ -45,7 +45,7 @@ TriggerMetadata.Interface = {}
 TriggerMetadata.Prototype = {}
 
 --[=[
-	@within Classes.TriggerMetadata
+	@within Classes.AutoModeration.TriggerMetadata
 	@private
 
 	Responsible for syncing data to this trigger metadata object. This is typically called by the API when this object is
@@ -71,7 +71,7 @@ function TriggerMetadata.Prototype.sync(
 end
 
 --[=[
-	@within Classes.TriggerMetadata
+	@within Classes.AutoModeration.TriggerMetadata
 	@private
 
 	Responsible for constructing this class.

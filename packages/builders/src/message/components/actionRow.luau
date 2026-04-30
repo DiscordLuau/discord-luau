@@ -1,5 +1,5 @@
 --[=[
-	@class Builders.ActionRow
+	@class Builders.Message.ActionRow
 	@__index Prototype
 
 	Implementation of discords ActionRow object as a Luau builder.	
@@ -8,8 +8,8 @@
 ]=]
 
 --[=[
-	@prop components {Builders.Button | Builders.TextInput | Builders.SelectMenu}
-	@within Builders.ActionRow
+	@prop components {Builders.Message.Button | Builders.Message.TextInput | Builders.Message.SelectMenu}
+	@within Builders.Message.ActionRow
 	The components that are part of this action row. Can include buttons, text inputs, and select menus.
 ]=]
 
@@ -23,7 +23,7 @@ ActionRow.Prototype = {}
 ActionRow.Interface = {}
 
 --[=[
-	@within Builders.ActionRow
+	@within Builders.Message.ActionRow
 
 	Adds a component to the action row. Components can be buttons, text inputs, or select menus.
 ]=]
@@ -37,7 +37,7 @@ function ActionRow.Prototype.addComponent(
 end
 
 --[=[
-	@within Builders.ActionRow
+	@within Builders.Message.ActionRow
 
 	Responsible for building the ActionRow JSON that can be parsed by the Discord API.
 ]=]
@@ -49,7 +49,7 @@ function ActionRow.Prototype.build(self: ActionRow): JSON
 end
 
 --[=[
-	@within Builders.ActionRow
+	@within Builders.Message.ActionRow
 
 	Responsible for creating a new ActionRow.
 

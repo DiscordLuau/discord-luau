@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.WidgetSettings
+	@class Classes.Guild.WidgetSettings
 	@__index Prototype
 
 	Implementation of the Discord WidgetSettings class in Luau
@@ -9,14 +9,14 @@
 
 --[=[
 	@prop enabled boolean?
-	@within Classes.WidgetSettings
+	@within Classes.Guild.WidgetSettings
 
 	Whether the widget is enabled for this guild
 ]=]
 
 --[=[
 	@prop channelId string?
-	@within Classes.WidgetSettings
+	@within Classes.Guild.WidgetSettings
 
 	The channel id that the widget will generate an invite to, or null if set to no invite
 ]=]
@@ -29,7 +29,7 @@ WidgetSettings.Interface = {}
 WidgetSettings.Prototype = {}
 
 --[=[
-	@within Classes.WidgetSettings
+	@within Classes.Guild.WidgetSettings
 	@private
 
 	Responsible for syncing data to this widget settings object. This is typically called by the API when this object is
@@ -42,7 +42,7 @@ function WidgetSettings.Prototype.sync(self: WidgetSettings, widgetSettingsData:
 end
 
 --[=[
-	@within Classes.WidgetSettings
+	@within Classes.Guild.WidgetSettings
 	@private
 
 	Responsible for constructing this class.

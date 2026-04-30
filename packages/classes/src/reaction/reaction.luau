@@ -14,7 +14,7 @@
 ]=]
 
 --[=[
-	@prop countDetails Classes.CountDetails
+	@prop countDetails Classes.Reaction.CountDetails
 	@within Classes.Reaction
 	Detailed information about the reaction count.
 ]=]

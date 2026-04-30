@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.Reference
+	@class Classes.Message.Reference
 	@__index Prototype
 
 	Implementation of the Discord Reference class in Luau
@@ -9,31 +9,31 @@
 
 --[=[
 	@prop type apiTypes.MessageReferenceType?
-	@within Classes.Reference
+	@within Classes.Message.Reference
 	The type of message reference.
 ]=]
 
 --[=[
 	@prop messageId apiTypes.Snowflake?
-	@within Classes.Reference
+	@within Classes.Message.Reference
 	The ID of the referenced message.
 ]=]
 
 --[=[
 	@prop guildId apiTypes.Snowflake?
-	@within Classes.Reference
+	@within Classes.Message.Reference
 	The ID of the guild containing the referenced message.
 ]=]
 
 --[=[
 	@prop channelId apiTypes.Snowflake?
-	@within Classes.Reference
+	@within Classes.Message.Reference
 	The ID of the channel containing the referenced message.
 ]=]
 
 --[=[
 	@prop failIfNotExists boolean?
-	@within Classes.Reference
+	@within Classes.Message.Reference
 	Whether to fail if the referenced message does not exist.
 ]=]
 
@@ -45,7 +45,7 @@ Reference.Interface = {}
 Reference.Prototype = {}
 
 --[=[
-	@within Classes.Reference
+	@within Classes.Message.Reference
 	@private
 
 	Responsible for syncing data to this reference object. This is typically called by the API when this object is
@@ -64,7 +64,7 @@ function Reference.Prototype.sync(self: Reference, referenceData: apiTypes.Messa
 end
 
 --[=[
-	@within Classes.Reference
+	@within Classes.Message.Reference
 	@private
 
 	Responsible for constructing this class.

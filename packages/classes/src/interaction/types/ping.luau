@@ -1,6 +1,7 @@
 --[=[
-	@class Classes.Ping
+	@class Classes.Interactions.Ping
 	@__index Prototype
+	@tag inherit:Classes.Interactions.InteractionBehaviour
 
 	Implementation of the Discord Ping Interaction class in Luau
 
@@ -24,11 +25,11 @@ Ping.Behaviours = {
 }
 
 --[=[
-	@within Classes.Ping
+	@within Classes.Interactions.Ping
 	
 	Acknowledge an interaction ping
 ]=]
-function Ping.Prototype.pongAsync(self: Ping)
+function Ping.Prototype.pongAsync(self: Ping): future.FutureLike<string, nil>
 	local request = self.state.rest:newRequest()
 
 	return future.Future.new(function()
@@ -48,13 +49,13 @@ function Ping.Prototype.pongAsync(self: Ping)
 end
 
 --[=[
-	@within Classes.Ping
+	@within Classes.Interactions.Ping
 	@private
 
 	Responsible for syncing data to this interaction object. This is typically called by the API when this object is
 	created or updated.
 ]=]
-function Ping.Prototype.sync(self: Ping, interactionData: apiTypes.InteractionObject)
+function Ping.Prototype.sync(self: Ping, interactionData: apiTypes.InteractionObject): nil
 	for _, behaviour in Ping.Behaviours do
 		behaviour.inheritMethods(self)
 		behaviour.inheritProperties(self, interactionData)
@@ -62,7 +63,7 @@ function Ping.Prototype.sync(self: Ping, interactionData: apiTypes.InteractionOb
 end
 
 --[=[
-	@within Classes.Ping
+	@within Classes.Interactions.Ping
 	@private
 
 	Responsible for constructing this class.

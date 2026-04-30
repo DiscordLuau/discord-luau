@@ -44,7 +44,7 @@
 ]=]
 
 --[=[
-	@prop choices { Builders.Choice.JSON }
+	@prop choices { Builders.Interaction.Choice.JSON }
 	@within Builders.Interaction.Option
 	Possible choices for this option (String, Integer, or Number types only).
 ]=]
@@ -295,11 +295,11 @@ function Option.Prototype.build(self: Option): JSON
 
 	return {
 		type = apiTypes.interaction.ApplicationCommandOptionType[self.type],
-		channel_types = channelTypeArray,
+		channel_types = #channelTypeArray > 0 and channelTypeArray or nil,
 		name = self.name,
-		name_localizations = next(self.nameLocalizations) ~= nil and self.nameLocalizations or nil,
+		name_localizations = next(self.nameLocalizations) and self.nameLocalizations or nil,
 		description = self.description,
-		description_localizations = next(self.descriptionLocalizations) ~= nil and self.descriptionLocalizations or nil,
+		description_localizations = next(self.descriptionLocalizations) and self.descriptionLocalizations or nil,
 		required = self.required,
 		choices = #self.choices > 0 and self.choices or nil,
 		options = #self.options > 0 and self.options or nil,

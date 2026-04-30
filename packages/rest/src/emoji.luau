@@ -15,7 +15,7 @@ local request = require("./request")
 local emoji = {}
 
 --[=[
-	@within Rest.application
+	@within Rest.emoji
 
 	https://discord.com/developers/docs/resources/emoji#list-guild-emojis
 ]=]
@@ -35,7 +35,7 @@ function emoji.listGuildEmojisAsync(instance: request.Request, guildId: apiTypes
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.emoji
 
 	https://discord.com/developers/docs/resources/emoji#get-guild-emoji
 ]=]
@@ -55,7 +55,7 @@ function emoji.getGuildEmojiAsync(instance: request.Request, guildId: apiTypes.S
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.emoji
 
 	https://discord.com/developers/docs/resources/emoji#create-guild-emoji
 ]=]
@@ -82,7 +82,7 @@ function emoji.createGuildEmojiAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.emoji
 
 	https://discord.com/developers/docs/resources/emoji#modify-guild-emoji
 ]=]
@@ -110,7 +110,7 @@ function emoji.modifyGuildEmojiAsync(
 end
 
 --[=[
-	@within Rest.application
+	@within Rest.emoji
 
 	https://discord.com/developers/docs/resources/emoji#delete-guild-emoji
 ]=]

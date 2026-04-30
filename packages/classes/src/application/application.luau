@@ -100,7 +100,7 @@
 
 --[=[
 	@within Classes.Application
-	@prop team Classes.Team?
+	@prop team Classes.Application.Team?
 	Information about the team that owns and manages this application. Teams allow multiple users to
 	collaborate on an application.
 ]=]
@@ -149,7 +149,7 @@
 
 --[=[
 	@within Classes.Application
-	@prop installParams Classes.InstallParams?
+	@prop installParams Classes.Application.InstallParams?
 	The default parameters used when installing the application. These parameters configure how the
 	application is set up when added to a server.
 ]=]
@@ -193,7 +193,7 @@ Application.Prototype = {}
 
 	For testing/building commands, it's advised you use guild commands, which do not suffer the same constraints.
 ]=]
-function Application.Prototype.createSlashCommandAsync(self: Application, slashCommand: builders.interactionJSON)
+function Application.Prototype.createSlashCommandAsync(self: Application, slashCommand: builders.interactionJSON): future.FutureLike<string, commandObject.Command>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -209,7 +209,7 @@ end
 	@within Classes.Application
 	Delete an existing global application command.
 ]=]
-function Application.Prototype.deleteSlashCommandAsync(self: Application, slashCommandId: apiTypes.Snowflake)
+function Application.Prototype.deleteSlashCommandAsync(self: Application, slashCommandId: apiTypes.Snowflake): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -229,7 +229,7 @@ function Application.Prototype.editSlashCommandAsync(
 	self: Application,
 	slashCommandId: apiTypes.Snowflake,
 	slashCommand: builders.interactionJSON
-)
+): future.FutureLike<string, commandObject.Command>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -246,7 +246,7 @@ end
 	@within Classes.Application
 	Get a list of global application commands.
 ]=]
-function Application.Prototype.getSlashCommandsAsync(self: Application, withLocalizations: boolean?)
+function Application.Prototype.getSlashCommandsAsync(self: Application, withLocalizations: boolean?): future.FutureLike<string, { commandObject.Command }>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -275,7 +275,7 @@ end
 function Application.Prototype.overwriteSlashCommandsAsync(
 	self: Application,
 	slashCommands: { builders.interactionJSON }
-)
+): future.FutureLike<string, { commandObject.Command }>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -300,7 +300,7 @@ end
 
 	Synchronizes the application object with the data from the API.
 ]=]
-function Application.Prototype.sync(self: Application, applicationData: apiTypes.ApplicationObject)
+function Application.Prototype.sync(self: Application, applicationData: apiTypes.ApplicationObject): nil
 	local integrationTypesConfig = {}
 
 	for integrationType, available in next, applicationData.integration_types_config or {} do

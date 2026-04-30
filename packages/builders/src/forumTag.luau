@@ -1,5 +1,5 @@
 --[=[
-	@class Builders.ForumTag
+	@class Builders.Channel.ForumTag
 	@__index Prototype
 
 	Implementation of a discord forum tag object as a luau builder.	
@@ -9,31 +9,31 @@
 
 --[=[
 	@prop name string
-	@within Builders.ForumTag
+	@within Builders.Channel.ForumTag
 	The name of the tag that is displayed.
 ]=]
 
 --[=[
 	@prop moderated boolean
-	@within Builders.ForumTag
+	@within Builders.Channel.ForumTag
 	Whether this tag can only be added to or removed from threads by a member with the MANAGE_THREADS permission.
 ]=]
 
 --[=[
 	@prop emojiId string?
-	@within Builders.ForumTag
+	@within Builders.Channel.ForumTag
 	The id of a guild's custom emoji.
 ]=]
 
 --[=[
 	@prop emojiName string?
-	@within Builders.ForumTag
+	@within Builders.Channel.ForumTag
 	The unicode character of the emoji.
 ]=]
 
 --[=[
 	@prop id string?
-	@within Builders.ForumTag
+	@within Builders.Channel.ForumTag
 	The id of the tag.
 ]=]
 
@@ -47,7 +47,7 @@ ForumTag.Prototype = {}
 ForumTag.Interface = {}
 
 --[=[
-	@within Builders.ForumTag
+	@within Builders.Channel.ForumTag
 
 	Sets either the id of a guilds custom emoji, or a unicode character of an emoji.
 ]=]
@@ -59,7 +59,7 @@ function ForumTag.Prototype.setEmoji(self: ForumTag, emojiId: string?, emojiName
 end
 
 --[=[
-	@within Builders.ForumTag
+	@within Builders.Channel.ForumTag
 
 	Sets whether this tag can only be added to or removed from threads by a member with the MANAGE_THREADS permission
 ]=]
@@ -70,7 +70,7 @@ function ForumTag.Prototype.setModerated(self: ForumTag, isModerated: boolean): 
 end
 
 --[=[
-	@within Builders.ForumTag
+	@within Builders.Channel.ForumTag
 
 	Set the name of this Forum Tag.
 ]=]
@@ -86,7 +86,7 @@ function ForumTag.Prototype.setName(self: ForumTag, tagName: string): ForumTag
 end
 
 --[=[
-	@within Builders.ForumTag
+	@within Builders.Channel.ForumTag
 
 	Responsible for buillding the forum tag object that the Discord API can understand.
 ]=]
@@ -100,7 +100,7 @@ function ForumTag.Prototype.build(self: ForumTag): JSON
 end
 
 --[=[
-	@within Builders.ForumTag
+	@within Builders.Channel.ForumTag
 
 	Constructs a new tag builder.
 	
@@ -144,7 +144,7 @@ function ForumTag.Interface.new(resource: {
 end
 
 --[=[
-	@within Builders.ForumTag
+	@within Builders.Channel.ForumTag
 
 	Enables us to construct a Tag Builder object from an existing tag object, used when modifying forum tags.
 ]=]

@@ -1,5 +1,5 @@
 --[=[
-	@class Builders.Provider
+	@class Builders.Embed.Provider
 	@__index Prototype
 
 	Implementation of discords Provider object as a Luau builder.	
@@ -9,13 +9,13 @@
 
 --[=[
 	@prop name string?
-	@within Builders.Provider
+	@within Builders.Embed.Provider
 	The name of the provider.
 ]=]
 
 --[=[
 	@prop url string?
-	@within Builders.Provider
+	@within Builders.Embed.Provider
 	The url of the provider.
 ]=]
 
@@ -25,7 +25,7 @@ Provider.Prototype = {}
 Provider.Interface = {}
 
 --[=[
-	@within Builders.Provider
+	@within Builders.Embed.Provider
 
 	Set the image url for this embed.
 ]=]
@@ -39,7 +39,7 @@ function Provider.Prototype.setName(self: Provider, name: string): Provider
 end
 
 --[=[
-	@within Builders.Provider
+	@within Builders.Embed.Provider
 
 	Set the image height for this embed.
 ]=]
@@ -50,7 +50,7 @@ function Provider.Prototype.setUrl(self: Provider, url: string): Provider
 end
 
 --[=[
-	@within Builders.Provider
+	@within Builders.Embed.Provider
 
 	Responsible for building the Provider JSON that can be parsed by the Discord API.
 ]=]
@@ -62,7 +62,7 @@ function Provider.Prototype.build(self: Provider): JSON
 end
 
 --[=[
-	@within Builders.Provider
+	@within Builders.Embed.Provider
 
 	Responsible for creating a new Provider.
 ]=]

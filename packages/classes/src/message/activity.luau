@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.MessageActivity
+	@class Classes.Message.Activity
 	@__index Prototype
 
 	Implementation of the Discord Activity class in Luau
@@ -9,13 +9,13 @@
 
 --[=[
 	@prop type MessageAcitvityType
-	@within Classes.MessageActivity
+	@within Classes.Message.Activity
 	Type of message activity, such as JOIN, SPECTATE, LISTEN, or JOIN_REQUEST
 ]=]
 
 --[=[
 	@prop partyId string?
-	@within Classes.MessageActivity
+	@within Classes.Message.Activity
 	Party ID associated with this activity, used for Rich Presence
 ]=]
 
@@ -27,7 +27,7 @@ Activity.Interface = {}
 Activity.Prototype = {}
 
 --[=[
-	@within Classes.MessageActivity
+	@within Classes.Message.Activity
 	@private
 
 	Responsible for syncing data to this activity object. This is typically called by the API when this object is
@@ -40,7 +40,7 @@ function Activity.Prototype.sync(self: Activity, activityData: apiTypes.MessageA
 end
 
 --[=[
-	@within Classes.MessageActivity
+	@within Classes.Message.Activity
 	@private
 
 	Responsible for constructing this class.

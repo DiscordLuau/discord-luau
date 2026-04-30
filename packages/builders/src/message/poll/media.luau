@@ -1,5 +1,5 @@
 --[=[
-	@class Builders.PollMedia
+	@class Builders.Message.PollMedia
 	@__index Prototype
 
 	Implementation of discords PollMedia object as a Luau builder.	
@@ -9,13 +9,13 @@
 
 --[=[
 	@prop text string?
-	@within Builders.PollMedia
+	@within Builders.Message.PollMedia
 	The text content of the poll media.
 ]=]
 
 --[=[
 	@prop emoji Builders.Emoji?
-	@within Builders.PollMedia
+	@within Builders.Message.PollMedia
 	The emoji associated with this poll media.
 ]=]
 
@@ -27,7 +27,7 @@ PollMedia.Prototype = {}
 PollMedia.Interface = {}
 
 --[=[
-	@within Builders.PollMedia
+	@within Builders.Message.PollMedia
 
 	Sets the text for the PollMedia.
 ]=]
@@ -38,7 +38,7 @@ function PollMedia.Prototype.setText(self: PollMedia, text: string): PollMedia
 end
 
 --[=[
-	@within Builders.PollMedia
+	@within Builders.Message.PollMedia
 
 	Responsible for setting the emoji for the PollMedia.
 ]=]
@@ -49,7 +49,7 @@ function PollMedia.Prototype.setEmoji(self: PollMedia, emoji: emojiBuilder.JSON)
 end
 
 --[=[
-	@within Builders.PollMedia
+	@within Builders.Message.PollMedia
 
 	Responsible for building the PollMedia JSON that can be parsed by the Discord API.
 ]=]
@@ -61,7 +61,7 @@ function PollMedia.Prototype.build(self: PollMedia): JSON
 end
 
 --[=[
-	@within Builders.PollMedia
+	@within Builders.Message.PollMedia
 
 	Responsible for creating a new PollMedia.
 

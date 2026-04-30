@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.IntegrationApplication
+	@class Classes.Guild.IntegrationApplication
 	@__index Prototype
 
 	Implementation of the Discord Integration Application class in Luau
@@ -9,35 +9,35 @@
 
 --[=[
 	@prop id string
-	@within Classes.IntegrationApplication
+	@within Classes.Guild.IntegrationApplication
 
 	The unique identifier for this application
 ]=]
 
 --[=[
 	@prop name string
-	@within Classes.IntegrationApplication
+	@within Classes.Guild.IntegrationApplication
 
 	The name of the application
 ]=]
 
 --[=[
 	@prop icon string?
-	@within Classes.IntegrationApplication
+	@within Classes.Guild.IntegrationApplication
 
 	The icon hash of the application, if one exists
 ]=]
 
 --[=[
 	@prop description string
-	@within Classes.IntegrationApplication
+	@within Classes.Guild.IntegrationApplication
 
 	The description of the application
 ]=]
 
 --[=[
 	@prop bot Classes.User?
-	@within Classes.IntegrationApplication
+	@within Classes.Guild.IntegrationApplication
 
 	The bot user associated with this application, if it is a bot application
 ]=]
@@ -52,7 +52,7 @@ Application.Interface = {}
 Application.Prototype = {}
 
 --[=[
-	@within Classes.IntegrationApplication
+	@within Classes.Guild.IntegrationApplication
 	@private
 
 	Responsible for syncing data to this application object. This is typically called by the API when this object is
@@ -71,7 +71,7 @@ function Application.Prototype.sync(self: Application, applicationData: apiTypes
 end
 
 --[=[
-	@within Classes.IntegrationApplication
+	@within Classes.Guild.IntegrationApplication
 	@private
 
 	Responsible for constructing this class.

@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.Invite
+	@class Classes.Guild.Invite
 	@__index Prototype
 
 	Implementation of the Discord Invite class in Luau
@@ -8,68 +8,68 @@
 ]=]
 
 --[=[
-	@prop channel Classes.Channel
-	@within Classes.Invite
+	@prop channel Classes.Channels.Channel
+	@within Classes.Guild.Invite
 	The channel this invite is for
 ]=]
 
 --[=[
 	@prop type string
-	@within Classes.Invite
+	@within Classes.Guild.Invite
 	The type of invite (GUILD, GROUP_DM, FRIEND)
 ]=]
 
 --[=[
 	@prop code string
-	@within Classes.Invite
+	@within Classes.Guild.Invite
 	The unique invite code
 ]=]
 
 --[=[
 	@prop guild Classes.UnavailableGuild?
-	@within Classes.Invite
+	@within Classes.Guild.Invite
 	The guild this invite is for
 ]=]
 
 --[=[
 	@prop inviter Classes.User?
-	@within Classes.Invite
+	@within Classes.Guild.Invite
 	The user who created the invite
 ]=]
 
 --[=[
 	@prop targetType string?
-	@within Classes.Invite
+	@within Classes.Guild.Invite
 	The type of target for this invite (STREAM, EMBEDDED_APPLICATION)
 ]=]
 
 --[=[
 	@prop targetUser Classes.User?
-	@within Classes.Invite
+	@within Classes.Guild.Invite
 	The user whose stream to display for this invite, if targetType is STREAM
 ]=]
 
 --[=[
 	@prop approximatePresenceCount number?
-	@within Classes.Invite
+	@within Classes.Guild.Invite
 	Approximate count of online members (only present when target_user is set)
 ]=]
 
 --[=[
 	@prop approximateMemberCount number?
-	@within Classes.Invite
+	@within Classes.Guild.Invite
 	Approximate count of total members
 ]=]
 
 --[=[
 	@prop expiresAt stdPolyfills.DateTime?
-	@within Classes.Invite
+	@within Classes.Guild.Invite
 	The expiration date of this invite
 ]=]
 
 --[=[
-	@prop scheduledEvent Classes.ScheduledEvent?
-	@within Classes.Invite
+	@prop scheduledEvent Classes.Guild.ScheduledEvent?
+	@within Classes.Guild.Invite
 	The scheduled event associated with this invite
 ]=]
 
@@ -93,11 +93,11 @@ Invite.Interface = {}
 Invite.Prototype = {}
 
 --[=[
-	@within Classes.Invite
+	@within Classes.Guild.Invite
 	Delete the attached integration object for the guild. Deletes any associated webhooks and kicks the associated bot
 	if there is one. Requires the MANAGE_GUILD permission.
 ]=]
-function Invite.Prototype.deleteAsync(self: Invite, reason: string?)
+function Invite.Prototype.deleteAsync(self: Invite, reason: string?): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -110,13 +110,13 @@ function Invite.Prototype.deleteAsync(self: Invite, reason: string?)
 end
 
 --[=[
-	@within Classes.Invite
+	@within Classes.Guild.Invite
 	@private
 
 	Responsible for syncing data to this invite object. This is typically called by the API when this object is
 	created or updated.
 ]=]
-function Invite.Prototype.sync(self: Invite, inviteData: apiTypes.InviteObject)
+function Invite.Prototype.sync(self: Invite, inviteData: apiTypes.InviteObject): nil
 	if inviteData.channel then
 		local channel = _require("../channels/construct")(self.state, inviteData.channel)
 		self.channel = channel :: apiTypes.AbstractChannel
@@ -144,7 +144,7 @@ function Invite.Prototype.sync(self: Invite, inviteData: apiTypes.InviteObject)
 end
 
 --[=[
-	@within Classes.Invite
+	@within Classes.Guild.Invite
 	@private
 
 	Responsible for constructing this class.

@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.WelcomeScreenChannel
+	@class Classes.Guild.WelcomeScreenChannel
 	@__index Prototype
 
 	Implementation of the Discord WelcomeScreenChannel class in Luau
@@ -9,28 +9,28 @@
 
 --[=[
 	@prop channelId string
-	@within Classes.WelcomeScreenChannel
+	@within Classes.Guild.WelcomeScreenChannel
 
 	The id of the channel that is shown in the welcome screen
 ]=]
 
 --[=[
 	@prop description string
-	@within Classes.WelcomeScreenChannel
+	@within Classes.Guild.WelcomeScreenChannel
 
 	The description shown for the channel in the welcome screen
 ]=]
 
 --[=[
 	@prop emojiId string
-	@within Classes.WelcomeScreenChannel
+	@within Classes.Guild.WelcomeScreenChannel
 
 	The id of the emoji that is shown alongside the channel
 ]=]
 
 --[=[
 	@prop emojiName string
-	@within Classes.WelcomeScreenChannel
+	@within Classes.Guild.WelcomeScreenChannel
 
 	The name of the emoji that is shown alongside the channel
 ]=]
@@ -43,7 +43,7 @@ WelcomeScreenChannel.Interface = {}
 WelcomeScreenChannel.Prototype = {}
 
 --[=[
-	@within Classes.WelcomeScreenChannel
+	@within Classes.Guild.WelcomeScreenChannel
 	@private
 
 	Responsible for syncing data to this welcome screen channel object. This is typically called by the API when this object is
@@ -63,7 +63,7 @@ function WelcomeScreenChannel.Prototype.sync(
 end
 
 --[=[
-	@within Classes.WelcomeScreenChannel
+	@within Classes.Guild.WelcomeScreenChannel
 	@private
 
 	Responsible for constructing this class.

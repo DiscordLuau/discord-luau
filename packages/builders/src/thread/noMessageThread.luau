@@ -1,5 +1,5 @@
 --[=[
-	@class Builders.NoMessageThread
+	@class Builders.Thread.NoMessageThread
 	@__index Prototype
 
 	Implementation of discords NoMessageThread object as a Luau builder.	
@@ -9,31 +9,31 @@
 
 --[=[
 	@prop name string?
-	@within Builders.NoMessageThread
+	@within Builders.Thread.NoMessageThread
 	The name of the thread that is displayed.
 ]=]
 
 --[=[
 	@prop autoArchiveDuration number?
-	@within Builders.NoMessageThread
+	@within Builders.Thread.NoMessageThread
 	Duration in minutes to automatically archive the thread after recent activity.
 ]=]
 
 --[=[
 	@prop type api_types.ChannelType?
-	@within Builders.NoMessageThread
+	@within Builders.Thread.NoMessageThread
 	The type of thread channel.
 ]=]
 
 --[=[
 	@prop invitable boolean?
-	@within Builders.NoMessageThread
+	@within Builders.Thread.NoMessageThread
 	Whether non-moderators can add other non-moderators to the thread.
 ]=]
 
 --[=[
 	@prop rateLimitPerUser number?
-	@within Builders.NoMessageThread
+	@within Builders.Thread.NoMessageThread
 	Amount of seconds a user has to wait before sending another message.
 ]=]
 
@@ -45,7 +45,7 @@ NoMessageThread.Prototype = {}
 NoMessageThread.Interface = {}
 
 --[=[
-	@within Builders.NoMessageThread
+	@within Builders.Thread.NoMessageThread
 
 	Sets the name of the thread.
 	Name must be between 1-100 characters.
@@ -60,7 +60,7 @@ function NoMessageThread.Prototype.setName(self: NoMessageThread, name: string):
 end
 
 --[=[
-	@within Builders.NoMessageThread
+	@within Builders.Thread.NoMessageThread
 
 	Sets the duration in minutes before the thread is automatically archived.
 	Valid values are 60, 1440, 4320, or 10080.
@@ -77,7 +77,7 @@ function NoMessageThread.Prototype.setAutoArchiveDuration(self: NoMessageThread,
 end
 
 --[=[
-	@within Builders.NoMessageThread
+	@within Builders.Thread.NoMessageThread
 
 	Sets the type of thread channel.
 	Must be a valid Discord channel type.
@@ -91,7 +91,7 @@ function NoMessageThread.Prototype.setType(self: NoMessageThread, type: apiTypes
 end
 
 --[=[
-	@within Builders.NoMessageThread
+	@within Builders.Thread.NoMessageThread
 
 	Sets whether non-moderators can add other non-moderators to the thread.
 ]=]
@@ -102,7 +102,7 @@ function NoMessageThread.Prototype.setInvitable(self: NoMessageThread, invitable
 end
 
 --[=[
-	@within Builders.NoMessageThread
+	@within Builders.Thread.NoMessageThread
 
 	Sets the amount of seconds a user has to wait before sending another message.
 	Must be less than or equal to 21600 seconds (6 hours).
@@ -116,7 +116,7 @@ function NoMessageThread.Prototype.setRateLimitPerUser(self: NoMessageThread, ra
 end
 
 --[=[
-	@within Builders.NoMessageThread
+	@within Builders.Thread.NoMessageThread
 
 	Responsible for building the NoMessageThread JSON that can be parsed by the Discord API.
 ]=]
@@ -133,7 +133,7 @@ function NoMessageThread.Prototype.build(self: NoMessageThread): JSON
 end
 
 --[=[
-	@within Builders.NoMessageThread
+	@within Builders.Thread.NoMessageThread
 
 	Responsible for creating a new NoMessageThread.
 ]=]

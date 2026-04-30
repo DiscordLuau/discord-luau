@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.MessageInteraction
+	@class Classes.Message.Interaction
 	@__index Prototype
 
 	Implementation of the Discord Interaction class in Luau
@@ -9,37 +9,37 @@
 
 --[=[
 	@prop type apiTypes.InteractionType
-	@within Classes.MessageInteraction
+	@within Classes.Message.Interaction
 	The type of interaction that was performed
 ]=]
 
 --[=[
 	@prop user Classes.User
-	@within Classes.MessageInteraction
+	@within Classes.Message.Interaction
 	The user who triggered the interaction
 ]=]
 
 --[=[
-	@prop member Classes.Member?
-	@within Classes.MessageInteraction
+	@prop member Classes.Guild.Member?
+	@within Classes.Message.Interaction
 	The member who triggered the interaction, if in a guild
 ]=]
 
 --[=[
 	@prop id string
-	@within Classes.MessageInteraction
+	@within Classes.Message.Interaction
 	The ID of the interaction
 ]=]
 
 --[=[
 	@prop name string
-	@within Classes.MessageInteraction
+	@within Classes.Message.Interaction
 	The name of the application command
 ]=]
 
 --[=[
 	@prop state state.State
-	@within Classes.MessageInteraction
+	@within Classes.Message.Interaction
 	The state object that this interaction is associated with
 ]=]
 
@@ -55,7 +55,7 @@ Interaction.Interface = {}
 Interaction.Prototype = {}
 
 --[=[
-	@within Classes.MessageInteraction
+	@within Classes.Message.Interaction
 	@private
 
 	Responsible for syncing data to this interaction object. This is typically called by the API when this object is
@@ -74,7 +74,7 @@ function Interaction.Prototype.sync(self: Interaction, interactionData: apiTypes
 end
 
 --[=[
-	@within Classes.MessageInteraction
+	@within Classes.Message.Interaction
 	@private
 
 	Responsible for constructing this class.

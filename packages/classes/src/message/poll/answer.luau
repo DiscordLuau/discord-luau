@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.Answer
+	@class Classes.Message.PollAnswer
 	@__index Prototype
 
 	Implementation of the Discord Answer class in Luau
@@ -9,13 +9,13 @@
 
 --[=[
 	@prop answerId number
-	@within Classes.Answer
+	@within Classes.Message.PollAnswer
 	The unique identifier for this poll answer option
 ]=]
 
 --[=[
-	@prop pollMedia Classes.MediaObject
-	@within Classes.Answer
+	@prop pollMedia Classes.Message.PollMediaObject
+	@within Classes.Message.PollAnswer
 	The media content representing this answer option
 ]=]
 
@@ -29,7 +29,7 @@ Answer.Interface = {}
 Answer.Prototype = {}
 
 --[=[
-	@within Classes.Answer
+	@within Classes.Message.PollAnswer
 	@private
 
 	Responsible for syncing data to this answer object. This is typically called by the API when this object is
@@ -42,7 +42,7 @@ function Answer.Prototype.sync(self: Answer, answerData: apiTypes.PollAnswerObje
 end
 
 --[=[
-	@within Classes.Answer
+	@within Classes.Message.PollAnswer
 	@private
 
 	Responsible for constructing this class.

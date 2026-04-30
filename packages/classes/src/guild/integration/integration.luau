@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.Integration
+	@class Classes.Guild.Integration
 	@__index Prototype
 
 	Implementation of the Discord Integration class in Luau
@@ -9,97 +9,97 @@
 
 --[=[
 	@prop id string
-	@within Classes.Integration
+	@within Classes.Guild.Integration
 	The integration's id
 ]=]
 
 --[=[
 	@prop name string
-	@within Classes.Integration
+	@within Classes.Guild.Integration
 	The integration's name
 ]=]
 
 --[=[
 	@prop type apiTypes.IntegrationType
-	@within Classes.Integration
+	@within Classes.Guild.Integration
 	Integration type (twitch, youtube, discord, or guild_subscription)
 ]=]
 
 --[=[
 	@prop enabled boolean
-	@within Classes.Integration
+	@within Classes.Guild.Integration
 	Whether this integration is enabled
 ]=]
 
 --[=[
 	@prop syncing boolean?
-	@within Classes.Integration
+	@within Classes.Guild.Integration
 	Whether this integration is syncing
 ]=]
 
 --[=[
 	@prop roleId string?
-	@within Classes.Integration
+	@within Classes.Guild.Integration
 	ID that this integration uses for "subscribers"
 ]=]
 
 --[=[
 	@prop enableEmoticons boolean?
-	@within Classes.Integration
+	@within Classes.Guild.Integration
 	Whether emoticons should be synced for this integration
 ]=]
 
 --[=[
 	@prop expireBehavior apiTypes.IntegrationExpireBehaviour
-	@within Classes.Integration
+	@within Classes.Guild.Integration
 	The behavior of expiring subscribers
 ]=]
 
 --[=[
 	@prop expireGracePeriod number?
-	@within Classes.Integration
+	@within Classes.Guild.Integration
 	The grace period (in days) before expiring subscribers
 ]=]
 
 --[=[
 	@prop user Classes.User?
-	@within Classes.Integration
+	@within Classes.Guild.Integration
 	User for this integration
 ]=]
 
 --[=[
-	@prop account Classes.Account
-	@within Classes.Integration
+	@prop account Classes.Guild.IntegrationAccount
+	@within Classes.Guild.Integration
 	Integration account information
 ]=]
 
 --[=[
 	@prop syncedAt stdPolyfills.DateTime?
-	@within Classes.Integration
+	@within Classes.Guild.Integration
 	When this integration was last synced
 ]=]
 
 --[=[
 	@prop subscriberCount number?
-	@within Classes.Integration
+	@within Classes.Guild.Integration
 	How many subscribers this integration has
 ]=]
 
 --[=[
 	@prop revoked boolean?
-	@within Classes.Integration
+	@within Classes.Guild.Integration
 	Whether this integration has been revoked
 ]=]
 
 --[=[
 	@prop application Classes.Application?
-	@within Classes.Integration
+	@within Classes.Guild.Integration
 	The bot/OAuth2 application for discord integrations
 ]=]
 
 --[=[
 	@prop scopes { apiTypes.OAuth2Scopes }?
-	@within Classes.Integration
+	@within Classes.Guild.Integration
 	The scopes the application has been authorized for
 ]=]
 
@@ -120,11 +120,11 @@ Integration.Interface = {}
 Integration.Prototype = {}
 
 --[=[
-	@within Classes.Integration
+	@within Classes.Guild.Integration
 	Delete the attached integration object for the guild. Deletes any associated webhooks and kicks the associated bot
 	if there is one. Requires the MANAGE_GUILD permission.
 ]=]
-function Integration.Prototype.deleteAsync(self: Integration, reason: string?)
+function Integration.Prototype.deleteAsync(self: Integration, reason: string?): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -139,10 +139,10 @@ function Integration.Prototype.deleteAsync(self: Integration, reason: string?)
 end
 
 --[=[
-	@within Classes.Integration
+	@within Classes.Guild.Integration
 	@private
 ]=]
-function Integration.Prototype.sync(self: Integration, integrationData: apiTypes.IntegrationObject)
+function Integration.Prototype.sync(self: Integration, integrationData: apiTypes.IntegrationObject): nil
 	self.id = integrationData.id
 
 	self.name = integrationData.name
@@ -177,7 +177,7 @@ function Integration.Prototype.sync(self: Integration, integrationData: apiTypes
 end
 
 --[=[
-	@within Classes.Integration
+	@within Classes.Guild.Integration
 	@private
 ]=]
 function Integration.Interface.new(

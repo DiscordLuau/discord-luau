@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.Prompt
+	@class Classes.Guild.OnboardingPrompt
 	@__index Prototype
 
 	Implementation of the Discord Prompt class in Luau
@@ -9,49 +9,49 @@
 
 --[=[
 	@prop id string
-	@within Classes.Prompt
+	@within Classes.Guild.OnboardingPrompt
 
 	The unique identifier for this prompt
 ]=]
 
 --[=[
 	@prop type apiTypes.OnboardingPromptType
-	@within Classes.Prompt
+	@within Classes.Guild.OnboardingPrompt
 
 	The type of prompt this is, determines how it is displayed to users
 ]=]
 
 --[=[
 	@prop options { Classes.Option }
-	@within Classes.Prompt
+	@within Classes.Guild.OnboardingPrompt
 
 	Array of options that users can select from this prompt
 ]=]
 
 --[=[
 	@prop title string?
-	@within Classes.Prompt
+	@within Classes.Guild.OnboardingPrompt
 
 	The title shown to users when displaying this prompt
 ]=]
 
 --[=[
 	@prop singleSelect boolean?
-	@within Classes.Prompt
+	@within Classes.Guild.OnboardingPrompt
 
 	Whether users can only select one option from this prompt
 ]=]
 
 --[=[
 	@prop required boolean?
-	@within Classes.Prompt
+	@within Classes.Guild.OnboardingPrompt
 
 	Whether this prompt is required to be answered by users
 ]=]
 
 --[=[
 	@prop inOnboarding boolean?
-	@within Classes.Prompt
+	@within Classes.Guild.OnboardingPrompt
 
 	Whether this prompt is shown during the onboarding flow
 ]=]
@@ -66,7 +66,7 @@ Prompt.Interface = {}
 Prompt.Prototype = {}
 
 --[=[
-	@within Classes.Prompt
+	@within Classes.Guild.OnboardingPrompt
 	@private
 
 	Responsible for syncing data to this prompt object. This is typically called by the API when this object is
@@ -95,7 +95,7 @@ function Prompt.Prototype.sync(self: Prompt, promptData: apiTypes.OnboardingProm
 end
 
 --[=[
-	@within Classes.Prompt
+	@within Classes.Guild.OnboardingPrompt
 	@private
 
 	Responsible for constructing this class.

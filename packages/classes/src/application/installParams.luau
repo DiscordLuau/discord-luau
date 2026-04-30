@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.InstallParams
+	@class Classes.Application.InstallParams
 	@__index Prototype
 
 	Implementation of the Discord InstallParams class in Luau
@@ -9,12 +9,12 @@
 
 --[=[
 	@prop scopes { apiTypes.OAuth2Scopes }
-	@within Classes.InstallParams
+	@within Classes.Application.InstallParams
 ]=]
 
 --[=[
 	@prop permissions Classes.Permission
-	@within Classes.InstallParams
+	@within Classes.Application.InstallParams
 ]=]
 
 local apiTypes = require("../../luau_packages/api_types")
@@ -27,7 +27,7 @@ InstallParams.Interface = {}
 InstallParams.Prototype = {}
 
 --[=[
-	@within Classes.InstallParams
+	@within Classes.Application.InstallParams
 	@private
 
 	Responsible for syncing data to this install params object. This is typically called by the API when this object is
@@ -40,7 +40,7 @@ function InstallParams.Prototype.sync(self: InstallParams, installParamsData: ap
 end
 
 --[=[
-	@within Classes.InstallParams
+	@within Classes.Application.InstallParams
 	@private
 
 	Responsible for constructing this class.

@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.InteractionBehaviour
+	@class Classes.Interactions.InteractionBehaviour
 	@__index Prototype
 
 	Represents a Discord Interaction object that implements the Discord Interaction class in Luau.
@@ -10,7 +10,7 @@
 
 --[=[
 	@prop type string
-	@within Classes.InteractionBehaviour
+	@within Classes.Interactions.InteractionBehaviour
 	
 	The type of interaction. This can be one of the following values:
 	- "PING"
@@ -22,7 +22,7 @@
 
 --[=[
 	@prop context string
-	@within Classes.InteractionBehaviour
+	@within Classes.Interactions.InteractionBehaviour
 	
 	The context type of the interaction. This can be one of the following values:
 	- "GUILD"
@@ -32,112 +32,112 @@
 
 --[=[
 	@prop id string
-	@within Classes.InteractionBehaviour
+	@within Classes.Interactions.InteractionBehaviour
 	
 	The unique identifier for the interaction.
 ]=]
 
 --[=[
 	@prop applicationId string
-	@within Classes.InteractionBehaviour
+	@within Classes.Interactions.InteractionBehaviour
 	
 	The ID of the application this interaction is for.
 ]=]
 
 --[=[
 	@prop data Classes.InteractionBehaviourData?
-	@within Classes.InteractionBehaviour
+	@within Classes.Interactions.InteractionBehaviour
 	
 	The data associated with the interaction. The structure of this data varies based on the interaction type.
 ]=]
 
 --[=[
 	@prop guild Classes.UnavailableGuild?
-	@within Classes.InteractionBehaviour
+	@within Classes.Interactions.InteractionBehaviour
 	
 	The guild where the interaction was triggered. This is only present for guild interactions.
 ]=]
 
 --[=[
 	@prop guildId string?
-	@within Classes.InteractionBehaviour
+	@within Classes.Interactions.InteractionBehaviour
 	
 	The ID of the guild where the interaction was triggered. This is only present for guild interactions.
 ]=]
 
 --[=[
 	@prop channelId string?
-	@within Classes.InteractionBehaviour
+	@within Classes.Interactions.InteractionBehaviour
 	
 	The ID of the channel where the interaction was triggered.
 ]=]
 
 --[=[
-	@prop member Classes.Member?
-	@within Classes.InteractionBehaviour
+	@prop member Classes.Guild.Member?
+	@within Classes.Interactions.InteractionBehaviour
 	
 	The member who triggered the interaction. This is only present for guild interactions.
 ]=]
 
 --[=[
 	@prop user Classes.User?
-	@within Classes.InteractionBehaviour
+	@within Classes.Interactions.InteractionBehaviour
 	
 	The user who triggered the interaction.
 ]=]
 
 --[=[
 	@prop token string
-	@within Classes.InteractionBehaviour
+	@within Classes.Interactions.InteractionBehaviour
 	
 	The token used for responding to the interaction.
 ]=]
 
 --[=[
 	@prop version number
-	@within Classes.InteractionBehaviour
+	@within Classes.Interactions.InteractionBehaviour
 	
 	The version of the interaction.
 ]=]
 
 --[=[
 	@prop message Classes.Message?
-	@within Classes.InteractionBehaviour
+	@within Classes.Interactions.InteractionBehaviour
 	
 	The message that triggered the interaction. This is only present for message component interactions.
 ]=]
 
 --[=[
 	@prop appPermissions Classes.Permission
-	@within Classes.InteractionBehaviour
+	@within Classes.Interactions.InteractionBehaviour
 	
 	The permissions the application has in the channel where the interaction was triggered.
 ]=]
 
 --[=[
 	@prop locale string?
-	@within Classes.InteractionBehaviour
+	@within Classes.Interactions.InteractionBehaviour
 	
 	The selected language of the user who triggered the interaction.
 ]=]
 
 --[=[
 	@prop guildLocale string?
-	@within Classes.InteractionBehaviour
+	@within Classes.Interactions.InteractionBehaviour
 	
 	The guild's preferred locale, if the interaction was triggered in a guild.
 ]=]
 
 --[=[
 	@prop entitlements {Classes.Entitlement}
-	@within Classes.InteractionBehaviour
+	@within Classes.Interactions.InteractionBehaviour
 	
 	The entitlements for the user who triggered the interaction.
 ]=]
 
 --[=[
 	@prop authorizingIntegrationOwners {[string]: string}
-	@within Classes.InteractionBehaviour
+	@within Classes.Interactions.InteractionBehaviour
 	
 	The mapping of integration types to their respective owners.
 ]=]
@@ -159,7 +159,7 @@ Interaction.Interface = {}
 Interaction.Prototype = {}
 
 --[=[
-	@within Classes.InteractionBehaviour
+	@within Classes.Interactions.InteractionBehaviour
 	@private
 
 	Responsible for inheriting properties from the interaction data to the class instance.
@@ -220,7 +220,7 @@ function Interaction.Interface.inheritProperties(class: any, interactionData: ap
 end
 
 --[=[
-	@within Classes.InteractionBehaviour
+	@within Classes.Interactions.InteractionBehaviour
 	@private
 
 	Responsible for inheriting methods from the Interaction prototype to the class instance.

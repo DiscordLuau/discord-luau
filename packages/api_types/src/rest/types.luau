@@ -1,5 +1,5 @@
 --[=[
-	@class StdPolyfills.rest.types
+	@class Types.rest.types
 
 	Mapping out all discord responses that we can get from the Discord v10 REST/HTTP API.
 ]=]

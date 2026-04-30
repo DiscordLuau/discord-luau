@@ -1,5 +1,5 @@
 --[=[
-	@class Classes.ActivityEmoji
+	@class Classes.Activity.Emoji
 	@__index Prototype
 
 	Implementation of the Discord ActivityEmoji class in Luau
@@ -9,21 +9,21 @@
 
 --[=[
 	@prop animated boolean?
-	@within Classes.ActivityEmoji
+	@within Classes.Activity.Emoji
 	
 	Whether this emoji is animated. This is only present if the emoji is custom.
 ]=]
 
 --[=[
 	@prop name string
-	@within Classes.ActivityEmoji
+	@within Classes.Activity.Emoji
 	
 	The name of the emoji. For custom emojis this is the name of the emoji, for default emojis this is the unicode character.
 ]=]
 
 --[=[
 	@prop id string
-	@within Classes.ActivityEmoji
+	@within Classes.Activity.Emoji
 ]=]
 
 local apiTypes = require("../../luau_packages/api_types")
@@ -34,7 +34,7 @@ ActivityEmoji.Interface = {}
 ActivityEmoji.Prototype = {}
 
 --[=[
-	@within Classes.ActivityEmoji
+	@within Classes.Activity.Emoji
 	@private
 
 	Responsible for syncing data to this activity emoji object. This is typically called by the API when this object is
@@ -47,7 +47,7 @@ function ActivityEmoji.Prototype.sync(self: ActivityEmoji, emojiData: apiTypes.A
 end
 
 --[=[
-	@within Classes.ActivityEmoji
+	@within Classes.Activity.Emoji
 	@private
 
 	Responsible for constructing this class.
