@@ -570,6 +570,12 @@ local DISCORD_VERSION = 10
 	@within DiscordLuau.Bot
 ]=]
 
+--[=[
+	@prop onRateLimited Emitter<{ opcode: number, retryAfter: number, guildId: string? }>
+	@within DiscordLuau.Bot
+	Fired when the gateway rate limits a request. When opcode is RequestGuildMembers, guildId identifies the affected guild.
+]=]
+
 local Bot = {}
 
 Bot.Interface = {}
@@ -635,6 +641,22 @@ function Bot.Prototype.connectAsync(self: Bot): future.FutureLike<string, nil>
 
 		self.state.webSocketManager.onReconnected:listen(function(data)
 			self.onShardReconnected:invoke(data.shardId)
+		end)
+
+		self.state.webSocketManager.onRateLimited:listen(function(data)
+			if data.guildId and data.opcode == apiTypes.gateway.opcodes.RequestGuildMembers then
+				self.rateLimitedGuilds[data.guildId] = true
+
+				stdPolyfills.task.delay(data.retryAfter, function()
+					self.rateLimitedGuilds[data.guildId :: string] = nil
+				end)
+			end
+
+			self.onRateLimited:invoke({
+				opcode = data.opcode,
+				retryAfter = data.retryAfter,
+				guildId = data.guildId,
+			})
 		end)
 
 		self.state.webSocketManager.onDispatch:listen(function(object: {
@@ -1627,6 +1649,37 @@ end
 --[=[
 	@within DiscordLuau.Bot
 
+	Requests guild members from the Discord Gateway. Limited to 1 request per guild every 30 seconds
+	when using limit=0 with an empty query. Returns a failed future if the guild is currently rate limited.
+]=]
+function Bot.Prototype.requestGuildMembersAsync(
+	self: Bot,
+	guildId: apiTypes.Snowflake,
+	params: {
+		query: string?,
+		limit: number,
+		presences: boolean?,
+		userIds: { apiTypes.Snowflake }?,
+		nonce: string?,
+	}
+): future.FutureLike<string, nil>
+	return future.Future.new(function()
+		assert(not self.rateLimitedGuilds[guildId], `requestGuildMembers is rate limited for guild {guildId}`)
+
+		self.state.webSocketManager:sendAsync(apiTypes.gateway.opcodes.RequestGuildMembers, {
+			guild_id = guildId,
+			query = params.query,
+			limit = params.limit,
+			presences = params.presences,
+			user_ids = params.userIds,
+			nonce = params.nonce,
+		}):await()
+	end) :: future.FutureLike<string, nil>
+end
+
+--[=[
+	@within DiscordLuau.Bot
+
 	Allows you to set the presence for the Discord Bot.
 
 	:::caution
@@ -1775,6 +1828,10 @@ function Bot.Interface.new(options: {
 			onGuildSoundboardSoundDelete = emitter.new(),
 			onGuildSoundboardSoundsUpdate = emitter.new(),
 			onVoiceChannelEffectSend = emitter.new(),
+
+			onRateLimited = emitter.new(),
+
+			rateLimitedGuilds = {},
 
 			onGuildRoleCreate = emitter.new(),
 			onGuildRoleUpdate = emitter.new(),
@@ -2110,6 +2167,10 @@ export type Bot =
 			soundId: string?,
 			soundVolume: number?,
 		}>,
+
+		onRateLimited: emitter.Emitter<{ opcode: number, retryAfter: number, guildId: string? }>,
+
+		rateLimitedGuilds: { [string]: boolean },
 	}
 
 return Bot.Interface
