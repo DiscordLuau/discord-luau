@@ -1165,6 +1165,62 @@ export type ContainerComponentObject = {
 	id: number?,
 }
 
+-- https://docs.discord.com/developers/components/reference#radio-group-radio-option-structure
+export type RadioGroupOptionObject = {
+	label: string, -- User-facing name; max 100 characters
+	value: string, -- Dev-defined value; max 100 characters
+	description: string?, -- Additional description; max 100 characters
+	emoji: EmojiObject?, -- Partial emoji object with id, name, animated
+	default: boolean?, -- Will show as selected by default
+}
+
+-- https://docs.discord.com/developers/components/reference#label
+export type LabelComponentObject = {
+	type: number, -- 18
+	label: string, -- The label text; max 45 characters
+	description: string?, -- Additional description text; max 100 characters
+	component: any, -- A component to associate with the label
+	required: boolean?, -- Whether this component is required (defaults to true)
+	id: number?, -- Optional identifier for component
+}
+
+-- https://docs.discord.com/developers/components/reference#file-upload
+export type FileUploadComponentObject = {
+	type: number, -- 19
+	custom_id: string, -- Developer-defined identifier; 1-100 characters
+	accept: string?, -- Allowed file types; max 200 characters
+	max_size: number?, -- Maximum file size in bytes; max 512 MB
+	required: boolean?, -- Whether required to answer in modal (defaults to true)
+	id: number?, -- Optional identifier for component
+}
+
+-- https://docs.discord.com/developers/components/reference#radio-group
+export type RadioGroupComponentObject = {
+	type: number, -- 21
+	custom_id: string, -- Developer-defined identifier; 1-100 characters
+	options: { RadioGroupOptionObject }, -- Array of radio options; max 10
+	required: boolean?, -- Whether required in modal (defaults to true)
+	id: number?, -- Optional identifier for component
+}
+
+-- https://docs.discord.com/developers/components/reference#checkbox-group
+export type CheckboxGroupComponentObject = {
+	type: number, -- 22
+	custom_id: string, -- Developer-defined identifier; 1-100 characters
+	options: { RadioGroupOptionObject }, -- Array of checkbox options; max 10
+	required: boolean?, -- Whether required in modal (defaults to true)
+	id: number?, -- Optional identifier for component
+}
+
+-- https://docs.discord.com/developers/components/reference#checkbox
+export type CheckboxComponentObject = {
+	type: number, -- 23
+	custom_id: string, -- Developer-defined identifier; 1-100 characters
+	default: boolean?, -- Whether checked by default (defaults to false)
+	required: boolean?, -- Whether required in modal (defaults to true)
+	id: number?, -- Optional identifier for component
+}
+
 -- https://discord.com/developers/docs/interactions/message-components#message-components
 export type ComponentObjects =
 	ActionRowComponentObject
@@ -1178,6 +1234,11 @@ export type ComponentObjects =
 	| SeparatorComponentObject
 	| SectionComponentObject
 	| ContainerComponentObject
+	| LabelComponentObject
+	| FileUploadComponentObject
+	| RadioGroupComponentObject
+	| CheckboxGroupComponentObject
+	| CheckboxComponentObject
 
 -- https://discord.com/developers/docs/resources/sticker#sticker-item-object
 export type SitckerItemObject = {

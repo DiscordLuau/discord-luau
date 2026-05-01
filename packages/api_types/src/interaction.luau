@@ -55,6 +55,11 @@ local ComponentTypes = table.freeze(util.tableReflect({
 	File = 13,
 	Separator = 14,
 	Container = 17,
+	Label = 18,
+	FileUpload = 19,
+	RadioGroup = 21,
+	CheckboxGroup = 22,
+	Checkbox = 23,
 }))
 
 export type InteractionType =
@@ -80,6 +85,11 @@ export type ComponentTypes =
 	| "File"
 	| "Separator"
 	| "Container"
+	| "Label"
+	| "FileUpload"
+	| "RadioGroup"
+	| "CheckboxGroup"
+	| "Checkbox"
 
 export type ApplicationCommandOptionType =
 	"SubCommand"
