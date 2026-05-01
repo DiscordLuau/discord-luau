@@ -698,13 +698,35 @@ end
 
 --[=[
 	@within Classes.Guild
+	Searches messages in the guild. Requires READ_MESSAGE_HISTORY and the MESSAGE_CONTENT privileged intent.
+	Discord may return error code 110000 if the guild message index is not yet ready.
+
+	https://docs.discord.com/developers/resources/message#search-guild-messages
+]=]
+function Guild.Prototype.searchMessagesAsync(
+	self: Guild,
+	params: apiTypes.SearchGuildMessagesRequest
+): future.FutureLike<string, apiTypes.SearchGuildMessagesResponse>
+	return future.Future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local response = rest.guild.searchGuildMessagesAsync(request, self.id, params):await()
+
+		assert(response:isOk(), `{response:unwrapErr()}`)
+
+		return response:unwrapOk() :: any
+	end) :: future.FutureLike<string, apiTypes.SearchGuildMessagesResponse>
+end
+
+--[=[
+	@within Classes.Guild
 	Returns a map of role IDs to the number of members with the role. Does not include the @everyone role.
 ]=]
 function Guild.Prototype.getRoleMemberCounts<T>(self: Guild): future.FutureLike<string, { [string]: number }>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local response = rest.guild.getGuildRoleMemberCounts(request, self.id):await()
+		local response = rest.guild.getGuildRoleMemberCountsAsync(request, self.id):await()
 
 		assert(response:isOk(), `{response:unwrapErr()}`)
 

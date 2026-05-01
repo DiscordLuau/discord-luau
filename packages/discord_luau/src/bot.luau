@@ -290,6 +290,261 @@ local DISCORD_VERSION = 10
 	@within DiscordLuau.Bot
 ]=]
 
+--[=[
+	@prop onMessageReactionAdd Emitter<{ userId: string, channelId: string, messageId: string, guildId: string?, member: Classes.GuildMember?, emoji: Classes.Emoji, messageAuthorId: string?, burst: boolean, burstColors: { string }, reactionType: number }>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onMessageReactionRemove Emitter<{ userId: string, channelId: string, messageId: string, guildId: string?, emoji: Classes.Emoji, burst: boolean, reactionType: number }>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onMessageReactionRemoveAll Emitter<{ channelId: string, messageId: string, guildId: string? }>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onMessageReactionRemoveEmoji Emitter<{ channelId: string, messageId: string, guildId: string?, emoji: Classes.Emoji }>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onThreadListSync Emitter<{ guildId: string, channelIds: { string }?, members: { Classes.ThreadMember } }>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onThreadMemberUpdate Emitter<{ guildId: string, threadMember: Classes.ThreadMember }>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onThreadMembersUpdate Emitter<{ id: string, guildId: string, memberCount: number, addedMembers: { Classes.ThreadMember }, removedMemberIds: { string }? }>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onEntitlementCreate Emitter<Classes.Entitlement>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onEntitlementUpdate Emitter<Classes.Entitlement>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onEntitlementDelete Emitter<Classes.Entitlement>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onGuildAuditLogEntryCreate Emitter<Classes.AuditLogEntry>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onGuildEmojisUpdate Emitter<{ guildId: string, emojis: { Classes.Emoji } }>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onGuildStickersUpdate Emitter<{ guildId: string, stickers: { Classes.Sticker } }>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onGuildScheduledEventCreate Emitter<Classes.ScheduledEvent>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onGuildScheduledEventUpdate Emitter<Classes.ScheduledEvent>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onGuildScheduledEventDelete Emitter<Classes.ScheduledEvent>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onGuildScheduledEventUserAdd Emitter<{ guildScheduledEventId: string, userId: string, guildId: string }>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onGuildScheduledEventUserRemove Emitter<{ guildScheduledEventId: string, userId: string, guildId: string }>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onIntegrationCreate Emitter<Classes.Integration>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onIntegrationUpdate Emitter<Classes.Integration>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onIntegrationDelete Emitter<{ id: string, guildId: string, applicationId: string? }>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onInviteCreate Emitter<{ channelId: string, code: string, createdAt: stdPolyfills.DateTime, guildId: string?, inviter: Classes.User?, maxAge: number, maxUses: number, targetType: number?, targetUser: Classes.User?, temporary: boolean, uses: number }>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onInviteDelete Emitter<{ channelId: string, code: string, guildId: string? }>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onAutoModerationRuleCreate Emitter<Classes.AutomoderationRule>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onAutoModerationRuleUpdate Emitter<Classes.AutomoderationRule>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onAutoModerationRuleDelete Emitter<Classes.AutomoderationRule>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onAutoModerationActionExecution Emitter<{ guildId: string, action: apiTypes.AutomoderationActionObject, ruleId: string, ruleTriggerType: apiTypes.AutomoderationRuleTriggerType, userId: string, channelId: string?, messageId: string?, alertSystemMessageId: string?, content: string, matchedKeyword: string?, matchedContent: string? }>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onApplicationCommandPermissionsUpdate Emitter<{ id: string, applicationId: string, guildId: string, permissions: { apiTypes.GuildApplicationCommandPermissionObject } }>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onMessagePollVoteAdd Emitter<{ userId: string, channelId: string, messageId: string, guildId: string?, answerId: number }>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onMessagePollVoteRemove Emitter<{ userId: string, channelId: string, messageId: string, guildId: string?, answerId: number }>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onGuildRoleCreate Emitter<Classes.Role>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onGuildRoleUpdate Emitter<Classes.Role>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onGuildRoleDelete Emitter<{ guildId: string, roleId: string }>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onAnnouncementThreadCreate Emitter<Classes.Announcement>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onPublicThreadCreate Emitter<Classes.Public>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onPrivateThreadCreate Emitter<Classes.Private>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onAnnouncementThreadUpdate Emitter<Classes.Announcement>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onPublicThreadUpdate Emitter<Classes.Public>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onPrivateThreadUpdate Emitter<Classes.Private>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onThreadDelete Emitter<{ id: string, guildId: string, parentId: string, type: number }>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onPresenceUpdate Emitter<Classes.Presence>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onTypingStart Emitter<{ channelId: string, guildId: string?, userId: string, timestamp: number, member: Classes.GuildMember? }>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onGuildMembersChunk Emitter<{ guildId: string, members: { Classes.GuildMember }, chunkIndex: number, chunkCount: number, notFound: { string }?, nonce: string? }>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onGuildIntegrationsUpdate Emitter<{ guildId: string }>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onWebhooksUpdate Emitter<{ guildId: string, channelId: string }>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onResumed Emitter<()>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onVoiceStateUpdate Emitter<Classes.VoiceState>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onVoiceServerUpdate Emitter<{ token: string, guildId: string, endpoint: string? }>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onStageInstanceCreate Emitter<Classes.StageInstance>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onStageInstanceUpdate Emitter<Classes.StageInstance>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onStageInstanceDelete Emitter<Classes.StageInstance>
+	@within DiscordLuau.Bot
+]=]
+
 local Bot = {}
 
 Bot.Interface = {}
@@ -393,27 +648,27 @@ function Bot.Prototype.connectAsync(self: Bot): future.FutureLike<string, nil>
 
 				self.state.cache.channels:set(typedObject.d.id :: apiTypes.Snowflake, typedObject.d)
 
-				if typedObject.d.type == 0 then
+				if typedObject.d.type == apiTypes.channel.ChannelTypes.GuildText then
 					self.onTextChannelCreate:invoke(classes.channels.types.guildText.new(self.state, typedObject.d))
-				elseif typedObject.d.type == 1 then
+				elseif typedObject.d.type == apiTypes.channel.ChannelTypes.DM then
 					self.onDMChannelCreate:invoke(classes.channels.types.dm.new(self.state, typedObject.d))
-				elseif typedObject.d.type == 2 then
+				elseif typedObject.d.type == apiTypes.channel.ChannelTypes.GuildVoice then
 					self.onVoiceChannelCreate:invoke(classes.channels.types.guildVoice.new(self.state, typedObject.d))
-				elseif typedObject.d.type == 3 then
+				elseif typedObject.d.type == apiTypes.channel.ChannelTypes.GroupDM then
 					self.onGroupDMChannelCreate:invoke(classes.channels.types.groupDm.new(self.state, typedObject.d))
-				elseif typedObject.d.type == 4 then
+				elseif typedObject.d.type == apiTypes.channel.ChannelTypes.GuildCategory then
 					self.onCategoryChannelCreate:invoke(
 						classes.channels.types.guildCategory.new(self.state, typedObject.d)
 					)
-				elseif typedObject.d.type == 5 then
+				elseif typedObject.d.type == apiTypes.channel.ChannelTypes.GuildAnnouncement then
 					self.onAnnouncementChannelCreate:invoke(
 						classes.channels.types.guildAnnouncement.new(self.state, typedObject.d)
 					)
-				elseif typedObject.d.type == 13 then
+				elseif typedObject.d.type == apiTypes.channel.ChannelTypes.GuildStageVoice then
 					self.onStageVoiceChannelCreate:invoke(
 						classes.channels.types.guildStageVoice.new(self.state, typedObject.d)
 					)
-				elseif typedObject.d.type == 14 then
+				elseif typedObject.d.type == apiTypes.channel.ChannelTypes.GuildDirectory then
 					self.onDirectoryChannelCreate:invoke(
 						classes.channels.types.guildDirectory.new(self.state, typedObject.d)
 					)
@@ -423,27 +678,27 @@ function Bot.Prototype.connectAsync(self: Bot): future.FutureLike<string, nil>
 
 				self.state.cache.channels:set(typedObject.d.id :: apiTypes.Snowflake, typedObject.d)
 
-				if typedObject.d.type == 0 then
+				if typedObject.d.type == apiTypes.channel.ChannelTypes.GuildText then
 					self.onTextChannelUpdated:invoke(classes.channels.types.guildText.new(self.state, typedObject.d))
-				elseif typedObject.d.type == 1 then
+				elseif typedObject.d.type == apiTypes.channel.ChannelTypes.DM then
 					self.onDMChannelUpdated:invoke(classes.channels.types.dm.new(self.state, typedObject.d))
-				elseif typedObject.d.type == 2 then
+				elseif typedObject.d.type == apiTypes.channel.ChannelTypes.GuildVoice then
 					self.onVoiceChannelUpdated:invoke(classes.channels.types.guildVoice.new(self.state, typedObject.d))
-				elseif typedObject.d.type == 3 then
+				elseif typedObject.d.type == apiTypes.channel.ChannelTypes.GroupDM then
 					self.onGroupDMChannelUpdated:invoke(classes.channels.types.groupDm.new(self.state, typedObject.d))
-				elseif typedObject.d.type == 4 then
+				elseif typedObject.d.type == apiTypes.channel.ChannelTypes.GuildCategory then
 					self.onCategoryChannelUpdated:invoke(
 						classes.channels.types.guildCategory.new(self.state, typedObject.d)
 					)
-				elseif typedObject.d.type == 5 then
+				elseif typedObject.d.type == apiTypes.channel.ChannelTypes.GuildAnnouncement then
 					self.onAnnouncementChannelUpdated:invoke(
 						classes.channels.types.guildAnnouncement.new(self.state, typedObject.d)
 					)
-				elseif typedObject.d.type == 13 then
+				elseif typedObject.d.type == apiTypes.channel.ChannelTypes.GuildStageVoice then
 					self.onStageVoiceChannelUpdated:invoke(
 						classes.channels.types.guildStageVoice.new(self.state, typedObject.d)
 					)
-				elseif typedObject.d.type == 14 then
+				elseif typedObject.d.type == apiTypes.channel.ChannelTypes.GuildDirectory then
 					self.onDirectoryChannelUpdated:invoke(
 						classes.channels.types.guildDirectory.new(self.state, typedObject.d)
 					)
@@ -453,27 +708,27 @@ function Bot.Prototype.connectAsync(self: Bot): future.FutureLike<string, nil>
 
 				self.state.cache.channels:remove(typedObject.d.id :: apiTypes.Snowflake)
 
-				if typedObject.d.type == 0 then
+				if typedObject.d.type == apiTypes.channel.ChannelTypes.GuildText then
 					self.onTextChannelDeleted:invoke(classes.channels.types.guildText.new(self.state, typedObject.d))
-				elseif typedObject.d.type == 1 then
+				elseif typedObject.d.type == apiTypes.channel.ChannelTypes.DM then
 					self.onDMChannelDeleted:invoke(classes.channels.types.dm.new(self.state, typedObject.d))
-				elseif typedObject.d.type == 2 then
+				elseif typedObject.d.type == apiTypes.channel.ChannelTypes.GuildVoice then
 					self.onVoiceChannelDeleted:invoke(classes.channels.types.guildVoice.new(self.state, typedObject.d))
-				elseif typedObject.d.type == 3 then
+				elseif typedObject.d.type == apiTypes.channel.ChannelTypes.GroupDM then
 					self.onGroupDMChannelDeleted:invoke(classes.channels.types.groupDm.new(self.state, typedObject.d))
-				elseif typedObject.d.type == 4 then
+				elseif typedObject.d.type == apiTypes.channel.ChannelTypes.GuildCategory then
 					self.onCategoryChannelDeleted:invoke(
 						classes.channels.types.guildCategory.new(self.state, typedObject.d)
 					)
-				elseif typedObject.d.type == 5 then
+				elseif typedObject.d.type == apiTypes.channel.ChannelTypes.GuildAnnouncement then
 					self.onAnnouncementChannelDeleted:invoke(
 						classes.channels.types.guildAnnouncement.new(self.state, typedObject.d)
 					)
-				elseif typedObject.d.type == 13 then
+				elseif typedObject.d.type == apiTypes.channel.ChannelTypes.GuildStageVoice then
 					self.onStageVoiceChannelDeleted:invoke(
 						classes.channels.types.guildStageVoice.new(self.state, typedObject.d)
 					)
-				elseif typedObject.d.type == 14 then
+				elseif typedObject.d.type == apiTypes.channel.ChannelTypes.GuildDirectory then
 					self.onDirectoryChannelDeleted:invoke(
 						classes.channels.types.guildDirectory.new(self.state, typedObject.d)
 					)
@@ -592,46 +847,413 @@ function Bot.Prototype.connectAsync(self: Bot): future.FutureLike<string, nil>
 				local typedObject = object.payload :: apiTypes.GuildRoleCreatePayload
 
 				self.state.cache.roles:set(typedObject.d.role.id :: apiTypes.Snowflake, typedObject.d.role)
+
+				self.onGuildRoleCreate:invoke(
+					classes.guild.role.new(self.state, typedObject.d.guild_id, typedObject.d.role)
+				)
 			elseif object.event == apiTypes.gateway.receiveEvents["GuildRoleUpdate"] then
 				local typedObject = object.payload :: apiTypes.GuildRoleUpdatePayload
 
 				self.state.cache.roles:set(typedObject.d.role.id :: apiTypes.Snowflake, typedObject.d.role)
+
+				self.onGuildRoleUpdate:invoke(
+					classes.guild.role.new(self.state, typedObject.d.guild_id, typedObject.d.role)
+				)
 			elseif object.event == apiTypes.gateway.receiveEvents["GuildRoleDelete"] then
 				local typedObject = object.payload :: apiTypes.GuildRoleDeletePayload
 
 				self.state.cache.roles:remove(typedObject.d.role_id :: apiTypes.Snowflake)
+
+				self.onGuildRoleDelete:invoke({
+					guildId = typedObject.d.guild_id,
+					roleId = typedObject.d.role_id,
+				})
 			elseif object.event == apiTypes.gateway.receiveEvents["ThreadCreate"] then
 				local typedObject = object.payload :: apiTypes.CreateThreadPayload
 
 				self.state.cache.channels:set(typedObject.d.id :: apiTypes.Snowflake, typedObject.d)
+
+				if typedObject.d.type == apiTypes.channel.ChannelTypes.AnnouncementThread then
+					self.onAnnouncementThreadCreate:invoke(
+						classes.channels.threads.announcement.new(self.state, typedObject.d)
+					)
+				elseif typedObject.d.type == apiTypes.channel.ChannelTypes.PublicThread then
+					self.onPublicThreadCreate:invoke(classes.channels.threads.public.new(self.state, typedObject.d))
+				elseif typedObject.d.type == apiTypes.channel.ChannelTypes.PrivateThread then
+					self.onPrivateThreadCreate:invoke(classes.channels.threads.private.new(self.state, typedObject.d))
+				end
 			elseif object.event == apiTypes.gateway.receiveEvents["ThreadUpdate"] then
 				local typedObject = object.payload :: apiTypes.UpdateThreadPayload
 
 				self.state.cache.channels:set(typedObject.d.id :: apiTypes.Snowflake, typedObject.d)
+
+				if typedObject.d.type == apiTypes.channel.ChannelTypes.AnnouncementThread then
+					self.onAnnouncementThreadUpdate:invoke(
+						classes.channels.threads.announcement.new(self.state, typedObject.d)
+					)
+				elseif typedObject.d.type == apiTypes.channel.ChannelTypes.PublicThread then
+					self.onPublicThreadUpdate:invoke(classes.channels.threads.public.new(self.state, typedObject.d))
+				elseif typedObject.d.type == apiTypes.channel.ChannelTypes.PrivateThread then
+					self.onPrivateThreadUpdate:invoke(classes.channels.threads.private.new(self.state, typedObject.d))
+				end
 			elseif object.event == apiTypes.gateway.receiveEvents["ThreadDelete"] then
 				local typedObject = object.payload :: apiTypes.DeleteThreadPayload
 
 				self.state.cache.channels:remove(typedObject.d.id :: apiTypes.Snowflake)
+
+				self.onThreadDelete:invoke({
+					id = typedObject.d.id,
+					guildId = typedObject.d.guild_id,
+					parentId = typedObject.d.parent_id,
+					type = typedObject.d.type,
+				})
 			elseif object.event == apiTypes.gateway.receiveEvents["InteractionCreate"] then
 				local typedObject = object.payload :: apiTypes.InteractionCreatePayload
 
-				if typedObject.d.type == 1 then
+				if typedObject.d.type == apiTypes.interaction.InteractionType.Ping then
 					self.onPingInteraction:invoke(classes.interaction.types.ping.new(self.state, typedObject.d))
-				elseif typedObject.d.type == 2 then
+				elseif typedObject.d.type == apiTypes.interaction.InteractionType.ApplicationCommand then
 					self.onCommandInteraction:invoke(classes.interaction.types.command.new(self.state, typedObject.d))
-				elseif typedObject.d.type == 3 then
+				elseif typedObject.d.type == apiTypes.interaction.InteractionType.MessageComponent then
 					self.onComponentInteraction:invoke(
 						classes.interaction.types.component.new(self.state, typedObject.d)
 					)
-				elseif typedObject.d.type == 4 then
+				elseif typedObject.d.type == apiTypes.interaction.InteractionType.ApplicationCommandAutocomplete then
 					self.onAutocompleteInteraction:invoke(
 						classes.interaction.types.autocomplete.new(self.state, typedObject.d)
 					)
-				elseif typedObject.d.type == 5 then
+				elseif typedObject.d.type == apiTypes.interaction.InteractionType.ModalSubmit then
 					self.onModalInteraction:invoke(classes.interaction.types.modal.new(self.state, typedObject.d))
 				else
 					error(`Unknown interaction type: {typedObject.d.type}`)
 				end
+			elseif object.event == apiTypes.gateway.receiveEvents["MessageReactionAdd"] then
+				local typedObject = object.payload :: apiTypes.MessageReactionAddPayload
+
+				self.onMessageReactionAdd:invoke({
+					userId = typedObject.d.user_id,
+					channelId = typedObject.d.channel_id,
+					messageId = typedObject.d.message_id,
+					guildId = typedObject.d.guild_id,
+					member = typedObject.d.member
+						and typedObject.d.guild_id
+						and classes.guild.member.new(self.state, typedObject.d.guild_id, typedObject.d.member),
+					emoji = classes.emoji.new(typedObject.d.emoji),
+					messageAuthorId = typedObject.d.message_author_id,
+					burst = typedObject.d.burst,
+					burstColors = typedObject.d.burst_colors,
+					reactionType = typedObject.d.type,
+				})
+			elseif object.event == apiTypes.gateway.receiveEvents["MessageReactionRemove"] then
+				local typedObject = object.payload :: apiTypes.MessageReactionRemovePayload
+
+				self.onMessageReactionRemove:invoke({
+					userId = typedObject.d.user_id,
+					channelId = typedObject.d.channel_id,
+					messageId = typedObject.d.message_id,
+					guildId = typedObject.d.guild_id,
+					emoji = classes.emoji.new(typedObject.d.emoji),
+					burst = typedObject.d.burst,
+					reactionType = typedObject.d.type,
+				})
+			elseif object.event == apiTypes.gateway.receiveEvents["MessageReactionRemoveAll"] then
+				local typedObject = object.payload :: apiTypes.MessageReactionRemoveAllPayload
+
+				self.onMessageReactionRemoveAll:invoke({
+					channelId = typedObject.d.channel_id,
+					messageId = typedObject.d.message_id,
+					guildId = typedObject.d.guild_id,
+				})
+			elseif object.event == apiTypes.gateway.receiveEvents["MessageReactionRemoveEmoji"] then
+				local typedObject = object.payload :: apiTypes.MessageReactionRemoveEmojiPayload
+
+				self.onMessageReactionRemoveEmoji:invoke({
+					channelId = typedObject.d.channel_id,
+					messageId = typedObject.d.message_id,
+					guildId = typedObject.d.guild_id,
+					emoji = classes.emoji.new(typedObject.d.emoji),
+				})
+			elseif object.event == apiTypes.gateway.receiveEvents["ThreadListSync"] then
+				local typedObject = object.payload :: apiTypes.ThreadListSyncPayload
+
+				local threadMemberArray = {}
+				for _, memberData in next, typedObject.d.members or {} do
+					table.insert(
+						threadMemberArray,
+						classes.threadMember.new(self.state, typedObject.d.guild_id, memberData)
+					)
+				end
+
+				self.onThreadListSync:invoke({
+					guildId = typedObject.d.guild_id,
+					channelIds = typedObject.d.channel_ids,
+					members = threadMemberArray,
+				})
+			elseif object.event == apiTypes.gateway.receiveEvents["ThreadMemberUpdate"] then
+				local typedObject = object.payload :: apiTypes.ThreadMemberUpdatePayload
+
+				self.onThreadMemberUpdate:invoke({
+					guildId = typedObject.d.guild_id,
+					threadMember = classes.threadMember.new(self.state, typedObject.d.guild_id, typedObject.d),
+				})
+			elseif object.event == apiTypes.gateway.receiveEvents["ThreadMembersUpdate"] then
+				local typedObject = object.payload :: apiTypes.ThreadMembersUpdatePayload
+
+				local addedMembersArray = {}
+				for _, memberData in next, typedObject.d.added_members or {} do
+					table.insert(
+						addedMembersArray,
+						classes.threadMember.new(self.state, typedObject.d.guild_id, memberData)
+					)
+				end
+
+				self.onThreadMembersUpdate:invoke({
+					id = typedObject.d.id,
+					guildId = typedObject.d.guild_id,
+					memberCount = typedObject.d.member_count,
+					addedMembers = addedMembersArray,
+					removedMemberIds = typedObject.d.removed_member_ids,
+				})
+			elseif object.event == apiTypes.gateway.receiveEvents["EntitlementCreate"] then
+				local typedObject = object.payload :: apiTypes.EntitlementCreatePayload
+
+				self.onEntitlementCreate:invoke(classes.entitlement.new(typedObject.d))
+			elseif object.event == apiTypes.gateway.receiveEvents["EntitlementUpdate"] then
+				local typedObject = object.payload :: apiTypes.EntitlementUpdatePayload
+
+				self.onEntitlementUpdate:invoke(classes.entitlement.new(typedObject.d))
+			elseif object.event == apiTypes.gateway.receiveEvents["EntitlementDelete"] then
+				local typedObject = object.payload :: apiTypes.EntitlementDeletePayload
+
+				self.onEntitlementDelete:invoke(classes.entitlement.new(typedObject.d))
+			elseif object.event == apiTypes.gateway.receiveEvents["GuildAuditLogEntryCreate"] then
+				local typedObject = object.payload :: apiTypes.GuildAuditLogEntryCreatePayload
+
+				self.onGuildAuditLogEntryCreate:invoke(classes.auditlog.entry.new(typedObject.d))
+			elseif object.event == apiTypes.gateway.receiveEvents["GuildEmojisUpdate"] then
+				local typedObject = object.payload :: apiTypes.GuildEmojisUpdatePayload
+
+				local emojiArray = {}
+				for _, emojiData in next, typedObject.d.emojis do
+					table.insert(emojiArray, classes.emoji.new(emojiData))
+				end
+
+				self.onGuildEmojisUpdate:invoke({
+					guildId = typedObject.d.guild_id,
+					emojis = emojiArray,
+				})
+			elseif object.event == apiTypes.gateway.receiveEvents["GuildStickersUpdate"] then
+				local typedObject = object.payload :: apiTypes.GuildStickersUpdatePayload
+
+				local stickerArray = {}
+				for _, stickerData in next, typedObject.d.stickers do
+					table.insert(stickerArray, classes.sticker.new(stickerData))
+				end
+
+				self.onGuildStickersUpdate:invoke({
+					guildId = typedObject.d.guild_id,
+					stickers = stickerArray,
+				})
+			elseif object.event == apiTypes.gateway.receiveEvents["GuildScheduledEventCreate"] then
+				local typedObject = object.payload :: apiTypes.GuildScheduledEventCreatePayload
+
+				self.onGuildScheduledEventCreate:invoke(classes.guild.scheduledEvent.new(typedObject.d))
+			elseif object.event == apiTypes.gateway.receiveEvents["GuildScheduledEventUpdate"] then
+				local typedObject = object.payload :: apiTypes.GuildScheduledEventUpdatePayload
+
+				self.onGuildScheduledEventUpdate:invoke(classes.guild.scheduledEvent.new(typedObject.d))
+			elseif object.event == apiTypes.gateway.receiveEvents["GuildScheduledEventDelete"] then
+				local typedObject = object.payload :: apiTypes.GuildScheduledEventDeletePayload
+
+				self.onGuildScheduledEventDelete:invoke(classes.guild.scheduledEvent.new(typedObject.d))
+			elseif object.event == apiTypes.gateway.receiveEvents["GuildScheduledEventUserAdd"] then
+				local typedObject = object.payload :: apiTypes.GuildScheduledEventUserAddPayload
+
+				self.onGuildScheduledEventUserAdd:invoke({
+					guildScheduledEventId = typedObject.d.guild_scheduled_event_id,
+					userId = typedObject.d.user_id,
+					guildId = typedObject.d.guild_id,
+				})
+			elseif object.event == apiTypes.gateway.receiveEvents["GuildScheduledEventUserRemove"] then
+				local typedObject = object.payload :: apiTypes.GuildScheduledEventUserRemovePayload
+
+				self.onGuildScheduledEventUserRemove:invoke({
+					guildScheduledEventId = typedObject.d.guild_scheduled_event_id,
+					userId = typedObject.d.user_id,
+					guildId = typedObject.d.guild_id,
+				})
+			elseif object.event == apiTypes.gateway.receiveEvents["IntegrationCreate"] then
+				local typedObject = object.payload :: apiTypes.IntegrationCreatePayload
+
+				self.onIntegrationCreate:invoke(
+					classes.guild.integration.integration.new(self.state, typedObject.d.guild_id, typedObject.d)
+				)
+			elseif object.event == apiTypes.gateway.receiveEvents["IntegrationUpdate"] then
+				local typedObject = object.payload :: apiTypes.IntegrationUpdatePayload
+
+				self.onIntegrationUpdate:invoke(
+					classes.guild.integration.integration.new(self.state, typedObject.d.guild_id, typedObject.d)
+				)
+			elseif object.event == apiTypes.gateway.receiveEvents["IntegrationDelete"] then
+				local typedObject = object.payload :: apiTypes.IntegrationDeletePayload
+
+				self.onIntegrationDelete:invoke({
+					id = typedObject.d.id :: string,
+					guildId = typedObject.d.guild_id,
+					applicationId = typedObject.d.application_id,
+				})
+			elseif object.event == apiTypes.gateway.receiveEvents["InviteCreate"] then
+				local typedObject = object.payload :: apiTypes.InviteCreatePayload
+
+				self.onInviteCreate:invoke({
+					channelId = typedObject.d.channel_id,
+					code = typedObject.d.code,
+					createdAt = stdPolyfills.datetime.fromIsoDate(typedObject.d.created_at),
+					guildId = typedObject.d.guild_id,
+					inviter = typedObject.d.inviter and classes.user.new(typedObject.d.inviter),
+					maxAge = typedObject.d.max_age,
+					maxUses = typedObject.d.max_uses,
+					targetType = typedObject.d.target_type,
+					targetUser = typedObject.d.target_user and classes.user.new(typedObject.d.target_user),
+					temporary = typedObject.d.temporary,
+					uses = typedObject.d.uses,
+				})
+			elseif object.event == apiTypes.gateway.receiveEvents["InviteDelete"] then
+				local typedObject = object.payload :: apiTypes.InviteDeletePayload
+
+				self.onInviteDelete:invoke({
+					channelId = typedObject.d.channel_id,
+					code = typedObject.d.code,
+					guildId = typedObject.d.guild_id,
+				})
+			elseif object.event == apiTypes.gateway.receiveEvents["AutoModerationRuleCreate"] then
+				local typedObject = object.payload :: apiTypes.AutoModerationRuleCreatePayload
+
+				self.onAutoModerationRuleCreate:invoke(classes.automoderation.rule.new(self.state, typedObject.d))
+			elseif object.event == apiTypes.gateway.receiveEvents["AutoModerationRuleUpdate"] then
+				local typedObject = object.payload :: apiTypes.AutoModerationRuleUpdatePayload
+
+				self.onAutoModerationRuleUpdate:invoke(classes.automoderation.rule.new(self.state, typedObject.d))
+			elseif object.event == apiTypes.gateway.receiveEvents["AutoModerationRuleDelete"] then
+				local typedObject = object.payload :: apiTypes.AutoModerationRuleDeletePayload
+
+				self.onAutoModerationRuleDelete:invoke(classes.automoderation.rule.new(self.state, typedObject.d))
+			elseif object.event == apiTypes.gateway.receiveEvents["AutoModerationActionExecution"] then
+				local typedObject = object.payload :: apiTypes.AutoModerationActionExecutionPayload
+
+				self.onAutoModerationActionExecution:invoke({
+					guildId = typedObject.d.guild_id,
+					action = typedObject.d.action,
+					ruleId = typedObject.d.rule_id,
+					ruleTriggerType = typedObject.d.rule_trigger_type,
+					userId = typedObject.d.user_id,
+					channelId = typedObject.d.channel_id,
+					messageId = typedObject.d.message_id,
+					alertSystemMessageId = typedObject.d.alert_system_message_id,
+					content = typedObject.d.content,
+					matchedKeyword = typedObject.d.matched_keyword,
+					matchedContent = typedObject.d.matched_content,
+				})
+			elseif object.event == apiTypes.gateway.receiveEvents["ApplicationCommandPermissionsUpdate"] then
+				local typedObject = object.payload :: apiTypes.ApplicationCommandPermissionsUpdatePayload
+
+				self.onApplicationCommandPermissionsUpdate:invoke({
+					id = typedObject.d.id,
+					applicationId = typedObject.d.application_id,
+					guildId = typedObject.d.guild_id,
+					permissions = typedObject.d.permissions,
+				})
+			elseif object.event == apiTypes.gateway.receiveEvents["MessagePollVoteAdd"] then
+				local typedObject = object.payload :: apiTypes.MessagePollVoteAdd
+
+				self.onMessagePollVoteAdd:invoke({
+					userId = typedObject.d.user_id,
+					channelId = typedObject.d.channel_id,
+					messageId = typedObject.d.message_id,
+					guildId = typedObject.d.guild_id,
+					answerId = typedObject.d.answer_id,
+				})
+			elseif object.event == apiTypes.gateway.receiveEvents["MessagePollVoteRemove"] then
+				local typedObject = object.payload :: apiTypes.MessagePollVoteRemove
+
+				self.onMessagePollVoteRemove:invoke({
+					userId = typedObject.d.user_id,
+					channelId = typedObject.d.channel_id,
+					messageId = typedObject.d.message_id,
+					guildId = typedObject.d.guild_id,
+					answerId = typedObject.d.answer_id,
+				})
+			elseif object.event == apiTypes.gateway.receiveEvents["PresenceUpdate"] then
+				local typedObject = object.payload :: apiTypes.PresenceUpdatePayload
+
+				self.onPresenceUpdate:invoke(classes.presence.new(typedObject.d :: apiTypes.PresenceObject))
+			elseif object.event == apiTypes.gateway.receiveEvents["TypingStart"] then
+				local typedObject = object.payload :: apiTypes.TypingStartPayload
+
+				self.onTypingStart:invoke({
+					channelId = typedObject.d.channel_id,
+					guildId = typedObject.d.guild_id,
+					userId = typedObject.d.user_id,
+					timestamp = typedObject.d.timestamp,
+					member = typedObject.d.member
+						and typedObject.d.guild_id
+						and classes.guild.member.new(self.state, typedObject.d.guild_id, typedObject.d.member),
+				})
+			elseif object.event == apiTypes.gateway.receiveEvents["GuildMembersChunk"] then
+				local typedObject = object.payload :: apiTypes.GuildMembersChunkPayload
+
+				local membersArray = {}
+				for _, memberData in next, typedObject.d.members do
+					table.insert(membersArray, classes.guild.member.new(self.state, typedObject.d.guild_id, memberData))
+				end
+
+				self.onGuildMembersChunk:invoke({
+					guildId = typedObject.d.guild_id,
+					members = membersArray,
+					chunkIndex = typedObject.d.chunk_index,
+					chunkCount = typedObject.d.chunk_count,
+					notFound = typedObject.d.not_found,
+					nonce = typedObject.d.nonce,
+				})
+			elseif object.event == apiTypes.gateway.receiveEvents["GuildIntegrationsUpdate"] then
+				local typedObject = object.payload :: apiTypes.GuildIntegrationsUpdatePayload
+
+				self.onGuildIntegrationsUpdate:invoke({
+					guildId = typedObject.d.guild_id,
+				})
+			elseif object.event == apiTypes.gateway.receiveEvents["WebhooksUpdate"] then
+				local typedObject = object.payload :: apiTypes.WebhooksUpdatePayload
+
+				self.onWebhooksUpdate:invoke({
+					guildId = typedObject.d.guild_id,
+					channelId = typedObject.d.channel_id,
+				})
+			elseif object.event == apiTypes.gateway.receiveEvents["Resumed"] then
+				self.onResumed:invoke()
+			elseif object.event == apiTypes.gateway.receiveEvents["VoiceStateUpdate"] then
+				local typedObject = object.payload :: apiTypes.VoiceStateUpdatePayload
+
+				self.onVoiceStateUpdate:invoke(classes.guild.voiceState.new(self.state, typedObject.d))
+			elseif object.event == apiTypes.gateway.receiveEvents["VoiceServerUpdate"] then
+				local typedObject = object.payload :: apiTypes.VoiceServerUpdatePayload
+
+				self.onVoiceServerUpdate:invoke({
+					token = typedObject.d.token,
+					guildId = typedObject.d.guild_id,
+					endpoint = typedObject.d.endpoint,
+				})
+			elseif object.event == apiTypes.gateway.receiveEvents["StageInstanceCreate"] then
+				local typedObject = object.payload :: apiTypes.StageInstanceCreate
+
+				self.onStageInstanceCreate:invoke(classes.guild.stageInstance.new(typedObject.d))
+			elseif object.event == apiTypes.gateway.receiveEvents["StageInstanceUpdate"] then
+				local typedObject = object.payload :: apiTypes.StageInstanceUpdate
+
+				self.onStageInstanceUpdate:invoke(classes.guild.stageInstance.new(typedObject.d))
+			elseif object.event == apiTypes.gateway.receiveEvents["StageInstanceDelete"] then
+				local typedObject = object.payload :: apiTypes.StageInstanceDelete
+
+				self.onStageInstanceDelete:invoke(classes.guild.stageInstance.new(typedObject.d))
 			end
 		end)
 
@@ -885,28 +1507,6 @@ end
 --[=[
 	@within DiscordLuau.Bot
 
-	Will create a new Guild instance, returns this instance.
-]=]
-function Bot.Prototype.createGuildAsync(
-	self: Bot,
-	guildData: builders.guildJSON & {
-		name: string,
-	}
-): future.FutureLike<string, classes.Guild>
-	return future.Future.new(function()
-		local request = self.state.rest:newRequest()
-
-		local response = rest.guild.createGuildAsync(request, guildData :: any):await()
-
-		assert(response:isOk(), `{response:unwrapErr()}`)
-
-		return classes.guild.guild.new(self.state, response:unwrapOk()) :: any
-	end) :: future.FutureLike<string, classes.Guild>
-end
-
---[=[
-	@within DiscordLuau.Bot
-
 	Will set the Log Level for the bot, and all instantiated objects within the bot.
 ]=]
 function Bot.Prototype.setLogLevel(self: Bot, logLevel: logger.LogLevel)
@@ -1025,6 +1625,75 @@ function Bot.Interface.new(options: {
 			onGuildMemberJoined = emitter.new(),
 			onGuildMemberLeft = emitter.new(),
 			onGuildMemberUpdated = emitter.new(),
+
+			onMessageReactionAdd = emitter.new(),
+			onMessageReactionRemove = emitter.new(),
+			onMessageReactionRemoveAll = emitter.new(),
+			onMessageReactionRemoveEmoji = emitter.new(),
+
+			onThreadListSync = emitter.new(),
+			onThreadMemberUpdate = emitter.new(),
+			onThreadMembersUpdate = emitter.new(),
+
+			onEntitlementCreate = emitter.new(),
+			onEntitlementUpdate = emitter.new(),
+			onEntitlementDelete = emitter.new(),
+
+			onGuildAuditLogEntryCreate = emitter.new(),
+
+			onGuildEmojisUpdate = emitter.new(),
+			onGuildStickersUpdate = emitter.new(),
+
+			onGuildScheduledEventCreate = emitter.new(),
+			onGuildScheduledEventUpdate = emitter.new(),
+			onGuildScheduledEventDelete = emitter.new(),
+			onGuildScheduledEventUserAdd = emitter.new(),
+			onGuildScheduledEventUserRemove = emitter.new(),
+
+			onIntegrationCreate = emitter.new(),
+			onIntegrationUpdate = emitter.new(),
+			onIntegrationDelete = emitter.new(),
+
+			onInviteCreate = emitter.new(),
+			onInviteDelete = emitter.new(),
+
+			onAutoModerationRuleCreate = emitter.new(),
+			onAutoModerationRuleUpdate = emitter.new(),
+			onAutoModerationRuleDelete = emitter.new(),
+			onAutoModerationActionExecution = emitter.new(),
+
+			onApplicationCommandPermissionsUpdate = emitter.new(),
+
+			onMessagePollVoteAdd = emitter.new(),
+			onMessagePollVoteRemove = emitter.new(),
+
+			onPresenceUpdate = emitter.new(),
+			onTypingStart = emitter.new(),
+			onGuildMembersChunk = emitter.new(),
+			onGuildIntegrationsUpdate = emitter.new(),
+			onWebhooksUpdate = emitter.new(),
+			onResumed = emitter.new(),
+
+			onVoiceStateUpdate = emitter.new(),
+			onVoiceServerUpdate = emitter.new(),
+
+			onStageInstanceCreate = emitter.new(),
+			onStageInstanceUpdate = emitter.new(),
+			onStageInstanceDelete = emitter.new(),
+
+			onGuildRoleCreate = emitter.new(),
+			onGuildRoleUpdate = emitter.new(),
+			onGuildRoleDelete = emitter.new(),
+
+			onAnnouncementThreadCreate = emitter.new(),
+			onPublicThreadCreate = emitter.new(),
+			onPrivateThreadCreate = emitter.new(),
+
+			onAnnouncementThreadUpdate = emitter.new(),
+			onPublicThreadUpdate = emitter.new(),
+			onPrivateThreadUpdate = emitter.new(),
+
+			onThreadDelete = emitter.new(),
 
 			onPingInteraction = emitter.new(),
 			onCommandInteraction = emitter.new(),
@@ -1148,6 +1817,175 @@ export type Bot =
 			pending: boolean?,
 			communicationDisabledUntil: stdPolyfills.DateTime?,
 		}>,
+
+		onMessageReactionAdd: emitter.Emitter<{
+			userId: string,
+			channelId: string,
+			messageId: string,
+			guildId: string?,
+			member: classes.GuildMember?,
+			emoji: classes.Emoji,
+			messageAuthorId: string?,
+			burst: boolean,
+			burstColors: { string },
+			reactionType: number,
+		}>,
+
+		onMessageReactionRemove: emitter.Emitter<{
+			userId: string,
+			channelId: string,
+			messageId: string,
+			guildId: string?,
+			emoji: classes.Emoji,
+			burst: boolean,
+			reactionType: number,
+		}>,
+
+		onMessageReactionRemoveAll: emitter.Emitter<{ channelId: string, messageId: string, guildId: string? }>,
+
+		onMessageReactionRemoveEmoji: emitter.Emitter<{ channelId: string, messageId: string, guildId: string?, emoji: classes.Emoji }>,
+
+		onThreadListSync: emitter.Emitter<{ guildId: string, channelIds: { string }?, members: { classes.ThreadMember } }>,
+
+		onThreadMemberUpdate: emitter.Emitter<{ guildId: string, threadMember: classes.ThreadMember }>,
+
+		onThreadMembersUpdate: emitter.Emitter<{
+			id: string,
+			guildId: string,
+			memberCount: number,
+			addedMembers: { classes.ThreadMember },
+			removedMemberIds: { string }?,
+		}>,
+
+		onEntitlementCreate: emitter.Emitter<classes.Entitlement>,
+
+		onEntitlementUpdate: emitter.Emitter<classes.Entitlement>,
+
+		onEntitlementDelete: emitter.Emitter<classes.Entitlement>,
+
+		onGuildAuditLogEntryCreate: emitter.Emitter<classes.AuditLogEntry>,
+
+		onGuildEmojisUpdate: emitter.Emitter<{ guildId: string, emojis: { classes.Emoji } }>,
+
+		onGuildStickersUpdate: emitter.Emitter<{ guildId: string, stickers: { classes.Sticker } }>,
+
+		onGuildScheduledEventCreate: emitter.Emitter<classes.ScheduledEvent>,
+
+		onGuildScheduledEventUpdate: emitter.Emitter<classes.ScheduledEvent>,
+
+		onGuildScheduledEventDelete: emitter.Emitter<classes.ScheduledEvent>,
+
+		onGuildScheduledEventUserAdd: emitter.Emitter<{ guildScheduledEventId: string, userId: string, guildId: string }>,
+
+		onGuildScheduledEventUserRemove: emitter.Emitter<{ guildScheduledEventId: string, userId: string, guildId: string }>,
+
+		onIntegrationCreate: emitter.Emitter<classes.Integration>,
+
+		onIntegrationUpdate: emitter.Emitter<classes.Integration>,
+
+		onIntegrationDelete: emitter.Emitter<{ id: string, guildId: string, applicationId: string? }>,
+
+		onInviteCreate: emitter.Emitter<{
+			channelId: string,
+			code: string,
+			createdAt: stdPolyfills.DateTime,
+			guildId: string?,
+			inviter: classes.User?,
+			maxAge: number,
+			maxUses: number,
+			targetType: number?,
+			targetUser: classes.User?,
+			temporary: boolean,
+			uses: number,
+		}>,
+
+		onInviteDelete: emitter.Emitter<{ channelId: string, code: string, guildId: string? }>,
+
+		onAutoModerationRuleCreate: emitter.Emitter<classes.AutomoderationRule>,
+
+		onAutoModerationRuleUpdate: emitter.Emitter<classes.AutomoderationRule>,
+
+		onAutoModerationRuleDelete: emitter.Emitter<classes.AutomoderationRule>,
+
+		onAutoModerationActionExecution: emitter.Emitter<{
+			guildId: string,
+			action: apiTypes.AutomoderationActionObject,
+			ruleId: string,
+			ruleTriggerType: apiTypes.AutomoderationRuleTriggerType,
+			userId: string,
+			channelId: string?,
+			messageId: string?,
+			alertSystemMessageId: string?,
+			content: string,
+			matchedKeyword: string?,
+			matchedContent: string?,
+		}>,
+
+		onApplicationCommandPermissionsUpdate: emitter.Emitter<{
+			id: string,
+			applicationId: string,
+			guildId: string,
+			permissions: { apiTypes.GuildApplicationCommandPermissionObject },
+		}>,
+
+		onMessagePollVoteAdd: emitter.Emitter<{ userId: string, channelId: string, messageId: string, guildId: string?, answerId: number }>,
+
+		onMessagePollVoteRemove: emitter.Emitter<{ userId: string, channelId: string, messageId: string, guildId: string?, answerId: number }>,
+
+		onPresenceUpdate: emitter.Emitter<classes.Presence>,
+
+		onTypingStart: emitter.Emitter<{
+			channelId: string,
+			guildId: string?,
+			userId: string,
+			timestamp: number,
+			member: classes.GuildMember?,
+		}>,
+
+		onGuildMembersChunk: emitter.Emitter<{
+			guildId: string,
+			members: { classes.GuildMember },
+			chunkIndex: number,
+			chunkCount: number,
+			notFound: { string }?,
+			nonce: string?,
+		}>,
+
+		onGuildIntegrationsUpdate: emitter.Emitter<{ guildId: string }>,
+
+		onWebhooksUpdate: emitter.Emitter<{ guildId: string, channelId: string }>,
+
+		onResumed: emitter.Emitter<()>,
+
+		onVoiceStateUpdate: emitter.Emitter<classes.VoiceState>,
+
+		onVoiceServerUpdate: emitter.Emitter<{ token: string, guildId: string, endpoint: string? }>,
+
+		onStageInstanceCreate: emitter.Emitter<classes.StageInstance>,
+
+		onStageInstanceUpdate: emitter.Emitter<classes.StageInstance>,
+
+		onStageInstanceDelete: emitter.Emitter<classes.StageInstance>,
+
+		onGuildRoleCreate: emitter.Emitter<classes.Role>,
+
+		onGuildRoleUpdate: emitter.Emitter<classes.Role>,
+
+		onGuildRoleDelete: emitter.Emitter<{ guildId: string, roleId: string }>,
+
+		onAnnouncementThreadCreate: emitter.Emitter<classes.Announcement>,
+
+		onPublicThreadCreate: emitter.Emitter<classes.Public>,
+
+		onPrivateThreadCreate: emitter.Emitter<classes.Private>,
+
+		onAnnouncementThreadUpdate: emitter.Emitter<classes.Announcement>,
+
+		onPublicThreadUpdate: emitter.Emitter<classes.Public>,
+
+		onPrivateThreadUpdate: emitter.Emitter<classes.Private>,
+
+		onThreadDelete: emitter.Emitter<{ id: string, guildId: string, parentId: string, type: number }>,
 
 		onPingInteraction: emitter.Emitter<classes.Ping>,
 
