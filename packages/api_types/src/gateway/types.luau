@@ -212,6 +212,36 @@ export type GuildEmojisUpdatePayload = Payload<{
 	emojis: { objects.EmojiObject }, -- Array of emojis
 }>
 
+-- https://discord.com/developers/docs/topics/gateway-events#guild-soundboard-sound-create
+export type GuildSoundboardSoundCreatePayload = Payload<objects.SoundboardSoundObject>
+
+-- https://discord.com/developers/docs/topics/gateway-events#guild-soundboard-sound-update
+export type GuildSoundboardSoundUpdatePayload = Payload<objects.SoundboardSoundObject>
+
+-- https://discord.com/developers/docs/topics/gateway-events#guild-soundboard-sound-delete
+export type GuildSoundboardSoundDeletePayload = Payload<{
+	sound_id: objects.Snowflake, -- ID of the deleted sound
+	guild_id: objects.Snowflake, -- ID of the guild
+}>
+
+-- https://discord.com/developers/docs/topics/gateway-events#guild-soundboard-sounds-update
+export type GuildSoundboardSoundsUpdatePayload = Payload<{
+	soundboard_sounds: { objects.SoundboardSoundObject },
+	guild_id: objects.Snowflake,
+}>
+
+-- https://discord.com/developers/docs/topics/gateway-events#voice-channel-effect-send
+export type VoiceChannelEffectSendPayload = Payload<{
+	channel_id: objects.Snowflake, -- ID of the channel the effect was sent in
+	guild_id: objects.Snowflake, -- ID of the guild the effect was sent in
+	user_id: objects.Snowflake, -- ID of the user who sent the effect
+	emoji: objects.EmojiObject?, -- emoji sent (nil for soundboard sounds)
+	animation_type: number?, -- type of emoji animation (0=premium, 1=basic)
+	animation_id: number?, -- ID of the emoji animation
+	sound_id: objects.Snowflake?, -- ID of the soundboard sound
+	sound_volume: number?, -- volume of the soundboard sound (0-1)
+}>
+
 -- https://discord.com/developers/docs/topics/gateway-events#guild-stickers-update
 export type GuildStickersUpdatePayload = Payload<{
 	guild_id: objects.Snowflake, -- ID of the guild

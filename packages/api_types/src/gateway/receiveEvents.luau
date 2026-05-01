@@ -78,6 +78,11 @@ local ReceiveEvents = table.freeze({
 	MessagePollVoteAdd = "MESSAGE_POLL_VOTE_ADD",
 	MessagePollVoteRemove = "MESSAGE_POLL_VOTE_REMOVE",
 	RateLimited = "RATE_LIMITED",
+	GuildSoundboardSoundCreate = "GUILD_SOUNDBOARD_SOUND_CREATE",
+	GuildSoundboardSoundUpdate = "GUILD_SOUNDBOARD_SOUND_UPDATE",
+	GuildSoundboardSoundDelete = "GUILD_SOUNDBOARD_SOUND_DELETE",
+	GuildSoundboardSoundsUpdate = "GUILD_SOUNDBOARD_SOUNDS_UPDATE",
+	VoiceChannelEffectSend = "VOICE_CHANNEL_EFFECT_SEND",
 })
 
 export type ReceiveEvent =
@@ -151,5 +156,10 @@ export type ReceiveEvent =
 	| "MessagePollVoteAdd"
 	| "MessagePollVoteRemove"
 	| "RateLimited"
+	| "GuildSoundboardSoundCreate"
+	| "GuildSoundboardSoundUpdate"
+	| "GuildSoundboardSoundDelete"
+	| "GuildSoundboardSoundsUpdate"
+	| "VoiceChannelEffectSend"
 
 return ReceiveEvents
