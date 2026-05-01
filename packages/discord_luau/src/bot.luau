@@ -1666,14 +1666,16 @@ function Bot.Prototype.requestGuildMembersAsync(
 	return future.Future.new(function()
 		assert(not self.rateLimitedGuilds[guildId], `requestGuildMembers is rate limited for guild {guildId}`)
 
-		self.state.webSocketManager:sendAsync(apiTypes.gateway.opcodes.RequestGuildMembers, {
-			guild_id = guildId,
-			query = params.query,
-			limit = params.limit,
-			presences = params.presences,
-			user_ids = params.userIds,
-			nonce = params.nonce,
-		}):await()
+		self.state.webSocketManager
+			:sendAsync(apiTypes.gateway.opcodes.RequestGuildMembers, {
+				guild_id = guildId,
+				query = params.query,
+				limit = params.limit,
+				presences = params.presences,
+				user_ids = params.userIds,
+				nonce = params.nonce,
+			})
+			:await()
 	end) :: future.FutureLike<string, nil>
 end
 
@@ -1717,6 +1719,8 @@ function Bot.Interface.new(options: {
 			}),
 
 			logger = logger.new("Bot"),
+
+			rateLimitedGuilds = {},
 
 			onReady = emitter.new(),
 			onAllShardsReady = emitter.new(),
@@ -1831,8 +1835,6 @@ function Bot.Interface.new(options: {
 
 			onRateLimited = emitter.new(),
 
-			rateLimitedGuilds = {},
-
 			onGuildRoleCreate = emitter.new(),
 			onGuildRoleUpdate = emitter.new(),
 			onGuildRoleDelete = emitter.new(),
@@ -1867,6 +1869,8 @@ export type Bot =
 	typeof(Bot.Prototype)
 	& {
 		state: state.State,
+
+		rateLimitedGuilds: { [string]: boolean },
 
 		logger: logger.Logger,
 
@@ -2169,8 +2173,6 @@ export type Bot =
 		}>,
 
 		onRateLimited: emitter.Emitter<{ opcode: number, retryAfter: number, guildId: string? }>,
-
-		rateLimitedGuilds: { [string]: boolean },
 	}
 
 return Bot.Interface
