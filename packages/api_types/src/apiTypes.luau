@@ -79,6 +79,7 @@ export type GuildFeature =
 	| "CREATOR_MONETIZABLE_PROVISIONAL"
 	| "CREATOR_STORE_PAGE"
 	| "DEVELOPER_SUPPORT_SERVER"
+	| "ENHANCED_ROLE_COLORS"
 	| "DISCOVERABLE"
 	| "FEATURABLE"
 	| "INVITES_DISABLED"
@@ -179,6 +180,9 @@ export type OverwriteObjectType = number
 
 -- https://discord.com/developers/docs/monetization/entitlements#entitlement-object-entitlement-types
 export type EntitlementType = number
+
+-- https://discord.com/developers/docs/monetization/skus#sku-object-sku-types
+export type SkuType = number
 
 -- https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-types
 export type ActivityType = number
@@ -368,6 +372,14 @@ export type AvatarDecorationDataObject = {
 	sku_id: Snowflake, -- id of the avatar decoration's SKU
 }
 
+-- https://discord.com/developers/docs/resources/user#user-object-user-primary-guild-structure
+export type UserPrimaryGuildObject = {
+	identity_guild_id: Snowflake?, -- the guild's ID
+	identity_enabled: boolean?, -- whether the guild identity (tag) is enabled
+	tag: string?, -- the guild's tag shown on the user's profile (1-4 chars)
+	badge: string?, -- the guild's badge icon hash
+}
+
 -- https://discord.com/developers/docs/resources/user#user-object
 export type UserObject = {
 	id: Snowflake, -- the user's id
@@ -387,6 +399,7 @@ export type UserObject = {
 	premium_type: PremiumTypes?, -- the type of Nitro subscription on a user's account
 	public_flags: number?, -- the public flags on a user's account
 	avatar_decoration_data: AvatarDecorationDataObject?, -- data for the user's avatar decoration
+	primary_guild: UserPrimaryGuildObject?, -- the user's primary guild and associated guild tag
 }
 
 -- https://discord.com/developers/docs/resources/guild#unavailable-guild-object
@@ -756,6 +769,16 @@ export type EntitlementObject = {
 	ends_at: string?, -- Date at which the entitlement is no longer valid. Not present when using test entitlements.
 	guild_id: Snowflake?, -- ID of the guild that is granted access to the entitlement's sku
 	consumed: boolean?, -- For consumable items, whether or not the entitlement has been consumed
+}
+
+-- https://discord.com/developers/docs/monetization/skus#sku-object
+export type SkuObject = {
+	id: Snowflake, -- ID of the SKU
+	type: SkuType, -- Type of SKU
+	application_id: Snowflake, -- ID of the parent application
+	name: string, -- Customer-facing name of your premium offering
+	slug: string, -- System-generated URL slug based on the SKU's name
+	flags: number, -- SKU flags combined as a bitfield
 }
 
 -- https://discord.com/developers/docs/resources/voice#voice-state-object

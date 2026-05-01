@@ -58,4 +58,27 @@ function application.editCurrentApplicationAsync(
 	end) :: future.FutureLike<string, apiTypes.EditCurrentApplicationResponse>
 end
 
+--[=[
+	@within Rest.application
+
+	https://discord.com/developers/docs/monetization/skus#list-skus
+]=]
+function application.listSkusAsync(
+	instance: request.Request,
+	applicationId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.ListSkusResponse>
+	return future.Future.new(function()
+		instance:assertToken()
+
+		instance:setMethod("GET")
+		instance:setUrl(string.format(apiTypes.rest.endpoints.ListSkus, applicationId))
+
+		local response = instance:executeAsync():await()
+
+		assert(response:isOk(), `{response:unwrapErr()}`)
+
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.ListSkusResponse>
+end
+
 return application
