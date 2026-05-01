@@ -180,6 +180,7 @@ local team = require("./team/team")
 local unavailableGuild = require("../guild/unavailableGuild")
 local installParams = require("./installParams")
 local commandObject = require("./command/command")
+local sku = require("./sku")
 
 local Application = {}
 
@@ -301,6 +302,28 @@ function Application.Prototype.overwriteSlashCommandsAsync(
 
 		return commands
 	end) :: future.FutureLike<string, { commandObject.Command }>
+end
+
+--[=[
+	@within Classes.Application
+	Returns a list of SKUs for this application.
+]=]
+function Application.Prototype.listSkusAsync(self: Application): future.FutureLike<string, { sku.Sku }>
+	return future.Future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local response = rest.application.listSkusAsync(request, self.id):await()
+
+		assert(response:isOk(), `{response:unwrapErr()}`)
+
+		local skus = {}
+
+		for _, skuData in response:unwrapOk() do
+			table.insert(skus, sku.new(skuData))
+		end
+
+		return skus
+	end) :: future.FutureLike<string, { sku.Sku }>
 end
 
 --[=[
