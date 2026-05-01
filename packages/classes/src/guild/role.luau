@@ -298,6 +298,8 @@ function Role.Prototype.sync(self: Role, roleData: apiTypes.GuildRoleObject): ni
 
 	self.color = roleData.color
 
+	self.colors = roleData.colors
+
 	self.hoist = roleData.hoist
 
 	self.icon = roleData.icon
@@ -340,6 +342,7 @@ export type Role = typeof(Role.Prototype) & {
 
 	name: string,
 	color: number,
+	colors: { [string]: number }?,
 	hoist: boolean,
 	icon: string?,
 	unicodeEmoji: string?,

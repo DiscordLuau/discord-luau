@@ -111,6 +111,7 @@
 local apiTypes = require("../luau_packages/api_types")
 
 local avatarDecoration = require("./avatarDecoration")
+local primaryGuild = require("./primaryGuild")
 
 local User = {}
 
@@ -137,6 +138,8 @@ function User.Prototype.sync(self: User, userData: apiTypes.UserObject)
 
 	self.avatarDecorationData = userData.avatar_decoration_data
 		and avatarDecoration.new(userData.avatar_decoration_data.asset, userData.avatar_decoration_data.sku_id)
+
+	self.primaryGuild = userData.primary_guild and primaryGuild.new(userData.primary_guild)
 
 	self.bot = userData.bot
 
@@ -201,6 +204,7 @@ export type User = typeof(User.Prototype) & {
 	premiumType: apiTypes.NitroType?,
 	publicFlags: number?,
 	avatarDecorationData: avatarDecoration.AvatarDecoration?,
+	primaryGuild: primaryGuild.PrimaryGuild?,
 }
 
 return User.Interface
