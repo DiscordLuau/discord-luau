@@ -28,6 +28,7 @@
 local apiTypes = require("../../../luau_packages/api_types")
 
 local textInput = require("./textInput")
+local label = require("./label")
 
 local Modal = {}
 
@@ -68,6 +69,21 @@ end
 	Sets the components that will be displayed in this modal. These must be text input components.
 ]=]
 function Modal.Prototype.setComponents(self: Modal, components: { textInput.JSON }): Modal
+	self.components = components
+
+	return self
+end
+
+--[=[
+	@within Builders.Message.Modal
+
+	Adds a Label component to the modal. Labels are the recommended replacement for ActionRow in modals.
+]=]
+function Modal.Prototype.addLabel(self: Modal, labelComponent: label.JSON): Modal
+	local components = self.components or {}
+
+	table.insert(components, labelComponent)
+
 	self.components = components
 
 	return self
@@ -142,7 +158,7 @@ end
 export type Modal = typeof(Modal.Prototype) & {
 	customId: string?,
 	title: string?,
-	components: { textInput.JSON }?,
+	components: { textInput.JSON | label.JSON }?,
 }
 
 export type JSON = apiTypes.InteractionCallbackModalObject

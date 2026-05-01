@@ -34,6 +34,11 @@ local mediaGallery = require("@self/message/components/mediaGallery")
 local file = require("@self/message/components/file")
 local section = require("@self/message/components/section")
 local container = require("@self/message/components/container")
+local label = require("@self/message/components/label")
+local fileUpload = require("@self/message/components/fileUpload")
+local radioGroup = require("@self/message/components/radioGroup")
+local checkboxGroup = require("@self/message/components/checkboxGroup")
+local checkbox = require("@self/message/components/checkbox")
 local selectMenuOption = require("@self/message/components/selectMenu/option")
 local defaultValue = require("@self/message/components/selectMenu/defaultValue")
 local selectMenu = require("@self/message/components/selectMenu/selectMenu")
@@ -92,6 +97,11 @@ export type mediaGalleryJSON = mediaGallery.JSON
 export type fileJSON = file.JSON
 export type sectionJSON = section.JSON
 export type containerJSON = container.JSON
+export type labelJSON = label.JSON
+export type fileUploadJSON = fileUpload.JSON
+export type radioGroupJSON = radioGroup.JSON
+export type checkboxGroupJSON = checkboxGroup.JSON
+export type checkboxJSON = checkbox.JSON
 export type selectMenuOptionJSON = selectMenuOption.JSON
 export type defaultValueJSON = defaultValue.JSON
 export type selectMenuJSON = selectMenu.JSON
@@ -162,6 +172,11 @@ return {
 			file = file,
 			section = section,
 			container = container,
+			label = label,
+			fileUpload = fileUpload,
+			radioGroup = radioGroup,
+			checkboxGroup = checkboxGroup,
+			checkbox = checkbox,
 		},
 	},
 	forumTag = forumTag,
