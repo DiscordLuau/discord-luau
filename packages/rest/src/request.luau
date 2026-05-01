@@ -41,9 +41,11 @@ end
 --[=[
 	@within Rest.Request
 
-	Responsible for adding to the Url Params of this request. Both the param key and values are strings.
+	Responsible for adding to the Url Params of this request. Values may be a string or an array of strings;
+	arrays are serialized as repeated query parameters (e.g. `key=a&key=b`) with full URL encoding applied
+	by the underlying runtime's net.request implementation.
 ]=]
-function Request.Prototype.addUrlParam(self: Request, paramName: string, paramValue: string)
+function Request.Prototype.addUrlParam(self: Request, paramName: string, paramValue: string | { string })
 	self.urlParams[paramName] = paramValue
 end
 
@@ -143,7 +145,6 @@ function Request.Prototype.executeAsync<Resolve>(self: Request)
 
 		local headerTable: stdPolyfills.HttpHeaderMap = {}
 		local baseUrl = `https://discord.com/api/v{self.restApiVersion}{self.url}`
-		local hasUrlParams = next(self.urlParams) ~= nil
 
 		headerTable["user-agent"] = "DiscordBot (https://github.com/DiscordLuau/discord-luau, 0.1.0)"
 		headerTable["content-type"] = "application/json"
@@ -154,18 +155,6 @@ function Request.Prototype.executeAsync<Resolve>(self: Request)
 
 		for header, value in self.headers do
 			headerTable[header] = value
-		end
-
-		if hasUrlParams then
-			baseUrl = baseUrl .. "?"
-		end
-
-		for param, value in self.urlParams do
-			baseUrl = baseUrl .. `{param}={value}&`
-		end
-
-		if hasUrlParams then
-			baseUrl = baseUrl:sub(1, #baseUrl - 1)
 		end
 
 		for _, hook in self.beforeHooks do
@@ -198,6 +187,7 @@ function Request.Prototype.executeAsync<Resolve>(self: Request)
 			method = self.method,
 			body = self.body,
 			headers = headerTable,
+			query = next(self.urlParams) ~= nil and self.urlParams or nil,
 		} :: stdPolyfills.FetchParams)
 
 		for _, hook in self.afterHooks do
@@ -283,7 +273,7 @@ export type Request = typeof(Request.Prototype) & {
 	url: string,
 	flags: { [string]: boolean },
 	headers: { [string]: string },
-	urlParams: { [string]: string },
+	urlParams: { [string]: string | { string } },
 	body: string,
 }
 
