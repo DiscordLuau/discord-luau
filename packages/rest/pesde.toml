@@ -18,4 +18,5 @@ default = "https://github.com/pesde-pkg/index"
 [dependencies]
 std_polyfills = { workspace = "discord_luau/std_polyfills" }
 api_types = { workspace = "discord_luau/api_types" }
+formdata = { workspace = "discord_luau/formdata" }
 future = { name = "yetanotherclown/luau_futures", version = "2.0.0-beta.3" }

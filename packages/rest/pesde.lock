@@ -24,12 +24,29 @@ util = [{ workspace = "discord_luau/util", version = "^" }, "standard"]
 ref_ty = "workspace"
 path = "packages/bit"
 
+[graph."discord_luau/formdata@0.0.1 luau"]
+direct = ["formdata", { workspace = "discord_luau/formdata", version = "^" }, "standard"]
+
+[graph."discord_luau/formdata@0.0.1 luau".dependencies]
+stream = ["discord_luau/stream@0.0.1 luau", "standard"]
+
+[graph."discord_luau/formdata@0.0.1 luau".pkg_ref]
+ref_ty = "workspace"
+path = "packages/formdata"
+
+[graph."discord_luau/formdata@0.0.1 luau".pkg_ref.dependencies]
+stream = [{ workspace = "discord_luau/stream", version = "^" }, "standard"]
+
 [graph."discord_luau/std_polyfills@0.0.1 luau"]
 direct = ["std_polyfills", { workspace = "discord_luau/std_polyfills", version = "^" }, "standard"]
 
 [graph."discord_luau/std_polyfills@0.0.1 luau".pkg_ref]
 ref_ty = "workspace"
 path = "packages/std_polyfills"
+
+[graph."discord_luau/stream@0.0.1 luau".pkg_ref]
+ref_ty = "workspace"
+path = "packages/stream"
 
 [graph."discord_luau/util@0.0.1 luau".pkg_ref]
 ref_ty = "workspace"

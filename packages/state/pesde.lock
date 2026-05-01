@@ -63,6 +63,7 @@ direct = ["rest", { workspace = "discord_luau/rest", version = "^" }, "standard"
 
 [graph."discord_luau/rest@0.0.1 luau".dependencies]
 api_types = ["discord_luau/api_types@0.0.1 luau", "standard"]
+formdata = ["discord_luau/formdata@0.0.1 luau", "standard"]
 future = ["yetanotherclown/luau_futures@2.0.0-beta.3 luau", "standard"]
 std_polyfills = ["discord_luau/std_polyfills@0.0.1 luau", "standard"]
 
@@ -72,6 +73,7 @@ path = "packages/rest"
 
 [graph."discord_luau/rest@0.0.1 luau".pkg_ref.dependencies]
 api_types = [{ workspace = "discord_luau/api_types", version = "^" }, "standard"]
+formdata = [{ workspace = "discord_luau/formdata", version = "^" }, "standard"]
 future = [{ name = "yetanotherclown/luau_futures", version = "^2.0.0-beta.3", index = "https://github.com/pesde-pkg/index" }, "standard"]
 std_polyfills = [{ workspace = "discord_luau/std_polyfills", version = "^" }, "standard"]
 
