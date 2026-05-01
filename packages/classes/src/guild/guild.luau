@@ -276,6 +276,7 @@ local vanityUrl = require("./vanityUrl")
 local onboarding = require("./onboarding/onboarding")
 local auditlog = require("../auditlog/auditlog")
 local automoderationRule = require("../automoderation/rule")
+local sound = require("../soundboard/sound")
 
 local guildAnnouncement = require("../channels/types/guildAnnouncement")
 local guildCategory = require("../channels/types/guildCategory")
@@ -1639,6 +1640,112 @@ function Guild.Prototype.createAutomoderationRuleAsync(
 
 		return automoderationRule.new(self.state, response:unwrapOk())
 	end) :: future.FutureLike<string, automoderationRule.AutomoderationRule>
+end
+
+--[=[
+	@within Classes.Guild
+	Returns a list of soundboard sounds for this guild.
+]=]
+function Guild.Prototype.listSoundboardSoundsAsync(
+	self: Guild
+): future.FutureLike<string, { sound.Sound }>
+	return future.Future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local response = rest.guild.listGuildSoundboardSoundsAsync(request, self.id):await()
+
+		assert(response:isOk(), `{response:unwrapErr()}`)
+
+		local sounds = {}
+		for _, soundData in next, response:unwrapOk().items do
+			table.insert(sounds, sound.new(soundData))
+		end
+
+		return sounds
+	end) :: future.FutureLike<string, { sound.Sound }>
+end
+
+--[=[
+	@within Classes.Guild
+	Returns a specific soundboard sound for this guild.
+]=]
+function Guild.Prototype.getSoundboardSoundAsync(
+	self: Guild,
+	soundId: apiTypes.Snowflake
+): future.FutureLike<string, sound.Sound>
+	return future.Future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local response = rest.guild.getGuildSoundboardSoundAsync(request, self.id, soundId):await()
+
+		assert(response:isOk(), `{response:unwrapErr()}`)
+
+		return sound.new(response:unwrapOk())
+	end) :: future.FutureLike<string, sound.Sound>
+end
+
+--[=[
+	@within Classes.Guild
+	Creates a new soundboard sound for this guild. Requires the CREATE_GUILD_EXPRESSIONS permission.
+]=]
+function Guild.Prototype.createSoundboardSoundAsync(
+	self: Guild,
+	jsonParams: apiTypes.CreateGuildSoundboardSoundRequest,
+	auditLogReason: string?
+): future.FutureLike<string, sound.Sound>
+	return future.Future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local response =
+			rest.guild.createGuildSoundboardSoundAsync(request, self.id, jsonParams, auditLogReason):await()
+
+		assert(response:isOk(), `{response:unwrapErr()}`)
+
+		return sound.new(response:unwrapOk())
+	end) :: future.FutureLike<string, sound.Sound>
+end
+
+--[=[
+	@within Classes.Guild
+	Modifies a soundboard sound for this guild. Requires the MANAGE_GUILD_EXPRESSIONS permission.
+]=]
+function Guild.Prototype.modifySoundboardSoundAsync(
+	self: Guild,
+	soundId: apiTypes.Snowflake,
+	jsonParams: apiTypes.ModifyGuildSoundboardSoundRequest,
+	auditLogReason: string?
+): future.FutureLike<string, sound.Sound>
+	return future.Future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local response =
+			rest.guild.modifyGuildSoundboardSoundAsync(request, self.id, soundId, jsonParams, auditLogReason):await()
+
+		assert(response:isOk(), `{response:unwrapErr()}`)
+
+		return sound.new(response:unwrapOk())
+	end) :: future.FutureLike<string, sound.Sound>
+end
+
+--[=[
+	@within Classes.Guild
+	Deletes a soundboard sound for this guild. Requires the MANAGE_GUILD_EXPRESSIONS permission.
+]=]
+function Guild.Prototype.deleteSoundboardSoundAsync(
+	self: Guild,
+	soundId: apiTypes.Snowflake,
+	auditLogReason: string?
+): future.FutureLike<string, nil>
+	return future.Future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local response =
+			rest.guild.deleteGuildSoundboardSoundAsync(request, self.id, soundId, auditLogReason):await()
+
+		assert(response:isOk(), `{response:unwrapErr()}`)
+
+		return nil
+	end) :: future.FutureLike<string, nil>
 end
 
 --[=[
