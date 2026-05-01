@@ -521,6 +521,18 @@ export type StickerObject = {
 	sort_value: number?, -- the standard sticker's sort order within its pack
 }
 
+-- https://discord.com/developers/docs/resources/soundboard#soundboard-sound-object
+export type SoundboardSoundObject = {
+	name: string, -- name of this sound (2-32 characters)
+	sound_id: Snowflake, -- ID of this sound
+	volume: number, -- volume of this sound, from 0 to 1
+	emoji_id: Snowflake?, -- ID of this sound's custom emoji
+	emoji_name: string?, -- unicode character of this sound's standard emoji
+	guild_id: Snowflake?, -- ID of the guild this sound is in (absent for default sounds)
+	available: boolean, -- whether this sound can be used
+	user: UserObject?, -- user who created this sound (not included in list endpoints)
+}
+
 -- https://discord.com/developers/docs/resources/guild#guild-object
 export type GuildObject = {
 	id: Snowflake?, -- guild id

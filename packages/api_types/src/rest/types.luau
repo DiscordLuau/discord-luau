@@ -1258,4 +1258,44 @@ export type EditFollowupMessageResponse = Response<objects.MessageObject>
 -- https://discord.com/developers/docs/interactions/receiving-and-responding#delete-followup-message
 export type DeleteFollowupMessageResponse = Response<nil>
 
+-- https://discord.com/developers/docs/resources/soundboard#send-soundboard-sound
+export type SendSoundboardSoundRequest = Request<{
+	sound_id: objects.Snowflake, -- ID of the soundboard sound to play
+	source_guild_id: objects.Snowflake?, -- ID of the guild the soundboard sound is from (required for external sounds)
+}>
+export type SendSoundboardSoundResponse = Response<nil>
+
+-- https://discord.com/developers/docs/resources/soundboard#list-default-soundboard-sounds
+export type ListDefaultSoundboardSoundsResponse = Response<{ objects.SoundboardSoundObject }>
+
+-- https://discord.com/developers/docs/resources/soundboard#list-guild-soundboard-sounds
+export type ListGuildSoundboardSoundsResponse = Response<{
+	items: { objects.SoundboardSoundObject },
+}>
+
+-- https://discord.com/developers/docs/resources/soundboard#get-guild-soundboard-sound
+export type GetGuildSoundboardSoundResponse = Response<objects.SoundboardSoundObject>
+
+-- https://discord.com/developers/docs/resources/soundboard#create-guild-soundboard-sound
+export type CreateGuildSoundboardSoundRequest = Request<{
+	name: string, -- name of the soundboard sound (2-32 characters)
+	sound: string, -- the mp3 or ogg sound data, base64 encoded (max 512kb)
+	volume: number?, -- volume of the soundboard sound (0-1, default 1)
+	emoji_id: objects.Snowflake?, -- ID of the custom emoji for the soundboard sound
+	emoji_name: string?, -- unicode character of the standard emoji for the soundboard sound
+}>
+export type CreateGuildSoundboardSoundResponse = Response<objects.SoundboardSoundObject>
+
+-- https://discord.com/developers/docs/resources/soundboard#modify-guild-soundboard-sound
+export type ModifyGuildSoundboardSoundRequest = Request<{
+	name: string?, -- name of the soundboard sound (2-32 characters)
+	volume: number?, -- volume of the soundboard sound (0-1)
+	emoji_id: objects.Snowflake?, -- ID of the custom emoji
+	emoji_name: string?, -- unicode character of the standard emoji
+}>
+export type ModifyGuildSoundboardSoundResponse = Response<objects.SoundboardSoundObject>
+
+-- https://discord.com/developers/docs/resources/soundboard#delete-guild-soundboard-sound
+export type DeleteGuildSoundboardSoundResponse = Response<nil>
+
 return "DISCORD_V10_PAYLOAD_TYPES"

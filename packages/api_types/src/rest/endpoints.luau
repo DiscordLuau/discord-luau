@@ -574,6 +574,27 @@ local endpoints = table.freeze({
 
 	-- https://discord.com/developers/docs/monetization/skus#list-skus
 	ListSkus = "/applications/%s/skus",
+
+	-- https://discord.com/developers/docs/resources/soundboard#send-soundboard-sound
+	SendSoundboardSound = "/channels/%s/send-soundboard-sound",
+
+	-- https://discord.com/developers/docs/resources/soundboard#list-default-soundboard-sounds
+	ListDefaultSoundboardSounds = "/soundboard-default-sounds",
+
+	-- https://discord.com/developers/docs/resources/soundboard#list-guild-soundboard-sounds
+	ListGuildSoundboardSounds = "/guilds/%s/soundboard-sounds",
+
+	-- https://discord.com/developers/docs/resources/soundboard#get-guild-soundboard-sound
+	GetGuildSoundboardSound = "/guilds/%s/soundboard-sounds/%s",
+
+	-- https://discord.com/developers/docs/resources/soundboard#create-guild-soundboard-sound
+	CreateGuildSoundboardSound = "/guilds/%s/soundboard-sounds",
+
+	-- https://discord.com/developers/docs/resources/soundboard#modify-guild-soundboard-sound
+	ModifyGuildSoundboardSound = "/guilds/%s/soundboard-sounds/%s",
+
+	-- https://discord.com/developers/docs/resources/soundboard#delete-guild-soundboard-sound
+	DeleteGuildSoundboardSound = "/guilds/%s/soundboard-sounds/%s",
 })
 
 export type Endpoint =
@@ -767,5 +788,12 @@ export type Endpoint =
 	| "GetCurrentAuthorizationInformation"
 	| "GetGuildRoleMemberCounts"
 	| "ListSkus"
+	| "SendSoundboardSound"
+	| "ListDefaultSoundboardSounds"
+	| "ListGuildSoundboardSounds"
+	| "GetGuildSoundboardSound"
+	| "CreateGuildSoundboardSound"
+	| "ModifyGuildSoundboardSound"
+	| "DeleteGuildSoundboardSound"
 
 return endpoints
