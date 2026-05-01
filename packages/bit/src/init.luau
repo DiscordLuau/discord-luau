@@ -62,7 +62,7 @@ end
 	Binary SHIFT operation for integers
 ]=]
 function Bit.shift(value: number, displacement: number): number
-	if Bit.is32Bit(value) then
+	if Bit.is32Bit(value) and math.abs(displacement) < 32 then
 		if displacement >= 0 then
 			return bit32.lshift(value, displacement)
 		else
