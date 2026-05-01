@@ -705,4 +705,29 @@ function channel.listJoinedPrivateArchivedThreadsAsync(
 		) :: future.FutureLike<string, apiTypes.ListJoinedPrivateArchivedThreadsResponse>
 end
 
+--[=[
+	@within Rest.channel
+
+	https://discord.com/developers/docs/resources/soundboard#send-soundboard-sound
+]=]
+function channel.sendSoundboardSoundAsync(
+	instance: request.Request,
+	channelId: apiTypes.Snowflake,
+	jsonParams: apiTypes.SendSoundboardSoundRequest
+): future.FutureLike<string, apiTypes.SendSoundboardSoundResponse>
+	return future.Future.new(function()
+		instance:assertToken()
+
+		instance:setMethod("POST")
+		instance:setUrl(string.format(apiTypes.rest.endpoints.SendSoundboardSound, channelId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
+
+		local response = instance:executeAsync():await()
+
+		assert(response:isOk(), `{response:unwrapErr()}`)
+
+		return response:unwrapOk().body
+	end) :: any
+end
+
 return channel

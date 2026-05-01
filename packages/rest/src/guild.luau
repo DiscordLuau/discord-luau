@@ -1225,4 +1225,154 @@ function guild.modifyGuildOnboardingAsync(
 	end) :: future.FutureLike<string, apiTypes.ModifyGuildOnboardingResponse>
 end
 
+--[=[
+	@within Rest.guild
+
+	https://discord.com/developers/docs/resources/soundboard#list-default-soundboard-sounds
+]=]
+function guild.listDefaultSoundboardSoundsAsync(
+	instance: request.Request
+): future.FutureLike<string, apiTypes.ListDefaultSoundboardSoundsResponse>
+	return future.Future.new(function()
+		instance:assertToken()
+
+		instance:setMethod("GET")
+		instance:setUrl(apiTypes.rest.endpoints.ListDefaultSoundboardSounds)
+
+		local response = instance:executeAsync():await()
+
+		assert(response:isOk(), `{response:unwrapErr()}`)
+
+		return response:unwrapOk().body
+	end) :: any
+end
+
+--[=[
+	@within Rest.guild
+
+	https://discord.com/developers/docs/resources/soundboard#list-guild-soundboard-sounds
+]=]
+function guild.listGuildSoundboardSoundsAsync(
+	instance: request.Request,
+	guildId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.ListGuildSoundboardSoundsResponse>
+	return future.Future.new(function()
+		instance:assertToken()
+
+		instance:setMethod("GET")
+		instance:setUrl(string.format(apiTypes.rest.endpoints.ListGuildSoundboardSounds, guildId))
+
+		local response = instance:executeAsync():await()
+
+		assert(response:isOk(), `{response:unwrapErr()}`)
+
+		return response:unwrapOk().body
+	end) :: any
+end
+
+--[=[
+	@within Rest.guild
+
+	https://discord.com/developers/docs/resources/soundboard#get-guild-soundboard-sound
+]=]
+function guild.getGuildSoundboardSoundAsync(
+	instance: request.Request,
+	guildId: apiTypes.Snowflake,
+	soundId: apiTypes.Snowflake
+): future.FutureLike<string, apiTypes.GetGuildSoundboardSoundResponse>
+	return future.Future.new(function()
+		instance:assertToken()
+
+		instance:setMethod("GET")
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetGuildSoundboardSound, guildId, soundId))
+
+		local response = instance:executeAsync():await()
+
+		assert(response:isOk(), `{response:unwrapErr()}`)
+
+		return response:unwrapOk().body
+	end) :: any
+end
+
+--[=[
+	@within Rest.guild
+
+	https://discord.com/developers/docs/resources/soundboard#create-guild-soundboard-sound
+]=]
+function guild.createGuildSoundboardSoundAsync(
+	instance: request.Request,
+	guildId: apiTypes.Snowflake,
+	jsonParams: apiTypes.CreateGuildSoundboardSoundRequest,
+	auditLogReason: string?
+): future.FutureLike<string, apiTypes.CreateGuildSoundboardSoundResponse>
+	return future.Future.new(function()
+		instance:assertToken()
+
+		instance:setMethod("POST")
+		instance:setUrl(string.format(apiTypes.rest.endpoints.CreateGuildSoundboardSound, guildId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
+		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
+
+		local response = instance:executeAsync():await()
+
+		assert(response:isOk(), `{response:unwrapErr()}`)
+
+		return response:unwrapOk().body
+	end) :: any
+end
+
+--[=[
+	@within Rest.guild
+
+	https://discord.com/developers/docs/resources/soundboard#modify-guild-soundboard-sound
+]=]
+function guild.modifyGuildSoundboardSoundAsync(
+	instance: request.Request,
+	guildId: apiTypes.Snowflake,
+	soundId: apiTypes.Snowflake,
+	jsonParams: apiTypes.ModifyGuildSoundboardSoundRequest,
+	auditLogReason: string?
+): future.FutureLike<string, apiTypes.ModifyGuildSoundboardSoundResponse>
+	return future.Future.new(function()
+		instance:assertToken()
+
+		instance:setMethod("PATCH")
+		instance:setUrl(string.format(apiTypes.rest.endpoints.ModifyGuildSoundboardSound, guildId, soundId))
+		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
+		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
+
+		local response = instance:executeAsync():await()
+
+		assert(response:isOk(), `{response:unwrapErr()}`)
+
+		return response:unwrapOk().body
+	end) :: any
+end
+
+--[=[
+	@within Rest.guild
+
+	https://discord.com/developers/docs/resources/soundboard#delete-guild-soundboard-sound
+]=]
+function guild.deleteGuildSoundboardSoundAsync(
+	instance: request.Request,
+	guildId: apiTypes.Snowflake,
+	soundId: apiTypes.Snowflake,
+	auditLogReason: string?
+): future.FutureLike<string, apiTypes.DeleteGuildSoundboardSoundResponse>
+	return future.Future.new(function()
+		instance:assertToken()
+
+		instance:setMethod("DELETE")
+		instance:setUrl(string.format(apiTypes.rest.endpoints.DeleteGuildSoundboardSound, guildId, soundId))
+		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
+
+		local response = instance:executeAsync():await()
+
+		assert(response:isOk(), `{response:unwrapErr()}`)
+
+		return response:unwrapOk().body
+	end) :: any
+end
+
 return guild
