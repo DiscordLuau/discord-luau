@@ -1,3 +1,5 @@
+local stdPolyfills = require("../luau_packages/std_polyfills")
+
 local future = require("../luau_packages/future")
 local apiTypes = require("../luau_packages/api_types")
 
@@ -71,6 +73,82 @@ function invite.deleteInviteAsync(
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.DeleteInviteResponse>
+end
+
+--[=[
+	@within Rest.invite
+
+	https://docs.discord.com/developers/resources/invite#get-target-users
+]=]
+function invite.getInviteTargetUsersAsync(
+	instance: request.Request,
+	inviteCode: string
+): future.FutureLike<string, apiTypes.GetInviteTargetUsersResponse>
+	return future.Future.new(function()
+		instance:assertToken()
+
+		instance:setMethod("GET")
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetInviteTargetUsers, inviteCode))
+
+		local response = instance:executeAsync():await()
+
+		assert(response:isOk(), `{response:unwrapErr()}`)
+
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.GetInviteTargetUsersResponse>
+end
+
+--[=[
+	@within Rest.invite
+
+	https://docs.discord.com/developers/resources/invite#update-target-users
+]=]
+function invite.updateInviteTargetUsersAsync(
+	instance: request.Request,
+	inviteCode: string,
+	csvContent: string
+): future.FutureLike<string, apiTypes.UpdateInviteTargetUsersResponse>
+	return future.Future.new(function()
+		instance:assertToken()
+
+		instance:setFlag("FormdataRequest", true)
+		instance:setMethod("PUT")
+		instance:setUrl(string.format(apiTypes.rest.endpoints.UpdateInviteTargetUsers, inviteCode))
+		instance:setBody(stdPolyfills.serde.encode("json", {
+			formdata_files = {
+				{ name = "target_users_file", content = csvContent, filename = "users.csv" },
+			},
+		}, true))
+
+		local response = instance:executeAsync():await()
+
+		assert(response:isOk(), `{response:unwrapErr()}`)
+
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.UpdateInviteTargetUsersResponse>
+end
+
+--[=[
+	@within Rest.invite
+
+	https://docs.discord.com/developers/resources/invite#get-target-users-job-status
+]=]
+function invite.getInviteTargetUsersJobStatusAsync(
+	instance: request.Request,
+	inviteCode: string
+): future.FutureLike<string, apiTypes.GetInviteTargetUsersJobStatusResponse>
+	return future.Future.new(function()
+		instance:assertToken()
+
+		instance:setMethod("GET")
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetInviteTargetUsersJobStatus, inviteCode))
+
+		local response = instance:executeAsync():await()
+
+		assert(response:isOk(), `{response:unwrapErr()}`)
+
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.GetInviteTargetUsersJobStatusResponse>
 end
 
 return invite
