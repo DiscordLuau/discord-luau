@@ -245,27 +245,48 @@ function REST.Prototype.implementAttachmentHandlerFor(_: REST, request: rest.Req
 			local bodyJson = stdPolyfills.serde.decode("json", requestInfo.body)
 			local messageJson = (bodyJson.data and bodyJson.data or bodyJson) :: {
 				attachments: { Attachment }?,
+				formdata_files: { { name: string, content: string, filename: string? } }?,
 			}
 
-			if messageJson.attachments and #messageJson.attachments > 0 then
-				local attachments = table.clone(messageJson.attachments)
-				local formdata = formdata.new()
+			if messageJson.formdata_files then
+				local formdataData = formdata.new()
 
-				messageJson.attachments = nil
-
-				formdata:set("payload_json", stdPolyfills.serde.encode("json", messageJson, true), nil, "json")
-
-				for index, attachment in attachments do
-					formdata:set(`files[{index - 1}]`, attachment.content, attachment.filename or utils.createGuid())
+				for _, file in messageJson.formdata_files do
+					formdataData:set(file.name, file.content, file.filename)
 				end
 
-				requestInfo.headers["content-type"] = `multipart/form-data; boundary={formdata:getHeader()}`
+				requestInfo.headers["content-type"] = `multipart/form-data; boundary={formdataData:getHeader()}`
 
 				return true,
 					{
 						url = requestInfo.url,
 						method = requestInfo.method,
-						body = formdata:getBody(),
+						body = formdataData:getBody(),
+						headers = requestInfo.headers,
+					}
+			elseif messageJson.attachments and #messageJson.attachments > 0 then
+				local attachments = table.clone(messageJson.attachments)
+				local formdataData = formdata.new()
+
+				messageJson.attachments = nil
+
+				formdataData:set("payload_json", stdPolyfills.serde.encode("json", messageJson, true), nil, "json")
+
+				for index, attachment in attachments do
+					formdataData:set(
+						`files[{index - 1}]`,
+						attachment.content,
+						attachment.filename or utils.createGuid()
+					)
+				end
+
+				requestInfo.headers["content-type"] = `multipart/form-data; boundary={formdataData:getHeader()}`
+
+				return true,
+					{
+						url = requestInfo.url,
+						method = requestInfo.method,
+						body = formdataData:getBody(),
 						headers = requestInfo.headers,
 					}
 			end
