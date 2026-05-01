@@ -5,6 +5,11 @@
 	Implementation of a discord Interaction object as a luau builder.
 
 	https://discord.com/developers/docs/interactions/application-commands#edit-global-application-command-json-params
+
+	Discord enforces the following per-application command limits server-side (as of March 2026):
+	- ChatInput (slash commands): 100 global, 100 per guild
+	- User commands (context menu): 15 global, 15 per guild
+	- Message commands (context menu): 15 global, 15 per guild
 ]=]
 
 --[=[
