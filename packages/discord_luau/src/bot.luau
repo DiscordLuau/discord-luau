@@ -545,6 +545,31 @@ local DISCORD_VERSION = 10
 	@within DiscordLuau.Bot
 ]=]
 
+--[=[
+	@prop onGuildSoundboardSoundCreate Emitter<Classes.SoundboardSound>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onGuildSoundboardSoundUpdate Emitter<Classes.SoundboardSound>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onGuildSoundboardSoundDelete Emitter<{ soundId: string, guildId: string }>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onGuildSoundboardSoundsUpdate Emitter<{ guildId: string, soundboardSounds: { Classes.SoundboardSound } }>
+	@within DiscordLuau.Bot
+]=]
+
+--[=[
+	@prop onVoiceChannelEffectSend Emitter<{ channelId: string, guildId: string, userId: string, emoji: Classes.Emoji?, animationType: number?, animationId: number?, soundId: string?, soundVolume: number? }>
+	@within DiscordLuau.Bot
+]=]
+
 local Bot = {}
 
 Bot.Interface = {}
@@ -1254,6 +1279,46 @@ function Bot.Prototype.connectAsync(self: Bot): future.FutureLike<string, nil>
 				local typedObject = object.payload :: apiTypes.StageInstanceDelete
 
 				self.onStageInstanceDelete:invoke(classes.guild.stageInstance.new(typedObject.d))
+			elseif object.event == apiTypes.gateway.receiveEvents["GuildSoundboardSoundCreate"] then
+				local typedObject = object.payload :: apiTypes.GuildSoundboardSoundCreatePayload
+
+				self.onGuildSoundboardSoundCreate:invoke(classes.soundboard.sound.new(typedObject.d))
+			elseif object.event == apiTypes.gateway.receiveEvents["GuildSoundboardSoundUpdate"] then
+				local typedObject = object.payload :: apiTypes.GuildSoundboardSoundUpdatePayload
+
+				self.onGuildSoundboardSoundUpdate:invoke(classes.soundboard.sound.new(typedObject.d))
+			elseif object.event == apiTypes.gateway.receiveEvents["GuildSoundboardSoundDelete"] then
+				local typedObject = object.payload :: apiTypes.GuildSoundboardSoundDeletePayload
+
+				self.onGuildSoundboardSoundDelete:invoke({
+					soundId = typedObject.d.sound_id,
+					guildId = typedObject.d.guild_id,
+				})
+			elseif object.event == apiTypes.gateway.receiveEvents["GuildSoundboardSoundsUpdate"] then
+				local typedObject = object.payload :: apiTypes.GuildSoundboardSoundsUpdatePayload
+
+				local soundboardSounds = {}
+				for _, soundData in next, typedObject.d.soundboard_sounds do
+					table.insert(soundboardSounds, classes.soundboard.sound.new(soundData))
+				end
+
+				self.onGuildSoundboardSoundsUpdate:invoke({
+					guildId = typedObject.d.guild_id,
+					soundboardSounds = soundboardSounds,
+				})
+			elseif object.event == apiTypes.gateway.receiveEvents["VoiceChannelEffectSend"] then
+				local typedObject = object.payload :: apiTypes.VoiceChannelEffectSendPayload
+
+				self.onVoiceChannelEffectSend:invoke({
+					channelId = typedObject.d.channel_id,
+					guildId = typedObject.d.guild_id,
+					userId = typedObject.d.user_id,
+					emoji = typedObject.d.emoji and classes.emoji.new(typedObject.d.emoji),
+					animationType = typedObject.d.animation_type,
+					animationId = typedObject.d.animation_id,
+					soundId = typedObject.d.sound_id,
+					soundVolume = typedObject.d.sound_volume,
+				})
 			end
 		end)
 
@@ -1262,6 +1327,30 @@ function Bot.Prototype.connectAsync(self: Bot): future.FutureLike<string, nil>
 
 		return nil
 	end) :: future.FutureLike<string, nil>
+end
+
+--[=[
+	@within DiscordLuau.Bot
+
+	Returns the list of default soundboard sounds available to all guilds.
+]=]
+function Bot.Prototype.listDefaultSoundboardSoundsAsync(
+	self: Bot
+): future.FutureLike<string, { classes.SoundboardSound }>
+	return future.Future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local response = rest.guild.listDefaultSoundboardSoundsAsync(request):await()
+
+		assert(response:isOk(), `{response:unwrapErr()}`)
+
+		local sounds = {}
+		for _, soundData in next, response:unwrapOk() do
+			table.insert(sounds, classes.soundboard.sound.new(soundData))
+		end
+
+		return sounds
+	end) :: future.FutureLike<string, { classes.SoundboardSound }>
 end
 
 --[=[
@@ -1681,6 +1770,12 @@ function Bot.Interface.new(options: {
 			onStageInstanceUpdate = emitter.new(),
 			onStageInstanceDelete = emitter.new(),
 
+			onGuildSoundboardSoundCreate = emitter.new(),
+			onGuildSoundboardSoundUpdate = emitter.new(),
+			onGuildSoundboardSoundDelete = emitter.new(),
+			onGuildSoundboardSoundsUpdate = emitter.new(),
+			onVoiceChannelEffectSend = emitter.new(),
+
 			onGuildRoleCreate = emitter.new(),
 			onGuildRoleUpdate = emitter.new(),
 			onGuildRoleDelete = emitter.new(),
@@ -1996,6 +2091,25 @@ export type Bot =
 		onAutocompleteInteraction: emitter.Emitter<classes.Autocomplete>,
 
 		onModalInteraction: emitter.Emitter<classes.Modal>,
+
+		onGuildSoundboardSoundCreate: emitter.Emitter<classes.SoundboardSound>,
+
+		onGuildSoundboardSoundUpdate: emitter.Emitter<classes.SoundboardSound>,
+
+		onGuildSoundboardSoundDelete: emitter.Emitter<{ soundId: string, guildId: string }>,
+
+		onGuildSoundboardSoundsUpdate: emitter.Emitter<{ guildId: string, soundboardSounds: { classes.SoundboardSound } }>,
+
+		onVoiceChannelEffectSend: emitter.Emitter<{
+			channelId: string,
+			guildId: string,
+			userId: string,
+			emoji: classes.Emoji?,
+			animationType: number?,
+			animationId: number?,
+			soundId: string?,
+			soundVolume: number?,
+		}>,
 	}
 
 return Bot.Interface
