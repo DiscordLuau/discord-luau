@@ -86,16 +86,16 @@ export type ReconnectPayload = Payload<boolean>
 export type InvalidSessionPayload = Payload<boolean?>
 
 -- https://discord.com/developers/docs/topics/gateway-events#auto-moderation-rule-create
-export type ApplicationCommandPermissionsCreatePayload = Payload<objects.AutomoderationRuleObject>
+export type AutoModerationRuleCreatePayload = Payload<objects.AutomoderationRuleObject>
 
--- https://discord.com/developers/docs/topics/gateway-events#application-command-permissions-update
-export type ApplicationCommandPermissionsUpdatePayload = Payload<objects.AutomoderationRuleObject>
+-- https://discord.com/developers/docs/topics/gateway-events#auto-moderation-rule-update
+export type AutoModerationRuleUpdatePayload = Payload<objects.AutomoderationRuleObject>
 
 -- https://discord.com/developers/docs/topics/gateway-events#auto-moderation-rule-delete
-export type ApplicationCommandPermissionsDeletePayload = Payload<objects.AutomoderationRuleObject>
+export type AutoModerationRuleDeletePayload = Payload<objects.AutomoderationRuleObject>
 
 -- https://discord.com/developers/docs/topics/gateway-events#auto-moderation-action-execution
-export type ApplicationCommandPermissionsExecutionPayload = Payload<{
+export type AutoModerationActionExecutionPayload = Payload<{
 	guild_id: objects.Snowflake, -- ID of the guild in which action was executed
 	action: objects.AutomoderationActionObject, -- Action which was executed
 	rule_id: objects.Snowflake, -- ID of the rule which action belongs to
@@ -108,6 +108,9 @@ export type ApplicationCommandPermissionsExecutionPayload = Payload<{
 	matched_keyword: string?, -- Word or phrase configured in the rule that triggered the rule
 	matched_content: string?, -- Substring in content that triggered the rule
 }>
+
+-- https://discord.com/developers/docs/topics/gateway-events#application-command-permissions-update
+export type ApplicationCommandPermissionsUpdatePayload = Payload<objects.GuildApplicationCommandPermissionsObject>
 
 -- https://discord.com/developers/docs/topics/gateway-events#channel-create
 export type CreateChannelPayload = Payload<objects.ChannelObject>
@@ -143,7 +146,7 @@ export type ThreadListSyncPayload = Payload<{
 }>
 
 -- https://discord.com/developers/docs/topics/gateway-events#thread-member-update
-export type ThreadMemberUpdatePayload = Payload<{
+export type ThreadMemberUpdatePayload = Payload<objects.ThreadMemberObject & {
 	guild_id: objects.Snowflake, -- ID of the guild
 }>
 
@@ -187,6 +190,9 @@ export type GuildUpdatePayload = Payload<objects.GuildObject>
 
 -- https://discord.com/developers/docs/topics/gateway-events#guild-delete
 export type GuildDeletePayload = Payload<objects.UnavailableGuildObject>
+
+-- https://discord.com/developers/docs/topics/gateway-events#guild-audit-log-entry-create
+export type GuildAuditLogEntryCreatePayload = Payload<objects.AuditLogEntryObject>
 
 -- https://discord.com/developers/docs/topics/gateway-events#guild-ban-add
 export type GuildBanAddPayload = Payload<{
@@ -450,11 +456,7 @@ export type TypingStartPayload = Payload<{
 -- https://discord.com/developers/docs/topics/gateway-events#user-update
 export type UserUpdatePayload = Payload<objects.UserObject>
 -- https://discord.com/developers/docs/topics/gateway-events#voice-state-update
-export type VoiceStateUpdatePayload = Payload<{
-	token: string, -- Voice connection token
-	guild_id: objects.Snowflake, -- Guild this voice server update is for
-	endpoint: string?, -- Voice server host
-}>
+export type VoiceStateUpdatePayload = Payload<objects.VoiceStateObject>
 
 -- https://discord.com/developers/docs/topics/gateway-events#voice-server-update
 export type VoiceServerUpdatePayload = Payload<{
