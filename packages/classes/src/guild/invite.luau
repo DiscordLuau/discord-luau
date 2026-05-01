@@ -94,6 +94,68 @@ Invite.Prototype = {}
 
 --[=[
 	@within Classes.Guild.Invite
+	Returns the list of users targeted by this invite's gate.
+]=]
+function Invite.Prototype.getTargetUsersAsync(self: Invite): future.FutureLike<string, { user.User }>
+	return future.Future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local response = rest.invite.getInviteTargetUsersAsync(request, self.code):await()
+
+		assert(response:isOk(), `{response:unwrapErr()}`)
+
+		local users = {}
+
+		for _, userData in response:unwrapOk().users do
+			table.insert(users, user.new(userData))
+		end
+
+		return users
+	end) :: future.FutureLike<string, { user.User }>
+end
+
+--[=[
+	@within Classes.Guild.Invite
+	Replaces the invite gate's target user list with the provided CSV content.
+	The CSV should contain one user ID per line with a `user_id` header.
+]=]
+function Invite.Prototype.updateTargetUsersAsync(
+	self: Invite,
+	csvContent: string
+): future.FutureLike<string, Invite>
+	return future.Future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local response = rest.invite.updateInviteTargetUsersAsync(request, self.code, csvContent):await()
+
+		assert(response:isOk(), `{response:unwrapErr()}`)
+
+		self:sync(response:unwrapOk())
+
+		return self
+	end) :: future.FutureLike<string, Invite>
+end
+
+--[=[
+	@within Classes.Guild.Invite
+	Returns the processing status of the most recent target users upload job.
+]=]
+function Invite.Prototype.getTargetUsersJobStatusAsync(
+	self: Invite
+): future.FutureLike<string, apiTypes.GetInviteTargetUsersJobStatusResponse>
+	return future.Future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local response = rest.invite.getInviteTargetUsersJobStatusAsync(request, self.code):await()
+
+		assert(response:isOk(), `{response:unwrapErr()}`)
+
+		return response:unwrapOk()
+	end) :: future.FutureLike<string, apiTypes.GetInviteTargetUsersJobStatusResponse>
+end
+
+--[=[
+	@within Classes.Guild.Invite
 	Delete the attached integration object for the guild. Deletes any associated webhooks and kicks the associated bot
 	if there is one. Requires the MANAGE_GUILD permission.
 ]=]
