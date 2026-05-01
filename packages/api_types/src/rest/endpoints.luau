@@ -236,9 +236,6 @@ local endpoints = table.freeze({
 	-- https://discord.com/developers/docs/resources/emoji#delete-guild-emoji
 	DeleteGuildEmoji = "/guilds/%s/emojis/%s",
 
-	-- https://discord.com/developers/docs/resources/guild#create-guild
-	CreateGuild = "/guilds",
-
 	-- https://discord.com/developers/docs/resources/guild#get-guild
 	GetGuild = "/guilds/%s",
 
@@ -271,6 +268,9 @@ local endpoints = table.freeze({
 
 	-- https://discord.com/developers/docs/resources/guild#search-guild-members
 	SearchGuildMembers = "/guilds/%s/members/search",
+
+	-- https://docs.discord.com/developers/resources/message#search-guild-messages
+	SearchGuildMessages = "/guilds/%s/messages/search",
 
 	-- https://discord.com/developers/docs/resources/guild#add-guild-member
 	AddGuildMember = "/guilds/%s/members/%s",
@@ -422,6 +422,15 @@ local endpoints = table.freeze({
 	-- https://discord.com/developers/docs/resources/invite#delete-invite
 	DeleteInvite = "/invites/%s",
 
+	-- https://docs.discord.com/developers/resources/invite#get-target-users
+	GetInviteTargetUsers = "/invites/%s/target-users",
+
+	-- https://docs.discord.com/developers/resources/invite#update-target-users
+	UpdateInviteTargetUsers = "/invites/%s/target-users",
+
+	-- https://docs.discord.com/developers/resources/invite#get-target-users-job-status
+	GetInviteTargetUsersJobStatus = "/invites/%s/target-users/job-status",
+
 	-- https://discord.com/developers/docs/resources/poll#get-answer-voters
 	GetAnswerVoters = "/channels/%s/polls/%s/answers/%s",
 
@@ -562,6 +571,9 @@ local endpoints = table.freeze({
 
 	-- https://docs.discord.com/developers/resources/guild#get-guild-role-member-counts
 	GetGuildRoleMemberCounts = "/guilds/%s/roles/member-counts",
+
+	-- https://discord.com/developers/docs/monetization/skus#list-skus
+	ListSkus = "/applications/%s/skus",
 })
 
 export type Endpoint =
@@ -643,7 +655,7 @@ export type Endpoint =
 	| "CreateGuildEmoji"
 	| "ModifyGuildEmoji"
 	| "DeleteGuildEmoji"
-	| "CreateGuild"
+
 	| "GetGuild"
 	| "GetGuildPreview"
 	| "ModifyGuild"
@@ -655,6 +667,7 @@ export type Endpoint =
 	| "GetGuildMember"
 	| "ListGuildMembers"
 	| "SearchGuildMembers"
+	| "SearchGuildMessages"
 	| "AddGuildMember"
 	| "ModifyGuildMember"
 	| "ModifyCurrentMember"
@@ -705,6 +718,9 @@ export type Endpoint =
 	| "DeleteGuildTemplate"
 	| "GetInvite"
 	| "DeleteInvite"
+	| "GetInviteTargetUsers"
+	| "UpdateInviteTargetUsers"
+	| "GetInviteTargetUsersJobStatus"
 	| "GetAnswerVoters"
 	| "EndPoll"
 	| "CreateStageInstance"
@@ -750,5 +766,6 @@ export type Endpoint =
 	| "GetCurrentBotApplicationInformation"
 	| "GetCurrentAuthorizationInformation"
 	| "GetGuildRoleMemberCounts"
+	| "ListSkus"
 
 return endpoints

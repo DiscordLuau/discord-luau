@@ -124,6 +124,8 @@ export type CreateChannelInviteRequest = Request<{
 	target_type: objects.InviteTargetTypes?, -- the type of target for this voice channel invite
 	target_user_id: objects.Snowflake?, -- the id of the user whose stream to display for this invite, required if target_type is 1, the user must be streaming in the channel
 	target_application_id: objects.Snowflake?, -- the id of the embedded application to open for this invite, required if target_type is 2, the application must have the EMBEDDED flag
+	target_users_file: string?, -- base64-encoded CSV of user IDs for bulk invite-gating
+	role_ids: { objects.Snowflake }?, -- role IDs to assign on invite acceptance
 }>
 
 -- https://discord.com/developers/docs/resources/channel#bulk-delete-messages
@@ -180,22 +182,6 @@ export type CreateGuildEmojiRequest = Request<{
 export type ModifyGuildEmojiRequest = Request<{
 	name: string, -- name of the emoji
 	roles: { objects.Snowflake }, -- roles allowed to use this emoji
-}>
-
--- https://discord.com/developers/docs/resources/guild#create-guild
-export type CreateGuildRequest = Request<{
-	name: string, -- name of the guild (2-100 characters)
-	region: string?, -- voice region id (deprecated)
-	icon: string?, -- base64 128x128 image for the guild icon
-	verification_level: objects.VerificationLevel?, -- verification level
-	default_message_notifications: objects.DefaultMessageNotification?, -- default message notification level
-	explicit_content_filter: objects.ExplicitContentFilterLevel?, -- explicit content filter level
-	roles: { objects.GuildRoleObject }?, -- new guild roles
-	channels: { objects.ChannelObject }?, -- new guild's channels
-	afk_channel_id: objects.Snowflake?, -- id for afk channel
-	afk_timeout: number?, -- afk timeout in seconds, can be set to: 60, 300, 900, 1800, 3600
-	system_channel_id: objects.Snowflake?, -- the id of the channel where guild notices such as welcome messages and boost events are posted
-	system_channel_flags: objects.SystemChannelFlags?, -- system channel flags
 }>
 
 -- https://discord.com/developers/docs/resources/guild#modify-guild
@@ -282,7 +268,10 @@ export type ModifyGuildMemberRequest = Request<{
 
 -- https://discord.com/developers/docs/resources/guild#modify-current-member
 export type ModifyCurrentMemberRequest = Request<{
-	nick: string, -- value to set user's nickname to
+	nick: string?,    -- value to set user's nickname to
+	avatar: string?,  -- guild-specific avatar; image data URI (e.g. "data:image/png;base64,...")
+	banner: string?,  -- guild-specific banner; image data URI
+	bio: string?,     -- guild bio; requires the guild to have the GUILD_MEMBER_BIO feature
 }>
 
 -- https://discord.com/developers/docs/resources/guild#create-guild-ban
@@ -681,6 +670,9 @@ export type GetCurrentApplicationResponse = Response<{ objects.ApplicationObject
 -- https://discord.com/developers/docs/resources/application#edit-current-application
 export type EditCurrentApplicationResponse = Response<{ objects.ApplicationObject }>
 
+-- https://discord.com/developers/docs/monetization/skus#list-skus
+export type ListSkusResponse = Response<{ objects.SkuObject }>
+
 -- https://discord.com/developers/docs/resources/application-role-connection-metadata#get-application-role-connection-metadata-records
 export type GetApplicationRoleConnectionMetadataRecordsResponse = Response<
 	objects.ApplicationRoleConnectionMetadataObject
@@ -765,6 +757,24 @@ export type GetChannelInvitesResponse = Response<{ objects.InviteObject & object
 
 -- https://discord.com/developers/docs/resources/channel#create-channel-invite
 export type CreateChannelInviteResponse = Response<objects.InviteObject>
+
+-- https://docs.discord.com/developers/resources/invite#get-target-users
+export type GetInviteTargetUsersResponse = Response<{
+	users: { objects.UserObject },
+}>
+
+-- https://docs.discord.com/developers/resources/invite#update-target-users
+export type UpdateInviteTargetUsersResponse = Response<objects.InviteObject>
+
+-- https://docs.discord.com/developers/resources/invite#get-target-users-job-status
+export type GetInviteTargetUsersJobStatusResponse = Response<{
+	status: number,          -- 0=UNSPECIFIED, 1=PROCESSING, 2=COMPLETED, 3=FAILED
+	total_users: number?,
+	processed_users: number?,
+	created_at: string,
+	completed_at: string?,
+	error_message: string?,
+}>
 
 -- https://discord.com/developers/docs/resources/channel#delete-channel-permission
 export type DeleteChannelPermissionResponse = Response<nil>
@@ -853,9 +863,6 @@ export type ModifyGuildEmojiResponse = Response<objects.EmojiObject>
 -- https://discord.com/developers/docs/resources/emoji#delete-guild-emoji
 export type DeleteGuildEmojiResponse = Response<nil>
 
--- https://discord.com/developers/docs/resources/guild#create-guild
-export type CreateGuildResponse = Response<objects.GuildObject>
-
 -- https://discord.com/developers/docs/resources/guild#get-guild
 export type GetGuildResponse = Response<objects.GuildObject>
 
@@ -896,6 +903,44 @@ export type ListGuildMembersResponse = Response<{ objects.GuildMemberObject }>
 
 -- https://discord.com/developers/docs/resources/guild#search-guild-members
 export type SearchGuildMembersResponse = Response<{ objects.GuildMemberObject }>
+
+-- https://docs.discord.com/developers/resources/message#search-guild-messages
+export type SearchGuildMessagesRequest = {
+	content: string?,                                -- text to search in message content (max 1024 characters)
+	channel_id: { objects.Snowflake }?,              -- filter to these channel IDs (max 500)
+	author_id: { objects.Snowflake }?,               -- filter to messages sent by these users (max 100)
+	author_type: { string }?,                        -- filter by author type: "user", "bot", "webhook", or negated variants
+	mentions: { objects.Snowflake }?,                -- filter to messages mentioning these users (max 100)
+	mentions_role_id: { objects.Snowflake }?,         -- filter to messages mentioning these roles (max 100)
+	mention_everyone: boolean?,                      -- filter by whether the message mentions @everyone
+	replied_to_user_id: { objects.Snowflake }?,      -- filter to messages replying to these users (max 100)
+	replied_to_message_id: { objects.Snowflake }?,   -- filter to messages replying to these messages (max 100)
+	has: { string }?,                                -- filter by type: "link", "embed", "file", "video", "image", "sticker", "sound", "poll", "snapshot"
+	embed_type: { string }?,                         -- filter by embed type: "image", "video", "gif", "sound", "article"
+	embed_provider: { string }?,                     -- filter by embed provider name (case-sensitive)
+	link_hostname: { string }?,                      -- filter by link hostname
+	attachment_filename: { string }?,                -- filter by attachment filename
+	attachment_extension: { string }?,               -- filter by attachment file extension
+	pinned: boolean?,                                -- filter to pinned (true) or non-pinned (false) messages
+	max_id: objects.Snowflake?,                      -- return messages before this message ID
+	min_id: objects.Snowflake?,                      -- return messages after this message ID
+	slop: number?,                                   -- max number of words to skip between matching tokens
+	sort_by: ("timestamp" | "relevance")?,
+	sort_order: ("asc" | "desc")?,                   -- default desc
+	limit: number?,                                  -- max results, 1-25, default 25
+	offset: number?,                                 -- pagination offset, max 9975
+	include_nsfw: boolean?,                          -- whether to include results from age-restricted channels
+}
+
+-- https://docs.discord.com/developers/resources/message#search-guild-messages
+export type SearchGuildMessagesResponse = Response<{
+	total_results: number,                     -- total number of results matching the query
+	messages: { { objects.MessageObject } },   -- nested arrays; each inner array is the matching message with surrounding context
+	threads: { objects.ChannelObject }?,       -- threads containing returned messages
+	members: { objects.ThreadMemberObject }?,  -- thread members for results in threads the user joined
+	doing_deep_historical_index: boolean?,     -- true when Discord is still indexing old messages
+	documents_indexed: number?,               -- count of indexed documents during the current indexing operation
+}>
 
 -- https://discord.com/developers/docs/resources/guild#add-guild-member
 export type AddGuildMemberResponse = Response<objects.GuildMemberObject>
