@@ -61,6 +61,9 @@
 	Poll data for the message.
 ]=]
 
+local bit = require("../../luau_packages/bit")
+local apiTypes = require("../../luau_packages/api_types")
+
 local embed = require("../embed/embed")
 local allowedMention = require("./allowedMention")
 local reference = require("./reference")
@@ -71,6 +74,13 @@ local button = require("./components/button")
 local textInput = require("./components/textInput")
 local selectMenu = require("./components/selectMenu/selectMenu")
 local actionRow = require("./components/actionRow")
+local textDisplay = require("./components/textDisplay")
+local separator = require("./components/separator")
+local componentThumbnail = require("./components/componentThumbnail")
+local mediaGallery = require("./components/mediaGallery")
+local file = require("./components/file")
+local section = require("./components/section")
+local container = require("./components/container")
 
 local Message = {}
 
@@ -160,7 +170,17 @@ end
 ]=]
 function Message.Prototype.addComponent(
 	self: Message,
-	component: button.JSON | textInput.JSON | selectMenu.JSON | actionRow.JSON
+	component: button.JSON
+		| textInput.JSON
+		| selectMenu.JSON
+		| actionRow.JSON
+		| textDisplay.JSON
+		| separator.JSON
+		| componentThumbnail.JSON
+		| mediaGallery.JSON
+		| file.JSON
+		| section.JSON
+		| container.JSON
 ): Message
 	local components = self.components or {}
 
@@ -208,7 +228,7 @@ end
 	Sets the flags for the message.
 ]=]
 function Message.Prototype.setFlags(self: Message, flags: number): Message
-	self.flags = flags
+	self.flags = bit.bor(self.flags or 0, flags)
 
 	return self
 end
@@ -241,6 +261,15 @@ end
 	Responsible for building the Message JSON that can be parsed by the Discord API.
 ]=]
 function Message.Prototype.build(self: Message): JSON
+	local isV2 = self.flags and bit.band(self.flags, apiTypes.message.MessageFlags.IsComponentsV2) ~= 0
+
+	if isV2 then
+		assert(not self.content, "IS_COMPONENTS_V2 messages cannot have content")
+		assert(#self.embeds == 0, "IS_COMPONENTS_V2 messages cannot have embeds")
+		assert(not self.poll, "IS_COMPONENTS_V2 messages cannot have a poll")
+		assert(#self.stickerIds == 0, "IS_COMPONENTS_V2 messages cannot have sticker IDs")
+	end
+
 	return {
 		content = self.content,
 		nonce = self.nonce,
@@ -269,7 +298,7 @@ function Message.Interface.new(resource: {
 	embeds: { embed.JSON }?,
 	allowedMentions: allowedMention.JSON?,
 	messageReference: reference.JSON?,
-	components: { button.JSON | textInput.JSON | selectMenu.JSON | actionRow.JSON }?,
+	components: { button.JSON | textInput.JSON | selectMenu.JSON | actionRow.JSON | textDisplay.JSON | separator.JSON | componentThumbnail.JSON | mediaGallery.JSON | file.JSON | section.JSON | container.JSON }?,
 	stickerIds: { string }?,
 	attachments: { Attachment }?,
 	flags: number?,
@@ -364,7 +393,7 @@ export type Message = typeof(Message.Prototype) & {
 	embeds: { embed.JSON },
 	allowedMentions: allowedMention.JSON?,
 	messageReference: reference.JSON?,
-	components: { button.JSON | textInput.JSON | selectMenu.JSON | actionRow.JSON },
+	components: { button.JSON | textInput.JSON | selectMenu.JSON | actionRow.JSON | textDisplay.JSON | separator.JSON | componentThumbnail.JSON | mediaGallery.JSON | file.JSON | section.JSON | container.JSON },
 	stickerIds: { string },
 	attachments: { Attachment },
 	flags: number?,
