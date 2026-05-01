@@ -119,6 +119,7 @@ local sku = require("@self/application/sku")
 local team = require("@self/application/team/team")
 local member = require("@self/application/team/member")
 local permission = require("@self/permission")
+local soundboardSound = require("@self/soundboard/sound")
 local automoderationRule = require("@self/automoderation/rule")
 local auditLogEntry = require("@self/auditlog/entry/entry")
 local automoderationAction = require("@self/automoderation/action/action")
@@ -245,6 +246,7 @@ export type Author = author.Author
 export type Embed = embed.Embed
 export type Thumbnail = thumbnail.Thumbnail
 export type Field = field.Field
+export type SoundboardSound = soundboardSound.Sound
 export type AutomoderationRule = automoderationRule.AutomoderationRule
 export type AuditLogEntry = auditLogEntry.AuditLogEntry
 export type AutomoderationAction = automoderationAction.Action
@@ -405,6 +407,9 @@ return {
 	reaction = {
 		countDetails = countDetails,
 		reaction = reaction,
+	},
+	soundboard = {
+		sound = soundboardSound,
 	},
 	sticker = sticker,
 	bitflags = {
