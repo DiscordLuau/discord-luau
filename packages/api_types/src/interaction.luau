@@ -48,6 +48,13 @@ local ComponentTypes = table.freeze(util.tableReflect({
 	RoleSelect = 6,
 	MentionableSelect = 7,
 	ChannelSelect = 8,
+	Section = 9,
+	TextDisplay = 10,
+	Thumbnail = 11,
+	MediaGallery = 12,
+	File = 13,
+	Separator = 14,
+	Container = 17,
 }))
 
 export type InteractionType =
@@ -66,6 +73,13 @@ export type ComponentTypes =
 	| "RoleSelect"
 	| "MentionableSelect"
 	| "ChannelSelect"
+	| "Section"
+	| "TextDisplay"
+	| "Thumbnail"
+	| "MediaGallery"
+	| "File"
+	| "Separator"
+	| "Container"
 
 export type ApplicationCommandOptionType =
 	"SubCommand"

@@ -1093,12 +1093,91 @@ export type TextInputComponentObject = {
 	placeholder: string?, -- Custom placeholder text if the input is empty; max 100 characters
 }
 
+-- https://discord.com/developers/docs/components/reference#unfurled-media-object
+export type UnfurledMediaObject = {
+	url: string, -- attachment reference (attachment://filename) or external URL
+	proxy_url: string?, -- proxied URL (set by Discord, read-only)
+	height: number?,
+	width: number?,
+	content_type: string?,
+}
+
+-- https://discord.com/developers/docs/components/reference#text-display
+export type TextDisplayComponentObject = {
+	type: number, -- 10
+	content: string, -- markdown text content
+	id: number?,
+}
+
+-- https://discord.com/developers/docs/components/reference#thumbnail
+export type ThumbnailComponentObject = {
+	type: number, -- 11
+	media: UnfurledMediaObject,
+	description: string?, -- alt text
+	spoiler: boolean?,
+	id: number?,
+}
+
+-- https://discord.com/developers/docs/components/reference#media-gallery-item
+export type MediaGalleryItemObject = {
+	media: UnfurledMediaObject,
+	description: string?,
+	spoiler: boolean?,
+}
+
+-- https://discord.com/developers/docs/components/reference#media-gallery
+export type MediaGalleryComponentObject = {
+	type: number, -- 12
+	items: { MediaGalleryItemObject }, -- 1-10 items
+	id: number?,
+}
+
+-- https://discord.com/developers/docs/components/reference#file
+export type FileComponentObject = {
+	type: number, -- 13
+	file: UnfurledMediaObject,
+	spoiler: boolean?,
+	id: number?,
+}
+
+-- https://discord.com/developers/docs/components/reference#separator
+export type SeparatorComponentObject = {
+	type: number, -- 14
+	divider: boolean?, -- whether to show a visual divider (default true)
+	spacing: number?, -- spacing size: 1=small, 2=large
+	id: number?,
+}
+
+-- https://discord.com/developers/docs/components/reference#section
+export type SectionComponentObject = {
+	type: number, -- 9
+	components: { TextDisplayComponentObject | ButtonComponentObject }, -- 1-3 text/button children
+	accessory: ThumbnailComponentObject | ButtonComponentObject, -- right-side accessory
+	id: number?,
+}
+
+-- https://discord.com/developers/docs/components/reference#container
+export type ContainerComponentObject = {
+	type: number, -- 17
+	components: { ComponentObjects }, -- child components
+	accent_color: number?, -- hex color integer for left border
+	spoiler: boolean?,
+	id: number?,
+}
+
 -- https://discord.com/developers/docs/interactions/message-components#message-components
 export type ComponentObjects =
 	ActionRowComponentObject
 	| ButtonComponentObject
 	| SelectMenuComponentObject
 	| TextInputComponentObject
+	| TextDisplayComponentObject
+	| ThumbnailComponentObject
+	| MediaGalleryComponentObject
+	| FileComponentObject
+	| SeparatorComponentObject
+	| SectionComponentObject
+	| ContainerComponentObject
 
 -- https://discord.com/developers/docs/resources/sticker#sticker-item-object
 export type SitckerItemObject = {

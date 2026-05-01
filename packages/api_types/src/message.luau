@@ -2,6 +2,7 @@
 	@class Types.message
 ]=]
 
+local bit = require("../luau_packages/bit")
 local util = require("../luau_packages/util")
 
 local MessageType = table.freeze(util.tableReflect({
@@ -83,6 +84,10 @@ local ReactionType = table.freeze(util.tableReflect({
 	Burst = 1,
 }))
 
+local MessageFlags = table.freeze({
+	IsComponentsV2 = bit.lshift(1, 15),
+})
+
 export type MessageType =
 	"Default"
 	| "RecipientAdd"
@@ -135,6 +140,8 @@ export type PollLayoutType = "Default"
 
 export type ReactionType = "Normal" | "Burst"
 
+export type MessageFlag = "IsComponentsV2"
+
 return {
 	MessageType = MessageType,
 	MessageAcitvityType = MessageAcitvityType,
@@ -144,4 +151,5 @@ return {
 	SelectDefaultValueType = SelectDefaultValueType,
 	PollLayoutType = PollLayoutType,
 	ReactionType = ReactionType,
+	MessageFlags = MessageFlags,
 }
