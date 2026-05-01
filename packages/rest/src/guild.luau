@@ -17,30 +17,6 @@ local guild = {}
 --[=[
 	@within Rest.guild
 
-	https://discord.com/developers/docs/resources/guild#create-guild
-]=]
-function guild.createGuildAsync(
-	instance: request.Request,
-	jsonParams: apiTypes.CreateGuildRequest
-): future.FutureLike<string, apiTypes.CreateGuildResponse>
-	return future.Future.new(function()
-		instance:assertToken()
-
-		instance:setMethod("POST")
-		instance:setUrl(apiTypes.rest.endpoints.CreateGuild)
-		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
-
-		local response = instance:executeAsync():await()
-
-		assert(response:isOk(), `{response:unwrapErr()}`)
-
-		return response:unwrapOk().body
-	end) :: future.FutureLike<string, apiTypes.CreateGuildResponse>
-end
-
---[=[
-	@within Rest.guild
-
 	https://discord.com/developers/docs/resources/guild#get-guild
 ]=]
 function guild.getGuildAsync(
@@ -194,14 +170,14 @@ end
 
 	https://docs.discord.com/developers/resources/guild#get-guild-role-member-counts
 ]=]
-function guild.getGuildRoleMemberCounts(
+function guild.getGuildRoleMemberCountsAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake
 ): future.FutureLike<string, apiTypes.GetGuildRoleMemberCountsResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
-		instance:setMethod("POST")
+		instance:setMethod("GET")
 		instance:setUrl(string.format(apiTypes.rest.endpoints.GetGuildRoleMemberCounts, guildId))
 
 		local response = instance:executeAsync():await()
@@ -312,6 +288,55 @@ function guild.listGuildMembersAsync(
 
 		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.ListGuildMembersResponse>
+end
+
+--[=[
+	@within Rest.guild
+
+	https://docs.discord.com/developers/resources/message#search-guild-messages
+]=]
+function guild.searchGuildMessagesAsync(
+	instance: request.Request,
+	guildId: apiTypes.Snowflake,
+	urlParams: apiTypes.SearchGuildMessagesRequest
+): future.FutureLike<string, apiTypes.SearchGuildMessagesResponse>
+	return future.Future.new(function()
+		instance:assertToken()
+
+		instance:addUrlParam("content", urlParams.content :: any)
+		instance:addUrlParam("pinned", urlParams.pinned ~= nil and tostring(urlParams.pinned) or (nil :: any))
+		instance:addUrlParam("mention_everyone", urlParams.mention_everyone ~= nil and tostring(urlParams.mention_everyone) or (nil :: any))
+		instance:addUrlParam("max_id", urlParams.max_id :: any)
+		instance:addUrlParam("min_id", urlParams.min_id :: any)
+		instance:addUrlParam("slop", urlParams.slop and tostring(urlParams.slop) or (nil :: any))
+		instance:addUrlParam("sort_by", urlParams.sort_by :: any)
+		instance:addUrlParam("sort_order", urlParams.sort_order :: any)
+		instance:addUrlParam("limit", urlParams.limit and tostring(urlParams.limit) or (nil :: any))
+		instance:addUrlParam("offset", urlParams.offset and tostring(urlParams.offset) or (nil :: any))
+		instance:addUrlParam("include_nsfw", urlParams.include_nsfw ~= nil and tostring(urlParams.include_nsfw) or (nil :: any))
+		instance:addUrlParam("channel_id", urlParams.channel_id :: any)
+		instance:addUrlParam("author_id", urlParams.author_id :: any)
+		instance:addUrlParam("author_type", urlParams.author_type :: any)
+		instance:addUrlParam("mentions", urlParams.mentions :: any)
+		instance:addUrlParam("mentions_role_id", urlParams.mentions_role_id :: any)
+		instance:addUrlParam("replied_to_user_id", urlParams.replied_to_user_id :: any)
+		instance:addUrlParam("replied_to_message_id", urlParams.replied_to_message_id :: any)
+		instance:addUrlParam("has", urlParams.has :: any)
+		instance:addUrlParam("embed_type", urlParams.embed_type :: any)
+		instance:addUrlParam("embed_provider", urlParams.embed_provider :: any)
+		instance:addUrlParam("link_hostname", urlParams.link_hostname :: any)
+		instance:addUrlParam("attachment_filename", urlParams.attachment_filename :: any)
+		instance:addUrlParam("attachment_extension", urlParams.attachment_extension :: any)
+
+		instance:setMethod("GET")
+		instance:setUrl(string.format(apiTypes.rest.endpoints.SearchGuildMessages, guildId))
+
+		local response = instance:executeAsync():await()
+
+		assert(response:isOk(), `{response:unwrapErr()}`)
+
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.SearchGuildMessagesResponse>
 end
 
 --[=[
