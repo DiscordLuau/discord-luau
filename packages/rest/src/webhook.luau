@@ -276,6 +276,50 @@ end
 --[=[
 	@within Rest.webhook
 
+	https://discord.com/developers/docs/resources/webhook#execute-slackcompatible-webhook
+]=]
+function webhook.executeSlackCompatibleWebhookAsync(
+	instance: request.Request,
+	webhookId: apiTypes.Snowflake,
+	webhookToken: string
+): future.FutureLike<string, apiTypes.ExecuteSlackCompatibleWebhookResponse>
+	return future.Future.new(function()
+		instance:setMethod("POST")
+		instance:setUrl(string.format(apiTypes.rest.endpoints.ExecuteSlackCompatibleWebhook, webhookId, webhookToken))
+
+		local response = instance:executeAsync():await()
+
+		assert(response:isOk(), `{response:unwrapErr()}`)
+
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.ExecuteSlackCompatibleWebhookResponse>
+end
+
+--[=[
+	@within Rest.webhook
+
+	https://discord.com/developers/docs/resources/webhook#execute-githubcompatible-webhook
+]=]
+function webhook.executeGithubCompatibleWebhookAsync(
+	instance: request.Request,
+	webhookId: apiTypes.Snowflake,
+	webhookToken: string
+): future.FutureLike<string, apiTypes.ExecuteGithubCompatibleWebhookResponse>
+	return future.Future.new(function()
+		instance:setMethod("POST")
+		instance:setUrl(string.format(apiTypes.rest.endpoints.ExecuteGithubCompatibleWebhook, webhookId, webhookToken))
+
+		local response = instance:executeAsync():await()
+
+		assert(response:isOk(), `{response:unwrapErr()}`)
+
+		return response:unwrapOk().body
+	end) :: future.FutureLike<string, apiTypes.ExecuteGithubCompatibleWebhookResponse>
+end
+
+--[=[
+	@within Rest.webhook
+
 	https://discord.com/developers/docs/resources/webhook#get-webhook-message
 ]=]
 function webhook.getWebhookMessageAsync(
