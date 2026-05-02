@@ -7,6 +7,7 @@ local stdio = require("@self/stdio")
 local io = require("@self/io")
 local net = require("@self/net")
 local runtime = require("@self/runtime")
+local ffi = require("@self/ffi")
 
 export type DateTime = datetime.DateTime
 export type RuntimeValue = runtime.RuntimeValue
@@ -91,4 +92,10 @@ return {
 		@within StdPolyfills
 	]=]
 	runtime = runtime,
+
+	--[=[
+		@prop ffi StdPolyfills.ffi
+		@within StdPolyfills
+	]=]
+	ffi = ffi,
 }
