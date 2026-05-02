@@ -80,11 +80,7 @@ end
 	Runs a subprocess and returns the result. Only supported on Zune; calling from
 	Lune will raise an error explaining the requirement.
 ]=]
-function process.run(
-	exec: string,
-	args: { string }?,
-	opts: { cwd: string?, env: { [string]: string }? }?
-): RunResult
+function process.run(exec: string, args: { string }?, opts: { cwd: string?, env: { [string]: string }? }?): RunResult
 	local target = runtime.assertRuntime()
 
 	if target == "Lune" then
@@ -96,7 +92,25 @@ function process.run(
 	error(`Out of reach`)
 end
 
+--[=[
+	@within StdPolyfills.process
+
+	Returns the CPU architecture the current process is executing on
+]=]
+function process.getArch(): Arch
+	local target = runtime.assertRuntime()
+
+	if target == "Lune" then
+		error(`The Lune runtime does not expose CPU architecture`)
+	elseif target == "Zune" then
+		return require("./zune/process").arch :: Arch
+	end
+
+	error(`Out of reach`)
+end
+
 export type OS = "linux" | "macos" | "windows"
+export type Arch = "x86_64" | "aarch64"
 
 export type RunResult = {
 	ok: boolean,
