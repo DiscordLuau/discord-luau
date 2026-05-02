@@ -8,8 +8,8 @@ local Bit64 = {}
 	Splits a 64-bit integer into high and low 32-bit integers
 ]]
 local function split64(value: number): (number, number)
-	local low = bit32.band(value, 0xFFFFFFFF)
 	local high = math.floor(value / 4294967296)
+	local low = value - high * 4294967296
 
 	return low, high
 end
