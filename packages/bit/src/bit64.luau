@@ -25,11 +25,12 @@ end
 	Binary NOT operation
 ]]
 function Bit64.bnot(value: number): number
-	local low, high = split64(value)
-	local newLow = bit32.bnot(low)
-	local newHigh = bit32.bnot(high)
+	if value < 9007199254740992 then
+		return -(value + 1)
+	end
 
-	return combine64(newLow, newHigh)
+	local low, high = split64(value)
+	return combine64(bit32.bnot(low), bit32.bnot(high))
 end
 
 --[[
