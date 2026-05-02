@@ -42,34 +42,31 @@ return function()
 		check.equal(bit.lshift(1, 52), 4503599627370496)
 	end)
 
-	-- band across the 32-bit boundary — the exact scenario from the issue report
 	test.case("band works correctly with values above 0xFFFFFFFF", function()
-		-- Lua 5.4: print(0xFFFFFFFF00000000 & 0x0000FFFF00000000) == 281470681808896
-		check.equal(bit.band(0xFFFFFFFF00000000, 0x0000FFFF00000000), 281470681808896)
-		-- band of a high permission flag with itself is idempotent
+		-- 0xFFFFFFFF00000000 & 0x0000FFFF00000000 = 0x0000FFFF00000000 = 281470681743360
+		check.equal(bit.band(0xFFFFFFFF00000000, 0x0000FFFF00000000), 281470681743360)
+
 		local pinMessages = bit.lshift(1, 51)
 		check.equal(bit.band(pinMessages, pinMessages), pinMessages)
-		-- band of two different high flags with no overlap is zero
+
 		local bypassSlowmode = bit.lshift(1, 52)
 		check.equal(bit.band(pinMessages, bypassSlowmode), 0)
 	end)
 
-	-- bor accumulates flags correctly above 32 bits
 	test.case("bor accumulates high permission flags correctly", function()
 		local pinMessages = bit.lshift(1, 51)
 		local bypassSlowmode = bit.lshift(1, 52)
 		local combined = bit.bor(pinMessages, bypassSlowmode)
-		-- combined should have both bits set
+
 		check.equal(bit.band(combined, pinMessages), pinMessages)
 		check.equal(bit.band(combined, bypassSlowmode), bypassSlowmode)
 	end)
 
-	-- bnot of a high permission flag should not affect unrelated bits
 	test.case("bnot and band correctly clears a high permission flag", function()
 		local pinMessages = bit.lshift(1, 51)
 		local bypassSlowmode = bit.lshift(1, 52)
 		local combined = bit.bor(pinMessages, bypassSlowmode)
-		-- remove pinMessages
+
 		local result = bit.band(combined, bit.bnot(pinMessages))
 		check.equal(bit.band(result, pinMessages), 0)
 		check.equal(bit.band(result, bypassSlowmode), bypassSlowmode)
