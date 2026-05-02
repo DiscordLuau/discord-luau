@@ -29,7 +29,6 @@ return function()
 		check.equal(bit.band(685566749516628033, 4063232), 131072)
 	end)
 
-	-- lshift beyond bit 31 — the boundary where bit32 breaks
 	test.case("lshift produces correct values for displacements >= 32", function()
 		-- 1 << 32 = 4294967296
 		check.equal(bit.lshift(1, 32), 4294967296)
