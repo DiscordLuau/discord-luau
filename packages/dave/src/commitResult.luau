@@ -1,7 +1,3 @@
---!strict
---!optimize 2
---!native
-
 --[=[
 	@class Dave.CommitResult
 	@__index Prototype
@@ -9,9 +5,8 @@
 	Holds the outcome of applying an MLS commit message via `Session:processCommit`.
 
 	A commit can succeed (the group epoch advanced), be ignored (the commit was redundant
-	or out-of-order), or fail hard (the commit was malformed). On hard failure,
-	`Session:processCommit` logs an error before returning — inspect `isFailed` only if
-	you need to handle the ignored case separately.
+	or out-of-order), or fail hard (the commit was malformed). Always inspect `isFailed`
+	and `isIgnored` after calling `Session:processCommit`.
 
 	After inspecting the result, call `destroy` to free the underlying handle.
 ]=]
@@ -19,7 +14,6 @@
 --[=[
 	@prop handle Sys.CommitResultHandle
 	@within Dave.CommitResult
-	@private
 
 	Opaque handle to the underlying libdave commit result object.
 ]=]
@@ -109,7 +103,6 @@ end
 
 --[=[
 	@within Dave.CommitResult
-	@private
 
 	Constructs a CommitResult wrapper around an existing libdave handle. Called internally
 	by `Session:processCommit`.

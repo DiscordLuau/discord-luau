@@ -1,7 +1,3 @@
---!strict
---!optimize 2
---!native
-
 --[=[
 	@class Dave.WelcomeResult
 	@__index Prototype
@@ -17,7 +13,6 @@
 --[=[
 	@prop handle Sys.WelcomeResultHandle
 	@within Dave.WelcomeResult
-	@private
 ]=]
 
 local stdPolyfills = require("../luau_packages/std_polyfills")
@@ -38,6 +33,10 @@ WelcomeResult.Prototype = {}
 function WelcomeResult.Prototype.getRosterMemberIds(self: WelcomeResult): { string }
 	local pointerSlot = Buffer.allocateSlot()
 	local lengthSlot = Buffer.allocateSlot()
+
+	local nullPtr = stdPolyfills.ffi.getNull()
+	pointerSlot:writeptr(0, nullPtr)
+	lengthSlot:writeptr(0, nullPtr)
 
 	Sys.lib.daveWelcomeResultGetRosterMemberIds(self.handle, pointerSlot, lengthSlot)
 
@@ -83,7 +82,6 @@ end
 
 --[=[
 	@within Dave.WelcomeResult
-	@private
 
 	Constructs a WelcomeResult wrapper around an existing libdave handle. Called internally
 	by `Session:processWelcome`.
