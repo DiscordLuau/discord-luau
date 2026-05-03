@@ -68,6 +68,5 @@ return function()
 				session:destroy()
 			end)
 		end)
-
 	end)
 end
