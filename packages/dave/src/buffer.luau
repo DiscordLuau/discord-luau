@@ -1,10 +1,5 @@
---!strict
---!optimize 2
---!native
-
 --[=[
 	@class Dave.Buffer
-	@private
 
 	Internal FFI interoperability helpers for the Dave package.
 ]=]
@@ -16,7 +11,6 @@ local ffi = stdPolyfills.ffi
 
 --[=[
 	@within Dave.Buffer
-	@private
 ]=]
 local function toCString(value: string): FFIPointer
 	local length = #value
@@ -30,21 +24,20 @@ end
 
 --[=[
 	@within Dave.Buffer
-	@private
 ]=]
 local function fromCString(pointer: FFIPointer): string
 	local chars = table.create(32)
-	local offset = 0
+	local byteOffset = 0
 
 	while true do
-		local byte = pointer:readu8(offset)
+		local byte = pointer:readu8(byteOffset)
 
 		if byte == 0 then
 			break
 		end
 
 		chars[#chars + 1] = string.char(byte)
-		offset += 1
+		byteOffset += 1
 	end
 
 	return table.concat(chars)
@@ -52,7 +45,6 @@ end
 
 --[=[
 	@within Dave.Buffer
-	@private
 ]=]
 local function allocateSlot(): FFIPointer
 	return ffi.alloc(8, 8)
@@ -60,7 +52,6 @@ end
 
 --[=[
 	@within Dave.Buffer
-	@private
 ]=]
 local function readRawU64(value: any): number
 	if type(value) == "number" then
@@ -76,7 +67,6 @@ end
 
 --[=[
 	@within Dave.Buffer
-	@private
 ]=]
 local function readSizeT(slot: FFIPointer): number
 	return readRawU64(slot:readu64(0))
@@ -84,7 +74,6 @@ end
 
 --[=[
 	@within Dave.Buffer
-	@private
 ]=]
 local function readU64AtOffset(pointer: FFIPointer, offset: number): number
 	return readRawU64(pointer:readu64(offset))
@@ -92,7 +81,6 @@ end
 
 --[=[
 	@within Dave.Buffer
-	@private
 ]=]
 local function readLibBytes(dataSlot: FFIPointer, lengthSlot: FFIPointer): buffer
 	local length = readSizeT(lengthSlot)
@@ -112,7 +100,6 @@ end
 
 --[=[
 	@within Dave.Buffer
-	@private
 ]=]
 local function u64StringToBuffer(decimal: string): buffer
 	local result = buffer.create(8)
@@ -141,7 +128,6 @@ end
 
 --[=[
 	@within Dave.Buffer
-	@private
 ]=]
 local function bufferToU64String(bytes: buffer): string
 	local low = buffer.readu32(bytes, 0)
@@ -171,7 +157,6 @@ end
 
 --[=[
 	@within Dave.Buffer
-	@private
 ]=]
 local function bufferToHex(bytes: buffer): string
 	local length = buffer.len(bytes)
@@ -186,7 +171,6 @@ end
 
 --[=[
 	@within Dave.Buffer
-	@private
 ]=]
 local function readPointerBytes(pointer: FFIPointer, lengthValue: any): buffer
 	local length = readRawU64(lengthValue)
@@ -199,7 +183,6 @@ end
 
 --[=[
 	@within Dave.Buffer
-	@private
 ]=]
 local function readU64ArrayAndFree(pointerSlot: FFIPointer, lengthSlot: FFIPointer): { string }
 	local count = readSizeT(lengthSlot)
@@ -207,8 +190,8 @@ local function readU64ArrayAndFree(pointerSlot: FFIPointer, lengthSlot: FFIPoint
 	local results = table.create(count)
 
 	for index = 0, count - 1 do
-		local idBuffer = dataPointer:readu64(index * 8)
-
+		local idBuffer = buffer.create(8)
+		dataPointer:read(index * 8, idBuffer, 0, 8)
 		results[index + 1] = bufferToU64String(idBuffer)
 	end
 
@@ -219,7 +202,6 @@ end
 
 --[=[
 	@within Dave.Buffer
-	@private
 ]=]
 local function withCStringArray(ids: { string }, callback: (pointer: FFIPointer, count: number) -> ())
 	local count = #ids

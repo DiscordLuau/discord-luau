@@ -1,11 +1,7 @@
---!strict
---!optimize 2
---!native
-
 --[=[
 	@class Dave.Sys
 
-	Raw FFI bindings for libdave — the C interface to Discord's DAVE end-to-end encryption protocol.
+	Raw FFI bindings for libdave - the C interface to Discord's DAVE end-to-end encryption protocol.
 
 	This module loads libdave via `stdPolyfills.ffi.dlopen` and exposes the full C API as a typed Luau
 	interface. It is a low-level binding layer; higher-level wrappers should be built on top of
@@ -55,6 +51,20 @@
 ]=]
 
 local stdPolyfills = require("../luau_packages/std_polyfills")
+
+if not stdPolyfills.runtime.capabilities().ffi then
+	local function makeStub(name: string): any
+		return setmetatable({} :: any, {
+			__index = function(_, key)
+				return makeStub(`{name}.{key}`)
+			end,
+			__call = function()
+				error(`DAVE requires FFI which is not available on this runtime (accessed: {name})`)
+			end,
+		})
+	end
+	return makeStub("Dave.Sys")
+end
 
 local types = stdPolyfills.ffi.getTypes()
 
