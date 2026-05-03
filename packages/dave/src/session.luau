@@ -1,7 +1,3 @@
---!strict
---!optimize 2
---!native
-
 --[=[
 	@class Dave.Session
 	@__index Prototype
@@ -26,19 +22,16 @@
 --[=[
 	@prop handle Sys.SessionHandle
 	@within Dave.Session
-	@private
 ]=]
 
 --[=[
 	@prop mlsFailureClosure FFIPointer
 	@within Dave.Session
-	@private
 ]=]
 
 --[=[
 	@prop mlsFailureCallbackRef { current: ((source: string, reason: string) -> ())? }
 	@within Dave.Session
-	@private
 ]=]
 
 local stdPolyfills = require("../luau_packages/std_polyfills")
@@ -63,11 +56,17 @@ local function makeForwarderClosure(callbackRef: { current: ((source: string, re
 		returns = types.void,
 		args = { types.pointer, types.pointer, types.pointer },
 	}, function(sourcePointer: FFIPointer, reasonPointer: FFIPointer)
-		local callback = callbackRef.current
+		-- errors must not escape C closure boundaries or Zune panics
+		pcall(function()
+			local callback = callbackRef.current
 
-		if callback ~= nil then
-			callback(Buffer.fromCString(sourcePointer), Buffer.fromCString(reasonPointer))
-		end
+			if callback ~= nil then
+				local sourceSuccess, source = pcall(Buffer.fromCString, sourcePointer)
+				local reasonSuccess, reason = pcall(Buffer.fromCString, reasonPointer)
+
+				callback(if sourceSuccess then source else "", if reasonSuccess then reason else "")
+			end
+		end)
 
 		return
 	end)
@@ -207,8 +206,8 @@ end
 	@within Dave.Session
 
 	Applies a serialised MLS commit message to advance the group epoch. Returns a
-	`CommitResult` describing the new roster state. Logs an error and halts the calling
-	coroutine if the commit is malformed *(hard-rejected by the library)*.
+	`CommitResult` describing the new roster state. Inspect `CommitResult:isFailed()` to
+	detect hard rejections and `CommitResult:isIgnored()` for soft rejections.
 ]=]
 function Session.Prototype.processCommit(self: Session, commit: buffer): CommitResult.CommitResult
 	local commitPointer = stdPolyfills.ffi.dupe(commit)
@@ -216,14 +215,7 @@ function Session.Prototype.processCommit(self: Session, commit: buffer): CommitR
 
 	stdPolyfills.ffi.free(commitPointer)
 
-	local result = CommitResult.new(resultHandle)
-
-	if result:isFailed() then
-		result:destroy()
-		logger:error("daveSessionProcessCommit: commit processing failed")
-	end
-
-	return result
+	return CommitResult.new(resultHandle)
 end
 
 --[=[
@@ -237,7 +229,7 @@ function Session.Prototype.processWelcome(
 	self: Session,
 	welcome: buffer,
 	recognizedUserIds: { string }
-): WelcomeResult.WelcomeResult
+): WelcomeResult.WelcomeResult?
 	local welcomePointer = stdPolyfills.ffi.dupe(welcome)
 	local resultHandle: Sys.WelcomeResultHandle = nil :: any
 
@@ -252,6 +244,17 @@ function Session.Prototype.processWelcome(
 	end)
 
 	stdPolyfills.ffi.free(welcomePointer)
+
+	-- daveSessionProcessWelcome returns nullptr on failure (e.g. welcome not for our key package).
+	-- Detect null by round-tripping the handle through a u64 slot - address 0 == null.
+	local checkSlot = Buffer.allocateSlot()
+	checkSlot:writeptr(0, resultHandle)
+	local isNull = Buffer.readSizeT(checkSlot) == 0
+	stdPolyfills.ffi.free(checkSlot)
+
+	if isNull then
+		return nil
+	end
 
 	return WelcomeResult.new(resultHandle)
 end
@@ -305,7 +308,7 @@ end
 	
 	The callback fires synchronously inside libdave.
 ]=]
-function Session.Prototype.getPairwiseFingerprint(self: Session, version: number, userId: string): string
+function Session.Prototype.getPairwiseFingerprint(self: Session, version: number, userId: string): string?
 	local types = stdPolyfills.ffi.getTypes()
 	local captured: string? = nil
 
@@ -324,7 +327,7 @@ function Session.Prototype.getPairwiseFingerprint(self: Session, version: number
 
 	stdPolyfills.ffi.free(userIdPointer)
 
-	return captured :: string
+	return captured
 end
 
 --[=[
@@ -349,7 +352,6 @@ end
 
 --[=[
 	@within Dave.Session
-	@private
 
 	Constructs a new DAVE session. `authSessionId` is an opaque string used by the
 	library to persist MLS signature keys across restarts. `onMlsFailure` is called

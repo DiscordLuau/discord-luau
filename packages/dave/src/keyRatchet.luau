@@ -1,7 +1,3 @@
---!strict
---!optimize 2
---!native
-
 --[=[
 	@class Dave.KeyRatchet
 	@__index Prototype
@@ -19,7 +15,6 @@
 --[=[
 	@prop handle Sys.KeyRatchetHandle
 	@within Dave.KeyRatchet
-	@private
 ]=]
 
 local Sys = require("./sys")
@@ -43,7 +38,6 @@ end
 
 --[=[
 	@within Dave.KeyRatchet
-	@private
 
 	Constructs a KeyRatchet wrapper around an existing libdave handle. Called internally
 	by `Session:getKeyRatchet`.
