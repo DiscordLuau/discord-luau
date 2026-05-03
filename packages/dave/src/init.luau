@@ -89,6 +89,13 @@ local Buffer = require("@self/buffer")
 
 local _logSinkClosure: FFIPointer? = nil
 
+export type Session = Session.Session
+export type Encryptor = Encryptor.Encryptor
+export type Decryptor = Decryptor.Decryptor
+export type KeyRatchet = KeyRatchet.KeyRatchet
+export type CommitResult = CommitResult.CommitResult
+export type WelcomeResult = WelcomeResult.WelcomeResult
+
 return {
 	sys = Sys,
 	Session = Session,
@@ -105,7 +112,12 @@ return {
 			returns = types.void,
 			args = { types.i32, types.pointer, types.i32, types.pointer },
 		}, function(severity: number, _filePtr: FFIPointer, _line: number, messagePtr: FFIPointer)
-			callback(severity, Buffer.fromCString(messagePtr))
+			-- errors must not escape C closure boundaries or Zune panics
+			pcall(function()
+				local success, message = pcall(Buffer.fromCString, messagePtr)
+
+				callback(severity, if success then message else "")
+			end)
 
 			return
 		end)
