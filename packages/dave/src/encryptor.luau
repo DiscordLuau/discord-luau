@@ -1,7 +1,3 @@
---!strict
---!optimize 2
---!native
-
 --[=[
 	@class Dave.Encryptor
 	@__index Prototype
@@ -26,19 +22,16 @@
 --[=[
 	@prop handle Sys.EncryptorHandle
 	@within Dave.Encryptor
-	@private
 ]=]
 
 --[=[
 	@prop versionChangedClosure FFIPointer
 	@within Dave.Encryptor
-	@private
 ]=]
 
 --[=[
 	@prop versionChangedCallbackRef { current: (() -> ())? }
 	@within Dave.Encryptor
-	@private
 ]=]
 
 local stdPolyfills = require("../luau_packages/std_polyfills")
@@ -64,12 +57,7 @@ export type EncryptorStats = {
 	encryptMissingKeyCount: number,
 }
 
-local encryptorResultMessages = {
-	[Sys.encryptorResultCode.encryptionFailure] = "encryption failure",
-	[Sys.encryptorResultCode.missingKeyRatchet] = "missing key ratchet",
-	[Sys.encryptorResultCode.missingCryptor] = "missing cryptor",
-	[Sys.encryptorResultCode.tooManyAttempts] = "too many attempts",
-}
+local encryptorResultMessages: { [number]: string }?
 
 --[=[
 	@within Dave.Encryptor
@@ -173,7 +161,16 @@ function Encryptor.Prototype.encrypt(self: Encryptor, mediaType: number, ssrc: n
 		stdPolyfills.ffi.free(outputPointer)
 		stdPolyfills.ffi.free(bytesWrittenSlot)
 
-		logger:error(encryptorResultMessages[resultCode] or `unknown error (code {resultCode})`)
+		if not encryptorResultMessages then
+			encryptorResultMessages = {
+				[Sys.encryptorResultCode.encryptionFailure] = "encryption failure",
+				[Sys.encryptorResultCode.missingKeyRatchet] = "missing key ratchet",
+				[Sys.encryptorResultCode.missingCryptor] = "missing cryptor",
+				[Sys.encryptorResultCode.tooManyAttempts] = "too many attempts",
+			}
+		end
+
+		logger:error((encryptorResultMessages :: { [number]: string })[resultCode] or `unknown error (code {resultCode})`)
 	end
 
 	local bytesWritten = Buffer.readSizeT(bytesWrittenSlot)
@@ -240,7 +237,6 @@ end
 
 --[=[
 	@within Dave.Encryptor
-	@private
 
 	Constructs a new Encryptor. Registers a stable forwarder closure for the
 	protocol-version-changed callback so the Luau handler can be swapped later via
@@ -248,24 +244,25 @@ end
 ]=]
 function Encryptor.Interface.new(): Encryptor
 	local versionChangedCallbackRef: { current: (() -> ())? } = { current = nil }
-	local types = stdPolyfills.ffi.getTypes()
+	local handle = Sys.lib.daveEncryptorCreate()
 
+	local types = stdPolyfills.ffi.getTypes()
 	local versionChangedClosure = stdPolyfills.ffi.closure({
 		returns = types.void,
 		args = { types.pointer },
-	}, function(_userData: any)
-		local callback = versionChangedCallbackRef.current
+	}, function(_userData: FFIPointer)
+		pcall(function()
+			local callback = versionChangedCallbackRef.current
 
-		if callback ~= nil then
-			callback()
-		end
+			if callback ~= nil then
+				callback()
+			end
+		end)
 
 		return
 	end)
 
-	local handle = Sys.lib.daveEncryptorCreate()
 	local nullPointer = stdPolyfills.ffi.getNull()
-
 	Sys.lib.daveEncryptorSetProtocolVersionChangedCallback(handle, versionChangedClosure, nullPointer)
 
 	return setmetatable(

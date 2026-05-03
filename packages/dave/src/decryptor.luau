@@ -1,7 +1,3 @@
---!strict
---!optimize 2
---!native
-
 --[=[
 	@class Dave.Decryptor
 	@__index Prototype
@@ -27,7 +23,6 @@
 --[=[
 	@prop handle Sys.DecryptorHandle
 	@within Dave.Decryptor
-	@private
 ]=]
 
 local stdPolyfills = require("../luau_packages/std_polyfills")
@@ -132,10 +127,13 @@ function Decryptor.Prototype.decrypt(self: Decryptor, mediaType: number, encrypt
 	end
 
 	local bytesWritten = Buffer.readSizeT(bytesWrittenSlot)
+
 	stdPolyfills.ffi.free(bytesWrittenSlot)
 
 	local result = buffer.create(bytesWritten)
+
 	outputPointer:read(0, result, 0, bytesWritten)
+
 	stdPolyfills.ffi.free(outputPointer)
 
 	return result
@@ -149,8 +147,9 @@ end
 ]=]
 function Decryptor.Prototype.getStats(self: Decryptor, mediaType: number): DecryptorStats
 	local structType = Sys.structs.decryptorStats
-	local statsBuf = structType:new({})
-	local statsPointer = stdPolyfills.ffi.dupe(statsBuf)
+	local statsBuffer = structType:new({})
+	local statsPointer = stdPolyfills.ffi.dupe(statsBuffer)
+
 	Sys.lib.daveDecryptorGetStats(self.handle, mediaType, statsPointer)
 
 	local result: DecryptorStats = {
@@ -164,6 +163,7 @@ function Decryptor.Prototype.getStats(self: Decryptor, mediaType: number): Decry
 	}
 
 	stdPolyfills.ffi.free(statsPointer)
+
 	return result
 end
 
@@ -179,7 +179,6 @@ end
 
 --[=[
 	@within Dave.Decryptor
-	@private
 
 	Constructs a new Decryptor.
 ]=]
