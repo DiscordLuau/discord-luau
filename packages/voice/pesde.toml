@@ -23,4 +23,7 @@ future = { name = "yetanotherclown/luau_futures", version = "2.0.0-beta.3" }
 logger = { workspace = "discord_luau/logger" }
 emitter = { workspace = "discord_luau/emitter" }
 secret = { workspace = "discord_luau/secret" }
-buffer = { workspace = "discord_luau/buffer" }
+dave = { workspace = "discord_luau/dave" }
+websocket = { workspace = "discord_luau/websocket" }
+sodium = { workspace = "discord_luau/sodium" }
+opus = { workspace = "discord_luau/opus" }
