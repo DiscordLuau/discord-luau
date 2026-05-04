@@ -1,6 +1,6 @@
 local stdPolyfills = require("../luau_packages/std_polyfills")
 
-local buffer = require("../luau_packages/buffer")
+local accumulator = require("../luau_packages/accumulator")
 local emitter = require("../luau_packages/emitter")
 local future = require("../luau_packages/future")
 local logger = require("../luau_packages/logger")
@@ -72,7 +72,7 @@ local LIBRARY_IDENTIFIER = "DiscordLuau"
 ]=]
 
 --[=[
-	@prop zlibBuffer Buffer
+	@prop zlibBuffer Accumulator
 	@within WebSocket.Shard
 ]=]
 
@@ -215,7 +215,6 @@ Shard.Prototype = {}
 
 --[=[
 	@within WebSocket.Shard
-	@private
 
 	Function responsible for handling incoming messages from the WebSocket connection.
 	
@@ -239,7 +238,7 @@ function Shard.Prototype._handleMessage(self: Shard, message: string): ()
 	else
 		self.zlibBuffer:write(message)
 
-		local success0, response0 = pcall(stdPolyfills.serde.decompress, "zlib" :: any, self.zlibBuffer.data)
+		local success0, response0 = pcall(stdPolyfills.serde.decompress, "zlib" :: any, self.zlibBuffer:peek())
 
 		if success0 then
 			self.logger:debug(`decompressed Shard message: #{string.len(response0)}`)
@@ -265,14 +264,16 @@ end
 ]=]
 function Shard.Prototype.heartbeatAsync(self: Shard, requested: boolean?)
 	return future.Future.new(function()
-		if not self.heartbeatAcknowledged and not requested then
+		if not self.heartbeatAcknowledged and not requested and not self.socketReconnecting then
 			self.logger:warn(`discord WebSocket state has become Zombified, reconnecting...`)
 
-			self:reconnectAsync():after(function(result)
-				if result:isErr() then
-					self.logger:warn(`shard has run into an error during zombified reconnect: {result:unwrapErr()}`)
-				end
-			end):await()
+			self:reconnectAsync()
+				:after(function(result)
+					if result:isErr() then
+						self.logger:warn(`shard has run into an error during zombified reconnect: {result:unwrapErr()}`)
+					end
+				end)
+				:await()
 		end
 
 		self.heartbeatClockTime = os.clock()
@@ -280,14 +281,19 @@ function Shard.Prototype.heartbeatAsync(self: Shard, requested: boolean?)
 
 		self.logger:info(`sending heartbeat request`)
 
-		self:sendAsync(stdPolyfills.serde.encode("json", {
-			["op"] = apiTypes.gateway.opcodes.Heartbeat,
-			["d"] = self.lastSequence or false,
-		}, true), true):after(function(result)
-			if result:isErr() then
-				self.logger:warn(`shard has run into an error during heartbeat send: {result:unwrapErr()}`)
-			end
-		end):await()
+		self:sendAsync(
+			stdPolyfills.serde.encode("json", {
+				["op"] = apiTypes.gateway.opcodes.Heartbeat,
+				["d"] = self.lastSequence or false,
+			}, true),
+			true
+		)
+			:after(function(result)
+				if result:isErr() then
+					self.logger:warn(`shard has run into an error during heartbeat send: {result:unwrapErr()}`)
+				end
+			end)
+			:await()
 	end) :: future.FutureLike<string, nil>
 end
 
@@ -317,12 +323,49 @@ function Shard.Prototype.identifyAsync(self: Shard)
 					["device"] = LIBRARY_IDENTIFIER,
 				},
 			},
-		}, true)):after(function(result)
-			if result:isErr() then
-				self.logger:warn(`shard has run into an error during identify send: {result:unwrapErr()}`)
-			end
-		end):await()
+		}, true))
+			:after(function(result)
+				if result:isErr() then
+					self.logger:warn(`shard has run into an error during identify send: {result:unwrapErr()}`)
+				end
+			end)
+			:await()
 	end) :: future.FutureLike<string, nil>
+end
+
+--[=[
+	@within WebSocket.Shard
+
+	Synchronously closes the shard's socket and kills all associated threads. Safe to call from
+	a signal handler or any context where yielding is not permitted.
+]=]
+function Shard.Prototype.forceClose(self: Shard, code: number?)
+	self.logger:info(`force closing shard {self.shardId}`)
+
+	if self.heartbeatThread then
+		coroutine.close(self.heartbeatThread)
+		self.heartbeatThread = nil
+	end
+
+	if self.socketThread then
+		coroutine.close(self.socketThread)
+		self.socketThread = nil
+	end
+
+	if self.socketInstance and not self.socketInstance.closeCode then
+		xpcall(function()
+			self.socketInstance.close(code)
+		end, function(errorMessage)
+			self.logger:info(
+				`Error during socketInstance.close, assuming socket has been closed: {tostring(errorMessage)}`
+			)
+		end)
+	end
+
+	self.socketInstance = nil
+	self.socketActive = false
+
+	self.logger:info(`shard {self.shardId} closed`)
 end
 
 --[=[
@@ -336,38 +379,10 @@ end
 function Shard.Prototype.disconnectAsync(self: Shard, code: number?)
 	return future.Future.new(function()
 		self.logger:info(`requesting disconnect: {code or 0}`)
-
 		self.socketDisconnecting = true
-
-		if self.socketInstance and not self.socketInstance.closeCode then
-			xpcall(function()
-				self.socketInstance.close(code)
-			end, function(errorMessage)
-				self.logger:info(
-					`Error during socketInstance.close, assuming socket has been closed: {tostring(errorMessage)}`
-				)
-			end)
-		end
-
-		if self.heartbeatThread then
-			coroutine.close(self.heartbeatThread)
-		end
-
-		self.heartbeatThread = nil
-
-		if self.socketActive then
-			self.socketActive = false
-
-			self.logger:info(`waiting for socket to close..`)
-
-			while self.socketInstance do
-				stdPolyfills.task.wait(0.5)
-			end
-		end
-
+		self:forceClose(code)
+		self.onSocketDisconnected:invoke(-1, true)
 		self.socketDisconnecting = false
-
-		self.logger:info(`disconnected.`)
 	end) :: future.FutureLike<string, nil>
 end
 
@@ -484,28 +499,26 @@ function Shard.Prototype.resumeAsync(self: Shard)
 					["seq"] = self.lastSequence,
 				},
 			}, true))
-				:andThen(function(response)
-					return future.Future.new(function()
-						if response:isOk() then
-							self.logger:notice(`has resumed!`)
-						else
-							self.logger:critical(`failed to resume session: {response:unwrapErr()}`)
-						end
-					end) :: future.FutureLike<string, nil>
-				end)
 				:after(function(result)
 					if result:isErr() then
-						self.logger:warn(`shard has run into an error during session resume: {result:unwrapErr()}`)
+						self.logger:critical(`failed to resume session: {result:unwrapErr()}`)
+					else
+						self.logger:notice(`has resumed!`)
 					end
-				end):await()
+				end)
+				:await()
 		else
 			self.logger:warn(`failed to resume session: {response:unwrapErr()}, will try to re-instantiate!`)
 
-			self:reinstantiateAsync(self.shouldReconnect):after(function(result)
-				if result:isErr() then
-					self.logger:warn(`shard has run into an error during re-instantiation after failed resume: {result:unwrapErr()}`)
-				end
-			end):await()
+			self:reinstantiateAsync(self.shouldReconnect)
+				:after(function(result)
+					if result:isErr() then
+						self.logger:warn(
+							`shard has run into an error during re-instantiation after failed resume: {result:unwrapErr()}`
+						)
+					end
+				end)
+				:await()
 		end
 	end) :: future.FutureLike<string, nil>
 end
@@ -520,6 +533,7 @@ function Shard.Prototype.reconnectAsync(self: Shard)
 	return future.Future.new(function()
 		if self.socketReconnecting then
 			self.logger:error(`Shard is already trying to reconnect - rejecting request!`)
+			return
 		end
 
 		self.socketIdentified = false
@@ -528,27 +542,32 @@ function Shard.Prototype.reconnectAsync(self: Shard)
 		if self.sessionGateway then
 			self.logger:notice(`reconnection requested, reconnecting..`)
 
-			local response = self:disconnectAsync(1012):await()
+			local disconnectResult = self:disconnectAsync(1012):await()
 
-			if response:isOk() then
-				local response = self:resumeAsync():await()
+			if disconnectResult:isOk() then
+				local resumeResult = self:resumeAsync():await()
 
-				if response:isOk() then
+				if resumeResult:isOk() then
 					self.logger:notice(`reconnection successful`)
+					self.onSocketReconnected:invoke()
 				else
-					self.logger:critical(`failed to reconnect session: {response:unwrapErr()}`)
+					self.logger:critical(`failed to reconnect session: {resumeResult:unwrapErr()}`)
 				end
 			else
-				self.logger:critical(`failed to reconnect session: {response:unwrapErr()}`)
+				self.logger:critical(`failed to reconnect session: {disconnectResult:unwrapErr()}`)
 			end
 		else
 			self.logger:warn(`failed to reconnect! Re-instantiating instead!`)
 
-			self:reinstantiateAsync(self.shouldReconnect):after(function(result)
-				if result:isErr() then
-					self.logger:warn(`shard has run into an error during re-instantiation after failed reconnect: {result:unwrapErr()}`)
-				end
-			end):await()
+			self:reinstantiateAsync(self.shouldReconnect)
+				:after(function(result)
+					if result:isErr() then
+						self.logger:warn(
+							`shard has run into an error during re-instantiation after failed reconnect: {result:unwrapErr()}`
+						)
+					end
+				end)
+				:await()
 		end
 
 		self.socketReconnecting = false
@@ -614,8 +633,6 @@ function Shard.Prototype.sendAsync(self: Shard, data: string, ignoreRateLimit: b
 			self.socketActive = false
 
 			self.logger:warn(`error during send: {response}\nTraceback: {debugTraceback}`)
-
-			self.onSocketDisconnected:wait()
 		end
 	end) :: future.FutureLike<string, nil>
 end
@@ -635,32 +652,34 @@ function Shard.Prototype.reinstantiateAsync(self: Shard, noFail: boolean?)
 	return future.Future.new(function()
 		self.logger:debug(`re-instantiation requested..`)
 
-		local response
+		local disconnectResult = self:disconnectAsync(1012):await()
 
-		response = self:disconnectAsync(1012):await()
-
-		if not response:isOk() then
+		if not disconnectResult:isOk() then
 			self.logger:emergency(
-				`exception during re-instantiation, shard {self.shardId} is now dead! \n{response:unwrapErr()}`
+				`exception during re-instantiation, shard {self.shardId} is now dead! \n{disconnectResult:unwrapErr()}`
 			)
 		end
 
-		response = self:connectAsync(self.socketUrl :: string, self.socketVersion :: number):await()
+		local connectResult = self:connectAsync(self.socketUrl :: string, self.socketVersion :: number):await()
 
-		if response:isOk() then
+		if connectResult:isOk() then
 			self.logger:warn(`re-instantiation successful, shard {self.shardId} has recovered.`)
 		else
 			if noFail then
 				stdPolyfills.task.wait(1)
 
-				self:reinstantiateAsync(noFail):after(function(result)
-					if result:isErr() then
-						self.logger:warn(`shard has run into an error during re-instantiation retry: {result:unwrapErr()}`)
-					end
-				end):await()
+				self:reinstantiateAsync(noFail)
+					:after(function(result)
+						if result:isErr() then
+							self.logger:warn(
+								`shard has run into an error during re-instantiation retry: {result:unwrapErr()}`
+							)
+						end
+					end)
+					:await()
 			else
 				self.logger:emergency(
-					`exception during re-instantiation, shard {self.shardId} is now dead! \n{response:unwrapErr()}`
+					`exception during re-instantiation, shard {self.shardId} is now dead! \n{connectResult:unwrapErr()}`
 				)
 			end
 		end
@@ -674,7 +693,7 @@ end
 	until the shard is disconnected.
 ]=]
 function Shard.Prototype.heartbeatIn(self: Shard, milliseconds: number): ()
-	if self.heartbeatThread then
+	if self.heartbeatThread and self.heartbeatThread ~= coroutine.running() then
 		coroutine.close(self.heartbeatThread)
 	end
 
@@ -682,8 +701,6 @@ function Shard.Prototype.heartbeatIn(self: Shard, milliseconds: number): ()
 
 	self.heartbeatThread = util.coroutineRun(function()
 		stdPolyfills.task.wait(milliseconds / 1000)
-
-		self.heartbeatThread = nil
 
 		self:heartbeatAsync()
 			:andThen(function()
@@ -695,7 +712,8 @@ function Shard.Prototype.heartbeatIn(self: Shard, milliseconds: number): ()
 				if result:isErr() then
 					self.logger:warn(`shard has run into an error during heartbeat loop: {result:unwrapErr()}`)
 				end
-			end):await()
+			end)
+			:await()
 	end)
 end
 
@@ -716,7 +734,7 @@ function Shard.Interface.new(settings: {
 
 	largeThreshold: number?,
 }): Shard
-	local self = setmetatable(
+	local self: Shard = setmetatable(
 		{
 			token = settings.token,
 			intents = settings.intents,
@@ -726,7 +744,7 @@ function Shard.Interface.new(settings: {
 
 			largeThreshold = settings.largeThreshold,
 
-			zlibBuffer = buffer.new(),
+			zlibBuffer = accumulator.new(),
 
 			onSocketConnected = emitter.new(),
 			onSocketReconnected = emitter.new(),
@@ -746,9 +764,9 @@ function Shard.Interface.new(settings: {
 			socketDisconnecting = false,
 			socketIdentified = false,
 
-			rateLimitedGuilds = {},
+			rateLimitedGuilds = {} :: { [string]: boolean },
 			gatewaySendTimestamps = {} :: { number },
-		} :: Shard,
+		} :: any,
 		{ __index = Shard.Prototype }
 	)
 
@@ -817,18 +835,22 @@ function Shard.Interface.new(settings: {
 				self.logger:warn(`discord invalid session is recoverable, resuming session..`)
 
 				self:reconnectAsync()
-					:andThen(function(result)
-						return future.Future.new(function()
+					:after(function(result)
+						if result:isErr() then
 							self.logger:warn(
 								`unrecoverable error during reconnection, re-instantiating shard.. \n{result:unwrapErr()}`
 							)
 
-							self:reinstantiateAsync(self.shouldReconnect):after(function(result)
-								if result:isErr() then
-									self.logger:warn(`shard has run into an error during re-instantiation after invalid session: {result:unwrapErr()}`)
-								end
-							end):await()
-						end) :: future.FutureLike<string, nil>
+							self:reinstantiateAsync(self.shouldReconnect)
+								:after(function(r)
+									if r:isErr() then
+										self.logger:warn(
+											`shard has run into an error during re-instantiation after invalid session: {r:unwrapErr()}`
+										)
+									end
+								end)
+								:await()
+						end
 					end)
 					:poll()
 			else
@@ -942,6 +964,10 @@ function Shard.Interface.new(settings: {
 			self:reconnectAsync():poll()
 		elseif code == apiTypes.gateway.closeCodes.SessionTimedOut then
 			self:reconnectAsync():poll()
+		elseif code == apiTypes.gateway.closeCodes.ShardingRequired then
+			self.logger:error(
+				`Shard '{self.shardId}', too many guilds for a single shard — increase your shard count and restart. [{code}]`
+			)
 		elseif code == apiTypes.gateway.closeCodes.InvalidShard then
 			self.logger:error(
 				`Shard '{self.shardId}', Something has gone terribly wrong with Discord-Luau.. please create an issue! [{code}]`
@@ -988,7 +1014,7 @@ export type Shard = typeof(Shard.Prototype) & {
 	shardCount: number,
 	shouldReconnect: boolean,
 	largeThreshold: number?,
-	zlibBuffer: buffer.Buffer,
+	zlibBuffer: accumulator.Accumulator,
 	onSocketConnected: emitter.Emitter<()>,
 	onSocketReconnected: emitter.Emitter<number?>,
 	onSocketDisconnected: emitter.Emitter<number?, boolean?>,
