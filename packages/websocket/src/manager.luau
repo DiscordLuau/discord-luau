@@ -151,24 +151,27 @@ function Manager.Prototype.connectAsync(
 		self.logger:debug(`Connecting all Shards to the Discord Gateway..`)
 
 		for shardIndex, shardInstance in next, self.shards do
-			if shardIndex ~= 1 and shardIndex % maxConcurrency == 0 then
+			local shardId = shardIndex - 1
+			if shardId > 0 and shardId % maxConcurrency == 0 then
 				stdPolyfills.task.wait(CONCURRENT_IDENTIFY_YIELD)
 			end
 
 			shardInstance.onSocketDispatch:listen(function(event)
 				self.onDispatch:invoke({
-					shardId = shardIndex - 1,
-					event = event.t,
+					shardId = shardId,
+					event = event.t :: apiTypes.ReceiveEvent,
 					payload = event,
 				})
 
 				if event.t == apiTypes.gateway.receiveEvents.Ready then
-					table.insert(readyShards, shardIndex - 1)
+					if not table.find(readyShards, shardId) then
+						table.insert(readyShards, shardId)
+					end
 
 					if #readyShards == shardCount then
 						self.onAllShardsReady:invoke({
-							shardId = shardIndex - 1,
-							payload = event,
+							shardId = shardId,
+							payload = event :: apiTypes.ReadyPayload,
 						})
 
 						self.ready = true
@@ -178,46 +181,53 @@ function Manager.Prototype.connectAsync(
 
 			shardInstance.onSocketHeartbeat:listen(function(ping: number?)
 				self.onHeartbeat:invoke({
-					shardId = shardIndex - 1,
-					latency = ping,
+					shardId = shardId,
+					latency = ping :: number,
 				})
 			end)
 
 			shardInstance.onSocketConnected:listen(function()
 				self.onConnected:invoke({
-					shardId = shardIndex - 1,
+					shardId = shardId,
 				})
 			end)
 
 			shardInstance.onSocketReconnected:listen(function()
 				self.onReconnected:invoke({
-					shardId = shardIndex - 1,
+					shardId = shardId,
 				})
 			end)
 
-			shardInstance.onSocketDisconnected:listen(function(code: number?)
+			shardInstance.onSocketDisconnected:listen(function(code: number?, closedBySelf: boolean?)
+				if closedBySelf then
+					return
+				end
+
 				self.onDisconnected:invoke({
-					shardId = shardIndex - 1,
+					shardId = shardId,
 					errorCode = code,
 				})
 			end)
 
 			shardInstance.onSocketRateLimited:listen(function(data)
 				self.onRateLimited:invoke({
-					shardId = shardIndex - 1,
+					shardId = shardId,
 					opcode = data.opcode,
 					retryAfter = data.retryAfter,
 					guildId = data.guildId,
 				})
 			end)
 
-			self.logger:debug(`Connecting Shard '{shardIndex - 1}' to Discord Gateway`)
+			self.logger:debug(`Connecting Shard '{shardId}' to Discord Gateway`)
 
-			shardInstance:connectAsync(websocketUrl, self.webSocketVersion):after(function(result)
-				if result:isErr() then
-					self.logger:warn(`shard has run into an error during gateway connection: {result:unwrapErr()}`)
-				end
-			end):await()
+			shardInstance
+				:connectAsync(websocketUrl, self.webSocketVersion)
+				:after(function(result)
+					if result:isErr() then
+						self.logger:warn(`shard has run into an error during gateway connection: {result:unwrapErr()}`)
+					end
+				end)
+				:await()
 		end
 	end)
 end
@@ -247,16 +257,17 @@ function Manager.Prototype.sendAsync<T>(self: Manager, operation: apiTypes.Opcod
 						stdPolyfills.task.wait(0.5)
 					end
 
-					shardObject
+					local sendResult = shardObject
 						:sendAsync(stdPolyfills.serde.encode("json", {
 							["op"] = operation,
 							["d"] = data,
 						}, false))
-						:after(function(result)
-							if result:isErr() then
-								self.logger:warn(`shard has run into an error during message dispatch: {result:unwrapErr()}`)
-							end
-						end):await()
+						:await()
+					if sendResult:isErr() then
+						self.logger:warn(
+							`shard has run into an error during message dispatch: {sendResult:unwrapErr()}`
+						)
+					end
 				end)
 			)
 		end
@@ -266,11 +277,10 @@ function Manager.Prototype.sendAsync<T>(self: Manager, operation: apiTypes.Opcod
 		end
 
 		for _, request in requests do
-			request:after(function(result)
-				if result:isErr() then
-					self.logger:warn(`shard has run into an error during send request: {result:unwrapErr()}`)
-				end
-			end):await()
+			local result = request:await()
+			if result:isErr() then
+				self.logger:warn(`shard has run into an error during send request: {result:unwrapErr()}`)
+			end
 		end
 	end)
 end
@@ -287,7 +297,7 @@ function Manager.Interface.new(settings: {
 	webSocketVersion: number,
 	reconnect: boolean,
 }): Manager
-	return setmetatable(
+	local self: Manager = setmetatable(
 		{
 			token = settings.token,
 			intents = settings.intents,
@@ -296,8 +306,8 @@ function Manager.Interface.new(settings: {
 			shouldReconnect = settings.reconnect,
 			ready = false,
 
-			shardIds = {},
-			shards = {},
+			shardIds = {} :: { ShardId },
+			shards = {} :: { [ShardId]: shard.Shard },
 
 			logger = logger.new("Manager"),
 
@@ -309,9 +319,11 @@ function Manager.Interface.new(settings: {
 			onRateLimited = emitter.new(),
 
 			onAllShardsReady = emitter.new(),
-		} :: Manager,
+		} :: any,
 		{ __index = Manager.Prototype }
 	)
+
+	return self
 end
 
 export type ShardId = number
