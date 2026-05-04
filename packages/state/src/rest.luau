@@ -18,7 +18,7 @@
 ]=]
 
 --[=[
-	@prop routeRatelimits { [string]: { remaining: number, limit: number, resetAfter: number, cooloff: boolean? } }
+	@prop routeRatelimits { [string]: { remaining: number, limit: number, resetAfter: number } }
 	@within State.Rest
 ]=]
 
@@ -64,7 +64,6 @@ local utils = require("../luau_packages/utils")
 local rest = require("../luau_packages/rest")
 local logger = require("../luau_packages/logger")
 
-local PER_RESOURCE_COOLOFF_TIME = 1
 local WARN_AFTER = 5
 
 local REST = {}
@@ -110,17 +109,10 @@ function REST.Prototype.implementBucketRatelimitsFor(self: REST, request: rest.R
 			end
 
 			self:yieldUntil(function()
-				return (bucket.remaining > 0 and bucket.cooloff ~= true) :: boolean
+				return bucket.remaining > 0
 			end, `please wait - {requestHash} has been ratelimited by bucket id..`)
 
-			if bucket then
-				bucket.remaining = bucket.remaining - 1
-				bucket.cooloff = true
-
-				stdPolyfills.task.delay(PER_RESOURCE_COOLOFF_TIME, function()
-					bucket.cooloff = nil
-				end)
-			end
+			bucket.remaining -= 1
 		end
 
 		return true
@@ -147,9 +139,12 @@ function REST.Prototype.implementBucketRatelimitsFor(self: REST, request: rest.R
 				resetAfter = tonumber(ratelimitResetAfter) :: number,
 			}
 
+			local bucketSnapshot = self.routeRatelimits[ratelimitBucket]
 			utils.coroutineRun(function()
-				stdPolyfills.task.wait(self.routeRatelimits[ratelimitBucket].resetAfter)
-				self.routeRatelimits[ratelimitBucket].remaining = self.routeRatelimits[ratelimitBucket].limit
+				stdPolyfills.task.wait(bucketSnapshot.resetAfter)
+				if self.routeRatelimits[ratelimitBucket] == bucketSnapshot then
+					bucketSnapshot.remaining = bucketSnapshot.limit
+				end
 			end)
 		end
 
@@ -167,7 +162,11 @@ function REST.Prototype.implementGlobalRatelimitsFor(self: REST, request: rest.R
 		local requestHash = `{requestInfo.method}@{requestInfo.url}`
 
 		self:yieldUntil(function()
-			return self.globalRequestCount + 1 <= self.globalRatelimit
+			if self.globalRequestCount + 1 <= self.globalRatelimit then
+				self.globalRequestCount += 1
+				return true
+			end
+			return false
 		end, `please wait - {requestHash} has been ratelimited by global resource..`)
 
 		self:yieldUntil(function()
@@ -177,8 +176,6 @@ function REST.Prototype.implementGlobalRatelimitsFor(self: REST, request: rest.R
 		self:yieldUntil(function()
 			return not self.resourcesBlocked[requestInfo.requestUrl]
 		end, `please wait - {requestHash} has been ratelimited by shared resource..`)
-
-		self.globalRequestCount += 1
 
 		stdPolyfills.task.delay(1, function()
 			self.globalRequestCount -= 1
@@ -201,7 +198,7 @@ function REST.Prototype.implementErrorHandlerFor(self: REST, request: rest.Reque
 		local message
 
 		if data.statusCode == 429 then
-			local decodeSuccess, decodedBody = pcall(stdPolyfills.serde.decode, "json" :: "json", request.body)
+			local decodeSuccess, decodedBody = pcall(stdPolyfills.serde.decode, "json" :: "json", data.body)
 			local scope = data.headers["x-ratelimit-scope"] :: string
 
 			assert(decodeSuccess, `Failed to decode JSON value for ratelimit`)
@@ -219,7 +216,7 @@ function REST.Prototype.implementErrorHandlerFor(self: REST, request: rest.Reque
 				if (scope == "user" or scope == "global") or decodedBody.global then
 					self.isBlocked = false
 				else
-					self.resourcesBlocked[requestInfo.requestUrl] = false
+					self.resourcesBlocked[requestInfo.requestUrl] = nil
 				end
 			end)
 		elseif data.statusCode == 403 then
@@ -251,8 +248,8 @@ function REST.Prototype.implementAttachmentHandlerFor(_: REST, request: rest.Req
 			if messageJson.formdata_files then
 				local formdataData = formdata.new()
 
-				for _, file in messageJson.formdata_files do
-					formdataData:set(file.name, file.content, file.filename)
+				for _, fileEntry in messageJson.formdata_files do
+					formdataData:set(fileEntry.name, fileEntry.content, fileEntry.filename)
 				end
 
 				requestInfo.headers["content-type"] = `multipart/form-data; boundary={formdataData:getHeader()}`
@@ -361,7 +358,7 @@ export type Attachment = {
 }
 
 export type Bucket = string
-export type Ratelimit = { remaining: number, limit: number, resetAfter: number, cooloff: boolean? }
+export type Ratelimit = { remaining: number, limit: number, resetAfter: number }
 export type REST = typeof(REST.Prototype) & {
 	token: secret.Secret<string>,
 	logger: logger.Logger,
