@@ -5,6 +5,13 @@ name = "discord_luau/websocket"
 version = "0.0.1"
 target = "luau"
 
+[graph."discord_luau/accumulator@0.0.1 luau"]
+direct = ["accumulator", { workspace = "discord_luau/accumulator", version = "^" }, "standard"]
+
+[graph."discord_luau/accumulator@0.0.1 luau".pkg_ref]
+ref_ty = "workspace"
+path = "packages/accumulator"
+
 [graph."discord_luau/api_types@0.0.1 luau"]
 direct = ["api_types", { workspace = "discord_luau/api_types", version = "^" }, "standard"]
 
@@ -24,19 +31,18 @@ util = [{ workspace = "discord_luau/util", version = "^" }, "standard"]
 ref_ty = "workspace"
 path = "packages/bit"
 
-[graph."discord_luau/buffer@0.0.1 luau"]
-direct = ["buffer", { workspace = "discord_luau/buffer", version = "^" }, "standard"]
-
-[graph."discord_luau/buffer@0.0.1 luau".pkg_ref]
-ref_ty = "workspace"
-path = "packages/buffer"
-
 [graph."discord_luau/emitter@0.0.1 luau"]
 direct = ["emitter", { workspace = "discord_luau/emitter", version = "^" }, "standard"]
+
+[graph."discord_luau/emitter@0.0.1 luau".dependencies]
+logger = ["discord_luau/logger@0.0.1 luau", "standard"]
 
 [graph."discord_luau/emitter@0.0.1 luau".pkg_ref]
 ref_ty = "workspace"
 path = "packages/emitter"
+
+[graph."discord_luau/emitter@0.0.1 luau".pkg_ref.dependencies]
+logger = [{ workspace = "discord_luau/logger", version = "^" }, "standard"]
 
 [graph."discord_luau/logger@0.0.1 luau"]
 direct = ["logger", { workspace = "discord_luau/logger", version = "^" }, "standard"]

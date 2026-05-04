@@ -2,6 +2,7 @@ local manager = require("@self/manager")
 local shard = require("@self/shard")
 
 export type Manager = manager.Manager
+export type Shard = shard.Shard
 
 --[=[
 	@class WebSocket
