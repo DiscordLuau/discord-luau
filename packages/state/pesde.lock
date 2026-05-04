@@ -5,6 +5,10 @@ name = "discord_luau/state"
 version = "0.0.1"
 target = "luau"
 
+[graph."discord_luau/accumulator@0.0.1 luau".pkg_ref]
+ref_ty = "workspace"
+path = "packages/accumulator"
+
 [graph."discord_luau/api_types@0.0.1 luau"]
 direct = ["api_types", { workspace = "discord_luau/api_types", version = "^" }, "standard"]
 
@@ -24,13 +28,15 @@ util = [{ workspace = "discord_luau/util", version = "^" }, "standard"]
 ref_ty = "workspace"
 path = "packages/bit"
 
-[graph."discord_luau/buffer@0.0.1 luau".pkg_ref]
-ref_ty = "workspace"
-path = "packages/buffer"
+[graph."discord_luau/emitter@0.0.1 luau".dependencies]
+logger = ["discord_luau/logger@0.0.1 luau", "standard"]
 
 [graph."discord_luau/emitter@0.0.1 luau".pkg_ref]
 ref_ty = "workspace"
 path = "packages/emitter"
+
+[graph."discord_luau/emitter@0.0.1 luau".pkg_ref.dependencies]
+logger = [{ workspace = "discord_luau/logger", version = "^" }, "standard"]
 
 [graph."discord_luau/formdata@0.0.1 luau"]
 direct = ["formdata", { workspace = "discord_luau/formdata", version = "^" }, "standard"]
@@ -106,8 +112,8 @@ path = "packages/utilities"
 direct = ["websocket", { workspace = "discord_luau/websocket", version = "^" }, "standard"]
 
 [graph."discord_luau/websocket@0.0.1 luau".dependencies]
+accumulator = ["discord_luau/accumulator@0.0.1 luau", "standard"]
 api_types = ["discord_luau/api_types@0.0.1 luau", "standard"]
-buffer = ["discord_luau/buffer@0.0.1 luau", "standard"]
 emitter = ["discord_luau/emitter@0.0.1 luau", "standard"]
 future = ["yetanotherclown/luau_futures@2.0.0-beta.3 luau", "standard"]
 logger = ["discord_luau/logger@0.0.1 luau", "standard"]
@@ -120,8 +126,8 @@ ref_ty = "workspace"
 path = "packages/websocket"
 
 [graph."discord_luau/websocket@0.0.1 luau".pkg_ref.dependencies]
+accumulator = [{ workspace = "discord_luau/accumulator", version = "^" }, "standard"]
 api_types = [{ workspace = "discord_luau/api_types", version = "^" }, "standard"]
-buffer = [{ workspace = "discord_luau/buffer", version = "^" }, "standard"]
 emitter = [{ workspace = "discord_luau/emitter", version = "^" }, "standard"]
 future = [{ name = "yetanotherclown/luau_futures", version = "^2.0.0-beta.3", index = "https://github.com/pesde-pkg/index" }, "standard"]
 logger = [{ workspace = "discord_luau/logger", version = "^" }, "standard"]

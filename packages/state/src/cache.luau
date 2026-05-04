@@ -4,7 +4,7 @@
 
 	Class responsible for handling the underlying cache for all objects in Discord-Luau.
 
-	Entries are evicted explicitly via `remove()` — callers must call this on DELETE gateway events.
+	Entries are evicted explicitly via `remove()` - callers must call this on DELETE gateway events.
 	The previous weak-table + TTL-coroutine approach was removed because it could silently evict
 	entries while they were still valid, and the coroutine workaround that prevented that eviction
 	made the TTL meaningless.

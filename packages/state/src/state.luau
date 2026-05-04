@@ -92,6 +92,7 @@ function State.Interface.new(settings: {
 		{
 			token = secretToken,
 			applicationId = "",
+			logLevel = settings.logLevel or "Warn" :: any,
 
 			rest = rest.new({
 				token = secretToken,
@@ -118,6 +119,8 @@ function State.Interface.new(settings: {
 				channels = cache.new(),
 				roles = cache.new(),
 			},
+
+			voiceConnections = {} :: { [string]: any },
 		} :: State,
 		{
 			__index = State.Prototype,
@@ -130,6 +133,7 @@ end
 export type State = typeof(State.Prototype) & {
 	token: secret.Secret<string>,
 	applicationId: apiTypes.Snowflake,
+	logLevel: logger.LogLevel,
 	rest: rest.REST,
 	webSocketManager: websocket.Manager,
 	intents: number,
@@ -140,6 +144,7 @@ export type State = typeof(State.Prototype) & {
 		channels: cache.Cache<apiTypes.Snowflake, apiTypes.ChannelObject>,
 		roles: cache.Cache<apiTypes.Snowflake, apiTypes.GuildRoleObject>,
 	},
+	voiceConnections: { [string]: any },
 }
 
 return State.Interface
