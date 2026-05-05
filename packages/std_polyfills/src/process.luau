@@ -109,6 +109,21 @@ function process.getArch(): Arch
 	error(`Out of reach`)
 end
 
+--[=[
+	@within StdPolyfills.process
+
+	Registers a callback to be invoked when the process receives an OS signal (e.g. `"INT"` for SIGINT).
+	Only supported on Zune; on Lune this is a no-op with a warning.
+]=]
+function process.onSignal(signal: Signal, callback: () -> ())
+	if not runtime.capabilities().onSignal then
+		return
+	end
+
+	require("./zune/process").onSignal(signal, callback)
+end
+
+export type Signal = "INT"
 export type OS = "linux" | "macos" | "windows"
 export type Arch = "x86_64" | "aarch64"
 
