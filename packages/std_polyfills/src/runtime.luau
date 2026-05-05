@@ -50,6 +50,43 @@ function runtime.assertRuntime(): RuntimeValue
 	return currentRuntime
 end
 
+--[=[
+	@within StdPolyfills.runtime
+
+	Returns a table describing which optional capabilities are available on the current runtime.
+	Use this to guard features that are not universally supported before attempting to load them.
+
+	```luau
+	local caps = stdPolyfills.runtime.capabilities()
+	if not caps.ffi then
+		-- skip FFI-dependent setup
+	end
+	```
+]=]
+function runtime.capabilities(): Capabilities
+	local current = runtime.getRuntime()
+
+	if current == "Zune" then
+		return {
+			ffi = true,
+			udp = true,
+			onSignal = true,
+		}
+	end
+
+	return {
+		ffi = false,
+		udp = false,
+		onSignal = false,
+	}
+end
+
+export type Capabilities = {
+	ffi: boolean,
+	udp: boolean,
+	onSignal: boolean,
+}
+
 export type RuntimeValue = "Lune" | "Zune" | "Roblox" | "Luau" | "Lute" | "Unknown"
 export type Runtime = typeof(runtime)
 
