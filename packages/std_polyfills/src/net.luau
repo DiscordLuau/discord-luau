@@ -37,7 +37,7 @@ function net.request(config: string | FetchParams): FetchResponse
 	if target == "Lune" then
 		return require("./lune/net").request(config)
 	elseif target == "Zune" then
-		return require("./zune/net").request(config)
+		return require("./zune/net").request(config :: any)
 	end
 
 	error(`Out of reach`)
@@ -51,13 +51,13 @@ end
 	Throws an error if the server at the given URL does not support web sockets, or if a miscellaneous network or I/O
 		error occurs.
 ]=]
-function net.tcpSocket(url: string)
+function net.tcpSocket(url: string): WebSocket
 	local target = runtime.assertRuntime()
 
 	if target == "Lune" then
-		return require("./lune/net").socket(url)
+		return require("./lune/net").socket(url) :: any
 	elseif target == "Zune" then
-		return require("./zune/net").socket(url)
+		return require("./zune/net").socket(url) :: any
 	end
 
 	error(`Out of reach`)
@@ -71,8 +71,16 @@ end
 	Throws an error if the server at the given URL does not support web sockets, or if a miscellaneous network or I/O
 		error occurs.
 ]=]
-function net.udpSocket(_url: string)
-	error(`No Runtimes currently support UDP sockets!`)
+function net.udpSocket(host: string, port: number): UdpSocket
+	local target = runtime.assertRuntime()
+
+	if target == "Lune" then
+		error(`UDP sockets are not available in Lune`)
+	elseif target == "Zune" then
+		return require("./zune/net").udpSocket(host, port)
+	end
+
+	error(`Out of reach`)
 end
 
 type HttpQueryOrHeaderMap = { [string]: string | { string } }
@@ -81,6 +89,13 @@ export type HttpHeaderMap = HttpQueryOrHeaderMap
 
 export type FetchParamsOptions = {
 	decompress: boolean?,
+}
+
+export type UdpSocket = {
+	closeCode: number?,
+	close: (code: number?) -> (),
+	send: (message: (string | buffer)?, asBinaryMessage: boolean?) -> (),
+	next: () -> string?,
 }
 
 export type WebSocket = {
