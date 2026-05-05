@@ -59,7 +59,7 @@ function datetime.now(): DateTime
 	error(`Out of reach`)
 end
 
-export type DateTime = typeof(datetime) & {
+export type DateTime = {
 	unixTimestamp: number,
 	unixTimestampMillis: number,
 
