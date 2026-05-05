@@ -11,8 +11,11 @@ local ffi = require("@self/ffi")
 
 export type DateTime = datetime.DateTime
 export type RuntimeValue = runtime.RuntimeValue
+export type Capabilities = runtime.Capabilities
+export type Signal = process.Signal
 
 export type WebSocket = net.WebSocket
+export type UdpSocket = net.UdpSocket
 export type FetchResponse = net.FetchResponse
 export type FetchParams = net.FetchParams
 export type HttpMethod = net.HttpMethod

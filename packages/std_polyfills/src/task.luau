@@ -97,6 +97,4 @@ function task.wait(duration: number?): number
 	error(`Out of reach`)
 end
 
-export type OS = "linux" | "macos" | "windows"
-
 return task
