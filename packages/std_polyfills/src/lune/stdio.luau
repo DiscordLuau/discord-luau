@@ -13,7 +13,7 @@ stdio.prompt = function(message: string?)
 		end
 	end)
 
-	local content = prompt("text") :: string
+	local content = prompt("text", message) :: string
 
 	stdio.write("\x1b[1A\x1b[2K")
 
