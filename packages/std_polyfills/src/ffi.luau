@@ -1,5 +1,3 @@
---!strict
-
 --[=[
 	@class StdPolyfills.ffi
 
@@ -103,7 +101,7 @@ end
 	print(lib.fooAdd(1, 2))
 	```
 ]=]
-function ffi.dlopen(path: string, functions: { [string]: FFIFunctionDefintion }): FFILibrary
+function ffi.dlopen(path: string, functions: { [string]: FFIFunctionDefinition }): FFILibrary
 	local target = runtime.assertRuntime()
 
 	if target == "Zune" then
@@ -155,7 +153,7 @@ end
 	)
 	```
 ]=]
-function ffi.closure(definition: FFIFunctionDefintion, handler: (...any) -> any): FFIPointer
+function ffi.closure(definition: FFIFunctionDefinition, handler: (...any) -> any): FFIPointer
 	local target = runtime.assertRuntime()
 
 	if target == "Zune" then
@@ -173,7 +171,7 @@ end
 	Wraps a raw `FFIPointer` to a C function as a callable Luau function according to
 	`definition`. Useful when a library hands you a function pointer at runtime.
 ]=]
-function ffi.fn(definition: FFIFunctionDefintion, srcPtr: FFIPointer): (...any) -> any
+function ffi.fn(definition: FFIFunctionDefinition, srcPtr: FFIPointer): (...any) -> any
 	local target = runtime.assertRuntime()
 
 	if target == "Zune" then
@@ -328,5 +326,12 @@ function ffi.getLuaState(mainthread: boolean?): FFIPointer
 
 	error(`Out of reach`)
 end
+
+export type _zune_ffi_types = any
+export type FFIPointer = any
+export type FFILibrary = any
+export type FFIFunctionDefinition = any
+export type FFIStructureType = any
+export type FFIAnyDataType = any
 
 return ffi

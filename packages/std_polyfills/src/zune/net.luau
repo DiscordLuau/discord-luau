@@ -52,7 +52,7 @@ function net.request(config: string | {
 		end
 	end
 
-	local response = zuneNet.http.request(url, opts)
+	local response = zuneNet.http.request(url, opts :: any)
 
 	return {
 		ok = response.ok,
@@ -111,6 +111,34 @@ function net.socket(url: string)
 		if message ~= nil then
 			wsHandle:send(message)
 		end
+	end
+
+	return value
+end
+
+function net.udpSocket(host: string, port: number)
+	local handle = zuneNet.createSocket(zuneNet.ADDRF.INET, zuneNet.SOCKF.DGRAM, zuneNet.IPPROTO.UDP)
+
+	handle:connect(host, port)
+
+	local value = { closeCode = nil :: number? }
+
+	function value.send(message: (string | buffer)?, _asBinaryMessage: boolean?)
+		if message ~= nil then
+			handle:send(message)
+		end
+	end
+
+	function value.next(): string?
+		local response = handle:recv(65536)
+		if response == nil then
+			return nil
+		end
+		return if type(response) == "buffer" then buffer.tostring(response) else response
+	end
+
+	function value.close(_code: number?)
+		handle:close()
 	end
 
 	return value

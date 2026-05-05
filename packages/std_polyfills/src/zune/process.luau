@@ -10,7 +10,11 @@ process.env = zune.process.env
 process.cwd = zune.process.cwd()
 
 function process.run(exec: string, args: { string }?, opts: { cwd: string?, env: { [string]: string }? }?)
-	return zune.process.run(exec, args, opts)
+	return zune.process.run(exec, args, opts :: any)
+end
+
+function process.onSignal(signal: string, callback: () -> ())
+	zune.process.onSignal(signal :: "INT", callback)
 end
 
 return process
