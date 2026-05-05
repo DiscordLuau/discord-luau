@@ -50,7 +50,7 @@ end
 function Stream.Prototype.advance(self: Stream, length: number?): string?
 	local absoluteLength = length or 1
 
-	if self.cursorPosition + absoluteLength > #self.textSource then
+	if absoluteLength < 0 or self.cursorPosition + absoluteLength > #self.textSource then
 		return nil
 	end
 
@@ -64,10 +64,24 @@ end
 --[=[
 	@within Stream
 
+	Responsible for rewinding the cursor position of the stream by the given amount. The cursor
+	will not go below zero.
+]=]
+function Stream.Prototype.rewind(self: Stream, length: number?)
+	self.cursorPosition = math.max(0, self.cursorPosition - (length or 1))
+end
+
+--[=[
+	@within Stream
+
 	Responsible for advancing the cursor position of the stream until a predicate is met, this will increment the
 		cursor position by the amount specified.
 ]=]
-function Stream.Prototype.advanceUntil(self: Stream, predicate: (char: string) -> ()): string?
+function Stream.Prototype.advanceUntil(self: Stream, predicate: (char: string) -> boolean): string?
+	if self.cursorPosition >= #self.textSource then
+		return nil
+	end
+
 	local internalCursor = self.cursorPosition + 1
 	local char = string.sub(self.textSource, internalCursor, internalCursor)
 
@@ -75,6 +89,7 @@ function Stream.Prototype.advanceUntil(self: Stream, predicate: (char: string) -
 		internalCursor += 1
 
 		if internalCursor > #self.textSource then
+			self.cursorPosition = #self.textSource
 			return nil
 		end
 
@@ -95,6 +110,8 @@ end
 ]=]
 function Stream.Prototype.readUntilEnd(self: Stream): string
 	local blockSource = string.sub(self.textSource, self.cursorPosition + 1, #self.textSource)
+
+	self.cursorPosition = #self.textSource
 
 	return blockSource
 end
