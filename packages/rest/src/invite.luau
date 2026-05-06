@@ -23,7 +23,7 @@ function invite.getInviteAsync(
 	instance: request.Request,
 	inviteCode: string,
 	urlParams: {
-		withCounts: number?,
+		withCounts: boolean?,
 		withExpiration: boolean?,
 		guildScheduledEventId: apiTypes.Snowflake?,
 	}
@@ -136,7 +136,10 @@ end
 function invite.getInviteTargetUsersJobStatusAsync(
 	instance: request.Request,
 	inviteCode: string
-): future.FutureLike<string, apiTypes.GetInviteTargetUsersJobStatusResponse>
+): future.FutureLike<
+	string,
+	apiTypes.GetInviteTargetUsersJobStatusResponse
+>
 	return future.Future.new(function()
 		instance:assertToken()
 

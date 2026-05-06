@@ -147,7 +147,7 @@ function autoModeration.deleteAutoModerationRuleAsync(
 	return future.Future.new(function()
 		instance:assertToken()
 
-		instance:setMethod("PATCH")
+		instance:setMethod("DELETE")
 		instance:setUrl(string.format(apiTypes.rest.endpoints.DeleteAutoModerationRule, guildId, autoModerationRuleId))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
