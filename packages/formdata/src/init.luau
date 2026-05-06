@@ -168,8 +168,12 @@ function FormData.Prototype.delete(self: FormData, name: string): ()
 		return object.name == name
 	end)
 
-	if index then
+	while index do
 		table.remove(self.entries, index)
+
+		index = filter(self.entries, function(object)
+			return object.name == name
+		end, index)
 	end
 end
 
@@ -210,13 +214,13 @@ function FormData.Prototype.getAll(self: FormData, name: string?): { FormDataEnt
 	local entries = {}
 
 	if name then
-		local lastIndex
+		local lastIndex: number?
 		local formDataEntryValue
 
 		while true do
 			lastIndex, formDataEntryValue = filter(self.entries, function(object)
 				return object.name == name
-			end, lastIndex)
+			end, lastIndex and lastIndex + 1)
 
 			if not lastIndex or not formDataEntryValue then
 				break
@@ -251,7 +255,9 @@ function FormData.Interface.new(): FormData
 		} :: FormData,
 		{
 			__index = FormData.Prototype,
-			__iter = entries,
+			__iter = function(self)
+				return next, self.entries
+			end,
 		}
 	)
 end
