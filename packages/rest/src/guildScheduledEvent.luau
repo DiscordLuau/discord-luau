@@ -53,7 +53,7 @@ end
 
 	https://discord.com/developers/docs/resources/guild-scheduled-event#create-guild-scheduled-event
 ]=]
-function guildScheduledEvent.createGuildScheduledEvent(
+function guildScheduledEvent.createGuildScheduledEventAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	jsonParams: apiTypes.CreateGuildScheduledEventRequest,
@@ -118,7 +118,7 @@ end
 
 	https://discord.com/developers/docs/resources/guild-scheduled-event#modify-guild-scheduled-event
 ]=]
-function guildScheduledEvent.modifyGuildScheduledEvent(
+function guildScheduledEvent.modifyGuildScheduledEventAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	scheduledEventId: apiTypes.Snowflake,
@@ -149,7 +149,7 @@ end
 
 	https://discord.com/developers/docs/resources/guild-scheduled-event#delete-guild-scheduled-event
 ]=]
-function guildScheduledEvent.deleteGuildScheduledEvent(
+function guildScheduledEvent.deleteGuildScheduledEventAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	scheduledEventId: apiTypes.Snowflake
@@ -176,7 +176,7 @@ end
 
 	https://discord.com/developers/docs/resources/guild-scheduled-event#get-guild-scheduled-event-users
 ]=]
-function guildScheduledEvent.getGuildScheduledEventUsers(
+function guildScheduledEvent.getGuildScheduledEventUsersAsync(
 	instance: request.Request,
 	guildId: apiTypes.Snowflake,
 	scheduledEventId: apiTypes.Snowflake

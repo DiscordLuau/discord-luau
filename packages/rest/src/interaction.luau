@@ -108,7 +108,7 @@ function interaction.editOriginalInteractionResponseAsync(
 
 		instance:setMethod("PATCH")
 		instance:setUrl(
-			string.format(apiTypes.rest.endpoints.GetOriginalInteractionResponse, applicationId, interactionToken)
+			string.format(apiTypes.rest.endpoints.EditOriginalInteractionResponse, applicationId, interactionToken)
 		)
 		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 

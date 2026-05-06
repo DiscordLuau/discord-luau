@@ -305,7 +305,10 @@ function guild.searchGuildMessagesAsync(
 
 		instance:addUrlParam("content", urlParams.content :: any)
 		instance:addUrlParam("pinned", urlParams.pinned ~= nil and tostring(urlParams.pinned) or (nil :: any))
-		instance:addUrlParam("mention_everyone", urlParams.mention_everyone ~= nil and tostring(urlParams.mention_everyone) or (nil :: any))
+		instance:addUrlParam(
+			"mention_everyone",
+			urlParams.mention_everyone ~= nil and tostring(urlParams.mention_everyone) or (nil :: any)
+		)
 		instance:addUrlParam("max_id", urlParams.max_id :: any)
 		instance:addUrlParam("min_id", urlParams.min_id :: any)
 		instance:addUrlParam("slop", urlParams.slop and tostring(urlParams.slop) or (nil :: any))
@@ -313,7 +316,10 @@ function guild.searchGuildMessagesAsync(
 		instance:addUrlParam("sort_order", urlParams.sort_order :: any)
 		instance:addUrlParam("limit", urlParams.limit and tostring(urlParams.limit) or (nil :: any))
 		instance:addUrlParam("offset", urlParams.offset and tostring(urlParams.offset) or (nil :: any))
-		instance:addUrlParam("include_nsfw", urlParams.include_nsfw ~= nil and tostring(urlParams.include_nsfw) or (nil :: any))
+		instance:addUrlParam(
+			"include_nsfw",
+			urlParams.include_nsfw ~= nil and tostring(urlParams.include_nsfw) or (nil :: any)
+		)
 		instance:addUrlParam("channel_id", urlParams.channel_id :: any)
 		instance:addUrlParam("author_id", urlParams.author_id :: any)
 		instance:addUrlParam("author_type", urlParams.author_type :: any)
@@ -1039,7 +1045,7 @@ function guild.modifyGuildWidgetAsync(
 		instance:assertToken()
 
 		instance:setMethod("PATCH")
-		instance:setUrl(string.format(apiTypes.rest.endpoints.GetGuildWidgetSettings, guildId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.ModifyGuildWidget, guildId))
 		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 		instance:addHeader("x-audit-log-reason", auditLogReason :: string)
 
