@@ -20,14 +20,13 @@ local application = {}
 	https://discord.com/developers/docs/resources/application#get-current-application
 ]=]
 function application.getCurrentApplicationAsync(
-	instance: request.Request,
-	applicationId: apiTypes.Snowflake
+	instance: request.Request
 ): future.FutureLike<string, apiTypes.GetCurrentApplicationResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(apiTypes.rest.endpoints.GetCurrentApplication, applicationId))
+		instance:setUrl(apiTypes.rest.endpoints.GetCurrentApplication)
 
 		local response = instance:executeAsync():await()
 
@@ -44,17 +43,20 @@ end
 ]=]
 function application.editCurrentApplicationAsync(
 	instance: request.Request,
-	applicationId: apiTypes.Snowflake,
 	jsonParams: apiTypes.EditCurrentApplicationRequest
 ): future.FutureLike<string, apiTypes.EditCurrentApplicationResponse>
 	return future.Future.new(function()
 		instance:assertToken()
 
 		instance:setMethod("PATCH")
-		instance:setUrl(string.format(apiTypes.rest.endpoints.EditCurrentApplication, applicationId))
+		instance:setUrl(apiTypes.rest.endpoints.EditCurrentApplication)
 		instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
-		instance:executeAsync():await()
+		local response = instance:executeAsync():await()
+
+		assert(response:isOk(), `{response:unwrapErr()}`)
+
+		return response:unwrapOk().body
 	end) :: future.FutureLike<string, apiTypes.EditCurrentApplicationResponse>
 end
 

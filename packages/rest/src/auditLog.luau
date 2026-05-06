@@ -31,9 +31,9 @@ function auditLog.getGuildAuditLogAsync(
 	return future.Future.new(function()
 		instance:assertToken()
 
-		instance:addUrlParam("user_id", urlParams.userId :: string)
-		instance:addUrlParam("before", urlParams.before :: string)
-		instance:addUrlParam("after", urlParams.after :: string)
+		instance:addUrlParam("user_id", urlParams.userId and tostring(urlParams.userId) or (nil :: any))
+		instance:addUrlParam("before", urlParams.before and tostring(urlParams.before) or (nil :: any))
+		instance:addUrlParam("after", urlParams.after and tostring(urlParams.after) or (nil :: any))
 		instance:addUrlParam("limit", urlParams.limit and tostring(urlParams.limit) or (nil :: any))
 		instance:addUrlParam(
 			"action_type",

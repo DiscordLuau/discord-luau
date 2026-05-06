@@ -1,3 +1,5 @@
+local stdPolyfills = require("../luau_packages/std_polyfills")
+
 local future = require("../luau_packages/future")
 local apiTypes = require("../luau_packages/api_types")
 
@@ -49,7 +51,8 @@ end
 ]=]
 function applicationRoleConnectionMetadata.updateApplicationRoleConnectionMetadataRecordsAsync(
 	instance: request.Request,
-	applicationId: apiTypes.Snowflake
+	applicationId: apiTypes.Snowflake,
+	jsonParams: apiTypes.UpdateApplicationRoleConnectionMetadataRecordsRequest
 ): future.FutureLike<
 	string,
 	apiTypes.UpdateApplicationRoleConnectionMetadataRecordsResponse
@@ -62,6 +65,7 @@ function applicationRoleConnectionMetadata.updateApplicationRoleConnectionMetada
 				instance:setUrl(
 					string.format(apiTypes.rest.endpoints.UpdateApplicationRoleConnectionMetadataRecords, applicationId)
 				)
+				instance:setBody(stdPolyfills.serde.encode("json", jsonParams, true))
 
 				local response = instance:executeAsync():await()
 
