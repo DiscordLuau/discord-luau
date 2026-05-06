@@ -296,7 +296,7 @@ function message.deleteAllReactionsForEmojiAsync(
 		instance:setMethod("DELETE")
 		instance:setUrl(
 			string.format(
-				apiTypes.rest.endpoints.DeleteAllReactions,
+				apiTypes.rest.endpoints.DeleteAllReactionsForEmoji,
 				channelId,
 				messageId,
 				stdPolyfills.net.urlEncode(emoji)

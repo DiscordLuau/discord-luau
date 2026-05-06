@@ -121,8 +121,6 @@ function webhook.getWebhookWithTokenAsync(
 	webhookToken: string
 ): future.FutureLike<string, apiTypes.GetWebhookWithTokenResponse>
 	return future.Future.new(function()
-		instance:assertToken()
-
 		instance:setMethod("GET")
 		instance:setUrl(string.format(apiTypes.rest.endpoints.GetWebhookWithToken, webhookId, webhookToken))
 
@@ -282,7 +280,10 @@ function webhook.executeSlackCompatibleWebhookAsync(
 	instance: request.Request,
 	webhookId: apiTypes.Snowflake,
 	webhookToken: string
-): future.FutureLike<string, apiTypes.ExecuteSlackCompatibleWebhookResponse>
+): future.FutureLike<
+	string,
+	apiTypes.ExecuteSlackCompatibleWebhookResponse
+>
 	return future.Future.new(function()
 		instance:setMethod("POST")
 		instance:setUrl(string.format(apiTypes.rest.endpoints.ExecuteSlackCompatibleWebhook, webhookId, webhookToken))
@@ -304,7 +305,10 @@ function webhook.executeGithubCompatibleWebhookAsync(
 	instance: request.Request,
 	webhookId: apiTypes.Snowflake,
 	webhookToken: string
-): future.FutureLike<string, apiTypes.ExecuteGithubCompatibleWebhookResponse>
+): future.FutureLike<
+	string,
+	apiTypes.ExecuteGithubCompatibleWebhookResponse
+>
 	return future.Future.new(function()
 		instance:setMethod("POST")
 		instance:setUrl(string.format(apiTypes.rest.endpoints.ExecuteGithubCompatibleWebhook, webhookId, webhookToken))
@@ -336,7 +340,7 @@ function webhook.getWebhookMessageAsync(
 
 		instance:addUrlParam("thread_id", urlParams.threadId and tostring(urlParams.threadId) or (nil :: any))
 
-		instance:setMethod("POST")
+		instance:setMethod("GET")
 		instance:setUrl(string.format(apiTypes.rest.endpoints.GetWebhookMessage, webhookId, webhookToken, messageId))
 
 		local response = instance:executeAsync():await()
@@ -399,7 +403,7 @@ function webhook.deleteWebhookMessageAsync(
 		instance:addUrlParam("thread_id", urlParams.threadId and tostring(urlParams.threadId) or (nil :: any))
 
 		instance:setMethod("DELETE")
-		instance:setUrl(string.format(apiTypes.rest.endpoints.EditWebhookMessage, webhookId, webhookToken, messageId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.DeleteWebhookMessage, webhookId, webhookToken, messageId))
 
 		local response = instance:executeAsync():await()
 
