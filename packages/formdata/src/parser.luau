@@ -27,7 +27,7 @@ local ILLEGAL_HTTP_TOKEN_CHARACTERS = table.freeze({
 	["]"] = true,
 	["{"] = true,
 	["}"] = true,
-	["\20"] = true,
+	[" "] = true,
 	["\9"] = true,
 	["\r"] = true,
 	["\n"] = true,
@@ -140,6 +140,8 @@ local function parseContentTransferEncoding(stream: Stream.Stream): string?
 
 		assert(contentTransferEncoding, `Invalid form data: {stream.textSource} (unexpected end of stream)`)
 
+		contentTransferEncoding = string.sub(contentTransferEncoding, 1, #contentTransferEncoding - 1)
+
 		return contentTransferEncoding
 	else
 		return nil
@@ -197,7 +199,7 @@ local function parseMultipartFormData(stream: Stream.Stream, boundary: string): 
 		local isLastEntry = stream:peek(4) == "--\r\n"
 
 		-- reserve the boundary for the next iteration
-		stream:advance(-(#boundary + 2))
+		stream:rewind(#boundary + 2)
 
 		-- 6 for the last entry to cover: LF/CR/--
 		body = string.sub(body, 1, #body - #boundary - 4)
