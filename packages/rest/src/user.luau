@@ -127,7 +127,7 @@ function user.getCurrentUserGuildMember(
 		instance:assertToken()
 
 		instance:setMethod("GET")
-		instance:setUrl(string.format(apiTypes.rest.endpoints.GetCurrentUserGuilds, guildId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.GetCurrentUserGuildMember, guildId))
 
 		local response = instance:executeAsync():await()
 
@@ -150,7 +150,7 @@ function user.leaveGuildAsync(
 		instance:assertToken()
 
 		instance:setMethod("DELETE")
-		instance:setUrl(string.format(apiTypes.rest.endpoints.GetCurrentUserGuilds, guildId))
+		instance:setUrl(string.format(apiTypes.rest.endpoints.LeaveGuild, guildId))
 
 		local response = instance:executeAsync():await()
 

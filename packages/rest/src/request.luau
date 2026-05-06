@@ -116,7 +116,7 @@ end
 function Request.Prototype.addHook(
 	self: Request,
 	hookState: "BeforeRequest" | "AfterRequest",
-	hookCallback: (RequestInformation, stdPolyfills.FetchResponse?) -> any
+	hookCallback: (RequestInformation, stdPolyfills.FetchResponse?) -> (boolean, any?)
 )
 	if hookState == "AfterRequest" then
 		table.insert(self.afterHooks, hookCallback)
