@@ -68,8 +68,9 @@ end
 --[=[
 	@within Logger
 
-	Function responsible for for setting the log level of the logger, for example - if the log level
-		is set to "Debug", then all log levels below, and "Debug" will be ignored.
+	Function responsible for setting the log level of the logger. Log levels with an index below the
+		configured level will be suppressed. For example, setting the level to "Warn" suppresses Debug,
+		Info, and Notice, while Warn and above are still emitted.
 ]=]
 function Logger.Prototype.setLogLevel(self: Logger, logLevel: LogLevel)
 	local logLevelIndex = table.find(LOGGER_LOG_LEVELS, logLevel)
@@ -91,17 +92,30 @@ end
 --[=[
 	@within Logger
 
+	Replaces the default `print` output with a custom sink. The sink receives the fully-formatted
+	log line (including ANSI codes) as a single string. Useful for capturing output in tests.
+]=]
+function Logger.Prototype.setSink(self: Logger, sink: (message: string) -> ())
+	self._sink = sink
+end
+
+--[=[
+	@within Logger
+
 	Constructor for the Logger object.
 ]=]
 function Logger.Interface.new(name: string, logLevel: LogLevel?): Logger
 	local logLevelIndex = logLevel and table.find(LOGGER_LOG_LEVELS, logLevel)
 
-	local self = setmetatable(
+	assert(not logLevel or logLevelIndex, `Invalid log level: {logLevel}`)
+
+	local self: Logger = setmetatable(
 		{
 			logLevel = logLevelIndex or 1,
-		} :: Logger,
+			_sink = print,
+		},
 		{ __index = Logger.Prototype }
-	)
+	) :: any
 
 	-- this block of code will generate a function for each log level, and set it to the Logger object.
 	for logValue, logType in LOGGER_LOG_LEVELS do
@@ -117,7 +131,7 @@ function Logger.Interface.new(name: string, logLevel: LogLevel?): Logger
 			local date = os.date("!*t", unixTimestampMillis / 1000)
 			local milliseconds = unixTimestampMillis % 1000
 			local time = string.format(
-				"%04d-%02d-%02d %02d:%02d:%02d.%02d",
+				"%04d-%02d-%02d %02d:%02d:%02d.%03d",
 				date.year,
 				date.month,
 				date.day,
@@ -127,7 +141,7 @@ function Logger.Interface.new(name: string, logLevel: LogLevel?): Logger
 				milliseconds
 			)
 
-			print(`{string.format(LOGGER_LOG_FORMATS[logType], time, name, logMessage)}{RESET}`)
+			self._sink(`{string.format(LOGGER_LOG_FORMATS[logType], time, name, logMessage)}{RESET}`)
 
 			if logValue >= 5 then
 				local thread = coroutine.running()
@@ -147,6 +161,7 @@ end
 export type LogLevel = "Debug" | "Info" | "Notice" | "Warn" | "Error" | "Critical" | "Alert" | "Emergency"
 export type Logger = typeof(Logger.Prototype) & {
 	logLevel: number,
+	_sink: (message: string) -> (),
 
 	debug: (self: Logger, ...any) -> (),
 	info: (self: Logger, ...any) -> (),
