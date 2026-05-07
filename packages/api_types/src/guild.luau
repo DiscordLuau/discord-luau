@@ -57,17 +57,54 @@ local ScheduledEventPrivacyLevel = table.freeze(util.tableReflect({
 	GuildOnly = 2,
 }))
 
-local SchedledEventEntityType = table.freeze(util.tableReflect({
+local ScheduledEventEntityType = table.freeze(util.tableReflect({
 	StageInstance = 1,
 	Voice = 2,
 	External = 3,
 }))
 
-local SchedledEventStatus = table.freeze(util.tableReflect({
+local ScheduledEventStatus = table.freeze(util.tableReflect({
 	Scheduled = 1,
 	Active = 2,
 	Completed = 3,
 	Cancelled = 4,
+}))
+
+local RecurrenceRuleFrequency = table.freeze(util.tableReflect({
+	Yearly = 0,
+	Monthly = 1,
+	Weekly = 2,
+	Daily = 3,
+}))
+
+local RecurrenceRuleWeekday = table.freeze(util.tableReflect({
+	Monday = 0,
+	Tuesday = 1,
+	Wednesday = 2,
+	Thursday = 3,
+	Friday = 4,
+	Saturday = 5,
+	Sunday = 6,
+}))
+
+local RecurrenceRuleMonth = table.freeze(util.tableReflect({
+	January = 1,
+	February = 2,
+	March = 3,
+	April = 4,
+	May = 5,
+	June = 6,
+	July = 7,
+	August = 8,
+	September = 9,
+	October = 10,
+	November = 11,
+	December = 12,
+}))
+
+local StageInstancePrivacyLevel = table.freeze(util.tableReflect({
+	Public = 1,
+	GuildOnly = 2,
 }))
 
 local IntegrationType = table.freeze(util.tableReflect({
@@ -205,8 +242,24 @@ export type MFALevel = "None" | "Elevated"
 export type InviteType = "Guild" | "GroupDM" | "Friend"
 export type InviteTargetType = "Stream" | "EmbeddedApplication"
 export type ScheduledEventPrivacyLevel = "GuildOnly"
-export type SchedledEventEntityType = "StageInstance" | "Voice" | "External"
-export type SchedledEventStatus = "Scheduled" | "Active" | "Completed" | "Canceled"
+export type ScheduledEventEntityType = "StageInstance" | "Voice" | "External"
+export type ScheduledEventStatus = "Scheduled" | "Active" | "Completed" | "Cancelled"
+export type RecurrenceRuleFrequency = "Yearly" | "Monthly" | "Weekly" | "Daily"
+export type RecurrenceRuleWeekday = "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Saturday" | "Sunday"
+export type RecurrenceRuleMonth =
+	"January"
+	| "February"
+	| "March"
+	| "April"
+	| "May"
+	| "June"
+	| "July"
+	| "August"
+	| "September"
+	| "October"
+	| "November"
+	| "December"
+export type StageInstancePrivacyLevel = "Public" | "GuildOnly"
 export type IntegrationType = "Twitch" | "YouTube" | "Discord" | "GuildSubscription"
 export type IntegrationExpireBehaviour = "RemoveRole" | "Kick"
 export type OnboardingPromptType = "MultipleChoice" | "Dropdown"
@@ -217,14 +270,68 @@ export type AuditLogEvent =
 	| "ChannelCreate"
 	| "ChannelUpdate"
 	| "ChannelDelete"
-	| "MessageCreate"
-	| "MessageUpdate"
+	| "ChannelOverwriteCreate"
+	| "ChannelOverwriteUpdate"
+	| "ChannelOverwriteDelete"
+	| "MemberKick"
+	| "MemberPrune"
+	| "MemberBanAdd"
+	| "MemberBanRemove"
+	| "MemberUpdate"
+	| "MemberRoleUpdate"
+	| "MemberMove"
+	| "MemberDisconnect"
+	| "BotAdd"
+	| "RoleCreate"
+	| "RoleUpdate"
+	| "RoleDelete"
+	| "InviteCreate"
+	| "InviteUpdate"
+	| "InviteDelete"
+	| "WebhookCreate"
+	| "WebhookUpdate"
+	| "WebhookDelete"
+	| "EmojiCreate"
+	| "EmojiUpdate"
+	| "EmojiDelete"
 	| "MessageDelete"
-	| "ReactionAdd"
-	| "ReactionRemove"
-	| "PresenceUpdate"
-	| "VoiceStateUpdate"
-	| "TypingStart"
+	| "MessageBulkDelete"
+	| "MessagePin"
+	| "MessageUnpin"
+	| "IntegrationCreate"
+	| "IntegrationUpdate"
+	| "IntegrationDelete"
+	| "StageInstanceCreate"
+	| "StageInstanceUpdate"
+	| "StageInstanceDelete"
+	| "StickerCreate"
+	| "StickerUpdate"
+	| "StickerDelete"
+	| "GuildScheduledEventCreate"
+	| "GuildScheduledEventUpdate"
+	| "GuildScheduledEventDelete"
+	| "ThreadCreate"
+	| "ThreadUpdate"
+	| "ThreadDelete"
+	| "ApplicationCommandPermissionUpdate"
+	| "SoundboardSoundCreate"
+	| "SoundboardSoundUpdate"
+	| "SoundboardSoundDelete"
+	| "AutoModerationRuleCreate"
+	| "AutoModerationRuleUpdate"
+	| "AutoModerationRuleDelete"
+	| "AutoModerationBlockMessage"
+	| "AutoModerationFlagToChannel"
+	| "AutoModerationUserCommunicationDisabled"
+	| "CreatorMonetizationRequestCreated"
+	| "CreatorMonetizationTermsAccepted"
+	| "OnboardingPromptCreate"
+	| "OnboardingPromptUpdate"
+	| "OnboardingPromptDelete"
+	| "OnboardingCreate"
+	| "OnboardingUpdate"
+	| "HomeSettingsCreate"
+	| "HomeSettingsUpdate"
 
 return {
 	AuditLogEvent = AuditLogEvent,
@@ -241,8 +348,12 @@ return {
 	InviteType = InviteType,
 	InviteTargetType = InviteTargetType,
 	ScheduledEventPrivacyLevel = ScheduledEventPrivacyLevel,
-	SchedledEventEntityType = SchedledEventEntityType,
-	SchedledEventStatus = SchedledEventStatus,
+	ScheduledEventEntityType = ScheduledEventEntityType,
+	ScheduledEventStatus = ScheduledEventStatus,
+	RecurrenceRuleFrequency = RecurrenceRuleFrequency,
+	RecurrenceRuleWeekday = RecurrenceRuleWeekday,
+	RecurrenceRuleMonth = RecurrenceRuleMonth,
+	StageInstancePrivacyLevel = StageInstancePrivacyLevel,
 	IntegrationType = IntegrationType,
 	IntegrationExpireBehaviour = IntegrationExpireBehaviour,
 	OnboardingPromptType = OnboardingPromptType,
