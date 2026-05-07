@@ -4,7 +4,7 @@
 	https://discord.com/developers/docs/topics/opcodes-and-status-codes#gateway-gateway-opcodes
 ]=]
 
-local Opcodess = table.freeze({
+local Opcodes = table.freeze({
 	Dispatch = 0,
 	Heartbeat = 1,
 	Identify = 2,
@@ -31,4 +31,4 @@ export type Opcode =
 	| "Hello"
 	| "HeartbeatACK"
 
-return Opcodess
+return Opcodes

@@ -83,7 +83,7 @@ export type ResumedPayload = Payload<nil>
 export type ReconnectPayload = Payload<boolean>
 
 -- https://discord.com/developers/docs/topics/gateway-events#invalid-session
-export type InvalidSessionPayload = Payload<boolean?>
+export type InvalidSessionPayload = Payload<boolean>
 
 -- https://discord.com/developers/docs/topics/gateway-events#auto-moderation-rule-create
 export type AutoModerationRuleCreatePayload = Payload<objects.AutomoderationRuleObject>
@@ -135,7 +135,12 @@ export type CreateThreadPayload = Payload<objects.ChannelObject>
 export type UpdateThreadPayload = Payload<objects.ChannelObject>
 
 -- https://discord.com/developers/docs/topics/gateway-events#thread-delete
-export type DeleteThreadPayload = Payload<objects.ChannelObject>
+export type DeleteThreadPayload = Payload<{
+	id: objects.Snowflake,
+	guild_id: objects.Snowflake,
+	parent_id: objects.Snowflake,
+	type: objects.ChannelType,
+}>
 
 -- https://discord.com/developers/docs/topics/gateway-events#thread-list-sync
 export type ThreadListSyncPayload = Payload<{
@@ -146,9 +151,11 @@ export type ThreadListSyncPayload = Payload<{
 }>
 
 -- https://discord.com/developers/docs/topics/gateway-events#thread-member-update
-export type ThreadMemberUpdatePayload = Payload<objects.ThreadMemberObject & {
-	guild_id: objects.Snowflake, -- ID of the guild
-}>
+export type ThreadMemberUpdatePayload = Payload<
+	objects.ThreadMemberObject & {
+		guild_id: objects.Snowflake, -- ID of the guild
+	}
+>
 
 -- https://discord.com/developers/docs/topics/gateway-events#thread-member-update
 export type ThreadMembersUpdatePayload = Payload<{
@@ -289,8 +296,8 @@ export type GuildMembersChunkPayload = Payload<{
 	members: { objects.GuildMemberObject }, -- Set of guild members
 	chunk_index: number, -- Chunk index in the expected chunks for this response (0 <= chunk_index < chunk_count)
 	chunk_count: number, -- Total number of expected chunks for this response
-	not_found: { unknown }?, -- When passing an invalid ID to REQUEST_GUILD_MEMBERS, it will be returned here
-	presences: { objects.PresenceObject }?, -- When passing true to REQUEST_GUILD_MEMBERS, presences of the returned members will be here
+	not_found: { objects.Snowflake }?, -- When passing an invalid ID to REQUEST_GUILD_MEMBERS, it will be returned here
+	presences: { objects.PresenceUpdateObject }?, -- When passing true to REQUEST_GUILD_MEMBERS, presences of the returned members will be here
 	nonce: string?, -- Nonce used in the Guild Members Request
 }>
 
@@ -315,20 +322,20 @@ export type GuildRoleDeletePayload = Payload<{
 -- https://discord.com/developers/docs/topics/gateway-events#guild-scheduled-event-create
 export type GuildScheduledEventCreatePayload = Payload<objects.GuildScheduledEventObject>
 
--- https://discord.com/developers/docs/topics/gateway-events#guild-scheduled-event-create
+-- https://discord.com/developers/docs/topics/gateway-events#guild-scheduled-event-update
 export type GuildScheduledEventUpdatePayload = Payload<objects.GuildScheduledEventObject>
 
--- https://discord.com/developers/docs/topics/gateway-events#guild-scheduled-event-create
+-- https://discord.com/developers/docs/topics/gateway-events#guild-scheduled-event-delete
 export type GuildScheduledEventDeletePayload = Payload<objects.GuildScheduledEventObject>
 
--- https://discord.com/developers/docs/topics/gateway-events#guild-scheduled-event-create
+-- https://discord.com/developers/docs/topics/gateway-events#guild-scheduled-event-user-add
 export type GuildScheduledEventUserAddPayload = Payload<{
 	guild_scheduled_event_id: objects.Snowflake, -- ID of the guild scheduled event
 	user_id: objects.Snowflake, -- ID of the user
 	guild_id: objects.Snowflake, -- ID of the guild
 }>
 
--- https://discord.com/developers/docs/topics/gateway-events#guild-scheduled-event-create
+-- https://discord.com/developers/docs/topics/gateway-events#guild-scheduled-event-user-remove
 export type GuildScheduledEventUserRemovePayload = Payload<{
 	guild_scheduled_event_id: objects.Snowflake, -- ID of the guild scheduled event
 	user_id: objects.Snowflake, -- ID of the user
@@ -444,35 +451,32 @@ export type MessageReactionRemovePayload = Payload<{
 -- https://discord.com/developers/docs/topics/gateway-events#message-reaction-remove-all
 export type MessageReactionRemoveAllPayload = Payload<{
 	channel_id: objects.Snowflake, -- ID of the channel
-	message_id: objects.Snowflake, -- ID of the guild
-	guild_id: objects.Snowflake?, -- ID of the message
+	message_id: objects.Snowflake, -- ID of the message
+	guild_id: objects.Snowflake?, -- ID of the guild
 }>
 
 -- https://discord.com/developers/docs/topics/gateway-events#message-reaction-remove-emoji
 export type MessageReactionRemoveEmojiPayload = Payload<{
 	channel_id: objects.Snowflake, -- ID of the channel
-	message_id: objects.Snowflake, -- ID of the guild
-	guild_id: objects.Snowflake?, -- ID of the message
+	message_id: objects.Snowflake, -- ID of the message
+	guild_id: objects.Snowflake?, -- ID of the guild
 	emoji: objects.EmojiObject, -- Emoji that was removed
 }>
 
 -- https://discord.com/developers/docs/topics/gateway-events#presence-update
-export type PresenceUpdatePayload = Payload<{
-	user: objects.UserObject, -- User whose presence is being updated
-	guild_id: objects.Snowflake, -- ID of the guild
-	status: string, -- Either "idle", "dnd", "online", or "offline"
-	activities: { objects.ActivityObject }, -- User's current activities
-	client_status: objects.ClientStatusObject, -- User's platform-dependent status
-}>
+export type PresenceUpdatePayload = Payload<objects.PresenceUpdateObject>
 
 -- https://discord.com/developers/docs/topics/gateway-events#stage-instance-create
-export type StageInstanceCreate = Payload<objects.StageInstanceObject>
+export type StageInstanceCreatePayload = Payload<objects.StageInstanceObject>
+export type StageInstanceCreate = StageInstanceCreatePayload
 
 -- https://discord.com/developers/docs/topics/gateway-events#stage-instance-update
-export type StageInstanceUpdate = Payload<objects.StageInstanceObject>
+export type StageInstanceUpdatePayload = Payload<objects.StageInstanceObject>
+export type StageInstanceUpdate = StageInstanceUpdatePayload
 
 -- https://discord.com/developers/docs/topics/gateway-events#stage-instance-delete
-export type StageInstanceDelete = Payload<objects.StageInstanceObject>
+export type StageInstanceDeletePayload = Payload<objects.StageInstanceObject>
+export type StageInstanceDelete = StageInstanceDeletePayload
 
 -- https://discord.com/developers/docs/topics/gateway-events#typing-start
 export type TypingStartPayload = Payload<{
@@ -502,22 +506,24 @@ export type WebhooksUpdatePayload = Payload<{
 }>
 
 -- https://discord.com/developers/docs/topics/gateway-events#message-poll-vote-add
-export type MessagePollVoteAdd = Payload<{
+export type MessagePollVoteAddPayload = Payload<{
 	user_id: objects.Snowflake, -- ID of the user
 	channel_id: objects.Snowflake, -- ID of the channel
 	message_id: objects.Snowflake, -- ID of the message
 	guild_id: objects.Snowflake?, -- ID of the guild
 	answer_id: number, -- ID of the answer
 }>
+export type MessagePollVoteAdd = MessagePollVoteAddPayload
 
 -- https://discord.com/developers/docs/topics/gateway-events#message-poll-vote-remove
-export type MessagePollVoteRemove = Payload<{
+export type MessagePollVoteRemovePayload = Payload<{
 	user_id: objects.Snowflake, -- ID of the user
 	channel_id: objects.Snowflake, -- ID of the channel
 	message_id: objects.Snowflake, -- ID of the message
 	guild_id: objects.Snowflake?, -- ID of the guild
 	answer_id: number, -- ID of the answer
 }>
+export type MessagePollVoteRemove = MessagePollVoteRemovePayload
 
 -- https://discord.com/developers/docs/events/gateway-events#rate-limited
 export type RateLimitedPayload = Payload<{

@@ -21,7 +21,7 @@ local Intents = table.freeze({
 	DirectMessageReactions = 13,
 	DirectMessageTyping = 14,
 	MessageContent = 15,
-	GuildScheduleEvents = 16,
+	GuildScheduledEvents = 16,
 	AutoModerationConfiguration = 20,
 	AutoModerationExecution = 21,
 	GuildMessagePolls = 24,
@@ -45,7 +45,7 @@ export type Intent =
 	| "DirectMessageReactions"
 	| "DirectMessageTyping"
 	| "MessageContent"
-	| "GuildScheduleEvents"
+	| "GuildScheduledEvents"
 	| "AutoModerationConfiguration"
 	| "AutoModerationExecution"
 	| "GuildMessagePolls"
