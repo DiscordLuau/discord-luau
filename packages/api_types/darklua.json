@@ -2,9 +2,8 @@
 	"generator": "retain_lines",
 	"bundle": {
 		"require_mode": {
-			"name": "path",
-			"module_folder_name": "init",
-			"sources": {}
+			"name": "luau",
+			"use_luau_configuration": true
 		},
 		"modules_identifier": "__DARKLUA_BUNDLE_MODULES",
 		"excludes": [
