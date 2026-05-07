@@ -15,6 +15,11 @@ local EntitlementType = table.freeze(util.tableReflect({
 	ApplicationSubscription = 8,
 }))
 
+local EntitlementOwnerType = table.freeze(util.tableReflect({
+	Guild = 1,
+	User = 2,
+}))
+
 export type EntitlementType =
 	"Purchase"
 	| "PremiumSubscription"
@@ -25,6 +30,9 @@ export type EntitlementType =
 	| "PremiumPurchase"
 	| "ApplicationSubscription"
 
+export type EntitlementOwnerType = "Guild" | "User"
+
 return {
 	EntitlementType = EntitlementType,
+	EntitlementOwnerType = EntitlementOwnerType,
 }

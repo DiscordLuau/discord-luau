@@ -45,7 +45,7 @@ local MessageType = table.freeze(util.tableReflect({
 	PollResult = 46,
 }))
 
-local MessageAcitvityType = table.freeze(util.tableReflect({
+local MessageActivityType = table.freeze(util.tableReflect({
 	Join = 1,
 	Spectate = 2,
 	Listen = 3,
@@ -62,6 +62,8 @@ local ButtonStyle = table.freeze(util.tableReflect({
 	Grey = 2,
 	Green = 3,
 	Red = 4,
+	Link = 5,
+	Premium = 6,
 }))
 
 local TextInputStyle = table.freeze(util.tableReflect({
@@ -127,10 +129,10 @@ export type MessageType =
 	| "PurchaseNotification"
 	| "PollResult"
 
-export type MessageAcitvityType = "Join" | "Spectate" | "Listen" | "JoinRequest"
+export type MessageActivityType = "Join" | "Spectate" | "Listen" | "JoinRequest"
 export type MessageReferenceType = "Default" | "Forward"
 
-export type ButtonStyle = "Blurple" | "Grey" | "Green" | "Red" | "Grey"
+export type ButtonStyle = "Blurple" | "Grey" | "Green" | "Red" | "Link" | "Premium"
 
 export type SelectDefaultValueType = "User" | "Role" | "Channel"
 
@@ -144,7 +146,7 @@ export type MessageFlag = "IsComponentsV2"
 
 return {
 	MessageType = MessageType,
-	MessageAcitvityType = MessageAcitvityType,
+	MessageActivityType = MessageActivityType,
 	MessageReferenceType = MessageReferenceType,
 	ButtonStyle = ButtonStyle,
 	TextInputStyle = TextInputStyle,
