@@ -14,10 +14,31 @@ local IntegrationTypesConfig = table.freeze(util.tableReflect({
 	UserInstall = 1,
 }))
 
+local ApplicationRoleConnectionMetadataType = table.freeze(util.tableReflect({
+	IntegerLessThanOrEqual = 1,
+	IntegerGreaterThanOrEqual = 2,
+	IntegerEqual = 3,
+	IntegerNotEqual = 4,
+	DatetimeLessThanOrEqual = 5,
+	DatetimeGreaterThanOrEqual = 6,
+	BooleanEqual = 7,
+	BooleanNotEqual = 8,
+}))
+
 export type MembershipState = "Invited" | "Accepted"
 export type TeamRole = "Owner" | "Admin" | "Developer" | "ReadOnly"
 
 export type IntegrationTypesConfig = "GuildInstall" | "UserInstall"
+
+export type ApplicationRoleConnectionMetadataType =
+	"IntegerLessThanOrEqual"
+	| "IntegerGreaterThanOrEqual"
+	| "IntegerEqual"
+	| "IntegerNotEqual"
+	| "DatetimeLessThanOrEqual"
+	| "DatetimeGreaterThanOrEqual"
+	| "BooleanEqual"
+	| "BooleanNotEqual"
 
 export type OAuth2Scopes =
 	"activities.read"
@@ -52,4 +73,5 @@ export type OAuth2Scopes =
 return {
 	MembershipState = MembershipState,
 	IntegrationTypesConfig = IntegrationTypesConfig,
+	ApplicationRoleConnectionMetadataType = ApplicationRoleConnectionMetadataType,
 }

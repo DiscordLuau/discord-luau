@@ -36,7 +36,7 @@ local ApplicationCommandType = table.freeze(util.tableReflect({
 	ChatInput = 1,
 	User = 2,
 	Message = 3,
-	PrimaryEntryPoiant = 4,
+	PrimaryEntryPoint = 4,
 }))
 
 local ComponentTypes = table.freeze(util.tableReflect({
@@ -104,7 +104,7 @@ export type ApplicationCommandOptionType =
 	| "Number"
 	| "Attachment"
 
-export type ApplicationCommandType = "ChatInput" | "User" | "Message" | "PrimaryEntryPoiant"
+export type ApplicationCommandType = "ChatInput" | "User" | "Message" | "PrimaryEntryPoint"
 
 export type InteractionContextType = "Guild" | "BotDm" | "PrivateChannel"
 
