@@ -507,7 +507,7 @@ local endpoints = table.freeze({
 	GetCurrentUserApplicationRolConnections = "/users/@me/applications/%s/role-connections",
 
 	-- https://discord.com/developers/docs/resources/user#update-current-user-application-role-connection
-	UpdateCurrentUserApplicationRoleConnection = "/users/@me/applications/%s/role-connections/%s",
+	UpdateCurrentUserApplicationRoleConnection = "/users/@me/applications/%s/role-connections",
 
 	-- https://discord.com/developers/docs/resources/voice#list-voice-regions
 	ListVoiceRegions = "/voice/regions",
@@ -626,7 +626,6 @@ export type Endpoint =
 	| "GetApplicationRoleConnectionMetadataRecords"
 	| "UpdateApplicationRoleConnectionMetadataRecords"
 	| "GetGuildAuditLog"
-	| "BatchEditApplicationCommandPermissions"
 	| "ListAutoModerationRulesForGuild"
 	| "GetAutoModerationRule"
 	| "CreateAutoModerationRule"
@@ -676,7 +675,6 @@ export type Endpoint =
 	| "CreateGuildEmoji"
 	| "ModifyGuildEmoji"
 	| "DeleteGuildEmoji"
-
 	| "GetGuild"
 	| "GetGuildPreview"
 	| "ModifyGuild"
@@ -692,7 +690,6 @@ export type Endpoint =
 	| "AddGuildMember"
 	| "ModifyGuildMember"
 	| "ModifyCurrentMember"
-	| "ModifyCurrentUserNick"
 	| "AddGuildMemberRole"
 	| "RemoveGuildMemberRole"
 	| "RemoveGuildMember"
@@ -702,6 +699,7 @@ export type Endpoint =
 	| "RemoveGuildBan"
 	| "BulkGuildBan"
 	| "GetGuildRoles"
+	| "GetGuildRole"
 	| "CreateGuildRole"
 	| "ModifyGuildRolePositions"
 	| "ModifyGuildRole"

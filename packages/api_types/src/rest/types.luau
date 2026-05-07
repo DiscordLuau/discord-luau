@@ -107,7 +107,7 @@ export type CreateMessageRequest = Request<{
 export type EditMessageRequest = Request<{
 	content: string?, -- Message contents (up to 2000 characters)
 	embeds: { objects.EmbedObject }?, -- Up to 10 rich embeds (up to 6000 characters)
-	allowed_mentions: { objects.AllowedMentionObject }?, -- Allowed mentions for the message
+	allowed_mentions: objects.AllowedMentionObject?, -- Allowed mentions for the message
 	components: { objects.ComponentObjects }?, -- Components to include with the message
 	-- files: { },
 	-- payload_json: string,
@@ -268,10 +268,10 @@ export type ModifyGuildMemberRequest = Request<{
 
 -- https://discord.com/developers/docs/resources/guild#modify-current-member
 export type ModifyCurrentMemberRequest = Request<{
-	nick: string?,    -- value to set user's nickname to
-	avatar: string?,  -- guild-specific avatar; image data URI (e.g. "data:image/png;base64,...")
-	banner: string?,  -- guild-specific banner; image data URI
-	bio: string?,     -- guild bio; requires the guild to have the GUILD_MEMBER_BIO feature
+	nick: string?, -- value to set user's nickname to
+	avatar: string?, -- guild-specific avatar; image data URI (e.g. "data:image/png;base64,...")
+	banner: string?, -- guild-specific banner; image data URI
+	bio: string?, -- guild bio; requires the guild to have the GUILD_MEMBER_BIO feature
 }>
 
 -- https://discord.com/developers/docs/resources/guild#create-guild-ban
@@ -323,7 +323,7 @@ export type ModifyGuildMFALevelRequest = Request<{
 export type BeginGuildPruneRequest = Request<{
 	days: number, -- number of days to prune (1-30)
 	compute_prune_count: boolean, -- whether pruned is returned, discouraged for large guilds
-	include_ruoles: { objects.Snowflake }, -- role(s) to include
+	include_roles: { objects.Snowflake }, -- role(s) to include
 	reason: string?, -- reason for the prune (deprecated)
 }>
 
@@ -470,20 +470,20 @@ export type ModifyWebhookRequest = Request<{
 
 -- https://discord.com/developers/docs/resources/webhook#execute-webhook
 export type ExecuteWebhookRequest = Request<{
-	content: string, -- the message contents (up to 2000 characters)
-	username: string, -- override the default username of the webhook
-	avatar_url: string, -- override the default avatar of the webhook
-	tts: boolean, -- true if this is a TTS message
-	embeds: { objects.EmbedObject }, -- embedded rich content
-	allowed_mentions: objects.AllowedMentionObject, -- allowed mentions for the message
-	components: { objects.ComponentObjects }, -- the components to include with the message
+	content: string?, -- the message contents (up to 2000 characters)
+	username: string?, -- override the default username of the webhook
+	avatar_url: string?, -- override the default avatar of the webhook
+	tts: boolean?, -- true if this is a TTS message
+	embeds: { objects.EmbedObject }?, -- embedded rich content
+	allowed_mentions: objects.AllowedMentionObject?, -- allowed mentions for the message
+	components: { objects.ComponentObjects }?, -- the components to include with the message
 	-- files: { },
 	-- payload_json: string,
-	attachments: { objects.AttachmentObject }, -- attachment objects with filename and description
-	flags: number, -- message flags combined as a bitfield (only SUPPRESS_EMBEDS and SUPPRESS_NOTIFICATIONS can be set can be set)
-	thread_name: string, -- name of thread to create (requires the webhook channel to be a forum or media channel)
-	applied_tags: { objects.Snowflake }, -- array of tag ids to apply to the thread (requires the webhook channel to be a forum or media channel)
-	poll: objects.PollObject, -- discord poll
+	attachments: { objects.AttachmentObject }?, -- attachment objects with filename and description
+	flags: number?, -- message flags combined as a bitfield (only SUPPRESS_EMBEDS and SUPPRESS_NOTIFICATIONS can be set can be set)
+	thread_name: string?, -- name of thread to create (requires the webhook channel to be a forum or media channel)
+	applied_tags: { objects.Snowflake }?, -- array of tag ids to apply to the thread (requires the webhook channel to be a forum or media channel)
+	poll: objects.PollObject?, -- discord poll
 }>
 
 -- https://discord.com/developers/docs/resources/webhook#execute-slackcompatible-webhook
@@ -497,6 +497,8 @@ export type ExecuteGithubCompatibleWebhookRequest = Request<{
 	-- ok, likewise with the slack comment, feel free to contribute; https://docs.github.com/en/webhooks/webhook-events-and-payloads
 }>
 
+export type ExecuteGithubCompatibleWebhookResponse = Response<nil>
+
 -- https://discord.com/developers/docs/resources/webhook#edit-webhook-message
 export type EditWebhookMessageRequest = Request<{
 	content: string, -- the message contents (up to 2000 characters)
@@ -505,7 +507,7 @@ export type EditWebhookMessageRequest = Request<{
 	components: { objects.ComponentObjects }, -- the components to include with the message
 	-- files: { },
 	-- payload_json: string,
-	attachments: objects.AttachmentObject, -- attached files to keep and possible descriptions for new files
+	attachments: { objects.AttachmentObject }?, -- attached files to keep and possible descriptions for new files
 }>
 
 -- https://discord.com/developers/docs/resources/channel#edit-channel-permissions
@@ -665,10 +667,10 @@ export type GetApplicationCommandPermissionsResponse = Response<{ objects.GuildA
 export type EditApplicationCommandPermissionsResponse = Response<objects.GuildApplicationCommandPermissionsObject>
 
 -- https://discord.com/developers/docs/resources/application#get-current-application
-export type GetCurrentApplicationResponse = Response<{ objects.ApplicationObject }>
+export type GetCurrentApplicationResponse = Response<objects.ApplicationObject>
 
 -- https://discord.com/developers/docs/resources/application#edit-current-application
-export type EditCurrentApplicationResponse = Response<{ objects.ApplicationObject }>
+export type EditCurrentApplicationResponse = Response<objects.ApplicationObject>
 
 -- https://discord.com/developers/docs/monetization/skus#list-skus
 export type ListSkusResponse = Response<{ objects.SkuObject }>
@@ -679,6 +681,10 @@ export type GetApplicationRoleConnectionMetadataRecordsResponse = Response<
 >
 
 -- https://discord.com/developers/docs/resources/application-role-connection-metadata#update-application-role-connection-metadata-records
+export type UpdateApplicationRoleConnectionMetadataRecordsRequest = Request<{
+	{ objects.ApplicationRoleConnectionMetadataObject }
+}>
+
 export type UpdateApplicationRoleConnectionMetadataRecordsResponse = Response<
 	objects.ApplicationRoleConnectionMetadataObject
 >
@@ -768,7 +774,7 @@ export type UpdateInviteTargetUsersResponse = Response<objects.InviteObject>
 
 -- https://docs.discord.com/developers/resources/invite#get-target-users-job-status
 export type GetInviteTargetUsersJobStatusResponse = Response<{
-	status: number,          -- 0=UNSPECIFIED, 1=PROCESSING, 2=COMPLETED, 3=FAILED
+	status: number, -- 0=UNSPECIFIED, 1=PROCESSING, 2=COMPLETED, 3=FAILED
 	total_users: number?,
 	processed_users: number?,
 	created_at: string,
@@ -906,40 +912,40 @@ export type SearchGuildMembersResponse = Response<{ objects.GuildMemberObject }>
 
 -- https://docs.discord.com/developers/resources/message#search-guild-messages
 export type SearchGuildMessagesRequest = {
-	content: string?,                                -- text to search in message content (max 1024 characters)
-	channel_id: { objects.Snowflake }?,              -- filter to these channel IDs (max 500)
-	author_id: { objects.Snowflake }?,               -- filter to messages sent by these users (max 100)
-	author_type: { string }?,                        -- filter by author type: "user", "bot", "webhook", or negated variants
-	mentions: { objects.Snowflake }?,                -- filter to messages mentioning these users (max 100)
-	mentions_role_id: { objects.Snowflake }?,         -- filter to messages mentioning these roles (max 100)
-	mention_everyone: boolean?,                      -- filter by whether the message mentions @everyone
-	replied_to_user_id: { objects.Snowflake }?,      -- filter to messages replying to these users (max 100)
-	replied_to_message_id: { objects.Snowflake }?,   -- filter to messages replying to these messages (max 100)
-	has: { string }?,                                -- filter by type: "link", "embed", "file", "video", "image", "sticker", "sound", "poll", "snapshot"
-	embed_type: { string }?,                         -- filter by embed type: "image", "video", "gif", "sound", "article"
-	embed_provider: { string }?,                     -- filter by embed provider name (case-sensitive)
-	link_hostname: { string }?,                      -- filter by link hostname
-	attachment_filename: { string }?,                -- filter by attachment filename
-	attachment_extension: { string }?,               -- filter by attachment file extension
-	pinned: boolean?,                                -- filter to pinned (true) or non-pinned (false) messages
-	max_id: objects.Snowflake?,                      -- return messages before this message ID
-	min_id: objects.Snowflake?,                      -- return messages after this message ID
-	slop: number?,                                   -- max number of words to skip between matching tokens
+	content: string?, -- text to search in message content (max 1024 characters)
+	channel_id: { objects.Snowflake }?, -- filter to these channel IDs (max 500)
+	author_id: { objects.Snowflake }?, -- filter to messages sent by these users (max 100)
+	author_type: { string }?, -- filter by author type: "user", "bot", "webhook", or negated variants
+	mentions: { objects.Snowflake }?, -- filter to messages mentioning these users (max 100)
+	mentions_role_id: { objects.Snowflake }?, -- filter to messages mentioning these roles (max 100)
+	mention_everyone: boolean?, -- filter by whether the message mentions @everyone
+	replied_to_user_id: { objects.Snowflake }?, -- filter to messages replying to these users (max 100)
+	replied_to_message_id: { objects.Snowflake }?, -- filter to messages replying to these messages (max 100)
+	has: { string }?, -- filter by type: "link", "embed", "file", "video", "image", "sticker", "sound", "poll", "snapshot"
+	embed_type: { string }?, -- filter by embed type: "image", "video", "gif", "sound", "article"
+	embed_provider: { string }?, -- filter by embed provider name (case-sensitive)
+	link_hostname: { string }?, -- filter by link hostname
+	attachment_filename: { string }?, -- filter by attachment filename
+	attachment_extension: { string }?, -- filter by attachment file extension
+	pinned: boolean?, -- filter to pinned (true) or non-pinned (false) messages
+	max_id: objects.Snowflake?, -- return messages before this message ID
+	min_id: objects.Snowflake?, -- return messages after this message ID
+	slop: number?, -- max number of words to skip between matching tokens
 	sort_by: ("timestamp" | "relevance")?,
-	sort_order: ("asc" | "desc")?,                   -- default desc
-	limit: number?,                                  -- max results, 1-25, default 25
-	offset: number?,                                 -- pagination offset, max 9975
-	include_nsfw: boolean?,                          -- whether to include results from age-restricted channels
+	sort_order: ("asc" | "desc")?, -- default desc
+	limit: number?, -- max results, 1-25, default 25
+	offset: number?, -- pagination offset, max 9975
+	include_nsfw: boolean?, -- whether to include results from age-restricted channels
 }
 
 -- https://docs.discord.com/developers/resources/message#search-guild-messages
 export type SearchGuildMessagesResponse = Response<{
-	total_results: number,                     -- total number of results matching the query
-	messages: { { objects.MessageObject } },   -- nested arrays; each inner array is the matching message with surrounding context
-	threads: { objects.ChannelObject }?,       -- threads containing returned messages
-	members: { objects.ThreadMemberObject }?,  -- thread members for results in threads the user joined
-	doing_deep_historical_index: boolean?,     -- true when Discord is still indexing old messages
-	documents_indexed: number?,               -- count of indexed documents during the current indexing operation
+	total_results: number, -- total number of results matching the query
+	messages: { { objects.MessageObject } }, -- nested arrays; each inner array is the matching message with surrounding context
+	threads: { objects.ChannelObject }?, -- threads containing returned messages
+	members: { objects.ThreadMemberObject }?, -- thread members for results in threads the user joined
+	doing_deep_historical_index: boolean?, -- true when Discord is still indexing old messages
+	documents_indexed: number?, -- count of indexed documents during the current indexing operation
 }>
 
 -- https://discord.com/developers/docs/resources/guild#add-guild-member
@@ -1075,7 +1081,7 @@ export type GetGuildTemplateResponse = Response<objects.GuildTemplateObject>
 export type CreateGuildFromGuildTemplateResponse = Response<objects.GuildObject>
 
 -- https://discord.com/developers/docs/resources/guild-template#get-guild-templates
-export type GetGuildTemplatesResponse = Response<objects.GuildTemplateObject>
+export type GetGuildTemplatesResponse = Response<{ objects.GuildTemplateObject }>
 
 -- https://discord.com/developers/docs/resources/guild-template#create-guild-template
 export type CreateGuildTemplateResponse = Response<objects.GuildTemplateObject>

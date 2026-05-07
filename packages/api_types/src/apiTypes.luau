@@ -37,7 +37,7 @@ export type LanguageLocales =
 	| "uk"
 	| "hi"
 	| "th"
-	| "zn-CH"
+	| "zh-CN"
 	| "ja"
 	| "ko"
 
@@ -203,7 +203,7 @@ export type IntegrationExpireBehaviours = number
 export type InteractionType = number
 
 -- https://discord.com/developers/docs/resources/message#embed-object-embed-types
-export type EmbedType = "Rich" | "Image" | "Video" | "GIFV" | "Article" | "Link" | "PollResult"
+export type EmbedType = "Rich" | "Image" | "Video" | "Gifv" | "Article" | "Link" | "PollResult"
 
 -- https://discord.com/developers/docs/resources/channel#message-object-message-types
 export type MessageType = number
@@ -294,8 +294,8 @@ export type InteractionCallbackType = number
 
 -- https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-timestamps
 export type ActivityTimestampObject = {
-	start: number, -- Unix time (in milliseconds) of when the activity started
-	["end"]: number, -- Unix time (in milliseconds) of when the activity ends
+	start: number?, -- Unix time (in milliseconds) of when the activity started
+	["end"]: number?, -- Unix time (in milliseconds) of when the activity ends
 }
 
 -- https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-emoji
@@ -313,10 +313,10 @@ export type ActivityPartyObject = {
 
 -- https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-assets
 export type ActivityAssetsObject = {
-	large_image: string, -- https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-asset-image
-	large_text: string, -- Text displayed when hovering over the large image of the activity
-	small_image: string, -- https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-asset-image
-	small_text: string, -- Text displayed when hovering over the small image of the activity
+	large_image: string?, -- https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-asset-image
+	large_text: string?, -- Text displayed when hovering over the large image of the activity
+	small_image: string?, -- https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-asset-image
+	small_text: string?, -- Text displayed when hovering over the small image of the activity
 }
 
 -- https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-secrets
@@ -430,7 +430,7 @@ export type GuildRoleTagObject = {
 	bot_id: Snowflake?, -- the id of the bot this role belongs to
 	integration_id: Snowflake?, -- the id of the integration this role belongs to
 	premium_subscriber: nil, -- whether this is the guild's Booster role
-	subscription_listing_id: Snowflake, -- the id of this role's subscription sku and listing
+	subscription_listing_id: Snowflake?, -- the id of this role's subscription sku and listing
 	available_for_purchase: nil, -- whether this role is available for purchase
 	guild_connections: nil, -- whether this role is a guild's linked role
 }
@@ -644,7 +644,7 @@ export type AutomoderationRuleTriggerMetadataObject = {
 }
 
 -- https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-action-object-action-metadata
-export type AutmoderationActionMetadataObject = {
+export type AutomoderationActionMetadataObject = {
 	channel_id: Snowflake, -- channel to which user content should be logged
 	duration_seconds: number, -- timeout duration in seconds, maximum of 2419200 seconds (4 weeks)
 	custom_message: string?, -- additional explanation that will be shown to members whenever their message is blocked, maximum of 150 characters
@@ -653,7 +653,7 @@ export type AutmoderationActionMetadataObject = {
 -- https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-action-object
 export type AutomoderationActionObject = {
 	type: AutomoderationActionType, -- the type of action
-	metadata: AutmoderationActionMetadataObject?, -- additional metadata needed during execution for this specific action type
+	metadata: AutomoderationActionMetadataObject?, -- additional metadata needed during execution for this specific action type
 }
 
 -- https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-rule-object
@@ -686,7 +686,7 @@ export type ThreadMetadataObject = {
 	archive_timestamp: string, -- timestamp when the thread's archive status was last changed, used for calculating recent activity
 	locked: boolean, -- whether the thread is locked; when a thread is locked, only users with MANAGE_THREADS can unarchive it
 	invitable: boolean?, -- whether non-moderators can add other non-moderators to a thread; only available on private threads
-	create_timestamp: string, -- timestamp when the thread was created; only populated for threads created after 2022-01-09
+	create_timestamp: string?, -- timestamp when the thread was created; only populated for threads created after 2022-01-09
 }
 
 -- https://discord.com/developers/docs/resources/guild#guild-member-object
@@ -1015,14 +1015,14 @@ export type MessageReferenceObject = {
 }
 
 -- https://discord.com/developers/docs/resources/channel#message-interaction-metadata-object-message-interaction-metadata-structure
-export type MessageInteractionMetadatObject = {
+export type MessageInteractionMetadataObject = {
 	id: Snowflake, -- ID of the interaction
 	type: InteractionType, -- Type of interaction
 	user: UserObject, -- User who triggered the interaction
 	authorizing_integration_owners: { [ApplicationIntegrationType]: Snowflake }, -- IDs for installation context(s) related to an interaction. Details in Authorizing Integration Owners Object
 	original_response_message_id: Snowflake?, -- ID of the original response message, present only on follow-up messages
 	interacted_message_id: Snowflake?, -- ID of the message that contained interactive component, present only on messages created from component interactions
-	triggering_interaction_metadata: MessageInteractionMetadatObject, -- Metadata for the interaction that was used to open the modal, present only on modal submit interactions
+	triggering_interaction_metadata: MessageInteractionMetadataObject, -- Metadata for the interaction that was used to open the modal, present only on modal submit interactions
 }
 
 -- https://discord.com/developers/docs/interactions/receiving-and-responding#message-interaction-object-message-interaction-structure
@@ -1241,7 +1241,7 @@ export type ComponentObjects =
 	| CheckboxComponentObject
 
 -- https://discord.com/developers/docs/resources/sticker#sticker-item-object
-export type SitckerItemObject = {
+export type StickerItemObject = {
 	id: Snowflake, -- id of the sticker
 	name: string, -- name of the sticker
 	format_type: StickerFormatType, -- 	type of sticker format
@@ -1294,7 +1294,7 @@ export type PollObject = {
 
 -- https://discord.com/developers/docs/resources/channel#message-call-object
 export type MessageCallObject = {
-	participants: { UserObject }, -- array of user object ids that participated in the call
+	participants: { Snowflake }, -- array of user object ids that participated in the call
 	ended_timestamp: string, -- time when call ended
 }
 
@@ -1309,7 +1309,7 @@ export type MessageSnapshotContentObject = {
 	flags: number?, -- message flags combined as a bitfield
 	mentions: { UserObject }, -- users specifically mentioned in the message
 	mention_roles: { Snowflake }, -- roles specifically mentioned in this message
-	sticker_items: { SitckerItemObject }?, -- sent if the message contains stickers
+	sticker_items: { StickerItemObject }?, -- sent if the message contains stickers
 	components: { ComponentObjects }?, -- sent if the message contains components like buttons, action rows, or other interactive components
 }
 
@@ -1344,11 +1344,11 @@ export type MessageObject = {
 	flags: number?, -- message flags combined as a bitfield
 	referenced_message: MessageObject?, -- the message associated with the message_reference
 	message_snapshots: { MessageSnapshotObject }?, -- forwarded message snapshots
-	interaction_metadata: MessageInteractionMetadatObject?, -- In preview. Sent if the message is sent as a result of an interaction
+	interaction_metadata: MessageInteractionMetadataObject?, -- In preview. Sent if the message is sent as a result of an interaction
 	interaction: MessageInteractionObject?, -- Deprecated in favor of interaction_metadata; sent if the message is a response to an interaction
 	thread: ChannelObject?, -- the thread that was started from this message, includes thread member object
 	components: { ComponentObjects }?, -- sent if the message contains components like buttons, action rows, or other interactive components
-	sticker_items: { SitckerItemObject }?, -- sent if the message contains stickers
+	sticker_items: { StickerItemObject }?, -- sent if the message contains stickers
 	stickers: { StickerObject }?, -- Deprecated the stickers sent with the message
 	position: number?, -- A generally increasing integer (there may be gaps or duplicates) that represents the approximate position of the message in a thread, it can be used to estimate the relative position of the message in a thread in company with total_message_sent on parent thread
 	role_subscription_data: RoleSubscriptionDataObject?, -- data of the role subscription purchase or renewal that prompted this ROLE_SUBSCRIPTION_PURCHASE message
@@ -1412,7 +1412,7 @@ export type InteractionObject = {
 	locale: LanguageLocales?, -- Selected language of the invoking user
 	guild_locale: LanguageLocales?, -- Guild's preferred locale, if invoked in a guild
 	entitlements: { EntitlementObject }, -- For monetized apps, any entitlements for the invoking user, representing access to premium SKUs
-	authorizing_integration_owners: { IntegrationType }, -- Mapping of installation contexts that the interaction was authorized for to related user or guild IDs. See Authorizing Integration Owners Object for details
+	authorizing_integration_owners: { [ApplicationIntegrationType]: Snowflake }, -- Mapping of installation contexts that the interaction was authorized for to related user or guild IDs. See Authorizing Integration Owners Object for details
 	context: InteractionContextType, -- Context where the interaction was triggered from
 	attachment_size_limit: number?, -- Maximum attachment size in bytes for this interaction, varies by guild boost tier and invoking user's Nitro status
 }
@@ -1702,7 +1702,7 @@ export type ConnectionObject = {
 	integrations: { IntegrationObject }?, -- an array of partial server integrations
 	verified: boolean, -- whether the connection is verified
 	friend_sync: boolean, -- whether friend sync is enabled for this connection
-	show_Activity: boolean, -- whether activities related to this connection will be shown in presence updates
+	show_activity: boolean, -- whether activities related to this connection will be shown in presence updates
 	two_way_link: boolean, -- whether this connection has a corresponding third party OAuth2 token
 	visibility: ConnectionVisibilityTypes, -- visibility of this connection
 }

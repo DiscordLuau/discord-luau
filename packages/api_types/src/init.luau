@@ -23,7 +23,11 @@ return {
 	application = require("@self/application"),
 	apiTypes = require("@self/apiTypes"),
 	client = require("@self/client"),
-	voice = {},
+	voice = {
+		opcodes = require("@self/voice/opcodes"),
+		closeCodes = require("@self/voice/closeCodes"),
+		types = require("@self/voice/types"),
+	},
 	rest = {
 		endpoints = require("@self/rest/endpoints"),
 		types = require("@self/rest/types"),
