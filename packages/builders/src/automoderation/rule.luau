@@ -258,7 +258,7 @@ function AutomoderationRule.Interface.new(resource: {
 			self:setActions(resource.actions)
 		end
 
-		if resource.enabled then
+		if resource.enabled ~= nil then
 			self:setEnabled(resource.enabled)
 		end
 

@@ -129,10 +129,13 @@ end
 	Builds the trigger metadata object.
 ]=]
 function TriggerMetadata.Prototype.build(self: TriggerMetadata): JSON
-	local presets = {}
-
-	for _, preset in self.presets do
-		table.insert(presets, apiTypes.guild.KeywordPresetType[preset])
+	local presets: { number }? = nil
+	if self.presets then
+		local arr: { number } = {}
+		for _, preset in self.presets do
+			table.insert(arr, apiTypes.guild.KeywordPresetType[preset])
+		end
+		presets = arr
 	end
 
 	return {
