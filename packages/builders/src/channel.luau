@@ -134,7 +134,6 @@
 ]=]
 
 local apiTypes = require("../luau_packages/api_types")
-local util = require("../luau_packages/util")
 
 local Channel = {}
 
@@ -148,9 +147,7 @@ Channel.Interface = {}
 ]=]
 function Channel.Prototype.setName(self: Channel, tagName: string): Channel
 	assert(#tagName <= 100, `Channel name must be less than 100 characters.`)
-	assert(#tagName > 1, `Channel name must be more than 1 characters.`)
-
-	assert(util.validateKebabCase(tagName), `Channel name must be kebab-case.`)
+	assert(#tagName >= 1, `Channel name must be at least 1 character.`)
 
 	self.name = tagName
 
@@ -225,7 +222,7 @@ function Channel.Prototype.setBitrate(self: Channel, bitrate: number): Channel
 		`Channel bitrate is only supported for guild voice and stage voice channels.`
 	)
 
-	assert(bitrate < 96000, `Channel bitrate must be less than 96kbit/s.`)
+	assert(bitrate <= 96000, `Channel bitrate must be at most 96kbit/s.`)
 	assert(bitrate > 8000, `Channel bitrate must be more than 8kbit/s.`)
 
 	self.bitrate = bitrate
@@ -266,8 +263,10 @@ function Channel.Prototype.setRateLimitPerUser(self: Channel, rateLimitPerUser: 
 		`Channel rate limit per user is only supported for guild text, voice, stage voice, forum, and media channels.`
 	)
 
-	assert(rateLimitPerUser <= 21600, `Channel rate limit per user must be less than 21600 seconds.`)
-	assert(rateLimitPerUser >= 0, `Channel rate limit per user must be more than 0 seconds.`)
+	if rateLimitPerUser ~= nil then
+		assert(rateLimitPerUser <= 21600, `Channel rate limit per user must be less than 21600 seconds.`)
+		assert(rateLimitPerUser >= 0, `Channel rate limit per user must be at least 0 seconds.`)
+	end
 
 	self.rateLimitPerUser = rateLimitPerUser
 

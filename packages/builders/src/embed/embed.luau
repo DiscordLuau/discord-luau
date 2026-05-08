@@ -32,9 +32,9 @@
 ]=]
 
 --[=[
-	@prop timestamp number?
+	@prop timestamp string?
 	@within Builders.Embed
-	The timestamp of the embed.
+	The timestamp of the embed (ISO 8601 string).
 ]=]
 
 --[=[
@@ -158,7 +158,7 @@ end
 	Set the timestamp of the embed, timestamps will exist at the bottom/footer of the embed.
 ]=]
 function Embed.Prototype.setTimestamp(self: Embed, timestamp: stdPolyfills.DateTime): Embed
-	self.timestamp = timestamp:toRfc3339()
+	self.timestamp = timestamp:toIsoDate()
 
 	return self
 end
@@ -264,8 +264,6 @@ end
 	Responsible for building the Embed JSON that can be parsed by the Discord API.
 ]=]
 function Embed.Prototype.build(self: Embed): JSON
-	assert(self.type, `Embed type must be set before building!`)
-
 	return {
 		title = self.title,
 		type = apiTypes.embed.EmbedType[self.type],
@@ -301,7 +299,7 @@ function Embed.Interface.new(resource: {
 	video: embedVideo.JSON?,
 	provider: embedProvider.JSON?,
 	author: embedAuthor.JSON?,
-	fields: { embedField.JSON },
+	fields: { embedField.JSON }?,
 }?): Embed
 	local self = setmetatable(
 		{
@@ -320,6 +318,10 @@ function Embed.Interface.new(resource: {
 
 		if resource.type then
 			self:setType(resource.type)
+		end
+
+		if resource.url then
+			self:setUrl(resource.url)
 		end
 
 		if resource.description then
@@ -373,7 +375,7 @@ export type Embed = typeof(Embed.Prototype) & {
 	type: apiTypes.EmbedType?,
 	description: string?,
 	url: string?,
-	timestamp: number?,
+	timestamp: string?,
 	color: number?,
 	footer: embedFooter.JSON?,
 	image: embedImage.JSON?,
