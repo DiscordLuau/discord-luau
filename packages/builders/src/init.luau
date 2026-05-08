@@ -61,6 +61,19 @@ local automoderationRule = require("@self/automoderation/rule")
 local automoderationAction = require("@self/automoderation/action/action")
 local automoderationActionMetadata = require("@self/automoderation/action/metadata")
 local automoderationTriggerMetadata = require("@self/automoderation/trigger/metadata")
+local scheduledEvent = require("@self/guild/scheduledEvent")
+local scheduledEventRecurrenceRule = require("@self/guild/scheduledEventRecurrenceRule")
+local stageInstance = require("@self/guild/stageInstance")
+local guildMember = require("@self/guild/member")
+local guildBan = require("@self/guild/ban")
+local guildPrune = require("@self/guild/prune")
+local channelPosition = require("@self/guild/channelPosition")
+local webhook = require("@self/webhook/webhook")
+local executeWebhook = require("@self/webhook/executeWebhook")
+local editMessage = require("@self/message/editMessage")
+local updateVoiceState = require("@self/voice/updateVoiceState")
+local testEntitlement = require("@self/entitlement/testEntitlement")
+local roleConnectionMetadata = require("@self/application/roleConnectionMetadata")
 
 export type providerJSON = provider.JSON
 export type fieldJSON = field.JSON
@@ -125,6 +138,19 @@ export type AutomoderationActionMetadataJSON = automoderationActionMetadata.JSON
 export type AutomoderationTriggerMetadataJSON = automoderationTriggerMetadata.JSON
 export type ModalJSON = modal.JSON
 export type intents = intents.Intents
+export type scheduledEventJSON = scheduledEvent.JSON
+export type scheduledEventRecurrenceRuleJSON = scheduledEventRecurrenceRule.JSON
+export type stageInstanceJSON = stageInstance.JSON
+export type guildMemberJSON = guildMember.JSON
+export type guildBanJSON = guildBan.JSON
+export type guildPruneJSON = guildPrune.JSON
+export type channelPositionJSON = channelPosition.JSON
+export type webhookJSON = webhook.JSON
+export type executeWebhookJSON = executeWebhook.JSON
+export type editMessageJSON = editMessage.JSON
+export type updateVoiceStateJSON = updateVoiceState.JSON
+export type testEntitlementJSON = testEntitlement.JSON
+export type roleConnectionMetadataJSON = roleConnectionMetadata.JSON
 
 return {
 	intents = intents,
@@ -150,6 +176,7 @@ return {
 		allowedMention = allowedMention,
 		reference = reference,
 		message = message,
+		editMessage = editMessage,
 		poll = {
 			poll = poll,
 			answer = answer,
@@ -194,6 +221,26 @@ return {
 			option = onboardingOption,
 		},
 		guild = guild,
+		scheduledEvent = scheduledEvent,
+		scheduledEventRecurrenceRule = scheduledEventRecurrenceRule,
+		stageInstance = stageInstance,
+		member = guildMember,
+		ban = guildBan,
+		prune = guildPrune,
+		channelPosition = channelPosition,
+	},
+	webhook = {
+		webhook = webhook,
+		executeWebhook = executeWebhook,
+	},
+	voice = {
+		updateVoiceState = updateVoiceState,
+	},
+	entitlement = {
+		testEntitlement = testEntitlement,
+	},
+	application = {
+		roleConnectionMetadata = roleConnectionMetadata,
 	},
 	thread = {
 		noMessageThread = noMessageThread,
