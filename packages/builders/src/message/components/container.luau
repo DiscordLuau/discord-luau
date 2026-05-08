@@ -94,8 +94,6 @@ function Container.Interface.new(): Container
 	local self = setmetatable(
 		{
 			components = {},
-			accentColor = nil,
-			spoiler = nil,
 		} :: Container,
 		{
 			__index = Container.Prototype,

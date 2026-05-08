@@ -82,7 +82,6 @@ function Section.Interface.new(): Section
 	local self = setmetatable(
 		{
 			components = {},
-			accessory = nil,
 		} :: Section,
 		{
 			__index = Section.Prototype,

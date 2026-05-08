@@ -156,11 +156,16 @@ function SelectMenu.Prototype.build(self: SelectMenu): JSON
 		assert(self.maxValues >= self.minValues, "maxValues must be >= minValues")
 	end
 
+	local channelTypeIntegers = {}
+	for _, channelType in self.apiTypes do
+		table.insert(channelTypeIntegers, apiTypes.channel.ChannelTypes[channelType])
+	end
+
 	return {
 		type = apiTypes.channel.SelectMenuType[self.type],
 		custom_id = self.customId,
 		options = #self.options > 0 and self.options or nil,
-		channel_types = #self.apiTypes > 0 and self.apiTypes or nil,
+		channel_types = #channelTypeIntegers > 0 and channelTypeIntegers or nil,
 		placeholder = self.placeholder,
 		default_values = #self.defaultValues > 0 and self.defaultValues or nil,
 		min_values = self.minValues,
