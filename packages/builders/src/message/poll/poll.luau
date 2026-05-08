@@ -20,9 +20,9 @@
 ]=]
 
 --[=[
-	@prop expiry string
+	@prop duration number
 	@within Builders.Message.Poll
-	The timestamp when the poll will expire.
+	Duration in hours for the poll. Discord converts this to an expiry timestamp internally.
 ]=]
 
 --[=[
@@ -36,8 +36,6 @@
 	@within Builders.Message.Poll
 	The layout type of the poll display.
 ]=]
-
-local stdPolyfills = require("../../../luau_packages/std_polyfills")
 
 local apiTypes = require("../../../luau_packages/api_types")
 
@@ -75,16 +73,13 @@ end
 --[=[
 	@within Builders.Message.Poll
 
-	Sets the expiry time for the poll.
+	Sets the duration of the poll in hours. Must be a positive integer.
+	Discord uses this to calculate the expiry timestamp internally.
 ]=]
-function Poll.Prototype.setExpiry(self: Poll, expiry: string | number | stdPolyfills.DateTime): Poll
-	if typeof(expiry) == "DateTime" then
-		local object = expiry :: stdPolyfills.DateTime
+function Poll.Prototype.setDuration(self: Poll, hours: number): Poll
+	assert(hours > 0, "Poll duration must be a positive number of hours")
 
-		self.expiry = tostring(object.unixTimestampMillis)
-	else
-		self.expiry = tostring(expiry)
-	end
+	self.duration = hours
 
 	return self
 end
@@ -126,7 +121,7 @@ function Poll.Prototype.build(self: Poll): JSON
 	return {
 		question = self.question,
 		answers = #self.answers > 0 and self.answers or nil,
-		expiry = self.expiry,
+		duration = self.duration,
 		allow_multiselect = self.allowMultiselect,
 		layout_type = apiTypes.message.PollLayoutType[self.layoutType],
 		results = nil,
@@ -141,7 +136,7 @@ end
 function Poll.Interface.new(resource: {
 	question: mediaBuilder.JSON?,
 	answers: { answerBuilder.JSON }?,
-	expiry: number?,
+	duration: number?,
 	allowMultiselect: boolean?,
 	layoutType: apiTypes.PollLayoutType?,
 }?): Poll
@@ -159,11 +154,11 @@ function Poll.Interface.new(resource: {
 			self:setQuestion(resource.question)
 		end
 
-		if resource.expiry then
-			self:setExpiry(resource.expiry)
+		if resource.duration then
+			self:setDuration(resource.duration)
 		end
 
-		if resource.allowMultiselect then
+		if resource.allowMultiselect ~= nil then
 			self:setMultiselect(resource.allowMultiselect)
 		end
 
@@ -184,7 +179,7 @@ end
 export type Poll = typeof(Poll.Prototype) & {
 	question: mediaBuilder.JSON,
 	answers: { answerBuilder.JSON },
-	expiry: string,
+	duration: number?,
 	allowMultiselect: boolean,
 	layoutType: apiTypes.PollLayoutType,
 }

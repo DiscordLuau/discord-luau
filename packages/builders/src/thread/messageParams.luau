@@ -70,7 +70,7 @@ MessageParams.Interface = {}
 	Sets the content of the message.
 ]=]
 function MessageParams.Prototype.setContent(self: MessageParams, content: string): MessageParams
-	assert(#content < 2000, `MessageParams content must be less than 2000 characters.`)
+	assert(#content <= 2000, `MessageParams content must be at most 2000 characters.`)
 
 	self.content = content
 

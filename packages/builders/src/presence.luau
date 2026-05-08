@@ -42,7 +42,6 @@ Presence.Interface = {}
 
 --[=[
 	@within Builders.Presence
-	@private
 
 	Adds an activity to the presence.
 ]=]
@@ -54,7 +53,6 @@ end
 
 --[=[
 	@within Builders.Presence
-	@private
 
 	Sets the status of the presence.
 ]=]
@@ -71,7 +69,6 @@ end
 
 --[=[
 	@within Builders.Presence
-	@private
 
 	Sets whether the presence is AFK.
 ]=]
@@ -83,7 +80,6 @@ end
 
 --[=[
 	@within Builders.Presence
-	@private
 
 	Sets the time since the presence was last updated.
 ]=]
@@ -95,7 +91,6 @@ end
 
 --[=[
 	@within Builders.Presence
-	@private
 
 	Builds the presence object that can be sent to the Discord API.
 ]=]
@@ -110,7 +105,6 @@ end
 
 --[=[
 	@within Builders.Presence
-	@private
 
 	Constructor for the Discord Presence Builder.
 ]=]

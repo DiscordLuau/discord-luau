@@ -79,7 +79,7 @@ end
 ]=]
 function Invite.Prototype.setMaxUses(self: Invite, uses: number): Invite
 	assert(uses >= 0, "Max uses must be greater than or equal to 0")
-	assert(uses <= 100, "Max uses must be less than or equal to 604800")
+	assert(uses <= 100, "Max uses must be less than or equal to 100")
 
 	self.maxUses = uses
 

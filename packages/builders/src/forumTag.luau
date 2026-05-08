@@ -39,8 +39,6 @@
 
 local apiTypes = require("../luau_packages/api_types")
 
-local util = require("../luau_packages/util")
-
 local ForumTag = {}
 
 ForumTag.Prototype = {}
@@ -77,8 +75,6 @@ end
 function ForumTag.Prototype.setName(self: ForumTag, tagName: string): ForumTag
 	assert(#tagName <= 20, `Tag name must be less than 20 characters.`)
 	assert(#tagName > 0, `Tag name must be more than 0 characters.`)
-
-	assert(util.validateKebabCase(tagName), `Tag name must be kebab-case.`)
 
 	self.name = tagName
 

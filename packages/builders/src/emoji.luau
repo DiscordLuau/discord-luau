@@ -19,8 +19,6 @@
 	The name of the emoji.
 ]=]
 
-local util = require("../luau_packages/util")
-
 local Emoji = {}
 
 Emoji.Prototype = {}
@@ -43,8 +41,6 @@ end
 	Set the name of the emoji to use.
 ]=]
 function Emoji.Prototype.setName(self: Emoji, emojiName: string): Emoji
-	assert(util.validateKebabCase(emojiName), `Emoji names are Kebab case!`)
-
 	self.emojiName = emojiName
 
 	return self
@@ -56,8 +52,7 @@ end
 	Responsible for building the Emoji JSON that can be parsed by the Discord API.
 ]=]
 function Emoji.Prototype.build(self: Emoji): JSON
-	assert(self.emojiId, `Emoji ID is required.`)
-	assert(self.emojiName, `Emoji name is required.`)
+	assert(self.emojiId or self.emojiName, "Either emoji ID (for custom emoji) or emoji name (for Unicode emoji) is required.")
 
 	return {
 		id = self.emojiId,

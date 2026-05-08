@@ -170,17 +170,7 @@ end
 ]=]
 function Message.Prototype.addComponent(
 	self: Message,
-	component: button.JSON
-		| textInput.JSON
-		| selectMenu.JSON
-		| actionRow.JSON
-		| textDisplay.JSON
-		| separator.JSON
-		| componentThumbnail.JSON
-		| mediaGallery.JSON
-		| file.JSON
-		| section.JSON
-		| container.JSON
+	component: button.JSON | textInput.JSON | selectMenu.JSON | actionRow.JSON | textDisplay.JSON | separator.JSON | componentThumbnail.JSON | mediaGallery.JSON | file.JSON | section.JSON | container.JSON
 ): Message
 	local components = self.components or {}
 
@@ -298,7 +288,19 @@ function Message.Interface.new(resource: {
 	embeds: { embed.JSON }?,
 	allowedMentions: allowedMention.JSON?,
 	messageReference: reference.JSON?,
-	components: { button.JSON | textInput.JSON | selectMenu.JSON | actionRow.JSON | textDisplay.JSON | separator.JSON | componentThumbnail.JSON | mediaGallery.JSON | file.JSON | section.JSON | container.JSON }?,
+	components: {
+		button.JSON
+		| textInput.JSON
+		| selectMenu.JSON
+		| actionRow.JSON
+		| textDisplay.JSON
+		| separator.JSON
+		| componentThumbnail.JSON
+		| mediaGallery.JSON
+		| file.JSON
+		| section.JSON
+		| container.JSON
+	}?,
 	stickerIds: { string }?,
 	attachments: { Attachment }?,
 	flags: number?,
@@ -393,7 +395,19 @@ export type Message = typeof(Message.Prototype) & {
 	embeds: { embed.JSON },
 	allowedMentions: allowedMention.JSON?,
 	messageReference: reference.JSON?,
-	components: { button.JSON | textInput.JSON | selectMenu.JSON | actionRow.JSON | textDisplay.JSON | separator.JSON | componentThumbnail.JSON | mediaGallery.JSON | file.JSON | section.JSON | container.JSON },
+	components: {
+		button.JSON
+		| textInput.JSON
+		| selectMenu.JSON
+		| actionRow.JSON
+		| textDisplay.JSON
+		| separator.JSON
+		| componentThumbnail.JSON
+		| mediaGallery.JSON
+		| file.JSON
+		| section.JSON
+		| container.JSON
+	},
 	stickerIds: { string },
 	attachments: { Attachment },
 	flags: number?,
