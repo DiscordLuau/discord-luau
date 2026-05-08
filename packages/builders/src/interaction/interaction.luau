@@ -70,6 +70,8 @@ local apiTypes = require("../../luau_packages/api_types")
 local interactionOption = require("./option")
 local util = require("../../luau_packages/util")
 
+local validateCommandName = util.validateCommandName
+
 local Interaction = {}
 
 Interaction.Prototype = {}
@@ -83,6 +85,7 @@ Interaction.Interface = {}
 function Interaction.Prototype.setName(self: Interaction, name: string): Interaction
 	assert(#name <= 32, "name must be less than 32 characters")
 	assert(#name >= 1, "name must be at least 1 character")
+	assert(validateCommandName(name), "name must be lowercase and may only contain letters, numbers, hyphens, underscores, or apostrophes")
 
 	self.name = name
 
@@ -113,7 +116,7 @@ function Interaction.Prototype.setNameLocalization(
 	assert(#name <= 32, "name must be less than 32 characters")
 	assert(#name >= 1, "name must be at least 1 character")
 
-	assert(util.validateKebabCase(name), `name must be kebab case`)
+	assert(validateCommandName(name), "name must be lowercase and may only contain letters, numbers, hyphens, underscores, or apostrophes")
 
 	self.nameLocalizations[localization] = name
 
@@ -218,7 +221,7 @@ function Interaction.Prototype.build(self: Interaction): JSON
 	if self.type == nil or self.type == "ChatInput" then
 		assert(self.description and #self.description >= 1, "CHAT_INPUT commands must have a description")
 	else
-		assert(not self.description or #self.description == 0, "USER and MESSAGE commands must not have a description")
+		assert(not self.description, "USER and MESSAGE commands must not have a description")
 	end
 	assert(#self.integrationTypes > 0, `must have one or more integration types set`)
 	assert(#self.contexts > 0, `must have one or more contexts set`)

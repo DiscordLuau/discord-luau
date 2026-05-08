@@ -56,7 +56,7 @@
 ]=]
 
 --[=[
-	@prop apiTypes { apiTypes.ChannelType }
+	@prop channelTypes { apiTypes.ChannelType }
 	@within Builders.Interaction.Option
 	Supported channel types for Channel option type.
 ]=]
@@ -95,6 +95,8 @@ local apiTypes = require("../../luau_packages/api_types")
 local interactionChoice = require("./choice")
 local util = require("../../luau_packages/util")
 
+local validateCommandName = util.validateCommandName
+
 local Option = {}
 
 Option.Prototype = {}
@@ -118,7 +120,7 @@ end
 function Option.Prototype.setName(self: Option, name: string): Option
 	assert(#name <= 32, "name must be less than 32 characters")
 	assert(#name >= 1, "name must be at least 1 character")
-	assert(util.validateKebabCase(name), `name must be kebab case`)
+	assert(validateCommandName(name), "name must be lowercase and may only contain letters, numbers, hyphens, underscores, or apostrophes")
 	self.name = name
 	return self
 end
@@ -135,7 +137,7 @@ function Option.Prototype.setNameLocalization(
 ): Option
 	assert(#name <= 32, "name must be less than 32 characters")
 	assert(#name >= 1, "name must be at least 1 character")
-	assert(util.validateKebabCase(name), `name must be kebab case`)
+	assert(validateCommandName(name), "name must be lowercase and may only contain letters, numbers, hyphens, underscores, or apostrophes")
 	self.nameLocalizations[localization] = name
 	return self
 end
@@ -210,7 +212,10 @@ function Option.Prototype.addOption(self: Option, option: JSON): Option
 	)
 	assert(#self.options < 25, "subcommands cannot have more than 25 options")
 	if self.type == "SubCommandGroup" then
-		assert(option.type == apiTypes.interaction.ApplicationCommandOptionType.SubCommand, "SubCommandGroups can only contain SubCommand options")
+		assert(
+			option.type == apiTypes.interaction.ApplicationCommandOptionType.SubCommand,
+			"SubCommandGroups can only contain SubCommand options"
+		)
 	end
 	table.insert(self.options, option)
 	return self
@@ -223,7 +228,7 @@ end
 ]=]
 function Option.Prototype.addChannelType(self: Option, channelType: apiTypes.ChannelType): Option
 	assert(self.type == "Channel", `Channel types can only be added to Channel options`)
-	table.insert(self.apiTypes, channelType)
+	table.insert(self.channelTypes, channelType)
 	return self
 end
 
@@ -298,11 +303,11 @@ end
 function Option.Prototype.build(self: Option): JSON
 	assert(self.type, "type must be set before building an option")
 	local channelTypeArray = {}
-	for _, channelType in self.apiTypes do
+	for _, channelType in self.channelTypes do
 		table.insert(channelTypeArray, apiTypes.channel.ChannelTypes[channelType])
 	end
 
-	assert(self.name, `Missing name for option: {self.name}`)
+	assert(self.name, "Option is missing a name")
 	assert(self.description, `Missing description for option: {self.name}`)
 
 	return {
@@ -337,7 +342,7 @@ function Option.Interface.new(resource: {
 	required: boolean?,
 	choices: { apiTypes.ApplicationCommandOptionChoiceObject }?,
 	options: { JSON }?,
-	apiTypes: { apiTypes.ChannelType }?,
+	channelTypes: { apiTypes.ChannelType }?,
 	minValue: number?,
 	maxValue: number?,
 	minLength: number?,
@@ -354,7 +359,7 @@ function Option.Interface.new(resource: {
 			required = resource and resource.required,
 			choices = resource and resource.choices or {},
 			options = resource and resource.options or {},
-			apiTypes = resource and resource.apiTypes or {},
+			channelTypes = resource and resource.channelTypes or {},
 			minValue = resource and resource.minValue,
 			maxValue = resource and resource.maxValue,
 			minLength = resource and resource.minLength,
@@ -375,7 +380,7 @@ export type Option = typeof(Option.Prototype) & {
 	required: boolean?,
 	choices: { interactionChoice.JSON },
 	options: { JSON },
-	apiTypes: { apiTypes.ChannelType },
+	channelTypes: { apiTypes.ChannelType },
 	minValue: number?,
 	maxValue: number?,
 	minLength: number?,
