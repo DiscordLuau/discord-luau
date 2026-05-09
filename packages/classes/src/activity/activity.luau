@@ -128,7 +128,6 @@ Activity.Prototype = {}
 
 --[=[
 	@within Classes.Activity
-	@private
 
 	Responsible for syncing data to this activity object. This is typically called by the API when this object is
 	created or updated.
@@ -166,7 +165,7 @@ function Activity.Prototype.sync(self: Activity, activityData: apiTypes.Activity
 	self.createdAt = activityData.created_at
 
 	self.timestamps = activityData.timestamps
-		and activityTimestamp.new(activityData.timestamps.start, activityData.timestamps["end"])
+		and activityTimestamp.new(activityData.timestamps.start :: number, activityData.timestamps["end"] :: number)
 
 	self.applicationId = activityData.application_id
 
@@ -181,10 +180,10 @@ function Activity.Prototype.sync(self: Activity, activityData: apiTypes.Activity
 
 	self.assets = activityData.assets
 		and activityAssets.new(
-			activityData.assets.large_image,
-			activityData.assets.large_text,
-			activityData.assets.small_image,
-			activityData.assets.small_text
+			activityData.assets.large_image :: string,
+			activityData.assets.large_text :: string,
+			activityData.assets.small_image :: string,
+			activityData.assets.small_text :: string
 		)
 
 	self.secrets = activityData.secrets
@@ -199,7 +198,6 @@ end
 
 --[=[
 	@within Classes.Activity
-	@private
 
 	Responsible for constructing this class.
 ]=]
@@ -217,8 +215,8 @@ export type Activity = typeof(Activity.Prototype) & {
 	type: ActivityType,
 	url: string?,
 	createdAt: number,
-	timestamps: activityTimestamp.ActivityTimestamp,
-	applicationId: apiTypes.Snowflake,
+	timestamps: activityTimestamp.ActivityTimestamp?,
+	applicationId: apiTypes.Snowflake?,
 	details: string?,
 	state: string?,
 	emoji: activityEmoji.ActivityEmoji?,

@@ -35,7 +35,6 @@ ActivitySecrets.Prototype = {}
 
 --[=[
 	@within Classes.Activity.Secrets
-	@private
 
 	Responsible for constructing this class.
 ]=]

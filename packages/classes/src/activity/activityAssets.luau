@@ -42,7 +42,6 @@ ActivityAssets.Prototype = {}
 
 --[=[
 	@within Classes.Activity.Assets
-	@private
 
 	Responsible for constructing this class.
 ]=]

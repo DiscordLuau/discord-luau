@@ -30,7 +30,6 @@ ActivityTimestamp.Prototype = {}
 
 --[=[
 	@within Classes.Activity.Timestamp
-	@private
 
 	Responsible for constructing this class.
 ]=]

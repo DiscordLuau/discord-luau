@@ -35,7 +35,6 @@ ActivityEmoji.Prototype = {}
 
 --[=[
 	@within Classes.Activity.Emoji
-	@private
 
 	Responsible for syncing data to this activity emoji object. This is typically called by the API when this object is
 	created or updated.
@@ -48,7 +47,6 @@ end
 
 --[=[
 	@within Classes.Activity.Emoji
-	@private
 
 	Responsible for constructing this class.
 ]=]

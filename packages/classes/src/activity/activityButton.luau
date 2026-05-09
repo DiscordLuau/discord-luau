@@ -28,7 +28,6 @@ ActivityButton.Prototype = {}
 
 --[=[
 	@within Classes.Activity.Button
-	@private
 
 	Responsible for constructing this class.
 ]=]

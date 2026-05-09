@@ -37,7 +37,6 @@ ActivityParty.Prototype = {}
 
 --[=[
 	@within Classes.Activity.Party
-	@private
 
 	Responsible for constructing this class.
 ]=]
