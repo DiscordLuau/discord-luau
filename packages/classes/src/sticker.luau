@@ -84,7 +84,6 @@ Sticker.Prototype = {}
 
 --[=[
 	@within Classes.Sticker
-	@private
 
 	Responsible for syncing data to this sticker object. This is typically called by the API when this object is
 	created or updated.
@@ -115,7 +114,6 @@ end
 
 --[=[
 	@within Classes.Sticker
-	@private
 
 	Responsible for constructing this class.
 ]=]

@@ -28,7 +28,6 @@ AvatarDecoration.Prototype = {}
 
 --[=[
 	@within Classes.AvatarDecoration
-	@private
 
 	Responsible for constructing this class.
 ]=]
