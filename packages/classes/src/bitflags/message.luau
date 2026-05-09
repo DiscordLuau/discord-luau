@@ -132,7 +132,6 @@ function MessageBitflag.Prototype.isVouceMessage(self: MessageBitflag): boolean
 end
 
 --[=[
-	@private
 	@within Classes.MessageBitflag
 	Creates a new MessageBitflag instance with the specified flag value.
 ]=]

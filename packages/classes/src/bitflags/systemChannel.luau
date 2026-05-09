@@ -69,7 +69,9 @@ end
 
 	Returns if the system channel has the suppress role subscriptions purchase notifications bitflag set.
 ]=]
-function SystemChannelBitflag.Prototype.suppressRoleSubscriptionPurchaseNotifications(self: SystemChannelBitflag): boolean
+function SystemChannelBitflag.Prototype.suppressRoleSubscriptionPurchaseNotifications(
+	self: SystemChannelBitflag
+): boolean
 	local targetBit = bit.lshift(1, 4)
 
 	return bit.band(self.flag, targetBit) == targetBit
@@ -80,7 +82,9 @@ end
 
 	Returns if the system channel has the suppress role subscriptions purchase notification replies bitflag set.
 ]=]
-function SystemChannelBitflag.Prototype.suppressRoleSubscriptionPurchaseNotificationReplies(self: SystemChannelBitflag): boolean
+function SystemChannelBitflag.Prototype.suppressRoleSubscriptionPurchaseNotificationReplies(
+	self: SystemChannelBitflag
+): boolean
 	local targetBit = bit.lshift(1, 5)
 
 	return bit.band(self.flag, targetBit) == targetBit
@@ -88,7 +92,6 @@ end
 
 --[=[
 	@within Classes.SystemChannelBitflag
-	@private
 
 	Responsible for constructing this class.
 ]=]

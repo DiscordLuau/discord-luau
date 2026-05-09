@@ -22,7 +22,6 @@ ThreadMemberBitflag.Prototype = {}
 
 --[=[
 	@within Classes.Channels.ThreadMemberBitflag
-	@private
 
 	Responsible for constructing this class.
 ]=]

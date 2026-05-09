@@ -123,7 +123,6 @@ end
 
 --[=[
 	@within Classes.ApplicationBitflag
-	@private
 
 	Creates a new ApplicationBitflag instance with the specified flag value.
 ]=]

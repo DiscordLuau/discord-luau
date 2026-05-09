@@ -21,7 +21,6 @@ ChannelBitflag.Prototype = {}
 
 --[=[
 	@within Classes.Channels.ChannelBitflag
-	@private
 
 	if this thread is pinned to the top of its parent GUILD_FORUM or GUILD_MEDIA channel
 ]=]
@@ -33,7 +32,6 @@ end
 
 --[=[
 	@within Classes.Channels.ChannelBitflag
-	@private
 
 	whether a tag is required to be specified when creating a thread in a
 	GUILD_FORUM or a GUILD_MEDIA channel. Tags are specified in the applied_tags field.
@@ -46,7 +44,6 @@ end
 
 --[=[
 	@within Classes.Channels.ChannelBitflag
-	@private
 
 	When set hides the embedded media download options. Available only for media channels
 ]=]
@@ -58,7 +55,6 @@ end
 
 --[=[
 	@within Classes.Channels.ChannelBitflag
-	@private
 
 	Responsible for constructing this class.
 ]=]

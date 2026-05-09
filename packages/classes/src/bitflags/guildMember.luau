@@ -21,7 +21,6 @@ GuildMemberBitflag.Prototype = {}
 
 --[=[
 	@within Classes.GuildMemberBitflag
-	@private
 
 	Member has left and rejoined the guild	
 ]=]
@@ -33,7 +32,6 @@ end
 
 --[=[
 	@within Classes.GuildMemberBitflag
-	@private
 
 	Member has completed onboarding	
 ]=]
@@ -45,7 +43,6 @@ end
 
 --[=[
 	@within Classes.GuildMemberBitflag
-	@private
 
 	Member is exempt from guild verification requirements	
 ]=]
@@ -57,7 +54,6 @@ end
 
 --[=[
 	@within Classes.GuildMemberBitflag
-	@private
 
 	Member has started onboarding	
 ]=]
@@ -69,7 +65,6 @@ end
 
 --[=[
 	@within Classes.GuildMemberBitflag
-	@private
 
 	Responsible for constructing this class.
 ]=]

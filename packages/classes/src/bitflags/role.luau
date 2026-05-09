@@ -21,7 +21,6 @@ RoleBitflag.Prototype = {}
 
 --[=[
 	@within Classes.RoleBitflag
-	@private
 
 	Checks if the role is in an onboarding prompt.
 ]=]
@@ -33,7 +32,6 @@ end
 
 --[=[
 	@within Classes.RoleBitflag
-	@private
 
 	Responsible for constructing this class.
 ]=]

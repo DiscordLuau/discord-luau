@@ -39,7 +39,6 @@ end
 
 --[=[
 	@within Classes.AttachmentBitflag
-	@private
 
 	Responsible for constructing this class.
 ]=]
