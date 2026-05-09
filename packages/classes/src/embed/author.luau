@@ -40,7 +40,6 @@ Author.Prototype = {}
 
 --[=[
 	@within Classes.Embed.Author
-	@private
 
 	Responsible for syncing data to this author object. This is typically called by the API when this object is
 	created or updated.
@@ -57,7 +56,6 @@ end
 
 --[=[
 	@within Classes.Embed.Author
-	@private
 
 	Responsible for constructing this class.
 ]=]

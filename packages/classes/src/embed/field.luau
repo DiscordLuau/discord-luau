@@ -34,7 +34,6 @@ Field.Prototype = {}
 
 --[=[
 	@within Classes.Embed.Field
-	@private
 
 	Responsible for syncing data to this field object. This is typically called by the API when this object is
 	created or updated.
@@ -49,7 +48,6 @@ end
 
 --[=[
 	@within Classes.Embed.Field
-	@private
 
 	Responsible for constructing this class.
 ]=]

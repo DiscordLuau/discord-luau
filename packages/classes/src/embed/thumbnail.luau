@@ -44,7 +44,6 @@ Thumbnail.Prototype = {}
 
 --[=[
 	@within Classes.Embed.Thumbnail
-	@private
 
 	Responsible for syncing data to this thumbnail object. This is typically called by the API when this object is
 	created or updated.
@@ -61,7 +60,6 @@ end
 
 --[=[
 	@within Classes.Embed.Thumbnail
-	@private
 
 	Responsible for constructing this class.
 ]=]

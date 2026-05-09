@@ -40,7 +40,6 @@ Video.Prototype = {}
 
 --[=[
 	@within Classes.Embed.Video
-	@private
 
 	Responsible for syncing data to this video object. This is typically called by the API when this object is
 	created or updated.
@@ -57,7 +56,6 @@ end
 
 --[=[
 	@within Classes.Embed.Video
-	@private
 
 	Responsible for constructing this class.
 ]=]

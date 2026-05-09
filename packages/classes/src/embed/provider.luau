@@ -30,7 +30,6 @@ Provider.Prototype = {}
 
 --[=[
 	@within Classes.Embed.Provider
-	@private
 
 	Responsible for syncing data to this provider object. This is typically called by the API when this object is
 	created or updated.
@@ -43,7 +42,6 @@ end
 
 --[=[
 	@within Classes.Embed.Provider
-	@private
 
 	Responsible for constructing this class.
 ]=]

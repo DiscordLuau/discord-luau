@@ -116,7 +116,6 @@ Embed.Prototype = {}
 
 --[=[
 	@within Classes.Embed
-	@private
 
 	Responsible for syncing data to this embed object. This is typically called by the API when this object is
 	created or updated.
@@ -157,7 +156,6 @@ end
 
 --[=[
 	@within Classes.Embed
-	@private
 
 	Responsible for constructing this class.
 ]=]
