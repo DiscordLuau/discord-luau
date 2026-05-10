@@ -45,7 +45,6 @@ Overwrite.Prototype = {}
 
 --[=[
 	@within Classes.Channels.Overwrite
-	@private
 
 	Responsible for syncing data to this overwrite object. This is typically called by the API when this object is
 	created or updated.
@@ -62,7 +61,6 @@ end
 
 --[=[
 	@within Classes.Channels.Overwrite
-	@private
 
 	Responsible for constructing this class.
 ]=]

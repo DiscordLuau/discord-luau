@@ -59,7 +59,6 @@ ThreadMetadata.Prototype = {}
 
 --[=[
 	@within Classes.Channels.ThreadMetadata
-	@private
 
 	Responsible for syncing data to this thread metadata object. This is typically called by the API when this object is
 	created or updated.
@@ -81,7 +80,6 @@ end
 
 --[=[
 	@within Classes.Channels.ThreadMetadata
-	@private
 
 	Responsible for constructing this class.
 ]=]

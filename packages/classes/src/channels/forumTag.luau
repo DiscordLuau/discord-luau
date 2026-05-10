@@ -51,7 +51,6 @@ ForumTag.Prototype = {}
 
 --[=[
 	@within Classes.Channels.ForumTag
-	@private
 
 	Responsible for syncing data to this forum tag object. This is typically called by the API when this object is
 	created or updated.
@@ -70,7 +69,6 @@ end
 
 --[=[
 	@within Classes.Channels.ForumTag
-	@private
 
 	Responsible for constructing this class.
 ]=]

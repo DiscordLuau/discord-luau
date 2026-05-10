@@ -44,7 +44,6 @@ ChannelMention.Prototype = {}
 
 --[=[
 	@within Classes.Channels.ChannelMention
-	@private
 
 	Responsible for syncing data to this channel mention object. This is typically called by the API when this object is
 	created or updated.
@@ -61,7 +60,6 @@ end
 
 --[=[
 	@within Classes.Channels.ChannelMention
-	@private
 
 	Responsible for constructing this class.
 ]=]
