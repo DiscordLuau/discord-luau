@@ -34,12 +34,11 @@ GroupDM.Behaviours = {
 
 --[=[
 	@within Classes.Channels.GroupDM
-	@private
 
 	Responsible for syncing data to this group DM object. This is typically called by the API when this object is
 	created or updated.
 ]=]
-function GroupDM.Prototype.sync(self: GroupDM, channelData: apiTypes.ChannelObject): nil
+function GroupDM.Prototype.sync(self: GroupDM, channelData: apiTypes.ChannelObject)
 	for _, behaviour in GroupDM.Behaviours do
 		behaviour.inheritMethods(self)
 		behaviour.inheritProperties(self, channelData)
@@ -48,15 +47,14 @@ end
 
 --[=[
 	@within Classes.Channels.GroupDM
-	@private
 
 	Responsible for constructing this class.
 ]=]
 function GroupDM.Interface.new(state: state.State, channelData: apiTypes.ChannelObject): GroupDM
-	local self = setmetatable(
+	local self: GroupDM = setmetatable(
 		{
 			state = state,
-		} :: GroupDM,
+		} :: any,
 		{ __index = GroupDM.Prototype }
 	)
 

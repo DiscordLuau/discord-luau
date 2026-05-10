@@ -31,7 +31,6 @@ GuildCategory.Behaviours = {
 
 --[=[
 	@within Classes.Channels.GuildCategory
-	@private
 
 	Responsible for syncing data to this channel object. This is typically called by the API when this object is
 	created or updated.
@@ -45,15 +44,14 @@ end
 
 --[=[
 	@within Classes.Channels.GuildCategory
-	@private
 
 	Responsible for constructing this class.
 ]=]
 function GuildCategory.Interface.new(state: state.State, channelData: apiTypes.ChannelObject): GuildCategory
-	local self = setmetatable(
+	local self: GuildCategory = setmetatable(
 		{
 			state = state,
-		} :: GuildCategory,
+		} :: any,
 		{ __index = GuildCategory.Prototype }
 	)
 

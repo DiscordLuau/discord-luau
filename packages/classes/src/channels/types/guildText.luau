@@ -34,7 +34,6 @@ GuildText.Behaviours = {
 
 --[=[
 	@within Classes.Channels.GuildText
-	@private
 
 	Responsible for syncing data to this guild text channel object. This is typically called by the API when this object is
 	created or updated.
@@ -48,15 +47,14 @@ end
 
 --[=[
 	@within Classes.Channels.GuildText
-	@private
 
 	Responsible for constructing this class.
 ]=]
 function GuildText.Interface.new(state: state.State, channelData: apiTypes.ChannelObject): GuildText
-	local self = setmetatable(
+	local self: GuildText = setmetatable(
 		{
 			state = state,
-		} :: GuildText,
+		} :: any,
 		{ __index = GuildText.Prototype }
 	)
 

@@ -34,7 +34,6 @@ GuildStageVoice.Behaviours = {
 
 --[=[
 	@within Classes.Channels.GuildStageVoice
-	@private
 
 	Responsible for syncing data to this guild stage voice object. This is typically called by the API when this object is
 	created or updated.
@@ -48,15 +47,14 @@ end
 
 --[=[
 	@within Classes.Channels.GuildStageVoice
-	@private
 
 	Responsible for constructing this class.
 ]=]
 function GuildStageVoice.Interface.new(state: state.State, channelData: apiTypes.ChannelObject): GuildStageVoice
-	local self = setmetatable(
+	local self: GuildStageVoice = setmetatable(
 		{
 			state = state,
-		} :: GuildStageVoice,
+		} :: any,
 		{ __index = GuildStageVoice.Prototype }
 	)
 

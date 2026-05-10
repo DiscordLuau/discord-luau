@@ -77,7 +77,6 @@ end
 
 --[=[
 	@within Classes.Channels.GuildAnnouncement
-	@private
 
 	Responsible for syncing data to this announcement channel object. This is typically called by the API when this object is
 	created or updated.
@@ -91,15 +90,14 @@ end
 
 --[=[
 	@within Classes.Channels.GuildAnnouncement
-	@private
 
 	Responsible for constructing this class.
 ]=]
 function GuildAnnouncement.Interface.new(state: state.State, channelData: apiTypes.ChannelObject): GuildAnnouncement
-	local self = setmetatable(
+	local self: GuildAnnouncement = setmetatable(
 		{
 			state = state,
-		} :: GuildAnnouncement,
+		} :: any,
 		{ __index = GuildAnnouncement.Prototype }
 	)
 

@@ -31,7 +31,6 @@ GuildDirectory.Behaviours = {
 
 --[=[
 	@within Classes.Channels.GuildDirectory
-	@private
 
 	Responsible for syncing data to this guild directory object. This is typically called by the API when this object is
 	created or updated.
@@ -45,15 +44,14 @@ end
 
 --[=[
 	@within Classes.Channels.GuildDirectory
-	@private
 
 	Responsible for constructing this class.
 ]=]
 function GuildDirectory.Interface.new(state: state.State, channelData: apiTypes.ChannelObject): GuildDirectory
-	local self = setmetatable(
+	local self: GuildDirectory = setmetatable(
 		{
 			state = state,
-		} :: GuildDirectory,
+		} :: any,
 		{ __index = GuildDirectory.Prototype }
 	)
 

@@ -31,12 +31,11 @@ DM.Behaviours = {
 
 --[=[
 	@within Classes.Channels.DM
-	@private
 
 	Responsible for syncing data to this DM object. This is typically called by the API when this object is
 	created or updated.
 ]=]
-function DM.Prototype.sync(self: DM, channelData: apiTypes.ChannelObject): nil
+function DM.Prototype.sync(self: DM, channelData: apiTypes.ChannelObject)
 	for _, behaviour in DM.Behaviours do
 		behaviour.inheritMethods(self)
 		behaviour.inheritProperties(self, channelData)
@@ -45,15 +44,14 @@ end
 
 --[=[
 	@within Classes.Channels.DM
-	@private
 
 	Responsible for constructing this class.
 ]=]
 function DM.Interface.new(state: state.State, channelData: apiTypes.ChannelObject): DM
-	local self = setmetatable(
+	local self: DM = setmetatable(
 		{
 			state = state,
-		} :: DM,
+		} :: any,
 		{ __index = DM.Prototype }
 	)
 
