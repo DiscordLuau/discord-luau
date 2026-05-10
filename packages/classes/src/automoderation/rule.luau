@@ -112,7 +112,7 @@ function AutomoderationRule.Prototype.modifyAsync(
 		local request = self.state.rest:newRequest()
 
 		local response = rest.autoModeration
-			.modifyAutoModerationRuleAsync(request, self.guildId, self.id, automoderationRuleJSON, auditLogReason)
+			.modifyAutoModerationRuleAsync(request, self.guildId, self.id, automoderationRuleJSON :: any, auditLogReason)
 			:await()
 
 		assert(response:isOk(), `{response:unwrapErr()}`)
@@ -146,7 +146,6 @@ end
 
 --[=[
 	@within Classes.AutoModeration.Rule
-	@private
 
 	Responsible for syncing data to this automoderation rule object. This is typically called by the API when this object is
 	created or updated.
@@ -154,7 +153,7 @@ end
 function AutomoderationRule.Prototype.sync(
 	self: AutomoderationRule,
 	automoderationData: apiTypes.AutomoderationRuleObject
-): nil
+)
 	local actions = {}
 
 	for _, actionData in automoderationData.actions do
@@ -187,7 +186,6 @@ end
 
 --[=[
 	@within Classes.AutoModeration.Rule
-	@private
 
 	Responsible for constructing this class.
 ]=]
@@ -196,6 +194,8 @@ function AutomoderationRule.Interface.new(
 	automoderationData: apiTypes.AutomoderationRuleObject
 ): AutomoderationRule
 	local self = setmetatable({} :: AutomoderationRule, { __index = AutomoderationRule.Prototype })
+
+	self.state = state
 
 	self:sync(automoderationData)
 

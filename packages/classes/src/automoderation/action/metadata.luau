@@ -38,14 +38,13 @@ ActionMetadata.Prototype = {}
 
 --[=[
 	@within Classes.AutoModeration.ActionMetadata
-	@private
 
 	Responsible for syncing data to this action metadata object. This is typically called by the API when this object is
 	created or updated.
 ]=]
 function ActionMetadata.Prototype.sync(
 	self: ActionMetadata,
-	actionMetadataData: apiTypes.AutmoderationActionMetadataObject
+	actionMetadataData: apiTypes.AutomoderationActionMetadataObject
 )
 	self.channelId = actionMetadataData.channel_id
 
@@ -56,11 +55,10 @@ end
 
 --[=[
 	@within Classes.AutoModeration.ActionMetadata
-	@private
 
 	Responsible for constructing this class.
 ]=]
-function ActionMetadata.Interface.new(actionMetadataData: apiTypes.AutmoderationActionMetadataObject): ActionMetadata
+function ActionMetadata.Interface.new(actionMetadataData: apiTypes.AutomoderationActionMetadataObject): ActionMetadata
 	local self = setmetatable({} :: ActionMetadata, { __index = ActionMetadata.Prototype })
 
 	self:sync(actionMetadataData)

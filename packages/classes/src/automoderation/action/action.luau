@@ -36,7 +36,6 @@ Action.Prototype = {}
 
 --[=[
 	@within Classes.AutoModeration.Action
-	@private
 
 	Responsible for syncing data to this action object. This is typically called by the API when this object is
 	created or updated.
@@ -49,7 +48,6 @@ end
 
 --[=[
 	@within Classes.AutoModeration.Action
-	@private
 
 	Responsible for constructing this class.
 ]=]
