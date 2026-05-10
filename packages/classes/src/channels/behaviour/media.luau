@@ -51,7 +51,6 @@ MediaBehaviour.Prototype = {}
 
 --[=[
 	@within Classes.Channels.MediaBehaviour
-	@private
 
 	Creates a new forum post (thread) in the channel. Returns the ID of the created thread.
 	
@@ -77,7 +76,6 @@ end
 
 --[=[
 	@within Classes.Channels.MediaBehaviour
-	@private
 ]=]
 function MediaBehaviour.Interface.inheritProperties(class: any, channelData: apiTypes.ChannelObject)
 	local forumTagArray = {}
@@ -100,7 +98,6 @@ end
 
 --[=[
 	@within Classes.Channels.MediaBehaviour
-	@private
 ]=]
 function MediaBehaviour.Interface.inheritMethods(class: any)
 	for key, value in MediaBehaviour.Prototype do

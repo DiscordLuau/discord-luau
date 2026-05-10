@@ -45,7 +45,6 @@ ChannelBehaviour.Prototype = {}
 
 --[=[
 	@within Classes.Channels.Channel
-	@private
 
 	Delete a channel, or close a private message. Requires the MANAGE_CHANNELS permission for the guild, or MANAGE_THREADS
 	if the channel is a thread. Deleting a category does not delete its child channels; they will have their parent_id
@@ -90,7 +89,11 @@ end
 
 	Modifies the channel's settings using the provided JSON data. Optionally accepts an audit log reason.
 ]=]
-function ChannelBehaviour.Prototype.modifyAsync<T>(self: Channel<T>, json: builders.channelJSON, reason: string?): future.FutureLike<string, Channel<T>>
+function ChannelBehaviour.Prototype.modifyAsync<T>(
+	self: Channel<T>,
+	json: builders.channelJSON,
+	reason: string?
+): future.FutureLike<string, Channel<T>>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -116,7 +119,6 @@ end
 
 --[=[
 	@within Classes.Channels.Channel
-	@private
 ]=]
 function ChannelBehaviour.Interface.inheritMethods(class: any)
 	for key, value in ChannelBehaviour.Prototype do

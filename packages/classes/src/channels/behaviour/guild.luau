@@ -110,7 +110,11 @@ end
 	@within Classes.Channels.GuildBehaviour
 	Sets the parent category of the channel and optionally syncs permissions with the parent.
 ]=]
-function GuildBehaviour.Prototype.setParentAsync<T>(self: Channel<T>, parentId: string, syncPermissions: boolean?): future.FutureLike<string, nil>
+function GuildBehaviour.Prototype.setParentAsync<T>(
+	self: Channel<T>,
+	parentId: string,
+	syncPermissions: boolean?
+): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -172,7 +176,7 @@ function GuildBehaviour.Prototype.deletePermissionAsync<T>(
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local response = rest.channel.deleteChannelPermissionAsync(request, self.guildId, overwriteId, reason):await()
+		local response = rest.channel.deleteChannelPermissionAsync(request, self.id, overwriteId, reason):await()
 
 		assert(response:isOk(), `{response:unwrapErr()}`)
 
@@ -206,11 +210,15 @@ end
 	@within Classes.Channels.GuildBehaviour
 	Creates a new invite for the channel.
 ]=]
-function GuildBehaviour.Prototype.createInviteAsync<T>(self: Channel<T>, json: builders.inviteJSON, reason: string?): future.FutureLike<string, invite.Invite>
+function GuildBehaviour.Prototype.createInviteAsync<T>(
+	self: Channel<T>,
+	json: builders.inviteJSON,
+	reason: string?
+): future.FutureLike<string, invite.Invite>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local response = rest.channel.createChannelInviteAsync(request, self.id, json, reason):await()
+		local response = rest.channel.createChannelInviteAsync(request, self.id, json :: any, reason):await()
 
 		assert(response:isOk(), `{response:unwrapErr()}`)
 
@@ -226,7 +234,10 @@ function GuildBehaviour.Prototype.listPublicArchivedThreadsAsync<T>(
 	self: Channel<T>,
 	before: stdPolyfills.DateTime?,
 	limit: number?
-): future.FutureLike<string, { threads: { apiTypes.Snowflake }, members: { threadMember.ThreadMember }, hasMore: boolean }>
+): future.FutureLike<
+	string,
+	{ threads: { apiTypes.Snowflake }, members: { threadMember.ThreadMember }, hasMore: boolean }
+>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -272,7 +283,10 @@ function GuildBehaviour.Prototype.listPrivateArchivedThreadsAsync<T>(
 	self: Channel<T>,
 	before: stdPolyfills.DateTime?,
 	limit: number?
-): future.FutureLike<string, { threads: { apiTypes.Snowflake }, members: { threadMember.ThreadMember }, hasMore: boolean }>
+): future.FutureLike<
+	string,
+	{ threads: { apiTypes.Snowflake }, members: { threadMember.ThreadMember }, hasMore: boolean }
+>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -318,7 +332,10 @@ function GuildBehaviour.Prototype.listJoinedPrivateArchivedThreadsAsync<T>(
 	self: Channel<T>,
 	before: stdPolyfills.DateTime?,
 	limit: number?
-): future.FutureLike<string, { threads: { apiTypes.Snowflake }, members: { threadMember.ThreadMember }, hasMore: boolean }>
+): future.FutureLike<
+	string,
+	{ threads: { apiTypes.Snowflake }, members: { threadMember.ThreadMember }, hasMore: boolean }
+>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -360,7 +377,10 @@ end
 	@within Classes.Channels.GuildBehaviour
 	Sets the name of the channel.
 ]=]
-function GuildBehaviour.Prototype.setNameAsync<T>(self: Channel<T>, groupName: string): future.FutureLike<string, Channel<T>>
+function GuildBehaviour.Prototype.setNameAsync<T>(
+	self: Channel<T>,
+	groupName: string
+): future.FutureLike<string, Channel<T>>
 	return self:modifyAsync({
 		name = groupName,
 	}) :: future.FutureLike<string, Channel<T>>
@@ -368,7 +388,6 @@ end
 
 --[=[
 	@within Classes.Channels.GuildBehaviour
-	@private
 
 	Inherits properties from the channel data into the class instance.
 	This is typically called during object creation or updates.
@@ -402,7 +421,6 @@ end
 
 --[=[
 	@within Classes.Channels.GuildBehaviour
-	@private
 
 	Inherits methods from the GuildBehaviour prototype into the class instance.
 	This is typically called during object creation or updates.

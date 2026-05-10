@@ -52,7 +52,6 @@ ForumBehaviour.Prototype = {}
 
 --[=[
 	@within Classes.Channels.ForumBehaviour
-	@private
 
 	Creates a new forum post (thread) in the channel. Returns the ID of the created thread.
 	
@@ -78,7 +77,6 @@ end
 
 --[=[
 	@within Classes.Channels.ForumBehaviour
-	@private
 ]=]
 function ForumBehaviour.Interface.inheritProperties(class: any, channelData: apiTypes.ChannelObject)
 	local forumTagArray = {}
@@ -102,7 +100,6 @@ end
 
 --[=[
 	@within Classes.Channels.ForumBehaviour
-	@private
 ]=]
 function ForumBehaviour.Interface.inheritMethods(class: any)
 	for key, value in ForumBehaviour.Prototype do

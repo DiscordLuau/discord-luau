@@ -99,7 +99,10 @@ end
 	@within Classes.Channels.GroupDMBehaviour
 	Sets the name of the Group DM channel.
 ]=]
-function GroupDMBehaviour.Prototype.setNameAsync<T>(self: Channel<T>, groupName: string): future.FutureLike<string, Channel<T>>
+function GroupDMBehaviour.Prototype.setNameAsync<T>(
+	self: Channel<T>,
+	groupName: string
+): future.FutureLike<string, Channel<T>>
 	return self:modifyAsync({
 		name = groupName,
 	}) :: future.FutureLike<string, Channel<T>>
@@ -109,7 +112,10 @@ end
 	@within Classes.Channels.GroupDMBehaviour
 	Sets the icon of the Group DM channel using base64 encoded image data.
 ]=]
-function GroupDMBehaviour.Prototype.setIconAsync<T>(self: Channel<T>, iconData: string): future.FutureLike<string, Channel<T>>
+function GroupDMBehaviour.Prototype.setIconAsync<T>(
+	self: Channel<T>,
+	iconData: string
+): future.FutureLike<string, Channel<T>>
 	return self:modifyAsync({
 		name = self.name,
 		icon = iconData,
@@ -118,7 +124,6 @@ end
 
 --[=[
 	@within Classes.Channels.GroupDMBehaviour
-	@private
 
 	Inherits properties from the channel data into the class instance.
 	This is typically called during object creation or updates.
@@ -128,7 +133,7 @@ function GroupDMBehaviour.Interface.inheritProperties(class: any, channelData: a
 
 	-- fixme: need to use `next` iterator here to avoid LSP errors.
 	for _, recipient in next, channelData.recipients or {} do
-		table.insert(recipientArray, user.new(recipient))
+		table.insert(recipientArray, user.new(recipient, class.state))
 	end
 
 	class.recipients = recipientArray
@@ -144,7 +149,6 @@ end
 
 --[=[
 	@within Classes.Channels.GroupDMBehaviour
-	@private
 
 	Inherits methods from the GroupDMBehaviour prototype into the class instance.
 	This is typically called during object creation or updates.

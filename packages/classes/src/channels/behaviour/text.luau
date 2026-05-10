@@ -137,7 +137,7 @@ function TextBehaviour.Prototype.createMessageAsync<T>(
 
 		request:setFlag("FormdataRequest", true)
 
-		local response = rest.message.createMessageAsync(request, self.id, json):await()
+		local response = rest.message.createMessageAsync(request, self.id, json :: any):await()
 
 		assert(response:isOk(), `{response:unwrapErr()}`)
 
@@ -226,7 +226,6 @@ end
 
 --[=[
 	@within Classes.Channels.TextBehaviour
-	@private
 
 	Inherits properties from the channel data into the class instance.
 	This is typically called during object creation or updates.
@@ -242,7 +241,6 @@ end
 
 --[=[
 	@within Classes.Channels.TextBehaviour
-	@private
 
 	Inherits methods from the TextBehaviour prototype into the class instance.
 	This is typically called during object creation or updates.

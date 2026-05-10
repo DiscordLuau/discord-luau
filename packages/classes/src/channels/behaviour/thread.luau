@@ -190,7 +190,6 @@ end
 
 --[=[
 	@within Classes.Channels.ThreadBehaviour
-	@private
 
 	Inherits properties from the channel data into the class instance.
 	This is typically called during object creation or updates.
@@ -213,7 +212,6 @@ end
 
 --[=[
 	@within Classes.Channels.ThreadBehaviour
-	@private
 
 	Inherits methods from the ThreadBehaviour prototype into the class instance.
 	This is typically called during object creation or updates.
