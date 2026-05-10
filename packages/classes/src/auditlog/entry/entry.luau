@@ -15,7 +15,7 @@
 ]=]
 
 --[=[
-	@prop options { Classes.AuditLog.EntryInfo }
+	@prop options Classes.AuditLog.EntryInfo?
 	@within Classes.AuditLog.Entry
 
 	Additional information about the audit log entry
@@ -68,14 +68,13 @@ AuditLogEntry.Prototype = {}
 
 --[=[
 	@within Classes.AuditLog.Entry
-	@private
 
 	Responsible for syncing data to this audit log entry object. This is typically called by the API when this object is
 	created or updated.
 ]=]
 function AuditLogEntry.Prototype.sync(self: AuditLogEntry, auditLogEntryData: apiTypes.AuditLogEntryObject)
 	local changes = {}
-	local options = {}
+	local options: auditLogInfo.AuditLogEntryInfo? = nil
 
 	if auditLogEntryData.changes then
 		for _, auditLogChangeData in auditLogEntryData.changes do
@@ -84,9 +83,7 @@ function AuditLogEntry.Prototype.sync(self: AuditLogEntry, auditLogEntryData: ap
 	end
 
 	if auditLogEntryData.options then
-		for _, auditLogChangeData in auditLogEntryData.options do
-			table.insert(options, auditLogInfo.new(auditLogChangeData))
-		end
+		options = auditLogInfo.new(auditLogEntryData.options :: any)
 	end
 
 	self.changes = changes
@@ -106,7 +103,6 @@ end
 
 --[=[
 	@within Classes.AuditLog.Entry
-	@private
 
 	Responsible for constructing this class.
 ]=]
@@ -124,7 +120,7 @@ export type AuditLogEntry = typeof(AuditLogEntry.Prototype) & {
 	userId: apiTypes.Snowflake?,
 	id: apiTypes.Snowflake,
 	actionType: apiTypes.AuditLogEvent,
-	options: { auditLogInfo.AuditLogEntryInfo },
+	options: auditLogInfo.AuditLogEntryInfo?,
 	reason: string?,
 }
 

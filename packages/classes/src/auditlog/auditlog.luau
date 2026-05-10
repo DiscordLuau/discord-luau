@@ -89,7 +89,6 @@ AuditLogs.Prototype = {}
 
 --[=[
 	@within Classes.AuditLog
-	@private
 
 	Responsible for syncing data to this audit logs object. This is typically called by the API when this object is
 	created or updated.
@@ -120,7 +119,7 @@ function AuditLogs.Prototype.sync(self: AuditLogs, auditLogsData: apiTypes.Audit
 	end
 
 	for _, userData in auditLogsData.users do
-		table.insert(self.users, user.new(userData))
+		table.insert(self.users, user.new(userData, self.state))
 	end
 
 	for _, webhookData in auditLogsData.webhooks do
@@ -130,7 +129,6 @@ end
 
 --[=[
 	@within Classes.AuditLog
-	@private
 
 	Responsible for constructing this class.
 ]=]

@@ -37,7 +37,6 @@ AuditLogChange.Prototype = {}
 
 --[=[
 	@within Classes.AuditLog.Change
-	@private
 
 	Responsible for syncing data to this audit log change object. This is typically called by the API when this object is
 	created or updated.
@@ -52,7 +51,6 @@ end
 
 --[=[
 	@within Classes.AuditLog.Change
-	@private
 
 	Responsible for constructing this class.
 ]=]

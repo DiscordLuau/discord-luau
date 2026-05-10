@@ -100,7 +100,6 @@ AuditLogEntryInfo.Prototype = {}
 
 --[=[
 	@within Classes.AuditLog.EntryInfo
-	@private
 
 	Responsible for syncing data to this audit log entry info object. This is typically called by the API when this object is
 	created or updated.
@@ -137,7 +136,6 @@ end
 
 --[=[
 	@within Classes.AuditLog.EntryInfo
-	@private
 
 	Responsible for constructing this class.
 ]=]
