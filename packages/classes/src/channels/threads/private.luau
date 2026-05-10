@@ -37,7 +37,6 @@ Private.Behaviours = {
 
 --[=[
 	@within Classes.Channels.PrivateThread
-	@private
 
 	Responsible for syncing data to this private thread object. This is typically called by the API when this object is
 	created or updated.
@@ -51,15 +50,14 @@ end
 
 --[=[
 	@within Classes.Channels.PrivateThread
-	@private
 
 	Responsible for constructing this class.
 ]=]
 function Private.Interface.new(state: state.State, channelData: apiTypes.ChannelObject): Private
-	local self = setmetatable(
+	local self: Private = setmetatable(
 		{
 			state = state,
-		} :: Private,
+		} :: any,
 		{ __index = Private.Prototype }
 	)
 

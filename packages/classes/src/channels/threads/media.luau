@@ -40,7 +40,6 @@ Media.Behaviours = {
 
 --[=[
 	@within Classes.Channels.MediaThread
-	@private
 
 	Responsible for syncing data to this media object. This is typically called by the API when this object is
 	created or updated.
@@ -54,15 +53,14 @@ end
 
 --[=[
 	@within Classes.Channels.MediaThread
-	@private
 
 	Responsible for constructing this class.
 ]=]
 function Media.Interface.new(state: state.State, channelData: apiTypes.ChannelObject): Media
-	local self = setmetatable(
+	local self: Media = setmetatable(
 		{
 			state = state,
-		} :: Media,
+		} :: any,
 		{ __index = Media.Prototype }
 	)
 

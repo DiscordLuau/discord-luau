@@ -37,7 +37,6 @@ Announcement.Behaviours = {
 
 --[=[
 	@within Classes.Channels.AnnouncementThread
-	@private
 
 	Responsible for syncing data to this announcement object. This is typically called by the API when this object is
 	created or updated.
@@ -51,15 +50,14 @@ end
 
 --[=[
 	@within Classes.Channels.AnnouncementThread
-	@private
 
 	Responsible for constructing this class.
 ]=]
 function Announcement.Interface.new(state: state.State, channelData: apiTypes.ChannelObject): Announcement
-	local self = setmetatable(
+	local self: Announcement = setmetatable(
 		{
 			state = state,
-		} :: Announcement,
+		} :: any,
 		{ __index = Announcement.Prototype }
 	)
 

@@ -37,7 +37,6 @@ Public.Behaviours = {
 
 --[=[
 	@within Classes.Channels.PublicThread
-	@private
 
 	Responsible for syncing data to this public thread object. This is typically called by the API when this object is
 	created or updated.
@@ -51,15 +50,14 @@ end
 
 --[=[
 	@within Classes.Channels.PublicThread
-	@private
 
 	Responsible for constructing this class.
 ]=]
 function Public.Interface.new(state: state.State, channelData: apiTypes.ChannelObject): Public
-	local self = setmetatable(
+	local self: Public = setmetatable(
 		{
 			state = state,
-		} :: Public,
+		} :: any,
 		{ __index = Public.Prototype }
 	)
 

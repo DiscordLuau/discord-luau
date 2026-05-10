@@ -40,7 +40,6 @@ Forum.Behaviours = {
 
 --[=[
 	@within Classes.Channels.ForumThread
-	@private
 
 	Responsible for syncing data to this forum object. This is typically called by the API when this object is
 	created or updated.
@@ -54,15 +53,14 @@ end
 
 --[=[
 	@within Classes.Channels.ForumThread
-	@private
 
 	Responsible for constructing this class.
 ]=]
 function Forum.Interface.new(state: state.State, channelData: apiTypes.ChannelObject): Forum
-	local self = setmetatable(
+	local self: Forum = setmetatable(
 		{
 			state = state,
-		} :: Forum,
+		} :: any,
 		{ __index = Forum.Prototype }
 	)
 
