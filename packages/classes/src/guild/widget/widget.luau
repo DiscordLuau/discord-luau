@@ -51,7 +51,6 @@ Widget.Prototype = {}
 
 --[=[
 	@within Classes.Guild.Widget
-	@private
 
 	Responsible for syncing data to this widget object. This is typically called by the API when this object is
 	created or updated.
@@ -77,11 +76,12 @@ function Widget.Prototype.sync(self: Widget, widgetData: apiTypes.GuildWidgetObj
 	self.channels = channelArray
 
 	self.members = userArray
+
+	self.presenceCount = widgetData.presence_count
 end
 
 --[=[
 	@within Classes.Guild.Widget
-	@private
 
 	Responsible for constructing this class.
 ]=]

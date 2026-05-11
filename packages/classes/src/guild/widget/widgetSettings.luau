@@ -30,7 +30,6 @@ WidgetSettings.Prototype = {}
 
 --[=[
 	@within Classes.Guild.WidgetSettings
-	@private
 
 	Responsible for syncing data to this widget settings object. This is typically called by the API when this object is
 	created or updated.
@@ -43,7 +42,6 @@ end
 
 --[=[
 	@within Classes.Guild.WidgetSettings
-	@private
 
 	Responsible for constructing this class.
 ]=]

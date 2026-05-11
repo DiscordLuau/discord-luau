@@ -54,7 +54,6 @@ Option.Prototype = {}
 
 --[=[
 	@within Classes.Guild.OnboardingOption
-	@private
 
 	Responsible for syncing data to this option object. This is typically called by the API when this object is
 	created or updated.
@@ -75,7 +74,6 @@ end
 
 --[=[
 	@within Classes.Guild.OnboardingOption
-	@private
 
 	Responsible for constructing this class.
 ]=]

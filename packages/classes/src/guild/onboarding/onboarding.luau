@@ -48,7 +48,6 @@ Onboarding.Prototype = {}
 
 --[=[
 	@within Classes.Guild.Onboarding
-	@private
 
 	Responsible for syncing data to this onboarding object. This is typically called by the API when this object is
 	created or updated.
@@ -73,7 +72,6 @@ end
 
 --[=[
 	@within Classes.Guild.Onboarding
-	@private
 
 	Responsible for constructing this class.
 ]=]
