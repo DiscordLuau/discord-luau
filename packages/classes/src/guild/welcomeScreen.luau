@@ -34,7 +34,6 @@ WelcomeScreen.Prototype = {}
 
 --[=[
 	@within Classes.Guild.WelcomeScreen
-	@private
 
 	Responsible for syncing data to this welcome screen object. This is typically called by the API when this object is
 	created or updated.
@@ -53,7 +52,6 @@ end
 
 --[=[
 	@within Classes.Guild.WelcomeScreen
-	@private
 
 	Responsible for constructing this class.
 ]=]

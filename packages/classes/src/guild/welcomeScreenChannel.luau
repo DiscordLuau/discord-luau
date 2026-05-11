@@ -44,7 +44,6 @@ WelcomeScreenChannel.Prototype = {}
 
 --[=[
 	@within Classes.Guild.WelcomeScreenChannel
-	@private
 
 	Responsible for syncing data to this welcome screen channel object. This is typically called by the API when this object is
 	created or updated.
@@ -64,7 +63,6 @@ end
 
 --[=[
 	@within Classes.Guild.WelcomeScreenChannel
-	@private
 
 	Responsible for constructing this class.
 ]=]
