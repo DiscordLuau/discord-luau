@@ -140,9 +140,8 @@ end
 
 --[=[
 	@within Classes.Guild.Integration
-	@private
 ]=]
-function Integration.Prototype.sync(self: Integration, integrationData: apiTypes.IntegrationObject): nil
+function Integration.Prototype.sync(self: Integration, integrationData: apiTypes.IntegrationObject)
 	self.id = integrationData.id
 
 	self.name = integrationData.name
@@ -161,7 +160,7 @@ function Integration.Prototype.sync(self: Integration, integrationData: apiTypes
 
 	self.expireGracePeriod = integrationData.expire_grace_period
 
-	self.user = integrationData.user and user.new(integrationData.user)
+	self.user = integrationData.user and user.new(integrationData.user, self.state)
 
 	self.account = integrationData.account and account.new(integrationData.account)
 
@@ -178,7 +177,6 @@ end
 
 --[=[
 	@within Classes.Guild.Integration
-	@private
 ]=]
 function Integration.Interface.new(
 	state: state.State,

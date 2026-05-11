@@ -30,7 +30,6 @@ Account.Prototype = {}
 
 --[=[
 	@within Classes.Guild.IntegrationAccount
-	@private
 
 	Responsible for syncing data to this account object. This is typically called by the API when this object is
 	created or updated.
@@ -43,7 +42,6 @@ end
 
 --[=[
 	@within Classes.Guild.IntegrationAccount
-	@private
 
 	Responsible for constructing this class.
 ]=]

@@ -53,7 +53,6 @@ Application.Prototype = {}
 
 --[=[
 	@within Classes.Guild.IntegrationApplication
-	@private
 
 	Responsible for syncing data to this application object. This is typically called by the API when this object is
 	created or updated.
@@ -72,7 +71,6 @@ end
 
 --[=[
 	@within Classes.Guild.IntegrationApplication
-	@private
 
 	Responsible for constructing this class.
 ]=]
