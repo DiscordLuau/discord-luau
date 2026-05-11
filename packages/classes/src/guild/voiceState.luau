@@ -98,7 +98,6 @@ VoiceState.Prototype = {}
 
 --[=[
 	@within Classes.Guild.VoiceState
-	@private
 
 	Responsible for syncing data to this voice state object. This is typically called by the API when this object is
 	created or updated.
@@ -110,7 +109,8 @@ function VoiceState.Prototype.sync(self: VoiceState, voiceStateData: apiTypes.Vo
 
 	self.userId = voiceStateData.user_id
 
-	self.member = voiceStateData.member and voiceStateData.guild_id
+	self.member = voiceStateData.member
+		and voiceStateData.guild_id
 		and member.new(self.state, voiceStateData.guild_id, voiceStateData.member)
 
 	self.sessionId = voiceStateData.session_id
@@ -135,7 +135,6 @@ end
 
 --[=[
 	@within Classes.Guild.VoiceState
-	@private
 
 	Responsible for constructing this class.
 ]=]

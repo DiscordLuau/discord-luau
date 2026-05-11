@@ -62,13 +62,13 @@
 ]=]
 
 --[=[
-	@prop status apiTypes.SchedledEventStatus
+	@prop status apiTypes.ScheduledEventStatus
 	@within Classes.Guild.ScheduledEvent
 	The status of the scheduled event
 ]=]
 
 --[=[
-	@prop entityType apiTypes.SchedledEventEntityType
+	@prop entityType apiTypes.ScheduledEventEntityType
 	@within Classes.Guild.ScheduledEvent
 	The type of the scheduled event
 ]=]
@@ -115,7 +115,6 @@ ScheduledEvent.Prototype = {}
 
 --[=[
 	@within Classes.Guild.ScheduledEvent
-	@private
 
 	Responsible for syncing data to this scheduled event object. This is typically called by the API when this object is
 	created or updated.
@@ -140,9 +139,9 @@ function ScheduledEvent.Prototype.sync(self: ScheduledEvent, scheduledEventData:
 
 	self.privacyLevel = apiTypes.guild.ScheduledEventPrivacyLevel[scheduledEventData.privacy_level]
 
-	self.status = apiTypes.guild.SchedledEventStatus[scheduledEventData.status + 1]
+	self.status = apiTypes.guild.ScheduledEventStatus[scheduledEventData.status]
 
-	self.entityType = apiTypes.guild.SchedledEventEntityType[scheduledEventData.entity_type + 1]
+	self.entityType = apiTypes.guild.ScheduledEventEntityType[scheduledEventData.entity_type]
 
 	self.entityId = scheduledEventData.entity_id
 
@@ -157,7 +156,6 @@ end
 
 --[=[
 	@within Classes.Guild.ScheduledEvent
-	@private
 
 	Responsible for constructing this class.
 ]=]
@@ -179,8 +177,8 @@ export type ScheduledEvent = typeof(ScheduledEvent.Prototype) & {
 	scheduledStartTime: stdPolyfills.DateTime,
 	scheduledEndTime: stdPolyfills.DateTime?,
 	privacyLevel: apiTypes.ScheduledEventPrivacyLevel,
-	status: apiTypes.SchedledEventStatus,
-	entityType: apiTypes.SchedledEventEntityType,
+	status: apiTypes.ScheduledEventStatus,
+	entityType: apiTypes.ScheduledEventEntityType,
 	entityId: apiTypes.Snowflake?,
 	location: string?,
 	creator: user.User?,

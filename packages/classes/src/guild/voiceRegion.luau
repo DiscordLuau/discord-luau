@@ -51,7 +51,6 @@ VoiceRegion.Prototype = {}
 
 --[=[
 	@within Classes.Guild.VoiceRegion
-	@private
 
 	Responsible for syncing data to this voice region object. This is typically called by the API when this object is
 	created or updated.
@@ -70,7 +69,6 @@ end
 
 --[=[
 	@within Classes.Guild.VoiceRegion
-	@private
 
 	Responsible for constructing this class.
 ]=]

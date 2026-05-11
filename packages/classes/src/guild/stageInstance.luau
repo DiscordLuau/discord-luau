@@ -58,7 +58,6 @@ StageInstance.Prototype = {}
 
 --[=[
 	@within Classes.Guild.StageInstance
-	@private
 
 	Responsible for syncing data to this stage instance object. This is typically called by the API when this object is
 	created or updated.
@@ -72,7 +71,7 @@ function StageInstance.Prototype.sync(self: StageInstance, stageData: apiTypes.S
 
 	self.topic = stageData.topic
 
-	self.privacyLevel = stageData.privacy_level
+	self.privacyLevel = apiTypes.guild.StageInstancePrivacyLevel[stageData.privacy_level]
 
 	self.discoverableDisabled = stageData.discoverable_disabled
 
@@ -81,7 +80,6 @@ end
 
 --[=[
 	@within Classes.Guild.StageInstance
-	@private
 
 	Responsible for constructing this class.
 ]=]
