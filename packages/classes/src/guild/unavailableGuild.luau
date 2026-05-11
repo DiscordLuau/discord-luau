@@ -35,7 +35,6 @@ UnavailableGuild.Prototype = {}
 
 --[=[
 	@within Classes.UnavailableGuild
-	@private
 
 	Responsible for constructing this class.
 ]=]

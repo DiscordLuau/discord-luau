@@ -62,20 +62,18 @@ end
 
 --[=[
 	@within Classes.Guild.Ban
-	@private
 
 	Responsible for syncing data to this ban object. This is typically called by the API when this object is
 	created or updated.
 ]=]
-function Ban.Prototype.sync(self: Ban, banData: apiTypes.BanObject): nil
+function Ban.Prototype.sync(self: Ban, banData: apiTypes.BanObject)
 	self.reason = banData.reason
 
-	self.user = user.new(banData.user)
+	self.user = user.new(banData.user, self.state)
 end
 
 --[=[
 	@within Classes.Guild.Ban
-	@private
 
 	Responsible for constructing this class.
 ]=]

@@ -96,7 +96,6 @@ Preview.Prototype = {}
 
 --[=[
 	@within Classes.Guild.Preview
-	@private
 
 	Responsible for syncing data to this guild preview object. This is typically called by the API when this object is
 	created or updated.
@@ -138,7 +137,6 @@ end
 
 --[=[
 	@within Classes.Guild.Preview
-	@private
 
 	Responsible for constructing this class.
 ]=]

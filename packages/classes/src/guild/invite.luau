@@ -107,7 +107,7 @@ function Invite.Prototype.getTargetUsersAsync(self: Invite): future.FutureLike<s
 		local users = {}
 
 		for _, userData in response:unwrapOk().users do
-			table.insert(users, user.new(userData))
+			table.insert(users, user.new(userData, self.state))
 		end
 
 		return users
@@ -119,10 +119,7 @@ end
 	Replaces the invite gate's target user list with the provided CSV content.
 	The CSV should contain one user ID per line with a `user_id` header.
 ]=]
-function Invite.Prototype.updateTargetUsersAsync(
-	self: Invite,
-	csvContent: string
-): future.FutureLike<string, Invite>
+function Invite.Prototype.updateTargetUsersAsync(self: Invite, csvContent: string): future.FutureLike<string, Invite>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -140,9 +137,10 @@ end
 	@within Classes.Guild.Invite
 	Returns the processing status of the most recent target users upload job.
 ]=]
-function Invite.Prototype.getTargetUsersJobStatusAsync(
-	self: Invite
-): future.FutureLike<string, apiTypes.GetInviteTargetUsersJobStatusResponse>
+function Invite.Prototype.getTargetUsersJobStatusAsync(self: Invite): future.FutureLike<
+	string,
+	apiTypes.GetInviteTargetUsersJobStatusResponse
+>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -173,12 +171,11 @@ end
 
 --[=[
 	@within Classes.Guild.Invite
-	@private
 
 	Responsible for syncing data to this invite object. This is typically called by the API when this object is
 	created or updated.
 ]=]
-function Invite.Prototype.sync(self: Invite, inviteData: apiTypes.InviteObject): nil
+function Invite.Prototype.sync(self: Invite, inviteData: apiTypes.InviteObject)
 	if inviteData.channel then
 		local channel = _require("../channels/construct")(self.state, inviteData.channel)
 		self.channel = channel :: apiTypes.AbstractChannel
@@ -190,11 +187,11 @@ function Invite.Prototype.sync(self: Invite, inviteData: apiTypes.InviteObject):
 
 	self.guild = inviteData.guild and inviteGuild.new(inviteData.guild)
 
-	self.inviter = inviteData.inviter and user.new(inviteData.inviter)
+	self.inviter = inviteData.inviter and user.new(inviteData.inviter, self.state)
 
 	self.targetType = inviteData.target_type and apiTypes.guild.InviteTargetType[inviteData.target_type]
 
-	self.targetUser = inviteData.target_user and user.new(inviteData.target_user)
+	self.targetUser = inviteData.target_user and user.new(inviteData.target_user, self.state)
 
 	self.approximatePresenceCount = inviteData.approximate_presence_count
 
@@ -207,7 +204,6 @@ end
 
 --[=[
 	@within Classes.Guild.Invite
-	@private
 
 	Responsible for constructing this class.
 ]=]

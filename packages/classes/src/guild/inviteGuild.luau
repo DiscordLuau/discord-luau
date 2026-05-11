@@ -63,9 +63,9 @@
 ]=]
 
 --[=[
-	@prop roles { apiTypes.PartialGuildRoleObject }
+	@prop roles { apiTypes.Snowflake }
 	@within Classes.Guild.InviteGuild
-	Partial role objects. Only id, name, position, color, colors, icon and unicode_emoji are present.
+	IDs of roles present in this guild.
 ]=]
 
 local apiTypes = require("../../luau_packages/api_types")
@@ -77,9 +77,14 @@ InviteGuild.Prototype = {}
 
 --[=[
 	@within Classes.Guild.InviteGuild
-	@private
 ]=]
 function InviteGuild.Prototype.sync(self: InviteGuild, guildData: apiTypes.InviteGuildObject)
+	local roleIds = {}
+
+	for _, role in next, guildData.roles or {} do
+		table.insert(roleIds, role.id)
+	end
+
 	self.id = guildData.id
 	self.name = guildData.name
 	self.icon = guildData.icon
@@ -87,16 +92,15 @@ function InviteGuild.Prototype.sync(self: InviteGuild, guildData: apiTypes.Invit
 	self.banner = guildData.banner
 	self.description = guildData.description
 	self.features = guildData.features
-	self.verificationLevel = guildData.verification_level
+	self.verificationLevel = guildData.verification_level :: any
 	self.vanityUrlCode = guildData.vanity_url_code
 	self.nsfwLevel = guildData.nsfw_level
 	self.premiumSubscriptionCount = guildData.premium_subscription_count
-	self.roles = guildData.roles or {}
+	self.roles = roleIds
 end
 
 --[=[
 	@within Classes.Guild.InviteGuild
-	@private
 ]=]
 function InviteGuild.Interface.new(guildData: apiTypes.InviteGuildObject): InviteGuild
 	local self = setmetatable({} :: InviteGuild, { __index = InviteGuild.Prototype })
@@ -118,7 +122,7 @@ export type InviteGuild = typeof(InviteGuild.Prototype) & {
 	vanityUrlCode: string?,
 	nsfwLevel: number?,
 	premiumSubscriptionCount: number?,
-	roles: { apiTypes.PartialGuildRoleObject },
+	roles: { apiTypes.Snowflake },
 }
 
 return InviteGuild.Interface

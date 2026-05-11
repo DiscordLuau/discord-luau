@@ -30,7 +30,6 @@ VanityUrl.Prototype = {}
 
 --[=[
 	@within Classes.Guild.VanityUrl
-	@private
 
 	Responsible for syncing data to this vanity URL object. This is typically called by the API when this object is
 	created or updated.
@@ -43,7 +42,6 @@ end
 
 --[=[
 	@within Classes.Guild.VanityUrl
-	@private
 
 	Responsible for constructing this class.
 ]=]
