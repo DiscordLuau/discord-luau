@@ -52,7 +52,6 @@ RoleTag.Prototype = {}
 
 --[=[
 	@within Classes.Guild.RoleTag
-	@private
 
 	Responsible for syncing data to this role tag object. This is typically called by the API when this object is
 	created or updated.
@@ -73,7 +72,6 @@ end
 
 --[=[
 	@within Classes.Guild.RoleTag
-	@private
 
 	Responsible for constructing this class.
 ]=]

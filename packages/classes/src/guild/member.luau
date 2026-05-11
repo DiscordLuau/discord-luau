@@ -215,7 +215,7 @@ end
 ]=]
 function Member.Prototype.muteAsync(self: Member, reason: string?): future.FutureLike<string, Member>
 	return self:modifyAsync({
-		muted = true,
+		mute = true,
 	}, reason)
 end
 
@@ -225,7 +225,7 @@ end
 ]=]
 function Member.Prototype.unmuteAsync(self: Member, reason: string?): future.FutureLike<string, Member>
 	return self:modifyAsync({
-		muted = false,
+		mute = false,
 	}, reason)
 end
 
@@ -365,11 +365,20 @@ end
 
 --[=[
 	@within Classes.Guild.Member
-	@private
+	Opens a DM channel with this member's user.
+]=]
+function Member.Prototype.getDmChannelIdAsync(self: Member): future.FutureLike<string, any>
+	assert(self.user, "Member has no user object")
+	assert(self.user.state, "Member's user has no state")
+	return self.user:getDmChannelIdAsync()
+end
+
+--[=[
+	@within Classes.Guild.Member
 	Synchronizes the member object with the data from the API.
 ]=]
-function Member.Prototype.sync(self: Member, guildMemberData: apiTypes.GuildMemberObject): nil
-	self.user = guildMemberData.user and user.new(guildMemberData.user)
+function Member.Prototype.sync(self: Member, guildMemberData: apiTypes.GuildMemberObject)
+	self.user = guildMemberData.user and user.new(guildMemberData.user, self.state)
 
 	self.communicationDisabledUntil = guildMemberData.communication_disabled_until
 		and stdPolyfills.datetime.fromIsoDate(guildMemberData.communication_disabled_until)
@@ -403,7 +412,6 @@ function Member.Prototype.sync(self: Member, guildMemberData: apiTypes.GuildMemb
 end
 
 --[=[
-	@private
 	@within Classes.Guild.Member
 	Creates a new Member instance with the specified member data.
 ]=]
@@ -438,7 +446,7 @@ export type Member = typeof(Member.Prototype) & {
 	premiumSince: stdPolyfills.DateTime?,
 	deaf: boolean,
 	mute: boolean,
-	flags: guildMemberBitflag.GuildMemberBitflag,
+	flags: guildMemberBitflag.GuildMemberBitflag?,
 	pending: boolean?,
 	permissions: string?,
 	communicationDisabledUntil: stdPolyfills.DateTime?,

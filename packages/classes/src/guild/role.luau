@@ -277,10 +277,9 @@ end
 
 --[=[
 	@within Classes.Guild.Role
-	@private
 	Synchronizes the role object with the data from the API.
 ]=]
-function Role.Prototype.sync(self: Role, roleData: apiTypes.GuildRoleObject): nil
+function Role.Prototype.sync(self: Role, roleData: apiTypes.GuildRoleObject)
 	local tagArray = {}
 
 	-- fixme: need to use `next` iterator here to avoid LSP errors.
@@ -316,7 +315,6 @@ function Role.Prototype.sync(self: Role, roleData: apiTypes.GuildRoleObject): ni
 end
 
 --[=[
-	@private
 	@within Classes.Guild.Role
 	Creates a new Role instance with the specified role data.
 ]=]
