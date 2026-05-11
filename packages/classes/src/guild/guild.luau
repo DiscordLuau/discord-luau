@@ -311,7 +311,7 @@ function Guild.Prototype.createSlashCommandAsync(
 		local request = self.state.rest:newRequest()
 
 		local response = rest.commands
-			.createGuildApplicationCommandAsync(request, self.state.applicationId, self.id, slashCommand)
+			.createGuildApplicationCommandAsync(request, self.state.applicationId, self.id, slashCommand :: any)
 			:await()
 
 		assert(response:isOk(), `{response:unwrapErr()}`)
@@ -354,7 +354,7 @@ function Guild.Prototype.editSlashCommandAsync(
 		local request = self.state.rest:newRequest()
 
 		local response = rest.commands
-			.editGuildApplicationCommandAsync(request, self.state.applicationId, self.id, slashCommandId, slashCommand)
+			.editGuildApplicationCommandAsync(request, self.state.applicationId, self.id, slashCommandId, slashCommand :: any)
 			:await()
 
 		assert(response:isOk(), `{response:unwrapErr()}`)
@@ -1272,7 +1272,7 @@ function Guild.Prototype.beginPruneAsync(
 			.beginGuildPruneAsync(request, self.id, {
 				days = days or 7,
 				compute_prune_count = returnPruneCount or true,
-				include_ruoles = includedRoles or {},
+				include_roles = includedRoles or {},
 				reason = reason,
 			})
 			:await()
@@ -1496,7 +1496,7 @@ function Guild.Prototype.modifyWelcomeScreenAsync(
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local response = rest.guild.modifyGuildWelcomeScreenAsync(request, self.id, json, reason):await()
+		local response = rest.guild.modifyGuildWelcomeScreenAsync(request, self.id, json :: any, reason):await()
 
 		assert(response:isOk(), `{response:unwrapErr()}`)
 
@@ -1533,7 +1533,7 @@ function Guild.Prototype.modifyOnboardingAsync(
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local response = rest.guild.modifyGuildOnboardingAsync(request, self.id, json, reason):await()
+		local response = rest.guild.modifyGuildOnboardingAsync(request, self.id, json :: any, reason):await()
 
 		assert(response:isOk(), `{response:unwrapErr()}`)
 
@@ -1634,7 +1634,8 @@ function Guild.Prototype.createAutomoderationRuleAsync(
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local response = rest.autoModeration.createAutoModerationRuleAsync(request, self.id, ruleJSON, reason):await()
+		local response =
+			rest.autoModeration.createAutoModerationRuleAsync(request, self.id, ruleJSON :: any, reason):await()
 
 		assert(response:isOk(), `{response:unwrapErr()}`)
 
@@ -1646,9 +1647,7 @@ end
 	@within Classes.Guild
 	Returns a list of soundboard sounds for this guild.
 ]=]
-function Guild.Prototype.listSoundboardSoundsAsync(
-	self: Guild
-): future.FutureLike<string, { sound.Sound }>
+function Guild.Prototype.listSoundboardSoundsAsync(self: Guild): future.FutureLike<string, { sound.Sound }>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
@@ -1739,8 +1738,7 @@ function Guild.Prototype.deleteSoundboardSoundAsync(
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local response =
-			rest.guild.deleteGuildSoundboardSoundAsync(request, self.id, soundId, auditLogReason):await()
+		local response = rest.guild.deleteGuildSoundboardSoundAsync(request, self.id, soundId, auditLogReason):await()
 
 		assert(response:isOk(), `{response:unwrapErr()}`)
 
@@ -1749,7 +1747,84 @@ function Guild.Prototype.deleteSoundboardSoundAsync(
 end
 
 --[=[
-	@private
+	@within Classes.Guild
+	Modifies the positions of a set of channels for this guild. Returns 204 on success.
+	Requires the MANAGE_CHANNELS permission.
+]=]
+function Guild.Prototype.modifyChannelPositionsAsync(
+	self: Guild,
+	positions: { builders.channelPositionJSON }
+): future.FutureLike<string, nil>
+	return future.Future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local response = rest.guild.modifyGuildChannelPositionsAsync(request, self.id, positions :: any):await()
+
+		assert(response:isOk(), `{response:unwrapErr()}`)
+
+		return nil
+	end) :: future.FutureLike<string, nil>
+end
+
+--[=[
+	@within Classes.Guild
+	Modifies the current bot member in this guild. Currently only supports changing the nickname.
+]=]
+function Guild.Prototype.modifyCurrentMemberAsync(
+	self: Guild,
+	nickname: string?,
+	reason: string?
+): future.FutureLike<string, member.Member>
+	return future.Future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local response = rest.guild.modifyCurrentMemberAsync(request, self.id, { nick = nickname }, reason):await()
+
+		assert(response:isOk(), `{response:unwrapErr()}`)
+
+		return member.new(self.state, self.id, response:unwrapOk())
+	end) :: future.FutureLike<string, member.Member>
+end
+
+--[=[
+	@within Classes.Guild
+	Returns a list of the default soundboard sounds available to all guilds.
+]=]
+function Guild.Prototype.listDefaultSoundboardSoundsAsync(self: Guild): future.FutureLike<string, { sound.Sound }>
+	return future.Future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local response = rest.guild.listDefaultSoundboardSoundsAsync(request):await()
+
+		assert(response:isOk(), `{response:unwrapErr()}`)
+
+		local sounds = {}
+
+		for _, soundData in response:unwrapOk() do
+			table.insert(sounds, sound.new(soundData))
+		end
+
+		return sounds
+	end) :: future.FutureLike<string, { sound.Sound }>
+end
+
+--[=[
+	@within Classes.Guild
+	Leaves this guild. The bot will no longer be a member.
+]=]
+function Guild.Prototype.leaveAsync(self: Guild): future.FutureLike<string, nil>
+	return future.Future.new(function()
+		local request = self.state.rest:newRequest()
+
+		local response = rest.user.leaveGuildAsync(request, self.id):await()
+
+		assert(response:isOk(), `{response:unwrapErr()}`)
+
+		return nil
+	end) :: future.FutureLike<string, nil>
+end
+
+--[=[
 	@within Classes.Guild
 	Synchronizes the guild object with the data from the API.
 ]=]
@@ -1860,7 +1935,6 @@ function Guild.Prototype.sync(self: Guild, guildData: apiTypes.GuildObject)
 end
 
 --[=[
-	@private
 	@within Classes.Guild
 	Creates a new Guild instance with the specified guild data.
 ]=]
