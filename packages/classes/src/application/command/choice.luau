@@ -37,7 +37,6 @@ Choice.Prototype = {}
 
 --[=[
 	@within Classes.Application.CommandChoice
-	@private
 
 	Responsible for syncing data to this choice object. This is typically called by the API when this object is
 	created or updated.
@@ -52,7 +51,6 @@ end
 
 --[=[
 	@within Classes.Application.CommandChoice
-	@private
 
 	Responsible for constructing this class.
 ]=]
