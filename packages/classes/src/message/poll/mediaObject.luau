@@ -30,7 +30,6 @@ MediaObject.Prototype = {}
 
 --[=[
 	@within Classes.Message.PollMediaObject
-	@private
 
 	Responsible for syncing data to this media object. This is typically called by the API when this object is
 	created or updated.
@@ -43,7 +42,6 @@ end
 
 --[=[
 	@within Classes.Message.PollMediaObject
-	@private
 
 	Responsible for constructing this class.
 ]=]

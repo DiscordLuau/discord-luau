@@ -30,7 +30,6 @@ Results.Prototype = {}
 
 --[=[
 	@within Classes.Message.PollResults
-	@private
 
 	Responsible for syncing data to this results object. This is typically called by the API when this object is
 	created or updated.
@@ -49,7 +48,6 @@ end
 
 --[=[
 	@within Classes.Message.PollResults
-	@private
 
 	Responsible for constructing this class.
 ]=]

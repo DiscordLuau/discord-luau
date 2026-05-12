@@ -34,7 +34,6 @@ AnswerCount.Prototype = {}
 
 --[=[
 	@within Classes.Message.PollAnswerCount
-	@private
 
 	Responsible for syncing data to this answer count object. This is typically called by the API when this object is
 	created or updated.
@@ -49,7 +48,6 @@ end
 
 --[=[
 	@within Classes.Message.PollAnswerCount
-	@private
 
 	Responsible for constructing this class.
 ]=]
