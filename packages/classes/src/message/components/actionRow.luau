@@ -34,7 +34,6 @@ ActionRow.Prototype = {}
 
 --[=[
 	@within Classes.Message.ActionRow
-	@private
 
 	Responsible for syncing data to this action row object. This is typically called by the API when this object is
 	created or updated.
@@ -71,7 +70,6 @@ end
 
 --[=[
 	@within Classes.Message.ActionRow
-	@private
 
 	Responsible for constructing this class.
 ]=]

@@ -79,7 +79,6 @@ TextInput.Prototype = {}
 
 --[=[
 	@within Classes.Message.TextInput
-	@private
 
 	Responsible for syncing data to this text input object. This is typically called by the API when this object is
 	created or updated.
@@ -106,7 +105,6 @@ end
 
 --[=[
 	@within Classes.Message.TextInput
-	@private
 
 	Responsible for constructing this class.
 ]=]

@@ -74,7 +74,6 @@ Button.Prototype = {}
 
 --[=[
 	@within Classes.Message.Button
-	@private
 
 	Responsible for syncing data to this button object. This is typically called by the API when this object is
 	created or updated.
@@ -99,7 +98,6 @@ end
 
 --[=[
 	@within Classes.Message.Button
-	@private
 
 	Responsible for constructing this class.
 ]=]

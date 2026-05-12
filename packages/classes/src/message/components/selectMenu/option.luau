@@ -48,7 +48,6 @@ Option.Prototype = {}
 
 --[=[
 	@within Classes.Message.SelectMenuOption
-	@private
 
 	Responsible for syncing data to this option object. This is typically called by the API when this object is
 	created or updated.
@@ -67,7 +66,6 @@ end
 
 --[=[
 	@within Classes.Message.SelectMenuOption
-	@private
 
 	Responsible for constructing this class.
 ]=]

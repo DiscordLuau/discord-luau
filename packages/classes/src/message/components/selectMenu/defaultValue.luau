@@ -32,7 +32,6 @@ DefaultValue.Prototype = {}
 
 --[=[
 	@within Classes.Message.SelectMenuDefaultValue
-	@private
 
 	Responsible for syncing data to this DefaultValue object. This is typically called by the API when this object is
 	created or updated.
@@ -44,7 +43,6 @@ function DefaultValue.Prototype.sync(self: DefaultValue, valueData: apiTypes.Sel
 end
 --[=[
 	@within Classes.Message.SelectMenuDefaultValue
-	@private
 
 	Responsible for constructing this class.
 ]=]

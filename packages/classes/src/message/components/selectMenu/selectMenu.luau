@@ -82,7 +82,6 @@ SelectMenu.Prototype = {}
 
 --[=[
 	@within Classes.Message.SelectMenu
-	@private
 
 	Responsible for syncing data to this select menu object. This is typically called by the API when this object is
 	created or updated.
@@ -125,7 +124,6 @@ end
 
 --[=[
 	@within Classes.Message.SelectMenu
-	@private
 
 	Responsible for constructing this class.
 ]=]
