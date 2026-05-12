@@ -46,7 +46,6 @@ Reference.Prototype = {}
 
 --[=[
 	@within Classes.Message.Reference
-	@private
 
 	Responsible for syncing data to this reference object. This is typically called by the API when this object is
 	created or updated.
@@ -65,7 +64,6 @@ end
 
 --[=[
 	@within Classes.Message.Reference
-	@private
 
 	Responsible for constructing this class.
 ]=]

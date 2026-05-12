@@ -34,12 +34,11 @@ StickerItem.Prototype = {}
 
 --[=[
 	@within Classes.Message.StickerItem
-	@private
 
 	Responsible for syncing data to this sticker item object. This is typically called by the API when this object is
 	created or updated.
 ]=]
-function StickerItem.Prototype.sync(self: StickerItem, stickerData: apiTypes.SitckerItemObject)
+function StickerItem.Prototype.sync(self: StickerItem, stickerData: apiTypes.StickerItemObject)
 	self.id = stickerData.id
 
 	self.name = stickerData.name
@@ -49,11 +48,10 @@ end
 
 --[=[
 	@within Classes.Message.StickerItem
-	@private
 
 	Responsible for constructing this class.
 ]=]
-function StickerItem.Interface.new(stickerData: apiTypes.SitckerItemObject): StickerItem
+function StickerItem.Interface.new(stickerData: apiTypes.StickerItemObject): StickerItem
 	local self = setmetatable({} :: StickerItem, { __index = StickerItem.Prototype })
 
 	self:sync(stickerData)

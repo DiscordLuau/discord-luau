@@ -216,7 +216,7 @@ local reaction = require("../reaction/reaction")
 local activity = require("./activity")
 local application = require("../application/application")
 local reference = require("./reference")
-local interactionMetadata = require("./ineractionMetadata")
+local interactionMetadata = require("./interactionMetadata")
 local interaction = require("./interaction")
 local stickerItem = require("./stickerItem")
 local roleSubscriptionData = require("./roleSubscriptionData")
@@ -384,7 +384,7 @@ function Message.Prototype.getReactionsAsync(
 		local users = {}
 
 		for _, userData in next, response:unwrapOk() do
-			table.insert(users, user.new(userData))
+			table.insert(users, user.new(userData, self.state))
 		end
 
 		return users :: any
@@ -498,11 +498,9 @@ function Message.Prototype.replyAsync(self: Message, message: builders.messageJS
 			fail_if_not_exists = false,
 		}
 
-		local response = rest.message.createMessageAsync(request, self.channelId, message):await()
+		local response = rest.message.createMessageAsync(request, self.channelId, message :: any):await()
 
 		assert(response:isOk(), `{response:unwrapErr()}`)
-
-		self.pinned = true
 
 		return nil
 	end) :: future.FutureLike<string, nil>
@@ -546,10 +544,9 @@ end
 
 --[=[
 	@within Classes.Message
-	@private
 	Synchronizes the message object with the data from the API.
 ]=]
-function Message.Prototype.sync(self: Message, messageData: apiTypes.MessageObject): nil
+function Message.Prototype.sync(self: Message, messageData: apiTypes.MessageObject)
 	self.type = apiTypes.message.MessageType[messageData.type]
 
 	local mentionArray = {}
@@ -559,6 +556,10 @@ function Message.Prototype.sync(self: Message, messageData: apiTypes.MessageObje
 	local embedArray = {}
 	local reactionArray = {}
 	local stickerItemArray = {}
+
+	for _, userData in next, messageData.mentions or {} do
+		table.insert(mentionArray, user.new(userData, self.state))
+	end
 
 	local componentArray: {
 		textInputComponent.TextInput
@@ -602,7 +603,7 @@ function Message.Prototype.sync(self: Message, messageData: apiTypes.MessageObje
 
 	self.channelId = messageData.channel_id :: string
 
-	self.author = messageData.author and user.new(messageData.author)
+	self.author = messageData.author and user.new(messageData.author, self.state)
 
 	self.content = messageData.content
 
@@ -612,7 +613,7 @@ function Message.Prototype.sync(self: Message, messageData: apiTypes.MessageObje
 
 	self.mentionEveryone = messageData.mention_everyone
 
-	self.mentionChannels = mentionArray
+	self.mentions = mentionArray
 
 	self.mentionRoles = roleArray
 
@@ -672,7 +673,6 @@ function Message.Prototype.sync(self: Message, messageData: apiTypes.MessageObje
 end
 
 --[=[
-	@private
 	@within Classes.Message
 	Creates a new Message instance with the specified message data.
 ]=]
@@ -717,7 +717,7 @@ export type Message = typeof(Message.Prototype) & {
 	messageReference: reference.Reference?,
 	messageSnapshots: { snapshot.Snapshot },
 	referencedMessage: Message?,
-	interactionMetadata: interactionMetadata.IneractionMetadata?,
+	interactionMetadata: interactionMetadata.InteractionMetadata?,
 	interaction: interaction.Interaction?,
 	-- thread: unknown?, -- fixme: we can't type the channels since channels require this message class.
 	components: {

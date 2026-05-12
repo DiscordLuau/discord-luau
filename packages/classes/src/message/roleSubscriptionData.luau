@@ -40,7 +40,6 @@ RoleSubscriptionData.Prototype = {}
 
 --[=[
 	@within Classes.Message.RoleSubscriptionData
-	@private
 
 	Responsible for syncing data to this role subscription data object. This is typically called by the API when this object is
 	created or updated.
@@ -60,7 +59,6 @@ end
 
 --[=[
 	@within Classes.Message.RoleSubscriptionData
-	@private
 
 	Responsible for constructing this class.
 ]=]

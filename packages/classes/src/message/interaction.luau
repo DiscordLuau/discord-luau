@@ -56,7 +56,6 @@ Interaction.Prototype = {}
 
 --[=[
 	@within Classes.Message.Interaction
-	@private
 
 	Responsible for syncing data to this interaction object. This is typically called by the API when this object is
 	created or updated.
@@ -64,7 +63,7 @@ Interaction.Prototype = {}
 function Interaction.Prototype.sync(self: Interaction, interactionData: apiTypes.MessageInteractionObject)
 	self.type = apiTypes.interaction.InteractionType[interactionData.type]
 
-	self.user = user.new(interactionData.user)
+	self.user = user.new(interactionData.user, self.state)
 
 	self.member = interactionData.member and member.new(self.state, "interaction", interactionData.member)
 
@@ -75,7 +74,6 @@ end
 
 --[=[
 	@within Classes.Message.Interaction
-	@private
 
 	Responsible for constructing this class.
 ]=]

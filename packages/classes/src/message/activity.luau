@@ -8,7 +8,7 @@
 ]=]
 
 --[=[
-	@prop type MessageAcitvityType
+	@prop type MessageActivityType
 	@within Classes.Message.Activity
 	Type of message activity, such as JOIN, SPECTATE, LISTEN, or JOIN_REQUEST
 ]=]
@@ -28,20 +28,18 @@ Activity.Prototype = {}
 
 --[=[
 	@within Classes.Message.Activity
-	@private
 
 	Responsible for syncing data to this activity object. This is typically called by the API when this object is
 	created or updated.
 ]=]
 function Activity.Prototype.sync(self: Activity, activityData: apiTypes.MessageActivityObject)
-	self.type = apiTypes.message.MessageAcitvityType[activityData.type]
+	self.type = apiTypes.message.MessageActivityType[activityData.type]
 
 	self.partyId = activityData.party_id
 end
 
 --[=[
 	@within Classes.Message.Activity
-	@private
 
 	Responsible for constructing this class.
 ]=]
@@ -54,7 +52,7 @@ function Activity.Interface.new(activityData: apiTypes.MessageActivityObject): A
 end
 
 export type Activity = typeof(Activity.Prototype) & {
-	type: apiTypes.MessageAcitvityType,
+	type: apiTypes.MessageActivityType,
 	partyId: string?,
 }
 

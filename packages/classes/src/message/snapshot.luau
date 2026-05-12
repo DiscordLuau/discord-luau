@@ -95,7 +95,6 @@ Snapshot.Prototype = {}
 
 --[=[
 	@within Classes.Message.Snapshot
-	@private
 
 	Responsible for syncing data to this snapshot object. This is typically called by the API when this object is
 	created or updated.
@@ -112,7 +111,8 @@ function Snapshot.Prototype.sync(self: Snapshot, snapshotData: apiTypes.MessageS
 		| selectMenuComponent.SelectMenu
 		| actionRowComponent.ActionRow
 		| buttonComponent.Button
-	} = {}
+	} =
+		{}
 
 	for _, userData in next, content.mentions do
 		table.insert(mentionArray, user.new(userData))
@@ -157,8 +157,7 @@ function Snapshot.Prototype.sync(self: Snapshot, snapshotData: apiTypes.MessageS
 	self.embeds = embedArray
 	self.attachments = attachmentArray
 	self.timestamp = stdPolyfills.datetime.fromIsoDate(content.timestamp)
-	self.editedTimestamp = content.edited_timestamp
-		and stdPolyfills.datetime.fromIsoDate(content.edited_timestamp)
+	self.editedTimestamp = content.edited_timestamp and stdPolyfills.datetime.fromIsoDate(content.edited_timestamp)
 	self.flags = content.flags
 	self.mentions = mentionArray
 	self.mentionRoles = content.mention_roles
@@ -170,7 +169,6 @@ end
 
 --[=[
 	@within Classes.Message.Snapshot
-	@private
 
 	Responsible for constructing this class.
 ]=]

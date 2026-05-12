@@ -8,9 +8,9 @@
 ]=]
 
 --[=[
-	@prop participants { Classes.User }
+	@prop participants { Snowflake }
 	@within Classes.Message.Call
-	Array of user objects that participated in the call
+	Array of user IDs that participated in the call
 ]=]
 
 --[=[
@@ -23,8 +23,6 @@ local stdPolyfills = require("../../luau_packages/std_polyfills")
 
 local apiTypes = require("../../luau_packages/api_types")
 
-local user = require("../user")
-
 local Call = {}
 
 Call.Interface = {}
@@ -32,26 +30,18 @@ Call.Prototype = {}
 
 --[=[
 	@within Classes.Message.Call
-	@private
 
 	Responsible for syncing data to this call object. This is typically called by the API when this object is
 	created or updated.
 ]=]
 function Call.Prototype.sync(self: Call, callData: apiTypes.MessageCallObject)
-	local userArray = {}
+	self.participants = callData.participants
 
-	for _, userData in callData.participants do
-		table.insert(userArray, user.new(userData))
-	end
-
-	self.participants = userArray
-
-	self.endedTimestamp = stdPolyfills.datetime.fromIsoDate(callData.ended_timestamp)
+	self.endedTimestamp = callData.ended_timestamp and stdPolyfills.datetime.fromIsoDate(callData.ended_timestamp)
 end
 
 --[=[
 	@within Classes.Message.Call
-	@private
 
 	Responsible for constructing this class.
 ]=]
@@ -64,8 +54,8 @@ function Call.Interface.new(callData: apiTypes.MessageCallObject): Call
 end
 
 export type Call = typeof(Call.Prototype) & {
-	participants: { user.User },
-	endedTimestamp: stdPolyfills.DateTime,
+	participants: { apiTypes.Snowflake },
+	endedTimestamp: stdPolyfills.DateTime?,
 }
 
 return Call.Interface
