@@ -46,7 +46,6 @@ Member.Prototype = {}
 
 --[=[
 	@within Classes.Application.TeamMember
-	@private
 
 	Responsible for syncing data to this member object. This is typically called by the API when this object is
 	created or updated.
@@ -67,7 +66,6 @@ end
 
 --[=[
 	@within Classes.Application.TeamMember
-	@private
 
 	Responsible for constructing this class.
 ]=]

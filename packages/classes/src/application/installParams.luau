@@ -28,7 +28,6 @@ InstallParams.Prototype = {}
 
 --[=[
 	@within Classes.Application.InstallParams
-	@private
 
 	Responsible for syncing data to this install params object. This is typically called by the API when this object is
 	created or updated.
@@ -41,7 +40,6 @@ end
 
 --[=[
 	@within Classes.Application.InstallParams
-	@private
 
 	Responsible for constructing this class.
 ]=]

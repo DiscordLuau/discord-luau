@@ -46,7 +46,6 @@ Sku.Prototype = {}
 
 --[=[
 	@within Classes.Application.Sku
-	@private
 ]=]
 function Sku.Prototype.sync(self: Sku, skuData: apiTypes.SkuObject)
 	self.id = skuData.id
@@ -59,7 +58,6 @@ end
 
 --[=[
 	@within Classes.Application.Sku
-	@private
 ]=]
 function Sku.Interface.new(skuData: apiTypes.SkuObject): Sku
 	local self = setmetatable({} :: Sku, { __index = Sku.Prototype })

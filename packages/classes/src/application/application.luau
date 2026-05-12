@@ -201,7 +201,7 @@ function Application.Prototype.createSlashCommandAsync(
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local response = rest.commands.createGlobalApplicationCommandAsync(request, self.id, slashCommand):await()
+		local response = rest.commands.createGlobalApplicationCommandAsync(request, self.id, slashCommand :: any):await()
 
 		assert(response:isOk(), `{response:unwrapErr()}`)
 
@@ -241,7 +241,7 @@ function Application.Prototype.editSlashCommandAsync(
 		local request = self.state.rest:newRequest()
 
 		local response =
-			rest.commands.editGlobalApplicationCommandAsync(request, self.id, slashCommandId, slashCommand):await()
+			rest.commands.editGlobalApplicationCommandAsync(request, self.id, slashCommandId, slashCommand :: any):await()
 
 		assert(response:isOk(), `{response:unwrapErr()}`)
 
@@ -290,7 +290,7 @@ function Application.Prototype.overwriteSlashCommandsAsync(
 		local request = self.state.rest:newRequest()
 
 		local response =
-			rest.commands.bulkOverwriteGlobalApplicationCommandsAsync(request, self.id, slashCommands):await()
+			rest.commands.bulkOverwriteGlobalApplicationCommandsAsync(request, self.id, slashCommands :: any):await()
 
 		assert(response:isOk(), `{response:unwrapErr()}`)
 
@@ -328,11 +328,10 @@ end
 
 --[=[
 	@within Classes.Application
-	@private
 
 	Synchronizes the application object with the data from the API.
 ]=]
-function Application.Prototype.sync(self: Application, applicationData: apiTypes.ApplicationObject): nil
+function Application.Prototype.sync(self: Application, applicationData: apiTypes.ApplicationObject)
 	local integrationTypesConfig = {}
 
 	for integrationType, available in next, applicationData.integration_types_config or {} do
@@ -359,13 +358,13 @@ function Application.Prototype.sync(self: Application, applicationData: apiTypes
 
 	self.botRequireCodeGrant = applicationData.bot_require_code_grant
 
-	self.bot = applicationData.bot and user.new(applicationData.bot)
+	self.bot = applicationData.bot and user.new(applicationData.bot, self.state)
 
 	self.termsOfServiceUrl = applicationData.terms_of_service_url
 
 	self.privacyPolicyUrl = applicationData.privacy_policy_url
 
-	self.owner = applicationData.owner and user.new(applicationData.owner)
+	self.owner = applicationData.owner and user.new(applicationData.owner, self.state)
 
 	self.summary = applicationData.summary
 
@@ -396,7 +395,6 @@ end
 
 --[=[
 	@within Classes.Application
-	@private
 
 	Creates a new Application instance with the specified application data.
 ]=]
