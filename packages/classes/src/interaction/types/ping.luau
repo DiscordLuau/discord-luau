@@ -50,12 +50,11 @@ end
 
 --[=[
 	@within Classes.Interactions.Ping
-	@private
 
 	Responsible for syncing data to this interaction object. This is typically called by the API when this object is
 	created or updated.
 ]=]
-function Ping.Prototype.sync(self: Ping, interactionData: apiTypes.InteractionObject): nil
+function Ping.Prototype.sync(self: Ping, interactionData: apiTypes.InteractionObject)
 	for _, behaviour in Ping.Behaviours do
 		behaviour.inheritMethods(self)
 		behaviour.inheritProperties(self, interactionData)
@@ -64,7 +63,6 @@ end
 
 --[=[
 	@within Classes.Interactions.Ping
-	@private
 
 	Responsible for constructing this class.
 ]=]

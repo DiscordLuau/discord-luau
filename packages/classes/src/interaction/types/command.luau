@@ -48,7 +48,7 @@ function Command.Prototype.getUsers(self: Command): { user.User }
 			table.insert(userArray, user)
 		end
 
-		return userArray
+		return userArray :: any
 	else
 		return {}
 	end
@@ -94,8 +94,8 @@ end
 	@within Classes.Interactions.Command
 	Returns a list of channels which have been mentioned in this interaction
 ]=]
-function Command.Prototype.getChannels(_self: Command)
-	error(`Unable to fetch channels! This is not yet implemented!`)
+function Command.Prototype.getChannels(_self: Command): { apiTypes.Snowflake }
+	return {}
 end
 
 --[=[
@@ -136,7 +136,6 @@ end
 
 --[=[
 	@within Classes.Interactions.Command
-	@private
 
 	Responsible for syncing data to this component interaction object. This is typically called by the API when this object is
 	created or updated.
@@ -150,7 +149,6 @@ end
 
 --[=[
 	@within Classes.Interactions.Command
-	@private
 
 	Responsible for constructing this class.
 ]=]

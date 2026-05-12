@@ -30,7 +30,6 @@ Modal.Behaviours = {
 
 --[=[
 	@within Classes.Interactions.Modal
-	@private
 
 	Gets the content of a text input component with the specified custom ID.
 ]=]
@@ -52,12 +51,11 @@ end
 
 --[=[
 	@within Classes.Interactions.Modal
-	@private
 
 	Responsible for syncing data to this modal interaction object. This is typically called by the API when this object is
 	created or updated.
 ]=]
-function Modal.Prototype.sync(self: Modal, interactionData: apiTypes.InteractionObject): nil
+function Modal.Prototype.sync(self: Modal, interactionData: apiTypes.InteractionObject)
 	for _, behaviour in Modal.Behaviours do
 		behaviour.inheritMethods(self)
 		behaviour.inheritProperties(self, interactionData)
@@ -66,7 +64,6 @@ end
 
 --[=[
 	@within Classes.Interactions.Modal
-	@private
 
 	Responsible for constructing this class.
 ]=]

@@ -27,12 +27,11 @@ Component.Behaviours = {
 
 --[=[
 	@within Classes.Interactions.Component
-	@private
 
 	Responsible for syncing data to this component interaction object. This is typically called by the API when this object is
 	created or updated.
 ]=]
-function Component.Prototype.sync(self: Component, interactionData: apiTypes.InteractionObject): nil
+function Component.Prototype.sync(self: Component, interactionData: apiTypes.InteractionObject)
 	for _, behaviour in Component.Behaviours do
 		behaviour.inheritMethods(self)
 		behaviour.inheritProperties(self, interactionData)
@@ -41,7 +40,6 @@ end
 
 --[=[
 	@within Classes.Interactions.Component
-	@private
 
 	Responsible for constructing this class.
 ]=]
