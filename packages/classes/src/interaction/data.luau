@@ -96,7 +96,6 @@ Data.Prototype = {}
 
 --[=[
 	@within Classes.Interactions.Data
-	@private
 
 	Responsible for syncing data to this interaction data object. This is typically called by the API when this object is
 	created or updated.
@@ -154,7 +153,6 @@ end
 
 --[=[
 	@within Classes.Interactions.Data
-	@private
 
 	Responsible for constructing this class.
 ]=]

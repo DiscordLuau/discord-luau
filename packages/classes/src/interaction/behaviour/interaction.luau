@@ -167,7 +167,6 @@ Interaction.Prototype = {}
 
 --[=[
 	@within Classes.Interactions.InteractionBehaviour
-	@private
 
 	Responsible for inheriting properties from the interaction data to the class instance.
 	This function initializes all the properties of an Interaction instance based on the provided interaction data.
@@ -180,7 +179,7 @@ function Interaction.Interface.inheritProperties(class: any, interactionData: ap
 		table.insert(entitlementArray, entitlement.new(entitlementData))
 	end
 
-	for integrationType, owner in ipairs(interactionData.authorizing_integration_owners) do
+	for integrationType, owner in next, interactionData.authorizing_integration_owners or {} do
 		if integrationType == 0 then
 			authorizingIntegrationOwners.GuildInstall = owner
 		elseif integrationType == 1 then
@@ -207,7 +206,7 @@ function Interaction.Interface.inheritProperties(class: any, interactionData: ap
 	class.member = interactionData.member
 		and member.new(class.state, interactionData.guild_id :: string, interactionData.member)
 
-	class.user = interactionData.user and user.new(interactionData.user)
+	class.user = interactionData.user and user.new(interactionData.user, class.state)
 
 	class.token = interactionData.token
 
@@ -230,7 +229,6 @@ end
 
 --[=[
 	@within Classes.Interactions.InteractionBehaviour
-	@private
 
 	Responsible for inheriting methods from the Interaction prototype to the class instance.
 	This function copies all methods from the Interaction.Prototype to the provided class instance.

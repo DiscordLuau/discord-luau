@@ -303,14 +303,12 @@ end
 
 --[=[
 	@within Classes.Interactions.Interactable
-	@private
 	Inherit properties from the Interaction class.
 ]=]
 function Interaction.Interface.inheritProperties() end
 
 --[=[
 	@within Classes.Interactions.Interactable
-	@private
 	Inherit methods from the Interaction class.
 ]=]
 function Interaction.Interface.inheritMethods(class: any)
