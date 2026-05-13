@@ -78,7 +78,6 @@ Webhook.Prototype = {}
 
 --[=[
 	@within Classes.Webhook
-	@private
 
 	Responsible for syncing data to this webhook object. This is typically called by the API when this object is
 	created or updated.
@@ -107,7 +106,6 @@ end
 
 --[=[
 	@within Classes.Webhook
-	@private
 
 	Responsible for constructing this class.
 ]=]

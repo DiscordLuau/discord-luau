@@ -56,7 +56,6 @@ end
 
 --[=[
 	@within Classes.Permission
-	@private
 
 	Responsible for constructing this class.
 ]=]

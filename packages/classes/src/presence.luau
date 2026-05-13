@@ -31,8 +31,6 @@
 	Whether this user is currently marked as AFK.
 ]=]
 
-local stdPolyfills = require("../luau_packages/std_polyfills")
-
 local apiTypes = require("../luau_packages/api_types")
 
 local activity = require("./activity/activity")
@@ -44,14 +42,11 @@ Presence.Prototype = {}
 
 --[=[
 	@within Classes.Presence
-	@private
 
 	Responsible for syncing data to this presence object. This is typically called by the API when this object is
 	created or updated.
 ]=]
-function Presence.Prototype.sync(self: Presence, presenceData: apiTypes.PresenceObject)
-	self.since = stdPolyfills.datetime.fromUnixTimestamp(presenceData.since)
-
+function Presence.Prototype.sync(self: Presence, presenceData: apiTypes.PresenceUpdateObject)
 	local activities = {}
 
 	for _, activityData in next, presenceData.activities do
@@ -61,17 +56,14 @@ function Presence.Prototype.sync(self: Presence, presenceData: apiTypes.Presence
 	self.activities = activities
 
 	self.status = presenceData.status
-
-	self.afk = presenceData.afk
 end
 
 --[=[
 	@within Classes.Presence
-	@private
 
 	Responsible for constructing this class.
 ]=]
-function Presence.Interface.new(presenceData: apiTypes.PresenceObject): Presence
+function Presence.Interface.new(presenceData: apiTypes.PresenceUpdateObject): Presence
 	local self = setmetatable({} :: Presence, { __index = Presence.Prototype })
 
 	self:sync(presenceData)
@@ -80,10 +72,8 @@ function Presence.Interface.new(presenceData: apiTypes.PresenceObject): Presence
 end
 
 export type Presence = typeof(Presence.Prototype) & {
-	since: stdPolyfills.DateTime,
 	activities: { activity.Activity },
 	status: string,
-	afk: boolean,
 }
 
 return Presence.Interface
