@@ -52,7 +52,6 @@ ThreadMember.Prototype = {}
 
 --[=[
 	@within Classes.Channels.ThreadMember
-	@private
 
 	Responsible for syncing data to this thread member object. This is typically called by the API when this object is
 	created or updated.
@@ -71,7 +70,6 @@ end
 
 --[=[
 	@within Classes.Channels.ThreadMember
-	@private
 
 	Responsible for constructing this class.
 ]=]

@@ -66,7 +66,6 @@ Sound.Prototype = {}
 
 --[=[
 	@within Classes.Sound
-	@private
 
 	Responsible for syncing data to this sound object.
 ]=]
@@ -90,7 +89,6 @@ end
 
 --[=[
 	@within Classes.Sound
-	@private
 
 	Responsible for constructing this class.
 ]=]

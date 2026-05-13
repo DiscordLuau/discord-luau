@@ -40,7 +40,6 @@ PrimaryGuild.Prototype = {}
 
 --[=[
 	@within Classes.PrimaryGuild
-	@private
 
 	Responsible for syncing data to this primary guild object. This is typically called by the API when this object is
 	created or updated.
@@ -57,7 +56,6 @@ end
 
 --[=[
 	@within Classes.PrimaryGuild
-	@private
 
 	Responsible for constructing this class.
 ]=]
