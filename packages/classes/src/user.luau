@@ -109,6 +109,9 @@
 ]=]
 
 local apiTypes = require("../luau_packages/api_types")
+local state = require("../luau_packages/state")
+local future = require("../luau_packages/future")
+local rest = require("../luau_packages/rest")
 
 local avatarDecoration = require("./avatarDecoration")
 local primaryGuild = require("./primaryGuild")
@@ -120,7 +123,6 @@ User.Prototype = {}
 
 --[=[
 	@within Classes.User
-	@private
 
 	Responsible for syncing data to this webhook object. This is typically called by the API when this object is
 	created or updated.
@@ -166,17 +168,50 @@ end
 
 --[=[
 	@within Classes.User
-	@private
+
+	Modifies the bot's own username or avatar. Requires state; only valid when this User object
+	represents the current bot user.
+]=]
+function User.Prototype.modifyAsync(self: User, username: string?, avatarData: string?): future.FutureLike<string, User>
+	assert(self.state, "Cannot modify user: this User object has no state reference")
+	return future.Future.new(function()
+		local request = self.state.rest:newRequest()
+		local response = rest.user.modifyCurrentUserAsync(request, { username = username, avatar = avatarData } :: any):await()
+		assert(response:isOk(), `{response:unwrapErr()}`)
+		self:sync(response:unwrapOk())
+		return self
+	end) :: future.FutureLike<string, User>
+end
+
+--[=[
+	@within Classes.User
+
+	Opens a DM channel with this user.
+]=]
+function User.Prototype.getDmChannelIdAsync(self: User): future.FutureLike<string, apiTypes.Snowflake>
+	assert(self.state, "Cannot open DM channel: this User object has no state reference")
+	return future.Future.new(function()
+		local request = self.state.rest:newRequest()
+		local response = rest.user.createDMAsync(request, { recipient_id = self.id }):await()
+		assert(response:isOk(), `{response:unwrapErr()}`)
+		return response:unwrapOk().id
+	end) :: future.FutureLike<string, apiTypes.Snowflake>
+end
+
+--[=[
+	@within Classes.User
 
 	Responsible for constructing this class.
 ]=]
-function User.Interface.new(userData: apiTypes.UserObject): User
+function User.Interface.new(userData: apiTypes.UserObject, userState: state.State?): User
 	local self = setmetatable(
 		{
 			id = userData.id,
 		} :: User,
 		{ __index = User.Prototype }
 	)
+
+	self.state = userState
 
 	if userData then
 		self:sync(userData)
@@ -187,6 +222,8 @@ end
 
 export type User = typeof(User.Prototype) & {
 	id: apiTypes.Snowflake,
+
+	state: state.State?,
 
 	username: string,
 	discriminator: string,
