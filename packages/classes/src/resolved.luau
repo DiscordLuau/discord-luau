@@ -62,14 +62,13 @@ Resolved.Prototype = {}
 
 --[=[
 	@within Classes.Resolved
-	@private
 
 	Responsible for syncing data to this resolved object. This is typically called by the API when this object is
 	created or updated.
 ]=]
 function Resolved.Prototype.sync(self: Resolved, resolvedData: apiTypes.ResolvedDataStructure)
 	for id, userData in next, resolvedData.users or {} do
-		self.users[id] = user.new(userData)
+		self.users[id] = user.new(userData, self.state)
 	end
 
 	for id, memberData in next, resolvedData.members or {} do
@@ -95,7 +94,6 @@ end
 
 --[=[
 	@within Classes.Resolved
-	@private
 
 	Responsible for constructing this class.
 ]=]

@@ -55,7 +55,6 @@ Reaction.Prototype = {}
 
 --[=[
 	@within Classes.Reaction
-	@private
 
 	Responsible for syncing data to this reaction object. This is typically called by the API when this object is
 	created or updated.
@@ -76,7 +75,6 @@ end
 
 --[=[
 	@within Classes.Reaction
-	@private
 
 	Responsible for constructing this class.
 ]=]
