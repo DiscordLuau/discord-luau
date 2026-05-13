@@ -2,7 +2,7 @@
 	@class Classes.Message.InteractionMetadata
 	@__index Prototype
 
-	Implementation of the Discord IneractionMetadata class in Luau. This class represents metadata about an interaction that occurred with a message.
+	Implementation of the Discord InteractionMetadata class in Luau. This class represents metadata about an interaction that occurred with a message.
 
 	https://discord.com/developers/docs/resources/message#message-interaction-metadata-object-message-interaction-metadata-structure
 ]=]
@@ -44,7 +44,7 @@
 ]=]
 
 --[=[
-	@prop triggeringInteractionMetadata Classes.Message.InteractionMetadata
+	@prop triggeringInteractionMetadata Classes.Message.InteractionMetadata?
 	@within Classes.Message.InteractionMetadata
 	The metadata of the interaction that triggered this interaction.
 ]=]
@@ -53,21 +53,20 @@ local apiTypes = require("../../luau_packages/api_types")
 
 local user = require("../user")
 
-local IneractionMetadata = {}
+local InteractionMetadata = {}
 
-IneractionMetadata.Interface = {}
-IneractionMetadata.Prototype = {}
+InteractionMetadata.Interface = {}
+InteractionMetadata.Prototype = {}
 
 --[=[
 	@within Classes.Message.InteractionMetadata
-	@private
 
 	Responsible for syncing data to this interaction metadata object. This is typically called by the API when this object is
 	created or updated.
 ]=]
-function IneractionMetadata.Prototype.sync(
-	self: IneractionMetadata,
-	interactionData: apiTypes.MessageInteractionMetadatObject
+function InteractionMetadata.Prototype.sync(
+	self: InteractionMetadata,
+	interactionData: apiTypes.MessageInteractionMetadataObject
 )
 	self.type = apiTypes.interaction.InteractionType[interactionData.type]
 
@@ -93,24 +92,23 @@ function IneractionMetadata.Prototype.sync(
 	self.interactedMessageId = interactionData.interacted_message_id
 
 	self.triggeringInteractionMetadata = interactionData.triggering_interaction_metadata
-		and IneractionMetadata.Interface.new(interactionData.triggering_interaction_metadata)
+		and InteractionMetadata.Interface.new(interactionData.triggering_interaction_metadata)
 end
 
 --[=[
 	@within Classes.Message.InteractionMetadata
-	@private
 
 	Responsible for constructing this class.
 ]=]
-function IneractionMetadata.Interface.new(interactionData: apiTypes.MessageInteractionMetadatObject): IneractionMetadata
-	local self = setmetatable({} :: IneractionMetadata, { __index = IneractionMetadata.Prototype })
+function InteractionMetadata.Interface.new(interactionData: apiTypes.MessageInteractionMetadataObject): InteractionMetadata
+	local self = setmetatable({} :: InteractionMetadata, { __index = InteractionMetadata.Prototype })
 
 	self:sync(interactionData)
 
 	return self
 end
 
-export type IneractionMetadata = typeof(IneractionMetadata.Prototype) & {
+export type InteractionMetadata = typeof(InteractionMetadata.Prototype) & {
 	id: apiTypes.Snowflake,
 	type: apiTypes.InteractionType,
 	user: user.User,
@@ -119,7 +117,7 @@ export type IneractionMetadata = typeof(IneractionMetadata.Prototype) & {
 	},
 	originalResponseMessageId: apiTypes.Snowflake?,
 	interactedMessageId: apiTypes.Snowflake?,
-	triggeringInteractionMetadata: IneractionMetadata,
+	triggeringInteractionMetadata: InteractionMetadata?,
 }
 
-return IneractionMetadata.Interface
+return InteractionMetadata.Interface
