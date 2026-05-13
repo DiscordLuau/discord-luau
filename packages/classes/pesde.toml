@@ -24,3 +24,5 @@ future = { name = "yetanotherclown/luau_futures", version = "2.0.0-beta.3" }
 builders = { workspace = "discord_luau/builders" }
 rest = { workspace = "discord_luau/rest" }
 bit = { workspace = "discord_luau/bit" }
+voice = { workspace = "discord_luau/voice" }
+emitter = { workspace = "discord_luau/emitter" }
