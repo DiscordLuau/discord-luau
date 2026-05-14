@@ -5,14 +5,14 @@ name = "discord_luau/root"
 version = "0.0.0"
 target = "luau"
 
+[workspace."discord_luau/accumulator"]
+luau = "packages/accumulator"
+
 [workspace."discord_luau/api_types"]
 luau = "packages/api_types"
 
 [workspace."discord_luau/bit"]
 luau = "packages/bit"
-
-[workspace."discord_luau/buffer"]
-luau = "packages/buffer"
 
 [workspace."discord_luau/builders"]
 luau = "packages/builders"
@@ -41,6 +41,9 @@ luau = "packages/formdata"
 [workspace."discord_luau/logger"]
 luau = "packages/logger"
 
+[workspace."discord_luau/opus"]
+luau = "packages/opus"
+
 [workspace."discord_luau/rest"]
 luau = "packages/rest"
 
@@ -49,6 +52,9 @@ luau = "packages/secret"
 
 [workspace."discord_luau/snowflake"]
 luau = "packages/snowflake"
+
+[workspace."discord_luau/sodium"]
+luau = "packages/sodium"
 
 [workspace."discord_luau/state"]
 luau = "packages/state"
