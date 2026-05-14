@@ -20,6 +20,7 @@ lib = "src/init.luau"
 discord = { workspace = "discord_luau/discord_luau" }
 builders = { workspace = "discord_luau/builders" }
 classes = { workspace = "discord_luau/classes" }
+opus = { workspace = "discord_luau/opus" }
 
 [patches]
 "yetanotherclown/luau_futures" = { "2.0.0-beta.3 luau" = "patches/yetanotherclown+luau_futures-2.0.0-beta.3+luau.patch" }
