@@ -5,7 +5,7 @@
 	Primarily required in the calculation for snowflake IDs that the Discord API will give us.
 ]=]
 
-local Bit64 = require("@self/bit64")
+local Bit52 = require("@self/bit52")
 local Bit = {}
 
 --[=[
@@ -26,7 +26,7 @@ function Bit.bnot(value: number): number
 	if Bit.is32Bit(value) then
 		return bit32.bnot(value)
 	else
-		return Bit64.bnot(value)
+		return Bit52.bnot(value)
 	end
 end
 
@@ -39,7 +39,7 @@ function Bit.bor(value0: number, value1: number): number
 	if Bit.is32Bit(value0) and Bit.is32Bit(value1) then
 		return bit32.bor(value0, value1)
 	else
-		return Bit64.bor(value0, value1)
+		return Bit52.bor(value0, value1)
 	end
 end
 
@@ -52,7 +52,7 @@ function Bit.band(value0: number, value1: number): number
 	if Bit.is32Bit(value0) and Bit.is32Bit(value1) then
 		return bit32.band(value0, value1)
 	else
-		return Bit64.band(value0, value1)
+		return Bit52.band(value0, value1)
 	end
 end
 
@@ -69,7 +69,7 @@ function Bit.shift(value: number, displacement: number): number
 			return bit32.rshift(value, -displacement)
 		end
 	else
-		return Bit64.shift(value, displacement)
+		return Bit52.shift(value, displacement)
 	end
 end
 

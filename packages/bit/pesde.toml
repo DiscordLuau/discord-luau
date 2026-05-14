@@ -1,6 +1,6 @@
 name = "discord_luau/bit"
 version = "0.0.1"
-description = "Discord-Luau Bit - Bit library for Luau. (supports 64bit for Discord Snowflakes!)"
+description = "Discord-Luau Bit - Bit library for Luau supporting integers up to 52 bits (Discord permission flags)."
 license = "MIT"
 authors = ["Async Matrix <hi@asyncmatrix.dev>"]
 repository = "https://github.com/DiscordLuau/discord-luau/tree/main/packages/bit"

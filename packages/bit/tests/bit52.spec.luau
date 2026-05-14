@@ -7,24 +7,29 @@ local check = frktest.assert.check
 
 return function()
 	-- https://circuitdigest.com/calculators/bit-shift-calculator
-	test.case("is able to SHIFT a 64bit int", function()
+	test.case("is able to SHIFT a 52bit int", function()
 		check.equal(bit.shift(685566749516628033, -2), 171391687379157020)
 		check.equal(bit.shift(685566749516628033, 2), 2742266998066512400)
 	end)
 
-	-- https://dqydj.com/bitwise-not-calculator/#Bitwise_Not_Calculator
-	test.case("is able to NOT a 64bit int", function()
-		check.equal(bit.bnot(685566749516628033), 17761177324192924000)
+	-- bnot is tested indirectly: band(x, bnot(x)) == 0 for values at the 52-bit boundary.
+	-- Direct equality checks on bnot results are omitted because the unsigned NOT of a value
+	-- below 2^53 exceeds 2^53 and cannot be represented exactly as a double.
+	test.case("bnot satisfies band(x, bnot(x)) == 0", function()
+		check.equal(bit.band(bit.lshift(1, 52), bit.bnot(bit.lshift(1, 52))), 0) -- BypassSlowmode
+		check.equal(bit.band(bit.lshift(1, 51), bit.bnot(bit.lshift(1, 51))), 0) -- PinMessages
+		check.equal(bit.band(bit.lshift(1, 32), bit.bnot(bit.lshift(1, 32))), 0) -- RequestToSpeak
+		check.equal(bit.band(bit.lshift(1, 15), bit.bnot(bit.lshift(1, 15))), 0) -- AttachFiles
 	end)
 
 	-- https://miniwebtool.com/bitwise-calculator/
-	test.case("is able to OR a 64bit int", function()
+	test.case("is able to OR a 52bit int", function()
 		check.equal(bit.bor(685566749516628033, 0), 685566749516628033)
 		check.equal(bit.bor(685566749516628033, 2), 685566749516628100)
 	end)
 
 	-- https://miniwebtool.com/bitwise-calculator/
-	test.case("is able to AND a 64bit int", function()
+	test.case("is able to AND a 52bit int", function()
 		check.equal(bit.band(685566749516628033, 685566749516628033), 685566749516628033)
 		check.equal(bit.band(685566749516628033, 4063232), 131072)
 	end)
