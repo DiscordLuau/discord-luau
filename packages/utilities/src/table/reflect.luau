@@ -23,16 +23,15 @@
 	]]
 	```
 
-	@return thread
+	@return table
 ]=]
 return function(source)
-	local reversed = {}
+	local result = {}
 
-	for i, v in source do
-		reversed[v] = i
+	for key, value in source do
+		result[key] = value
+		result[value] = key
 	end
 
-	return setmetatable(source, {
-		__index = reversed,
-	})
+	return result
 end

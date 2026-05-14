@@ -7,7 +7,7 @@
 
 	Will return either true/false, will not error.
 
-	@return thread
+	@return boolean
 ]=]
 return function(source: string)
 	if source == "" then

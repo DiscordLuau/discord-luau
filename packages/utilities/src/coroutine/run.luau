@@ -8,12 +8,12 @@
 
 	@return thread
 ]=]
-return function(func: () -> (), ...)
-	local thread = coroutine.create(func)
-	local status, result = coroutine.resume(thread, ...)
+return function(callback: () -> (), ...)
+	local thread = coroutine.create(callback)
+	local success, errorMessage = coroutine.resume(thread, ...)
 
-	if not status then
-		error(result)
+	if not success then
+		error(errorMessage, 0)
 	end
 
 	return thread
