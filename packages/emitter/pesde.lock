@@ -4,3 +4,20 @@ format = 2
 name = "discord_luau/emitter"
 version = "0.0.1"
 target = "luau"
+
+[graph."discord_luau/logger@0.0.1 luau"]
+direct = ["logger", { workspace = "discord_luau/logger", version = "^" }, "standard"]
+
+[graph."discord_luau/logger@0.0.1 luau".dependencies]
+std_polyfills = ["discord_luau/std_polyfills@0.0.1 luau", "standard"]
+
+[graph."discord_luau/logger@0.0.1 luau".pkg_ref]
+ref_ty = "workspace"
+path = "packages/logger"
+
+[graph."discord_luau/logger@0.0.1 luau".pkg_ref.dependencies]
+std_polyfills = [{ workspace = "discord_luau/std_polyfills", version = "^" }, "standard"]
+
+[graph."discord_luau/std_polyfills@0.0.1 luau".pkg_ref]
+ref_ty = "workspace"
+path = "packages/std_polyfills"

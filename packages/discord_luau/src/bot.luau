@@ -86,12 +86,12 @@ local DISCORD_VERSION = 10
 ]=]
 
 --[=[
-	@prop onMessageDeleted Emitter<{ messageId: apiTypes.Snowflake, channelId: apiTypes.Snowflake, guildId: apiTypes.Snowflake }>
+	@prop onMessageDeleted Emitter<{ messageId: apiTypes.Snowflake, channelId: apiTypes.Snowflake, guildId: apiTypes.Snowflake? }>
 	@within DiscordLuau.Bot
 ]=]
 
 --[=[
-	@prop onMessageBulkDeleted Emitter<{ channelId: string, guildId: string, ids: { string } }>
+	@prop onMessageBulkDeleted Emitter<{ channelId: string, guildId: string?, ids: { string } }>
 	@within DiscordLuau.Bot
 ]=]
 
@@ -251,7 +251,7 @@ local DISCORD_VERSION = 10
 ]=]
 
 --[=[
-	@prop onGuildMemberJoined Emitter<Classes.GuildMember & { guildId: string }>
+	@prop onGuildMemberJoined Emitter<{ guildId: string, member: Classes.GuildMember }>
 	@within DiscordLuau.Bot
 ]=]
 
@@ -261,7 +261,7 @@ local DISCORD_VERSION = 10
 ]=]
 
 --[=[
-	@prop onGuildMemberUpdated Emitter<{guildId: stringroles: { string },user: classes.User,nick: string?,avatar: string,joinedAt: stdPolyfills.DateTime,premiumSince: stdPolyfills.DateTime,deaf: boolean?,mute: boolean?,pending: boolean?,communicationDisabledUntil: stdPolyfills.DateTime?,}>
+	@prop onGuildMemberUpdated Emitter<{guildId: string,roles: { string },user: classes.User,nick: string?,avatar: string?,joinedAt: stdPolyfills.DateTime?,premiumSince: stdPolyfills.DateTime?,deaf: boolean?,mute: boolean?,pending: boolean?,communicationDisabledUntil: stdPolyfills.DateTime?,}>
 	@within DiscordLuau.Bot
 ]=]
 
@@ -636,7 +636,7 @@ function Bot.Prototype.connectAsync(self: Bot): future.FutureLike<string, nil>
 		end)
 
 		self.state.webSocketManager.onDisconnected:listen(function(data)
-			self.onShardDisconnected:invoke(data.shardId, data.errorCode)
+			self.onShardDisconnected:invoke(data.shardId, data.errorCode :: any)
 		end)
 
 		self.state.webSocketManager.onReconnected:listen(function(data)
@@ -785,7 +785,7 @@ function Bot.Prototype.connectAsync(self: Bot): future.FutureLike<string, nil>
 
 				self.onChannelPinsUpdate:invoke({
 					channelId = typedObject.d.channel_id,
-					guildId = typedObject.d.guild_id,
+					guildId = typedObject.d.guild_id :: string,
 					lastPinTimestamp = typedObject.d.last_pin_timestamp
 						and stdPolyfills.datetime.fromIsoDate(typedObject.d.last_pin_timestamp),
 				})
@@ -1233,7 +1233,7 @@ function Bot.Prototype.connectAsync(self: Bot): future.FutureLike<string, nil>
 			elseif object.event == apiTypes.gateway.receiveEvents["PresenceUpdate"] then
 				local typedObject = object.payload :: apiTypes.PresenceUpdatePayload
 
-				self.onPresenceUpdate:invoke(classes.presence.new(typedObject.d :: apiTypes.PresenceObject))
+				self.onPresenceUpdate:invoke(classes.presence.new(typedObject.d))
 			elseif object.event == apiTypes.gateway.receiveEvents["TypingStart"] then
 				local typedObject = object.payload :: apiTypes.TypingStartPayload
 
@@ -1249,7 +1249,7 @@ function Bot.Prototype.connectAsync(self: Bot): future.FutureLike<string, nil>
 			elseif object.event == apiTypes.gateway.receiveEvents["GuildMembersChunk"] then
 				local typedObject = object.payload :: apiTypes.GuildMembersChunkPayload
 
-				local membersArray = {}
+				local membersArray: { classes.GuildMember } = {}
 				for _, memberData in next, typedObject.d.members do
 					table.insert(membersArray, classes.guild.member.new(self.state, typedObject.d.guild_id, memberData))
 				end
@@ -1343,6 +1343,27 @@ function Bot.Prototype.connectAsync(self: Bot): future.FutureLike<string, nil>
 				})
 			end
 		end)
+
+		if stdPolyfills.runtime.capabilities().onSignal then
+			stdPolyfills.process.onSignal("INT", function()
+				self.logger:info("SIGINT received - shutting down voice and gateway connections")
+
+				for channelId, connection in self.state.voiceConnections do
+					self.logger:info(`disconnecting voice connection for channel {channelId}`)
+					connection:forceClose()
+				end
+				table.clear(self.state.voiceConnections)
+
+				for _, shard in next, self.state.webSocketManager.shards do
+					self.logger:info(`disconnecting shard '{shard.shardId}'`)
+					shard:forceClose()
+				end
+			end)
+		else
+			self.logger:warn(
+				"SIGINT handling is not supported on this runtime - voice and gateway connections will not be gracefully closed on interrupt"
+			)
+		end
 
 		self.state.webSocketManager:connectAsync(gatewayInformation:unwrapOk()):poll()
 		self.state.webSocketManager.onConnected:wait()
@@ -1553,9 +1574,9 @@ end
 --[=[
 	@within DiscordLuau.Bot
 
-	Returns a text channel object for the given channel ID.
+	Returns a forum channel object for the given channel ID.
 
-	This function sends a request to the Discord API to retrieve information about a text channel.
+	This function sends a request to the Discord API to retrieve information about a forum channel.
 ]=]
 function Bot.Prototype.getForumChannelAsync(
 	self: Bot,
@@ -1571,9 +1592,9 @@ end
 --[=[
 	@within DiscordLuau.Bot
 
-	Returns a text channel object for the given channel ID.
+	Returns a media channel object for the given channel ID.
 
-	This function sends a request to the Discord API to retrieve information about a text channel.
+	This function sends a request to the Discord API to retrieve information about a media channel.
 ]=]
 function Bot.Prototype.getMediaChannelAsync(
 	self: Bot,
@@ -1691,7 +1712,7 @@ end
 		Due to this zombified state - presences may be delayed, or won't render immediately
 	:::
 ]=]
-function Bot.Prototype.setPresenceAsync(self: Bot, presence: builders.presenceJSON)
+function Bot.Prototype.setPresenceAsync(self: Bot, presence: builders.presenceJSON): future.FutureLike<string, nil>
 	return self.state.webSocketManager:sendAsync(apiTypes.gateway.opcodes.PresenceUpdate, presence)
 end
 
@@ -1707,7 +1728,7 @@ function Bot.Interface.new(options: {
 	logLevel: logger.LogLevel?,
 	globalRatelimit: number?,
 })
-	local self = setmetatable(
+	local self: Bot = setmetatable(
 		{
 			state = state.state.new({
 				token = options.token,
@@ -1854,7 +1875,7 @@ function Bot.Interface.new(options: {
 			onComponentInteraction = emitter.new(),
 			onAutocompleteInteraction = emitter.new(),
 			onModalInteraction = emitter.new(),
-		} :: Bot,
+		} :: any,
 		{ __index = Bot.Prototype }
 	)
 
@@ -1890,9 +1911,9 @@ export type Bot =
 
 		onMessageChanged: emitter.Emitter<classes.Message>,
 
-		onMessageDeleted: emitter.Emitter<{ messageId: apiTypes.Snowflake, channelId: apiTypes.Snowflake, guildId: apiTypes.Snowflake }>,
+		onMessageDeleted: emitter.Emitter<{ messageId: apiTypes.Snowflake, channelId: apiTypes.Snowflake, guildId: apiTypes.Snowflake? }>,
 
-		onMessageBulkDeleted: emitter.Emitter<{ channelId: string, guildId: string, ids: { string } }>,
+		onMessageBulkDeleted: emitter.Emitter<{ channelId: string, guildId: string?, ids: { string } }>,
 
 		onGroupDMChannelCreate: emitter.Emitter<classes.GroupDM>,
 
@@ -1956,7 +1977,7 @@ export type Bot =
 
 		onGuildMemberUnbanned: emitter.Emitter<{ guildId: string, user: classes.User }>,
 
-		onGuildMemberJoined: emitter.Emitter<classes.GuildMember & { guildId: string }>,
+		onGuildMemberJoined: emitter.Emitter<{ guildId: string, member: classes.GuildMember }>,
 
 		onGuildMemberLeft: emitter.Emitter<{ guildId: string, user: classes.User }>,
 
@@ -1965,9 +1986,9 @@ export type Bot =
 			roles: { string },
 			user: classes.User,
 			nick: string?,
-			avatar: string,
-			joinedAt: stdPolyfills.DateTime,
-			premiumSince: stdPolyfills.DateTime,
+			avatar: string?,
+			joinedAt: stdPolyfills.DateTime?,
+			premiumSince: stdPolyfills.DateTime?,
 			deaf: boolean?,
 			mute: boolean?,
 			pending: boolean?,
