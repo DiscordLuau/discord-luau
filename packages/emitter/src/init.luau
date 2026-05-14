@@ -6,6 +6,10 @@
 		out to the Consumers of this library.
 ]=]
 
+local Logger = require("./luau_packages/logger")
+
+local logger = Logger.new("Emitter")
+
 local Emitter = {}
 
 Emitter.Interface = {}
@@ -17,17 +21,35 @@ Emitter.Prototype = {}
 	Listen to this event, returns a function that can be called to disconnect the listener
 ]=]
 function Emitter.Prototype.listen<T...>(self: Emitter<T...>, callback: (T...) -> ()): () -> ()
+	local emitterRef = self
+
 	local thread = coroutine.create(function()
 		while true do
-			callback(coroutine.yield())
+			local args = table.pack(coroutine.yield())
+
+			local ok, err = xpcall(function()
+				(callback :: any)(table.unpack(args, 1, args.n))
+			end, function(errMsg)
+				return debug.traceback(errMsg, 2)
+			end)
+
+			if not ok then
+				local invokeTrace = emitterRef._lastInvokeTrace
+				local message = `listener callback errored:\n{err}`
+
+				if invokeTrace then
+					message ..= `\n\ninvoke site:\n{invokeTrace}`
+				end
+
+				logger:warn(message)
+			end
 		end
 	end)
 
-	local status, response = coroutine.resume(thread)
+	local status, err = coroutine.resume(thread)
 
 	if not status then
-		warn(response)
-		print(debug.traceback(thread))
+		logger:warn(`failed to initialise listener thread: {err}`)
 	end
 
 	table.insert(self._connectedThreads, thread)
@@ -76,28 +98,38 @@ end
 
 	This will additionally resume all the threads that are currently waiting for an event to be emitted.
 ]=]
-function Emitter.Prototype.invoke<T...>(self: Emitter<T...>, ...: any): ()
-	local callback = coroutine.wrap(function(...)
-		for _, thread in self._yieldingThreads do
-			local status, response = coroutine.resume(thread, ...)
+function Emitter.Prototype.invoke<T...>(self: Emitter<T...>, ...: T...): ()
+	self._lastInvokeTrace = debug.traceback()
 
-			if not status then
-				print(response)
-			end
+	for _, thread in self._yieldingThreads do
+		if coroutine.status(thread) == "dead" then
+			continue
 		end
 
-		self._yieldingThreads = {}
+		local status, response = coroutine.resume(thread, ...)
 
-		for _, thread in self._connectedThreads do
-			local status, response = coroutine.resume(thread, ...)
-
-			if not status then
-				print(response)
-			end
+		if not status then
+			logger:warn(`failed to resume yielding thread: {response}\n\ninvoke site:\n{self._lastInvokeTrace}`)
 		end
-	end)
+	end
 
-	return callback(...)
+	self._yieldingThreads = {}
+
+	for i = #self._connectedThreads, 1, -1 do
+		local thread = self._connectedThreads[i]
+
+		if coroutine.status(thread) == "dead" then
+			table.remove(self._connectedThreads, i)
+			continue
+		end
+
+		local status, response = coroutine.resume(thread, ...)
+
+		if not status then
+			logger:warn(`failed to resume connected thread: {response}\n\ninvoke site:\n{self._lastInvokeTrace}`)
+			table.remove(self._connectedThreads, i)
+		end
+	end
 end
 
 --[=[
@@ -120,6 +152,7 @@ end
 export type Emitter<T...> = typeof(Emitter.Prototype) & {
 	_yieldingThreads: { thread },
 	_connectedThreads: { thread },
+	_lastInvokeTrace: string?,
 }
 
 return Emitter.Interface
