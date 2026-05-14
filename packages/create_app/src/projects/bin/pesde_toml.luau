@@ -1,5 +1,5 @@
 return function(projectName: string, license: string)
-	local safeName = string.lower(string.gsub(projectName, "%-", "_"))
+	local safeName = string.lower(string.gsub(projectName, "%-", "_") :: string)
 
 	return [[name = "]]
 		.. safeName

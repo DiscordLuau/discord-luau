@@ -1,9 +1,12 @@
 local StdPolyfills = require("../../../luau_packages/std_polyfills")
 
-return function()
+local RUNTIME_ALIASES = {
+	lune = { lune = "~/.lune/.typedefs/0.10.1/" },
+	zune = { zune = "~/.zune/typedefs/" },
+}
+
+return function(runtime: string)
 	return StdPolyfills.serde.encode("json", {
-		aliases = {
-			lune = "~/.lune/.typedefs/0.10.1/",
-		},
+		aliases = RUNTIME_ALIASES[runtime] or RUNTIME_ALIASES.lune,
 	}, true)
 end

@@ -26,7 +26,11 @@ if osInfo == "windows" then
 		stdio = "forward",
 	})
 else
-	local commandString = "zune " .. table.concat(spawnArgs, " ") .. " < /dev/tty > /dev/tty"
+	local quotedArgs = {}
+	for _, arg in spawnArgs do
+		table.insert(quotedArgs, "'" .. string.gsub(arg, "'", "'\\''") .. "'")
+	end
+	local commandString = "zune " .. table.concat(quotedArgs, " ") .. " < /dev/tty > /dev/tty"
 
 	process.exec("sh", { "-c", commandString }, {
 		stdio = "forward",

@@ -6,9 +6,13 @@ local RUNTIME_TOOLS = {
 }
 
 return function(runtime: string)
-	return StdPolyfills.serde.encode("toml", {
-		tools = {
-			[runtime] = RUNTIME_TOOLS[runtime],
-		},
-	}, true)
+	local tools = {
+		lune = RUNTIME_TOOLS.lune,
+	}
+
+	if runtime ~= "lune" then
+		tools[runtime] = RUNTIME_TOOLS[runtime]
+	end
+
+	return StdPolyfills.serde.encode("toml", { tools = tools }, true)
 end

@@ -12,7 +12,7 @@ return function(license: string, projectName: string)
 			["X-GitHub-Api-Version"] = "2022-11-28",
 			["User-Agent"] = "DiscordLuau/create_app",
 		},
-	})
+	} :: any)
 
 	if not response.ok then
 		return `# LICENSE\n\n{license}\n\nSee https://choosealicense.com for the full license text.\n`

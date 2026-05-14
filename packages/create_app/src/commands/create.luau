@@ -86,7 +86,7 @@ local function resolveDirectory(directory: string?): string?
 			resolvedPath = home .. separator .. restOfPath
 		end
 	elseif (string.sub(directory, 1, 1) == "/") or (string.match(directory, "^%a:\\") ~= nil) then
-		return directory
+		resolvedPath = directory
 	else
 		local cwd = StdPolyfills.process.getCwd()
 		resolvedPath = cwd .. separator .. directory
@@ -99,37 +99,39 @@ local function resolveDirectory(directory: string?): string?
 	end
 end
 
-local function buildProjectMap(projectMap: VDirectory, path: string, information: Information)
+local function buildProjectMap(projectMap: VDirectory, path: string, information: Information, sep: string)
 	for key, value in projectMap do
+		local childPath = path .. sep .. key
 		if typeof(value) == "table" then
-			StdPolyfills.fileSystem.writeDir(`{path}/{key}`)
-			buildProjectMap(value :: VDirectory, `{path}/{key}`, information)
+			StdPolyfills.fileSystem.writeDir(childPath)
+			buildProjectMap(value :: VDirectory, childPath, information, sep)
 		else
-			StdPolyfills.fileSystem.writeFile(`{path}/{key}`, (value :: VFile)(information))
+			StdPolyfills.fileSystem.writeFile(childPath, (value :: VFile)(information))
 		end
 	end
 end
 
 local function setupProject(path: string, projectFile: string, information: Information)
+	local platform = StdPolyfills.process.getPlatform()
+	local sep = OS_SLASH_MAP[platform] or "/"
 	local directoryName = string.match(information.ProjectName, "[^/]+$") or information.ProjectName
+	local projectRoot = path .. sep .. directoryName
 
-	if StdPolyfills.fileSystem.isDir(`{path}/{directoryName}`) then
-		return Logger:error(`Directory '{path}/{directoryName}' already exists - aborting project creation!`)
+	if StdPolyfills.fileSystem.isDir(projectRoot) then
+		return Logger:error(`Directory '{projectRoot}' already exists - aborting project creation!`)
 	end
 
-	if StdPolyfills.fileSystem.isFile(`{path}/{directoryName}`) then
-		return Logger:error(
-			`Directory '{path}/{directoryName}' already exists (as a file) - aborting project creation!`
-		)
+	if StdPolyfills.fileSystem.isFile(projectRoot) then
+		return Logger:error(`Directory '{projectRoot}' already exists (as a file) - aborting project creation!`)
 	end
 
-	StdPolyfills.fileSystem.writeDir(`{path}/{directoryName}`)
+	StdPolyfills.fileSystem.writeDir(projectRoot)
 
 	local projectMap: VDirectory = (require :: any)(`./../projects/{projectFile}`)
 
-	buildProjectMap(projectMap, `{path}/{directoryName}`, information)
+	buildProjectMap(projectMap, projectRoot, information, sep)
 
-	Logger:debug(`Finished setting up project in the following dir: '{`{path}/{directoryName}`}'`)
+	Logger:debug(`Finished setting up project in the following dir: '{projectRoot}'`)
 end
 
 return command
@@ -157,8 +159,10 @@ return command
 		Logger:debug(`Resolved path argument as the following directory; '{targetDirectory}'`)
 
 		require("../ui/createWizard")(function(info, setStatus, _setWarning)
+			local platform = StdPolyfills.process.getPlatform()
+			local sep = OS_SLASH_MAP[platform] or "/"
 			local projectDirectoryName = string.match(info.ProjectName, "[^/]+$") or info.ProjectName
-			local projectPath = `{targetDirectory}/{projectDirectoryName}`
+			local projectPath = targetDirectory .. sep .. projectDirectoryName
 
 			setStatus("Creating project structure…", 0.10)
 			setupProject(targetDirectory, info.IDE, info)

@@ -38,8 +38,8 @@ return {
 	[".gitignore"] = function(_information: Information)
 		return gitignore()
 	end,
-	[".luaurc"] = function(_information: Information)
-		return luau_rc()
+	[".luaurc"] = function(information: Information)
+		return luau_rc(information.Runtime)
 	end,
 	["pesde.toml"] = function(information: Information)
 		return pesde_toml(information.ProjectName, information.License)
