@@ -1,7 +1,7 @@
 [tools]
 luau-lsp = "JohnnyMorganz/luau-lsp@1.67.0"
 selene = "Kampfkarren/selene@0.27.1"
-stylua = "JohnnyMorganz/StyLua@0.20.0"
+stylua = "JohnnyMorganz/StyLua@2.4.1"
 darklua = "seaofvoices/darklua@0.18.0"
 lune = "lune-org/lune@0.10.4"
 zune = "Scythe-Technology/zune@0.5.6"
