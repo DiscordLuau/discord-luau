@@ -1,6 +1,0 @@
----
-base: luau
-globals:
-  warn:
-    args:
-      - type: ...
