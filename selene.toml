@@ -1,4 +1,4 @@
-std = "lune+zune"
+std = "luau"
 exclude = ["packages/api_types/bundled.luau"]
 
 [lints]
