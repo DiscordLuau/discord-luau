@@ -12,6 +12,8 @@
 -- selene: allow(unused_variable)
 local state = require("../../../luau_packages/state")
 local apiTypes = require("../../../luau_packages/api_types")
+local rest = require("../../../luau_packages/rest")
+local future = require("../../../luau_packages/future")
 
 local interactionBehaviour = require("../behaviour/interaction")
 local interactableBehaviour = require("../behaviour/interactable")
@@ -24,6 +26,31 @@ Component.Behaviours = {
 	interactionBehaviour,
 	interactableBehaviour,
 }
+
+--[=[
+	@within Classes.Interactions.Component
+
+	Silently acknowledge a component interaction without updating the original message. Sends interaction
+	response type 6 (DEFERRED_UPDATE_MESSAGE). Use this when you want to handle the interaction in the
+	background without showing a loading state or modifying the message.
+]=]
+function Component.Prototype.acknowledgeAsync(self: Component): future.FutureLike<string, nil>
+	local request = self.state.rest:newRequest()
+
+	return future.Future.new(function()
+		local response = rest.interaction
+			.createInteractionResponseAsync(request, self.id, self.token, {
+				type = 6,
+			}, {
+				withResponse = false,
+			})
+			:await()
+
+		assert(response:isOk(), `{response:unwrapErr()}`)
+
+		return nil
+	end) :: future.FutureLike<string, nil>
+end
 
 --[=[
 	@within Classes.Interactions.Component
