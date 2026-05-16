@@ -16,6 +16,9 @@
 -- selene: allow(unused_variable)
 local state = require("../../../luau_packages/state")
 local apiTypes = require("../../../luau_packages/api_types")
+local rest = require("../../../luau_packages/rest")
+local future = require("../../../luau_packages/future")
+local builders = require("../../../luau_packages/builders")
 
 local interactionBehaviour = require("../behaviour/interaction")
 
@@ -26,6 +29,43 @@ Autocomplete.Prototype = {}
 Autocomplete.Behaviours = {
 	interactionBehaviour,
 }
+
+--[=[
+	@within Classes.Interactions.Autocomplete
+
+	Respond to an autocomplete interaction with a list of choices. Sends interaction response type 8
+	(APPLICATION_COMMAND_AUTOCOMPLETE_RESULT).
+
+	```luau
+	interaction:respondAsync({
+		builders.choice.new({ name = "Option A", value = "a" }):build(),
+		builders.choice.new({ name = "Option B", value = "b" }):build(),
+	}):await()
+	```
+]=]
+function Autocomplete.Prototype.respondAsync(
+	self: Autocomplete,
+	choices: { builders.choiceJSON }
+): future.FutureLike<string, nil>
+	local request = self.state.rest:newRequest()
+
+	return future.Future.new(function()
+		local response = rest.interaction
+			.createInteractionResponseAsync(request, self.id, self.token, {
+				type = 8,
+				data = {
+					choices = choices,
+				},
+			}, {
+				withResponse = false,
+			})
+			:await()
+
+		assert(response:isOk(), `{response:unwrapErr()}`)
+
+		return nil
+	end) :: future.FutureLike<string, nil>
+end
 
 --[=[
 	@within Classes.Interactions.Autocomplete
