@@ -707,7 +707,7 @@ end
 	until the shard is disconnected.
 ]=]
 function Shard.Prototype.heartbeatIn(self: Shard, milliseconds: number): ()
-	if self.heartbeatThread and self.heartbeatThread ~= coroutine.running() then
+	if self.heartbeatThread and coroutine.status(self.heartbeatThread) == "suspended" then
 		coroutine.close(self.heartbeatThread)
 	end
 
