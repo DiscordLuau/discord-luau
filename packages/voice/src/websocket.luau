@@ -250,11 +250,13 @@ function WebSocketTransport.Prototype._openSocket(self: WebSocketTransport, url:
 	self.logger:info(`voice WebSocket connected, starting receive loop`)
 
 	self.socketThread = util.coroutineRun(function()
+		local myThread = coroutine.running()
+
 		if self.onConnected then
 			self.onConnected()
 		end
 
-		while self.socketActive and self.socketInstance do
+		while self.socketActive and self.socketInstance and self.socketThread == myThread do
 			assert(self.socketInstance, `Voice socket instance is nil.`)
 
 			if self.socketInstance.closeCode then
@@ -275,6 +277,10 @@ function WebSocketTransport.Prototype._openSocket(self: WebSocketTransport, url:
 					self.socketActive = false
 				end
 			end
+		end
+
+		if self.socketThread ~= myThread then
+			return
 		end
 
 		local sock = self.socketInstance
@@ -312,7 +318,9 @@ function WebSocketTransport.Prototype.forceClose(self: WebSocketTransport, code:
 	end
 
 	if self.socketThread then
-		coroutine.close(self.socketThread)
+		if coroutine.status(self.socketThread) == "suspended" then
+			coroutine.close(self.socketThread)
+		end
 		self.socketThread = nil
 	end
 
