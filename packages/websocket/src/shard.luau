@@ -348,7 +348,9 @@ function Shard.Prototype.forceClose(self: Shard, code: number?)
 	end
 
 	if self.socketThread then
-		coroutine.close(self.socketThread)
+		if coroutine.status(self.socketThread) == "suspended" then
+			coroutine.close(self.socketThread)
+		end
 		self.socketThread = nil
 	end
 
@@ -421,11 +423,12 @@ function Shard.Prototype.connectAsync(self: Shard, socketUrl: string, socketVers
 		self.logger:info(`has connected to: {socketUrl}, starting receive thread.`)
 
 		self.socketThread = util.coroutineRun(function()
+			local myThread = coroutine.running()
 			self.logger:info(`Receive thread started, awaiting messages.`)
 
 			self.onSocketConnected:invoke()
 
-			while self.socketActive and self.socketInstance do
+			while self.socketActive and self.socketInstance and self.socketThread == myThread do
 				assert(self.socketInstance, `Socket instance is nil.`)
 
 				if self.socketInstance.closeCode then
@@ -451,6 +454,10 @@ function Shard.Prototype.connectAsync(self: Shard, socketUrl: string, socketVers
 						self.socketActive = false
 					end
 				end
+			end
+
+			if self.socketThread ~= myThread then
+				return
 			end
 
 			local sock = self.socketInstance
