@@ -422,16 +422,17 @@ function Shard.Prototype.connectAsync(self: Shard, socketUrl: string, socketVers
 
 		self.logger:info(`has connected to: {socketUrl}, starting receive thread.`)
 
-		self.socketThread = util.coroutineRun(function()
-			local myThread = coroutine.running()
-			self.logger:info(`Receive thread started, awaiting messages.`)
+		do
+			local thread = coroutine.create(function()
+				local myThread = coroutine.running()
+				self.logger:info(`Receive thread started, awaiting messages.`)
 
-			self.onSocketConnected:invoke()
+				self.onSocketConnected:invoke()
 
-			while self.socketActive and self.socketInstance and self.socketThread == myThread do
-				assert(self.socketInstance, `Socket instance is nil.`)
+				while self.socketActive and self.socketInstance and self.socketThread == myThread do
+					assert(self.socketInstance, `Socket instance is nil.`)
 
-				if self.socketInstance.closeCode then
+					if self.socketInstance.closeCode then
 					self.logger:warn(`closed from server: {self.socketInstance.closeCode}`)
 
 					self.socketActive = false
@@ -478,6 +479,12 @@ function Shard.Prototype.connectAsync(self: Shard, socketUrl: string, socketVers
 				self.onSocketDisconnected:invoke(-1)
 			end
 		end)
+			self.socketThread = thread
+			local success, errorMessage = coroutine.resume(thread)
+			if not success then
+				self.logger:error(`receive thread failed to start: {errorMessage}`)
+			end
+		end
 	end) :: future.FutureLike<string, nil>
 end
 
