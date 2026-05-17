@@ -38,11 +38,11 @@ function Modal.Prototype.getContent(self: Modal, customId: string): string?
 	assert(self.data.components, `Expected components`)
 	assert(self.data.components[1], `Expected component list`)
 
-	local componentList = self.data.components[1] :: actionRow.ActionRow
-
-	for _, value in componentList.components :: { textInput.TextInput } do
-		if value.customId == customId then
-			return value.value
+	for _, componentList in self.data.components :: { actionRow.ActionRow } do
+		for _, value in componentList.components :: { textInput.TextInput } do
+			if value.customId == customId then
+				return value.value
+			end
 		end
 	end
 
