@@ -117,9 +117,14 @@ function Emitter.Prototype.invoke<T...>(self: Emitter<T...>, ...: T...): ()
 
 	for i = #self._connectedThreads, 1, -1 do
 		local thread = self._connectedThreads[i]
+		local threadStatus = coroutine.status(thread)
 
-		if coroutine.status(thread) == "dead" then
+		if threadStatus == "dead" then
 			table.remove(self._connectedThreads, i)
+			continue
+		end
+
+		if threadStatus == "normal" then
 			continue
 		end
 
