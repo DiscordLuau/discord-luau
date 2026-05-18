@@ -342,7 +342,7 @@ end
 function Shard.Prototype.forceClose(self: Shard, code: number?)
 	self.logger:info(`force closing shard {self.shardId}`)
 
-	if self.heartbeatThread then
+	if self.heartbeatThread and coroutine.status(self.heartbeatThread) == "suspended" then
 		coroutine.close(self.heartbeatThread)
 		self.heartbeatThread = nil
 	end
@@ -950,9 +950,8 @@ function Shard.Interface.new(settings: {
 			return
 		end
 
-		if self.heartbeatThread then
+		if self.heartbeatThread and coroutine.status(self.heartbeatThread) == "suspended" then
 			coroutine.close(self.heartbeatThread)
-
 			self.heartbeatThread = nil
 		end
 
