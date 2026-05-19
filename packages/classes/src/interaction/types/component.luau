@@ -14,6 +14,7 @@ local state = require("../../../luau_packages/state")
 local apiTypes = require("../../../luau_packages/api_types")
 local rest = require("../../../luau_packages/rest")
 local future = require("../../../luau_packages/future")
+local builders = require("../../../luau_packages/builders")
 
 local interactionBehaviour = require("../behaviour/interaction")
 local interactableBehaviour = require("../behaviour/interactable")
@@ -47,6 +48,40 @@ function Component.Prototype.acknowledgeAsync(self: Component): future.FutureLik
 			:await()
 
 		assert(response:isOk(), `{response:unwrapErr()}`)
+
+		self.isDeferred = true
+
+		return nil
+	end) :: future.FutureLike<string, nil>
+end
+
+--[=[
+	@within Classes.Interactions.Component
+
+	Edit the message this component is attached to. Sends interaction response type 7 (UPDATE_MESSAGE).
+	Unlike acknowledgeAsync + editResponseAsync, this updates the message immediately in a single round trip.
+]=]
+function Component.Prototype.updateAsync(
+	self: Component,
+	messageJSON: builders.messageJSON
+): future.FutureLike<string, nil>
+	local request = self.state.rest:newRequest()
+
+	return future.Future.new(function()
+		request:setFlag("FormdataRequest", true)
+
+		local response = rest.interaction
+			.createInteractionResponseAsync(request, self.id, self.token, {
+				type = 7,
+				data = messageJSON,
+			}, {
+				withResponse = false,
+			})
+			:await()
+
+		assert(response:isOk(), `{response:unwrapErr()}`)
+
+		self.isDeferred = true
 
 		return nil
 	end) :: future.FutureLike<string, nil>
