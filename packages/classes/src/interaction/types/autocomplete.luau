@@ -70,6 +70,37 @@ end
 --[=[
 	@within Classes.Interactions.Autocomplete
 
+	Returns the option currently being typed by the user (the focused option). Searches recursively through
+	subcommand and subcommand group options if needed.
+]=]
+function Autocomplete.Prototype.getFocusedOption(self: Autocomplete)
+	if not self.data then
+		return nil
+	end
+
+	local function findFocused(options)
+		for _, option in options do
+			if option.focused then
+				return option
+			end
+
+			if option.options then
+				local found = findFocused(option.options)
+				if found then
+					return found
+				end
+			end
+		end
+
+		return nil
+	end
+
+	return findFocused(self.data.options)
+end
+
+--[=[
+	@within Classes.Interactions.Autocomplete
+
 	Responsible for syncing data to this interaction object. This is typically called by the API when this object is
 	created or updated.
 ]=]
