@@ -68,7 +68,7 @@ end
 
 --[=[
 	@within Classes.Interactions.Interactable
-	Respond to this interaction with a message.
+	Respond to this interaction with a message. If the interaction was already deferred, edits the original response instead.
 ]=]
 function Interaction.Prototype.messageAsync(
 	self: Interaction,
@@ -80,9 +80,19 @@ function Interaction.Prototype.messageAsync(
 
 		request:setFlag("FormdataRequest", true)
 
+		if self.isDeferred then
+			local response = rest.interaction
+				.editOriginalInteractionResponseAsync(request, self.state.applicationId, self.token, messageJSON, {})
+				:await()
+
+			assert(response:isOk(), `{response:unwrapErr()}`)
+
+			return message.new(self.state, response:unwrapOk()) :: any
+		end
+
 		local response = rest.interaction
 			.createInteractionResponseAsync(request, self.id, self.token, {
-				type = self.isDeferred and 5 or 4,
+				type = 4,
 				data = messageJSON,
 			}, {
 				withResponse = responseMessage or false,
@@ -93,7 +103,7 @@ function Interaction.Prototype.messageAsync(
 
 		local data = response:unwrapOk()
 
-		if responseMessage and data.resource.message then
+		if responseMessage and data.resource and data.resource.message then
 			return message.new(self.state, data.resource.message) :: any
 		else
 			return nil :: any
