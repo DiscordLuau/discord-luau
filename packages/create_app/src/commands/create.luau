@@ -17,7 +17,7 @@ local OS_HOME_VARS = table.freeze({
 	["windows"] = "USERPROFILE",
 })
 
-type VFile = (information: Information) -> string
+type VFile = (information: Information) -> string?
 type VDirectory = { [string]: VDirectory | VFile }
 
 type Information = {
@@ -106,7 +106,11 @@ local function buildProjectMap(projectMap: VDirectory, path: string, information
 			StdPolyfills.fileSystem.writeDir(childPath)
 			buildProjectMap(value :: VDirectory, childPath, information, sep)
 		else
-			StdPolyfills.fileSystem.writeFile(childPath, (value :: VFile)(information))
+			local content = (value :: VFile)(information)
+
+			if content ~= nil then
+				StdPolyfills.fileSystem.writeFile(childPath, content)
+			end
 		end
 	end
 end

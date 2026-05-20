@@ -1,5 +1,6 @@
-return function()
-	return [[std = "luau"
+return function(runtime: string)
+	local std = if string.lower(runtime) == "zune" then "luau+zune" else "luau"
+	return `std = "{std}"\n` .. [[
 
 [lints]
 high_cyclomatic_complexity = "allow"

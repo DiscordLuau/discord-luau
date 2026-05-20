@@ -6,6 +6,7 @@ local luau_rc = require("./bin/luau_rc")
 local pesde_toml = require("./bin/pesde_toml")
 local rokit_toml = require("./bin/rokit_toml")
 local selene_toml = require("./bin/selene_toml")
+local zune_yml = require("./bin/zune_yml")
 local git_attributes = require("./bin/git_attributes")
 local gitignore = require("./bin/gitignore")
 
@@ -47,8 +48,11 @@ return {
 	["rokit.toml"] = function(information: Information)
 		return rokit_toml(information.Runtime)
 	end,
-	["selene.toml"] = function(_information: Information)
-		return selene_toml()
+	["selene.toml"] = function(information: Information)
+		return selene_toml(information.Runtime)
+	end,
+	["zune.yml"] = function(information: Information)
+		return zune_yml(information.Runtime)
 	end,
 	["LICENSE.md"] = function(information: Information)
 		return license_md(information.License, information.ProjectName)
