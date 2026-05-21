@@ -265,7 +265,7 @@ end
 function Shard.Prototype.heartbeatAsync(self: Shard, requested: boolean?)
 	return future.Future.new(function()
 		if not self.heartbeatAcknowledged and not requested and not self.socketReconnecting then
-			self.logger:warn(`discord WebSocket state has become Zombified, reconnecting...`)
+			self.logger:info(`discord WebSocket state has become Zombified, reconnecting...`)
 
 			self:reconnectAsync()
 				:after(function(result)
@@ -433,7 +433,7 @@ function Shard.Prototype.connectAsync(self: Shard, socketUrl: string, socketVers
 					assert(self.socketInstance, `Socket instance is nil.`)
 
 					if self.socketInstance.closeCode then
-					self.logger:warn(`closed from server: {self.socketInstance.closeCode}`)
+					self.logger:info(`closed from server: {self.socketInstance.closeCode}`)
 
 					self.socketActive = false
 				else
@@ -677,7 +677,7 @@ function Shard.Prototype.reinstantiateAsync(self: Shard, noFail: boolean?)
 		local connectResult = self:connectAsync(self.socketUrl :: string, self.socketVersion :: number):await()
 
 		if connectResult:isOk() then
-			self.logger:warn(`re-instantiation successful, shard {self.shardId} has recovered.`)
+			self.logger:info(`re-instantiation successful, shard {self.shardId} has recovered.`)
 		else
 			if noFail then
 				stdPolyfills.task.wait(1)
@@ -843,10 +843,10 @@ function Shard.Interface.new(settings: {
 
 			local messageObject = payload :: apiTypes.InvalidSessionPayload
 
-			self.logger:warn(`discord returned invalid session, reconnecting..`)
+			self.logger:info(`discord returned invalid session, reconnecting..`)
 
 			if messageObject.d then
-				self.logger:warn(`discord invalid session is recoverable, resuming session..`)
+				self.logger:info(`discord invalid session is recoverable, resuming session..`)
 
 				self:reconnectAsync()
 					:after(function(result)
@@ -868,7 +868,7 @@ function Shard.Interface.new(settings: {
 					end)
 					:poll()
 			else
-				self.logger:warn(`unrecoverable error during connection, re-instantiating shard..`)
+				self.logger:info(`invalid session is not recoverable, re-instantiating shard..`)
 
 				self:reinstantiateAsync(self.shouldReconnect):poll()
 			end
