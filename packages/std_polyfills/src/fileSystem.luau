@@ -39,6 +39,51 @@ end
 --[=[
 	@within StdPolyfills.fileSystem
 ]=]
+function fileSystem.readDirEntries(path: string): { { name: string, kind: string } }
+	local target = runtime.assertRuntime()
+
+	if target == "Lune" then
+		return require("./lune/fileSystem").readDirEntries(path)
+	elseif target == "Zune" then
+		return require("./zune/fileSystem").readDirEntries(path)
+	end
+
+	error(`Out of reach`)
+end
+
+--[=[
+	@within StdPolyfills.fileSystem
+]=]
+function fileSystem.stat(path: string): { kind: string, modified: number?, size: number? }
+	local target = runtime.assertRuntime()
+
+	if target == "Lune" then
+		return require("./lune/fileSystem").stat(path)
+	elseif target == "Zune" then
+		return require("./zune/fileSystem").stat(path)
+	end
+
+	error(`Out of reach`)
+end
+
+--[=[
+	@within StdPolyfills.fileSystem
+]=]
+function fileSystem.watch(path: string, callback: (path: string, events: { string }) -> ()): { stop: () -> () }
+	local target = runtime.assertRuntime()
+
+	if target == "Lune" then
+		return require("./lune/fileSystem").watch(path, callback)
+	elseif target == "Zune" then
+		return require("./zune/fileSystem").watch(path, callback)
+	end
+
+	error(`Out of reach`)
+end
+
+--[=[
+	@within StdPolyfills.fileSystem
+]=]
 function fileSystem.writeDir(path: string)
 	local target = runtime.assertRuntime()
 

@@ -14,6 +14,33 @@ function fileSystem.readDir(path: string): { string }
 	return names
 end
 
+function fileSystem.readDirEntries(path: string): { { name: string, kind: string } }
+	local entries = zune.fs.entries(path)
+	local result = {}
+	for _, entry in entries do
+		table.insert(result, { name = entry.name, kind = entry.kind })
+	end
+	return result
+end
+
+function fileSystem.stat(path: string): { kind: string, modified: number?, size: number? }
+	local meta = zune.fs.stat(path)
+	return {
+		kind = meta.kind,
+		modified = meta.modifiedAt,
+		size = meta.size,
+	}
+end
+
+function fileSystem.watch(path: string, callback: (path: string, events: { string }) -> ()): { stop: () -> () }
+	local watcher = zune.fs.watch(path, callback)
+	return {
+		stop = function()
+			watcher:stop()
+		end,
+	}
+end
+
 function fileSystem.writeFile(path: string, contents: string)
 	return zune.fs.writeFile(path, contents)
 end
