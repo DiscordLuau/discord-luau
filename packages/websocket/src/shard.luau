@@ -997,6 +997,18 @@ function Shard.Interface.new(settings: {
 			self.logger:warn(
 				`Shard '{self.shardId}', intent '{self.intents}' are invalid, are you sure the bot has the chosen intents enabled?`
 			)
+		elseif code == 1001 then
+			self.logger:info(`server is going away (1001), reconnecting...`)
+
+			self:reconnectAsync():poll()
+		elseif code == 1006 then
+			self.logger:info(`unknown WebSocket error (1006), reconnecting...`)
+
+			self:reconnectAsync():poll()
+		elseif code == nil then
+			self.logger:info(`connection closed without a close frame, reconnecting...`)
+
+			self:reconnectAsync():poll()
 		elseif code == -1 then
 			if self.socketReconnecting then
 				return
