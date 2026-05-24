@@ -101,6 +101,8 @@ function Interaction.Prototype.messageAsync(
 
 		assert(response:isOk(), `{response:unwrapErr()}`)
 
+		self.isReplied = true
+
 		local data = response:unwrapOk()
 
 		if responseMessage and data.resource and data.resource.message then
@@ -133,6 +135,8 @@ function Interaction.Prototype.modalAsync(
 			:await()
 
 		assert(response:isOk(), `{response:unwrapErr()}`)
+
+		self.isReplied = true
 
 		local data = response:unwrapOk()
 
@@ -334,6 +338,7 @@ export type Interaction = InteractionMethods & {
 	id: string,
 	token: string,
 	isDeferred: boolean?,
+	isReplied: boolean?,
 }
 
 return Interaction.Interface
