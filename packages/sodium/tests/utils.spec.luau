@@ -31,7 +31,7 @@ return function()
 		end)
 
 		test.case("bin2hex produces lowercase hex string", function()
-			local data = makeBuffer("\x00\xff\xab")
+			local data = makeBuffer("\0\255\171")
 			local hex = Sodium.utils.bin2hex(data)
 			check.equal(hex, "00ffab")
 		end)
