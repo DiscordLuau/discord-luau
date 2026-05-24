@@ -53,7 +53,7 @@ return function()
 		local m = Modal.new()
 		m:setCustomId("my-modal"):setTitle("My Modal")
 		local components = {}
-		for i = 1, 6 do
+		for _ = 1, 6 do
 			table.insert(components, makeTextInput())
 		end
 		m:setComponents(components)

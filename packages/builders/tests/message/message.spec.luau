@@ -42,7 +42,7 @@ return function()
 	test.case("Message errors when more than 10 embeds are added", function()
 		local m = Message.new()
 		local fakeEmbed = { title = "x" } :: any
-		for i = 1, 10 do
+		for _ = 1, 10 do
 			m:addEmbed(fakeEmbed)
 		end
 		check.should_error(function()
