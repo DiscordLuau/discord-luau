@@ -59,29 +59,19 @@ function Encoder.Prototype.encode(self: Encoder, pcmFrame: buffer): buffer
 		)
 	end)
 
-	Buffer.free(pcmPointer)
-
 	if not ffiSuccess then
-		Buffer.free(outputPointer)
-
 		error(`opus_encode ffi error: {bytesWritten}`)
 	end
 
 	bytesWritten = bytesWritten :: number
 
 	if bytesWritten < 0 then
-		Buffer.free(outputPointer)
-
 		local errorMessage = Buffer.fromCString(Sys.lib.opus_strerror(bytesWritten), 128)
 
 		error(`opus_encode failed: {errorMessage} (code={bytesWritten})`)
 	end
 
-	local result = Buffer.read(outputPointer, bytesWritten)
-
-	Buffer.free(outputPointer)
-
-	return result
+	return Buffer.read(outputPointer, bytesWritten)
 end
 
 --[=[
