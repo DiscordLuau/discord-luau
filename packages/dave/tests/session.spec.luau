@@ -6,7 +6,6 @@ local check = frktest.assert.check
 
 local GROUP_ID = "1234567890123456789"
 local USER_ID_A = "111111111111111111"
-local USER_ID_B = "222222222222222222"
 
 local maxVersion = Dave.sys.lib.daveMaxSupportedProtocolVersion()
 
