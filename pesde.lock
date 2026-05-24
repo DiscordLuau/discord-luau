@@ -20,6 +20,9 @@ luau = "packages/builders"
 [workspace."discord_luau/classes"]
 luau = "packages/classes"
 
+[workspace."discord_luau/commands"]
+luau = "packages/commands"
+
 [workspace."discord_luau/create_app"]
 luau = "packages/create_app"
 
