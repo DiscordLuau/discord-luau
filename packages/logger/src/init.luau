@@ -140,7 +140,7 @@ function Logger.Interface.new(name: string, logLevel: LogLevel?): Logger
 
 			self._sink(`{string.format(LOGGER_LOG_FORMATS[logType], time, name, logMessage)}{RESET}`)
 
-			if logValue >= 5 then
+			if logValue >= 5 and self._sink == print then
 				local thread = coroutine.running()
 
 				stdPolyfills.task.defer(function()
