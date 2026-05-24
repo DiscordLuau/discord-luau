@@ -27,8 +27,6 @@
 
 local apiTypes = require("../../luau_packages/api_types")
 
-local util = require("../../luau_packages/util")
-
 local Choice = {}
 
 Choice.Prototype = {}
