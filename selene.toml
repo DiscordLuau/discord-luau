@@ -1,5 +1,5 @@
-std = "luau"
-exclude = ["packages/api_types/bundled.luau"]
+std = "luau+zune"
+exclude = ["packages/api_types/bundled.luau", "**/luau_packages/**"]
 
 [lints]
 high_cyclomatic_complexity = "allow"
