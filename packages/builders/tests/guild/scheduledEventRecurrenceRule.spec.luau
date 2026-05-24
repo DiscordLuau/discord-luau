@@ -35,7 +35,7 @@ return function()
 
 		check.equal(json.by_weekday ~= nil, true)
 		local by_weekday = json.by_weekday
-		assert(by_weekday)
+		assert(by_weekday, "by_weekday should not be nil")
 		check.equal(by_weekday[1], apiTypes.guild.RecurrenceRuleWeekday.Monday)
 		check.equal(by_weekday[2], apiTypes.guild.RecurrenceRuleWeekday.Friday)
 		check.equal(type(by_weekday[1]), "number")
@@ -48,7 +48,7 @@ return function()
 		local json = rule:build()
 
 		local by_month = json.by_month
-		assert(by_month)
+		assert(by_month, "by_month should not be nil")
 		check.equal(by_month[1], apiTypes.guild.RecurrenceRuleMonth.January)
 		check.equal(by_month[2], apiTypes.guild.RecurrenceRuleMonth.July)
 	end)

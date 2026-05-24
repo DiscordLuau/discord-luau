@@ -25,7 +25,7 @@ return function()
 
 		check.equal(json.channel_types ~= nil, true)
 		local channel_types = json.channel_types
-		assert(channel_types)
+		assert(channel_types, "channel_types should not be nil")
 		check.equal(channel_types[1], apiTypes.channel.ChannelTypes.GuildText)
 		check.equal(channel_types[2], apiTypes.channel.ChannelTypes.GuildVoice)
 		check.equal(type(channel_types[1]), "number")

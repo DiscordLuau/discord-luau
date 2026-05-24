@@ -42,7 +42,7 @@ return function()
 
 		check.equal(json.roles ~= nil, true)
 		local roles = json.roles
-		assert(roles)
+		assert(roles, "roles should not be nil")
 		check.equal(roles[1], "111")
 		check.equal(roles[3], "333")
 	end)

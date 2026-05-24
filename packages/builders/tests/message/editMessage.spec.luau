@@ -58,7 +58,7 @@ return function()
 
 		check.equal(json.embeds ~= nil, true)
 		local embeds = json.embeds
-		assert(embeds)
+		assert(embeds, "embeds should not be nil")
 		check.equal(#embeds, 2)
 	end)
 

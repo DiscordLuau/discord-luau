@@ -69,7 +69,7 @@ return function()
 		local json = p:build()
 
 		local include_roles = json.include_roles
-		assert(include_roles)
+		assert(include_roles, "include_roles should not be nil")
 		check.equal(include_roles[1], "111")
 		check.equal(include_roles[2], "222")
 	end)

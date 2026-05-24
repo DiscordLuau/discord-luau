@@ -22,7 +22,7 @@ return function()
 
 		check.equal(json.presets ~= nil, true)
 		local presets = json.presets
-		assert(presets)
+		assert(presets, "presets should not be nil")
 		check.equal(type(presets[1]), "number")
 		check.equal(presets[1], apiTypes.guild.KeywordPresetType.Profanity)
 	end)

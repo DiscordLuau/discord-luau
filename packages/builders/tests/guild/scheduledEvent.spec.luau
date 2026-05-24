@@ -37,7 +37,7 @@ return function()
 		check.equal(json.entity_type, apiTypes.guild.ScheduledEventEntityType.External)
 		check.equal(json.entity_metadata ~= nil, true)
 		local entity_metadata = json.entity_metadata
-		assert(entity_metadata)
+		assert(entity_metadata, "entity_metadata should not be nil")
 		check.equal(entity_metadata.location, "Central Park, NYC")
 		check.equal(json.scheduled_end_time, "2026-07-04T20:00:00Z")
 		check.equal(json.channel_id, nil)

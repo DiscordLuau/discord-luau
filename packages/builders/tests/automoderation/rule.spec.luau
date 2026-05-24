@@ -59,9 +59,9 @@ return function()
 		local json = r:build()
 
 		local exempt_roles = json.exempt_roles
-		assert(exempt_roles)
+		assert(exempt_roles, "exempt_roles should not be nil")
 		local exempt_channels = json.exempt_channels
-		assert(exempt_channels)
+		assert(exempt_channels, "exempt_channels should not be nil")
 		check.equal(exempt_roles[1], "111111111111111111")
 		check.equal(exempt_channels[1], "222222222222222222")
 	end)
