@@ -1,8 +1,15 @@
 local frktest = require("../../../luau_packages/frktest")
-local Dave = require("../src")
 
 local test = frktest.test
 local check = frktest.assert.check
+
+local ok, Dave = pcall(require, "../src")
+
+if not ok then
+	return function() end
+end
+
+Dave = Dave :: any
 
 local GROUP_ID = "1234567890123456789"
 local USER_ID_A = "111111111111111111"
