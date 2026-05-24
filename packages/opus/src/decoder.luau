@@ -52,29 +52,19 @@ function Decoder.Prototype.decode(self: Decoder, opusBuffer: buffer): buffer
 		return Sys.lib.opus_decode(self.handle, inputPointer, inputLen, outputPointer, Sys.MAX_FRAME_SIZE, 0)
 	end)
 
-	Buffer.free(inputPointer)
-
 	if not ffiSuccess then
-		Buffer.free(outputPointer)
-
 		error(`opus_decode ffi error: {samplesDecoded}`)
 	end
 
 	samplesDecoded = samplesDecoded :: number
 
 	if samplesDecoded < 0 then
-		Buffer.free(outputPointer)
-
 		local errorMessage = Buffer.fromCString(Sys.lib.opus_strerror(samplesDecoded), 128)
 
 		error(`opus_decode failed: {errorMessage} (code={samplesDecoded})`)
 	end
 
-	local result = Buffer.read(outputPointer, samplesDecoded * self.channels * 2)
-
-	Buffer.free(outputPointer)
-
-	return result
+	return Buffer.read(outputPointer, samplesDecoded * self.channels * 2)
 end
 
 --[=[
@@ -97,29 +87,19 @@ function Decoder.Prototype.decodeFec(self: Decoder, nextPacket: buffer): buffer
 		return Sys.lib.opus_decode(self.handle, inputPointer, inputLen, outputPointer, Sys.MAX_FRAME_SIZE, 1)
 	end)
 
-	Buffer.free(inputPointer)
-
 	if not ffiSuccess then
-		Buffer.free(outputPointer)
-
 		error(`opus_decode FEC ffi error: {samplesDecoded}`)
 	end
 
 	samplesDecoded = samplesDecoded :: number
 
 	if samplesDecoded < 0 then
-		Buffer.free(outputPointer)
-
 		local errorMessage = Buffer.fromCString(Sys.lib.opus_strerror(samplesDecoded), 128)
 
 		error(`opus_decode FEC failed: {errorMessage} (code={samplesDecoded})`)
 	end
 
-	local result = Buffer.read(outputPointer, samplesDecoded * self.channels * 2)
-
-	Buffer.free(outputPointer)
-
-	return result
+	return Buffer.read(outputPointer, samplesDecoded * self.channels * 2)
 end
 
 --[=[
@@ -129,33 +109,25 @@ end
 ]=]
 function Decoder.Prototype.decodePLC(self: Decoder): buffer
 	local nullPointer = Buffer.getNull()
-	local outputPointer = Buffer.alloc(Sys.MAX_FRAME_SIZE * self.channels * 2)
+	local outputPointer = Buffer.alloc(Sys.DISCORD_FRAME_SIZE * self.channels * 2)
 
 	local ffiSuccess, samplesDecoded = pcall(function()
-		return Sys.lib.opus_decode(self.handle, nullPointer, 0, outputPointer, Sys.MAX_FRAME_SIZE, 0)
+		return Sys.lib.opus_decode(self.handle, nullPointer, 0, outputPointer, Sys.DISCORD_FRAME_SIZE, 0)
 	end)
 
 	if not ffiSuccess then
-		Buffer.free(outputPointer)
-
 		error(`opus_decode PLC ffi error: {samplesDecoded}`)
 	end
 
 	samplesDecoded = samplesDecoded :: number
 
 	if samplesDecoded < 0 then
-		Buffer.free(outputPointer)
-
 		local errorMessage = Buffer.fromCString(Sys.lib.opus_strerror(samplesDecoded), 128)
 
 		error(`opus_decode PLC failed: {errorMessage} (code={samplesDecoded})`)
 	end
 
-	local result = Buffer.read(outputPointer, samplesDecoded * self.channels * 2)
-
-	Buffer.free(outputPointer)
-
-	return result
+	return Buffer.read(outputPointer, samplesDecoded * self.channels * 2)
 end
 
 --[=[
