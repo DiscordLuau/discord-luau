@@ -33,7 +33,7 @@ function fileSystem.watch(path: string, callback: (path: string, events: { strin
 	local stopped = false
 	local snapshots: { [string]: number } = {}
 
-	local function snapshot()
+	local function snapshot(): { [string]: number }?
 		local ok, entries = pcall(fs.readDir, path)
 		if not ok then
 			return
