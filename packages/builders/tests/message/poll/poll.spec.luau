@@ -2,7 +2,6 @@ local poll = require("../../../src/message/poll/poll")
 local media = require("../../../src/message/poll/media")
 local answer = require("../../../src/message/poll/answer")
 local frktest = require("../../../../../luau_packages/frktest")
-local apiTypes = require("../../../luau_packages/api_types")
 
 local Poll = poll
 local test = frktest.test
