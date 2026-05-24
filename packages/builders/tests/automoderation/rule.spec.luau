@@ -14,10 +14,7 @@ end
 return function()
 	test.case("Rule builds with required fields", function()
 		local r = Rule.new()
-		r:setName("My Rule")
-			:setEventType("MessageSend")
-			:setTriggerType("Keyword")
-			:setActions({ makeAction() })
+		r:setName("My Rule"):setEventType("MessageSend"):setTriggerType("Keyword"):setActions({ makeAction() })
 		local json = r:build()
 
 		check.equal(json.name, "My Rule")

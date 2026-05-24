@@ -433,52 +433,52 @@ function Shard.Prototype.connectAsync(self: Shard, socketUrl: string, socketVers
 					assert(self.socketInstance, `Socket instance is nil.`)
 
 					if self.socketInstance.closeCode then
-					self.logger:info(`closed from server: {self.socketInstance.closeCode}`)
-
-					self.socketActive = false
-				else
-					local success, response = pcall(self.socketInstance.next)
-
-					if not self.socketActive then
-						continue
-					elseif not self.socketInstance then
-						self.logger:warn(`- missing WebSocket: {response and response or "No error provided"}`)
+						self.logger:info(`closed from server: {self.socketInstance.closeCode}`)
 
 						self.socketActive = false
-					elseif success and response then
-						self:_handleMessage(response :: string)
 					else
-						self.logger:warn(
-							`error during receive: {response and response or "No error provided, see close code"}`
-						)
+						local success, response = pcall(self.socketInstance.next)
 
-						self.socketActive = false
+						if not self.socketActive then
+							continue
+						elseif not self.socketInstance then
+							self.logger:warn(`- missing WebSocket: {response and response or "No error provided"}`)
+
+							self.socketActive = false
+						elseif success and response then
+							self:_handleMessage(response :: string)
+						else
+							self.logger:warn(
+								`error during receive: {response and response or "No error provided, see close code"}`
+							)
+
+							self.socketActive = false
+						end
 					end
 				end
-			end
 
-			if self.socketThread ~= myThread then
-				return
-			end
+				if self.socketThread ~= myThread then
+					return
+				end
 
-			local sock = self.socketInstance
+				local sock = self.socketInstance
 
-			self.socketThread = nil
-			self.socketInstance = nil
-			self.logger:info(`socket has disconnected, receive thread stopped.`)
+				self.socketThread = nil
+				self.socketInstance = nil
+				self.logger:info(`socket has disconnected, receive thread stopped.`)
 
-			if self.socketReconnecting then
-				return
-			end
+				if self.socketReconnecting then
+					return
+				end
 
-			if sock then
-				self.onSocketDisconnected:invoke(sock.closeCode)
-			elseif self.socketDisconnecting then
-				self.onSocketDisconnected:invoke(-1, true)
-			else
-				self.onSocketDisconnected:invoke(-1)
-			end
-		end)
+				if sock then
+					self.onSocketDisconnected:invoke(sock.closeCode)
+				elseif self.socketDisconnecting then
+					self.onSocketDisconnected:invoke(-1, true)
+				else
+					self.onSocketDisconnected:invoke(-1)
+				end
+			end)
 			self.socketThread = thread
 			local success, errorMessage = coroutine.resume(thread)
 			if not success then

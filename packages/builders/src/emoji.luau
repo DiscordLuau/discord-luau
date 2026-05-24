@@ -52,7 +52,10 @@ end
 	Responsible for building the Emoji JSON that can be parsed by the Discord API.
 ]=]
 function Emoji.Prototype.build(self: Emoji): JSON
-	assert(self.emojiId or self.emojiName, "Either emoji ID (for custom emoji) or emoji name (for Unicode emoji) is required.")
+	assert(
+		self.emojiId or self.emojiName,
+		"Either emoji ID (for custom emoji) or emoji name (for Unicode emoji) is required."
+	)
 
 	return {
 		id = self.emojiId,

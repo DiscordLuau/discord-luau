@@ -201,7 +201,8 @@ function Application.Prototype.createSlashCommandAsync(
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local response = rest.commands.createGlobalApplicationCommandAsync(request, self.id, slashCommand :: any):await()
+		local response =
+			rest.commands.createGlobalApplicationCommandAsync(request, self.id, slashCommand :: any):await()
 
 		assert(response:isOk(), `{response:unwrapErr()}`)
 
@@ -240,8 +241,9 @@ function Application.Prototype.editSlashCommandAsync(
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 
-		local response =
-			rest.commands.editGlobalApplicationCommandAsync(request, self.id, slashCommandId, slashCommand :: any):await()
+		local response = rest.commands
+			.editGlobalApplicationCommandAsync(request, self.id, slashCommandId, slashCommand :: any)
+			:await()
 
 		assert(response:isOk(), `{response:unwrapErr()}`)
 

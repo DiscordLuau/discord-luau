@@ -137,9 +137,12 @@ return function()
 
 			object:advance(2)
 
-			check.equal(object:advanceUntil(function(_char)
-				return true
-			end), nil)
+			check.equal(
+				object:advanceUntil(function(_char)
+					return true
+				end),
+				nil
+			)
 		end)
 
 		test.case("returns nil and advances to end when predicate never matches", function()

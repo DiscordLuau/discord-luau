@@ -54,7 +54,10 @@ function Kdf.Interface.deriveKey(masterKey: buffer, subkeyId: number, context: s
 		outputLength >= Sys.kdf.BYTES_MIN and outputLength <= Sys.kdf.BYTES_MAX,
 		`outputBytes must be {Sys.kdf.BYTES_MIN}–{Sys.kdf.BYTES_MAX}, got {outputLength}`
 	)
-	assert(buffer.len(masterKey) == Sys.kdf.KEY_BYTES, `masterKey must be {Sys.kdf.KEY_BYTES} bytes, got {buffer.len(masterKey)}`)
+	assert(
+		buffer.len(masterKey) == Sys.kdf.KEY_BYTES,
+		`masterKey must be {Sys.kdf.KEY_BYTES} bytes, got {buffer.len(masterKey)}`
+	)
 
 	local subkeyPointer = Buffer.alloc(outputLength)
 	local contextPointer = makeContext(context)

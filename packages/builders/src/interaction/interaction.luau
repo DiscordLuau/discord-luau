@@ -85,7 +85,10 @@ Interaction.Interface = {}
 function Interaction.Prototype.setName(self: Interaction, name: string): Interaction
 	assert(#name <= 32, "name must be less than 32 characters")
 	assert(#name >= 1, "name must be at least 1 character")
-	assert(validateCommandName(name), "name must be lowercase and may only contain letters, numbers, hyphens, underscores, or apostrophes")
+	assert(
+		validateCommandName(name),
+		"name must be lowercase and may only contain letters, numbers, hyphens, underscores, or apostrophes"
+	)
 
 	self.name = name
 
@@ -116,7 +119,10 @@ function Interaction.Prototype.setNameLocalization(
 	assert(#name <= 32, "name must be less than 32 characters")
 	assert(#name >= 1, "name must be at least 1 character")
 
-	assert(validateCommandName(name), "name must be lowercase and may only contain letters, numbers, hyphens, underscores, or apostrophes")
+	assert(
+		validateCommandName(name),
+		"name must be lowercase and may only contain letters, numbers, hyphens, underscores, or apostrophes"
+	)
 
 	self.nameLocalizations[localization] = name
 

@@ -120,7 +120,10 @@ end
 	Returns `true` if valid, `false` otherwise - does not error on invalid signatures.
 ]=]
 function Sign.Interface.verify(signature: buffer, message: buffer, publicKey: buffer): boolean
-	assert(buffer.len(signature) == Sys.sign.BYTES, `signature must be {Sys.sign.BYTES} bytes, got {buffer.len(signature)}`)
+	assert(
+		buffer.len(signature) == Sys.sign.BYTES,
+		`signature must be {Sys.sign.BYTES} bytes, got {buffer.len(signature)}`
+	)
 	assert(
 		buffer.len(publicKey) == Sys.sign.PUBLIC_KEY_BYTES,
 		`publicKey must be {Sys.sign.PUBLIC_KEY_BYTES} bytes, got {buffer.len(publicKey)}`

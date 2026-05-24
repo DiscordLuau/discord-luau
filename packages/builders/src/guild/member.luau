@@ -37,10 +37,7 @@ function GuildMember.Prototype.setChannelId(self: GuildMember, channelId: string
 	return self
 end
 
-function GuildMember.Prototype.setCommunicationDisabledUntil(
-	self: GuildMember,
-	isoTimestamp: string?
-): GuildMember
+function GuildMember.Prototype.setCommunicationDisabledUntil(self: GuildMember, isoTimestamp: string?): GuildMember
 	self.communicationDisabledUntil = isoTimestamp
 	return self
 end

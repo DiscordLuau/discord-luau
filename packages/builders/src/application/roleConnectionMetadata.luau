@@ -91,10 +91,8 @@ function ApplicationRoleConnectionMetadata.Interface.new(resource: {
 	nameLocalizations: { [string]: string }?,
 	descriptionLocalizations: { [string]: string }?,
 }?): ApplicationRoleConnectionMetadata
-	local self = setmetatable(
-		{} :: ApplicationRoleConnectionMetadata,
-		{ __index = ApplicationRoleConnectionMetadata.Prototype }
-	)
+	local self =
+		setmetatable({} :: ApplicationRoleConnectionMetadata, { __index = ApplicationRoleConnectionMetadata.Prototype })
 
 	if resource then
 		if resource.metadataType then

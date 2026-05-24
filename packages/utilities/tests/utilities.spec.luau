@@ -90,7 +90,9 @@ return function()
 		test.case("matches the UUID v4 format", function()
 			local guid = utilities.createGuid()
 
-			check.is_true(string.match(guid, "^%x%x%x%x%x%x%x%x%-%x%x%x%x%-4%x%x%x%-%x%x%x%x%-%x%x%x%x%x%x%x%x%x%x%x%x$") ~= nil)
+			check.is_true(
+				string.match(guid, "^%x%x%x%x%x%x%x%x%-%x%x%x%x%-4%x%x%x%-%x%x%x%x%-%x%x%x%x%x%x%x%x%x%x%x%x$") ~= nil
+			)
 		end)
 
 		test.case("the version nibble is always 4", function()
@@ -107,10 +109,7 @@ return function()
 				local variantNibble = string.sub(guid, 20, 20)
 
 				check.is_true(
-					variantNibble == "8"
-					or variantNibble == "9"
-					or variantNibble == "a"
-					or variantNibble == "b"
+					variantNibble == "8" or variantNibble == "9" or variantNibble == "a" or variantNibble == "b"
 				)
 			end
 		end)

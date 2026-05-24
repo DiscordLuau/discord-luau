@@ -56,8 +56,14 @@ end
 	Returns a combined buffer: `[mac (16 B)][ciphertext]`. Errors if encryption fails.
 ]=]
 function Secretbox.Interface.seal(message: buffer, key: buffer, nonce: buffer): buffer
-	assert(buffer.len(key) == Sys.secretbox.KEY_BYTES, `key must be {Sys.secretbox.KEY_BYTES} bytes, got {buffer.len(key)}`)
-	assert(buffer.len(nonce) == Sys.secretbox.NONCE_BYTES, `nonce must be {Sys.secretbox.NONCE_BYTES} bytes, got {buffer.len(nonce)}`)
+	assert(
+		buffer.len(key) == Sys.secretbox.KEY_BYTES,
+		`key must be {Sys.secretbox.KEY_BYTES} bytes, got {buffer.len(key)}`
+	)
+	assert(
+		buffer.len(nonce) == Sys.secretbox.NONCE_BYTES,
+		`nonce must be {Sys.secretbox.NONCE_BYTES} bytes, got {buffer.len(nonce)}`
+	)
 
 	local messageLength = buffer.len(message)
 	local ciphertextLength = Sys.secretbox.MAC_BYTES + messageLength
@@ -93,8 +99,14 @@ end
 	Returns the plaintext. Errors if the MAC does not verify.
 ]=]
 function Secretbox.Interface.open(ciphertext: buffer, key: buffer, nonce: buffer): buffer
-	assert(buffer.len(key) == Sys.secretbox.KEY_BYTES, `key must be {Sys.secretbox.KEY_BYTES} bytes, got {buffer.len(key)}`)
-	assert(buffer.len(nonce) == Sys.secretbox.NONCE_BYTES, `nonce must be {Sys.secretbox.NONCE_BYTES} bytes, got {buffer.len(nonce)}`)
+	assert(
+		buffer.len(key) == Sys.secretbox.KEY_BYTES,
+		`key must be {Sys.secretbox.KEY_BYTES} bytes, got {buffer.len(key)}`
+	)
+	assert(
+		buffer.len(nonce) == Sys.secretbox.NONCE_BYTES,
+		`nonce must be {Sys.secretbox.NONCE_BYTES} bytes, got {buffer.len(nonce)}`
+	)
 
 	local ciphertextLength = buffer.len(ciphertext)
 
@@ -142,8 +154,14 @@ end
 	Ciphertext is the same length as the message; result is `{ cipher, mac }`. Errors if encryption fails.
 ]=]
 function Secretbox.Interface.sealDetached(message: buffer, key: buffer, nonce: buffer): SealResult
-	assert(buffer.len(key) == Sys.secretbox.KEY_BYTES, `key must be {Sys.secretbox.KEY_BYTES} bytes, got {buffer.len(key)}`)
-	assert(buffer.len(nonce) == Sys.secretbox.NONCE_BYTES, `nonce must be {Sys.secretbox.NONCE_BYTES} bytes, got {buffer.len(nonce)}`)
+	assert(
+		buffer.len(key) == Sys.secretbox.KEY_BYTES,
+		`key must be {Sys.secretbox.KEY_BYTES} bytes, got {buffer.len(key)}`
+	)
+	assert(
+		buffer.len(nonce) == Sys.secretbox.NONCE_BYTES,
+		`nonce must be {Sys.secretbox.NONCE_BYTES} bytes, got {buffer.len(nonce)}`
+	)
 
 	local messageLength = buffer.len(message)
 
@@ -190,9 +208,18 @@ end
 	Returns the plaintext. Errors if the MAC does not verify.
 ]=]
 function Secretbox.Interface.openDetached(cipher: buffer, mac: buffer, key: buffer, nonce: buffer): buffer
-	assert(buffer.len(mac) == Sys.secretbox.MAC_BYTES, `mac must be {Sys.secretbox.MAC_BYTES} bytes, got {buffer.len(mac)}`)
-	assert(buffer.len(key) == Sys.secretbox.KEY_BYTES, `key must be {Sys.secretbox.KEY_BYTES} bytes, got {buffer.len(key)}`)
-	assert(buffer.len(nonce) == Sys.secretbox.NONCE_BYTES, `nonce must be {Sys.secretbox.NONCE_BYTES} bytes, got {buffer.len(nonce)}`)
+	assert(
+		buffer.len(mac) == Sys.secretbox.MAC_BYTES,
+		`mac must be {Sys.secretbox.MAC_BYTES} bytes, got {buffer.len(mac)}`
+	)
+	assert(
+		buffer.len(key) == Sys.secretbox.KEY_BYTES,
+		`key must be {Sys.secretbox.KEY_BYTES} bytes, got {buffer.len(key)}`
+	)
+	assert(
+		buffer.len(nonce) == Sys.secretbox.NONCE_BYTES,
+		`nonce must be {Sys.secretbox.NONCE_BYTES} bytes, got {buffer.len(nonce)}`
+	)
 
 	local messageLength = buffer.len(cipher)
 

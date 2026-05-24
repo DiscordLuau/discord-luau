@@ -43,7 +43,7 @@ local function getActiveOptions(data: any): { any }
 	if firstType == "SubCommand" then
 		return (first.options :: any) or {}
 	elseif firstType == "SubCommandGroup" then
-		local nested = (first.options :: any)
+		local nested = first.options :: any
 		if nested and #nested > 0 then
 			return (nested[1].options :: any) or {}
 		end
