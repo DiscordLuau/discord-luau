@@ -279,8 +279,8 @@ end
 function DaveManager.Prototype.handleProposals(
 	self: DaveManager,
 	payload: any,
-	userId: string,
-	ssrc: number?
+	_: string,
+	_: number?
 ): (buffer?, { string }?)
 	self.logger:info(`received DAVE MLS proposals`)
 

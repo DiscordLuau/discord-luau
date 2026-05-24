@@ -532,7 +532,7 @@ function Connection.Interface.new(settings: {
 			jitter = newJitter
 			self.jitters[ssrc] = jitter
 
-			newJitter:start(function(sequence: number, packet: buffer)
+			newJitter:start(function(_: number, packet: buffer)
 				self.onRawAudioFrame:invoke({ userId = self.dave.ssrcToUserId[ssrc], ssrc = ssrc, frame = packet })
 			end, function(pcm: buffer)
 				self.onAudioFrame:invoke({ userId = self.dave.ssrcToUserId[ssrc], ssrc = ssrc, frame = pcm })
