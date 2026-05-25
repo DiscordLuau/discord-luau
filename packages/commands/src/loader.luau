@@ -207,6 +207,8 @@ end
 ]=]
 function Loader.Prototype.watch(self: Loader, directoryPath: string): () -> ()
 	local stoppers: { () -> () } = {}
+	local reloadTimestamps: { [string]: number } = {}
+	local DEBOUNCE_S = 0.5
 
 	local function watchDirectory(directory: string)
 		local watcher = stdPolyfills.fileSystem.watch(directory, function(path: string, events: { string })
@@ -225,6 +227,11 @@ function Loader.Prototype.watch(self: Loader, directoryPath: string): () -> ()
 			local moduleName = stripExtension(fileName)
 
 			if eventName == "write" or eventName == "change" then
+				local now = os.clock()
+				if now - (reloadTimestamps[path] or 0) < DEBOUNCE_S then
+					return
+				end
+				reloadTimestamps[path] = now
 				self:reload(directory, moduleName)
 			elseif eventName == "create" then
 				local normalizedDirectory = normalizePath(directory)
