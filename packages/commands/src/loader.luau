@@ -23,7 +23,7 @@
 local logger = require("../luau_packages/logger")
 local stdPolyfills = require("../luau_packages/std_polyfills")
 
-local registry = require("@self/registry")
+local registry = require("./registry")
 
 -- debug.info(1, "s") returns the path of this source file, which we use to
 -- compute how many directory levels separate the loader from the project root.
