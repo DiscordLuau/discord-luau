@@ -10,11 +10,21 @@ DiscordLuau - Create App is an interactive command-line tool to quickly scaffold
 
 ### How do I use this?
 
-Run the following in your command line
+**Linux / macOS**
+```bash
+curl -fsSL https://raw.githubusercontent.com/DiscordLuau/discord-luau/main/packages/create_app/run.sh | tr -d '\r' | bash
+```
 
-> pesde x discord_luau/create_app --help
+**Windows (PowerShell)**
+```powershell
+irm https://raw.githubusercontent.com/DiscordLuau/discord-luau/main/packages/create_app/run.ps1 -OutFile $env:TEMP\run.ps1; pwsh $env:TEMP\run.ps1
+```
 
-> pesde x discord_luau/create_app create
+Or if you have `pesde x` working:
+
+```
+pesde x discord_luau/create_app create
+```
 
 ### Contributing
 See the [Contributing Guide](CONTRIBUTING) for more information on how to contribute to this project.
