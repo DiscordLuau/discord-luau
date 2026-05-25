@@ -934,7 +934,9 @@ end
 ]=]
 function Commands.Prototype.registerGuildAsync(self: Commands, guildId: string): future.FutureLike<string, nil>
 	return future.Future.new(function()
-		local guild = self.bot:getGuildAsync(guildId):await()
+		local guildResult = self.bot:getGuildAsync(guildId):await()
+		assert(guildResult:isOk(), `failed to fetch guild: {guildResult:unwrapErr()}`)
+		local guild = guildResult:unwrapOk()
 
 		local payload = {}
 
@@ -960,7 +962,9 @@ function Commands.Prototype.registerGuildAsync(self: Commands, guildId: string):
 			table.insert(payload, entry)
 		end
 
-		guild:overwriteSlashCommandsAsync(payload):await()
+		self.logger:info(`sending {#payload} command(s) to guild '{guildId}'`)
+		local overwriteResult = guild:overwriteSlashCommandsAsync(payload):await()
+		assert(overwriteResult:isOk(), `failed to register commands: {overwriteResult:unwrapErr()}`)
 	end) :: future.FutureLike<string, nil>
 end
 
@@ -984,9 +988,12 @@ end
 ]=]
 function Commands.Prototype.unregisterGuildAsync(self: Commands, guildId: string): future.FutureLike<string, nil>
 	return future.Future.new(function()
-		local guild = self.bot:getGuildAsync(guildId):await()
+		local guildResult = self.bot:getGuildAsync(guildId):await()
+		assert(guildResult:isOk(), `failed to fetch guild: {guildResult:unwrapErr()}`)
+		local guild = guildResult:unwrapOk()
 
-		guild:overwriteSlashCommandsAsync({}):await()
+		local overwriteResult = guild:overwriteSlashCommandsAsync({}):await()
+		assert(overwriteResult:isOk(), `failed to clear commands: {overwriteResult:unwrapErr()}`)
 	end) :: future.FutureLike<string, nil>
 end
 
