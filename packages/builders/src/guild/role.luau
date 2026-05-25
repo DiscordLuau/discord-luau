@@ -50,8 +50,6 @@
 ]=]
 
 local apiTypes = require("../../luau_packages/api_types")
-local util = require("../../luau_packages/util")
-
 local bit = require("../../luau_packages/bit")
 
 local Role = {}

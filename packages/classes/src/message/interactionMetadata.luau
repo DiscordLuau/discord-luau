@@ -100,7 +100,9 @@ end
 
 	Responsible for constructing this class.
 ]=]
-function InteractionMetadata.Interface.new(interactionData: apiTypes.MessageInteractionMetadataObject): InteractionMetadata
+function InteractionMetadata.Interface.new(
+	interactionData: apiTypes.MessageInteractionMetadataObject
+): InteractionMetadata
 	local self = setmetatable({} :: InteractionMetadata, { __index = InteractionMetadata.Prototype })
 
 	self:sync(interactionData)

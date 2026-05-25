@@ -1,6 +1,5 @@
 local interaction = require("../../src/interaction/interaction")
 local frktest = require("../../../../luau_packages/frktest")
-local apiTypes = require("../../luau_packages/api_types")
 
 local Interaction = interaction
 local test = frktest.test

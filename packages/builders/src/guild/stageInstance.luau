@@ -42,10 +42,7 @@ function StageInstance.Prototype.setSendStartNotification(
 	return self
 end
 
-function StageInstance.Prototype.setGuildScheduledEventId(
-	self: StageInstance,
-	scheduledEventId: string
-): StageInstance
+function StageInstance.Prototype.setGuildScheduledEventId(self: StageInstance, scheduledEventId: string): StageInstance
 	self.guildScheduledEventId = scheduledEventId
 	return self
 end
@@ -57,9 +54,7 @@ function StageInstance.Prototype.build(self: StageInstance): JSON
 	return {
 		channel_id = self.channelId,
 		topic = self.topic,
-		privacy_level = if self.privacyLevel
-			then apiTypes.guild.StageInstancePrivacyLevel[self.privacyLevel]
-			else nil,
+		privacy_level = if self.privacyLevel then apiTypes.guild.StageInstancePrivacyLevel[self.privacyLevel] else nil,
 		send_start_notification = self.sendStartNotification,
 		guild_scheduled_event_id = self.guildScheduledEventId,
 	}

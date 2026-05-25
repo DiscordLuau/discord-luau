@@ -14,10 +14,7 @@ end
 return function()
 	test.case("Rule builds with required fields", function()
 		local r = Rule.new()
-		r:setName("My Rule")
-			:setEventType("MessageSend")
-			:setTriggerType("Keyword")
-			:setActions({ makeAction() })
+		r:setName("My Rule"):setEventType("MessageSend"):setTriggerType("Keyword"):setActions({ makeAction() })
 		local json = r:build()
 
 		check.equal(json.name, "My Rule")
@@ -62,9 +59,9 @@ return function()
 		local json = r:build()
 
 		local exempt_roles = json.exempt_roles
-		assert(exempt_roles)
+		assert(exempt_roles, "exempt_roles should not be nil")
 		local exempt_channels = json.exempt_channels
-		assert(exempt_channels)
+		assert(exempt_channels, "exempt_channels should not be nil")
 		check.equal(exempt_roles[1], "111111111111111111")
 		check.equal(exempt_channels[1], "222222222222222222")
 	end)

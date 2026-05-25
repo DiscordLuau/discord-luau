@@ -176,7 +176,8 @@ function User.Prototype.modifyAsync(self: User, username: string?, avatarData: s
 	assert(self.state, "Cannot modify user: this User object has no state reference")
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
-		local response = rest.user.modifyCurrentUserAsync(request, { username = username, avatar = avatarData } :: any):await()
+		local response =
+			rest.user.modifyCurrentUserAsync(request, { username = username, avatar = avatarData } :: any):await()
 		assert(response:isOk(), `{response:unwrapErr()}`)
 		self:sync(response:unwrapOk())
 		return self

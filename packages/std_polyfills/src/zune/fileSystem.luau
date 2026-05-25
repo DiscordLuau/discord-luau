@@ -20,20 +20,23 @@ function fileSystem.readDirEntries(path: string): { { name: string, kind: string
 	for _, entry in entries do
 		table.insert(result, { name = entry.name, kind = entry.kind })
 	end
-	return result
+	return result :: any
 end
 
 function fileSystem.stat(path: string): { kind: string, modified: number?, size: number? }
 	local meta = zune.fs.stat(path)
+	if meta.kind == "none" then
+		return { kind = "none", modified = nil, size = nil }
+	end
 	return {
-		kind = meta.kind,
-		modified = meta.modifiedAt,
-		size = meta.size,
+		kind = (meta :: any).kind,
+		modified = (meta :: any).modified_at,
+		size = (meta :: any).size,
 	}
 end
 
 function fileSystem.watch(path: string, callback: (path: string, events: { string }) -> ()): { stop: () -> () }
-	local watcher = zune.fs.watch(path, callback)
+	local watcher = zune.fs.watch(path, callback :: any)
 	return {
 		stop = function()
 			watcher:stop()

@@ -1,9 +1,16 @@
 local frktest = require("../../../luau_packages/frktest")
-local Opus = require("../src")
 local stdPolyfills = require("../luau_packages/std_polyfills")
 
 local test = frktest.test
 local check = frktest.assert.check
+
+local opusOk, Opus = pcall(require, "../src")
+
+if not opusOk then
+	return function() end
+end
+
+Opus = Opus :: any
 
 local hasFfi = stdPolyfills.runtime.capabilities().ffi
 

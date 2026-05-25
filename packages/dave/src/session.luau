@@ -35,14 +35,11 @@
 ]=]
 
 local stdPolyfills = require("../luau_packages/std_polyfills")
-local Logger = require("../luau_packages/logger")
 local Sys = require("./sys")
 local Buffer = require("./buffer")
 local KeyRatchet = require("./keyRatchet")
 local CommitResult = require("./commitResult")
 local WelcomeResult = require("./welcomeResult")
-
-local logger = Logger.new("Dave.Session")
 
 local Session = {}
 

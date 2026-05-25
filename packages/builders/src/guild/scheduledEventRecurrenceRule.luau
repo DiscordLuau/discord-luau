@@ -50,7 +50,12 @@ end
 
 function GuildScheduledEventRecurrenceRule.Prototype.setByNWeekday(
 	self: GuildScheduledEventRecurrenceRule,
-	nWeekdays: { { n: number, day: apiTypes.RecurrenceRuleWeekday } }
+	nWeekdays: {
+		{
+			n: number,
+			day: apiTypes.RecurrenceRuleWeekday,
+		}
+	}
 ): GuildScheduledEventRecurrenceRule
 	self.byNWeekday = nWeekdays
 	return self

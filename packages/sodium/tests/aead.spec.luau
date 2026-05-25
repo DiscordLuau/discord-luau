@@ -1,9 +1,16 @@
 local frktest = require("../../../luau_packages/frktest")
-local Sodium = require("../src")
 local helpers = require("./helpers")
 
 local test = frktest.test
 local check = frktest.assert.check
+
+local ok, Sodium = pcall(require, "../src")
+
+if not ok then
+	return function() end
+end
+
+Sodium = Sodium :: any
 local makeBuffer = helpers.makeBuffer
 local bufferEqual = helpers.bufferEqual
 

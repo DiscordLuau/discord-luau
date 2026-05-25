@@ -14,5 +14,5 @@
   },
   "luau-lsp.types.documentationFiles": [
     ".zune/zune.d.luau"
-  ],
+  ]
 }

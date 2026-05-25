@@ -120,7 +120,10 @@ end
 function Option.Prototype.setName(self: Option, name: string): Option
 	assert(#name <= 32, "name must be less than 32 characters")
 	assert(#name >= 1, "name must be at least 1 character")
-	assert(validateCommandName(name), "name must be lowercase and may only contain letters, numbers, hyphens, underscores, or apostrophes")
+	assert(
+		validateCommandName(name),
+		"name must be lowercase and may only contain letters, numbers, hyphens, underscores, or apostrophes"
+	)
 	self.name = name
 	return self
 end
@@ -137,7 +140,10 @@ function Option.Prototype.setNameLocalization(
 ): Option
 	assert(#name <= 32, "name must be less than 32 characters")
 	assert(#name >= 1, "name must be at least 1 character")
-	assert(validateCommandName(name), "name must be lowercase and may only contain letters, numbers, hyphens, underscores, or apostrophes")
+	assert(
+		validateCommandName(name),
+		"name must be lowercase and may only contain letters, numbers, hyphens, underscores, or apostrophes"
+	)
 	self.nameLocalizations[localization] = name
 	return self
 end

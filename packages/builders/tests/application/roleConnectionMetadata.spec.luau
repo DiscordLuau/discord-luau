@@ -9,15 +9,13 @@ local check = frktest.assert.check
 return function()
 	test.case("RoleConnectionMetadata builds with required fields", function()
 		local rcm = RoleConnectionMetadata.new()
-		rcm:setType("IntegerLessThanOrEqual"):setKey("game_level"):setName("Game Level"):setDescription(
-			"Your level in the game"
-		)
+		rcm:setType("IntegerLessThanOrEqual")
+			:setKey("game_level")
+			:setName("Game Level")
+			:setDescription("Your level in the game")
 		local json = rcm:build()
 
-		check.equal(
-			json.type,
-			apiTypes.application.ApplicationRoleConnectionMetadataType.IntegerLessThanOrEqual
-		)
+		check.equal(json.type, apiTypes.application.ApplicationRoleConnectionMetadataType.IntegerLessThanOrEqual)
 		check.equal(json.key, "game_level")
 		check.equal(json.name, "Game Level")
 		check.equal(json.description, "Your level in the game")

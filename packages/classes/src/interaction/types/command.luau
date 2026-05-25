@@ -26,6 +26,30 @@ local interactionBehaviour = require("../behaviour/interaction")
 local interactableBehaviour = require("../behaviour/interactable")
 
 local user = require("../../user")
+local guildMember = require("../../guild/member")
+local role = require("../../guild/role")
+local attachment = require("../../attachment")
+
+local function getActiveOptions(data: any): { any }
+	if data == nil then
+		return {}
+	end
+	local options = data.options
+	if options == nil or #options == 0 then
+		return {}
+	end
+	local first = options[1]
+	local firstType = (first.type :: any) :: string
+	if firstType == "SubCommand" then
+		return (first.options :: any) or {}
+	elseif firstType == "SubCommandGroup" then
+		local nested = first.options :: any
+		if nested and #nested > 0 then
+			return (nested[1].options :: any) or {}
+		end
+	end
+	return options
+end
 
 local Command = {}
 
@@ -146,20 +170,119 @@ end
 
 --[=[
 	@within Classes.Interactions.Command
-	Returns the option with the given name, or nil if not found. Searches top-level options only.
+	Returns the raw option object for `name`, descending into the active subcommand or
+	subcommand-group if present. Returns nil when the option is absent or data is missing.
 ]=]
 function Command.Prototype.getOption(self: Command, name: string)
 	if not self.data then
 		return nil
 	end
 
-	for _, option in self.data.options do
+	for _, option in getActiveOptions(self.data) do
 		if option.name == name then
 			return option
 		end
 	end
 
 	return nil
+end
+
+--[=[
+	@within Classes.Interactions.Command
+	Returns the string value of the named option, or nil if absent.
+]=]
+function Command.Prototype.getString(self: Command, name: string): string?
+	local opt: any = self:getOption(name)
+	return if opt ~= nil and opt.value ~= nil then opt.value :: string else nil
+end
+
+--[=[
+	@within Classes.Interactions.Command
+	Returns the integer value of the named option, or nil if absent.
+]=]
+function Command.Prototype.getInteger(self: Command, name: string): number?
+	local opt: any = self:getOption(name)
+	return if opt ~= nil and opt.value ~= nil then opt.value :: number else nil
+end
+
+--[=[
+	@within Classes.Interactions.Command
+	Returns the number (float) value of the named option, or nil if absent.
+]=]
+function Command.Prototype.getNumber(self: Command, name: string): number?
+	local opt: any = self:getOption(name)
+	return if opt ~= nil and opt.value ~= nil then opt.value :: number else nil
+end
+
+--[=[
+	@within Classes.Interactions.Command
+	Returns the boolean value of the named option, or nil if absent.
+]=]
+function Command.Prototype.getBoolean(self: Command, name: string): boolean?
+	local opt: any = self:getOption(name)
+	return if opt ~= nil and opt.value ~= nil then opt.value :: boolean else nil
+end
+
+--[=[
+	@within Classes.Interactions.Command
+	Returns the resolved User for the named option, or nil if absent.
+]=]
+function Command.Prototype.getUser(self: Command, name: string): user.User?
+	local opt: any = self:getOption(name)
+	if opt == nil or not self.data or not self.data.resolved then
+		return nil
+	end
+	return (self.data.resolved.users :: any)[opt.value :: string]
+end
+
+--[=[
+	@within Classes.Interactions.Command
+	Returns the resolved GuildMember for the named option, or nil if absent.
+	Only populated in guild interactions.
+]=]
+function Command.Prototype.getMember(self: Command, name: string): guildMember.Member?
+	local opt: any = self:getOption(name)
+	if opt == nil or not self.data or not self.data.resolved then
+		return nil
+	end
+	return (self.data.resolved.members :: any)[opt.value :: string]
+end
+
+--[=[
+	@within Classes.Interactions.Command
+	Returns the resolved Role for the named option, or nil if absent.
+]=]
+function Command.Prototype.getRole(self: Command, name: string): role.Role?
+	local opt: any = self:getOption(name)
+	if opt == nil or not self.data or not self.data.resolved then
+		return nil
+	end
+	return (self.data.resolved.roles :: any)[opt.value :: string]
+end
+
+--[=[
+	@within Classes.Interactions.Command
+	Returns the partial channel for the named option, or nil if absent.
+	Channels in resolved data are partial — id, name, type, and permissions only.
+]=]
+function Command.Prototype.getChannel(self: Command, name: string): apiTypes.AbstractChannel?
+	local opt: any = self:getOption(name)
+	if opt == nil or not self.data or not self.data.resolved then
+		return nil
+	end
+	return (self.data.resolved.channels :: any)[opt.value :: string]
+end
+
+--[=[
+	@within Classes.Interactions.Command
+	Returns the resolved Attachment for the named option, or nil if absent.
+]=]
+function Command.Prototype.getAttachment(self: Command, name: string): attachment.Attachment?
+	local opt: any = self:getOption(name)
+	if opt == nil or not self.data or not self.data.resolved then
+		return nil
+	end
+	return (self.data.resolved.attachments :: any)[opt.value :: string]
 end
 
 --[=[

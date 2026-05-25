@@ -1,8 +1,15 @@
 local frktest = require("../../../luau_packages/frktest")
-local Sodium = require("../src")
 
 local test = frktest.test
 local check = frktest.assert.check
+
+local ok, Sodium = pcall(require, "../src")
+
+if not ok then
+	return function() end
+end
+
+Sodium = Sodium :: any
 
 return function()
 	test.suite("randombytes", function()

@@ -170,7 +170,9 @@ function Encryptor.Prototype.encrypt(self: Encryptor, mediaType: number, ssrc: n
 			}
 		end
 
-		logger:error((encryptorResultMessages :: { [number]: string })[resultCode] or `unknown error (code {resultCode})`)
+		logger:error(
+			(encryptorResultMessages :: { [number]: string })[resultCode] or `unknown error (code {resultCode})`
+		)
 	end
 
 	local bytesWritten = Buffer.readSizeT(bytesWrittenSlot)

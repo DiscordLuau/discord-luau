@@ -35,7 +35,6 @@ local sodium = require("../luau_packages/sodium")
 local dave = require("../luau_packages/dave")
 
 local ENCRYPTION_MODE_AES256_GCM = "aead_aes256_gcm_rtpsize"
-local ENCRYPTION_MODE_XCHACHA20 = "aead_xchacha20_poly1305_rtpsize"
 
 local RTP_HEADER_SIZE = 12
 

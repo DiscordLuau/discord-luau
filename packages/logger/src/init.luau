@@ -109,17 +109,14 @@ function Logger.Interface.new(name: string, logLevel: LogLevel?): Logger
 
 	assert(not logLevel or logLevelIndex, `Invalid log level: {logLevel}`)
 
-	local self: Logger = setmetatable(
-		{
-			logLevel = logLevelIndex or 1,
-			_sink = print,
-		},
-		{ __index = Logger.Prototype }
-	) :: any
+	local self: Logger = setmetatable({
+		logLevel = logLevelIndex or 1,
+		_sink = print,
+	}, { __index = Logger.Prototype }) :: any
 
 	-- this block of code will generate a function for each log level, and set it to the Logger object.
 	for logValue, logType in LOGGER_LOG_LEVELS do
-		local camelCaseMethod = `{string.lower(string.sub(logType, 1, 1))}{string.sub(logType, 2, #logType)}`;
+		local camelCaseMethod = `{string.lower(string.sub(logType, 1, 1))}{string.sub(logType, 2, #logType)}`
 
 		(self :: {})[camelCaseMethod] = function(_, ...)
 			if logValue < self.logLevel then
@@ -143,7 +140,7 @@ function Logger.Interface.new(name: string, logLevel: LogLevel?): Logger
 
 			self._sink(`{string.format(LOGGER_LOG_FORMATS[logType], time, name, logMessage)}{RESET}`)
 
-			if logValue >= 5 then
+			if logValue >= 5 and self._sink == print then
 				local thread = coroutine.running()
 
 				stdPolyfills.task.defer(function()

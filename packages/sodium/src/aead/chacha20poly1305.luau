@@ -106,7 +106,13 @@ end
 	Decrypts `cipher` using its detached `tag`, `key` (32 bytes), and `nonce` (12 bytes).
 	Returns the plaintext buffer; errors if authentication tag does not verify.
 ]=]
-function Chacha20poly1305.Interface.decrypt(cipher: buffer, tag: buffer, key: buffer, nonce: buffer, ad: buffer?): buffer
+function Chacha20poly1305.Interface.decrypt(
+	cipher: buffer,
+	tag: buffer,
+	key: buffer,
+	nonce: buffer,
+	ad: buffer?
+): buffer
 	assert(buffer.len(tag) == TAG_BYTES, `tag must be {TAG_BYTES} bytes, got {buffer.len(tag)}`)
 	assert(buffer.len(key) == KEY_BYTES, `key must be {KEY_BYTES} bytes, got {buffer.len(key)}`)
 	assert(buffer.len(nonce) == NONCE_BYTES, `nonce must be {NONCE_BYTES} bytes, got {buffer.len(nonce)}`)

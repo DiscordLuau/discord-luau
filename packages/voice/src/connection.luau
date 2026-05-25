@@ -528,18 +528,15 @@ function Connection.Interface.new(settings: {
 
 		if not jitter then
 			local newJitter = voiceJitter.new(sequence)
-			
+
 			jitter = newJitter
 			self.jitters[ssrc] = jitter
 
-			newJitter:start(
-				function(sequence: number, packet: buffer)
-					self.onRawAudioFrame:invoke({ userId = self.dave.ssrcToUserId[ssrc], ssrc = ssrc, frame = packet })
-				end,
-				function(pcm: buffer)
-					self.onAudioFrame:invoke({ userId = self.dave.ssrcToUserId[ssrc], ssrc = ssrc, frame = pcm })
-				end
-			)
+			newJitter:start(function(_: number, packet: buffer)
+				self.onRawAudioFrame:invoke({ userId = self.dave.ssrcToUserId[ssrc], ssrc = ssrc, frame = packet })
+			end, function(pcm: buffer)
+				self.onAudioFrame:invoke({ userId = self.dave.ssrcToUserId[ssrc], ssrc = ssrc, frame = pcm })
+			end)
 		end
 
 		jitter:push(sequence, audioFrame)
@@ -568,7 +565,6 @@ function Connection.Interface.new(settings: {
 					self:disconnectAsync(1011):poll()
 				end
 			end)
-
 		elseif opcode == apiTypes.voice.opcodes.HeartbeatACK then
 			self.webSocket.heartbeatAcknowledged = true
 			self.webSocket.heartbeatPing = os.clock() - (self.webSocket.heartbeatClockTime :: number)
@@ -576,7 +572,6 @@ function Connection.Interface.new(settings: {
 			self.logger:info(`voice heartbeat ack, ping: '{string.sub(tostring(self.webSocket.heartbeatPing), 1, 7)}'`)
 
 			self.onHeartbeat:invoke(self.webSocket.heartbeatPing)
-
 		elseif opcode == apiTypes.voice.opcodes.Ready then
 			self.logger:info(
 				`received voice Ready, ssrc={payloadData.ssrc} udp={payloadData.ip}:{payloadData.port} modes={#payloadData.modes}`
@@ -617,7 +612,6 @@ function Connection.Interface.new(settings: {
 					self.logger:warn(`select protocol failed: {selectResult:unwrapErr()}`)
 				end
 			end)
-
 		elseif opcode == apiTypes.voice.opcodes.SessionDescription then
 			local confirmedMode = payloadData.mode
 			local secretKeyArray = payloadData.secret_key
@@ -654,14 +648,12 @@ function Connection.Interface.new(settings: {
 			end
 
 			self.onReady:invoke()
-
 		elseif opcode == apiTypes.voice.opcodes.Resumed then
 			self.webSocket.isResuming = false
 
 			self.logger:notice(`voice session resumed successfully`)
 
 			self.onReady:invoke()
-
 		elseif opcode == apiTypes.voice.opcodes.ClientsConnect then
 			self.dave.recognizedUserIds = payloadData.user_ids
 
@@ -670,15 +662,16 @@ function Connection.Interface.new(settings: {
 			for _, userId in self.dave.recognizedUserIds do
 				self.onClientConnect:invoke({ userId = userId })
 			end
-
 		elseif opcode == apiTypes.voice.opcodes.Speaking then
 			self.dave.ssrcToUserId[payloadData.ssrc] = payloadData.user_id
 
-			self.onSpeaking:invoke({ userId = payloadData.user_id, ssrc = payloadData.ssrc, speaking = payloadData.speaking })
-
+			self.onSpeaking:invoke({
+				userId = payloadData.user_id,
+				ssrc = payloadData.ssrc,
+				speaking = payloadData.speaking,
+			})
 		elseif opcode == apiTypes.voice.opcodes.Video then
 			self.logger:debug(`received voice Video: user={payloadData.user_id} ssrc={payloadData.video_ssrc}`)
-
 		elseif opcode == apiTypes.voice.opcodes.ClientDisconnect then
 			self.logger:info(`received ClientDisconnect: user={payloadData.user_id}`)
 
@@ -698,43 +691,32 @@ function Connection.Interface.new(settings: {
 			end
 
 			self.onClientDisconnect:invoke({ userId = payloadData.user_id })
-
 		elseif opcode == apiTypes.voice.opcodes.SessionUpdate then
 			self.logger:debug(
 				`received voice SessionUpdate: audio_codec={payloadData.audio_codec} video_codec={payloadData.video_codec}`
 			)
-
 		elseif opcode == apiTypes.voice.opcodes.MediaSinkWants then
 			self.logger:debug(`received MediaSinkWants from server - bot cannot adjust stream quality`)
-
 		elseif opcode == apiTypes.voice.opcodes.VoiceBackendVersion then
 			self.logger:info(`voice backend version: voice={payloadData.voice} rtc_worker={payloadData.rtc_worker}`)
-
 		elseif opcode == apiTypes.voice.opcodes.ChannelOptionsUpdate then
 			self.logger:debug(`received voice ChannelOptionsUpdate: bitrate={payloadData.bitrate}`)
-
 		elseif opcode == apiTypes.voice.opcodes.ClientFlags then
 			self.logger:debug(`received ClientFlags - opcode is erroneously sent in stream contexts`)
-
 		elseif opcode == apiTypes.voice.opcodes.ClientPlatform then
 			self.logger:debug(`received ClientPlatform - opcode is erroneously sent in stream contexts`)
-
 		elseif opcode == apiTypes.voice.opcodes.DaveProtocolPrepareTransition then
 			local frame = self.dave:handlePrepareTransition(payloadData)
 
 			util.coroutineRun(function()
 				self.webSocket:sendAsync(frame):await()
 			end)
-
 		elseif opcode == apiTypes.voice.opcodes.DaveProtocolExecuteTransition then
 			self.dave:handleExecuteTransition(payloadData)
-
 		elseif opcode == apiTypes.voice.opcodes.DaveProtocolTransitionReady then
 			self.logger:info(`DAVE protocol transition ready (server ack)`)
-
 		elseif opcode == apiTypes.voice.opcodes.DaveProtocolPrepareEpoch then
 			self.dave:handlePrepareEpoch(payloadData, self.channelId, self.userId)
-
 		elseif opcode == apiTypes.voice.opcodes.DaveMlsExternalSenderPackage then
 			local frame = self.dave:handleExternalSender(payloadData)
 
@@ -743,7 +725,6 @@ function Connection.Interface.new(settings: {
 					self.webSocket:sendAsync(frame):await()
 				end)
 			end
-
 		elseif opcode == apiTypes.voice.opcodes.DaveMlsProposals then
 			local frame, rosterIds = self.dave:handleProposals(payloadData, self.userId, self.udp.ssrc)
 
@@ -754,21 +735,18 @@ function Connection.Interface.new(settings: {
 					self.webSocket:sendAsync(frame):await()
 				end)
 			end
-
 		elseif opcode == apiTypes.voice.opcodes.DaveMlsAnnounceCommitTransition then
 			local rosterIds = self.dave:handleCommitTransition(payloadData, self.userId, self.udp.ssrc)
 
 			if rosterIds then
 				self.onDaveEpochTransition:invoke(#rosterIds)
 			end
-
 		elseif opcode == apiTypes.voice.opcodes.DaveMlsWelcome then
 			local rosterIds = self.dave:handleWelcome(payloadData, self.userId, self.udp.ssrc)
 
 			if rosterIds then
 				self.onDaveEpochTransition:invoke(#rosterIds)
 			end
-
 		elseif opcode == apiTypes.voice.opcodes.DaveMlsInvalidCommitWelcome then
 			self.logger:warn(`received DAVE MLS invalid commit welcome`)
 		end

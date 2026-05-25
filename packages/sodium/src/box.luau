@@ -78,7 +78,10 @@ function Box.Interface.seal(message: buffer, recipientPublicKey: buffer, senderS
 		buffer.len(senderSecretKey) == Sys.box.SECRET_KEY_BYTES,
 		`senderSecretKey must be {Sys.box.SECRET_KEY_BYTES} bytes, got {buffer.len(senderSecretKey)}`
 	)
-	assert(buffer.len(nonce) == Sys.box.NONCE_BYTES, `nonce must be {Sys.box.NONCE_BYTES} bytes, got {buffer.len(nonce)}`)
+	assert(
+		buffer.len(nonce) == Sys.box.NONCE_BYTES,
+		`nonce must be {Sys.box.NONCE_BYTES} bytes, got {buffer.len(nonce)}`
+	)
 
 	local messageLength = buffer.len(message)
 	local ciphertextLength = Sys.box.MAC_BYTES + messageLength
@@ -122,7 +125,12 @@ end
 	Decrypts a combined `ciphertext` (from `seal`) using `senderPublicKey`, `recipientSecretKey`, and `nonce`.
 	Errors if the MAC does not verify.
 ]=]
-function Box.Interface.open(ciphertext: buffer, senderPublicKey: buffer, recipientSecretKey: buffer, nonce: buffer): buffer
+function Box.Interface.open(
+	ciphertext: buffer,
+	senderPublicKey: buffer,
+	recipientSecretKey: buffer,
+	nonce: buffer
+): buffer
 	assert(
 		buffer.len(senderPublicKey) == Sys.box.PUBLIC_KEY_BYTES,
 		`senderPublicKey must be {Sys.box.PUBLIC_KEY_BYTES} bytes, got {buffer.len(senderPublicKey)}`
@@ -131,7 +139,10 @@ function Box.Interface.open(ciphertext: buffer, senderPublicKey: buffer, recipie
 		buffer.len(recipientSecretKey) == Sys.box.SECRET_KEY_BYTES,
 		`recipientSecretKey must be {Sys.box.SECRET_KEY_BYTES} bytes, got {buffer.len(recipientSecretKey)}`
 	)
-	assert(buffer.len(nonce) == Sys.box.NONCE_BYTES, `nonce must be {Sys.box.NONCE_BYTES} bytes, got {buffer.len(nonce)}`)
+	assert(
+		buffer.len(nonce) == Sys.box.NONCE_BYTES,
+		`nonce must be {Sys.box.NONCE_BYTES} bytes, got {buffer.len(nonce)}`
+	)
 
 	local ciphertextLength = buffer.len(ciphertext)
 
@@ -195,7 +206,10 @@ function Box.Interface.sealDetached(
 		buffer.len(senderSecretKey) == Sys.box.SECRET_KEY_BYTES,
 		`senderSecretKey must be {Sys.box.SECRET_KEY_BYTES} bytes, got {buffer.len(senderSecretKey)}`
 	)
-	assert(buffer.len(nonce) == Sys.box.NONCE_BYTES, `nonce must be {Sys.box.NONCE_BYTES} bytes, got {buffer.len(nonce)}`)
+	assert(
+		buffer.len(nonce) == Sys.box.NONCE_BYTES,
+		`nonce must be {Sys.box.NONCE_BYTES} bytes, got {buffer.len(nonce)}`
+	)
 
 	local messageLength = buffer.len(message)
 
@@ -260,7 +274,10 @@ function Box.Interface.openDetached(
 		buffer.len(recipientSecretKey) == Sys.box.SECRET_KEY_BYTES,
 		`recipientSecretKey must be {Sys.box.SECRET_KEY_BYTES} bytes, got {buffer.len(recipientSecretKey)}`
 	)
-	assert(buffer.len(nonce) == Sys.box.NONCE_BYTES, `nonce must be {Sys.box.NONCE_BYTES} bytes, got {buffer.len(nonce)}`)
+	assert(
+		buffer.len(nonce) == Sys.box.NONCE_BYTES,
+		`nonce must be {Sys.box.NONCE_BYTES} bytes, got {buffer.len(nonce)}`
+	)
 
 	local messageLength = buffer.len(cipher)
 
@@ -350,7 +367,10 @@ function Box.Interface.sealAfterPrecompute(message: buffer, sharedKey: buffer, n
 		buffer.len(sharedKey) == Sys.box.BEFORENM_BYTES,
 		`sharedKey must be {Sys.box.BEFORENM_BYTES} bytes, got {buffer.len(sharedKey)}`
 	)
-	assert(buffer.len(nonce) == Sys.box.NONCE_BYTES, `nonce must be {Sys.box.NONCE_BYTES} bytes, got {buffer.len(nonce)}`)
+	assert(
+		buffer.len(nonce) == Sys.box.NONCE_BYTES,
+		`nonce must be {Sys.box.NONCE_BYTES} bytes, got {buffer.len(nonce)}`
+	)
 
 	local messageLength = buffer.len(message)
 	local ciphertextLength = Sys.box.MAC_BYTES + messageLength
@@ -391,7 +411,10 @@ function Box.Interface.openAfterPrecompute(ciphertext: buffer, sharedKey: buffer
 		buffer.len(sharedKey) == Sys.box.BEFORENM_BYTES,
 		`sharedKey must be {Sys.box.BEFORENM_BYTES} bytes, got {buffer.len(sharedKey)}`
 	)
-	assert(buffer.len(nonce) == Sys.box.NONCE_BYTES, `nonce must be {Sys.box.NONCE_BYTES} bytes, got {buffer.len(nonce)}`)
+	assert(
+		buffer.len(nonce) == Sys.box.NONCE_BYTES,
+		`nonce must be {Sys.box.NONCE_BYTES} bytes, got {buffer.len(nonce)}`
+	)
 
 	local ciphertextLength = buffer.len(ciphertext)
 

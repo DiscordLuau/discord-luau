@@ -34,12 +34,21 @@ Pwhash.Interface = {}
 	Derives a key of `outputBytes` bytes from `password` and a 16-byte `salt` using Argon2id.
 	`opsLimit` and `memLimit` default to the interactive presets; increase to moderate or sensitive for stronger derivation.
 ]=]
-function Pwhash.Interface.hash(password: buffer, salt: buffer, outputBytes: number, opsLimit: number?, memLimit: number?): buffer
+function Pwhash.Interface.hash(
+	password: buffer,
+	salt: buffer,
+	outputBytes: number,
+	opsLimit: number?,
+	memLimit: number?
+): buffer
 	assert(
 		outputBytes >= Sys.pwhash.BYTES_MIN and outputBytes <= Sys.pwhash.BYTES_MAX,
 		`outputBytes must be {Sys.pwhash.BYTES_MIN}–{Sys.pwhash.BYTES_MAX}, got {outputBytes}`
 	)
-	assert(buffer.len(salt) == Sys.pwhash.SALT_BYTES, `salt must be {Sys.pwhash.SALT_BYTES} bytes, got {buffer.len(salt)}`)
+	assert(
+		buffer.len(salt) == Sys.pwhash.SALT_BYTES,
+		`salt must be {Sys.pwhash.SALT_BYTES} bytes, got {buffer.len(salt)}`
+	)
 
 	local operationsLimit = opsLimit or Sys.pwhash.OPSLIMIT_INTERACTIVE
 	local memoryLimit = memLimit or Sys.pwhash.MEMLIMIT_INTERACTIVE
