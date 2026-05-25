@@ -6,7 +6,7 @@
 
 local classes = require("../luau_packages/classes")
 
-local command = require("@self/command")
+local command = require("./command")
 
 local function resolveInteractionUserId(interaction: classes.TypesCommand): string
 	if interaction.user then
