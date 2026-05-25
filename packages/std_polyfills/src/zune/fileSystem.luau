@@ -36,7 +36,19 @@ function fileSystem.stat(path: string): { kind: string, modified: number?, size:
 end
 
 function fileSystem.watch(path: string, callback: (path: string, events: { string }) -> ()): { stop: () -> () }
-	local watcher = zune.fs.watch(path, callback :: any)
+	local EVENT_MAP: { [string]: string } = {
+		modified = "change",
+		created = "create",
+		deleted = "remove",
+		renamed = "rename",
+	}
+	local watcher = zune.fs.watch(path, function(watchPath: string, watchEvents: { string })
+		local translated = {}
+		for _, event in watchEvents do
+			table.insert(translated, EVENT_MAP[event] or event)
+		end
+		callback(watchPath, translated)
+	end)
 	return {
 		stop = function()
 			watcher:stop()
