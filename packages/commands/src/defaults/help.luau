@@ -13,6 +13,7 @@ local registry = require("../registry")
 
 local HELP_NAVIGATE_ID = "help:navigate"
 local FLAG_COMPONENTS_V2 = 32768
+local FLAG_EPHEMERAL = 64
 local COMMANDS_PER_PAGE = 10
 
 local messageComponents = builders.message.components
@@ -178,8 +179,8 @@ local function buildMessage(pageIndex: number, pages: { { title: string, lines: 
 
 	local actionRow = messageComponents.actionRow.new()
 	actionRow:addComponent(prevButton:build())
-	actionRow:addComponent(nextButton:build())
 	actionRow:addComponent(pageIndicator:build())
+	actionRow:addComponent(nextButton:build())
 
 	local container = messageComponents.container.new()
 	container:addComponent(header:build())
@@ -189,7 +190,7 @@ local function buildMessage(pageIndex: number, pages: { { title: string, lines: 
 	container:addComponent(actionRow:build())
 
 	return {
-		flags = FLAG_COMPONENTS_V2,
+		flags = FLAG_COMPONENTS_V2 + FLAG_EPHEMERAL,
 		components = { container:build() },
 	}
 end
@@ -200,8 +201,11 @@ return function(registryInstance: registry.Registry): command.CommandDefinition
 			.new()
 			:setName("help")
 			:setDescription("List all available commands")
+			:setType("ChatInput")
 			:addIntegrationType("UserInstall")
 			:addContext("Guild")
+			:addContext("BotDm")
+			:addContext("PrivateChannel")
 			:build(),
 
 		execute = function(interaction)
