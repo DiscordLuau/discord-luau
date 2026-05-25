@@ -10,7 +10,7 @@
 	@within Commands.Registry
 ]=]
 
-local command = require("@self/command")
+local command = require("./command")
 
 local Registry = {}
 
