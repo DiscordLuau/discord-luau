@@ -9,7 +9,7 @@ local apiTypes = require("../luau_packages/api_types")
 local classes = require("../luau_packages/classes")
 local logger = require("../luau_packages/logger")
 
-local command = require("@self/command")
+local command = require("./command")
 
 --[=[
 	@within Commands.Pipeline
