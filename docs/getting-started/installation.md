@@ -86,7 +86,6 @@ local DISCORD_BOT_INTENTS = builders.intents
     .new({
         "Guilds",
         "GuildMessages",
-        "MessageContent",
     })
     :build()
 
