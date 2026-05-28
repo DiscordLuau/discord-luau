@@ -311,7 +311,7 @@ function Shard.Prototype.identifyAsync(self: Shard)
 			["d"] = {
 				["token"] = self.token.value,
 				["intents"] = self.intents,
-				["compress"] = true,
+				["compress"] = stdPolyfills.runtime.capabilities().compress,
 				["large_threshold"] = self.largeThreshold or 250,
 				["shard"] = {
 					self.shardId,
