@@ -16,6 +16,10 @@ function fileSystem.readFile(path: string): string
 		return require("./lune/fileSystem").readFile(path)
 	elseif target == "Zune" then
 		return require("./zune/fileSystem").readFile(path)
+	elseif target == "Eryx" then
+		return require("./eryx/fileSystem").readFile(path)
+	elseif target == "Roblox" then
+		error(`fileSystem is not available on Roblox`)
 	end
 
 	error(`Out of reach`)
@@ -31,6 +35,10 @@ function fileSystem.readDir(path: string): { string }
 		return require("./lune/fileSystem").readDir(path)
 	elseif target == "Zune" then
 		return require("./zune/fileSystem").readDir(path)
+	elseif target == "Eryx" then
+		return require("./eryx/fileSystem").readDir(path)
+	elseif target == "Roblox" then
+		error(`fileSystem is not available on Roblox`)
 	end
 
 	error(`Out of reach`)
@@ -46,6 +54,10 @@ function fileSystem.readDirEntries(path: string): { { name: string, kind: string
 		return require("./lune/fileSystem").readDirEntries(path)
 	elseif target == "Zune" then
 		return require("./zune/fileSystem").readDirEntries(path)
+	elseif target == "Eryx" then
+		return require("./eryx/fileSystem").readDirEntries(path)
+	elseif target == "Roblox" then
+		error(`fileSystem is not available on Roblox`)
 	end
 
 	error(`Out of reach`)
@@ -61,6 +73,10 @@ function fileSystem.stat(path: string): { kind: string, modified: number?, size:
 		return require("./lune/fileSystem").stat(path)
 	elseif target == "Zune" then
 		return require("./zune/fileSystem").stat(path)
+	elseif target == "Eryx" then
+		return require("./eryx/fileSystem").stat(path)
+	elseif target == "Roblox" then
+		error(`fileSystem is not available on Roblox`)
 	end
 
 	error(`Out of reach`)
@@ -76,6 +92,10 @@ function fileSystem.watch(path: string, callback: (path: string, events: { strin
 		return require("./lune/fileSystem").watch(path, callback)
 	elseif target == "Zune" then
 		return require("./zune/fileSystem").watch(path, callback)
+	elseif target == "Eryx" then
+		return require("./eryx/fileSystem").watch(path, callback)
+	elseif target == "Roblox" then
+		error(`fileSystem is not available on Roblox`)
 	end
 
 	error(`Out of reach`)
@@ -91,6 +111,10 @@ function fileSystem.writeDir(path: string)
 		return require("./lune/fileSystem").writeDir(path)
 	elseif target == "Zune" then
 		return require("./zune/fileSystem").writeDir(path)
+	elseif target == "Eryx" then
+		return require("./eryx/fileSystem").writeDir(path)
+	elseif target == "Roblox" then
+		error(`fileSystem is not available on Roblox`)
 	end
 
 	error(`Out of reach`)
@@ -106,6 +130,10 @@ function fileSystem.writeFile(path: string, contents: string)
 		return require("./lune/fileSystem").writeFile(path, contents)
 	elseif target == "Zune" then
 		return require("./zune/fileSystem").writeFile(path, contents)
+	elseif target == "Eryx" then
+		return require("./eryx/fileSystem").writeFile(path, contents)
+	elseif target == "Roblox" then
+		error(`fileSystem is not available on Roblox`)
 	end
 
 	error(`Out of reach`)
@@ -121,6 +149,10 @@ function fileSystem.removeDir(path: string)
 		return require("./lune/fileSystem").removeDir(path)
 	elseif target == "Zune" then
 		return require("./zune/fileSystem").removeDir(path)
+	elseif target == "Eryx" then
+		return require("./eryx/fileSystem").removeDir(path)
+	elseif target == "Roblox" then
+		error(`fileSystem is not available on Roblox`)
 	end
 
 	error(`Out of reach`)
@@ -136,6 +168,10 @@ function fileSystem.removeFile(path: string)
 		return require("./lune/fileSystem").removeFile(path)
 	elseif target == "Zune" then
 		return require("./zune/fileSystem").removeFile(path)
+	elseif target == "Eryx" then
+		return require("./eryx/fileSystem").removeFile(path)
+	elseif target == "Roblox" then
+		error(`fileSystem is not available on Roblox`)
 	end
 
 	error(`Out of reach`)
@@ -151,6 +187,10 @@ function fileSystem.isFile(path: string): boolean
 		return require("./lune/fileSystem").isFile(path)
 	elseif target == "Zune" then
 		return require("./zune/fileSystem").isFile(path)
+	elseif target == "Eryx" then
+		return require("./eryx/fileSystem").isFile(path)
+	elseif target == "Roblox" then
+		error(`fileSystem is not available on Roblox`)
 	end
 
 	error(`Out of reach`)
@@ -166,6 +206,10 @@ function fileSystem.isDir(path: string): boolean
 		return require("./lune/fileSystem").isDir(path)
 	elseif target == "Zune" then
 		return require("./zune/fileSystem").isDir(path)
+	elseif target == "Eryx" then
+		return require("./eryx/fileSystem").isDir(path)
+	elseif target == "Roblox" then
+		error(`fileSystem is not available on Roblox`)
 	end
 
 	error(`Out of reach`)
