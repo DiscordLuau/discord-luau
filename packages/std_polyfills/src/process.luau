@@ -18,6 +18,8 @@ function process.getPlatform(): OS
 		return require("./lune/process").os :: OS
 	elseif target == "Zune" then
 		return require("./zune/process").os :: OS
+	elseif target == "Roblox" then
+		return require("./roblox/process").os :: OS
 	end
 
 	error(`Out of reach`)
@@ -35,6 +37,8 @@ function process.getArgs(): { string }
 		return require("./lune/process").args :: { string }
 	elseif target == "Zune" then
 		return require("./zune/process").args :: { string }
+	elseif target == "Roblox" then
+		return require("./roblox/process").args :: { string }
 	end
 
 	error(`Out of reach`)
@@ -52,6 +56,8 @@ function process.getEnv(): { [string]: string }
 		return require("./lune/process").env :: { [string]: string }
 	elseif target == "Zune" then
 		return require("./zune/process").env :: { [string]: string }
+	elseif target == "Roblox" then
+		return require("./roblox/process").env :: { [string]: string }
 	end
 
 	error(`Out of reach`)
@@ -69,6 +75,8 @@ function process.getCwd(): string
 		return require("./lune/process").cwd :: string
 	elseif target == "Zune" then
 		return require("./zune/process").cwd :: string
+	elseif target == "Roblox" then
+		return require("./roblox/process").cwd :: string
 	end
 
 	error(`Out of reach`)
@@ -87,6 +95,8 @@ function process.run(exec: string, args: { string }?, opts: { cwd: string?, env:
 		return require("./lune/process").exec(exec, args, opts) :: RunResult
 	elseif target == "Zune" then
 		return require("./zune/process").run(exec, args, opts) :: RunResult
+	elseif target == "Roblox" then
+		error(`process.run is not available on Roblox`)
 	end
 
 	error(`Out of reach`)
@@ -104,6 +114,8 @@ function process.getArch(): Arch
 		error(`The Lune runtime does not expose CPU architecture`)
 	elseif target == "Zune" then
 		return require("./zune/process").arch :: Arch
+	elseif target == "Roblox" then
+		error(`process.getArch is not available on Roblox`)
 	end
 
 	error(`Out of reach`)

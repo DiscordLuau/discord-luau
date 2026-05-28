@@ -18,6 +18,8 @@ function datetime.fromIsoDate(isoDate: string): DateTime
 		return require("./lune/datetime").fromIsoDate(isoDate) :: any
 	elseif target == "Zune" then
 		return require("./zune/datetime").fromIsoDate(isoDate) :: any
+	elseif target == "Roblox" then
+		return require("./roblox/datetime").fromIsoDate(isoDate) :: any
 	end
 
 	error(`Out of reach`)
@@ -37,6 +39,8 @@ function datetime.fromUnixTimestamp(unixTimestamp: number): DateTime
 		return require("./lune/datetime").fromUnixTimestamp(unixTimestamp) :: any
 	elseif target == "Zune" then
 		return require("./zune/datetime").fromUnixTimestamp(unixTimestamp) :: any
+	elseif target == "Roblox" then
+		return require("./roblox/datetime").fromUnixTimestamp(unixTimestamp) :: any
 	end
 
 	error(`Out of reach`)
@@ -54,6 +58,8 @@ function datetime.now(): DateTime
 		return require("./lune/datetime").now() :: any
 	elseif target == "Zune" then
 		return require("./zune/datetime").now() :: any
+	elseif target == "Roblox" then
+		return require("./roblox/datetime").now() :: any
 	end
 
 	error(`Out of reach`)

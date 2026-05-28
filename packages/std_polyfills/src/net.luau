@@ -18,6 +18,8 @@ function net.urlEncode(url: string, binary: boolean?): string
 		return require("./lune/net").urlEncode(url, binary)
 	elseif target == "Zune" then
 		return require("./zune/net").urlEncode(url, binary)
+	elseif target == "Roblox" then
+		return require("./roblox/net").urlEncode(url, binary)
 	end
 
 	error(`Out of reach`)
@@ -38,6 +40,8 @@ function net.request(config: string | FetchParams): FetchResponse
 		return require("./lune/net").request(config)
 	elseif target == "Zune" then
 		return require("./zune/net").request(config :: any)
+	elseif target == "Roblox" then
+		return require("./roblox/net").request(config :: any)
 	end
 
 	error(`Out of reach`)
@@ -58,6 +62,8 @@ function net.tcpSocket(url: string): WebSocket
 		return require("./lune/net").socket(url) :: any
 	elseif target == "Zune" then
 		return require("./zune/net").socket(url) :: any
+	elseif target == "Roblox" then
+		return require("./roblox/net").socket(url) :: any
 	end
 
 	error(`Out of reach`)
@@ -78,6 +84,8 @@ function net.udpSocket(host: string, port: number): UdpSocket
 		error(`UDP sockets are not available in Lune`)
 	elseif target == "Zune" then
 		return require("./zune/net").udpSocket(host, port)
+	elseif target == "Roblox" then
+		error(`UDP sockets are not available in Roblox`)
 	end
 
 	error(`Out of reach`)

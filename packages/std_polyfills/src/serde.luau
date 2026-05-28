@@ -18,6 +18,8 @@ function serde.encode(format: EncodeDecodeFormat, value: any, pretty: boolean?):
 		return require("./lune/serde").encode(format, value, pretty)
 	elseif target == "Zune" then
 		return require("./zune/serde").encode(format, value, pretty)
+	elseif target == "Roblox" then
+		return require("./roblox/serde").encode(format, value, pretty)
 	end
 
 	error(`Out of reach`)
@@ -35,6 +37,8 @@ function serde.decode(format: EncodeDecodeFormat, encoded: buffer | string): any
 		return require("./lune/serde").decode(format, encoded)
 	elseif target == "Zune" then
 		return require("./zune/serde").decode(format, encoded)
+	elseif target == "Roblox" then
+		return require("./roblox/serde").decode(format, encoded)
 	end
 
 	error(`Out of reach`)
@@ -52,6 +56,8 @@ function serde.decompress(format: CompressDecompressFormat, s: buffer | string):
 		return require("./lune/serde").decompress(format, s)
 	elseif target == "Zune" then
 		return require("./zune/serde").decompress(format, s)
+	elseif target == "Roblox" then
+		return require("./roblox/serde").decompress(format, s)
 	end
 
 	error(`Out of reach`)
@@ -69,6 +75,8 @@ function serde.compress(format: CompressDecompressFormat, s: buffer | string, le
 		return require("./lune/serde").compress(format, s, level)
 	elseif target == "Zune" then
 		return require("./zune/serde").compress(format, s, level)
+	elseif target == "Roblox" then
+		return require("./roblox/serde").compress(format, s, level)
 	end
 
 	error(`Out of reach`)
