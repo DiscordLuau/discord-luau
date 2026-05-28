@@ -35,16 +35,11 @@ local DISCORD_BOT_INTENTS = builders.intents
     .new({
         "Guilds",
         "GuildMessages",
-        "MessageContent",
     })
     :build()
 ```
 
 `builders.intents.new()` accepts a list of intent names and `:build()` converts them into the bitfield integer that the Discord gateway expects.
-
-:::note[MessageContent requires a portal toggle]
-The `MessageContent` intent is privileged. You must enable it in the [Discord Developer Portal](https://discord.com/developers/applications) under your application's **Bot** tab, otherwise the bot will connect but `message.content` will always be empty.
-:::
 
 ## Creating the bot
 
@@ -105,7 +100,6 @@ local DISCORD_BOT_INTENTS = builders.intents
     .new({
         "Guilds",
         "GuildMessages",
-        "MessageContent",
     })
     :build()
 
