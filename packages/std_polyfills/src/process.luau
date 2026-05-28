@@ -20,6 +20,8 @@ function process.getPlatform(): OS
 		return require("./zune/process").os :: OS
 	elseif target == "Roblox" then
 		return require("./roblox/process").os :: OS
+	elseif target == "Eryx" then
+		return require("./eryx/process").os :: OS
 	end
 
 	error(`Out of reach`)
@@ -39,6 +41,8 @@ function process.getArgs(): { string }
 		return require("./zune/process").args :: { string }
 	elseif target == "Roblox" then
 		return require("./roblox/process").args :: { string }
+	elseif target == "Eryx" then
+		return require("./eryx/process").args :: { string }
 	end
 
 	error(`Out of reach`)
@@ -58,6 +62,8 @@ function process.getEnv(): { [string]: string }
 		return require("./zune/process").env :: { [string]: string }
 	elseif target == "Roblox" then
 		return require("./roblox/process").env :: { [string]: string }
+	elseif target == "Eryx" then
+		return require("./eryx/process").env :: { [string]: string }
 	end
 
 	error(`Out of reach`)
@@ -77,6 +83,8 @@ function process.getCwd(): string
 		return require("./zune/process").cwd :: string
 	elseif target == "Roblox" then
 		return require("./roblox/process").cwd :: string
+	elseif target == "Eryx" then
+		return require("./eryx/process").cwd :: string
 	end
 
 	error(`Out of reach`)
@@ -97,6 +105,8 @@ function process.run(exec: string, args: { string }?, opts: { cwd: string?, env:
 		return require("./zune/process").run(exec, args, opts) :: RunResult
 	elseif target == "Roblox" then
 		error(`process.run is not available on Roblox`)
+	elseif target == "Eryx" then
+		return require("./eryx/process").run(exec, args, opts) :: RunResult
 	end
 
 	error(`Out of reach`)
@@ -116,6 +126,8 @@ function process.getArch(): Arch
 		return require("./zune/process").arch :: Arch
 	elseif target == "Roblox" then
 		error(`process.getArch is not available on Roblox`)
+	elseif target == "Eryx" then
+		return require("./eryx/process").arch :: Arch
 	end
 
 	error(`Out of reach`)
