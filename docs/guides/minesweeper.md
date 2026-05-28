@@ -22,11 +22,11 @@ Because Discord handles each spoiler independently, there is no cascading reveal
 ## Generating the board
 
 ```lua
-local ROWS  <const> = 9
-local COLUMNS  <const> = 9
-local MINES <const> = 10
+local ROWS = 9
+local COLUMNS = 9
+local MINES = 10
 
-local NUMBER_EMOJIS <const> = table.freeze({
+local NUMBER_EMOJIS = table.freeze({
     [0] = ":zero:",
     [1] = ":one:",
     [2] = ":two:",
@@ -174,11 +174,11 @@ local classes  = require("@self/../luau_packages/classes")
 local builders = require("@self/../luau_packages/builders")
 local env      = require("@self/../.env")
 
-local ROWS  <const> = 9
-local COLUMNS  <const> = 9
-local MINES <const> = 10
+local ROWS = 9
+local COLUMNS = 9
+local MINES = 10
 
-local NUMBER_EMOJIS <const> = table.freeze({
+local NUMBER_EMOJIS = table.freeze({
     [0] = ":zero:",
     [1] = ":one:",
     [2] = ":two:",
