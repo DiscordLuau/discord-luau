@@ -20,6 +20,8 @@ function task.cancel(thread: thread)
 		return require("./zune/task").cancel(thread)
 	elseif target == "Roblox" then
 		return require("./roblox/task").cancel(thread)
+	elseif target == "Eryx" then
+		return require("./eryx/task").cancel(thread)
 	end
 
 	error(`Out of reach`)
@@ -39,6 +41,8 @@ function task.defer<T...>(functionOrThread: thread | (T...) -> ...any, ...: T...
 		return require("./zune/task").defer(functionOrThread, ...)
 	elseif target == "Roblox" then
 		return require("./roblox/task").defer(functionOrThread, ...)
+	elseif target == "Eryx" then
+		return require("./eryx/task").defer(functionOrThread, ...)
 	end
 
 	error(`Out of reach`)
@@ -58,6 +62,8 @@ function task.delay<T...>(duration: number, functionOrThread: thread | (T...) ->
 		return require("./zune/task").delay(duration, functionOrThread, ...)
 	elseif target == "Roblox" then
 		return require("./roblox/task").delay(duration, functionOrThread, ...)
+	elseif target == "Eryx" then
+		return require("./eryx/task").delay(duration, functionOrThread, ...)
 	end
 
 	error(`Out of reach`)
@@ -80,6 +86,8 @@ function task.spawn<T...>(functionOrThread: thread | (T...) -> ...any, ...: T...
 		return require("./zune/task").spawn(functionOrThread, ...)
 	elseif target == "Roblox" then
 		return require("./roblox/task").spawn(functionOrThread, ...)
+	elseif target == "Eryx" then
+		return require("./eryx/task").spawn(functionOrThread, ...)
 	end
 
 	error(`Out of reach`)
@@ -102,6 +110,8 @@ function task.wait(duration: number?): number
 		return require("./zune/task").wait(duration)
 	elseif target == "Roblox" then
 		return require("./roblox/task").wait(duration)
+	elseif target == "Eryx" then
+		return require("./eryx/task").wait(duration)
 	end
 
 	error(`Out of reach`)
