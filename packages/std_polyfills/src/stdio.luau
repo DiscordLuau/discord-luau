@@ -20,6 +20,8 @@ function stdio.prompt(message: string?): string
 		return require("./zune/stdio").prompt(message)
 	elseif target == "Roblox" then
 		return require("./roblox/stdio").prompt(message)
+	elseif target == "Eryx" then
+		return require("./eryx/stdio").prompt(message)
 	end
 
 	error(`Out of reach`)
@@ -39,6 +41,8 @@ function stdio.write(source: string)
 		return require("./zune/stdio").write(source)
 	elseif target == "Roblox" then
 		return require("./roblox/stdio").write(source)
+	elseif target == "Eryx" then
+		return require("./eryx/stdio").write(source)
 	end
 
 	error(`Out of reach`)
