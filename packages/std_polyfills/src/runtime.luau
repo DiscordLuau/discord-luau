@@ -4,6 +4,7 @@
 
 local LUNE_STRING_MATCH = "(Lune) (%d+%.%d+%.%d+.*)+(%d+)"
 local ZUNE_STRING_MATCH = "(zune) (%d+%.%d+%.%d+.*)+(%d+%.%d+)"
+local ERYX_STRING_MATCH = "(erxy) (%d+%.%d+)"
 
 local runtime = {}
 
@@ -27,6 +28,8 @@ function runtime.getRuntime(): RuntimeValue
 			return "Lune"
 		elseif string.match(version, ZUNE_STRING_MATCH) then
 			return "Zune"
+		elseif string.match(version, ERYX_STRING_MATCH) then
+			return "Eryx"
 		end
 	end
 
@@ -43,7 +46,7 @@ end
 function runtime.assertRuntime(): RuntimeValue
 	local currentRuntime = runtime.getRuntime()
 
-	if currentRuntime ~= "Lune" and currentRuntime ~= "Zune" and currentRuntime ~= "Roblox" then
+	if currentRuntime ~= "Lune" and currentRuntime ~= "Zune" and currentRuntime ~= "Roblox" and currentRuntime ~= "Eryx" then
 		error(`Discord-Luau currently doesn't support the '{currentRuntime}' runtime!`)
 	end
 
@@ -82,6 +85,16 @@ function runtime.capabilities(): Capabilities
 			compress = true,
 			forbidCustomUserAgent = false,
 		}
+	elseif current == "Eryx" then
+		return {
+			-- @eryx/_ffi exists but uses a different model (loadLibrary+getFunction)
+			-- and lacks struct/closure/alloc/tagged pointers that dave/sodium/opus require.
+			ffi = false,
+			udp = true,
+			onSignal = false,
+			compress = true,
+			forbidCustomUserAgent = false,
+		}
 	end
 
 	return {
@@ -101,7 +114,7 @@ export type Capabilities = {
 	forbidCustomUserAgent: boolean,
 }
 
-export type RuntimeValue = "Lune" | "Zune" | "Roblox" | "Luau" | "Lute" | "Unknown"
+export type RuntimeValue = "Lune" | "Zune" | "Roblox" | "Eryx" | "Luau" | "Lute" | "Unknown"
 export type Runtime = typeof(runtime)
 
 return runtime
