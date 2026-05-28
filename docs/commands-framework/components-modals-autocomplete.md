@@ -24,7 +24,6 @@ return {
 
     execute = function(interaction: classes.TypesCommand)
         interaction:messageAsync({
-            content = "Vote!",
             components = {
                 -- action row with Yes / No buttons
             },
