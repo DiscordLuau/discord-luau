@@ -27,3 +27,6 @@ classes = { workspace = "discord_luau/classes" }
 logger = { workspace = "discord_luau/logger" }
 bit = { workspace = "discord_luau/bit" }
 emitter = { workspace = "discord_luau/emitter" }
+
+[patches]
+"yetanotherclown/luau_futures" = { "2.0.0-beta.3 luau" = "patches/yetanotherclown+luau_futures-2.0.0-beta.3+luau.patch" }

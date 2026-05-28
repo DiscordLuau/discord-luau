@@ -27,3 +27,6 @@ dave = { workspace = "discord_luau/dave" }
 websocket = { workspace = "discord_luau/websocket" }
 sodium = { workspace = "discord_luau/sodium" }
 opus = { workspace = "discord_luau/opus" }
+
+[patches]
+"yetanotherclown/luau_futures" = { "2.0.0-beta.3 luau" = "patches/yetanotherclown+luau_futures-2.0.0-beta.3+luau.patch" }

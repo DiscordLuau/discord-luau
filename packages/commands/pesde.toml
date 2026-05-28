@@ -22,3 +22,6 @@ classes = { workspace = "discord_luau/classes" }
 api_types = { workspace = "discord_luau/api_types" }
 future = { name = "yetanotherclown/luau_futures", version = "2.0.0-beta.3" }
 logger = { workspace = "discord_luau/logger" }
+
+[patches]
+"yetanotherclown/luau_futures" = { "2.0.0-beta.3 luau" = "patches/yetanotherclown+luau_futures-2.0.0-beta.3+luau.patch" }
