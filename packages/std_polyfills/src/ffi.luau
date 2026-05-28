@@ -27,6 +27,10 @@ function ffi.getTypes(): _zune_ffi_types
 		return require("./zune/ffi").types
 	elseif target == "Lune" then
 		error(`The Lune runtime does not support FFI`)
+	elseif target == "Eryx" then
+		return require("./eryx/ffi").getTypes()
+	elseif target == "Roblox" then
+		error(`FFI is not available on Roblox`)
 	end
 
 	error(`Out of reach`)
@@ -44,6 +48,10 @@ function ffi.getNull(): FFIPointer
 		return require("./zune/ffi").null
 	elseif target == "Lune" then
 		error(`The Lune runtime does not support FFI`)
+	elseif target == "Eryx" then
+		return require("./eryx/ffi").getNull()
+	elseif target == "Roblox" then
+		error(`FFI is not available on Roblox`)
 	end
 
 	error(`Out of reach`)
@@ -62,6 +70,10 @@ function ffi.getPrefix(): string
 		return require("./zune/ffi").prefix
 	elseif target == "Lune" then
 		error(`The Lune runtime does not support FFI`)
+	elseif target == "Eryx" then
+		return require("./eryx/ffi").getPrefix()
+	elseif target == "Roblox" then
+		error(`FFI is not available on Roblox`)
 	end
 
 	error(`Out of reach`)
@@ -80,6 +92,10 @@ function ffi.getSuffix(): string
 		return require("./zune/ffi").suffix
 	elseif target == "Lune" then
 		error(`The Lune runtime does not support FFI`)
+	elseif target == "Eryx" then
+		return require("./eryx/ffi").getSuffix()
+	elseif target == "Roblox" then
+		error(`FFI is not available on Roblox`)
 	end
 
 	error(`Out of reach`)
@@ -108,6 +124,10 @@ function ffi.dlopen(path: string, functions: { [string]: FFIFunctionDefinition }
 		return require("./zune/ffi").dlopen(path, functions)
 	elseif target == "Lune" then
 		error(`The Lune runtime does not support FFI`)
+	elseif target == "Eryx" then
+		return require("./eryx/ffi").dlopen(path, functions)
+	elseif target == "Roblox" then
+		error(`FFI is not available on Roblox`)
 	end
 
 	error(`Out of reach`)
@@ -133,6 +153,10 @@ function ffi.struct(fields: { { [string]: FFIAnyDataType } }): FFIStructureType
 		return require("./zune/ffi").struct(fields)
 	elseif target == "Lune" then
 		error(`The Lune runtime does not support FFI`)
+	elseif target == "Eryx" then
+		return require("./eryx/ffi").struct(fields)
+	elseif target == "Roblox" then
+		error(`FFI is not available on Roblox`)
 	end
 
 	error(`Out of reach`)
@@ -160,6 +184,10 @@ function ffi.closure(definition: FFIFunctionDefinition, handler: (...any) -> any
 		return require("./zune/ffi").closure(definition, handler)
 	elseif target == "Lune" then
 		error(`The Lune runtime does not support FFI`)
+	elseif target == "Eryx" then
+		return require("./eryx/ffi").closure(definition, handler)
+	elseif target == "Roblox" then
+		error(`FFI is not available on Roblox`)
 	end
 
 	error(`Out of reach`)
@@ -178,6 +206,10 @@ function ffi.fn(definition: FFIFunctionDefinition, srcPtr: FFIPointer): (...any)
 		return require("./zune/ffi").fn(definition, srcPtr)
 	elseif target == "Lune" then
 		error(`The Lune runtime does not support FFI`)
+	elseif target == "Eryx" then
+		return require("./eryx/ffi").fn(definition, srcPtr)
+	elseif target == "Roblox" then
+		error(`FFI is not available on Roblox`)
 	end
 
 	error(`Out of reach`)
@@ -197,6 +229,10 @@ function ffi.alloc(size: number, alignment: number?): FFIPointer
 		return require("./zune/ffi").alloc(size, alignment)
 	elseif target == "Lune" then
 		error(`The Lune runtime does not support FFI`)
+	elseif target == "Eryx" then
+		return require("./eryx/ffi").alloc(size, alignment)
+	elseif target == "Roblox" then
+		error(`FFI is not available on Roblox`)
 	end
 
 	error(`Out of reach`)
@@ -215,6 +251,10 @@ function ffi.create(dataType: FFIAnyDataType): FFIPointer
 		return require("./zune/ffi").create(dataType)
 	elseif target == "Lune" then
 		error(`The Lune runtime does not support FFI`)
+	elseif target == "Eryx" then
+		return require("./eryx/ffi").create(dataType)
+	elseif target == "Roblox" then
+		error(`FFI is not available on Roblox`)
 	end
 
 	error(`Out of reach`)
@@ -232,6 +272,10 @@ function ffi.free(src: FFIPointer): ()
 		return require("./zune/ffi").free(src)
 	elseif target == "Lune" then
 		error(`The Lune runtime does not support FFI`)
+	elseif target == "Eryx" then
+		return require("./eryx/ffi").free(src)
+	elseif target == "Roblox" then
+		error(`FFI is not available on Roblox`)
 	end
 
 	error(`Out of reach`)
@@ -250,6 +294,10 @@ function ffi.dupe(src: buffer | FFIPointer | vector): FFIPointer
 		return require("./zune/ffi").dupe(src)
 	elseif target == "Lune" then
 		error(`The Lune runtime does not support FFI`)
+	elseif target == "Eryx" then
+		return require("./eryx/ffi").dupe(src)
+	elseif target == "Roblox" then
+		error(`FFI is not available on Roblox`)
 	end
 
 	error(`Out of reach`)
@@ -267,6 +315,10 @@ function ffi.ptr(src: FFIPointer): FFIPointer
 		return require("./zune/ffi").ptr(src)
 	elseif target == "Lune" then
 		error(`The Lune runtime does not support FFI`)
+	elseif target == "Eryx" then
+		return require("./eryx/ffi").ptr(src)
+	elseif target == "Roblox" then
+		error(`FFI is not available on Roblox`)
 	end
 
 	error(`Out of reach`)
@@ -285,6 +337,10 @@ function ffi.ptrFromAddress(src: buffer): FFIPointer
 		return require("./zune/ffi").ptrFromAddress(src)
 	elseif target == "Lune" then
 		error(`The Lune runtime does not support FFI`)
+	elseif target == "Eryx" then
+		return require("./eryx/ffi").ptrFromAddress(src)
+	elseif target == "Roblox" then
+		error(`FFI is not available on Roblox`)
 	end
 
 	error(`Out of reach`)
@@ -303,6 +359,10 @@ function ffi.tagName(tag: number): string?
 		return require("./zune/ffi").tagName(tag)
 	elseif target == "Lune" then
 		error(`The Lune runtime does not support FFI`)
+	elseif target == "Eryx" then
+		return require("./eryx/ffi").tagName(tag)
+	elseif target == "Roblox" then
+		error(`FFI is not available on Roblox`)
 	end
 
 	error(`Out of reach`)
@@ -322,6 +382,10 @@ function ffi.getLuaState(mainthread: boolean?): FFIPointer
 		return require("./zune/ffi").getLuaState(mainthread)
 	elseif target == "Lune" then
 		error(`The Lune runtime does not support FFI`)
+	elseif target == "Eryx" then
+		return require("./eryx/ffi").getLuaState(mainthread)
+	elseif target == "Roblox" then
+		error(`FFI is not available on Roblox`)
 	end
 
 	error(`Out of reach`)
