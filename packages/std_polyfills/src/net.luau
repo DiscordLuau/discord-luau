@@ -20,6 +20,8 @@ function net.urlEncode(url: string, binary: boolean?): string
 		return require("./zune/net").urlEncode(url, binary)
 	elseif target == "Roblox" then
 		return require("./roblox/net").urlEncode(url, binary)
+	elseif target == "Eryx" then
+		return require("./eryx/net").urlEncode(url, binary)
 	end
 
 	error(`Out of reach`)
@@ -42,6 +44,8 @@ function net.request(config: string | FetchParams): FetchResponse
 		return require("./zune/net").request(config :: any)
 	elseif target == "Roblox" then
 		return require("./roblox/net").request(config :: any)
+	elseif target == "Eryx" then
+		return require("./eryx/net").request(config :: any)
 	end
 
 	error(`Out of reach`)
@@ -64,6 +68,8 @@ function net.tcpSocket(url: string): WebSocket
 		return require("./zune/net").socket(url) :: any
 	elseif target == "Roblox" then
 		return require("./roblox/net").socket(url) :: any
+	elseif target == "Eryx" then
+		return require("./eryx/net").socket(url) :: any
 	end
 
 	error(`Out of reach`)
@@ -86,6 +92,8 @@ function net.udpSocket(host: string, port: number): UdpSocket
 		return require("./zune/net").udpSocket(host, port)
 	elseif target == "Roblox" then
 		error(`UDP sockets are not available in Roblox`)
+	elseif target == "Eryx" then
+		error(`UDP sockets are not available via this polyfill on Eryx`)
 	end
 
 	error(`Out of reach`)
