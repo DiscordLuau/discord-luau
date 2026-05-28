@@ -9,7 +9,7 @@ Attachments let you upload files directly to Discord. discord-luau supports send
 
 ## Prerequisites
 
-This guide uses the `onMessage` event, which requires the `MessageContent` intent. Make sure it is enabled in the [Discord Developer Portal](https://discord.com/developers/applications) under your application's **Bot** tab.
+This guide uses the `onMessage` event. To match on `message.content` in your handler, add `"MessageContent"` to your intents - it is a privileged intent that must also be enabled in the [Discord Developer Portal](https://discord.com/developers/applications) under your application's **Bot** tab.
 
 ## Adding an attachment to a message
 
@@ -23,7 +23,7 @@ local env      = require("@self/../.env")
 
 local bot = discord.bot.new({
     token = env.DISCORD_BOT_TOKEN,
-    intents = builders.intents.new({ "Guilds", "GuildMessages", "MessageContent" }):build(),
+    intents = builders.intents.new({ "Guilds", "GuildMessages" }):build(),
     reconnect = true,
 })
 
@@ -87,7 +87,7 @@ local env      = require("@self/../.env")
 
 local bot = discord.bot.new({
     token = env.DISCORD_BOT_TOKEN,
-    intents = builders.intents.new({ "Guilds", "GuildMessages", "MessageContent" }):build(),
+    intents = builders.intents.new({ "Guilds", "GuildMessages" }):build(),
     reconnect = true,
 })
 
