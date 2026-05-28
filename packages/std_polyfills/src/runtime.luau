@@ -43,7 +43,7 @@ end
 function runtime.assertRuntime(): RuntimeValue
 	local currentRuntime = runtime.getRuntime()
 
-	if currentRuntime ~= "Lune" and currentRuntime ~= "Zune" then
+	if currentRuntime ~= "Lune" and currentRuntime ~= "Zune" and currentRuntime ~= "Roblox" then
 		error(`Discord-Luau currently doesn't support the '{currentRuntime}' runtime!`)
 	end
 
@@ -71,6 +71,16 @@ function runtime.capabilities(): Capabilities
 			ffi = true,
 			udp = true,
 			onSignal = true,
+			compress = true,
+			forbidCustomUserAgent = false,
+		}
+	elseif current == "Lune" then
+		return {
+			ffi = false,
+			udp = false,
+			onSignal = false,
+			compress = true,
+			forbidCustomUserAgent = false,
 		}
 	end
 
@@ -78,6 +88,8 @@ function runtime.capabilities(): Capabilities
 		ffi = false,
 		udp = false,
 		onSignal = false,
+		compress = false,
+		forbidCustomUserAgent = true,
 	}
 end
 
@@ -85,6 +97,8 @@ export type Capabilities = {
 	ffi: boolean,
 	udp: boolean,
 	onSignal: boolean,
+	compress: boolean,
+	forbidCustomUserAgent: boolean,
 }
 
 export type RuntimeValue = "Lune" | "Zune" | "Roblox" | "Luau" | "Lute" | "Unknown"
