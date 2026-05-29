@@ -13,18 +13,18 @@ end
 
 function serde.decode(format: string, encoded: string | buffer): any
 	if format == "json" then
-		local str = if type(encoded) == "buffer" then buffer.tostring(encoded) else encoded
-		return HttpService:JSONDecode(str)
+		local source = if type(encoded) == "buffer" then buffer.tostring(encoded) else encoded
+		return HttpService:JSONDecode(source)
 	end
 
 	error(`Unsupported serde format on Roblox: {format}`)
 end
 
-function serde.compress(_format: string, _s: string | buffer, _level: number?): string
+function serde.compress(_format: string, _data: string | buffer, _level: number?): string
 	error("serde.compress is not available on Roblox — disable gateway compression via capabilities().compress")
 end
 
-function serde.decompress(_format: string, _s: string | buffer): string
+function serde.decompress(_format: string, _data: string | buffer): string
 	error("serde.decompress is not available on Roblox — disable gateway compression via capabilities().compress")
 end
 

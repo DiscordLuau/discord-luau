@@ -3,27 +3,28 @@ local HttpService = game:GetService("HttpService")
 
 local net = {}
 
-local function urlEncodeChar(c: string): string
-	return string.format("%%%02X", string.byte(c))
+local function urlEncodeChar(character: string): string
+	return string.format("%%%02X", string.byte(character))
 end
 
+-- HttpService:UrlEncode only encodes individual values, not full URLs; manual encoding handles raw strings
 function net.urlEncode(url: string, _binary: boolean?): string
-	-- HttpService:UrlEncode only encodes individual values, not full URLs; use
-	-- it for query-param values but fall back to manual encoding for raw strings.
 	return (string.gsub(url, "[^%w%-%.%_%~]", urlEncodeChar))
 end
 
 local function buildQueryString(query: { [string]: string | { string } }): string
 	local parts = {}
+
 	for key, value in query do
 		if type(value) == "table" then
-			for _, v in value do
-				table.insert(parts, net.urlEncode(key) .. "=" .. net.urlEncode(v))
+			for _, entry in value do
+				table.insert(parts, net.urlEncode(key) .. "=" .. net.urlEncode(entry))
 			end
 		else
 			table.insert(parts, net.urlEncode(key) .. "=" .. net.urlEncode(value :: string))
 		end
 	end
+
 	return table.concat(parts, "&")
 end
 
@@ -53,9 +54,10 @@ function net.request(config: string | {
 		end
 
 		if config.query then
-			local qs = buildQueryString(config.query)
-			if #qs > 0 then
-				url = url .. (if string.find(url, "?", 1, true) then "&" else "?") .. qs
+			local queryString = buildQueryString(config.query)
+
+			if #queryString > 0 then
+				url = url .. (if string.find(url, "?", 1, true) then "&" else "?") .. queryString
 			end
 		end
 	end
@@ -66,6 +68,7 @@ function net.request(config: string | {
 		Method = method,
 		Headers = headers,
 	}
+
 	if method ~= "GET" and method ~= "HEAD" then
 		requestParams.Body = body
 	end
@@ -81,9 +84,8 @@ function net.request(config: string | {
 	}
 end
 
--- Adapts Roblox's CreateWebStreamClient (WebSocket type) to the pull-based
--- next() interface expected by the shard receive loop.
--- Yields until the connection is established (Opened fires) before returning.
+-- Adapts Roblox's CreateWebStreamClient to the pull-based next() interface expected by the shard receive loop;
+-- yields until the connection is established (Opened fires) before returning
 function net.socket(url: string)
 	local messageQueue: { string } = {}
 	local receiveWaiter: thread? = nil
@@ -100,6 +102,7 @@ function net.socket(url: string)
 
 	ws.Opened:Connect(function(_statusCode: number, _headers: { [string]: string })
 		isOpen = true
+
 		if connectWaiter then
 			local co = connectWaiter
 			connectWaiter = nil
@@ -109,6 +112,7 @@ function net.socket(url: string)
 
 	ws.MessageReceived:Connect(function(message: string)
 		table.insert(messageQueue, message)
+
 		if receiveWaiter then
 			local co = receiveWaiter
 			receiveWaiter = nil
@@ -119,11 +123,14 @@ function net.socket(url: string)
 	ws.Closed:Connect(function()
 		if connectWaiter then
 			connectError = `WebSocket closed before opening: {url}`
+
 			local co = connectWaiter
 			connectWaiter = nil
 			task.defer(co)
 		end
+
 		isOpen = false
+
 		if receiveWaiter then
 			local co = receiveWaiter
 			receiveWaiter = nil
@@ -134,11 +141,14 @@ function net.socket(url: string)
 	ws.Error:Connect(function(statusCode: number, errorMessage: string)
 		if connectWaiter then
 			connectError = `WebSocket error {statusCode}: {errorMessage}`
+
 			local co = connectWaiter
 			connectWaiter = nil
 			task.defer(co)
 		end
+
 		isOpen = false
+
 		if receiveWaiter then
 			local co = receiveWaiter
 			receiveWaiter = nil
@@ -157,18 +167,21 @@ function net.socket(url: string)
 		if #messageQueue > 0 then
 			return table.remove(messageQueue, 1)
 		end
+
 		if not isOpen then
 			return nil
 		end
+
 		receiveWaiter = coroutine.running()
 		coroutine.yield()
+
 		return table.remove(messageQueue, 1)
 	end
 
 	function value.send(message: (string | buffer)?, _asBinaryMessage: boolean?)
-		if message ~= nil then
-			local str = if type(message) == "buffer" then buffer.tostring(message) else message :: string
-			ws:Send(str)
+		if message then
+			local data = if type(message) == "buffer" then buffer.tostring(message) else message :: string
+			ws:Send(data)
 		end
 	end
 
