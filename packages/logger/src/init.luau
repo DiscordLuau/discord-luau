@@ -14,13 +14,13 @@ local stdPolyfills = require("@self/../luau_packages/std_polyfills")
 
 local isRoblox = stdPolyfills.runtime.getRuntime() == "Roblox"
 
-local DIM   = if isRoblox then "" else "\27\91\50\109"
-local BOLD  = if isRoblox then "" else "\27\91\49\109"
+local DIM = if isRoblox then "" else "\27\91\50\109"
+local BOLD = if isRoblox then "" else "\27\91\49\109"
 local RESET = if isRoblox then "" else "\27\91\48\109"
-local CYAN   = if isRoblox then "" else "\27\91\51\54\109"
-local BLUE   = if isRoblox then "" else "\27\91\51\52\109"
+local CYAN = if isRoblox then "" else "\27\91\51\54\109"
+local BLUE = if isRoblox then "" else "\27\91\51\52\109"
 local YELLOW = if isRoblox then "" else "\27\91\51\51\109"
-local RED    = if isRoblox then "" else "\27\91\51\49\109"
+local RED = if isRoblox then "" else "\27\91\51\49\109"
 
 local LOGGER_LOG_LEVELS = table.freeze({
 	"Debug",
