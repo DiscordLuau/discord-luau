@@ -1,23 +1,19 @@
--- @eryx/_ffi wraps loadLibrary+getFunction rather than Zune's dlopen-with-definition model.
--- struct, closure, and raw memory ops (alloc/create/free/dupe/ptr) have no equivalent in
--- Eryx's FFI and will error if called.
 -- selene: allow(undefined_variable)
 local erxFfi = require("@eryx/_ffi")
 local erxOs = require("@eryx/os")
 
 local ffi = {}
 
--- Map Zune type names to Eryx type objects
 local TYPES = {
-	void    = erxFfi.void,
-	i8      = erxFfi.i8,
-	u8      = erxFfi.u8,
-	i16     = erxFfi.i16,
-	u16     = erxFfi.u16,
-	i32     = erxFfi.i32,
-	u32     = erxFfi.u32,
-	i64     = erxFfi.i64,
-	u64     = erxFfi.u64,
+	void = erxFfi.void,
+	i8 = erxFfi.i8,
+	u8 = erxFfi.u8,
+	i16 = erxFfi.i16,
+	u16 = erxFfi.u16,
+	i32 = erxFfi.i32,
+	u32 = erxFfi.u32,
+	i64 = erxFfi.i64,
+	u64 = erxFfi.u64,
 	pointer = erxFfi.u64:pointer(),
 }
 
@@ -31,11 +27,13 @@ end
 
 function ffi.getPrefix(): string
 	local platform = erxOs.platform()
+
 	return if platform == "windows" then "" else "lib"
 end
 
 function ffi.getSuffix(): string
 	local platform = erxOs.platform()
+
 	if platform == "windows" then
 		return ".dll"
 	elseif platform == "macos" then
@@ -45,14 +43,16 @@ function ffi.getSuffix(): string
 	end
 end
 
--- Bridges Zune's dlopen({ symbolName = { returns, args } }) to Eryx's loadLibrary+getFunction.
+-- Bridges Zune's dlopen({ symbolName = { returns, args } }) to Eryx's loadLibrary+getFunction model
 function ffi.dlopen(path: string, functions: { [string]: { returns: any, args: { any } } })
 	local lib = erxFfi.loadLibrary(path)
 	local result = {}
-	for name, def in functions do
-		local fn = lib:getFunction(name, def.returns, def.args)
+
+	for name, definition in functions do
+		local fn = lib:getFunction(name, definition.returns, definition.args)
 		result[name] = fn
 	end
+
 	return result
 end
 

@@ -10,6 +10,7 @@ function stdio.prompt(message: string?): string
 	if message then
 		erxStdio.write(message)
 	end
+
 	return erxStdio.readline()
 end
 
