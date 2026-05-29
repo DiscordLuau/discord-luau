@@ -1,40 +1,42 @@
-<div align="center">
-	<p>
-		<a href=""><img src="https://raw.githubusercontent.com/DiscordLuau/.github/master/resource/DiscordLuau-Banner.png" width="512" alt="discord-luau"/></a>
-	</p>
-</div>
+<p align="center">
+  <img src="https://raw.githubusercontent.com/DiscordLuau/docs/master/src/assets/vector.svg" alt="discord-luau" width="96" />
+</p>
 
-## [DiscordLuau - Snowflake](https://pesde.dev/packages/discord_luau/snowflake)
+Library enabling developers to query information from Discord snowflake IDs.
 
-DiscordLuau - Snowflake provides a way to parse Disord snowflakes into their respective components.
+**Source:** [packages/snowflake](https://github.com/DiscordLuau/discord-luau/tree/main/packages/snowflake)
 
-### Installation
-
-To use DiscordLuau Snowflake, add it to your project using the pesde package manager:
+## Installation
 
 ```bash
 pesde add discord_luau/snowflake
 ```
 
-### Getting Started
+## Example
 
-1. Require the library in your project:
 ```luau
-local Snowflake = require("./lune_packages/snowflake")
+local Snowflake = require("./luau_packages/snowflake")
+
+local snowflake = Snowflake.new("175928847299117063")
+
+local timestamp = snowflake:getTimestamp()
+
+print(timestamp.unixTimestamp)
+print(timestamp:toIsoDate())
+
+local workerId = snowflake:getInternalWorkerId()
+
+local processId = snowflake:getInternalProcessId()
+
+local increment = snowflake:getIncrement()
 ```
 
-2. Use the provided library to create a valid snowflake object:
-```luau
-local object = Snowflake.new("123456789012345678")
+Full documentation at [discordluau-docs.devcomp.workers.dev](https://discordluau-docs.devcomp.workers.dev/).
 
-local timestamp = object:getTimestamp()
-local workerId = object:getWorkerId()
-local processId = object:getProcessId()
-```
+## Contributing
 
-### Contributing
+Contributions are welcome via the repository at [github.com/DiscordLuau/discord-luau](https://github.com/DiscordLuau/discord-luau).
 
-See the [Contributing Guide](CONTRIBUTING) for more information on how to contribute to this project.
+## License
 
-### License
-This project is licensed under the MIT License. Feel free to use it in your projects.
+This package is licensed under the MIT License.

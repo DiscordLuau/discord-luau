@@ -1,39 +1,38 @@
-<div align="center">
-	<p>
-		<a href=""><img src="https://raw.githubusercontent.com/DiscordLuau/.github/master/resource/DiscordLuau-Banner.png" width="512" alt="discord-luau"/></a>
-	</p>
-</div>
+<p align="center">
+  <img src="https://raw.githubusercontent.com/DiscordLuau/docs/master/src/assets/vector.svg" alt="discord-luau" width="96" />
+</p>
 
-## [DiscordLuau - Logger](https://pesde.dev/packages/discord_luau/logger)
+Logging implementation for Discord-Luau, supporting eight log levels with ANSI-colored console output.
 
-DiscordLuau - Logger provides a simple class for logging messages to the console. It takes advantage of ASCII colors to make the output more readable.
+**Source:** [packages/logger](https://github.com/DiscordLuau/discord-luau/tree/main/packages/logger)
 
-### Installation
-
-To use DiscordLuau Logger, add it to your project using the pesde package manager:
+## Installation
 
 ```bash
 pesde add discord_luau/logger
 ```
 
-### Getting Started
+## Example
 
-1. Require the library in your project:
 ```luau
-local Logger = require("./lune_packages/logger")
+local Logger = require("./luau_packages/logger")
+
+local logger = Logger.new("MyBot", "Debug")
+
+logger:debug("Starting up...")
+logger:info("Connected to Discord")
+logger:warn("Rate limit approaching")
+logger:error("Failed to send message")
 ```
 
-2. Use the provided library to create a valid log object:
-```luau
-local log = Logger.new()
+Available log levels in ascending order of severity: `Debug`, `Info`, `Notice`, `Warn`, `Error`, `Critical`, `Alert`, `Emergency`.
 
-log:Info(`This is an info message!`)
-log:Warn(`This is a warning message!`)
-```
+Full documentation at [discordluau-docs.devcomp.workers.dev](https://discordluau-docs.devcomp.workers.dev/).
 
-### Contributing
+## Contributing
 
-See the [Contributing Guide](CONTRIBUTING) for more information on how to contribute to this project.
+Contributions are welcome via the repository at [github.com/DiscordLuau/discord-luau](https://github.com/DiscordLuau/discord-luau).
 
-### License
-This project is licensed under the MIT License. Feel free to use it in your projects.
+## License
+
+This package is licensed under the MIT License.

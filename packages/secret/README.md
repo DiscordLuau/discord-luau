@@ -1,40 +1,36 @@
-<div align="center">
-	<p>
-		<a href=""><img src="https://raw.githubusercontent.com/DiscordLuau/.github/master/resource/DiscordLuau-Banner.png" width="512" alt="discord-luau"/></a>
-	</p>
-</div>
+<p align="center">
+  <img src="https://raw.githubusercontent.com/DiscordLuau/docs/master/src/assets/vector.svg" alt="discord-luau" width="96" />
+</p>
 
-## [DiscordLuau - Secret](https://pesde.dev/packages/discord_luau/secret)
+Handles sensitive strings such as bot tokens, preventing them from being accidentally leaked into console output.
 
-DiscordLuau - Secret provides a way to display secrets in the console, in the event you accidently print them. This is used when handling any discord bot tokens in order to make sure they are not leaked.
+**Source:** [packages/secret](https://github.com/DiscordLuau/discord-luau/tree/main/packages/secret)
 
-### Installation
-
-To use DiscordLuau Secret, add it to your project using the pesde package manager:
+## Installation
 
 ```bash
 pesde add discord_luau/secret
 ```
 
-### Getting Started
+## Example
 
-1. Require the library in your project:
 ```luau
-local Secret = require("./lune_packages/secret")
+local Secret = require("./luau_packages/secret")
+
+local token = Secret.new("Bot mY.sUp3r.S3cr3tT0k3n")
+
+-- Safe to print - only a portion is revealed
+print(token) -- Secret(Bot mY.sUp3r.S------------------)
+
+print(token == Secret.new("Bot mY.sUp3r.S3cr3tT0k3n")) -- true
 ```
 
-2. Use the provided library to create a valid secret object:
-```luau
-local secret = Secret.new("something-secret")
+Full documentation at [discordluau-docs.devcomp.workers.dev](https://discordluau-docs.devcomp.workers.dev/).
 
-print(secret == xyz)
-print(#secret)
-print(tostring(secret))
-```
+## Contributing
 
-### Contributing
+Contributions are welcome via the repository at [github.com/DiscordLuau/discord-luau](https://github.com/DiscordLuau/discord-luau).
 
-See the [Contributing Guide](CONTRIBUTING) for more information on how to contribute to this project.
+## License
 
-### License
-This project is licensed under the MIT License. Feel free to use it in your projects.
+This package is licensed under the MIT License.

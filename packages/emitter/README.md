@@ -1,44 +1,39 @@
-<div align="center">
-	<p>
-		<a href=""><img src="https://raw.githubusercontent.com/DiscordLuau/.github/master/resource/DiscordLuau-Banner.png" width="512" alt="discord-luau"/></a>
-	</p>
-</div>
+<p align="center">
+  <img src="https://raw.githubusercontent.com/DiscordLuau/docs/master/src/assets/vector.svg" alt="discord-luau" width="96" />
+</p>
 
-## [DiscordLuau - Emitter](https://pesde.dev/packages/discord_luau/emitter)
+A signal/event emitter for Luau.
 
-DicordLuau - Emitter provides a simple event emitter for DiscordLuau, it's a simple way to listen and emit events.
+**Source:** [packages/emitter](https://github.com/DiscordLuau/discord-luau/tree/main/packages/emitter)
 
-### Installation
-
-To use DiscordLuau Emitter, add it to your project using the pesde package manager:
+## Installation
 
 ```bash
 pesde add discord_luau/emitter
 ```
 
-### Getting Started
+## Example
 
-1. Require the library in your project:
 ```luau
-local Emitter = require("./lune_packages/emitter")
-```
+local Emitter = require("./luau_packages/emitter")
 
-2. Use the provided library to create a valid discord class:
-```luau
-local event = Emitter.new()
+local onMessage = Emitter.new()
 
-event:listenOnce(function()
-	doSomething()
+local connection = onMessage:listen(function(message)
+	print("Received:", message)
 end)
 
-...
+onMessage:fire("Hello, world!")
 
-event:invoke()
+connection:disconnect()
 ```
 
-### Contributing
+Full documentation at [discordluau-docs.devcomp.workers.dev](https://discordluau-docs.devcomp.workers.dev/).
 
-See the [Contributing Guide](CONTRIBUTING) for more information on how to contribute to this project.
+## Contributing
 
-### License
-This project is licensed under the MIT License. Feel free to use it in your projects.
+Contributions are welcome via the repository at [github.com/DiscordLuau/discord-luau](https://github.com/DiscordLuau/discord-luau).
+
+## License
+
+This package is licensed under the MIT License.
