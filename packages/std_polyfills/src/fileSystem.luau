@@ -20,6 +20,8 @@ function fileSystem.readFile(path: string): string
 		return require("./eryx/fileSystem").readFile(path)
 	elseif target == "Roblox" then
 		error(`fileSystem is not available on Roblox`)
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)
@@ -39,6 +41,8 @@ function fileSystem.readDir(path: string): { string }
 		return require("./eryx/fileSystem").readDir(path)
 	elseif target == "Roblox" then
 		error(`fileSystem is not available on Roblox`)
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)
@@ -58,6 +62,8 @@ function fileSystem.readDirEntries(path: string): { { name: string, kind: string
 		return require("./eryx/fileSystem").readDirEntries(path)
 	elseif target == "Roblox" then
 		error(`fileSystem is not available on Roblox`)
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)
@@ -77,6 +83,8 @@ function fileSystem.stat(path: string): { kind: string, modified: number?, size:
 		return require("./eryx/fileSystem").stat(path)
 	elseif target == "Roblox" then
 		error(`fileSystem is not available on Roblox`)
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)
@@ -96,6 +104,8 @@ function fileSystem.watch(path: string, callback: (path: string, events: { strin
 		return require("./eryx/fileSystem").watch(path, callback)
 	elseif target == "Roblox" then
 		error(`fileSystem is not available on Roblox`)
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)
@@ -115,6 +125,8 @@ function fileSystem.writeDir(path: string)
 		return require("./eryx/fileSystem").writeDir(path)
 	elseif target == "Roblox" then
 		error(`fileSystem is not available on Roblox`)
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)
@@ -134,6 +146,8 @@ function fileSystem.writeFile(path: string, contents: string)
 		return require("./eryx/fileSystem").writeFile(path, contents)
 	elseif target == "Roblox" then
 		error(`fileSystem is not available on Roblox`)
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)
@@ -153,6 +167,8 @@ function fileSystem.removeDir(path: string)
 		return require("./eryx/fileSystem").removeDir(path)
 	elseif target == "Roblox" then
 		error(`fileSystem is not available on Roblox`)
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)
@@ -172,6 +188,8 @@ function fileSystem.removeFile(path: string)
 		return require("./eryx/fileSystem").removeFile(path)
 	elseif target == "Roblox" then
 		error(`fileSystem is not available on Roblox`)
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)
@@ -191,6 +209,8 @@ function fileSystem.isFile(path: string): boolean
 		return require("./eryx/fileSystem").isFile(path)
 	elseif target == "Roblox" then
 		error(`fileSystem is not available on Roblox`)
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)
@@ -210,6 +230,8 @@ function fileSystem.isDir(path: string): boolean
 		return require("./eryx/fileSystem").isDir(path)
 	elseif target == "Roblox" then
 		error(`fileSystem is not available on Roblox`)
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)

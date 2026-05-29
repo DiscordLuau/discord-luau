@@ -30,10 +30,10 @@ function runtime.getRuntime(): RuntimeValue
 			return "Zune"
 		elseif string.match(version, ERYX_STRING_MATCH) then
 			return "Eryx"
+		elseif select(1, require, "@lute/net/client") then
+			return "Lute"
 		end
 	end
-
-	-- TODO: at some point in the future - figure out how to detect Lute!
 
 	return "Unknown"
 end
@@ -46,7 +46,13 @@ end
 function runtime.assertRuntime(): RuntimeValue
 	local currentRuntime = runtime.getRuntime()
 
-	if currentRuntime ~= "Lune" and currentRuntime ~= "Zune" and currentRuntime ~= "Roblox" and currentRuntime ~= "Eryx" then
+	if
+		currentRuntime ~= "Lune"
+		and currentRuntime ~= "Zune"
+		and currentRuntime ~= "Roblox"
+		and currentRuntime ~= "Eryx"
+		and currentRuntime ~= "Lute"
+	then
 		error(`Discord-Luau currently doesn't support the '{currentRuntime}' runtime!`)
 	end
 
@@ -93,6 +99,14 @@ function runtime.capabilities(): Capabilities
 			udp = true,
 			onSignal = false,
 			compress = true,
+			forbidCustomUserAgent = false,
+		}
+	elseif current == "Lute" then
+		return {
+			ffi = false,
+			udp = false,
+			onSignal = false,
+			compress = false,
 			forbidCustomUserAgent = false,
 		}
 	end

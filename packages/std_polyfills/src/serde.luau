@@ -22,6 +22,8 @@ function serde.encode(format: EncodeDecodeFormat, value: any, pretty: boolean?):
 		return require("./roblox/serde").encode(format, value, pretty)
 	elseif target == "Eryx" then
 		return require("./eryx/serde").encode(format, value, pretty)
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)
@@ -43,6 +45,8 @@ function serde.decode(format: EncodeDecodeFormat, encoded: buffer | string): any
 		return require("./roblox/serde").decode(format, encoded)
 	elseif target == "Eryx" then
 		return require("./eryx/serde").decode(format, encoded)
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)
@@ -64,6 +68,8 @@ function serde.decompress(format: CompressDecompressFormat, s: buffer | string):
 		return require("./roblox/serde").decompress(format, s)
 	elseif target == "Eryx" then
 		return require("./eryx/serde").decompress(format, s)
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)
@@ -85,6 +91,8 @@ function serde.compress(format: CompressDecompressFormat, s: buffer | string, le
 		return require("./roblox/serde").compress(format, s, level)
 	elseif target == "Eryx" then
 		return require("./eryx/serde").compress(format, s, level)
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)

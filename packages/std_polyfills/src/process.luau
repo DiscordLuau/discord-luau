@@ -22,6 +22,8 @@ function process.getPlatform(): OS
 		return require("./roblox/process").os :: OS
 	elseif target == "Eryx" then
 		return require("./eryx/process").os :: OS
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)
@@ -43,6 +45,8 @@ function process.getArgs(): { string }
 		return require("./roblox/process").args :: { string }
 	elseif target == "Eryx" then
 		return require("./eryx/process").args :: { string }
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)
@@ -64,6 +68,8 @@ function process.getEnv(): { [string]: string }
 		return require("./roblox/process").env :: { [string]: string }
 	elseif target == "Eryx" then
 		return require("./eryx/process").env :: { [string]: string }
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)
@@ -85,6 +91,8 @@ function process.getCwd(): string
 		return require("./roblox/process").cwd :: string
 	elseif target == "Eryx" then
 		return require("./eryx/process").cwd :: string
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)
@@ -107,6 +115,8 @@ function process.run(exec: string, args: { string }?, opts: { cwd: string?, env:
 		error(`process.run is not available on Roblox`)
 	elseif target == "Eryx" then
 		return require("./eryx/process").run(exec, args, opts) :: RunResult
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)
@@ -128,6 +138,8 @@ function process.getArch(): Arch
 		error(`process.getArch is not available on Roblox`)
 	elseif target == "Eryx" then
 		return require("./eryx/process").arch :: Arch
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)

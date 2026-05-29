@@ -31,6 +31,8 @@ function ffi.getTypes(): _zune_ffi_types
 		return require("./eryx/ffi").getTypes()
 	elseif target == "Roblox" then
 		error(`FFI is not available on Roblox`)
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)
@@ -52,6 +54,8 @@ function ffi.getNull(): FFIPointer
 		return require("./eryx/ffi").getNull()
 	elseif target == "Roblox" then
 		error(`FFI is not available on Roblox`)
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)
@@ -74,6 +78,8 @@ function ffi.getPrefix(): string
 		return require("./eryx/ffi").getPrefix()
 	elseif target == "Roblox" then
 		error(`FFI is not available on Roblox`)
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)
@@ -96,6 +102,8 @@ function ffi.getSuffix(): string
 		return require("./eryx/ffi").getSuffix()
 	elseif target == "Roblox" then
 		error(`FFI is not available on Roblox`)
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)
@@ -128,6 +136,8 @@ function ffi.dlopen(path: string, functions: { [string]: FFIFunctionDefinition }
 		return require("./eryx/ffi").dlopen(path, functions)
 	elseif target == "Roblox" then
 		error(`FFI is not available on Roblox`)
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)
@@ -157,6 +167,8 @@ function ffi.struct(fields: { { [string]: FFIAnyDataType } }): FFIStructureType
 		return require("./eryx/ffi").struct(fields)
 	elseif target == "Roblox" then
 		error(`FFI is not available on Roblox`)
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)
@@ -188,6 +200,8 @@ function ffi.closure(definition: FFIFunctionDefinition, handler: (...any) -> any
 		return require("./eryx/ffi").closure(definition, handler)
 	elseif target == "Roblox" then
 		error(`FFI is not available on Roblox`)
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)
@@ -210,6 +224,8 @@ function ffi.fn(definition: FFIFunctionDefinition, srcPtr: FFIPointer): (...any)
 		return require("./eryx/ffi").fn(definition, srcPtr)
 	elseif target == "Roblox" then
 		error(`FFI is not available on Roblox`)
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)
@@ -233,6 +249,8 @@ function ffi.alloc(size: number, alignment: number?): FFIPointer
 		return require("./eryx/ffi").alloc(size, alignment)
 	elseif target == "Roblox" then
 		error(`FFI is not available on Roblox`)
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)
@@ -255,6 +273,8 @@ function ffi.create(dataType: FFIAnyDataType): FFIPointer
 		return require("./eryx/ffi").create(dataType)
 	elseif target == "Roblox" then
 		error(`FFI is not available on Roblox`)
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)
@@ -276,6 +296,8 @@ function ffi.free(src: FFIPointer): ()
 		return require("./eryx/ffi").free(src)
 	elseif target == "Roblox" then
 		error(`FFI is not available on Roblox`)
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)
@@ -298,6 +320,8 @@ function ffi.dupe(src: buffer | FFIPointer | vector): FFIPointer
 		return require("./eryx/ffi").dupe(src)
 	elseif target == "Roblox" then
 		error(`FFI is not available on Roblox`)
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)
@@ -319,6 +343,8 @@ function ffi.ptr(src: FFIPointer): FFIPointer
 		return require("./eryx/ffi").ptr(src)
 	elseif target == "Roblox" then
 		error(`FFI is not available on Roblox`)
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)
@@ -341,6 +367,8 @@ function ffi.ptrFromAddress(src: buffer): FFIPointer
 		return require("./eryx/ffi").ptrFromAddress(src)
 	elseif target == "Roblox" then
 		error(`FFI is not available on Roblox`)
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)
@@ -363,6 +391,8 @@ function ffi.tagName(tag: number): string?
 		return require("./eryx/ffi").tagName(tag)
 	elseif target == "Roblox" then
 		error(`FFI is not available on Roblox`)
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)
@@ -386,6 +416,8 @@ function ffi.getLuaState(mainthread: boolean?): FFIPointer
 		return require("./eryx/ffi").getLuaState(mainthread)
 	elseif target == "Roblox" then
 		error(`FFI is not available on Roblox`)
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)

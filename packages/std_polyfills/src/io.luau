@@ -18,6 +18,8 @@ io.terminal = {
 			return require("./eryx/io").terminal.enableRawMode()
 		elseif target == "Roblox" then
 			error(`io is not available on Roblox`)
+		elseif target == "Lute" then
+			error(`Discord-Luau does not currently support the Lute runtime`)
 		end
 
 		error(`Out of reach`)
@@ -33,6 +35,8 @@ io.terminal = {
 			return require("./eryx/io").terminal.restoreMode()
 		elseif target == "Roblox" then
 			error(`io is not available on Roblox`)
+		elseif target == "Lute" then
+			error(`Discord-Luau does not currently support the Lute runtime`)
 		end
 
 		error(`Out of reach`)
@@ -48,6 +52,8 @@ io.terminal = {
 			return require("./eryx/io").terminal.getSize()
 		elseif target == "Roblox" then
 			error(`io is not available on Roblox`)
+		elseif target == "Lute" then
+			error(`Discord-Luau does not currently support the Lute runtime`)
 		end
 
 		error(`Out of reach`)
@@ -70,6 +76,8 @@ function io.stdoutWrite(data: string)
 		return require("./eryx/io").stdoutWrite(data)
 	elseif target == "Roblox" then
 		error(`io is not available on Roblox`)
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)
@@ -91,6 +99,8 @@ function io.stderrWrite(data: string)
 		return require("./eryx/io").stderrWrite(data)
 	elseif target == "Roblox" then
 		error(`io is not available on Roblox`)
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)
@@ -112,6 +122,8 @@ function io.stdinRead(amount: number?): string
 		return require("./eryx/io").stdinRead(amount)
 	elseif target == "Roblox" then
 		error(`io is not available on Roblox`)
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)

@@ -22,6 +22,8 @@ function datetime.fromIsoDate(isoDate: string): DateTime
 		return require("./roblox/datetime").fromIsoDate(isoDate) :: any
 	elseif target == "Eryx" then
 		return require("./eryx/datetime").fromIsoDate(isoDate) :: any
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)
@@ -45,6 +47,8 @@ function datetime.fromUnixTimestamp(unixTimestamp: number): DateTime
 		return require("./roblox/datetime").fromUnixTimestamp(unixTimestamp) :: any
 	elseif target == "Eryx" then
 		return require("./eryx/datetime").fromUnixTimestamp(unixTimestamp) :: any
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)
@@ -66,6 +70,8 @@ function datetime.now(): DateTime
 		return require("./roblox/datetime").now() :: any
 	elseif target == "Eryx" then
 		return require("./eryx/datetime").now() :: any
+	elseif target == "Lute" then
+		error(`Discord-Luau does not currently support the Lute runtime`)
 	end
 
 	error(`Out of reach`)
