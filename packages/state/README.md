@@ -1,49 +1,41 @@
-<div align="center">
-	<p>
-		<a href=""><img src="https://raw.githubusercontent.com/DiscordLuau/.github/master/resource/DiscordLuau-Banner.png" width="512" alt="discord-luau"/></a>
-	</p>
-</div>
+<p align="center">
+  <img src="https://raw.githubusercontent.com/DiscordLuau/docs/master/src/assets/vector.svg" alt="discord-luau" width="96" />
+</p>
 
-## [DiscordLuau - State](https://pesde.dev/packages/discord_luau/state)
+Shared state container for a discord-luau bot, holding the REST client, gateway connection, and in-memory cache for guilds, channels, users, and roles.
 
-DiscordLuau - State provides a single source of truth for your discord bots state, generally shared between the REST and Gateway libraries.
+**Source:** [packages/state](https://github.com/DiscordLuau/discord-luau/tree/main/packages/state)
 
-This is what stores, as well as handles the following:
-
-- Discord Websockets
-- Discord API Token
-- Application ID
-- Discord API Version
-- Discord Intents
-- Discord Cache
-
-### Installation
-
-To use DiscordLuau State, add it to your project using the pesde package manager:
+## Installation
 
 ```bash
 pesde add discord_luau/state
 ```
 
-### Getting Started
+## Example
 
-1. Require the library in your project:
 ```luau
-local State = require("./lune_packages/state")
+local State = require("./luau_packages/state")
+
+local state = State.state.new({
+    token = "Bot YOUR_TOKEN_HERE",
+    intents = 513,
+    version = 10,
+    reconnect = true,
+})
+
+local guild = state.cache.guilds:get("1234567890")
+
+-- Evict on GUILD_DELETE
+state.cache.guilds:remove("1234567890")
 ```
 
-2. Use the provided library to create a valid snowflake object:
-```luau
-local object = State.new(
-	"", -- token
-	0, -- intents
-	10 -- api version
-)
-```
+Full documentation at [discordluau-docs.devcomp.workers.dev](https://discordluau-docs.devcomp.workers.dev/).
 
-### Contributing
+## Contributing
 
-See the [Contributing Guide](CONTRIBUTING) for more information on how to contribute to this project.
+Contributions are welcome via the repository at [github.com/DiscordLuau/discord-luau](https://github.com/DiscordLuau/discord-luau).
 
-### License
-This project is licensed under the MIT License. Feel free to use it in your projects.
+## License
+
+This package is licensed under the MIT License.
