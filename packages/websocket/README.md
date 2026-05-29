@@ -1,45 +1,47 @@
-<div align="center">
-	<p>
-		<a href=""><img src="https://raw.githubusercontent.com/DiscordLuau/.github/master/resource/DiscordLuau-Banner.png" width="512" alt="discord-luau"/></a>
-	</p>
-</div>
+<p align="center">
+  <img src="https://raw.githubusercontent.com/DiscordLuau/docs/master/src/assets/vector.svg" alt="discord-luau" width="96" />
+</p>
 
-## [DiscordLuau - WebSocket](https://pesde.dev/packages/discord_luau/websocket
-)
+Implementation of the Discord WebSocket gateway connection, providing multi-shard management, heartbeating, session resumption, and event dispatch.
 
-DiscordLuau - WebSocket provides bindings for the Discord WebSocket API. This package is responsible for providing the core functionality for the DiscordLuau client.
+**Source:** [packages/websocket](https://github.com/DiscordLuau/discord-luau/tree/main/packages/websocket)
 
-### Installation
-
-To use DiscordLuau WebSocket, add it to your project using the pesde package manager:
+## Installation
 
 ```bash
 pesde add discord_luau/websocket
 ```
 
-### Getting Started
+## Example
 
-1. Require the library in your project:
 ```luau
-local WebSocket = require("./lune_packages/websocket")
-```
+local WebSocket = require("./luau_packages/websocket")
 
-2. Use the provided library to create a valid string stream object:
-```luau
-local manager = websocket.manager.new({
-	token = secretToken,
-	intents = intents,
-	webSocketVersion = version,
+local manager = WebSocket.manager.new({
+	token = botToken,
+	intents = 513,
+	webSocketVersion = 10,
 	largeThreshold = 250,
+	reconnect = true,
 })
 
-manager:connectAsync()
+manager.onAllShardsReady:listen(function()
+	print("All shards ready")
+end)
+
+manager.onDispatch:listen(function(payload)
+	print("Event:", payload.event)
+end)
+
+manager:connectAsync(gatewayInfo):await()
 ```
 
-### Contributing
+Full documentation at [discordluau-docs.devcomp.workers.dev](https://discordluau-docs.devcomp.workers.dev/).
 
-See the [Contributing Guide](CONTRIBUTING) for more information on how to contribute to this project.
+## Contributing
 
-### License
+Contributions are welcome via the repository at [github.com/DiscordLuau/discord-luau](https://github.com/DiscordLuau/discord-luau).
 
-See the [LICENSE](LICENSE) file for more information.
+## License
+
+This package is licensed under the MIT License.

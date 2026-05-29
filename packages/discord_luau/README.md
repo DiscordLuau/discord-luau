@@ -1,48 +1,53 @@
-<div align="center">
-	<p>
-		<a href=""><img src="https://raw.githubusercontent.com/DiscordLuau/.github/master/resource/DiscordLuau-Banner.png" width="512" alt="discord-luau"/></a>
-	</p>
-</div>
+<p align="center">
+  <img src="https://raw.githubusercontent.com/DiscordLuau/docs/master/src/assets/vector.svg" alt="discord-luau" width="96" />
+</p>
 
-## [DiscordLuau](https://pesde.dev/packages/discord_luau/discord_luau)
+The entrypoint for the Discord Luau library, providing the `Bot` object used to connect to Discord and receive gateway events.
 
-the DiscordLuau package represents the core of the Discord Luau Library. It serves as the primary interface for developers to build their own Discord bots and applications.
+**Source:** [packages/discord_luau](https://github.com/DiscordLuau/discord-luau/tree/main/packages/discord_luau)
 
-### Installation
-
-To use DiscordLuau, add it to your project using the pesde package manager:
+## Installation
 
 ```bash
 pesde add discord_luau/discord_luau
 ```
 
-### Getting Started
+## Example
 
-1. Require the library in your project:
 ```luau
+local process = require("@lune/process")
+
 local DiscordLuau = require("./lune_packages/discord_luau")
-```
 
-2. Use the provided luau library:
-```luau
-local discordBot = discordLuau.Bot.new({
-	intents = builders.intents.new({ "Guilds" }):build(),
-	token = env.DISCORD_BOT_TOKEN,
+local intents = DiscordLuau.builders.intents.new()
+    :addIntent("Guilds")
+    :addIntent("GuildMessages")
+    :build()
+
+local bot = DiscordLuau.bot.new({
+    token = process.env.DISCORD_BOT_TOKEN,
+    intents = intents,
 })
 
-discordBot.onAllShardsReady:listen(function()
-	print("we're up and running!")
+bot.onAllShardsReady:listen(function()
+    print("Bot is ready")
 end)
 
-discordBot:connectAsync():after(function()
-	print("Connected to Discord!")
+bot.onMessage:listen(function(message)
+    if message.content == "!ping" then
+        message:replyAsync({ content = "Pong!" }):await()
+    end
 end)
 
+bot:connectAsync():await()
 ```
 
-### Contributing
+Full documentation at [discordluau-docs.devcomp.workers.dev](https://discordluau-docs.devcomp.workers.dev/).
 
-See the [Contributing Guide](CONTRIBUTING) for more information on how to contribute to this project.
+## Contributing
 
-### License
-This project is licensed under the MIT License. Feel free to use it in your projects.
+Contributions are welcome via the repository at [github.com/DiscordLuau/discord-luau](https://github.com/DiscordLuau/discord-luau).
+
+## License
+
+This project is licensed under the MIT License.
