@@ -11,10 +11,12 @@ io.terminal = {
 	end,
 	getSize = function(): (number?, number?)
 		local size = erxStdio.terminalSize()
-		if size then
-			return size.width, size.height
+
+		if not size then
+			return nil, nil
 		end
-		return nil, nil
+
+		return size.columns, size.rows
 	end,
 }
 
@@ -30,6 +32,7 @@ function io.stdinRead(amount: number?): string
 	if amount then
 		return erxStdio.read(amount)
 	end
+
 	return erxStdio.readline()
 end
 
