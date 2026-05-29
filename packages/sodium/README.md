@@ -1,41 +1,58 @@
-<div align="center">
-	<p>
-		<a href=""><img src="https://raw.githubusercontent.com/DiscordLuau/.github/master/resource/DiscordLuau-Banner.png" width="512" alt="discord-luau"/></a>
-	</p>
-</div>
+<p align="center">
+  <img src="https://raw.githubusercontent.com/DiscordLuau/docs/master/src/assets/vector.svg" alt="discord-luau" width="96" />
+</p>
 
-## [DiscordLuau - Sodium](https://pesde.dev/packages/discord_luau/sodium)
+FFI bindings for libsodium, providing AES-256-GCM authenticated encryption, hashing, signing, and key derivation with pre-built binaries for all supported platforms.
 
-FFI bindings for [libsodium](https://doc.libsodium.org/), bundling pre-built binaries for all supported platforms - no system installation required.
+**Source:** [packages/sodium](https://github.com/DiscordLuau/discord-luau/tree/main/packages/sodium)
 
----
+## Installation
 
-## Security Limitations
+```bash
+pesde add discord_luau/sodium
+```
 
-This library does its best to handle sensitive material safely, but several limitations are inherent to the runtime and cannot be addressed at the library level.
+## Example
 
-**What this library does** - all cryptographic operations are delegated to libsodium through FFI. FFI-allocated memory holding keys, passwords, and intermediate state is zeroed with `sodium_memzero` before being freed. All authentication tag comparisons are performed inside libsodium using constant-time functions; no tag is ever compared in Luau code.
+```luau
+local sodium = require("./luau_packages/sodium")
 
-**What this library cannot do** - keys returned to the caller live in GC-managed Luau memory. The library has no way to zero GC memory; only the GC can free it, and it never zeroes on collection. Key material may persist in the process heap for an indeterminate period after the variable goes out of scope. This is a known limitation shared by every high-level language that wraps a native crypto library through an FFI layer - Python, Node.js, Lua, and others all have the same constraint. The FFI-side copies are properly zeroed; the Luau-side handles are not.
+-- AES-256-GCM (requires AES-NI hardware support)
+if sodium.aes256gcm.isAvailable() then
+    local key = sodium.aes256gcm.keygen()
 
-**Strings cannot be zeroed** - Luau strings are immutable and may be interned in the VM for the lifetime of the process. This is why `pwhash` functions require a `buffer` for passwords rather than a `string`.
+    local nonce = sodium.randombytes.buf(sodium.aes256gcm.NONCE_BYTES)
 
-**`sodium.sys.lib` is exported** and gives callers direct access to every libsodium FFI binding with no safety wrappers. Incorrect usage will write past allocation bounds and corrupt memory silently. Prefer the high-level modules unless you have a specific reason to use `sys.lib` directly.
+    local data = buffer.fromstring("hello, world")
 
----
+    local encrypted = sodium.aes256gcm.encrypt(data, key, nonce)
 
-## Nonce Reuse
+    local decrypted = sodium.aes256gcm.decrypt(
+        encrypted.cipher, encrypted.tag, key, nonce
+    )
 
-`aes256gcm` and `chacha20poly1305` use 12-byte nonces. Reusing any nonce with the same key completely breaks confidentiality and authenticity. Use a strict counter and rotate the key before reaching 2^32 invocations, or use `xchacha20poly1305` which has a 24-byte nonce safe for random generation at scale.
+    print(buffer.tostring(decrypted))
+end
 
----
+local key = sodium.secretbox.keygen()
 
-## Choosing an Algorithm
+local nonce = sodium.secretbox.nonce()
 
-| Algorithm | Nonce | Hardware | Nonce strategy |
-|-----------|-------|----------|----------------|
-| `aes256gcm` | 12 B | AES-NI required | Counter only - check `isAvailable()` first |
-| `chacha20poly1305` | 12 B | any CPU | Counter only |
-| `xchacha20poly1305` | 24 B | any CPU | Random or counter |
+local message = buffer.fromstring("secret message")
 
-When in doubt, use `xchacha20poly1305`.
+local sealed = sodium.secretbox.seal(message, key, nonce)
+
+local plaintext = sodium.secretbox.open(sealed, key, nonce)
+
+print(buffer.tostring(plaintext))
+```
+
+Full documentation at [discordluau-docs.devcomp.workers.dev](https://discordluau-docs.devcomp.workers.dev/).
+
+## Contributing
+
+Contributions are welcome via the repository at [github.com/DiscordLuau/discord-luau](https://github.com/DiscordLuau/discord-luau).
+
+## License
+
+This package is licensed under the MIT License.
