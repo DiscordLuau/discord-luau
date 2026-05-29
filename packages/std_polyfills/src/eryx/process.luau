@@ -2,7 +2,7 @@ local erxOs = require("@eryx/os")
 
 local process = {}
 
--- @eryx/os returns "x64"/"arm64"/"arm"/"x86" — map to polyfill's expected values
+-- os.arch() returns "x64"/"arm64"/"arm"/"x86" — map to the polyfill's expected output values
 local archMap: { [string]: string } = {
 	x64 = "x86_64",
 	arm64 = "aarch64",
@@ -16,11 +16,20 @@ process.arch = (archMap[erxOs.arch() or "x64"] or "x86_64") :: "x86_64" | "aarch
 -- Strip the script path (first element) to match Lune/Zune convention
 local rawArgs = erxOs.cliargs()
 process.args = table.move(rawArgs, 2, #rawArgs, 1, {})
-process.env = erxOs.environ()
-process.cwd = erxOs.cwd()
 
-function process.run(_exec: string, _args: { string }?, _opts: any?)
-	error("process.run is not available on Eryx")
+process.env = erxOs.environ()
+
+process.cwd = tostring(erxOs.cwd())
+
+function process.run(exec: string, args: { string }?, opts: any?)
+	local result = erxOs.exec(exec, args or {}, opts)
+
+	return {
+		ok = result.code == 0,
+		code = result.code,
+		stdout = result.stdout,
+		stderr = result.stderr,
+	}
 end
 
 return process
