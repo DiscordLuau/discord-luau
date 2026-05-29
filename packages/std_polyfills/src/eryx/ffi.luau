@@ -43,7 +43,6 @@ function ffi.getSuffix(): string
 	end
 end
 
--- Bridges Zune's dlopen({ symbolName = { returns, args } }) to Eryx's loadLibrary+getFunction model
 function ffi.dlopen(path: string, functions: { [string]: { returns: any, args: { any } } })
 	local lib = erxFfi.loadLibrary(path)
 	local result = {}

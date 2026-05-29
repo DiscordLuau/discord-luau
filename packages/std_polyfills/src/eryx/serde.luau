@@ -7,7 +7,6 @@ local yaml = require("@eryx/data/yaml")
 
 local serde = {}
 
--- @eryx/compression modules accept buffer input and return buffer output
 local function toBuffer(data: string | buffer): buffer
 	return if type(data) == "buffer" then data :: buffer else buffer.fromstring(data :: string)
 end

@@ -21,11 +21,11 @@ function serde.decode(format: string, encoded: string | buffer): any
 end
 
 function serde.compress(_format: string, _data: string | buffer, _level: number?): string
-	error("serde.compress is not available on Roblox — disable gateway compression via capabilities().compress")
+	error("serde.compress is not available on Roblox - disable gateway compression via capabilities().compress")
 end
 
 function serde.decompress(_format: string, _data: string | buffer): string
-	error("serde.decompress is not available on Roblox — disable gateway compression via capabilities().compress")
+	error("serde.decompress is not available on Roblox - disable gateway compression via capabilities().compress")
 end
 
 return serde

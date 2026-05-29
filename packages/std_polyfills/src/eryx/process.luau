@@ -2,7 +2,7 @@ local erxOs = require("@eryx/os")
 
 local process = {}
 
--- os.arch() returns "x64"/"arm64"/"arm"/"x86" — map to the polyfill's expected output values
+-- os.arch() returns "x64"/"arm64"/"arm"/"x86" - map to the polyfill's expected output values
 local archMap: { [string]: string } = {
 	x64 = "x86_64",
 	arm64 = "aarch64",
