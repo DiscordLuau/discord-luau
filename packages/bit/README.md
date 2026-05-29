@@ -1,36 +1,44 @@
-<div align="center">
-	<p>
-		<a href=""><img src="https://raw.githubusercontent.com/DiscordLuau/.github/master/resource/DiscordLuau-Banner.png" width="512" alt="discord-luau"/></a>
-	</p>
-</div>
+<p align="center">
+  <img src="https://raw.githubusercontent.com/DiscordLuau/docs/master/src/assets/vector.svg" alt="discord-luau" width="96" />
+</p>
 
-## [DiscordLuau - Bit](https://pesde.dev/packages/discord_luau/bit)
+Bit library for Luau supporting integers up to 52 bits, intended for working with Discord permission flags.
 
-DiscordLuau - Bit is a library that extends Luau with 64-bit operations. By default, Luau supports only 32-bit operations, but tasks such as calculating permissions and processing snowflakes require 64-bit capabilities.
+**Source:** [packages/bit](https://github.com/DiscordLuau/discord-luau/tree/main/packages/bit)
 
-### Installation
-
-To use DiscordLuaus Bit, add it to your project using the pesde package manager:
+## Installation
 
 ```bash
 pesde add discord_luau/bit
 ```
 
-### Getting Started
+## Example
 
-1. Require the library in your project:
 ```luau
 local Bit = require("./luau_packages/bit")
+
+local SEND_MESSAGES = Bit.lshift(1, 11)
+
+local MANAGE_CHANNELS = Bit.lshift(1, 4)
+
+local permissions = Bit.bor(SEND_MESSAGES, MANAGE_CHANNELS)
+
+print(Bit.band(permissions, SEND_MESSAGES) ~= 0)
+
+-- Works with permission values beyond 32 bits
+local HIGH_PERMISSION = Bit.lshift(1, 46)
+
+local combined = Bit.bor(permissions, HIGH_PERMISSION)
+
+print(Bit.band(combined, HIGH_PERMISSION) ~= 0)
 ```
 
-2. Use the provided library to do something with bits:
-```luau
-local b = Bit.band(3, 42)
-```
+Full documentation at [discordluau-docs.devcomp.workers.dev](https://discordluau-docs.devcomp.workers.dev/).
 
-### Contributing
+## Contributing
 
-See the [Contributing Guide](CONTRIBUTING) for more information on how to contribute to this project.
+Contributions are welcome via the repository at [github.com/DiscordLuau/discord-luau](https://github.com/DiscordLuau/discord-luau).
 
-### License
-This project is licensed under the MIT License. Feel free to use it in your projects.
+## License
+
+This package is licensed under the MIT License.

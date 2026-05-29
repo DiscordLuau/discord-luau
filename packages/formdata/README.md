@@ -1,45 +1,44 @@
-<div align="center">
-	<p>
-		<a href=""><img src="https://raw.githubusercontent.com/DiscordLuau/.github/master/resource/DiscordLuau-Banner.png" width="512" alt="discord-luau"/></a>
-	</p>
-</div>
+<p align="center">
+  <img src="https://raw.githubusercontent.com/DiscordLuau/docs/master/src/assets/vector.svg" alt="discord-luau" width="96" />
+</p>
 
-## [DiscordLuau - FormData](https://pesde.dev/packages/discord_luau/formdata)
+FormData implementation for Luau, following the multipart/form-data specification.
 
-DiscordLuau - FormData provides tools for developers to parse and create FormData objects for sending data to Discord.
+**Source:** [packages/formdata](https://github.com/DiscordLuau/discord-luau/tree/main/packages/formdata)
 
-Notably, this library is designed with general-purpose use in mind and can be utilized beyond the scope of Discord Luau projects.
-
-### Installation
-
-To use DiscordLuau FormData, add it to your project using the pesde package manager:
+## Installation
 
 ```bash
 pesde add discord_luau/formdata
 ```
 
-### Getting Started
+## Example
 
-1. Require the library in your project:
 ```luau
-local FormData = require("./lune_packages/formdata")
+local FormData = require("./luau_packages/formdata")
+
+local form = FormData.new()
+
+form:append("username", "Luau")
+form:append("avatar", imageBytes, "avatar.png")
+
+local body = form:getBody()
+
+local header = form:getHeader()
+
+local parsed = FormData.parse(responseBody, contentTypeHeader)
+
+if parsed:has("username") then
+    print(parsed:get("username"))
+end
 ```
 
-2. Use the provided library to create a valid formdata object:
-```luau
-local formdata = FormData.new()
+Full documentation at [discordluau-docs.devcomp.workers.dev](https://discordluau-docs.devcomp.workers.dev/).
 
-formdataObject:append(`key`, `value`, `filename.txt`)
+## Contributing
 
-...
+Contributions are welcome via the repository at [github.com/DiscordLuau/discord-luau](https://github.com/DiscordLuau/discord-luau).
 
-local body = formdataObject:getBody()
-local header =  formdataObject:getHeader()
-```
+## License
 
-### Contributing
-
-See the [Contributing Guide](CONTRIBUTING) for more information on how to contribute to this project.
-
-### License
-This project is licensed under the MIT License. Feel free to use it in your projects.
+This package is licensed under the MIT License.

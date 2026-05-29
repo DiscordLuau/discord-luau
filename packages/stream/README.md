@@ -1,38 +1,43 @@
-<div align="center">
-	<p>
-		<a href=""><img src="https://raw.githubusercontent.com/DiscordLuau/.github/master/resource/DiscordLuau-Banner.png" width="512" alt="discord-luau"/></a>
-	</p>
-</div>
+<p align="center">
+  <img src="https://raw.githubusercontent.com/DiscordLuau/docs/master/src/assets/vector.svg" alt="discord-luau" width="96" />
+</p>
 
-## [DiscordLuau - Stream](https://pesde.dev/packages/discord_luau/stream)
+Stream implementation used to navigate through strings safely.
 
-DiscordLuau - Stream, otherwise known as a string stream, is a way to navigate through a string - this is often useful for parsing data such as FormData.
+**Source:** [packages/stream](https://github.com/DiscordLuau/discord-luau/tree/main/packages/stream)
 
-### Installation
-
-To use DiscordLuau Stream, add it to your project using the pesde package manager:
+## Installation
 
 ```bash
 pesde add discord_luau/stream
 ```
 
-### Getting Started
+## Example
 
-1. Require the library in your project:
 ```luau
-local Stream = require("./lune_packages/stream")
+local Stream = require("./luau_packages/stream")
+
+local stream = Stream.new("Content-Type: text/plain\r\n")
+
+local key = stream:advanceUntil(function(character)
+    return character == ":"
+end)
+
+stream:advance(2)
+stream:trim()
+
+local value = stream:readUntilEnd()
+
+print(key) -- "Content-Type"
+print(value) -- "text/plain"
 ```
 
-2. Use the provided library to create a valid string stream object:
-```luau
-local object = Stream.new("hello, world!")
+Full documentation at [discordluau-docs.devcomp.workers.dev](https://discordluau-docs.devcomp.workers.dev/).
 
-print(object:advance(5))
-```
+## Contributing
 
-### Contributing
+Contributions are welcome via the repository at [github.com/DiscordLuau/discord-luau](https://github.com/DiscordLuau/discord-luau).
 
-See the [Contributing Guide](CONTRIBUTING) for more information on how to contribute to this project.
+## License
 
-### License
-This project is licensed under the MIT License. Feel free to use it in your projects.
+This package is licensed under the MIT License.
