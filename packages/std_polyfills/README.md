@@ -1,38 +1,48 @@
-<div align="center">
-	<p>
-		<a href=""><img src="https://raw.githubusercontent.com/DiscordLuau/.github/master/resource/DiscordLuau-Banner.png" width="512" alt="discord-luau"/></a>
-	</p>
-</div>
+<p align="center">
+  <img src="https://raw.githubusercontent.com/DiscordLuau/docs/master/src/assets/vector.svg" alt="discord-luau" width="96" />
+</p>
 
-## [DiscordLuau - Std Polyfills](https://pesde.dev/packages/discord_luau/std_polyfills)
+Polyfills for stdlib functions across multiple Luau runtimes (Lune, Zune, Eryx, Roblox).
 
-DiscordLuau - Std Polyfills provides polyfills for the standard library. When transitioning Discord-Luau to a new Luau runtime, ensure the standard library is fully polyfilled.
+**Source:** [packages/std_polyfills](https://github.com/DiscordLuau/discord-luau/tree/main/packages/std_polyfills)
 
-All Discord-Luau packages depend on this package as a core dependency.
-
-### Installation
-
-To use DiscordLuau's standard library polyfills, add it to your project using the pesde package manager:
+## Installation
 
 ```bash
 pesde add discord_luau/std_polyfills
 ```
 
-### Getting Started
+## Example
 
-1. Require the library in your project:
 ```luau
-local stdPolyfills = require("./luau_packages/std_polyfills")
+local polyfills = require("./luau_packages/std_polyfills")
+
+local runtime = polyfills.runtime.getRuntime()
+
+print("Running on:", runtime)
+
+local caps = polyfills.runtime.capabilities()
+
+if caps.ffi then
+    -- load FFI-dependent libraries
+end
+
+local now = polyfills.datetime.now()
+
+local response = polyfills.net.request({
+    url = "https://discord.com/api/v10/gateway",
+    method = "GET",
+})
+
+print(response.statusCode, response.body)
 ```
 
-2. Use the provided library:
-```luau
-local DateTime = Std.datetime.now()
-```
+Full documentation at [discordluau-docs.devcomp.workers.dev](https://discordluau-docs.devcomp.workers.dev/).
 
-### Contributing
+## Contributing
 
-See the [Contributing Guide](CONTRIBUTING) for more information on how to contribute to this project.
+Contributions are welcome via the repository at [github.com/DiscordLuau/discord-luau](https://github.com/DiscordLuau/discord-luau).
 
-### License
-This project is licensed under the MIT License. Feel free to use it in your projects.
+## License
+
+This package is licensed under the MIT License.

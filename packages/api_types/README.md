@@ -1,36 +1,35 @@
-<div align="center">
-	<p>
-		<a href=""><img src="https://raw.githubusercontent.com/DiscordLuau/.github/master/resource/DiscordLuau-Banner.png" width="512" alt="discord-luau"/></a>
-	</p>
-</div>
+<p align="center">
+  <img src="https://raw.githubusercontent.com/DiscordLuau/docs/master/src/assets/vector.svg" alt="discord-luau" width="96" />
+</p>
 
-## [DiscordLuau - Types](https://pesde.dev/packages/discord_luau/api_types)
+Luau type definitions for the Discord API.
 
-DiscordLuau - Types is a comprehensive library providing Luau types for all Discord v10 APIs. It is designed to help developers effectively type HTTP and WebSocket requests they receive from the Discord API, enabling better code clarity, safety, and development efficiency.
+**Source:** [packages/api_types](https://github.com/DiscordLuau/discord-luau/tree/main/packages/api_types)
 
-### Installation
-
-To use DiscordLuau - Types, add it to your project using the pesde package manager:
+## Installation
 
 ```bash
 pesde add discord_luau/api_types
 ```
 
-### Getting Started
+## Example
 
-1. Require the library in your project:
 ```luau
-local DiscordTypes = require("./luau_packages/api_types")
+local ApiTypes = require("./luau_packages/api_types")
+
+local message: ApiTypes.Message = {
+	id = "1234567890",
+	content = "Hello, world!",
+	author = { id = "9876543210", username = "Luau" },
+}
 ```
 
-2. Use the provided types to structure your Discord API requests and responses:
-```luau
-local channel = getChannel(channelId) :: DiscordTypes.GetChannelResponse
-```
+Full documentation at [discordluau-docs.devcomp.workers.dev](https://discordluau-docs.devcomp.workers.dev/).
 
-### Contributing
+## Contributing
 
-See the [Contributing Guide](CONTRIBUTING) for more information on how to contribute to this project.
+Contributions are welcome via the repository at [github.com/DiscordLuau/discord-luau](https://github.com/DiscordLuau/discord-luau).
 
-### License
-This project is licensed under the MIT License. Feel free to use it in your projects.
+## License
+
+This package is licensed under the MIT License.

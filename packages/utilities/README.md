@@ -1,36 +1,47 @@
-<div align="center">
-	<p>
-		<a href=""><img src="https://raw.githubusercontent.com/DiscordLuau/.github/master/resource/DiscordLuau-Banner.png" width="512" alt="discord-luau"/></a>
-	</p>
-</div>
+<p align="center">
+  <img src="https://raw.githubusercontent.com/DiscordLuau/docs/master/src/assets/vector.svg" alt="discord-luau" width="96" />
+</p>
 
-## [DiscordLuau - Util](https://pesde.dev/packages/discord_luau/util)
+A variety of utility functions for Discord-Luau.
 
-DiscordLuau - Util provides basic functionality for discord-luau, for example - validating the validity of a string to make sure it's kebab case.
+**Source:** [packages/utilities](https://github.com/DiscordLuau/discord-luau/tree/main/packages/utilities)
 
-### Installation
-
-To use DiscordLuau Util, add it to your project using the pesde package manager:
+## Installation
 
 ```bash
 pesde add discord_luau/util
 ```
 
-### Getting Started
+## Example
 
-1. Require the library in your project:
 ```luau
-local Util = require("./lune_packages/util")
+local Utilities = require("./luau_packages/util")
+
+print(Utilities.validateKebabCase("general-chat"))
+
+print(Utilities.validateKebabCase("General Chat"))
+
+print(Utilities.validateCommandName("ping"))
+
+print(Utilities.validateCommandName("My Command"))
+
+local id = Utilities.createGuid()
+
+print(id) -- e.g. "3f2504e0-4f89-41d3-9a0c-0305e82c3301"
+
+local flags = Utilities.tableReflect({ READ = 1, WRITE = 2 })
+
+print(flags.READ)
+
+print(flags[1])
 ```
 
-2. Use the provided library to create a valid string stream object:
-```luau
-Util.validateKebabCase("hello-world")
-```
+Full documentation at [discordluau-docs.devcomp.workers.dev](https://discordluau-docs.devcomp.workers.dev/).
 
-### Contributing
+## Contributing
 
-See the [Contributing Guide](CONTRIBUTING) for more information on how to contribute to this project.
+Contributions are welcome via the repository at [github.com/DiscordLuau/discord-luau](https://github.com/DiscordLuau/discord-luau).
 
-### License
-This project is licensed under the MIT License. Feel free to use it in your projects.
+## License
+
+This package is licensed under the MIT License.

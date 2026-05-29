@@ -1,33 +1,35 @@
-<div align="center">
-	<p>
-		<a href=""><img src="https://raw.githubusercontent.com/DiscordLuau/.github/master/resource/DiscordLuau-Banner.png" width="512" alt="discord-luau"/></a>
-	</p>
-</div>
+<p align="center">
+  <img src="https://raw.githubusercontent.com/DiscordLuau/docs/master/src/assets/vector.svg" alt="discord-luau" width="96" />
+</p>
 
-## [DiscordLuau - Create App](https://pesde.dev/packages/discord_luau/create_app)
+An interactive command-line tool to scaffold a new Discord bot project in Luau.
 
-DiscordLuau - Create App is an interactive command-line tool to quickly scaffold a new Discord bot project in Luau.
+**Source:** [packages/create_app](https://github.com/DiscordLuau/discord-luau/tree/main/packages/create_app)
 
-### How do I use this?
+## Installation
 
-**Linux / macOS**
+Run directly with pesde:
+
 ```bash
-curl -fsSL https://raw.githubusercontent.com/DiscordLuau/discord-luau/main/packages/create_app/run.sh | tr -d '\r' | bash
+pesde x discord_luau/create_app
 ```
 
-**Windows (PowerShell)**
-```powershell
-irm https://raw.githubusercontent.com/DiscordLuau/discord-luau/main/packages/create_app/run.ps1 -OutFile $env:TEMP\run.ps1; pwsh $env:TEMP\run.ps1
+Or with a target directory:
+
+```bash
+pesde x discord_luau/create_app my-bot
 ```
 
-Or if you have `pesde x` working:
+> Requires [rokit](https://github.com/rojo-rbx/rokit), [pesde](https://pesde.dev), [Zune](https://github.com/Scythe-Technology/Zune), and [Lune](https://lune-org.github.io/docs) to be installed and available in your PATH.
 
-```
-pesde x discord_luau/create_app create
-```
+## Example
 
-### Contributing
-See the [Contributing Guide](CONTRIBUTING) for more information on how to contribute to this project.
+Running the command opens an interactive wizard that walks through project name, IDE, runtime, Git, license, and bot token. After confirming, it creates a ready-to-run project directory and runs `pesde install`.
 
-### License
-This project is licensed under the MIT License. Feel free to use it in your projects.
+## Contributing
+
+Contributions are welcome via the repository at [github.com/DiscordLuau/discord-luau](https://github.com/DiscordLuau/discord-luau).
+
+## License
+
+This package is licensed under the MIT License.

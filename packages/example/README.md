@@ -1,15 +1,43 @@
-<div align="center">
-	<p>
-		<a href=""><img src="https://raw.githubusercontent.com/DiscordLuau/.github/master/resource/DiscordLuau-Banner.png" width="512" alt="discord-luau"/></a>
-	</p>
-</div>
+<p align="center">
+  <img src="https://raw.githubusercontent.com/DiscordLuau/docs/master/src/assets/vector.svg" alt="discord-luau" width="96" />
+</p>
 
-## [DiscordLuau - Example](https://pesde.dev/packages/discord_luau/example)
+Example project demonstrating how to build a Discord bot with discord-luau.
 
-Example is a library of test scripts that developers of discord-luau use to test the libraries capabilities.
+**Source:** [packages/example](https://github.com/DiscordLuau/discord-luau/tree/main/packages/example)
 
-### Contributing
-See the [Contributing Guide](CONTRIBUTING) for more information on how to contribute to this project.
+## Getting Started
 
-### License
-This project is licensed under the MIT License. Feel free to use it in your projects.
+Clone the repository and install dependencies:
+
+```bash
+git clone https://github.com/DiscordLuau/discord-luau
+cd discord-luau
+pesde install
+```
+
+Create a `.env.luau` file at the root of the repository returning a table with your bot token:
+
+```luau
+return {
+    DISCORD_TOKEN = "Bot YOUR_TOKEN_HERE",
+}
+```
+
+Run the example:
+
+```bash
+zune packages/example/src
+```
+
+## Documentation
+
+Full documentation at [discordluau-docs.devcomp.workers.dev](https://discordluau-docs.devcomp.workers.dev/).
+
+## Contributing
+
+Contributions are welcome via the repository at [github.com/DiscordLuau/discord-luau](https://github.com/DiscordLuau/discord-luau).
+
+## License
+
+This project is licensed under the MIT License.
