@@ -203,6 +203,7 @@ return function(registryInstance: registry.Registry): command.CommandDefinition
 			:setDescription("List all available commands")
 			:setType("ChatInput")
 			:addIntegrationType("UserInstall")
+			:addIntegrationType("GuildInstall")
 			:addContext("Guild")
 			:addContext("BotDm")
 			:addContext("PrivateChannel")
