@@ -12,6 +12,7 @@ includes = [
     "LICENSE",
     "README.md",
     "CONTRIBUTING.md",
+    "patches/**/*",
 ]
 
 [target]
