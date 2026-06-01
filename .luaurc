@@ -4,6 +4,7 @@
 		"*": false
 	},
 	"aliases": {
-		"lune": ".lune/typedefs/"
+		"lune": ".lune/typedefs/",
+		"eryx": ".eryx/typedefs/"
 	}
 }
