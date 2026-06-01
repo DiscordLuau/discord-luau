@@ -1,33 +1,21 @@
 --[=[
 	@class Bit
 
-	A Bit wrapper library that supports both 64-bit integers and 32-bit integers. 
+	A Bit wrapper library that supports 64-bit integers represented as decimal strings.
 	Primarily required in the calculation for snowflake IDs that the Discord API will give us.
 ]=]
 
-local Bit52 = require("@self/bit52")
+local int64 = require("@self/../luau_packages/int64")
+
 local Bit = {}
-
---[=[
-	@within Bit
-
-	Returns true if the given value is a 32-bit integer.
-]=]
-function Bit.is32Bit(value: number): boolean
-	return value >= 0 and value <= 0xFFFFFFFF
-end
 
 --[=[
 	@within Bit
 
 	Binary NOT operation for integers
 ]=]
-function Bit.bnot(value: number): number
-	if Bit.is32Bit(value) then
-		return bit32.bnot(value)
-	else
-		return Bit52.bnot(value)
-	end
+function Bit.bnot(value: string): string
+	return int64.to_dec_string(int64.bnot(int64.from_dec_string(value)))
 end
 
 --[=[
@@ -35,12 +23,8 @@ end
 
 	Binary OR operation for integers
 ]=]
-function Bit.bor(value0: number, value1: number): number
-	if Bit.is32Bit(value0) and Bit.is32Bit(value1) then
-		return bit32.bor(value0, value1)
-	else
-		return Bit52.bor(value0, value1)
-	end
+function Bit.bor(value0: string, value1: string): string
+	return int64.to_dec_string(int64.bor(int64.from_dec_string(value0), int64.from_dec_string(value1)))
 end
 
 --[=[
@@ -48,28 +32,22 @@ end
 
 	Binary AND operation for integers
 ]=]
-function Bit.band(value0: number, value1: number): number
-	if Bit.is32Bit(value0) and Bit.is32Bit(value1) then
-		return bit32.band(value0, value1)
-	else
-		return Bit52.band(value0, value1)
-	end
+function Bit.band(value0: string, value1: string): string
+	return int64.to_dec_string(int64.band(int64.from_dec_string(value0), int64.from_dec_string(value1)))
 end
 
 --[=[
 	@within Bit
 
-	Binary SHIFT operation for integers
+	Binary SHIFT operation for integers. Positive displacement = left shift, negative = right shift.
 ]=]
-function Bit.shift(value: number, displacement: number): number
-	if Bit.is32Bit(value) and math.abs(displacement) < 32 then
-		if displacement >= 0 then
-			return bit32.lshift(value, displacement)
-		else
-			return bit32.rshift(value, -displacement)
-		end
+function Bit.shift(value: string, displacement: number): string
+	if displacement == 0 then
+		return value
+	elseif displacement > 0 then
+		return int64.to_dec_string(int64.lshift(int64.from_dec_string(value), displacement))
 	else
-		return Bit52.shift(value, displacement)
+		return int64.to_dec_string(int64.rshift(int64.from_dec_string(value), -displacement))
 	end
 end
 
@@ -78,7 +56,7 @@ end
 
 	Binary LEFT SHIFT operation for integers
 ]=]
-function Bit.lshift(value: number, displacement: number): number
+function Bit.lshift(value: string, displacement: number): string
 	return Bit.shift(value, displacement)
 end
 
@@ -87,7 +65,7 @@ end
 
 	Binary RIGHT SHIFT operation for integers
 ]=]
-function Bit.rshift(value: number, displacement: number): number
+function Bit.rshift(value: string, displacement: number): string
 	return Bit.shift(value, -displacement)
 end
 
