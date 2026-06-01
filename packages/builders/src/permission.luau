@@ -20,9 +20,9 @@
 ]=]
 
 --[=[
-	@prop bitflag number
+	@prop bitflag string
 	@within Builders.Permission
-	The numeric representation of the permission bitflag.
+	The string representation of the permission bitflag.
 ]=]
 
 local apiTypes = require("../luau_packages/api_types")
@@ -40,11 +40,7 @@ Permission.Interface = {}
 	Sets the bitflag for this builder.
 ]=]
 function Permission.Prototype.setPermissionBitflag(self: Permission, bitflag: string | number): Permission
-	local numberRepresentation = tonumber(bitflag)
-
-	assert(numberRepresentation ~= nil, `Bitflag must be a number or a string representation of a number.`)
-
-	self.bitflag = numberRepresentation
+	self.bitflag = tostring(bitflag)
 
 	return self
 end
@@ -87,7 +83,7 @@ function Permission.Prototype.build(self: Permission): JSON
 		bitflag = bit.band(bitflag, bit.bnot(apiTypes.permission.Permissions[permission]))
 	end
 
-	return tostring(bitflag)
+	return bitflag
 end
 
 --[=[
@@ -104,7 +100,7 @@ function Permission.Interface.new(resource: {
 
 			removedPermissions = {},
 
-			bitflag = 0,
+			bitflag = "0",
 		} :: Permission,
 		{
 			__index = Permission.Prototype,
@@ -126,7 +122,7 @@ end
 	Enables you to create a permission builder from a list of permissions.
 ]=]
 function Permission.Interface.fromPermissions(permissions: { apiTypes.Permissions }): Permission
-	local bitflag = 0
+	local bitflag = "0"
 
 	for _, permission in permissions do
 		bitflag = bit.bor(bitflag, apiTypes.permission.Permissions[permission])
@@ -138,7 +134,7 @@ function Permission.Interface.fromPermissions(permissions: { apiTypes.Permission
 end
 
 export type Permission = typeof(Permission.Prototype) & {
-	bitflag: number,
+	bitflag: string,
 	addedPermissions: { apiTypes.Permissions },
 	removedPermissions: { apiTypes.Permissions },
 }
