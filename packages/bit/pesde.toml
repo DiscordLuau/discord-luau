@@ -1,12 +1,19 @@
 name = "discord_luau/bit"
 version = "0.0.1"
-description = "Discord-Luau Bit - Bit library for Luau supporting integers up to 52 bits (Discord permission flags)."
+description = "Discord-Luau Bit - Bit library for Luau supporting 64-bit integers (Discord permission flags)."
 license = "MIT"
 authors = ["Async Matrix <hi@asyncmatrix.dev>"]
 repository = "https://github.com/DiscordLuau/discord-luau/tree/main/packages/bit"
 pesde_version = "0.7.0-rc.7"
 
-includes = ["src/**/*", "pesde.toml", "LICENSE", "README.md", "CONTRIBUTING.md", "patches/**/*"]
+includes = [
+    "src/**/*",
+    "pesde.toml",
+    "LICENSE",
+    "README.md",
+    "CONTRIBUTING.md",
+    "patches/**/*",
+]
 
 [target]
 environment = "luau"
@@ -14,3 +21,6 @@ lib = "src/init.luau"
 
 [indices]
 default = "https://github.com/pesde-pkg/index"
+
+[dependencies]
+int64 = { name = "4x8matrix/int64", version = "^1.0.1" }

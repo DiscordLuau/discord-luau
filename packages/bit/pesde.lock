@@ -4,3 +4,10 @@ format = 2
 name = "discord_luau/bit"
 version = "0.0.1"
 target = "luau"
+
+[graph."4x8matrix/int64@1.0.1 luau"]
+direct = ["int64", { name = "4x8matrix/int64", version = "^1.0.1", index = "default" }, "standard"]
+
+[graph."4x8matrix/int64@1.0.1 luau".pkg_ref]
+ref_ty = "pesde"
+index_url = "https://github.com/pesde-pkg/index"
