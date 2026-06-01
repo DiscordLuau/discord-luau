@@ -29,7 +29,7 @@ Intents.Interface = {}
 ]=]
 function Intents.Prototype.addIntent(self: Intents, intent: apiTypes.Intent): Intents
 	assert(apiTypes.gateway.intents[intent], `Invalid intent: {intent}`)
-	assert(table.find(self.intents, intent) == nil, `Intent {intent} already set`)
+	assert(not table.find(self.intents, intent), `Intent {intent} already set`)
 
 	table.insert(self.intents, intent)
 
@@ -42,17 +42,17 @@ end
 	Responsible for building all intent permissions into an integer that the Discord API can parse
 ]=]
 function Intents.Prototype.build(self: Intents): number
-	local intentsValue = 0
+	local intentsValue = "0"
 
 	for _, intentEnum in self.intents do
 		local intentDisposition = apiTypes.gateway.intents[intentEnum]
 
 		assert(intentDisposition, `Unexpected intent '{intentEnum}'`)
 
-		intentsValue += bit.lshift(1, intentDisposition) :: number
+		intentsValue = bit.bor(intentsValue, bit.lshift("1", intentDisposition))
 	end
 
-	return intentsValue
+	return tonumber(intentsValue) :: number
 end
 
 --[=[
