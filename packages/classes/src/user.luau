@@ -194,8 +194,10 @@ function User.Prototype.getDmChannelIdAsync(self: User): future.FutureLike<strin
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
 		local response = rest.user.createDMAsync(request, { recipient_id = self.id }):await()
+
 		assert(response:isOk(), `{response:unwrapErr()}`)
-		return response:unwrapOk().id
+
+		return response:unwrapOk().id :: any
 	end) :: future.FutureLike<string, apiTypes.Snowflake>
 end
 

@@ -180,9 +180,13 @@ end
 
 	Encrypts and sends a raw Opus audio frame over UDP. The connection must be ready before calling this.
 ]=]
-function VoiceBehaviour.Prototype.sendOpusAsync<T>(self: VoiceChannel<T>, audioFrame: buffer): future.FutureLike<nil>
+function VoiceBehaviour.Prototype.sendOpusAsync<T>(
+	self: VoiceChannel<T>,
+	audioFrame: buffer
+): future.FutureLike<string, nil>
 	assert(self.connection, "not connected to a voice channel")
-	return self.connection:sendOpusAsync(audioFrame) :: future.FutureLike<nil>
+
+	return self.connection:sendOpusAsync(audioFrame)
 end
 
 --[=[
@@ -190,9 +194,13 @@ end
 
 	Sets the bot's speaking state. Pass a bitmask of speaking flags: Microphone = 1, Soundshare = 2, Priority = 4.
 ]=]
-function VoiceBehaviour.Prototype.setSpeakingAsync<T>(self: VoiceChannel<T>, speakingFlags: number): future.FutureLike<nil>
+function VoiceBehaviour.Prototype.setSpeakingAsync<T>(
+	self: VoiceChannel<T>,
+	speakingFlags: number
+): future.FutureLike<string, nil>
 	assert(self.connection, "not connected to a voice channel")
-	return self.connection:setSpeakingAsync(speakingFlags) :: future.FutureLike<nil>
+
+	return self.connection:setSpeakingAsync(speakingFlags)
 end
 
 --[=[
