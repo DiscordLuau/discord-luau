@@ -131,9 +131,21 @@ function Role.Prototype.build(self: Role): JSON
 		permissionBits[index] = permissionBit
 	end
 
+	local permissions = nil
+
+	if #permissionBits > 0 then
+		local bits = "0"
+
+		for _, permissionBit in permissionBits do
+			bits = bit.bor(bits, permissionBit)
+		end
+
+		permissions = bits
+	end
+
 	return {
 		name = self.name,
-		permissions = #permissionBits == 0 and nil or tostring(bit.bor(table.unpack(permissionBits))),
+		permissions = permissions,
 		color = self.color,
 		hoist = self.isHoisted,
 		icon = self.icon,
