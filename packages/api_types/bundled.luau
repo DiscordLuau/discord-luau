@@ -4851,71 +4851,503 @@ do
 	end
 	do
 		local function __modImpl()
-			local b = {}
+			local b = {
+				["0"] = "0000",
+				["1"] = "0001",
+				["2"] = "0010",
+				["3"] = "0011",
+				["4"] = "0100",
+				["5"] = "0101",
+				["6"] = "0110",
+				["7"] = "0111",
+				["8"] = "1000",
+				["9"] = "1001",
+				a = "1010",
+				b = "1011",
+				c = "1100",
+				d = "1101",
+				e = "1110",
+				f = "1111",
+			}
 
-			local function split(c: number): (number, number)
-				local d = math.floor(c / 4294967296)
-				local e = c - d * 4294967296
+			local c = vector.create(0, 0, 0)
 
-				return e, d
+			local d = vector.create(0, 0, 1)
+
+			local e = vector.create(0, 0, 2)
+
+			local f = vector.create(0x3fffff, 0xfffff, 0x3fffff)
+
+			local g = vector.create(0, 0x3ff, 0x3fffff)
+
+			local h = vector.create(0x800, 0, 0)
+
+			local i = vector.create(0, 4, 0)
+
+			local function normalize(j: vector): vector
+				return vector.create(
+					bit32.band(j.x, 0b1111_1111_1111_1111_1111_11),
+					bit32.band(j.y, 0b1111_1111_1111_1111_1111),
+					bit32.band(j.z, 0b1111_1111_1111_1111_1111_11)
+				)
 			end
 
-			local function combine(c: number, d: number): number
-				return (d * 4294967296) + c
+			local function from_pair(j: number, k: number): vector
+				return vector.create(
+					bit32.rshift(j, 10),
+					bit32.bor(bit32.extract(k, 22, 10), bit32.lshift(bit32.band(j, 0b1111_1111_11), 10)),
+					bit32.band(k, 0b1111_1111_1111_1111_1111_11)
+				)
 			end
 
-			function b.bnot(c: number): number
-				local d, e = split(c)
-				return combine(bit32.bnot(d), bit32.band(bit32.bnot(e), 0x1FFFFF))
+			local function from_u32(j: number): vector
+				return vector.create(0, bit32.rshift(j, 22), bit32.band(j, 0b1111_1111_1111_1111_1111_11))
 			end
 
-			function b.bor(c: number, d: number): number
-				local e, f = split(c)
-				local g, h = split(d)
-
-				return combine(bit32.bor(e, g), bit32.bor(f, h))
+			local function from_f64(j: number): vector
+				return from_pair(bit32.bor(j // 4294967296), bit32.bor(j % 4294967296))
 			end
 
-			function b.band(c: number, d: number): number
-				local e, f = split(c)
-				local g, h = split(d)
+			local function to_pair(j: vector): (number, number)
+				local k = bit32.bor(bit32.lshift(j.x, 10), bit32.rshift(j.y, 10))
+				local l = bit32.bor(bit32.lshift(j.y, 22), j.z)
 
-				return combine(bit32.band(e, g), bit32.band(f, h))
+				return k, l
 			end
 
-			function b.shift(c: number, d: number): number
-				if d == 0 then
-					return c
+			local function to_quartet(j: vector): (number, number, number, number)
+				local k, l = to_pair(j)
+				local m, n = bit32.rshift(k, 16), bit32.band(k, 0xffff)
+				local o, p = bit32.rshift(l, 16), bit32.band(l, 0xffff)
+
+				return m, n, o, p
+			end
+
+			local function to_f64(j: vector): number
+				local k, l = to_pair(j)
+				return k * 4294967296 + l
+			end
+
+			local function is_zero(j: vector): boolean
+				return j == c
+			end
+
+			local function band(j: vector, k: vector): vector
+				return vector.create(bit32.band(j.x, k.x), bit32.band(j.y, k.y), bit32.band(j.z, k.z))
+			end
+
+			local function bor(j: vector, k: vector): vector
+				return vector.create(bit32.bor(j.x, k.x), bit32.bor(j.y, k.y), bit32.bor(j.z, k.z))
+			end
+
+			local function bxor(j: vector, k: vector): vector
+				return vector.create(bit32.bxor(j.x, k.x), bit32.bxor(j.y, k.y), bit32.bxor(j.z, k.z))
+			end
+
+			local function bnot(j: vector): vector
+				return vector.create(
+					bit32.band(bit32.bnot(j.x), 0b1111_1111_1111_1111_1111_11),
+					bit32.band(bit32.bnot(j.y), 0b1111_1111_1111_1111_1111),
+					bit32.band(bit32.bnot(j.z), 0b1111_1111_1111_1111_1111_11)
+				)
+			end
+
+			local function lshift(j: vector, k: number): vector
+				if k >= 64 then
+					return vector.zero
+				elseif k == 0 then
+					return j
 				end
+				local l, m = to_pair(j)
+				if k < 32 then
+					local n = 32 - k
+					local o = from_pair(bit32.replace(bit32.rshift(m, n), l, k, n), bit32.lshift(m, k))
+					return o
+				else
+					local n = from_pair(bit32.lshift(m, k - 32), 0)
+					return n
+				end
+			end
 
-				local e, f = split(c)
+			local function rshift(j: vector, k: number): vector
+				if k == 0 then
+					return j
+				end
+				local l, m = to_pair(j)
+				if k < 32 then
+					local n = from_pair(bit32.rshift(l, k), bit32.replace(bit32.rshift(m, k), l, 32 - k, k))
+					return n
+				else
+					local n = from_pair(0, bit32.rshift(l, k - 32))
+					return n
+				end
+			end
 
-				if d > 0 then
-					if d >= 32 then
-						f = bit32.lshift(e, d - 32)
-						e = 0
+			local function arshift(j: vector, k: number): vector
+				if bit32.btest(j.x, 0x20_0000) then
+					if k >= 64 then
+						return f
 					else
-						f = bit32.bor(bit32.lshift(f, d), bit32.rshift(e, 32 - d))
-						e = bit32.lshift(e, d)
+						return bor(rshift(j, k), bnot(rshift(f, k)))
 					end
 				else
-					d = -d
-					if d >= 32 then
-						e = bit32.rshift(f, d - 32)
-						f = 0
-					else
-						e = bit32.bor(bit32.rshift(e, d), bit32.lshift(f, 32 - d))
-						f = bit32.rshift(f, d)
+					return rshift(j, k)
+				end
+			end
+
+			local function lrotate(j: vector, k: number): vector
+				k = bit32.band(k, 63)
+				local l = lshift(j, k)
+				local m = rshift(j, 64 - k)
+				return bor(l, m)
+			end
+
+			local function rrotate(j: vector, k: number): vector
+				k = bit32.band(k, 63)
+				local l = lshift(j, 64 - k)
+				local m = rshift(j, k)
+				return bor(l, m)
+			end
+
+			local function countlz(j: vector): number
+				local k, l = to_pair(j)
+				if k == 0 then
+					return bit32.countlz(l) + 32
+				else
+					return bit32.countlz(k)
+				end
+			end
+
+			local function countrz(j: vector): number
+				local k, l = to_pair(j)
+				if l == 0 then
+					return bit32.countrz(k) + 32
+				else
+					return bit32.countrz(l)
+				end
+			end
+
+			local function btest(j: vector, k: vector): boolean
+				return band(j, k) ~= c
+			end
+
+			local function byteswap(j: vector): vector
+				local k, l = to_pair(j)
+				return from_pair(bit32.byteswap(l), bit32.byteswap(k))
+			end
+
+			local function gt(j: vector, k: vector): boolean
+				local l, m = to_pair(j)
+				local n, o = to_pair(k)
+
+				if l == n then
+					return m > o
+				else
+					return l > n
+				end
+			end
+
+			local function gt_equal(j: vector, k: vector): boolean
+				return j == k or gt(j, k)
+			end
+
+			local function lt(j: vector, k: vector): boolean
+				local l, m = to_pair(j)
+				local n, o = to_pair(k)
+
+				if l == n then
+					return m < o
+				else
+					return l < n
+				end
+			end
+
+			local function lt_equal(j: vector, k: vector): boolean
+				return j == k or lt(j, k)
+			end
+
+			local function div_32(j: vector, k: number): (vector, number)
+				if k == 0 then
+					error("cannot divide integers by zero")
+				end
+				local l, m = to_pair(j)
+				local n, o = 0, 0
+				local p = 0
+
+				for q = 31, 0, -1 do
+					p = bit32.bor(bit32.lshift(p, 1), bit32.band(bit32.rshift(l, q), 1))
+
+					if p >= k then
+						p -= k
+						n = bit32.bor(n, bit32.lshift(1, q))
+					end
+				end
+				for q = 31, 0, -1 do
+					p = bit32.bor(bit32.lshift(p, 1), bit32.band(bit32.rshift(m, q), 1))
+
+					if p >= k then
+						p -= k
+						o = bit32.bor(o, bit32.lshift(1, q))
 					end
 				end
 
-				e = bit32.band(e, 0xFFFFFFFF)
-				f = bit32.band(f, 0xFFFFFFFF)
-
-				return combine(e, f)
+				return from_pair(n, o), p
 			end
 
-			return b
+			local function add(j: vector, k: vector): vector
+				local l = j + k
+
+				l += vector.create(0, if l.z > 4194303 then 1 else 0, 0)
+				l += vector.create(if l.y > 1048575 then 1 else 0, 0, 0)
+
+				return normalize(l)
+			end
+
+			local function sub(j: vector, k: vector): vector
+				local l = j - k
+
+				local m = l.z
+				local n = l.y
+				local o = l.x
+
+				local p = l.z < 0
+				if p then
+					m += 4194304
+				end
+
+				if p then
+					n -= 1
+				end
+				local q = n < 0
+				if q then
+					n += 1048576
+				end
+
+				if q then
+					o -= 1
+				end
+				local r = o < 0
+				if r then
+					o += 4194304
+				end
+
+				return vector.create(o, n, m)
+			end
+
+			local function mult(j: vector, k: vector): vector
+				local l, m, n, o = to_quartet(j)
+				local p, q, r, s = to_quartet(k)
+
+				local t = o * s
+				local u = bit32.rshift(t, 16) + n * s
+				local v = bit32.rshift(u, 16)
+				u = bit32.band(u, 0xFFFF) + o * r
+
+				v += bit32.rshift(u, 16) + m * s
+				local w = bit32.rshift(v, 16)
+
+				v = bit32.band(v, 0xFFFF) + n * r
+				w += bit32.rshift(v, 16)
+				v = bit32.band(v, 0xFFFF) + o * q
+				w += bit32.rshift(v, 16) + l * s + m * r + n * q + o * p
+
+				return from_pair(bit32.replace(v, w, 16, 16), bit32.replace(t, u, 16, 16))
+			end
+
+			local function div(j: vector, k: vector): (vector, vector)
+				if is_zero(k) then
+					error("cannot divide integers by zero")
+				elseif countlz(j) >= 11 and countlz(k) >= 11 then
+					local l = to_f64(j)
+					local m = to_f64(k)
+					return from_f64(l // m), from_f64(l % m)
+				end
+
+				local l = c
+				local m = j
+
+				for n = math.abs(countlz(j) - countlz(k)), 0, -1 do
+					local o = lshift(k, n)
+
+					if gt_equal(m, o) then
+						m = sub(m, o)
+						l = bor(l, lshift(d, n))
+					end
+				end
+
+				return l, m
+			end
+
+			local function pow(j: vector, k: number): vector
+				if k == 0 then
+					return d
+				elseif k % 2 == 1 then
+					return mult(j, pow(j, k - 1))
+				else
+					local l = pow(j, k / 2)
+					return mult(l, l)
+				end
+			end
+
+			local function from_buffer(j: buffer, k: number?): vector
+				k = k or 0
+				local l = buffer.readu32(j, k :: number)
+				local m = buffer.readu32(j, k :: number + 4)
+
+				return from_pair(m, l)
+			end
+
+			local function from_byte_string(j: string, k: number?): vector
+				k = k or 1
+
+				local l, m, n, o, p, q, r, s = string.byte(j, k, k :: number + 7)
+				local t = bit32.bor(bit32.lshift(bit32.replace(n, o, 8, 8), 16), bit32.replace(l, m, 8, 8))
+				local u = bit32.bor(bit32.lshift(bit32.replace(r, s, 8, 8), 16), bit32.replace(p, q, 8, 8))
+
+				return from_pair(u, t)
+			end
+
+			local function to_buffer(j: vector): buffer
+				local k, l = to_pair(j)
+				local m = buffer.create(8)
+
+				buffer.writeu32(m, 0, l)
+				buffer.writeu32(m, 4, k)
+				return m
+			end
+
+			local function write_to_buffer(j: buffer, k: vector, l: number)
+				local m, n = to_pair(k)
+				buffer.writeu32(j, l, n)
+				buffer.writeu32(j, l + 4, m)
+			end
+
+			local function to_byte_string(j: vector): string
+				local k, l = to_pair(j)
+
+				return string.char(
+					bit32.band(l, 0xFF),
+					bit32.extract(l, 8, 8),
+					bit32.extract(l, 16, 8),
+					bit32.rshift(l, 24),
+					bit32.band(k, 0xFF),
+					bit32.extract(k, 8, 8),
+					bit32.extract(k, 16, 8),
+					bit32.rshift(k, 24)
+				)
+			end
+
+			local function to_hex_string(j: vector): string
+				local k, l = to_pair(j)
+				return string.format("%08x%08x", k, l)
+			end
+
+			local function to_bin_string(j: vector): string
+				return (string.gsub(to_hex_string(j), "(.)", b))
+			end
+
+			local function from_dec_string(j: string): vector
+				if string.find(j, "%D") then
+					local k, l = string.match(j, "()(%D)")
+					local m = string.format("0x%02x", string.byte(l :: any))
+					error(`unexpected character '{l}' ({m}) at position {k} while parsing decimal string`)
+				end
+				local k, l = 0, 0
+				for m = 1, #j do
+					local n = string.byte(j, m, m) - 48
+
+					k *= 10
+					l = l * 10 + k // 4294967296
+					k = bit32.bor(k, 0) + n
+
+					if k >= 4294967296 then
+						k -= 4294967296
+						l += 1
+					end
+				end
+
+				return from_pair(l, k)
+			end
+
+			local function to_dec_string(j: vector): string
+				if countlz(j) >= 11 then
+					return tostring(to_f64(j))
+				else
+					local k, l = div_32(j, 1e9)
+					local m, n = to_pair(k)
+					if m == 0 and n < 1e9 then
+						return string.format("%u%09u", n, l)
+					else
+						return string.format("%s%09u", to_dec_string(k), l)
+					end
+				end
+			end
+
+			return {
+
+				ZERO = c,
+
+				ONE = d,
+
+				TWO = e,
+
+				MAX = f,
+
+				MAX_U32 = g,
+
+				MAX_F64 = h,
+
+				MAX_F32 = i,
+
+				from_pair = from_pair,
+				from_u32 = from_u32,
+				from_f64 = from_f64,
+
+				to_pair = to_pair,
+				to_quartet = to_quartet,
+				to_f64 = to_f64,
+
+				lt = lt,
+				lt_equal = lt_equal,
+				gt = gt,
+				gt_equal = gt_equal,
+				is_zero = is_zero,
+
+				band = band,
+				bor = bor,
+				bxor = bxor,
+				btest = btest,
+
+				bnot = bnot,
+				byteswap = byteswap,
+				countlz = countlz,
+				countrz = countrz,
+
+				rshift = rshift,
+				arshift = arshift,
+				rrotate = rrotate,
+				lshift = lshift,
+				lrotate = lrotate,
+
+				add = add,
+				sub = sub,
+				mult = mult,
+				div = div,
+				pow = pow,
+
+				to_byte_string = to_byte_string,
+				from_byte_string = from_byte_string,
+
+				to_buffer = to_buffer,
+				write_to_buffer = write_to_buffer,
+				from_buffer = from_buffer,
+
+				to_hex_string = to_hex_string,
+				to_bin_string = to_bin_string,
+
+				to_dec_string = to_dec_string,
+				from_dec_string = from_dec_string,
+			}
 		end
 		function a.l(): typeof(__modImpl())
 			local b = a.cache.l
@@ -4929,57 +5361,7 @@ do
 	do
 		local function __modImpl()
 			local b = a.l()
-			local c = {}
-
-			function c.is32Bit(d: number): boolean
-				return d >= 0 and d <= 0xFFFFFFFF
-			end
-
-			function c.bnot(d: number): number
-				if c.is32Bit(d) then
-					return bit32.bnot(d)
-				else
-					return b.bnot(d)
-				end
-			end
-
-			function c.bor(d: number, e: number): number
-				if c.is32Bit(d) and c.is32Bit(e) then
-					return bit32.bor(d, e)
-				else
-					return b.bor(d, e)
-				end
-			end
-
-			function c.band(d: number, e: number): number
-				if c.is32Bit(d) and c.is32Bit(e) then
-					return bit32.band(d, e)
-				else
-					return b.band(d, e)
-				end
-			end
-
-			function c.shift(d: number, e: number): number
-				if c.is32Bit(d) and math.abs(e) < 32 then
-					if e >= 0 then
-						return bit32.lshift(d, e)
-					else
-						return bit32.rshift(d, -e)
-					end
-				else
-					return b.shift(d, e)
-				end
-			end
-
-			function c.lshift(d: number, e: number): number
-				return c.shift(d, e)
-			end
-
-			function c.rshift(d: number, e: number): number
-				return c.shift(d, -e)
-			end
-
-			return c
+			return b
 		end
 		function a.m(): typeof(__modImpl())
 			local b = a.cache.m
@@ -4993,7 +5375,40 @@ do
 	do
 		local function __modImpl()
 			local b = a.m()
-			return b
+
+			local c = {}
+
+			function c.bnot(d: string): string
+				return b.to_dec_string(b.bnot(b.from_dec_string(d)))
+			end
+
+			function c.bor(d: string, e: string): string
+				return b.to_dec_string(b.bor(b.from_dec_string(d), b.from_dec_string(e)))
+			end
+
+			function c.band(d: string, e: string): string
+				return b.to_dec_string(b.band(b.from_dec_string(d), b.from_dec_string(e)))
+			end
+
+			function c.shift(d: string, e: number): string
+				if e == 0 then
+					return d
+				elseif e > 0 then
+					return b.to_dec_string(b.lshift(b.from_dec_string(d), e))
+				else
+					return b.to_dec_string(b.rshift(b.from_dec_string(d), -e))
+				end
+			end
+
+			function c.lshift(d: string, e: number): string
+				return c.shift(d, e)
+			end
+
+			function c.rshift(d: string, e: number): string
+				return c.shift(d, -e)
+			end
+
+			return c
 		end
 		function a.n(): typeof(__modImpl())
 			local b = a.cache.n
@@ -5006,67 +5421,8 @@ do
 	end
 	do
 		local function __modImpl()
-			local b = a.g()
-
-			local c = a.n()
-
-			local d = table.freeze(b.tableReflect({
-				CreateInstantInvite = c.lshift(1, 0),
-				KickMembers = c.lshift(1, 1),
-				BanMembers = c.lshift(1, 2),
-				Administrator = c.lshift(1, 3),
-				ManageChannels = c.lshift(1, 4),
-				ManageGuild = c.lshift(1, 5),
-				AddReactions = c.lshift(1, 6),
-				ViewAuditLog = c.lshift(1, 7),
-				PrioritySpeaker = c.lshift(1, 8),
-				Stream = c.lshift(1, 9),
-				ViewChannel = c.lshift(1, 10),
-				SendMessages = c.lshift(1, 11),
-				SendTTSMessages = c.lshift(1, 12),
-				ManageMessages = c.lshift(1, 13),
-				EmbedLinks = c.lshift(1, 14),
-				AttachFiles = c.lshift(1, 15),
-				ReadMessageHistory = c.lshift(1, 16),
-				MentionEveryone = c.lshift(1, 17),
-				UseExternalEmojis = c.lshift(1, 18),
-				ViewGuildInsights = c.lshift(1, 19),
-				Connect = c.lshift(1, 20),
-				Speak = c.lshift(1, 21),
-				MuteMembers = c.lshift(1, 22),
-				DeafenMembers = c.lshift(1, 23),
-				MoveMembers = c.lshift(1, 24),
-				UseVAD = c.lshift(1, 25),
-				ChangeNickname = c.lshift(1, 26),
-				ManageNicknames = c.lshift(1, 27),
-				ManageRoles = c.lshift(1, 28),
-				ManageWebhooks = c.lshift(1, 29),
-				ManageGuildExpressions = c.lshift(1, 30),
-				UseApplicationCommands = c.lshift(1, 31),
-				RequestToSpeak = c.lshift(1, 32),
-				ManageEvents = c.lshift(1, 33),
-				ManageThreads = c.lshift(1, 34),
-				CreatePublicThreads = c.lshift(1, 35),
-				CreatePrivateThreads = c.lshift(1, 36),
-				UseExternalStickers = c.lshift(1, 37),
-				SendMessagesInThreads = c.lshift(1, 38),
-				UseEmbeddedActivities = c.lshift(1, 39),
-				ModerateMembers = c.lshift(1, 40),
-				ViewCreatorMonetizationAnalytics = c.lshift(1, 41),
-				UseSoundboard = c.lshift(1, 42),
-				CreateGuildExpressions = c.lshift(1, 43),
-				UseExternalSounds = c.lshift(1, 45),
-				CreateEvents = c.lshift(1, 44),
-				SendVoiceMessages = c.lshift(1, 46),
-				SendPolls = c.lshift(1, 49),
-				UseExternalApps = c.lshift(1, 50),
-				PinMessages = c.lshift(1, 51),
-				BypassSlowmode = c.lshift(1, 52),
-			}))
-
-			return {
-				Permissions = d,
-			}
+			local b = a.n()
+			return b
 		end
 		function a.o(): typeof(__modImpl())
 			local b = a.cache.o
@@ -5079,7 +5435,80 @@ do
 	end
 	do
 		local function __modImpl()
-			local b = a.n()
+			local b = a.g()
+
+			local c = a.o()
+
+			local d = table.freeze(b.tableReflect({
+				CreateInstantInvite = c.lshift("1", 0),
+				KickMembers = c.lshift("1", 1),
+				BanMembers = c.lshift("1", 2),
+				Administrator = c.lshift("1", 3),
+				ManageChannels = c.lshift("1", 4),
+				ManageGuild = c.lshift("1", 5),
+				AddReactions = c.lshift("1", 6),
+				ViewAuditLog = c.lshift("1", 7),
+				PrioritySpeaker = c.lshift("1", 8),
+				Stream = c.lshift("1", 9),
+				ViewChannel = c.lshift("1", 10),
+				SendMessages = c.lshift("1", 11),
+				SendTTSMessages = c.lshift("1", 12),
+				ManageMessages = c.lshift("1", 13),
+				EmbedLinks = c.lshift("1", 14),
+				AttachFiles = c.lshift("1", 15),
+				ReadMessageHistory = c.lshift("1", 16),
+				MentionEveryone = c.lshift("1", 17),
+				UseExternalEmojis = c.lshift("1", 18),
+				ViewGuildInsights = c.lshift("1", 19),
+				Connect = c.lshift("1", 20),
+				Speak = c.lshift("1", 21),
+				MuteMembers = c.lshift("1", 22),
+				DeafenMembers = c.lshift("1", 23),
+				MoveMembers = c.lshift("1", 24),
+				UseVAD = c.lshift("1", 25),
+				ChangeNickname = c.lshift("1", 26),
+				ManageNicknames = c.lshift("1", 27),
+				ManageRoles = c.lshift("1", 28),
+				ManageWebhooks = c.lshift("1", 29),
+				ManageGuildExpressions = c.lshift("1", 30),
+				UseApplicationCommands = c.lshift("1", 31),
+				RequestToSpeak = c.lshift("1", 32),
+				ManageEvents = c.lshift("1", 33),
+				ManageThreads = c.lshift("1", 34),
+				CreatePublicThreads = c.lshift("1", 35),
+				CreatePrivateThreads = c.lshift("1", 36),
+				UseExternalStickers = c.lshift("1", 37),
+				SendMessagesInThreads = c.lshift("1", 38),
+				UseEmbeddedActivities = c.lshift("1", 39),
+				ModerateMembers = c.lshift("1", 40),
+				ViewCreatorMonetizationAnalytics = c.lshift("1", 41),
+				UseSoundboard = c.lshift("1", 42),
+				CreateGuildExpressions = c.lshift("1", 43),
+				UseExternalSounds = c.lshift("1", 45),
+				CreateEvents = c.lshift("1", 44),
+				SendVoiceMessages = c.lshift("1", 46),
+				SendPolls = c.lshift("1", 49),
+				UseExternalApps = c.lshift("1", 50),
+				PinMessages = c.lshift("1", 51),
+				BypassSlowmode = c.lshift("1", 52),
+			}))
+
+			return {
+				Permissions = d,
+			}
+		end
+		function a.p(): typeof(__modImpl())
+			local b = a.cache.p
+			if not b then
+				b = { c = __modImpl() }
+				a.cache.p = b
+			end
+			return b.c
+		end
+	end
+	do
+		local function __modImpl()
+			local b = a.o()
 			local c = a.g()
 
 			local d = table.freeze(c.tableReflect({
@@ -5164,7 +5593,7 @@ do
 			}))
 
 			local l = table.freeze({
-				IsComponentsV2 = b.lshift(1, 15),
+				IsComponentsV2 = b.lshift("1", 15),
 			})
 
 			return {
@@ -5179,11 +5608,11 @@ do
 				MessageFlags = l,
 			}
 		end
-		function a.p(): typeof(__modImpl())
-			local b = a.cache.p
+		function a.q(): typeof(__modImpl())
+			local b = a.cache.q
 			if not b then
 				b = { c = __modImpl() }
-				a.cache.p = b
+				a.cache.q = b
 			end
 			return b.c
 		end
@@ -5258,11 +5687,11 @@ do
 				ComponentTypes = g,
 			}
 		end
-		function a.q(): typeof(__modImpl())
-			local b = a.cache.q
+		function a.r(): typeof(__modImpl())
+			local b = a.cache.r
 			if not b then
 				b = { c = __modImpl() }
-				a.cache.q = b
+				a.cache.r = b
 			end
 			return b.c
 		end
@@ -5524,11 +5953,11 @@ do
 				OverwriteType = v,
 			}
 		end
-		function a.r(): typeof(__modImpl())
-			local b = a.cache.r
+		function a.s(): typeof(__modImpl())
+			local b = a.cache.s
 			if not b then
 				b = { c = __modImpl() }
-				a.cache.r = b
+				a.cache.s = b
 			end
 			return b.c
 		end
@@ -5558,11 +5987,11 @@ do
 				EntitlementOwnerType = d,
 			}
 		end
-		function a.s(): typeof(__modImpl())
-			local b = a.cache.s
+		function a.t(): typeof(__modImpl())
+			local b = a.cache.t
 			if not b then
 				b = { c = __modImpl() }
-				a.cache.s = b
+				a.cache.t = b
 			end
 			return b.c
 		end
@@ -5585,19 +6014,6 @@ do
 				EmbedType = c,
 			}
 		end
-		function a.t(): typeof(__modImpl())
-			local b = a.cache.t
-			if not b then
-				b = { c = __modImpl() }
-				a.cache.t = b
-			end
-			return b.c
-		end
-	end
-	do
-		local function __modImpl()
-			return "DISCORD_V10_PAYLOAD_TYPES"
-		end
 		function a.u(): typeof(__modImpl())
 			local b = a.cache.u
 			if not b then
@@ -5609,8 +6025,21 @@ do
 	end
 	do
 		local function __modImpl()
+			return "DISCORD_V10_PAYLOAD_TYPES"
+		end
+		function a.v(): typeof(__modImpl())
+			local b = a.cache.v
+			if not b then
+				b = { c = __modImpl() }
+				a.cache.v = b
+			end
+			return b.c
+		end
+	end
+	do
+		local function __modImpl()
 			local b = a.g()
-			a.u()
+			a.v()
 
 			local c = table.freeze(b.tableReflect({
 				GuildText = 0,
@@ -5667,11 +6096,11 @@ do
 				SelectMenuType = h,
 			}
 		end
-		function a.v(): typeof(__modImpl())
-			local b = a.cache.v
+		function a.w(): typeof(__modImpl())
+			local b = a.cache.w
 			if not b then
 				b = { c = __modImpl() }
-				a.cache.v = b
+				a.cache.w = b
 			end
 			return b.c
 		end
@@ -5707,11 +6136,11 @@ do
 				ApplicationRoleConnectionMetadataType = e,
 			}
 		end
-		function a.w(): typeof(__modImpl())
-			local b = a.cache.w
+		function a.x(): typeof(__modImpl())
+			local b = a.cache.x
 			if not b then
 				b = { c = __modImpl() }
-				a.cache.w = b
+				a.cache.x = b
 			end
 			return b.c
 		end
@@ -5741,11 +6170,11 @@ do
 				Status = d,
 			}
 		end
-		function a.x(): typeof(__modImpl())
-			local b = a.cache.x
+		function a.y(): typeof(__modImpl())
+			local b = a.cache.y
 			if not b then
 				b = { c = __modImpl() }
-				a.cache.x = b
+				a.cache.y = b
 			end
 			return b.c
 		end
@@ -5788,11 +6217,11 @@ do
 
 			return b
 		end
-		function a.y(): typeof(__modImpl())
-			local b = a.cache.y
+		function a.z(): typeof(__modImpl())
+			local b = a.cache.z
 			if not b then
 				b = { c = __modImpl() }
-				a.cache.y = b
+				a.cache.z = b
 			end
 			return b.c
 		end
@@ -5820,11 +6249,11 @@ do
 
 			return b
 		end
-		function a.z(): typeof(__modImpl())
-			local b = a.cache.z
+		function a.A(): typeof(__modImpl())
+			local b = a.cache.A
 			if not b then
 				b = { c = __modImpl() }
-				a.cache.z = b
+				a.cache.A = b
 			end
 			return b.c
 		end
@@ -5833,11 +6262,11 @@ do
 		local function __modImpl()
 			return {}
 		end
-		function a.A(): typeof(__modImpl())
-			local b = a.cache.A
+		function a.B(): typeof(__modImpl())
+			local b = a.cache.B
 			if not b then
 				b = { c = __modImpl() }
-				a.cache.A = b
+				a.cache.B = b
 			end
 			return b.c
 		end
@@ -6243,26 +6672,26 @@ do
 
 			return b
 		end
-		function a.B(): typeof(__modImpl())
-			local b = a.cache.B
+		function a.C(): typeof(__modImpl())
+			local b = a.cache.C
 			if not b then
 				b = { c = __modImpl() }
-				a.cache.B = b
+				a.cache.C = b
 			end
 			return b.c
 		end
 	end
 	do
 		local function __modImpl()
-			a.u()
+			a.v()
 
 			return "DISCORD_V10_PAYLOAD_TYPES"
 		end
-		function a.C(): typeof(__modImpl())
-			local b = a.cache.C
+		function a.D(): typeof(__modImpl())
+			local b = a.cache.D
 			if not b then
 				b = { c = __modImpl() }
-				a.cache.C = b
+				a.cache.D = b
 			end
 			return b.c
 		end
@@ -6288,11 +6717,11 @@ do
 
 			return b
 		end
-		function a.D(): typeof(__modImpl())
-			local b = a.cache.D
+		function a.E(): typeof(__modImpl())
+			local b = a.cache.E
 			if not b then
 				b = { c = __modImpl() }
-				a.cache.D = b
+				a.cache.E = b
 			end
 			return b.c
 		end
@@ -6325,11 +6754,11 @@ do
 
 			return b
 		end
-		function a.E(): typeof(__modImpl())
-			local b = a.cache.E
+		function a.F(): typeof(__modImpl())
+			local b = a.cache.F
 			if not b then
 				b = { c = __modImpl() }
-				a.cache.E = b
+				a.cache.F = b
 			end
 			return b.c
 		end
@@ -6352,11 +6781,11 @@ do
 
 			return b
 		end
-		function a.F(): typeof(__modImpl())
-			local b = a.cache.F
+		function a.G(): typeof(__modImpl())
+			local b = a.cache.G
 			if not b then
 				b = { c = __modImpl() }
-				a.cache.F = b
+				a.cache.G = b
 			end
 			return b.c
 		end
@@ -6443,11 +6872,11 @@ do
 
 			return b
 		end
-		function a.G(): typeof(__modImpl())
-			local b = a.cache.G
+		function a.H(): typeof(__modImpl())
+			local b = a.cache.H
 			if not b then
 				b = { c = __modImpl() }
-				a.cache.G = b
+				a.cache.H = b
 			end
 			return b.c
 		end
@@ -6465,26 +6894,26 @@ do
 
 			return b
 		end
-		function a.H(): typeof(__modImpl())
-			local b = a.cache.H
+		function a.I(): typeof(__modImpl())
+			local b = a.cache.I
 			if not b then
 				b = { c = __modImpl() }
-				a.cache.H = b
+				a.cache.I = b
 			end
 			return b.c
 		end
 	end
 	do
 		local function __modImpl()
-			a.u()
+			a.v()
 
 			return "DISCORD_V10_PAYLOAD_TYPES"
 		end
-		function a.I(): typeof(__modImpl())
-			local b = a.cache.I
+		function a.J(): typeof(__modImpl())
+			local b = a.cache.J
 			if not b then
 				b = { c = __modImpl() }
-				a.cache.I = b
+				a.cache.J = b
 			end
 			return b.c
 		end
@@ -6496,31 +6925,31 @@ return {
 	webhook = a.i(),
 	sticker = a.j(),
 	poll = a.k(),
-	permission = a.o(),
-	message = a.p(),
-	interaction = a.q(),
-	guild = a.r(),
-	entitlement = a.s(),
-	embed = a.t(),
-	channel = a.v(),
-	application = a.w(),
-	apiTypes = a.u(),
-	client = a.x(),
+	permission = a.p(),
+	message = a.q(),
+	interaction = a.r(),
+	guild = a.s(),
+	entitlement = a.t(),
+	embed = a.u(),
+	channel = a.w(),
+	application = a.x(),
+	apiTypes = a.v(),
+	client = a.y(),
 	voice = {
-		opcodes = a.y(),
-		closeCodes = a.z(),
-		types = a.A(),
+		opcodes = a.z(),
+		closeCodes = a.A(),
+		types = a.B(),
 	},
 	rest = {
-		endpoints = a.B(),
-		types = a.C(),
+		endpoints = a.C(),
+		types = a.D(),
 	},
 	gateway = {
-		closeCodes = a.D(),
-		intents = a.E(),
-		opcodes = a.F(),
-		receiveEvents = a.G(),
-		sendEvents = a.H(),
-		types = a.I(),
+		closeCodes = a.E(),
+		intents = a.F(),
+		opcodes = a.G(),
+		receiveEvents = a.H(),
+		sendEvents = a.I(),
+		types = a.J(),
 	},
 }
