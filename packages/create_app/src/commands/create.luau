@@ -83,32 +83,35 @@ local function resolveDirectory(directory: string?): string?
 			if string.sub(restOfPath, 1, 1) == "/" or string.sub(restOfPath, 1, 1) == "\\" then
 				restOfPath = string.sub(restOfPath, 2)
 			end
+
 			resolvedPath = home .. separator .. restOfPath
 		end
-	elseif (string.sub(directory, 1, 1) == "/") or (string.match(directory, "^%a:\\") ~= nil) then
+	elseif string.sub(directory, 1, 1) == "/" or string.match(directory, "^%a:\\") then
 		resolvedPath = directory
 	else
 		local cwd = StdPolyfills.process.getCwd()
+
 		resolvedPath = cwd .. separator .. directory
 	end
 
 	if StdPolyfills.fileSystem.isDir(resolvedPath) then
 		return resolvedPath
-	else
-		return nil
 	end
+
+	return nil
 end
 
-local function buildProjectMap(projectMap: VDirectory, path: string, information: Information, sep: string)
+local function buildProjectMap(projectMap: VDirectory, path: string, information: Information, separator: string)
 	for key, value in projectMap do
-		local childPath = path .. sep .. key
+		local childPath = path .. separator .. key
+
 		if typeof(value) == "table" then
 			StdPolyfills.fileSystem.writeDir(childPath)
-			buildProjectMap(value :: VDirectory, childPath, information, sep)
+			buildProjectMap(value :: VDirectory, childPath, information, separator)
 		else
 			local content = (value :: VFile)(information)
 
-			if content ~= nil then
+			if content then
 				StdPolyfills.fileSystem.writeFile(childPath, content)
 			end
 		end
