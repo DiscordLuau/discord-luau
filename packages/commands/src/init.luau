@@ -408,7 +408,7 @@ function Commands.Prototype.waitForComponent(
 	}
 ): future.FutureLike<classes.Component, string>
 	return future.Future.new(function()
-		return waitForInteraction(self.componentCollectors, options.filter, options.timeout)
+		return waitForInteraction(self.componentCollectors, options.filter, options.timeout) :: any
 	end) :: future.FutureLike<classes.Component, string>
 end
 
@@ -430,7 +430,7 @@ function Commands.Prototype.waitForModal(
 	}
 ): future.FutureLike<classes.Modal, string>
 	return future.Future.new(function()
-		return waitForInteraction(self.modalCollectors, options.filter, options.timeout)
+		return waitForInteraction(self.modalCollectors, options.filter, options.timeout) :: any
 	end) :: future.FutureLike<classes.Modal, string>
 end
 
