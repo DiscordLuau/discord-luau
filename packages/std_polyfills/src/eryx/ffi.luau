@@ -55,47 +55,47 @@ function ffi.dlopen(path: string, functions: { [string]: { returns: any, args: {
 	return result
 end
 
-function ffi.struct(_fields: any)
+function ffi.struct(_fields: any): any
 	error("ffi.struct is not supported on Eryx")
 end
 
-function ffi.closure(_definition: any, _handler: any)
+function ffi.closure(_definition: any, _handler: any): any
 	error("ffi.closure is not supported on Eryx")
 end
 
-function ffi.fn(_definition: any, _srcPtr: any)
+function ffi.fn(_definition: any, _srcPtr: any): any
 	error("ffi.fn is not supported on Eryx")
 end
 
-function ffi.alloc(_size: number, _alignment: number?)
+function ffi.alloc(_size: number, _alignment: number?): any
 	error("ffi.alloc is not supported on Eryx")
 end
 
-function ffi.create(_dataType: any)
+function ffi.create(_dataType: any): any
 	error("ffi.create is not supported on Eryx")
 end
 
-function ffi.free(_src: any)
+function ffi.free(_src: any): any
 	error("ffi.free is not supported on Eryx")
 end
 
-function ffi.dupe(_src: any)
+function ffi.dupe(_src: any): any
 	error("ffi.dupe is not supported on Eryx")
 end
 
-function ffi.ptr(_src: any)
+function ffi.ptr(_src: any): any
 	error("ffi.ptr is not supported on Eryx")
 end
 
-function ffi.ptrFromAddress(_src: buffer)
+function ffi.ptrFromAddress(_src: buffer): any
 	error("ffi.ptrFromAddress is not supported on Eryx")
 end
 
-function ffi.tagName(_tag: number)
+function ffi.tagName(_tag: number): any
 	error("ffi.tagName is not supported on Eryx")
 end
 
-function ffi.getLuaState(_mainthread: boolean?)
+function ffi.getLuaState(_mainthread: boolean?): any
 	error("ffi.getLuaState is not supported on Eryx")
 end
 
