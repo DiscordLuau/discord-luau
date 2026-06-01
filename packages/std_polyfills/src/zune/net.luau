@@ -34,7 +34,8 @@ function net.request(config: string | {
 	headers: { [string]: string }?,
 })
 	local url: string
-	local opts: { method: string?, headers: { [string]: string }?, body: (string | buffer)? } = {}
+	local opts: { method: string?, headers: { [string]: string }?, body: (string | buffer)?, max_body_size: number? } =
+		{}
 
 	if type(config) == "string" then
 		url = config
