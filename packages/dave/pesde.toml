@@ -8,7 +8,6 @@ pesde_version = "0.7.0-rc.7"
 
 includes = [
     "src/**/*",
-    "binaries/**/*",
     "pesde.toml",
     "LICENSE",
     "README.md",
@@ -24,5 +23,6 @@ lib = "src/init.luau"
 default = "https://github.com/pesde-pkg/index"
 
 [dependencies]
-std_polyfills = { workspace = "discord_luau/std_polyfills" }
+binary = { workspace = "discord_luau/binary" }
 logger = { workspace = "discord_luau/logger" }
+std_polyfills = { workspace = "discord_luau/std_polyfills" }
