@@ -101,7 +101,7 @@ function Sticker.Prototype.sync(self: Sticker, stickerData: apiTypes.StickerObje
 
 	self.type = apiTypes.sticker.StickerTypes[stickerData.type]
 
-	self.formatType = apiTypes.sticker.StickerFormatType[stickerData.format_type]
+	self.formatType = apiTypes.sticker.StickerFormatTypes[stickerData.format_type]
 
 	self.available = stickerData.available
 
