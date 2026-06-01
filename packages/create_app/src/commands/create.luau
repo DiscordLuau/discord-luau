@@ -198,9 +198,14 @@ return command
 				)
 			end
 
-			if info.UseGit == "Yes" then
+			if information.UseGit == "Yes" then
 				setStatus("Running git init…", 0.65)
-				local gitInitResult = StdPolyfills.process.run("git", { "init" }, { cwd = projectPath })
+
+				local gitOk, gitInitResult = pcall(StdPolyfills.process.run, "git", { "init" }, { cwd = projectPath })
+
+				if not gitOk then
+					error("git is not installed or not in PATH")
+				end
 
 				if not gitInitResult.ok then
 					local output = processOutput(gitInitResult)
