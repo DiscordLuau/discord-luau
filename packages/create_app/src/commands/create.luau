@@ -31,14 +31,17 @@ type Information = {
 
 local function stripBanners(output: string): string
 	local lines = {}
+
 	for line in string.gmatch(output .. "\n", "([^\n]*)\n") do
 		if not string.match(line, "^[%s]*┃") then
 			table.insert(lines, line)
 		end
 	end
+
 	while #lines > 0 and string.match(lines[#lines], "^%s*$") do
 		table.remove(lines)
 	end
+
 	return table.concat(lines, "\n")
 end
 
@@ -46,18 +49,21 @@ local function processOutput(result: any): string
 	local parts = {}
 	local cleanStdout = stripBanners(result.stdout or "")
 	local cleanStderr = stripBanners(result.stderr or "")
+
 	if #cleanStdout > 0 then
 		table.insert(parts, cleanStdout)
 	end
+
 	if #cleanStderr > 0 then
 		table.insert(parts, cleanStderr)
 	end
+
 	return table.concat(parts, "\n")
 end
 
 local function resolveDirectory(directory: string?): string?
 	if not directory or directory == "." then
-		return StdPolyfills.process.getCwd()
+		return StdPolyfills.process.getEnv()["DISCORD_LUAU_CWD"] or StdPolyfills.process.getCwd()
 	end
 
 	local platform = StdPolyfills.process.getPlatform()
@@ -120,9 +126,9 @@ end
 
 local function setupProject(path: string, projectFile: string, information: Information)
 	local platform = StdPolyfills.process.getPlatform()
-	local sep = OS_SLASH_MAP[platform] or "/"
+	local separator = OS_SLASH_MAP[platform] or "/"
 	local directoryName = string.match(information.ProjectName, "[^/]+$") or information.ProjectName
-	local projectRoot = path .. sep .. directoryName
+	local projectRoot = path .. separator .. directoryName
 
 	if StdPolyfills.fileSystem.isDir(projectRoot) then
 		error(`Directory '{projectRoot}' already exists - aborting project creation!`)
@@ -136,7 +142,7 @@ local function setupProject(path: string, projectFile: string, information: Info
 
 	local projectMap: VDirectory = (require :: any)(`./../projects/{projectFile}`)
 
-	buildProjectMap(projectMap, projectRoot, information, sep)
+	buildProjectMap(projectMap, projectRoot, information, separator)
 
 	Logger:debug(`Finished setting up project in the following dir: '{projectRoot}'`)
 end
@@ -153,7 +159,6 @@ return command
 				`create_app must be run with the Zune runtime (detected: '{currentRuntime}'). `
 					.. `Please run this tool via 'pesde x discord_luau/create_app', which will invoke Zune automatically.`
 			)
-
 			return
 		end
 
@@ -214,6 +219,7 @@ return command
 			end
 
 			setStatus("Running pesde install…", 0.80)
+
 			local pesdeResult = StdPolyfills.process.run("pesde", { "install" }, { cwd = projectPath })
 
 			if not pesdeResult.ok then
