@@ -5,9 +5,28 @@ name = "discord_luau/sodium"
 version = "0.0.1"
 target = "luau"
 
+[graph."discord_luau/binary@0.0.1 luau"]
+direct = ["binary", { workspace = "discord_luau/binary", version = "^" }, "standard"]
+
+[graph."discord_luau/binary@0.0.1 luau".dependencies]
+sha256 = ["kimpure/sha256@0.1.1 luau", "standard"]
+std_polyfills = ["discord_luau/std_polyfills@0.0.1 luau", "standard"]
+
+[graph."discord_luau/binary@0.0.1 luau".pkg_ref]
+ref_ty = "workspace"
+path = "packages/binary"
+
+[graph."discord_luau/binary@0.0.1 luau".pkg_ref.dependencies]
+sha256 = [{ name = "kimpure/sha256", version = "^0.1.1", index = "https://github.com/pesde-pkg/index" }, "standard"]
+std_polyfills = [{ workspace = "discord_luau/std_polyfills", version = "^" }, "standard"]
+
 [graph."discord_luau/std_polyfills@0.0.1 luau"]
 direct = ["std_polyfills", { workspace = "discord_luau/std_polyfills", version = "^" }, "standard"]
 
 [graph."discord_luau/std_polyfills@0.0.1 luau".pkg_ref]
 ref_ty = "workspace"
 path = "packages/std_polyfills"
+
+[graph."kimpure/sha256@0.1.1 luau".pkg_ref]
+ref_ty = "pesde"
+index_url = "https://github.com/pesde-pkg/index"

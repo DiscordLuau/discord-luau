@@ -11,6 +11,9 @@ luau = "packages/accumulator"
 [workspace."discord_luau/api_types"]
 luau = "packages/api_types"
 
+[workspace."discord_luau/binary"]
+luau = "packages/binary"
+
 [workspace."discord_luau/bit"]
 luau = "packages/bit"
 
