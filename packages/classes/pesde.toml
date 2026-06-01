@@ -1,12 +1,19 @@
 name = "discord_luau/classes"
-version = "0.0.1"
+version = "0.0.2"
 description = "Discord-Luau Classes - Objects that wrap around various discord API structures."
 license = "MIT"
 authors = ["Async Matrix <hi@asyncmatrix.dev>"]
 repository = "https://github.com/DiscordLuau/discord-luau/tree/main/packages/classes"
 pesde_version = "0.7.0-rc.7"
 
-includes = ["src/**/*", "pesde.toml", "LICENSE", "README.md", "CONTRIBUTING.md", "patches/**/*"]
+includes = [
+    "src/**/*",
+    "pesde.toml",
+    "LICENSE",
+    "README.md",
+    "CONTRIBUTING.md",
+    "patches/**/*",
+]
 
 [target]
 environment = "luau"
