@@ -249,7 +249,7 @@ local checksums: { [string]: string } = {
 local result = binary.load({
 	id = "libdave",
 	version = "0.0.1",
-	url = "https://github.com/DiscordLuau/discord-luau/raw/refs/tags/dave-{version}/packages/dave/binaries/{os}-{arch}/libdave{ext}",
+	url = "https://raw.githubusercontent.com/DiscordLuau/discord-luau/refs/tags/dave-{version}/packages/dave/binaries/{os}-{arch}/libdave{ext}",
 	checksum = checksums[`{platform}-{architecture}`] or error(`Unsupported platform '{platform}-{architecture}' for libdave`),
 })
 

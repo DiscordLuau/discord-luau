@@ -61,7 +61,7 @@ local checksums: { [string]: string } = {
 local result = binary.load({
 	id = "libopus",
 	version = "0.0.1",
-	url = "https://github.com/DiscordLuau/discord-luau/raw/refs/tags/opus-{version}/packages/opus/binaries/{os}-{arch}/libopus{ext}",
+	url = "https://raw.githubusercontent.com/DiscordLuau/discord-luau/refs/tags/opus-{version}/packages/opus/binaries/{os}-{arch}/libopus{ext}",
 	checksum = checksums[`{platform}-{architecture}`] or error(`Unsupported platform '{platform}-{architecture}' for libopus`),
 })
 
