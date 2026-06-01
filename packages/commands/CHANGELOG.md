@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- `FutureLike` return casts in `waitForComponent` and `waitForModal` now go through `any` to satisfy strict type analysis
+
 ## 0.0.1
 
 - Initial release on Pesde. Package versioning is now managed through CI.
