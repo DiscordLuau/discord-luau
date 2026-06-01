@@ -122,11 +122,11 @@ local function setupProject(path: string, projectFile: string, information: Info
 	local projectRoot = path .. sep .. directoryName
 
 	if StdPolyfills.fileSystem.isDir(projectRoot) then
-		return Logger:error(`Directory '{projectRoot}' already exists - aborting project creation!`)
+		error(`Directory '{projectRoot}' already exists - aborting project creation!`)
 	end
 
 	if StdPolyfills.fileSystem.isFile(projectRoot) then
-		return Logger:error(`Directory '{projectRoot}' already exists (as a file) - aborting project creation!`)
+		error(`Directory '{projectRoot}' already exists (as a file) - aborting project creation!`)
 	end
 
 	StdPolyfills.fileSystem.writeDir(projectRoot)
