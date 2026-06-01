@@ -87,7 +87,7 @@ local ReactionType = table.freeze(util.tableReflect({
 }))
 
 local MessageFlags = table.freeze({
-	IsComponentsV2 = bit.lshift(1, 15),
+	IsComponentsV2 = bit.lshift("1", 15),
 })
 
 export type MessageType =
