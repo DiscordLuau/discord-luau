@@ -78,7 +78,7 @@ return function()
 
 	test.case("Message flags are combined with bor", function()
 		local m = Message.new()
-		m:setFlags(4):setFlags(8)
+		m:setFlags("4"):setFlags("8")
 		local json = m:build()
 
 		check.equal(json.flags, 12)

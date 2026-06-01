@@ -5,7 +5,6 @@ local Intents = intents
 local test = frktest.test
 local check = frktest.assert.check
 
--- Require dependencies for expected value calculation.
 local apiTypes = require("../luau_packages/api_types")
 local bit = require("../luau_packages/bit")
 
@@ -16,8 +15,10 @@ return function()
 		builder:addIntent("GuildMessages")
 		local built = builder:build()
 
-		local expected = bit.lshift(1, apiTypes.gateway.intents.GuildMembers)
-			+ bit.lshift(1, apiTypes.gateway.intents.GuildMessages)
+		local expected = tonumber(bit.bor(
+			bit.lshift("1", apiTypes.gateway.intents.GuildMembers),
+			bit.lshift("1", apiTypes.gateway.intents.GuildMessages)
+		))
 		check.equal(built, expected)
 	end)
 

@@ -10,7 +10,7 @@ return function()
 
 		permission:setPermissionBitflag(12345)
 
-		check.equal(permission.bitflag, 12345)
+		check.equal(permission.bitflag, "12345")
 
 		local builtBitflag = permission:build()
 		check.equal(builtBitflag, "12345")
@@ -46,7 +46,7 @@ return function()
 		check.should_not_error(function()
 			permission:setPermissionBitflag(12345):addPermission("ManageChannels"):removePermission("Administrator")
 
-			check.equal(permission.bitflag, 12345)
+			check.equal(permission.bitflag, "12345")
 
 			return permission
 		end)
