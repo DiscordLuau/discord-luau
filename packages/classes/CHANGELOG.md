@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- All bitflag classes (`ApplicationBitflag`, `AttachmentBitflag`, `ChannelBitflag`, `GuildMemberBitflag`, `MessageBitflag`, `RoleBitflag`, `SystemChannelBitflag`) now store `flag` internally as a `string` - constructors still accept `number` from JSON and convert via `tostring`
+- `Permission` class now stores the permission bitfield as a `string` rather than `number`, matching Discord's own representation
+- Shard calculation in `VoiceBehaviour.joinAsync` now passes the guild snowflake string directly to the bit library instead of calling `tonumber` first
+
 ## 0.0.2
 
 ### Fixed
