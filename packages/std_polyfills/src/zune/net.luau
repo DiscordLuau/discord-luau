@@ -52,6 +52,8 @@ function net.request(config: string | {
 		end
 	end
 
+	opts.max_body_size = 1024 * 1024 * 256
+
 	local response = zuneNet.http.request(url, opts :: any)
 
 	return {
