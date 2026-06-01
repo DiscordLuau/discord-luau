@@ -8,7 +8,7 @@
 ]=]
 
 --[=[
-	@prop flag number
+	@prop flag string
 	@within Classes.AttachmentBitflag
 	The bitfield representing the attachment flags.
 ]=]
@@ -21,18 +21,12 @@ AttachmentBitflag.Interface = {}
 AttachmentBitflag.Prototype = {}
 
 --[=[
-	@prop flag number
-	@within Classes.AttachmentBitflag
-	The bitfield representing the attachment flags.
-]=]
-
---[=[
 	@within Classes.AttachmentBitflag
 
 	This attachment has been edited using the remix feature on mobile
 ]=]
 function AttachmentBitflag.Prototype.isRemix(self: AttachmentBitflag): boolean
-	local targetBit = bit.lshift(1, 2)
+	local targetBit = bit.lshift("1", 2)
 
 	return bit.band(self.flag, targetBit) == targetBit
 end
@@ -45,7 +39,7 @@ end
 function AttachmentBitflag.Interface.new(flag: number): AttachmentBitflag
 	local self = setmetatable(
 		{
-			flag = flag,
+			flag = tostring(flag),
 		} :: AttachmentBitflag,
 		{ __index = AttachmentBitflag.Prototype }
 	)
@@ -54,7 +48,7 @@ function AttachmentBitflag.Interface.new(flag: number): AttachmentBitflag
 end
 
 export type AttachmentBitflag = typeof(AttachmentBitflag.Prototype) & {
-	flag: number,
+	flag: string,
 }
 
 return AttachmentBitflag.Interface

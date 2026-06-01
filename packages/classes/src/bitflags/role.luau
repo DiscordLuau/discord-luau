@@ -8,7 +8,7 @@
 ]=]
 
 --[=[
-	@prop flag number
+	@prop flag string
 	@within Classes.RoleBitflag
 ]=]
 
@@ -25,7 +25,7 @@ RoleBitflag.Prototype = {}
 	Checks if the role is in an onboarding prompt.
 ]=]
 function RoleBitflag.Prototype.isInOnboardingPrompt(self: RoleBitflag)
-	local targetBit = bit.lshift(1, 0)
+	local targetBit = bit.lshift("1", 0)
 
 	return bit.band(self.flag, targetBit) == targetBit
 end
@@ -38,7 +38,7 @@ end
 function RoleBitflag.Interface.new(flag: number): RoleBitflag
 	local self = setmetatable(
 		{
-			flag = flag,
+			flag = tostring(flag),
 		} :: RoleBitflag,
 		{ __index = RoleBitflag.Prototype }
 	)
@@ -47,7 +47,7 @@ function RoleBitflag.Interface.new(flag: number): RoleBitflag
 end
 
 export type RoleBitflag = typeof(RoleBitflag.Prototype) & {
-	flag: number,
+	flag: string,
 }
 
 return RoleBitflag.Interface

@@ -8,7 +8,7 @@
 ]=]
 
 --[=[
-	@prop flag number
+	@prop flag string
 	@within Classes.Channels.ChannelBitflag
 ]=]
 
@@ -25,7 +25,7 @@ ChannelBitflag.Prototype = {}
 	if this thread is pinned to the top of its parent GUILD_FORUM or GUILD_MEDIA channel
 ]=]
 function ChannelBitflag.Prototype.isPinned(self: ChannelBitflag)
-	local targetBit = bit.lshift(1, 1)
+	local targetBit = bit.lshift("1", 1)
 
 	return bit.band(self.flag, targetBit) == targetBit
 end
@@ -37,7 +37,7 @@ end
 	GUILD_FORUM or a GUILD_MEDIA channel. Tags are specified in the applied_tags field.
 ]=]
 function ChannelBitflag.Prototype.requiresTag(self: ChannelBitflag)
-	local targetBit = bit.lshift(1, 4)
+	local targetBit = bit.lshift("1", 4)
 
 	return bit.band(self.flag, targetBit) == targetBit
 end
@@ -48,7 +48,7 @@ end
 	When set hides the embedded media download options. Available only for media channels
 ]=]
 function ChannelBitflag.Prototype.hideMediaDownloadOptions(self: ChannelBitflag)
-	local targetBit = bit.lshift(1, 15)
+	local targetBit = bit.lshift("1", 15)
 
 	return bit.band(self.flag, targetBit) == targetBit
 end
@@ -61,7 +61,7 @@ end
 function ChannelBitflag.Interface.new(flag: number): ChannelBitflag
 	local self = setmetatable(
 		{
-			flag = flag,
+			flag = tostring(flag),
 		} :: ChannelBitflag,
 		{ __index = ChannelBitflag.Prototype }
 	)
@@ -70,7 +70,7 @@ function ChannelBitflag.Interface.new(flag: number): ChannelBitflag
 end
 
 export type ChannelBitflag = typeof(ChannelBitflag.Prototype) & {
-	flag: number,
+	flag: string,
 }
 
 return ChannelBitflag.Interface

@@ -8,7 +8,7 @@
 ]=]
 
 --[=[
-	@prop flag number
+	@prop flag string
 	@within Classes.GuildMemberBitflag
 ]=]
 
@@ -25,7 +25,7 @@ GuildMemberBitflag.Prototype = {}
 	Member has left and rejoined the guild	
 ]=]
 function GuildMemberBitflag.Prototype.didRejoin(self: GuildMemberBitflag)
-	local targetBit = bit.lshift(1, 0)
+	local targetBit = bit.lshift("1", 0)
 
 	return bit.band(self.flag, targetBit) == targetBit
 end
@@ -36,7 +36,7 @@ end
 	Member has completed onboarding	
 ]=]
 function GuildMemberBitflag.Prototype.completedOnboarding(self: GuildMemberBitflag)
-	local targetBit = bit.lshift(1, 1)
+	local targetBit = bit.lshift("1", 1)
 
 	return bit.band(self.flag, targetBit) == targetBit
 end
@@ -47,7 +47,7 @@ end
 	Member is exempt from guild verification requirements	
 ]=]
 function GuildMemberBitflag.Prototype.bypassesVerification(self: GuildMemberBitflag)
-	local targetBit = bit.lshift(1, 2)
+	local targetBit = bit.lshift("1", 2)
 
 	return bit.band(self.flag, targetBit) == targetBit
 end
@@ -58,7 +58,7 @@ end
 	Member has started onboarding	
 ]=]
 function GuildMemberBitflag.Prototype.startedOnboarding(self: GuildMemberBitflag)
-	local targetBit = bit.lshift(1, 3)
+	local targetBit = bit.lshift("1", 3)
 
 	return bit.band(self.flag, targetBit) == targetBit
 end
@@ -71,7 +71,7 @@ end
 function GuildMemberBitflag.Interface.new(flag: number): GuildMemberBitflag
 	local self = setmetatable(
 		{
-			flag = flag,
+			flag = tostring(flag),
 		} :: GuildMemberBitflag,
 		{ __index = GuildMemberBitflag.Prototype }
 	)
@@ -80,7 +80,7 @@ function GuildMemberBitflag.Interface.new(flag: number): GuildMemberBitflag
 end
 
 export type GuildMemberBitflag = typeof(GuildMemberBitflag.Prototype) & {
-	flag: number,
+	flag: string,
 }
 
 return GuildMemberBitflag.Interface

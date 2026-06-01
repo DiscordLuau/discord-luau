@@ -8,7 +8,7 @@
 ]=]
 
 --[=[
-	@prop flag number
+	@prop flag string
 	@within Classes.SystemChannelBitflag
 	The bitfield representing the system channel flags.
 ]=]
@@ -26,7 +26,7 @@ SystemChannelBitflag.Prototype = {}
 	Returns if the system channel has the suppress join notifications bitflag set.
 ]=]
 function SystemChannelBitflag.Prototype.suppressJoinNotifications(self: SystemChannelBitflag): boolean
-	local targetBit = bit.lshift(1, 0)
+	local targetBit = bit.lshift("1", 0)
 
 	return bit.band(self.flag, targetBit) == targetBit
 end
@@ -37,7 +37,7 @@ end
 	Returns if the system channel has the suppress premium subscriptions bitflag set.
 ]=]
 function SystemChannelBitflag.Prototype.suppressPremiumSubscriptions(self: SystemChannelBitflag): boolean
-	local targetBit = bit.lshift(1, 1)
+	local targetBit = bit.lshift("1", 1)
 
 	return bit.band(self.flag, targetBit) == targetBit
 end
@@ -48,7 +48,7 @@ end
 	Returns if the system channel has the suppress guild reminder notifications bitflag set.
 ]=]
 function SystemChannelBitflag.Prototype.suppressGuildReminderNotifications(self: SystemChannelBitflag): boolean
-	local targetBit = bit.lshift(1, 2)
+	local targetBit = bit.lshift("1", 2)
 
 	return bit.band(self.flag, targetBit) == targetBit
 end
@@ -59,7 +59,7 @@ end
 	Returns if the system channel has the suppress join notification replies bitflag set.
 ]=]
 function SystemChannelBitflag.Prototype.suppressJoinNotificationReplies(self: SystemChannelBitflag): boolean
-	local targetBit = bit.lshift(1, 3)
+	local targetBit = bit.lshift("1", 3)
 
 	return bit.band(self.flag, targetBit) == targetBit
 end
@@ -72,7 +72,7 @@ end
 function SystemChannelBitflag.Prototype.suppressRoleSubscriptionPurchaseNotifications(
 	self: SystemChannelBitflag
 ): boolean
-	local targetBit = bit.lshift(1, 4)
+	local targetBit = bit.lshift("1", 4)
 
 	return bit.band(self.flag, targetBit) == targetBit
 end
@@ -85,7 +85,7 @@ end
 function SystemChannelBitflag.Prototype.suppressRoleSubscriptionPurchaseNotificationReplies(
 	self: SystemChannelBitflag
 ): boolean
-	local targetBit = bit.lshift(1, 5)
+	local targetBit = bit.lshift("1", 5)
 
 	return bit.band(self.flag, targetBit) == targetBit
 end
@@ -98,7 +98,7 @@ end
 function SystemChannelBitflag.Interface.new(flag: number): SystemChannelBitflag
 	local self = setmetatable(
 		{
-			flag = flag,
+			flag = tostring(flag),
 		} :: SystemChannelBitflag,
 		{ __index = SystemChannelBitflag.Prototype }
 	)
@@ -107,7 +107,7 @@ function SystemChannelBitflag.Interface.new(flag: number): SystemChannelBitflag
 end
 
 export type SystemChannelBitflag = typeof(SystemChannelBitflag.Prototype) & {
-	flag: number,
+	flag: string,
 }
 
 return SystemChannelBitflag.Interface
