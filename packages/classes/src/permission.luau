@@ -8,7 +8,7 @@
 ]=]
 
 --[=[
-	@prop permission number
+	@prop permission string
 	@within Classes.Permission
 	The permission bitfield representing the permissions granted.
 ]=]
@@ -62,7 +62,7 @@ end
 function Permission.Interface.new(permission: string): Permission
 	local self = setmetatable(
 		{
-			permission = tonumber(permission),
+			permission = permission,
 		} :: Permission,
 		{ __index = Permission.Prototype }
 	)
@@ -71,7 +71,7 @@ function Permission.Interface.new(permission: string): Permission
 end
 
 export type Permission = typeof(Permission.Prototype) & {
-	permission: number,
+	permission: string,
 }
 
 return Permission.Interface
