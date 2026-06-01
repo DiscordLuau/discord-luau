@@ -1,0 +1,50 @@
+name: Tag Packages
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "packages/*/pesde.toml"
+
+permissions:
+  contents: write
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Tag updated packages
+        run: |
+          BEFORE="${{ github.event.before }}"
+          AFTER="${{ github.event.after }}"
+
+          if [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+            echo "Initial push, skipping"
+            exit 0
+          fi
+
+          CHANGED=$(git diff --name-only "$BEFORE" "$AFTER" -- 'packages/*/pesde.toml')
+
+          for file in $CHANGED; do
+            name=$(grep '^name' "$file" | sed 's/name = "\(.*\)"/\1/' | sed 's|.*/||')
+            version=$(grep '^version' "$file" | sed 's/version = "\(.*\)"/\1/')
+            tag="${name}-${version}"
+
+            if git tag "$tag" 2>/dev/null; then
+              echo "Created tag: $tag"
+              git push origin "$tag"
+            else
+              echo "Tag $tag already exists, skipping"
+            fi
+          done
