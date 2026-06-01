@@ -34,7 +34,7 @@ end
 
 	Defers a thread or function to run at the end of the current task queue.
 ]=]
-function task.defer<T...>(functionOrThread: thread | (T...) -> ...any, ...: T...): thread
+function task.defer<T...>(functionOrThread: thread | (T...) -> ...any, ...: any): thread
 	local target = runtime.assertRuntime()
 
 	if target == "Lune" then
@@ -57,7 +57,7 @@ end
 
 	Delays a thread or function to run after duration seconds.
 ]=]
-function task.delay<T...>(duration: number, functionOrThread: thread | (T...) -> ...any, ...: T...): thread
+function task.delay<T...>(duration: number, functionOrThread: thread | (T...) -> ...any, ...: any): thread
 	local target = runtime.assertRuntime()
 
 	if target == "Lune" then
@@ -83,7 +83,7 @@ end
 	If the spawned task yields, the thread that spawned the task will resume, letting the spawned task run in the
 		background.
 ]=]
-function task.spawn<T...>(functionOrThread: thread | (T...) -> ...any, ...: T...): thread
+function task.spawn<T...>(functionOrThread: thread | (T...) -> ...any, ...: any): thread
 	local target = runtime.assertRuntime()
 
 	if target == "Lune" then
