@@ -2,8 +2,12 @@
 # It is not intended for manual editing.
 format = 2
 name = "discord_luau/classes"
-version = "0.0.1"
+version = "0.0.2"
 target = "luau"
+
+[graph."4x8matrix/int64@1.0.1 luau".pkg_ref]
+ref_ty = "pesde"
+index_url = "https://github.com/pesde-pkg/index"
 
 [graph."discord_luau/accumulator@0.0.1 luau".pkg_ref]
 ref_ty = "workspace"
@@ -39,9 +43,15 @@ std_polyfills = [{ workspace = "discord_luau/std_polyfills", version = "^" }, "s
 [graph."discord_luau/bit@0.0.1 luau"]
 direct = ["bit", { workspace = "discord_luau/bit", version = "^" }, "standard"]
 
+[graph."discord_luau/bit@0.0.1 luau".dependencies]
+int64 = ["4x8matrix/int64@1.0.1 luau", "standard"]
+
 [graph."discord_luau/bit@0.0.1 luau".pkg_ref]
 ref_ty = "workspace"
 path = "packages/bit"
+
+[graph."discord_luau/bit@0.0.1 luau".pkg_ref.dependencies]
+int64 = [{ name = "4x8matrix/int64", version = "^1.0.1", index = "https://github.com/pesde-pkg/index" }, "standard"]
 
 [graph."discord_luau/builders@0.0.1 luau"]
 direct = ["builders", { workspace = "discord_luau/builders", version = "^" }, "standard"]
@@ -144,15 +154,15 @@ std_polyfills = [{ workspace = "discord_luau/std_polyfills", version = "^" }, "s
 ref_ty = "workspace"
 path = "packages/secret"
 
-[graph."discord_luau/sodium@0.0.1 luau".dependencies]
+[graph."discord_luau/sodium@0.0.2 luau".dependencies]
 binary = ["discord_luau/binary@0.0.1 luau", "standard"]
 std_polyfills = ["discord_luau/std_polyfills@0.0.1 luau", "standard"]
 
-[graph."discord_luau/sodium@0.0.1 luau".pkg_ref]
+[graph."discord_luau/sodium@0.0.2 luau".pkg_ref]
 ref_ty = "workspace"
 path = "packages/sodium"
 
-[graph."discord_luau/sodium@0.0.1 luau".pkg_ref.dependencies]
+[graph."discord_luau/sodium@0.0.2 luau".pkg_ref.dependencies]
 binary = [{ workspace = "discord_luau/binary", version = "^" }, "standard"]
 std_polyfills = [{ workspace = "discord_luau/std_polyfills", version = "^" }, "standard"]
 
@@ -212,7 +222,7 @@ future = ["yetanotherclown/luau_futures@2.0.0-beta.3 luau", "standard"]
 logger = ["discord_luau/logger@0.0.1 luau", "standard"]
 opus = ["discord_luau/opus@0.0.1 luau", "standard"]
 secret = ["discord_luau/secret@0.0.1 luau", "standard"]
-sodium = ["discord_luau/sodium@0.0.1 luau", "standard"]
+sodium = ["discord_luau/sodium@0.0.2 luau", "standard"]
 std_polyfills = ["discord_luau/std_polyfills@0.0.1 luau", "standard"]
 util = ["discord_luau/util@0.0.1 luau", "standard"]
 websocket = ["discord_luau/websocket@0.0.1 luau", "standard"]

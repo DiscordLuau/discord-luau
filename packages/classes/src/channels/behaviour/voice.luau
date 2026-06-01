@@ -106,7 +106,7 @@ function VoiceBehaviour.Prototype.joinAsync<T>(self: VoiceChannel<T>): future.Fu
 		local shardId: number
 
 		if self.guildId and self.guildId ~= "" then
-			shardId = bit.rshift(tonumber(self.guildId) :: number, 22) % shardCount
+			shardId = tonumber(bit.rshift(self.guildId, 22)) % shardCount
 		else
 			shardId = 0
 		end
