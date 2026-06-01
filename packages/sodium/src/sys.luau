@@ -73,6 +73,7 @@
 	@within Sodium.Sys
 ]=]
 
+local binary = require("../luau_packages/binary")
 local stdPolyfills = require("../luau_packages/std_polyfills")
 
 if not stdPolyfills.runtime.capabilities().ffi then
@@ -434,19 +435,27 @@ export type Lib = {
 	) -> number,
 }
 
-local os = stdPolyfills.process.getPlatform()
-local arch = stdPolyfills.process.getArch()
+local platform = stdPolyfills.process.getPlatform()
+local architecture = if stdPolyfills.process.getArch() == "aarch64" then "arm64" else "x64"
 
-local osName = if os == "linux" then "Linux" elseif os == "macos" then "macOS" else "Windows"
-local archName = if arch == "aarch64" then "ARM64" else "X64"
-local subdir = if os == "windows" then "bin" else "lib"
-local ext = if os == "linux" then "so" elseif os == "macos" then "dylib" else "dll"
+local checksums: { [string]: string } = {
+	["linux-arm64"] = "sha256:dccbbedba8d50c4dca0061d4255e3cc6ff11e3def564b3b4ac0efac3da22b915",
+	["linux-x64"] = "sha256:13373e2914d27a8796568de878e62242f1076dc9c05ee6c6e31c71df829c10e2",
+	["macos-arm64"] = "sha256:f8d4e805cc5426b11eaad5d8782f38a414b4666868e019526ff7228439433b35",
+	["macos-x64"] = "sha256:391fd170b4dc52f91a9c123e12e55bcdb75b320e88f79df654250a2171db6dca",
+	["windows-x64"] = "sha256:5d3c25465c54982538797b191de224c6c26a8b638b320e39d76ea475bf5c4d10",
+}
 
-local libPath = `{zune.require.navigate("../binaries")}/{osName}-{archName}/{subdir}/libsodium.{ext}`
+local result = binary.load({
+	id = "libsodium",
+	version = "0.0.1",
+	url = "https://github.com/DiscordLuau/discord-luau/raw/refs/tags/sodium-{version}/packages/sodium/binaries/{os}-{arch}/libsodium{ext}",
+	checksum = checksums[`{platform}-{architecture}`] or error(`Unsupported platform '{platform}-{architecture}' for libsodium`),
+})
 
 local lib = (
-	stdPolyfills.ffi.dlopen(libPath, {
-		-- ── AEAD: AES-256-GCM ────────────────────────────────────────────────
+	stdPolyfills.ffi.dlopen(result.path, {
+		--  AEAD: AES-256-GCM
 
 		crypto_aead_aes256gcm_is_available = { returns = i32, args = {} },
 		crypto_aead_aes256gcm_keygen = { returns = void, args = { pointer } },
@@ -467,7 +476,7 @@ local lib = (
 			args = { pointer, pointer, pointer, cSizeT, pointer, pointer, cSizeT, pointer, pointer },
 		},
 
-		-- ── AEAD: ChaCha20-Poly1305 (IETF) ───────────────────────────────────
+		--  AEAD: ChaCha20-Poly1305 (IETF)
 
 		crypto_aead_chacha20poly1305_ietf_keygen = { returns = void, args = { pointer } },
 		crypto_aead_chacha20poly1305_ietf_encrypt = {
@@ -487,7 +496,7 @@ local lib = (
 			args = { pointer, pointer, pointer, cSizeT, pointer, pointer, cSizeT, pointer, pointer },
 		},
 
-		-- ── AEAD: XChaCha20-Poly1305 ─────────────────────────────────────────
+		--  AEAD: XChaCha20-Poly1305
 
 		crypto_aead_xchacha20poly1305_ietf_keygen = { returns = void, args = { pointer } },
 		crypto_aead_xchacha20poly1305_ietf_encrypt = {
@@ -507,7 +516,7 @@ local lib = (
 			args = { pointer, pointer, pointer, cSizeT, pointer, pointer, cSizeT, pointer, pointer },
 		},
 
-		-- ── Secret-key authenticated encryption ──────────────────────────────
+		--  Secret-key authenticated encryption
 
 		crypto_secretbox_keygen = { returns = void, args = { pointer } },
 		crypto_secretbox_easy = { returns = i32, args = { pointer, pointer, cSizeT, pointer, pointer } },
@@ -518,7 +527,7 @@ local lib = (
 			args = { pointer, pointer, pointer, cSizeT, pointer, pointer },
 		},
 
-		-- ── Public-key authenticated encryption ──────────────────────────────
+		--  Public-key authenticated encryption
 
 		crypto_box_keypair = { returns = i32, args = { pointer, pointer } },
 		crypto_box_beforenm = { returns = i32, args = { pointer, pointer, pointer } },
@@ -535,14 +544,14 @@ local lib = (
 		crypto_box_easy_afternm = { returns = i32, args = { pointer, pointer, cSizeT, pointer, pointer } },
 		crypto_box_open_easy_afternm = { returns = i32, args = { pointer, pointer, cSizeT, pointer, pointer } },
 
-		-- ── Signatures (Ed25519) ──────────────────────────────────────────────
+		--  Signatures (Ed25519)
 
 		crypto_sign_keypair = { returns = i32, args = { pointer, pointer } },
 		crypto_sign_ed25519_sk_to_pk = { returns = i32, args = { pointer, pointer } },
 		crypto_sign_detached = { returns = i32, args = { pointer, pointer, pointer, cSizeT, pointer } },
 		crypto_sign_verify_detached = { returns = i32, args = { pointer, pointer, cSizeT, pointer } },
 
-		-- ── Generic hash (BLAKE2b) ────────────────────────────────────────────
+		--  Generic hash (BLAKE2b)
 
 		crypto_generichash_statebytes = { returns = cSizeT, args = {} },
 		crypto_generichash = { returns = i32, args = { pointer, cSizeT, pointer, cSizeT, pointer, cSizeT } },
@@ -550,35 +559,35 @@ local lib = (
 		crypto_generichash_update = { returns = i32, args = { pointer, pointer, cSizeT } },
 		crypto_generichash_final = { returns = i32, args = { pointer, pointer, cSizeT } },
 
-		-- ── Hash (SHA-256 / SHA-512) ──────────────────────────────────────────
+		--  Hash (SHA-256 / SHA-512)
 
 		crypto_hash_sha256 = { returns = i32, args = { pointer, pointer, cSizeT } },
 		crypto_hash_sha512 = { returns = i32, args = { pointer, pointer, cSizeT } },
 
-		-- ── Authentication (HMAC-SHA512256) ───────────────────────────────────
+		--  Authentication (HMAC-SHA512256)
 
 		crypto_auth_keygen = { returns = void, args = { pointer } },
 		crypto_auth = { returns = i32, args = { pointer, pointer, cSizeT, pointer } },
 		crypto_auth_verify = { returns = i32, args = { pointer, pointer, cSizeT, pointer } },
 
-		-- ── Key derivation ────────────────────────────────────────────────────
+		--  Key derivation
 
 		crypto_kdf_keygen = { returns = void, args = { pointer } },
 		crypto_kdf_derive_from_key = { returns = i32, args = { pointer, cSizeT, u64, pointer, pointer } },
 
-		-- ── Password hashing (Argon2id) ───────────────────────────────────────
+		--  Password hashing (Argon2id)
 
 		crypto_pwhash = { returns = i32, args = { pointer, u64, pointer, u64, pointer, u64, cSizeT, i32 } },
 		crypto_pwhash_str = { returns = i32, args = { pointer, pointer, u64, u64, cSizeT } },
 		crypto_pwhash_str_verify = { returns = i32, args = { pointer, pointer, u64 } },
 		crypto_pwhash_str_needs_rehash = { returns = i32, args = { pointer, u64, cSizeT } },
 
-		-- ── Random bytes ──────────────────────────────────────────────────────
+		--  Random bytes
 
 		randombytes_buf = { returns = void, args = { pointer, cSizeT } },
 		randombytes_uniform = { returns = u32, args = { u32 } },
 
-		-- ── Utilities ─────────────────────────────────────────────────────────
+		--  Utilities
 
 		sodium_init = { returns = i32, args = {} },
 		sodium_memcmp = { returns = i32, args = { pointer, pointer, cSizeT } },
