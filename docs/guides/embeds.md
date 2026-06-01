@@ -9,7 +9,7 @@ Embeds are rich message attachments that can contain a title, description, field
 
 ## Prerequisites
 
-This guide uses the `onMessage` event. To match on `message.content` in your handler, add `"MessageContent"` to your intents — it is a privileged intent that must also be enabled in the [Discord Developer Portal](https://discord.com/developers/applications) under your application's **Bot** tab.
+This guide uses the `onMessage` event. To match on `message.content` in your handler, add `"MessageContent"` to your intents - it is a privileged intent that must also be enabled in the [Discord Developer Portal](https://discord.com/developers/applications) under your application's **Bot** tab.
 
 ## Building an embed
 

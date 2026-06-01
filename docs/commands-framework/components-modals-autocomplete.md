@@ -167,5 +167,5 @@ Both methods accept the same options:
 
 ## References
 
-- [Getting Started](/guides/commands-framework/getting-started) — setting up the commands instance
-- [Middleware & After Hooks](/guides/commands-framework/middleware-and-hooks) — pipeline that wraps component dispatch too
+- [Getting Started](/guides/commands-framework/getting-started) - setting up the commands instance
+- [Middleware & After Hooks](/guides/commands-framework/middleware-and-hooks) - pipeline that wraps component dispatch too

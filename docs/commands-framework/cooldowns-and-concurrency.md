@@ -60,7 +60,7 @@ The `per` field controls what the cooldown is keyed on.
 
 ## Multiple rules
 
-You can stack rules to enforce several limits at once. All rules are checked — the longest remaining cooldown wins.
+You can stack rules to enforce several limits at once. All rules are checked - the longest remaining cooldown wins.
 
 ```lua
 cooldown = {
@@ -126,5 +126,5 @@ local commandsManager = commands.new(bot, {
 
 ## References
 
-- [Guards & Permissions](/guides/commands-framework/guards-and-permissions) — blocking access before execution
-- [Middleware & After Hooks](/guides/commands-framework/middleware-and-hooks) — wrapping the full dispatch pipeline
+- [Guards & Permissions](/guides/commands-framework/guards-and-permissions) - blocking access before execution
+- [Middleware & After Hooks](/guides/commands-framework/middleware-and-hooks) - wrapping the full dispatch pipeline

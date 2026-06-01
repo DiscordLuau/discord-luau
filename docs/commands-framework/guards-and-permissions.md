@@ -34,7 +34,7 @@ return {
 | `commands.Guards.dmOnly` | Interaction is in a DM |
 | `commands.Guards.ownerOnly(ids)` | Invoking user's ID is in the provided list |
 
-`ownerOnly` is a factory — call it with a list of owner IDs:
+`ownerOnly` is a factory - call it with a list of owner IDs:
 
 ```lua
 guards = {
@@ -65,7 +65,7 @@ return {
 
 ## AND logic
 
-By default, guards in the list are AND — every guard must pass.
+By default, guards in the list are AND - every guard must pass.
 
 ```lua
 guards = {
@@ -76,7 +76,7 @@ guards = {
 
 ## OR logic
 
-Wrap guards in a nested table to express OR — at least one must pass.
+Wrap guards in a nested table to express OR - at least one must pass.
 
 ```lua
 guards = {
@@ -154,6 +154,6 @@ return {
 
 ## References
 
-- [Getting Started](/guides/commands-framework/getting-started) — basic setup
-- [Cooldowns & Concurrency](/guides/commands-framework/cooldowns-and-concurrency) — rate-limiting command usage
-- [Subcommands](/guides/commands-framework/subcommands) — per-subcommand guards
+- [Getting Started](/guides/commands-framework/getting-started) - basic setup
+- [Cooldowns & Concurrency](/guides/commands-framework/cooldowns-and-concurrency) - rate-limiting command usage
+- [Subcommands](/guides/commands-framework/subcommands) - per-subcommand guards

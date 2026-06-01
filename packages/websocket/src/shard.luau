@@ -979,7 +979,7 @@ function Shard.Interface.new(settings: {
 			self:reconnectAsync():poll()
 		elseif code == apiTypes.gateway.closeCodes.ShardingRequired then
 			self.logger:error(
-				`Shard '{self.shardId}', too many guilds for a single shard — increase your shard count and restart. [{code}]`
+				`Shard '{self.shardId}', too many guilds for a single shard - increase your shard count and restart. [{code}]`
 			)
 		elseif code == apiTypes.gateway.closeCodes.InvalidShard then
 			self.logger:error(

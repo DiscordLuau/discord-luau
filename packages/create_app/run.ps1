@@ -27,13 +27,13 @@ function Write-Err   { param($msg) Write-Host "[discord-luau] error: $msg" -Fore
 $missing = @()
 
 if (-not (Get-Command git   -ErrorAction SilentlyContinue)) {
-    $missing += "git   — https://git-scm.com/downloads"
+    $missing += "git   - https://git-scm.com/downloads"
 }
 if (-not (Get-Command zune  -ErrorAction SilentlyContinue)) {
-    $missing += "zune  — https://zune.sh/"
+    $missing += "zune  - https://zune.sh/"
 }
 if (-not (Get-Command pesde -ErrorAction SilentlyContinue)) {
-    $missing += "pesde — https://pesde.dev"
+    $missing += "pesde - https://pesde.dev"
 }
 
 if ($missing.Count -gt 0) {
@@ -85,7 +85,7 @@ if (-not $defaultDir) { $defaultDir = Join-Path $HOME "Documents" }
 
 $hasPathArg = $CreateAppArgs | Where-Object { -not $_.StartsWith("-") }
 if (-not $hasPathArg) {
-    Write-Warn "No output directory specified — defaulting to $defaultDir"
+    Write-Warn "No output directory specified - defaulting to $defaultDir"
     $CreateAppArgs += $defaultDir
 }
 

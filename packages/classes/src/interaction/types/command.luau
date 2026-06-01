@@ -263,7 +263,7 @@ end
 --[=[
 	@within Classes.Interactions.Command
 	Returns the partial channel for the named option, or nil if absent.
-	Channels in resolved data are partial — id, name, type, and permissions only.
+	Channels in resolved data are partial - id, name, type, and permissions only.
 ]=]
 function Command.Prototype.getChannel(self: Command, name: string): apiTypes.AbstractChannel?
 	local opt: any = self:getOption(name)

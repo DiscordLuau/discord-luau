@@ -68,7 +68,7 @@ end,
 
 ## Transforms
 
-Transforms run before `execute` and convert raw option values into processed results. This keeps your execute handler clean — it just reads the final value rather than doing parsing inline.
+Transforms run before `execute` and convert raw option values into processed results. This keeps your execute handler clean - it just reads the final value rather than doing parsing inline.
 
 Define a `transforms` table on the command, keyed by option name:
 
@@ -128,5 +128,5 @@ The first argument is the raw option value (equivalent to `interaction:getOption
 
 ## References
 
-- [Subcommands](/guides/commands-framework/subcommands) — per-subcommand transforms
-- [Getting Started](/guides/commands-framework/getting-started) — basic command setup
+- [Subcommands](/guides/commands-framework/subcommands) - per-subcommand transforms
+- [Getting Started](/guides/commands-framework/getting-started) - basic command setup

@@ -9,7 +9,7 @@ The commands framework can watch your command files for changes and reload them 
 
 ## File watching
 
-When `watch` is enabled (the default), calling `commands:load()` also starts watching the loaded directory. Saving a command file triggers an automatic reload — no restart required.
+When `watch` is enabled (the default), calling `commands:load()` also starts watching the loaded directory. Saving a command file triggers an automatic reload - no restart required.
 
 ```lua
 local commandsManager = commands.new(bot) -- watch: true by default
@@ -84,7 +84,7 @@ Install a plugin with `commands:usePlugin()`:
 commandsManager:usePlugin(loggingPlugin)
 ```
 
-Installing the same plugin twice is a no-op — the framework warns and skips.
+Installing the same plugin twice is a no-op - the framework warns and skips.
 
 ## Unloading a plugin
 
@@ -128,5 +128,5 @@ local commandsManager = commands.new(bot, {
 
 ## References
 
-- [Getting Started](/guides/commands-framework/getting-started) — `commands.new` options including `watch` and `context`
-- [Middleware & After Hooks](/guides/commands-framework/middleware-and-hooks) — what plugins commonly register
+- [Getting Started](/guides/commands-framework/getting-started) - `commands.new` options including `watch` and `context`
+- [Middleware & After Hooks](/guides/commands-framework/middleware-and-hooks) - what plugins commonly register

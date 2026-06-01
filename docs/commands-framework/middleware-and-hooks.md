@@ -22,7 +22,7 @@ Middleware runs in registration order, before guards, cooldowns, and `execute`.
 
 ## Short-circuiting
 
-Omitting `next()` stops the pipeline entirely — guards, cooldowns, and `execute` all skip.
+Omitting `next()` stops the pipeline entirely - guards, cooldowns, and `execute` all skip.
 
 ```lua
 commandsManager:use(function(interaction: any, next: () -> ())
@@ -124,6 +124,6 @@ For a slash command, the full pipeline runs in this order:
 
 ## References
 
-- [Guards & Permissions](/guides/commands-framework/guards-and-permissions) — step 3 in the pipeline
-- [Cooldowns & Concurrency](/guides/commands-framework/cooldowns-and-concurrency) — steps 4–5 in the pipeline
-- [Hot Reload & Plugins](/guides/commands-framework/hot-reload-and-plugins) — plugins can register middleware
+- [Guards & Permissions](/guides/commands-framework/guards-and-permissions) - step 3 in the pipeline
+- [Cooldowns & Concurrency](/guides/commands-framework/cooldowns-and-concurrency) - steps 4–5 in the pipeline
+- [Hot Reload & Plugins](/guides/commands-framework/hot-reload-and-plugins) - plugins can register middleware
