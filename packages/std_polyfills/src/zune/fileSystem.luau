@@ -42,11 +42,13 @@ function fileSystem.watch(path: string, callback: (path: string, events: { strin
 		deleted = "remove",
 		renamed = "rename",
 	}
-	local watcher = zune.fs.watch(path, function(watchPath: string, watchEvents: { string })
+	local watcher = zune.fs.watch(path, function(watchPath: string, watchEvents)
 		local translated = {}
+
 		for _, event in watchEvents do
 			table.insert(translated, EVENT_MAP[event] or event)
 		end
+
 		callback(watchPath, translated)
 	end)
 	return {
