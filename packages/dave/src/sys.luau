@@ -50,6 +50,7 @@
 	@within Dave.Sys
 ]=]
 
+local binary = require("../luau_packages/binary")
 local stdPolyfills = require("../luau_packages/std_polyfills")
 
 if not stdPolyfills.runtime.capabilities().ffi then
@@ -234,18 +235,26 @@ export type Lib = {
 	daveSetLogSinkCallback: (onLog: FFIPointer) -> (),
 }
 
-local os = stdPolyfills.process.getPlatform()
-local arch = stdPolyfills.process.getArch()
+local platform = stdPolyfills.process.getPlatform()
+local architecture = if stdPolyfills.process.getArch() == "aarch64" then "arm64" else "x64"
 
-local osName = if os == "linux" then "Linux" elseif os == "macos" then "macOS" else "Windows"
-local archName = if arch == "aarch64" then "ARM64" else "X64"
-local subdir = if os == "windows" then "bin" else "lib"
-local ext = if os == "linux" then "so" elseif os == "macos" then "dylib" else "dll"
+local checksums: { [string]: string } = {
+	["linux-arm64"] = "sha256:6e16bdda78718767c7fb25236f48e20a845afc4050d073fbecae5eb9bd85ef03",
+	["linux-x64"] = "sha256:76ec5e0d8a97d2d8b2601a011c3b9e7ae9144528718baeb9a78ed76b9994c7e1",
+	["macos-arm64"] = "sha256:e0739c49ccf8ca497facf22b2eb6b3a534be7195ebee4f4bb4db5550555176d5",
+	["macos-x64"] = "sha256:a67b38937665717300a77f8e6eedc9dd0418054c79be500d332b5f5563805243",
+	["windows-x64"] = "sha256:cdd3ad04ec5f5588e320594d2abe878da7ba5385b254f207d86c8cb1649739bd",
+}
 
-local libPath = `{zune.require.navigate("../binaries")}/{osName}-{archName}/{subdir}/libdave.{ext}`
+local result = binary.load({
+	id = "libdave",
+	version = "0.0.1",
+	url = "https://github.com/DiscordLuau/discord-luau/raw/refs/tags/dave-{version}/packages/dave/binaries/{os}-{arch}/libdave{ext}",
+	checksum = checksums[`{platform}-{architecture}`] or error(`Unsupported platform '{platform}-{architecture}' for libdave`),
+})
 
 local lib = (
-	stdPolyfills.ffi.dlopen(libPath, {
+	stdPolyfills.ffi.dlopen(result.path, {
 		daveMaxSupportedProtocolVersion = { returns = u16, args = {} },
 
 		daveFree = { returns = void, args = { pointer } },
