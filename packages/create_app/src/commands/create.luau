@@ -165,25 +165,28 @@ return command
 
 		Logger:debug(`Resolved path argument as the following directory; '{targetDirectory}'`)
 
-		require("../ui/createWizard")(function(info, setStatus, _setWarning)
+		require("../ui/createWizard")(function(information, setStatus, _setWarning)
 			local platform = StdPolyfills.process.getPlatform()
-			local sep = OS_SLASH_MAP[platform] or "/"
-			local projectDirectoryName = string.match(info.ProjectName, "[^/]+$") or info.ProjectName
-			local projectPath = targetDirectory .. sep .. projectDirectoryName
+			local separator = OS_SLASH_MAP[platform] or "/"
+			local projectDirectoryName = string.match(information.ProjectName, "[^/]+$") or information.ProjectName
+			local baseDirectory = string.gsub(targetDirectory, "[/\\]+$", "")
+			local projectPath = baseDirectory .. separator .. projectDirectoryName
 
 			setStatus("Creating project structure…", 0.10)
-			setupProject(targetDirectory, info.IDE, info)
+			setupProject(baseDirectory, information.IDE, information)
 
 			setStatus("Running rokit install…", 0.35)
-			local rokitResult = StdPolyfills.process.run("rokit", { "install" }, { cwd = projectPath })
+			local rokitResult = StdPolyfills.process.run("rokit", { "install", "--no-trust-check" }, { cwd = projectPath })
 
 			if not rokitResult.ok then
 				local output = processOutput(rokitResult)
 				error(`rokit install failed (exit {rokitResult.code}){if #output > 0 then "\n" .. output else ""}`)
 			end
 
-			local runtimeName = info.Runtime
+			local runtimeName = information.Runtime
+
 			setStatus(`Running {runtimeName} setup…`, 0.55)
+
 			local runtimeSetupResult = StdPolyfills.process.run(runtimeName, { "setup" }, { cwd = projectPath })
 
 			if not runtimeSetupResult.ok then
