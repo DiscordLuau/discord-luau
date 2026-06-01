@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - `formatType` resolving to an invalid type in `ApiTypes`, should be `StickerFormatTypes` and not `StickerFormatType`
+- `FutureLike` return casts in `User.getDmChannelIdAsync` and `VoiceBehaviour` methods now go through `any` to satisfy strict type analysis
 
 ## 0.0.1
 
