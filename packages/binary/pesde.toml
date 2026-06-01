@@ -12,7 +12,6 @@ includes = [
     "LICENSE",
     "README.md",
     "CONTRIBUTING.md",
-    "patches/**/*",
 ]
 
 [target]
@@ -25,6 +24,3 @@ default = "https://github.com/pesde-pkg/index"
 [dependencies]
 std_polyfills = { workspace = "discord_luau/std_polyfills" }
 sha256 = { name = "kimpure/sha256", version = "0.1.1" }
-
-[patches]
-"kimpure/sha256" = { "0.1.1 luau" = "patches/kimpure+sha256-0.1.1.patch" }
