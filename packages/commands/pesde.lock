@@ -5,6 +5,10 @@ name = "discord_luau/commands"
 version = "0.0.1"
 target = "luau"
 
+[graph."4x8matrix/int64@1.0.1 luau".pkg_ref]
+ref_ty = "pesde"
+index_url = "https://github.com/pesde-pkg/index"
+
 [graph."discord_luau/accumulator@0.0.1 luau".pkg_ref]
 ref_ty = "workspace"
 path = "packages/accumulator"
@@ -36,9 +40,15 @@ path = "packages/binary"
 sha256 = [{ name = "kimpure/sha256", version = "^0.1.1", index = "https://github.com/pesde-pkg/index" }, "standard"]
 std_polyfills = [{ workspace = "discord_luau/std_polyfills", version = "^" }, "standard"]
 
+[graph."discord_luau/bit@0.0.1 luau".dependencies]
+int64 = ["4x8matrix/int64@1.0.1 luau", "standard"]
+
 [graph."discord_luau/bit@0.0.1 luau".pkg_ref]
 ref_ty = "workspace"
 path = "packages/bit"
+
+[graph."discord_luau/bit@0.0.1 luau".pkg_ref.dependencies]
+int64 = [{ name = "4x8matrix/int64", version = "^1.0.1", index = "https://github.com/pesde-pkg/index" }, "standard"]
 
 [graph."discord_luau/builders@0.0.1 luau"]
 direct = ["builders", { workspace = "discord_luau/builders", version = "^" }, "standard"]
@@ -59,10 +69,10 @@ bit = [{ workspace = "discord_luau/bit", version = "^" }, "standard"]
 std_polyfills = [{ workspace = "discord_luau/std_polyfills", version = "^" }, "standard"]
 util = [{ workspace = "discord_luau/util", version = "^" }, "standard"]
 
-[graph."discord_luau/classes@0.0.1 luau"]
+[graph."discord_luau/classes@0.0.2 luau"]
 direct = ["classes", { workspace = "discord_luau/classes", version = "^" }, "standard"]
 
-[graph."discord_luau/classes@0.0.1 luau".dependencies]
+[graph."discord_luau/classes@0.0.2 luau".dependencies]
 api_types = ["discord_luau/api_types@0.0.1 luau", "standard"]
 bit = ["discord_luau/bit@0.0.1 luau", "standard"]
 builders = ["discord_luau/builders@0.0.1 luau", "standard"]
@@ -74,11 +84,11 @@ std_polyfills = ["discord_luau/std_polyfills@0.0.1 luau", "standard"]
 util = ["discord_luau/util@0.0.1 luau", "standard"]
 voice = ["discord_luau/voice@0.0.1 luau", "standard"]
 
-[graph."discord_luau/classes@0.0.1 luau".pkg_ref]
+[graph."discord_luau/classes@0.0.2 luau".pkg_ref]
 ref_ty = "workspace"
 path = "packages/classes"
 
-[graph."discord_luau/classes@0.0.1 luau".pkg_ref.dependencies]
+[graph."discord_luau/classes@0.0.2 luau".pkg_ref.dependencies]
 api_types = [{ workspace = "discord_luau/api_types", version = "^" }, "standard"]
 bit = [{ workspace = "discord_luau/bit", version = "^" }, "standard"]
 builders = [{ workspace = "discord_luau/builders", version = "^" }, "standard"]
@@ -169,15 +179,15 @@ std_polyfills = [{ workspace = "discord_luau/std_polyfills", version = "^" }, "s
 ref_ty = "workspace"
 path = "packages/secret"
 
-[graph."discord_luau/sodium@0.0.1 luau".dependencies]
+[graph."discord_luau/sodium@0.0.2 luau".dependencies]
 binary = ["discord_luau/binary@0.0.1 luau", "standard"]
 std_polyfills = ["discord_luau/std_polyfills@0.0.1 luau", "standard"]
 
-[graph."discord_luau/sodium@0.0.1 luau".pkg_ref]
+[graph."discord_luau/sodium@0.0.2 luau".pkg_ref]
 ref_ty = "workspace"
 path = "packages/sodium"
 
-[graph."discord_luau/sodium@0.0.1 luau".pkg_ref.dependencies]
+[graph."discord_luau/sodium@0.0.2 luau".pkg_ref.dependencies]
 binary = [{ workspace = "discord_luau/binary", version = "^" }, "standard"]
 std_polyfills = [{ workspace = "discord_luau/std_polyfills", version = "^" }, "standard"]
 
@@ -228,7 +238,7 @@ future = ["yetanotherclown/luau_futures@2.0.0-beta.3 luau", "standard"]
 logger = ["discord_luau/logger@0.0.1 luau", "standard"]
 opus = ["discord_luau/opus@0.0.1 luau", "standard"]
 secret = ["discord_luau/secret@0.0.1 luau", "standard"]
-sodium = ["discord_luau/sodium@0.0.1 luau", "standard"]
+sodium = ["discord_luau/sodium@0.0.2 luau", "standard"]
 std_polyfills = ["discord_luau/std_polyfills@0.0.1 luau", "standard"]
 util = ["discord_luau/util@0.0.1 luau", "standard"]
 websocket = ["discord_luau/websocket@0.0.1 luau", "standard"]

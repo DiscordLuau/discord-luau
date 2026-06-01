@@ -5,6 +5,10 @@ name = "discord_luau/rest"
 version = "0.0.1"
 target = "luau"
 
+[graph."4x8matrix/int64@1.0.1 luau".pkg_ref]
+ref_ty = "pesde"
+index_url = "https://github.com/pesde-pkg/index"
+
 [graph."discord_luau/api_types@0.0.1 luau"]
 direct = ["api_types", { workspace = "discord_luau/api_types", version = "^" }, "standard"]
 
@@ -20,9 +24,15 @@ path = "packages/api_types"
 bit = [{ workspace = "discord_luau/bit", version = "^" }, "standard"]
 util = [{ workspace = "discord_luau/util", version = "^" }, "standard"]
 
+[graph."discord_luau/bit@0.0.1 luau".dependencies]
+int64 = ["4x8matrix/int64@1.0.1 luau", "standard"]
+
 [graph."discord_luau/bit@0.0.1 luau".pkg_ref]
 ref_ty = "workspace"
 path = "packages/bit"
+
+[graph."discord_luau/bit@0.0.1 luau".pkg_ref.dependencies]
+int64 = [{ name = "4x8matrix/int64", version = "^1.0.1", index = "https://github.com/pesde-pkg/index" }, "standard"]
 
 [graph."discord_luau/formdata@0.0.1 luau"]
 direct = ["formdata", { workspace = "discord_luau/formdata", version = "^" }, "standard"]

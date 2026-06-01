@@ -5,6 +5,10 @@ name = "discord_luau/state"
 version = "0.0.1"
 target = "luau"
 
+[graph."4x8matrix/int64@1.0.1 luau".pkg_ref]
+ref_ty = "pesde"
+index_url = "https://github.com/pesde-pkg/index"
+
 [graph."discord_luau/accumulator@0.0.1 luau".pkg_ref]
 ref_ty = "workspace"
 path = "packages/accumulator"
@@ -24,9 +28,15 @@ path = "packages/api_types"
 bit = [{ workspace = "discord_luau/bit", version = "^" }, "standard"]
 util = [{ workspace = "discord_luau/util", version = "^" }, "standard"]
 
+[graph."discord_luau/bit@0.0.1 luau".dependencies]
+int64 = ["4x8matrix/int64@1.0.1 luau", "standard"]
+
 [graph."discord_luau/bit@0.0.1 luau".pkg_ref]
 ref_ty = "workspace"
 path = "packages/bit"
+
+[graph."discord_luau/bit@0.0.1 luau".pkg_ref.dependencies]
+int64 = [{ name = "4x8matrix/int64", version = "^1.0.1", index = "https://github.com/pesde-pkg/index" }, "standard"]
 
 [graph."discord_luau/emitter@0.0.1 luau".dependencies]
 logger = ["discord_luau/logger@0.0.1 luau", "standard"]

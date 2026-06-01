@@ -5,6 +5,10 @@ name = "discord_luau/voice"
 version = "0.0.1"
 target = "luau"
 
+[graph."4x8matrix/int64@1.0.1 luau".pkg_ref]
+ref_ty = "pesde"
+index_url = "https://github.com/pesde-pkg/index"
+
 [graph."discord_luau/accumulator@0.0.1 luau".pkg_ref]
 ref_ty = "workspace"
 path = "packages/accumulator"
@@ -36,9 +40,15 @@ path = "packages/binary"
 sha256 = [{ name = "kimpure/sha256", version = "^0.1.1", index = "https://github.com/pesde-pkg/index" }, "standard"]
 std_polyfills = [{ workspace = "discord_luau/std_polyfills", version = "^" }, "standard"]
 
+[graph."discord_luau/bit@0.0.1 luau".dependencies]
+int64 = ["4x8matrix/int64@1.0.1 luau", "standard"]
+
 [graph."discord_luau/bit@0.0.1 luau".pkg_ref]
 ref_ty = "workspace"
 path = "packages/bit"
+
+[graph."discord_luau/bit@0.0.1 luau".pkg_ref.dependencies]
+int64 = [{ name = "4x8matrix/int64", version = "^1.0.1", index = "https://github.com/pesde-pkg/index" }, "standard"]
 
 [graph."discord_luau/dave@0.0.1 luau"]
 direct = ["dave", { workspace = "discord_luau/dave", version = "^" }, "standard"]
@@ -105,18 +115,18 @@ direct = ["secret", { workspace = "discord_luau/secret", version = "^" }, "stand
 ref_ty = "workspace"
 path = "packages/secret"
 
-[graph."discord_luau/sodium@0.0.1 luau"]
+[graph."discord_luau/sodium@0.0.2 luau"]
 direct = ["sodium", { workspace = "discord_luau/sodium", version = "^" }, "standard"]
 
-[graph."discord_luau/sodium@0.0.1 luau".dependencies]
+[graph."discord_luau/sodium@0.0.2 luau".dependencies]
 binary = ["discord_luau/binary@0.0.1 luau", "standard"]
 std_polyfills = ["discord_luau/std_polyfills@0.0.1 luau", "standard"]
 
-[graph."discord_luau/sodium@0.0.1 luau".pkg_ref]
+[graph."discord_luau/sodium@0.0.2 luau".pkg_ref]
 ref_ty = "workspace"
 path = "packages/sodium"
 
-[graph."discord_luau/sodium@0.0.1 luau".pkg_ref.dependencies]
+[graph."discord_luau/sodium@0.0.2 luau".pkg_ref.dependencies]
 binary = [{ workspace = "discord_luau/binary", version = "^" }, "standard"]
 std_polyfills = [{ workspace = "discord_luau/std_polyfills", version = "^" }, "standard"]
 
