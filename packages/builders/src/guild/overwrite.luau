@@ -49,8 +49,8 @@ Overwrite.Interface = {}
 	Responsible for allowing specific permissions to be set on either a Role of a Member.
 ]=]
 function Overwrite.Prototype.allowPermissions(self: Overwrite, ...: apiTypes.Permissions): Overwrite
-	for _, apiTypes in { ... } do
-		table.insert(self.allowedPermissionFlags, apiTypes)
+	for _, permissionFlag in { ... } do
+		table.insert(self.allowedPermissionFlags, permissionFlag)
 	end
 
 	return self
@@ -62,8 +62,8 @@ end
 	Responsible for denying specific permissions to be set on either a Role of a Member.
 ]=]
 function Overwrite.Prototype.denyPermissions(self: Overwrite, ...: apiTypes.Permissions): Overwrite
-	for _, apiTypes in { ... } do
-		table.insert(self.deniedPermissionFlags, apiTypes)
+	for _, permissionFlag in { ... } do
+		table.insert(self.deniedPermissionFlags, permissionFlag)
 	end
 
 	return self
@@ -101,12 +101,12 @@ function Overwrite.Prototype.build(self: Overwrite): JSON
 		denyPermissionBits[index] = permissionBit
 	end
 
-	local allowBits = 0
+	local allowBits = "0"
 	for _, permissionBit in allowPermissionBits do
 		allowBits = bit.bor(allowBits, permissionBit)
 	end
 
-	local denyBits = 0
+	local denyBits = "0"
 	for _, permissionBit in denyPermissionBits do
 		denyBits = bit.bor(denyBits, permissionBit)
 	end
@@ -114,8 +114,8 @@ function Overwrite.Prototype.build(self: Overwrite): JSON
 	return {
 		type = self.type == "role" and 0 or 1,
 
-		allow = tostring(allowBits),
-		deny = tostring(denyBits),
+		allow = allowBits,
+		deny = denyBits,
 	}
 end
 

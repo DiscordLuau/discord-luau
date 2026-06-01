@@ -44,7 +44,7 @@
 ]=]
 
 --[=[
-	@prop flags number?
+	@prop flags string?
 	@within Builders.Message
 	Message flags combined as a bitfield.
 ]=]
@@ -217,8 +217,8 @@ end
 
 	Sets the flags for the message.
 ]=]
-function Message.Prototype.setFlags(self: Message, flags: number): Message
-	self.flags = bit.bor(self.flags or 0, flags)
+function Message.Prototype.setFlags(self: Message, flags: string): Message
+	self.flags = bit.bor(self.flags or "0", flags)
 
 	return self
 end
@@ -251,7 +251,7 @@ end
 	Responsible for building the Message JSON that can be parsed by the Discord API.
 ]=]
 function Message.Prototype.build(self: Message): JSON
-	local isV2 = self.flags and bit.band(self.flags, apiTypes.message.MessageFlags.IsComponentsV2) ~= 0
+	local isV2 = self.flags and bit.band(self.flags, apiTypes.message.MessageFlags.IsComponentsV2) ~= "0"
 
 	if isV2 then
 		assert(not self.content, "IS_COMPONENTS_V2 messages cannot have content")
@@ -270,7 +270,7 @@ function Message.Prototype.build(self: Message): JSON
 		components = #self.components > 0 and self.components or nil,
 		sticker_ids = #self.stickerIds > 0 and self.stickerIds or nil,
 		attachments = #self.attachments > 0 and self.attachments or nil,
-		flags = self.flags,
+		flags = self.flags and tonumber(self.flags),
 		enforce_nonce = self.enforceNonce,
 		poll = self.poll,
 	}
