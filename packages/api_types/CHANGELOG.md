@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Permission flags and `MessageFlags` now use string-based bit operations, aligning with Discord's own representation for values that exceed 32-bit range
+
 ## 0.0.1
 
 - Initial release on Pesde. Package versioning is now managed through CI.
