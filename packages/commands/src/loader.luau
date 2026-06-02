@@ -37,10 +37,11 @@ Loader.Interface = {}
 Loader.Prototype = {}
 
 local function computeRequirePrefix(): string
-	local sourcePath = SOURCE
+	local sourcePath = string.gsub(SOURCE, "\\", "/")
+	local isAbsolute = string.sub(sourcePath, 1, 1) == "/" or string.match(sourcePath, "^%a:/") ~= nil
 
-	if string.sub(sourcePath, 1, 1) == "/" then
-		local cwd = stdPolyfills.process.getCwd()
+	if isAbsolute then
+		local cwd = string.gsub(stdPolyfills.process.getCwd(), "\\", "/")
 
 		if string.sub(sourcePath, 1, #cwd) == cwd then
 			sourcePath = string.sub(sourcePath, #cwd + 2)
@@ -54,7 +55,9 @@ local function computeRequirePrefix(): string
 end
 
 local function normalizePath(path: string): string
-	return string.match(path, "^%.%/(.+)") or path
+	local normalized = string.gsub(path, "\\", "/")
+
+	return string.match(normalized, "^%.%/(.+)") or normalized
 end
 
 local function stripExtension(filename: string): string
