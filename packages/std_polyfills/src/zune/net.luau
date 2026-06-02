@@ -57,12 +57,14 @@ function net.request(config: string | {
 
 	local response = zuneNet.http.request(url, opts :: any)
 
+	local rawBody = response.body
+
 	return {
 		ok = response.ok,
 		statusCode = response.status_code,
 		statusMessage = response.status_reason,
 		headers = response.headers,
-		body = response.body,
+		body = if type(rawBody) == "buffer" then buffer.tostring(rawBody :: buffer) else rawBody :: string,
 	}
 end
 
