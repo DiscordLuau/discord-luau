@@ -77,7 +77,7 @@ function runtime.capabilities(): Capabilities
 
 	if current == "Zune" then
 		return {
-			ffi = true,
+			ffi = false,
 			udp = true,
 			onSignal = true,
 			compress = true,
