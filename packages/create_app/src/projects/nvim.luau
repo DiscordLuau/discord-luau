@@ -1,4 +1,5 @@
 local pesde_future_patch = require("./bin/pesde_future_patch")
+local pesde_sha256_patch = require("./bin/pesde_sha256_patch")
 local license_md = require("./bin/license_md")
 local init_src = require("./bin/init_src")
 local env_file = require("./bin/env_file")
@@ -23,6 +24,9 @@ return {
 	["patches"] = {
 		["yetanotherclown+luau_futures-2.0.0-beta.3+luau.patch"] = function(_information: Information)
 			return pesde_future_patch()
+		end,
+		["kimpure+sha256-0.1.1.patch"] = function(_information: Information)
+			return pesde_sha256_patch()
 		end,
 	},
 	["src"] = {
