@@ -11,7 +11,7 @@ local function resolveTokens(url: string, version: string): string
 	local platform = stdPolyfills.process.getPlatform()
 	local rawArchitecture = stdPolyfills.process.getArch()
 
-	local architecture = if rawArchitecture == "aarch64" then "arm64" else "x64"
+	local architecture = if rawArchitecture == "aarch64" then "arm64" elseif rawArchitecture == "x86" then "x86" else "x64"
 	local extension = if platform == "linux" then ".so" elseif platform == "macos" then ".dylib" else ".dll"
 
 	local resolved = string.gsub(url, "{version}", version)
