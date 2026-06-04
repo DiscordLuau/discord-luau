@@ -7,8 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.0.2
+
+### Added
+
+- All `pcall` calls in the dispatch pipeline, loader, and guards upgraded to `xpcall` with `debug.traceback` so error logs now include full stack traces
+
 ### Fixed
 
+- Windows path separators in the loader's require prefix are now normalised so hot-reload works correctly on Windows
 - `FutureLike` return casts in `waitForComponent` and `waitForModal` now go through `any` to satisfy strict type analysis
 
 ## 0.0.1

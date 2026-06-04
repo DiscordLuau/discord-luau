@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.0.3
+
 ### Changed
 
 - All bitflag classes (`ApplicationBitflag`, `AttachmentBitflag`, `ChannelBitflag`, `GuildMemberBitflag`, `MessageBitflag`, `RoleBitflag`, `SystemChannelBitflag`) now store `flag` internally as a `string` - constructors still accept `number` from JSON and convert via `tostring`

@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.0.2
+
 ### Changed
 
 - `Permission.bitflag` is now a `string` instead of `number`, matching Discord's wire format for permission bitfields
