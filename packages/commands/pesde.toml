@@ -1,12 +1,19 @@
 name = "discord_luau/commands"
-version = "0.0.1"
+version = "0.0.2"
 description = "Discord-Luau Commands - A commands framework for discord-luau."
 license = "MIT"
 authors = ["Async Matrix <hi@asyncmatrix.dev>"]
 repository = "https://github.com/DiscordLuau/discord-luau/tree/main/packages/commands"
 pesde_version = "0.7.0-rc.7"
 
-includes = ["src/**/*", "pesde.toml", "LICENSE", "README.md", "CONTRIBUTING.md", "patches/**/*"]
+includes = [
+    "src/**/*",
+    "pesde.toml",
+    "LICENSE",
+    "README.md",
+    "CONTRIBUTING.md",
+    "patches/**/*",
+]
 
 [indices]
 default = "https://github.com/pesde-pkg/index"
@@ -16,12 +23,12 @@ environment = "luau"
 lib = "src/init.luau"
 
 [dependencies]
-std_polyfills = { workspace = "discord_luau/std_polyfills" }
-builders = { workspace = "discord_luau/builders" }
-classes = { workspace = "discord_luau/classes" }
-api_types = { workspace = "discord_luau/api_types" }
+std_polyfills = { name = "discord_luau/std_polyfills", version = "0.0.2" }
+builders = { name = "discord_luau/builders", version = "0.0.2" }
+classes = { name = "discord_luau/classes", version = "0.0.3" }
+api_types = { name = "discord_luau/api_types", version = "0.0.2" }
 future = { name = "yetanotherclown/luau_futures", version = "2.0.0-beta.3" }
-logger = { workspace = "discord_luau/logger" }
+logger = { name = "discord_luau/logger", version = "0.0.1" }
 
 [patches]
 "yetanotherclown/luau_futures" = { "2.0.0-beta.3 luau" = "patches/yetanotherclown+luau_futures-2.0.0-beta.3+luau.patch" }

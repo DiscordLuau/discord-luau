@@ -1,5 +1,5 @@
 name = "discord_luau/std_polyfills"
-version = "0.0.1"
+version = "0.0.2"
 description = "Discord-Luau Polyfills - polyfills for stdlib functions."
 license = "MIT"
 authors = ["Async Matrix <hi@asyncmatrix.dev>"]

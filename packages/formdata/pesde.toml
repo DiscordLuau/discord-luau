@@ -16,4 +16,4 @@ environment = "luau"
 lib = "src/init.luau"
 
 [dependencies]
-stream = { workspace = "discord_luau/stream" }
+stream = { name = "discord_luau/stream", version = "0.0.1" }

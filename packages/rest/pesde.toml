@@ -16,9 +16,9 @@ lib = "src/init.luau"
 default = "https://github.com/pesde-pkg/index"
 
 [dependencies]
-std_polyfills = { workspace = "discord_luau/std_polyfills" }
-api_types = { workspace = "discord_luau/api_types" }
-formdata = { workspace = "discord_luau/formdata" }
+std_polyfills = { name = "discord_luau/std_polyfills", version = "0.0.2" }
+api_types = { name = "discord_luau/api_types", version = "0.0.2" }
+formdata = { name = "discord_luau/formdata", version = "0.0.1" }
 future = { name = "yetanotherclown/luau_futures", version = "2.0.0-beta.3" }
 
 [patches]

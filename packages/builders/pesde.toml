@@ -1,5 +1,5 @@
 name = "discord_luau/builders"
-version = "0.0.1"
+version = "0.0.2"
 description = "Discord-Luau Builders - Builders used to generate payloads that the discord API can parse."
 license = "MIT"
 authors = ["Async Matrix <hi@asyncmatrix.dev>"]
@@ -16,7 +16,7 @@ lib = "src/init.luau"
 default = "https://github.com/pesde-pkg/index"
 
 [dependencies]
-std_polyfills = { workspace = "discord_luau/std_polyfills" }
-api_types = { workspace = "discord_luau/api_types" }
-util = { workspace = "discord_luau/util" }
-bit = { workspace = "discord_luau/bit" }
+std_polyfills = { name = "discord_luau/std_polyfills", version = "0.0.2" }
+api_types = { name = "discord_luau/api_types", version = "0.0.2" }
+util = { name = "discord_luau/util", version = "0.0.1" }
+bit = { name = "discord_luau/bit", version = "0.0.2" }

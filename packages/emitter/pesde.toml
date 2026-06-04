@@ -16,4 +16,4 @@ lib = "src/init.luau"
 default = "https://github.com/pesde-pkg/index"
 
 [dependencies]
-logger = { workspace = "discord_luau/logger" }
+logger = { name = "discord_luau/logger", version = "0.0.1" }

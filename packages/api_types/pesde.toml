@@ -1,5 +1,5 @@
 name = "discord_luau/api_types"
-version = "0.0.1"
+version = "0.0.2"
 description = "Discord-Luau Types - API Types for the Discord API."
 license = "MIT"
 authors = ["Async Matrix <hi@asyncmatrix.dev>"]
@@ -23,5 +23,5 @@ lib = "bundled.luau"
 default = "https://github.com/pesde-pkg/index"
 
 [dependencies]
-util = { workspace = "discord_luau/util" }
-bit = { workspace = "discord_luau/bit" }
+util = { name = "discord_luau/util", version = "0.0.1" }
+bit = { name = "discord_luau/bit", version = "0.0.2" }

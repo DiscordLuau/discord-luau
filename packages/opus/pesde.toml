@@ -1,5 +1,5 @@
 name = "discord_luau/opus"
-version = "0.0.1"
+version = "0.0.2"
 description = "Discord Luau Opus - FFI bindings for libopus, providing Opus audio encoding and decoding."
 license = "MIT"
 authors = ["Async Matrix <hi@asyncmatrix.dev>"]
@@ -23,5 +23,5 @@ lib = "src/init.luau"
 default = "https://github.com/pesde-pkg/index"
 
 [dependencies]
-binary = { workspace = "discord_luau/binary" }
-std_polyfills = { workspace = "discord_luau/std_polyfills" }
+binary = { name = "discord_luau/binary", version = "0.0.2" }
+std_polyfills = { name = "discord_luau/std_polyfills", version = "0.0.2" }

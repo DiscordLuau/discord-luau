@@ -16,17 +16,17 @@ lib = "src/init.luau"
 default = "https://github.com/pesde-pkg/index"
 
 [dependencies]
-std_polyfills = { workspace = "discord_luau/std_polyfills" }
-api_types = { workspace = "discord_luau/api_types" }
-util = { workspace = "discord_luau/util" }
-state = { workspace = "discord_luau/state" }
+std_polyfills = { name = "discord_luau/std_polyfills", version = "0.0.2" }
+api_types = { name = "discord_luau/api_types", version = "0.0.2" }
+util = { name = "discord_luau/util", version = "0.0.1" }
+state = { name = "discord_luau/state", version = "0.0.1" }
 future = { name = "yetanotherclown/luau_futures", version = "2.0.0-beta.3" }
-builders = { workspace = "discord_luau/builders" }
-rest = { workspace = "discord_luau/rest" }
-classes = { workspace = "discord_luau/classes" }
-logger = { workspace = "discord_luau/logger" }
-bit = { workspace = "discord_luau/bit" }
-emitter = { workspace = "discord_luau/emitter" }
+builders = { name = "discord_luau/builders", version = "0.0.2" }
+rest = { name = "discord_luau/rest", version = "0.0.1" }
+classes = { name = "discord_luau/classes", version = "0.0.3" }
+logger = { name = "discord_luau/logger", version = "0.0.1" }
+bit = { name = "discord_luau/bit", version = "0.0.2" }
+emitter = { name = "discord_luau/emitter", version = "0.0.1" }
 
 [patches]
 "yetanotherclown/luau_futures" = { "2.0.0-beta.3 luau" = "patches/yetanotherclown+luau_futures-2.0.0-beta.3+luau.patch" }

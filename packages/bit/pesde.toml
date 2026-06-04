@@ -1,5 +1,5 @@
 name = "discord_luau/bit"
-version = "0.0.1"
+version = "0.0.2"
 description = "Discord-Luau Bit - Bit library for Luau supporting 64-bit integers (Discord permission flags)."
 license = "MIT"
 authors = ["Async Matrix <hi@asyncmatrix.dev>"]
