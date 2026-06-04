@@ -436,14 +436,16 @@ export type Lib = {
 }
 
 local platform = stdPolyfills.process.getPlatform()
-local architecture = if stdPolyfills.process.getArch() == "aarch64" then "arm64" else "x64"
+local rawArch = stdPolyfills.process.getArch()
+local architecture = if rawArch == "aarch64" then "arm64" elseif rawArch == "x86" then "x86" else "x64"
 
 local checksums: { [string]: string } = {
 	["linux-arm64"] = "sha256:dccbbedba8d50c4dca0061d4255e3cc6ff11e3def564b3b4ac0efac3da22b915",
 	["linux-x64"] = "sha256:13373e2914d27a8796568de878e62242f1076dc9c05ee6c6e31c71df829c10e2",
 	["macos-arm64"] = "sha256:f8d4e805cc5426b11eaad5d8782f38a414b4666868e019526ff7228439433b35",
 	["macos-x64"] = "sha256:391fd170b4dc52f91a9c123e12e55bcdb75b320e88f79df654250a2171db6dca",
-	["windows-x64"] = "sha256:5d3c25465c54982538797b191de224c6c26a8b638b320e39d76ea475bf5c4d10",
+	["windows-x64"] = "sha256:f1485ce247ce946e2c17ee2c56811c22838703309c7944a03867bbc45ce91cf9",
+	["windows-x86"] = "sha256:ada13ecb6fe5bd7bc5b9e7d256639c40bcb00794c58b8bb21abea0b090601ada",
 }
 
 local result = binary.load({
