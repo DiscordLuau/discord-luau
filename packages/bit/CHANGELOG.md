@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.0.2
+
 ### Changed
 
 - Replaced the custom 52-bit integer implementation with the `int64` library, giving true 64-bit integer support

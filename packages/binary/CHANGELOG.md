@@ -7,13 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.0.2
+
+### Added
+
+- x86 architecture now recognised in `resolveTokens` so `{arch}` resolves correctly for 32-bit Windows targets
+
 ### Changed
 
-- Pinned `kimpure/sha256` dependency to exact version `0.1.1` rather than the loose `^0.1.1` range
-
-### Removed
-
-- `kimpure+sha256` patch - the upstream `0.1.1` release already includes the binary blob hashing fix the patch was applying
+- Pinned `kimpure/sha256` dependency to exact version `0.1.1`
+- `kimpure+sha256` patch re-registered - required to fix raw byte hashing and integer overflow that the upstream release did not fully resolve
 
 ## 0.0.1
 
