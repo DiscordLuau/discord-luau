@@ -45,14 +45,24 @@ for index, name in publishable do
 
 	local result = zune.process.run("pesde", { "publish", "--yes" }, {
 		stdout = "inherit",
-		stderr = "inherit",
+		stderr = "pipe",
 		cwd = `{PACKAGES_DIR}/{name}`,
 	})
 
 	if not result.ok then
-		print(`\n[\27[31merror\27[0m] failed to publish {name} (exit code {result.code})`)
+		local stderr = result.stderr or ""
 
-		zune.process.exit(result.code)
+		if string.find(stderr, "package version already exists") then
+			print(`[skip] {name} (already published)`)
+		else
+			if #stderr > 0 then
+				print(stderr)
+			end
+
+			print(`\n[\27[31merror\27[0m] failed to publish {name} (exit code {result.code})`)
+
+			zune.process.exit(result.code)
+		end
 	end
 
 	local tarball = `{PACKAGES_DIR}/{name}/package.tar.gz`
