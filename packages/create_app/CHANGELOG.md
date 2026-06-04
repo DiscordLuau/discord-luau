@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.0.3
+
+### Added
+
+- `kimpure+sha256` patch file template added to all scaffolded project types (vscode, nvim, zed)
+- Generated `pesde.toml` now includes the `kimpure/sha256` patch entry alongside the existing `luau_futures` entry
+
 ## 0.0.2
 
 ### Added

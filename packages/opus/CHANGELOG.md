@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.0.2
+
+### Added
+
+- Windows x86 binary (`windows-x86/libopus.dll`)
+
+### Fixed
+
+- Windows x64 `libopus.dll` replaced with a build that does not link against libraries unavailable on Windows
+
 ## 0.0.1
 
 - Initial release on Pesde. Package versioning is now managed through CI.
