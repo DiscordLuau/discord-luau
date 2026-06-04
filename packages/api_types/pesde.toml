@@ -23,5 +23,5 @@ lib = "bundled.luau"
 default = "https://github.com/pesde-pkg/index"
 
 [dependencies]
-util = { name = "discord_luau/util", version = "0.0.1" }
+util = { name = "discord_luau/util", version = "0.0.2" }
 bit = { name = "discord_luau/bit", version = "0.0.2" }

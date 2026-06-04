@@ -1,5 +1,5 @@
 name = "discord_luau/rest"
-version = "0.0.1"
+version = "0.0.2"
 description = "Discord-Luau Rest - providing calls to the discord HTTP Rest API"
 license = "MIT"
 authors = ["Async Matrix <hi@asyncmatrix.dev>"]
@@ -18,7 +18,7 @@ default = "https://github.com/pesde-pkg/index"
 [dependencies]
 std_polyfills = { name = "discord_luau/std_polyfills", version = "0.0.2" }
 api_types = { name = "discord_luau/api_types", version = "0.0.2" }
-formdata = { name = "discord_luau/formdata", version = "0.0.1" }
+formdata = { name = "discord_luau/formdata", version = "0.0.2" }
 future = { name = "yetanotherclown/luau_futures", version = "2.0.0-beta.3" }
 
 [patches]

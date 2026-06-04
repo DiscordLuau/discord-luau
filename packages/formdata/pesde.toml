@@ -1,5 +1,5 @@
 name = "discord_luau/formdata"
-version = "0.0.1"
+version = "0.0.2"
 description = "Discord-Luau FormData - FormData implementation for luau."
 license = "MIT"
 authors = ["Async Matrix <hi@asyncmatrix.dev>"]
@@ -16,4 +16,4 @@ environment = "luau"
 lib = "src/init.luau"
 
 [dependencies]
-stream = { name = "discord_luau/stream", version = "0.0.1" }
+stream = { name = "discord_luau/stream", version = "0.0.2" }

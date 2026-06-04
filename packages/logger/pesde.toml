@@ -1,5 +1,5 @@
 name = "discord_luau/logger"
-version = "0.0.1"
+version = "0.0.2"
 description = "Discord-Luau Logger - Logging implementation for Discord-Luau"
 license = "MIT"
 authors = ["Async Matrix <hi@asyncmatrix.dev>"]

@@ -1,5 +1,5 @@
 name = "discord_luau/emitter"
-version = "0.0.1"
+version = "0.0.2"
 description = "Discord-Luau Emitter - A signal-like alternative for luau"
 license = "MIT"
 authors = ["Async Matrix <hi@asyncmatrix.dev>"]
@@ -16,4 +16,4 @@ lib = "src/init.luau"
 default = "https://github.com/pesde-pkg/index"
 
 [dependencies]
-logger = { name = "discord_luau/logger", version = "0.0.1" }
+logger = { name = "discord_luau/logger", version = "0.0.2" }

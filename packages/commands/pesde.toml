@@ -28,7 +28,7 @@ builders = { name = "discord_luau/builders", version = "0.0.2" }
 classes = { name = "discord_luau/classes", version = "0.0.3" }
 api_types = { name = "discord_luau/api_types", version = "0.0.2" }
 future = { name = "yetanotherclown/luau_futures", version = "2.0.0-beta.3" }
-logger = { name = "discord_luau/logger", version = "0.0.1" }
+logger = { name = "discord_luau/logger", version = "0.0.2" }
 
 [patches]
 "yetanotherclown/luau_futures" = { "2.0.0-beta.3 luau" = "patches/yetanotherclown+luau_futures-2.0.0-beta.3+luau.patch" }

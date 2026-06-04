@@ -1,5 +1,5 @@
 name = "discord_luau/snowflake"
-version = "0.0.1"
+version = "0.0.2"
 description = "Discord-Luau Snowflake - library enabling developers to query information on snowflake ids"
 license = "MIT"
 authors = ["Async Matrix <hi@asyncmatrix.dev>"]

@@ -1,5 +1,5 @@
 name = "discord_luau/websocket"
-version = "0.0.1"
+version = "0.0.2"
 description = "Discord Luau Websocket - Implementation of the websocket for discord."
 license = "MIT"
 authors = ["Async Matrix <hi@asyncmatrix.dev>"]
@@ -16,14 +16,14 @@ lib = "src/init.luau"
 default = "https://github.com/pesde-pkg/index"
 
 [dependencies]
-util = { name = "discord_luau/util", version = "0.0.1" }
+util = { name = "discord_luau/util", version = "0.0.2" }
 std_polyfills = { name = "discord_luau/std_polyfills", version = "0.0.2" }
 api_types = { name = "discord_luau/api_types", version = "0.0.2" }
 future = { name = "yetanotherclown/luau_futures", version = "2.0.0-beta.3" }
-logger = { name = "discord_luau/logger", version = "0.0.1" }
-emitter = { name = "discord_luau/emitter", version = "0.0.1" }
-secret = { name = "discord_luau/secret", version = "0.0.1" }
-accumulator = { name = "discord_luau/accumulator", version = "0.0.1" }
+logger = { name = "discord_luau/logger", version = "0.0.2" }
+emitter = { name = "discord_luau/emitter", version = "0.0.2" }
+secret = { name = "discord_luau/secret", version = "0.0.2" }
+accumulator = { name = "discord_luau/accumulator", version = "0.0.2" }
 
 [patches]
 "yetanotherclown/luau_futures" = { "2.0.0-beta.3 luau" = "patches/yetanotherclown+luau_futures-2.0.0-beta.3+luau.patch" }
