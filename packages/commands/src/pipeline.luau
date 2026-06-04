@@ -67,12 +67,12 @@ local function runGuards(
 
 			local passed = false
 
-			local success, errorMessage = pcall(function()
+			local success, errorMessage = xpcall(function()
 				passed = guard(interaction)
-			end)
+			end, debug.traceback)
 
 			if not success then
-				log:warn(`guard threw for '{name}': {errorMessage}`)
+				log:warn(`guard threw for '{name}':\n{errorMessage}`)
 				sendErrorResponse(interaction, tostring(errorMessage), onError)
 				return false
 			end
@@ -89,12 +89,12 @@ local function runGuards(
 			for _, guard in orGroup do
 				local passed = false
 
-				local success, errorMessage = pcall(function()
+				local success, errorMessage = xpcall(function()
 					passed = guard(interaction)
-				end)
+				end, debug.traceback)
 
 				if not success then
-					log:warn(`guard threw for '{name}': {errorMessage}`)
+					log:warn(`guard threw for '{name}':\n{errorMessage}`)
 					sendErrorResponse(interaction, tostring(errorMessage), onError)
 					return false
 				end
@@ -154,15 +154,20 @@ local function runTransforms(
 		local option: any = interaction:getOption(optionName)
 
 		local rawValue: any = if option then option.value else nil
-		local success, result = pcall(transformFunction :: (any, any) -> any, rawValue, interaction)
+
+		local transformResult: any
+
+		local success, errorMessage = xpcall(function()
+			transformResult = (transformFunction :: (any, any) -> any)(rawValue, interaction)
+		end, debug.traceback)
 
 		if not success then
-			log:warn(`transform '{optionName}' threw for '{name}': {result}`)
-			sendErrorResponse(interaction, tostring(result), onError)
+			log:warn(`transform '{optionName}' threw for '{name}':\n{errorMessage}`)
+			sendErrorResponse(interaction, tostring(errorMessage), onError)
 			return
 		end
 
-		results[optionName] = result
+		results[optionName] = transformResult
 	end
 
 	return results
@@ -192,18 +197,22 @@ local function runAfterHooks(
 	log: logger.Logger
 )
 	if perCommand then
-		local success, errorMessage = pcall(perCommand :: (any) -> any, interaction)
+		local success, errorMessage = xpcall(function()
+			(perCommand :: (any) -> any)(interaction)
+		end, debug.traceback)
 
 		if not success then
-			log:warn(`afterExecute threw: {errorMessage}`)
+			log:warn(`afterExecute threw:\n{errorMessage}`)
 		end
 	end
 
 	for _, hook in afterHooks do
-		local success, errorMessage = pcall(hook :: (any) -> any, interaction)
+		local success, errorMessage = xpcall(function()
+			(hook :: (any) -> any)(interaction)
+		end, debug.traceback)
 
 		if not success then
-			log:warn(`after hook threw: {errorMessage}`)
+			log:warn(`after hook threw:\n{errorMessage}`)
 		end
 	end
 end
@@ -229,10 +238,12 @@ local function runMiddleware(
 		runMiddleware(middlewares, index + 1, interaction, final, log)
 	end
 
-	local success, errorMessage = pcall(middlewares[index] :: (any, any) -> any, interaction, callNext)
+	local success, errorMessage = xpcall(function()
+		(middlewares[index] :: (any, any) -> any)(interaction, callNext)
+	end, debug.traceback)
 
 	if not success then
-		log:warn(`middleware[{index}] threw: {errorMessage}`)
+		log:warn(`middleware[{index}] threw:\n{errorMessage}`)
 	end
 end
 

@@ -96,7 +96,13 @@ end
 
 local function resolveModule(rawModule: any, context: any): (boolean, any)
 	if type(rawModule) == "function" then
-		return pcall(rawModule :: (any) -> any, context)
+		local result: any
+
+		local success, errorMessage = xpcall(function()
+			result = (rawModule :: (any) -> any)(context)
+		end, debug.traceback)
+
+		return success, if success then result else errorMessage
 	end
 
 	return true, rawModule

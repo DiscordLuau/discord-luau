@@ -305,14 +305,18 @@ function Commands.Prototype.usePlugin(self: Commands, plugin: PluginDefinition)
 		return
 	end
 
-	local success, result = pcall(plugin.setup :: (any) -> any, self)
+	local setupResult: any
+
+	local success, errorMessage = xpcall(function()
+		setupResult = (plugin.setup :: (any) -> any)(self)
+	end, debug.traceback)
 
 	if not success then
-		self.logger:warn(`plugin '{plugin.name}' setup threw: {result}`)
+		self.logger:warn(`plugin '{plugin.name}' setup threw:\n{errorMessage}`)
 		return
 	end
 
-	self.plugins[plugin.name] = if type(result) == "function" then result :: () -> () else function() end
+	self.plugins[plugin.name] = if type(setupResult) == "function" then setupResult :: () -> () else function() end
 
 	self.logger:info(`loaded plugin '{plugin.name}'`)
 end
@@ -330,10 +334,12 @@ function Commands.Prototype.unloadPlugin(self: Commands, name: string)
 		return
 	end
 
-	local success, errorMessage = pcall(teardown :: (any) -> any)
+	local success, errorMessage = xpcall(function()
+		(teardown :: (any) -> any)()
+	end, debug.traceback)
 
 	if not success then
-		self.logger:warn(`plugin '{name}' teardown threw: {errorMessage}`)
+		self.logger:warn(`plugin '{name}' teardown threw:\n{errorMessage}`)
 	end
 
 	self.plugins[name] = nil
@@ -526,12 +532,16 @@ function Commands.Prototype.dispatchCommand(self: Commands, interaction: classes
 			local cooldownRules: { command.CooldownRule }? = nil
 
 			if type(registeredCommand.cooldown) == "function" then
-				local success, result = pcall(registeredCommand.cooldown :: (any) -> any, interaction)
+				local cooldownResult: any
+
+				local success, errorMessage = xpcall(function()
+					cooldownResult = (registeredCommand.cooldown :: (any) -> any)(interaction)
+				end, debug.traceback)
 
 				if not success then
-					self.logger:warn(`cooldown function threw for '{data.name}': {result}`)
+					self.logger:warn(`cooldown function threw for '{data.name}':\n{errorMessage}`)
 				else
-					cooldownRules = result
+					cooldownRules = cooldownResult
 				end
 			else
 				cooldownRules = registeredCommand.cooldown :: { command.CooldownRule }
@@ -625,12 +635,14 @@ function Commands.Prototype.dispatchCommand(self: Commands, interaction: classes
 
 				pipeline.injectGetTransformed(interaction, subTransformed)
 
-				local success, errorMessage = pcall(subcommandDefinition.execute :: (any) -> any, interaction)
+				local success, errorMessage = xpcall(function()
+					(subcommandDefinition.execute :: (any) -> any)(interaction)
+				end, debug.traceback)
 
 				releaseConcurrencySlot()
 
 				if not success then
-					self.logger:warn(`error in '{data.name}' subcommand execute: {errorMessage}`)
+					self.logger:warn(`error in '{data.name}' subcommand execute:\n{errorMessage}`)
 					pipeline.sendErrorResponse(interaction, tostring(errorMessage), effectiveOnError)
 				end
 
@@ -649,13 +661,14 @@ function Commands.Prototype.dispatchCommand(self: Commands, interaction: classes
 				local targetUser: classes.User? = (resolved.users :: any)[data.targetId]
 
 				if targetUser and registeredCommand.userExecute then
-					local success, errorMessage =
-						pcall(registeredCommand.userExecute :: (any, any) -> any, interaction, targetUser)
+					local success, errorMessage = xpcall(function()
+						(registeredCommand.userExecute :: (any, any) -> any)(interaction, targetUser)
+					end, debug.traceback)
 
 					releaseConcurrencySlot()
 
 					if not success then
-						self.logger:warn(`error in '{data.name}' userExecute: {errorMessage}`)
+						self.logger:warn(`error in '{data.name}' userExecute:\n{errorMessage}`)
 						pipeline.sendErrorResponse(interaction, tostring(errorMessage), effectiveOnError)
 					end
 
@@ -667,13 +680,14 @@ function Commands.Prototype.dispatchCommand(self: Commands, interaction: classes
 				local targetMessage: classes.Message? = (resolved.messages :: any)[data.targetId]
 
 				if targetMessage and registeredCommand.messageExecute then
-					local success, errorMessage =
-						pcall(registeredCommand.messageExecute :: (any, any) -> any, interaction, targetMessage)
+					local success, errorMessage = xpcall(function()
+						(registeredCommand.messageExecute :: (any, any) -> any)(interaction, targetMessage)
+					end, debug.traceback)
 
 					releaseConcurrencySlot()
 
 					if not success then
-						self.logger:warn(`error in '{data.name}' messageExecute: {errorMessage}`)
+						self.logger:warn(`error in '{data.name}' messageExecute:\n{errorMessage}`)
 						pipeline.sendErrorResponse(interaction, tostring(errorMessage), effectiveOnError)
 					end
 
@@ -704,12 +718,14 @@ function Commands.Prototype.dispatchCommand(self: Commands, interaction: classes
 
 		pipeline.injectGetTransformed(interaction, transformed)
 
-		local success, errorMessage = pcall(registeredCommand.execute :: (any) -> any, interaction)
+		local success, errorMessage = xpcall(function()
+			(registeredCommand.execute :: (any) -> any)(interaction)
+		end, debug.traceback)
 
 		releaseConcurrencySlot()
 
 		if not success then
-			self.logger:warn(`error in '{data.name}' execute: {errorMessage}`)
+			self.logger:warn(`error in '{data.name}' execute:\n{errorMessage}`)
 			pipeline.sendErrorResponse(interaction, tostring(errorMessage), effectiveOnError)
 		end
 
@@ -758,10 +774,12 @@ function Commands.Prototype.dispatchComponent(self: Commands, interaction: class
 			if registeredCommand.components then
 				for pattern, handler in registeredCommand.components do
 					if matchCustomId(pattern, customId) then
-						local success, errorMessage = pcall(handler :: (any) -> any, interaction)
+						local success, errorMessage = xpcall(function()
+							(handler :: (any) -> any)(interaction)
+						end, debug.traceback)
 
 						if not success then
-							self.logger:warn(`error in component '{customId}' handler: {errorMessage}`)
+							self.logger:warn(`error in component '{customId}' handler:\n{errorMessage}`)
 							pipeline.sendErrorResponse(
 								interaction,
 								tostring(errorMessage),
@@ -820,10 +838,12 @@ function Commands.Prototype.dispatchModal(self: Commands, interaction: classes.M
 			if registeredCommand.modals then
 				for pattern, handler in registeredCommand.modals do
 					if matchCustomId(pattern, customId) then
-						local success, errorMessage = pcall(handler :: (any) -> any, interaction)
+						local success, errorMessage = xpcall(function()
+							(handler :: (any) -> any)(interaction)
+						end, debug.traceback)
 
 						if not success then
-							self.logger:warn(`error in modal '{customId}' handler: {errorMessage}`)
+							self.logger:warn(`error in modal '{customId}' handler:\n{errorMessage}`)
 
 							pipeline.sendErrorResponse(
 								interaction,
@@ -867,10 +887,12 @@ function Commands.Prototype.dispatchAutocomplete(self: Commands, interaction: cl
 			local subcommandDefinition = resolveSubcommand(registeredCommand.subcommands, data)
 
 			if subcommandDefinition and subcommandDefinition.autocomplete then
-				local success, errorMessage = pcall(subcommandDefinition.autocomplete :: (any) -> any, interaction)
+				local success, errorMessage = xpcall(function()
+					(subcommandDefinition.autocomplete :: (any) -> any)(interaction)
+				end, debug.traceback)
 
 				if not success then
-					self.logger:warn(`error in '{data.name}' subcommand autocomplete: {errorMessage}`)
+					self.logger:warn(`error in '{data.name}' subcommand autocomplete:\n{errorMessage}`)
 				end
 
 				return
@@ -882,10 +904,12 @@ function Commands.Prototype.dispatchAutocomplete(self: Commands, interaction: cl
 			return
 		end
 
-		local success, errorMessage = pcall(registeredCommand.autocomplete :: (any) -> any, interaction)
+		local success, errorMessage = xpcall(function()
+			(registeredCommand.autocomplete :: (any) -> any)(interaction)
+		end, debug.traceback)
 
 		if not success then
-			self.logger:warn(`error in '{data.name}' autocomplete: {errorMessage}`)
+			self.logger:warn(`error in '{data.name}' autocomplete:\n{errorMessage}`)
 		end
 	end, self.logger)
 end
