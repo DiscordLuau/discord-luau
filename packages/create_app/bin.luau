@@ -41,7 +41,7 @@ if osInfo == "windows" then
 		end
 
 		local innerCommand = "zune run src/init.luau" .. extraArguments .. " & pause"
-		local env = table.clone(process.env)
+		local env = table.clone(process.env) :: { [string]: string }
 
 		env.DISCORD_LUAU_CWD = process.cwd
 
