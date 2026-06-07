@@ -1,6 +1,8 @@
---- a/init.luau	2026-06-01 01:43:01.231746549 +0100
-+++ b/init.luau	2026-06-01 01:35:56.391293960 +0100
-@@ -131,33 +131,8 @@
+diff --git a/init.luau b/init.luau
+index 0ab7093..30328fa 100644
+--- a/init.luau
++++ b/init.luau
+@@ -131,33 +131,8 @@ function sha256.update(self, message)
              i = self.start
              while index < length and i < 64 do
                  code = message:byte(index+1)
@@ -36,8 +38,8 @@
                  index+=1
              end
          end
-@@ -214,11 +189,7 @@
-
+@@ -214,11 +189,7 @@ end
+ 
  function sha256.hash(self)
      local function to_signed32(n)
 -        if n >= 0 then
@@ -47,5 +49,5 @@
 -        end
 +        return bit32.band(n, 0xFFFFFFFF)
      end
-
+ 
      local a = self.h0
