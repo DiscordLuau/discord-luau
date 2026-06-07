@@ -250,7 +250,8 @@ local result = binary.load({
 	id = "libdave",
 	version = "0.0.1",
 	url = "https://raw.githubusercontent.com/DiscordLuau/discord-luau/refs/tags/dave-{version}/packages/dave/binaries/{os}-{arch}/libdave{ext}",
-	checksum = checksums[`{platform}-{architecture}`] or error(`Unsupported platform '{platform}-{architecture}' for libdave`),
+	checksum = checksums[`{platform}-{architecture}`]
+		or error(`Unsupported platform '{platform}-{architecture}' for libdave`),
 })
 
 local lib = (
