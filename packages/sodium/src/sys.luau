@@ -452,7 +452,8 @@ local result = binary.load({
 	id = "libsodium",
 	version = "0.0.1",
 	url = "https://raw.githubusercontent.com/DiscordLuau/discord-luau/refs/tags/sodium-{version}/packages/sodium/binaries/{os}-{arch}/libsodium{ext}",
-	checksum = checksums[`{platform}-{architecture}`] or error(`Unsupported platform '{platform}-{architecture}' for libsodium`),
+	checksum = checksums[`{platform}-{architecture}`]
+		or error(`Unsupported platform '{platform}-{architecture}' for libsodium`),
 })
 
 local lib = (
