@@ -1,5 +1,5 @@
 name = "discord_luau/commands"
-version = "0.0.2"
+version = "0.0.3"
 description = "Discord-Luau Commands - A commands framework for discord-luau."
 license = "MIT"
 authors = ["Async Matrix <hi@asyncmatrix.dev>"]
@@ -23,12 +23,12 @@ environment = "luau"
 lib = "src/init.luau"
 
 [dependencies]
-std_polyfills = { name = "discord_luau/std_polyfills", version = "0.0.2" }
-builders = { name = "discord_luau/builders", version = "0.0.2" }
-classes = { name = "discord_luau/classes", version = "0.0.3" }
-api_types = { name = "discord_luau/api_types", version = "0.0.2" }
+std_polyfills = { name = "discord_luau/std_polyfills", version = ">=0.0.0" }
+builders = { name = "discord_luau/builders", version = ">=0.0.0" }
+classes = { name = "discord_luau/classes", version = ">=0.0.0" }
+api_types = { name = "discord_luau/api_types", version = ">=0.0.0" }
 future = { name = "yetanotherclown/luau_futures", version = "2.0.0-beta.3" }
-logger = { name = "discord_luau/logger", version = "0.0.2" }
+logger = { name = "discord_luau/logger", version = ">=0.0.0" }
 
 [patches]
 "yetanotherclown/luau_futures" = { "2.0.0-beta.3 luau" = "patches/yetanotherclown+luau_futures-2.0.0-beta.3+luau.patch" }

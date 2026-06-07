@@ -1,5 +1,5 @@
 name = "discord_luau/create_app"
-version = "0.0.3"
+version = "0.0.4"
 description = "DiscordLuau - Create App, an interactive command-line tool to scaffold a new Discord bot project in Luau."
 license = "MIT"
 authors = ["Async Matrix <hi@asyncmatrix.dev>"]
@@ -24,7 +24,7 @@ bin = "bin.luau"
 default = "https://github.com/pesde-pkg/index"
 
 [dependencies]
-std_polyfills = { name = "discord_luau/std_polyfills", version = "0.0.2" }
-logger = { name = "discord_luau/logger", version = "0.0.2" }
+std_polyfills = { name = "discord_luau/std_polyfills", version = ">=0.0.0" }
+logger = { name = "discord_luau/logger", version = ">=0.0.0" }
 cli_builder = { name = "4x8matrix/cli_builder", version = "0.1.0-dev.1" }
 cli_tui = { name = "4x8matrix/tui", version = "0.1.0-dev.2" }

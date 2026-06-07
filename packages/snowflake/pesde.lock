@@ -2,12 +2,12 @@
 # It is not intended for manual editing.
 format = 2
 name = "discord_luau/snowflake"
-version = "0.0.1"
+version = "0.0.3"
 target = "luau"
 
-[graph."discord_luau/std_polyfills@0.0.1 luau"]
-direct = ["std_polyfills", { workspace = "discord_luau/std_polyfills", version = "^" }, "standard"]
+[graph."discord_luau/std_polyfills@0.0.2 luau"]
+direct = ["std_polyfills", { name = "discord_luau/std_polyfills", version = ">=0.0.0", index = "default" }, "standard"]
 
-[graph."discord_luau/std_polyfills@0.0.1 luau".pkg_ref]
-ref_ty = "workspace"
-path = "packages/std_polyfills"
+[graph."discord_luau/std_polyfills@0.0.2 luau".pkg_ref]
+ref_ty = "pesde"
+index_url = "https://github.com/pesde-pkg/index"

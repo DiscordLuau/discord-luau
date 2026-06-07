@@ -1,5 +1,5 @@
 name = "discord_luau/dave"
-version = "0.0.2"
+version = "0.0.3"
 description = "Discord Luau Dave - Implementation of the End to End encryption DAVE protocol for discord."
 license = "MIT"
 authors = ["Async Matrix <hi@asyncmatrix.dev>"]
@@ -23,6 +23,6 @@ lib = "src/init.luau"
 default = "https://github.com/pesde-pkg/index"
 
 [dependencies]
-binary = { name = "discord_luau/binary", version = "0.0.2" }
-logger = { name = "discord_luau/logger", version = "0.0.2" }
-std_polyfills = { name = "discord_luau/std_polyfills", version = "0.0.2" }
+binary = { name = "discord_luau/binary", version = ">=0.0.0" }
+logger = { name = "discord_luau/logger", version = ">=0.0.0" }
+std_polyfills = { name = "discord_luau/std_polyfills", version = ">=0.0.0" }

@@ -1,5 +1,5 @@
 name = "discord_luau/binary"
-version = "0.0.2"
+version = "0.0.5"
 description = "Platform binary acquisition layer for FFI packages - resolves, caches, and downloads native shared libraries"
 license = "MIT"
 authors = ["Async Matrix <hi@asyncmatrix.dev>"]
@@ -23,7 +23,7 @@ lib = "src/init.luau"
 default = "https://github.com/pesde-pkg/index"
 
 [dependencies]
-std_polyfills = { name = "discord_luau/std_polyfills", version = "0.0.2" }
+std_polyfills = { name = "discord_luau/std_polyfills", version = ">=0.0.0" }
 sha256 = { name = "kimpure/sha256", version = "0.1.1" }
 
 [patches]

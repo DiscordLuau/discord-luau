@@ -2,12 +2,12 @@
 # It is not intended for manual editing.
 format = 2
 name = "discord_luau/formdata"
-version = "0.0.1"
+version = "0.0.3"
 target = "luau"
 
-[graph."discord_luau/stream@0.0.1 luau"]
-direct = ["stream", { workspace = "discord_luau/stream", version = "^" }, "standard"]
+[graph."discord_luau/stream@0.0.2 luau"]
+direct = ["stream", { name = "discord_luau/stream", version = ">=0.0.0", index = "default" }, "standard"]
 
-[graph."discord_luau/stream@0.0.1 luau".pkg_ref]
-ref_ty = "workspace"
-path = "packages/stream"
+[graph."discord_luau/stream@0.0.2 luau".pkg_ref]
+ref_ty = "pesde"
+index_url = "https://github.com/pesde-pkg/index"

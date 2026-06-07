@@ -1,12 +1,19 @@
 name = "discord_luau/state"
-version = "0.0.2"
+version = "0.0.3"
 description = "Discord-Luau State - contains the state for a discord bot."
 license = "MIT"
 authors = ["Async Matrix <hi@asyncmatrix.dev>"]
 repository = "https://github.com/DiscordLuau/discord-luau/tree/main/packages/state"
 pesde_version = "0.7.0-rc.7"
 
-includes = ["src/**/*", "pesde.toml", "LICENSE", "README.md", "CONTRIBUTING.md", "patches/**/*"]
+includes = [
+    "src/**/*",
+    "pesde.toml",
+    "LICENSE",
+    "README.md",
+    "CONTRIBUTING.md",
+    "patches/**/*",
+]
 
 [target]
 environment = "luau"
@@ -16,11 +23,11 @@ lib = "src/init.luau"
 default = "https://github.com/pesde-pkg/index"
 
 [dependencies]
-std_polyfills = { name = "discord_luau/std_polyfills", version = "0.0.2" }
-api_types = { name = "discord_luau/api_types", version = "0.0.2" }
-utils = { name = "discord_luau/util", version = "0.0.2" }
-websocket = { name = "discord_luau/websocket", version = "0.0.2" }
-rest = { name = "discord_luau/rest", version = "0.0.2" }
-secret = { name = "discord_luau/secret", version = "0.0.2" }
-formdata = { name = "discord_luau/formdata", version = "0.0.2" }
-logger = { name = "discord_luau/logger", version = "0.0.2" }
+std_polyfills = { name = "discord_luau/std_polyfills", version = ">=0.0.0" }
+api_types = { name = "discord_luau/api_types", version = ">=0.0.0" }
+utils = { name = "discord_luau/util", version = ">=0.0.0" }
+websocket = { name = "discord_luau/websocket", version = ">=0.0.0" }
+rest = { name = "discord_luau/rest", version = ">=0.0.0" }
+secret = { name = "discord_luau/secret", version = ">=0.0.0" }
+formdata = { name = "discord_luau/formdata", version = ">=0.0.0" }
+logger = { name = "discord_luau/logger", version = ">=0.0.0" }

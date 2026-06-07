@@ -1,12 +1,19 @@
 name = "discord_luau/voice"
-version = "0.0.2"
+version = "0.0.3"
 description = "Discord Luau Voice - Implementation of the voice protocol for discord."
 license = "MIT"
 authors = ["Async Matrix <hi@asyncmatrix.dev>"]
 repository = "https://github.com/DiscordLuau/discord-luau/tree/main/packages/voice"
 pesde_version = "0.7.0-rc.7"
 
-includes = ["src/**/*", "pesde.toml", "LICENSE", "README.md", "CONTRIBUTING.md", "patches/**/*"]
+includes = [
+    "src/**/*",
+    "pesde.toml",
+    "LICENSE",
+    "README.md",
+    "CONTRIBUTING.md",
+    "patches/**/*",
+]
 
 [target]
 environment = "luau"
@@ -16,17 +23,17 @@ lib = "src/init.luau"
 default = "https://github.com/pesde-pkg/index"
 
 [dependencies]
-util = { name = "discord_luau/util", version = "0.0.2" }
-std_polyfills = { name = "discord_luau/std_polyfills", version = "0.0.2" }
-api_types = { name = "discord_luau/api_types", version = "0.0.2" }
+util = { name = "discord_luau/util", version = ">=0.0.0" }
+std_polyfills = { name = "discord_luau/std_polyfills", version = ">=0.0.0" }
+api_types = { name = "discord_luau/api_types", version = ">=0.0.0" }
 future = { name = "yetanotherclown/luau_futures", version = "2.0.0-beta.3" }
-logger = { name = "discord_luau/logger", version = "0.0.2" }
-emitter = { name = "discord_luau/emitter", version = "0.0.2" }
-secret = { name = "discord_luau/secret", version = "0.0.2" }
-dave = { name = "discord_luau/dave", version = "0.0.2" }
-websocket = { name = "discord_luau/websocket", version = "0.0.2" }
-sodium = { name = "discord_luau/sodium", version = "0.0.3" }
-opus = { name = "discord_luau/opus", version = "0.0.2" }
+logger = { name = "discord_luau/logger", version = ">=0.0.0" }
+emitter = { name = "discord_luau/emitter", version = ">=0.0.0" }
+secret = { name = "discord_luau/secret", version = ">=0.0.0" }
+dave = { name = "discord_luau/dave", version = ">=0.0.0" }
+websocket = { name = "discord_luau/websocket", version = ">=0.0.0" }
+sodium = { name = "discord_luau/sodium", version = ">=0.0.0" }
+opus = { name = "discord_luau/opus", version = ">=0.0.0" }
 
 [patches]
 "yetanotherclown/luau_futures" = { "2.0.0-beta.3 luau" = "patches/yetanotherclown+luau_futures-2.0.0-beta.3+luau.patch" }

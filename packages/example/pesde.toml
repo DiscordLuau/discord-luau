@@ -1,13 +1,20 @@
 name = "discord_luau/example"
 private = true
-version = "0.0.2"
+version = "0.0.3"
 description = "Discord-Luau Example - Example/Test scripts for discord-luau."
 license = "MIT"
 authors = ["Async Matrix <hi@asyncmatrix.dev>"]
 repository = "https://github.com/DiscordLuau/discord-luau/tree/main/packages/formdata"
 pesde_version = "0.7.1"
 
-includes = ["src/**/*", "pesde.toml", "LICENSE", "README.md", "CONTRIBUTING.md", "patches/**/*"]
+includes = [
+    "src/**/*",
+    "pesde.toml",
+    "LICENSE",
+    "README.md",
+    "CONTRIBUTING.md",
+    "patches/**/*",
+]
 
 [indices]
 default = "https://github.com/pesde-pkg/index"
@@ -17,10 +24,10 @@ environment = "luau"
 lib = "src/init.luau"
 
 [dependencies]
-discord = { name = "discord_luau/discord_luau", version = "0.0.2" }
-builders = { name = "discord_luau/builders", version = "0.0.2" }
-classes = { name = "discord_luau/classes", version = "0.0.3" }
-opus = { name = "discord_luau/opus", version = "0.0.2" }
+discord = { name = "discord_luau/discord_luau", version = ">=0.0.0" }
+builders = { name = "discord_luau/builders", version = ">=0.0.0" }
+classes = { name = "discord_luau/classes", version = ">=0.0.0" }
+opus = { name = "discord_luau/opus", version = ">=0.0.0" }
 
 [patches]
 "yetanotherclown/luau_futures" = { "2.0.0-beta.3 luau" = "patches/yetanotherclown+luau_futures-2.0.0-beta.3+luau.patch" }
