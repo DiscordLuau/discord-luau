@@ -15,10 +15,12 @@ return function()
 		builder:addIntent("GuildMessages")
 		local built = builder:build()
 
-		local expected = tonumber(bit.bor(
-			bit.lshift("1", apiTypes.gateway.intents.GuildMembers),
-			bit.lshift("1", apiTypes.gateway.intents.GuildMessages)
-		))
+		local expected = tonumber(
+			bit.bor(
+				bit.lshift("1", apiTypes.gateway.intents.GuildMembers),
+				bit.lshift("1", apiTypes.gateway.intents.GuildMessages)
+			)
+		)
 		check.equal(built, expected)
 	end)
 
