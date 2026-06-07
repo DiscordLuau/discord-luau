@@ -303,7 +303,7 @@ function Message.Interface.new(resource: {
 	}?,
 	stickerIds: { string }?,
 	attachments: { Attachment }?,
-	flags: number?,
+	flags: string?,
 	enforceNonce: boolean?,
 	poll: poll.JSON?,
 }?): Message
@@ -410,7 +410,7 @@ export type Message = typeof(Message.Prototype) & {
 	},
 	stickerIds: { string },
 	attachments: { Attachment },
-	flags: number?,
+	flags: string?,
 	enforceNonce: boolean?,
 	poll: poll.JSON?,
 }
