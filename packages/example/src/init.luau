@@ -11,6 +11,7 @@ local discordBot = discordLuau.bot.new({
 	token = env.DISCORD_BOT_TOKEN,
 	intents = discordBuilders.intents.new({ "Guilds", "GuildMessages" }):build(),
 	reconnect = true,
+	logLevel = "Warn",
 })
 
 discordBot.onAllShardsReady:listenOnce(function()
