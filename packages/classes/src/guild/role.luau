@@ -128,7 +128,7 @@ end
 ]=]
 function Role.Prototype.modifyAsync(
 	self: Role,
-	json: builders.roleJSON,
+	json: apiTypes.ModifyGuildRoleRequest,
 	reason: string?
 ): future.FutureLike<string, Role>
 	return future.Future.new(function()
