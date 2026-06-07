@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.0.4
+
+### Fixed
+
+- sha256 patch template now includes the required git diff header and omits timestamps, fixing patch application failures via git2
+- `process.env` clone in `bin.luau` is now explicitly cast to `{ [string]: string }` to resolve a strict type analysis error
+
+### Changed
+
+- Internal dependency version constraints updated to open-ended ranges so pesde resolves to the latest published version automatically
+
 ## 0.0.3
 
 ### Added
