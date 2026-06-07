@@ -1,13 +1,14 @@
---> Publishes all non-private workspace packages to the pesde registry with a 6-second delay between each to avoid rate limiting.
+--> Publishes all non-private workspace packages to the pesde registry with rate limit retry handling.
 
 local PACKAGES_DIR = "packages"
-local PUBLISH_DELAY = 6
+local PUBLISH_DELAY = 10
+local MAX_RETRIES = 5
 
 local entries = zune.fs.entries(PACKAGES_DIR)
 local publishable: { string } = {}
 
-local function isPrivate(packageDir: string): boolean
-	local manifestPath = `{PACKAGES_DIR}/{packageDir}/pesde.toml`
+local function isPrivate(packageDirectory: string): boolean
+	local manifestPath = `{PACKAGES_DIR}/{packageDirectory}/pesde.toml`
 	local success, contents = pcall(zune.fs.readFileSync, manifestPath)
 
 	if not success then
@@ -16,6 +17,48 @@ local function isPrivate(packageDir: string): boolean
 
 	local manifest = zune.serde.toml.decode(contents)
 	return manifest.private == true
+end
+
+local function publishPackage(name: string): boolean
+	for attempt = 1, MAX_RETRIES do
+		local result = zune.process.run("pesde", { "publish", "--yes" }, {
+			stdout = "inherit",
+			stderr = "pipe",
+			cwd = `{PACKAGES_DIR}/{name}`,
+		})
+
+		if result.ok then
+			return true
+		end
+
+		local stderr = result.stderr or ""
+
+		if string.find(stderr, "package version already exists") then
+			print(`[skip] {name} (already published)`)
+			return true
+		end
+
+		local retryIn = string.match(stderr, "retry in (%d+)s")
+
+		if retryIn then
+			local waitTime = tonumber(retryIn) + 1
+
+			print(`[rate limit] retry {attempt}/{MAX_RETRIES} for {name} - waiting {waitTime}s...`)
+
+			zune.task.wait(waitTime)
+		else
+			if #stderr > 0 then
+				print(stderr)
+			end
+
+			print(`\n[\27[31merror\27[0m] failed to publish {name} (exit code {result.code})`)
+			zune.process.exit(result.code)
+		end
+	end
+
+	print(`\n[\27[31merror\27[0m] gave up publishing {name} after {MAX_RETRIES} attempts`)
+	zune.process.exit(1)
+	return false
 end
 
 for _, entry in entries do
@@ -43,29 +86,10 @@ for index, name in publishable do
 
 	print(`[publish] {name}`)
 
-	local result = zune.process.run("pesde", { "publish", "--yes" }, {
-		stdout = "inherit",
-		stderr = "pipe",
-		cwd = `{PACKAGES_DIR}/{name}`,
-	})
-
-	if not result.ok then
-		local stderr = result.stderr or ""
-
-		if string.find(stderr, "package version already exists") then
-			print(`[skip] {name} (already published)`)
-		else
-			if #stderr > 0 then
-				print(stderr)
-			end
-
-			print(`\n[\27[31merror\27[0m] failed to publish {name} (exit code {result.code})`)
-
-			zune.process.exit(result.code)
-		end
-	end
+	publishPackage(name)
 
 	local tarball = `{PACKAGES_DIR}/{name}/package.tar.gz`
+
 	local tarballStat = zune.fs.stat(tarball)
 	if tarballStat.kind ~= "none" then
 		zune.fs.deleteFile(tarball)
