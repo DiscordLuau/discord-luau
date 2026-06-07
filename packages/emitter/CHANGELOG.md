@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.0.3
+
+### Changed
+
+- Internal dependency version constraints updated to open-ended ranges so pesde resolves to the latest published version automatically
+
 ## 0.0.2
 
 ### Changed
