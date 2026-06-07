@@ -14,13 +14,16 @@ local stdPolyfills = require("@self/../luau_packages/std_polyfills")
 
 local isRoblox = stdPolyfills.runtime.getRuntime() == "Roblox"
 
-local DIM = if isRoblox then "" else "\27\91\50\109"
-local BOLD = if isRoblox then "" else "\27\91\49\109"
-local RESET = if isRoblox then "" else "\27\91\48\109"
-local CYAN = if isRoblox then "" else "\27\91\51\54\109"
-local BLUE = if isRoblox then "" else "\27\91\51\52\109"
-local YELLOW = if isRoblox then "" else "\27\91\51\51\109"
-local RED = if isRoblox then "" else "\27\91\51\49\109"
+local environment = stdPolyfills.process.getEnv()
+local useAnsi = not isRoblox and environment["NO_COLOR"] == nil
+
+local DIM = if useAnsi then "\27\91\50\109" else ""
+local BOLD = if useAnsi then "\27\91\49\109" else ""
+local RESET = if useAnsi then "\27\91\48\109" else ""
+local CYAN = if useAnsi then "\27\91\51\54\109" else ""
+local BLUE = if useAnsi then "\27\91\51\52\109" else ""
+local YELLOW = if useAnsi then "\27\91\51\51\109" else ""
+local RED = if useAnsi then "\27\91\51\49\109" else ""
 
 local LOGGER_LOG_LEVELS = table.freeze({
 	"Debug",
@@ -32,6 +35,9 @@ local LOGGER_LOG_LEVELS = table.freeze({
 	"Alert",
 	"Emergency",
 })
+
+local envLevelName = environment["DISCORD_LUAU_LOG_LEVEL"]
+local envLevelFloor = envLevelName and table.find(LOGGER_LOG_LEVELS, envLevelName) or nil
 
 local LOGGER_LOG_FORMATS = table.freeze({
 	["Debug"] = `{DIM}[%s][%s][DEBUG]: %s`,
@@ -49,11 +55,6 @@ local Logger = {}
 Logger.Prototype = {}
 Logger.Interface = {}
 
---[=[
-	@within Logger
-
-	Function responsible for parsing a varadic list of arguments into a string.
-]=]
 local function parseVaradic(args: { any }): string
 	local source = ""
 
@@ -77,14 +78,9 @@ function Logger.Prototype.setLogLevel(self: Logger, logLevel: LogLevel)
 
 	assert(logLevelIndex, `Invalid log level: {logLevel}`)
 
-	self.logLevel = logLevelIndex
+	self.logLevel = if envLevelFloor then math.min(logLevelIndex, envLevelFloor) else logLevelIndex
 end
 
---[=[
-	@within Logger
-
-	Function responsible for for getting the log level of the logger
-]=]
 function Logger.Prototype.getLogLevel(self: Logger): LogLevel
 	return LOGGER_LOG_LEVELS[self.logLevel] :: LogLevel
 end
@@ -96,25 +92,20 @@ end
 	log line (including ANSI codes) as a single string. Useful for capturing output in tests.
 ]=]
 function Logger.Prototype.setSink(self: Logger, sink: (message: string) -> ())
-	self._sink = sink
+	self.sink = sink
 end
 
---[=[
-	@within Logger
-
-	Constructor for the Logger object.
-]=]
 function Logger.Interface.new(name: string, logLevel: LogLevel?): Logger
 	local logLevelIndex = logLevel and table.find(LOGGER_LOG_LEVELS, logLevel)
 
 	assert(not logLevel or logLevelIndex, `Invalid log level: {logLevel}`)
 
 	local self: Logger = setmetatable({
-		logLevel = logLevelIndex or 1,
-		_sink = print,
+		logLevel = if envLevelFloor then math.min(logLevelIndex or 1, envLevelFloor) else (logLevelIndex or 1),
+		sink = print,
 	}, { __index = Logger.Prototype }) :: any
 
-	-- this block of code will generate a function for each log level, and set it to the Logger object.
+	-- dynamically generates a method for each log level on the instance
 	for logValue, logType in LOGGER_LOG_LEVELS do
 		local camelCaseMethod = `{string.lower(string.sub(logType, 1, 1))}{string.sub(logType, 2, #logType)}`
 
@@ -138,9 +129,9 @@ function Logger.Interface.new(name: string, logLevel: LogLevel?): Logger
 				milliseconds
 			)
 
-			self._sink(`{string.format(LOGGER_LOG_FORMATS[logType], time, name, logMessage)}{RESET}`)
+			self.sink(`{string.format(LOGGER_LOG_FORMATS[logType], time, name, logMessage)}{RESET}`)
 
-			if logValue >= 5 and self._sink == print then
+			if logValue >= 5 and self.sink == print then
 				local thread = coroutine.running()
 
 				stdPolyfills.task.defer(function()
@@ -158,7 +149,7 @@ end
 export type LogLevel = "Debug" | "Info" | "Notice" | "Warn" | "Error" | "Critical" | "Alert" | "Emergency"
 export type Logger = typeof(Logger.Prototype) & {
 	logLevel: number,
-	_sink: (message: string) -> (),
+	sink: (message: string) -> (),
 
 	debug: (self: Logger, ...any) -> (),
 	info: (self: Logger, ...any) -> (),
