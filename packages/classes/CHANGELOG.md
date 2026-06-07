@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.0.5
+
+### Fixed
+
+- `Role.modifyAsync` now accepts `apiTypes.ModifyGuildRoleRequest` instead of `builders.roleJSON`, allowing partial role update tables without requiring all fields to be present
+- `VoiceBehaviour.joinAsync` shard ID calculation now has an explicit `number` type cast on the `tonumber` result to satisfy strict type analysis
+
+## 0.0.4
+
+### Changed
+
+- Internal dependency version constraints updated to open-ended ranges so pesde resolves to the latest published version automatically
+
 ## 0.0.3
 
 ### Changed
