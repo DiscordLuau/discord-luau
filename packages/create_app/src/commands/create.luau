@@ -181,7 +181,11 @@ return command
 			setupProject(baseDirectory, information.IDE, information)
 
 			setStatus("Running rokit install…", 0.35)
-			local rokitResult = StdPolyfills.process.run("rokit", { "install", "--no-trust-check" }, { cwd = projectPath })
+			local rokitResult = StdPolyfills.process.run(
+				"rokit",
+				{ "install", "--no-trust-check" },
+				{ cwd = projectPath }
+			)
 
 			if not rokitResult.ok then
 				local output = processOutput(rokitResult)
