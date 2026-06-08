@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.0.3
+
+### Added
+
+- Added password/token/webhook detection in the `capture` command to avoid users printing sensitive information in their capture logs.
+
+## 0.0.2
+
+### Fixes
+
+- `bin.luau` is now configured to use Zune as the `capture` command requires zune primitives that aren't available in other runtimes. 
+
 ## 0.0.1
 
 ### Added
