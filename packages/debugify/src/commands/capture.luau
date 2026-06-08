@@ -1,6 +1,7 @@
 local CliBuilder = require("../../luau_packages/cli_builder")
 local StdPolyfills = require("../../luau_packages/std_polyfills")
 local diagnostics = require("../utilities/diagnostics")
+local redact = require("../utilities/redact")
 
 local command = CliBuilder.command
 
@@ -81,8 +82,10 @@ local function pipeStream(stream: any, writeFunction: (data: string) -> (), logL
 				break
 			end
 
-			writeFunction(chunk)
-			flushChunk(chunk, logLines, partial)
+			local sanitizedChunk = redact.sanitize(chunk)
+
+			writeFunction(sanitizedChunk)
+			flushChunk(sanitizedChunk, logLines, partial)
 		end
 	end)
 end
