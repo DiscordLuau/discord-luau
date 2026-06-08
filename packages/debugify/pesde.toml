@@ -1,5 +1,5 @@
 name = "discord_luau/debuggify"
-version = "0.0.1"
+version = "0.0.3"
 description = "Discord-Luau Debuggify - Collect and display diagnostic information to help troubleshoot Discord-Luau issues."
 license = "MIT"
 authors = ["Async Matrix <hi@asyncmatrix.dev>"]
