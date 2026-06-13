@@ -20,6 +20,12 @@
 ]=]
 
 --[=[
+	@prop guildId string?
+	@within Classes.Message
+	The ID of the guild the message was sent in. Nil for DM messages.
+]=]
+
+--[=[
 	@prop author Classes.User
 	@within Classes.Message
 	The author of this message.
@@ -603,6 +609,8 @@ function Message.Prototype.sync(self: Message, messageData: apiTypes.MessageObje
 
 	self.channelId = messageData.channel_id :: string
 
+	self.guildId = messageData.guild_id
+
 	self.author = messageData.author and user.new(messageData.author, self.state)
 
 	self.content = messageData.content
@@ -694,6 +702,7 @@ export type Message = typeof(Message.Prototype) & {
 
 	id: apiTypes.Snowflake,
 	channelId: apiTypes.Snowflake,
+	guildId: apiTypes.Snowflake?,
 	author: user.User?,
 	content: string?,
 	timestamp: stdPolyfills.DateTime?,
