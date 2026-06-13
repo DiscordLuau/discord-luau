@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.0.6
+
+### Added
+
+- `Message` now exposes a `guildId` field populated from `guild_id` in the message payload; nil for DM messages
+
 ## 0.0.5
 
 ### Fixed
