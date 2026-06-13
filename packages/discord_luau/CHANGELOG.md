@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.0.4
+
+### Fixed
+
+- `guild_id` is now propagated from the `GUILD_CREATE` payload to channel and thread cache entries so `Message.guildId` is correctly populated when reading from cache
+
 ## 0.0.3
 
 ### Changed
