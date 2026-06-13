@@ -1,5 +1,5 @@
 name = "discord_luau/classes"
-version = "0.0.5"
+version = "0.0.6"
 description = "Discord-Luau Classes - Objects that wrap around various discord API structures."
 license = "MIT"
 authors = ["Async Matrix <hi@asyncmatrix.dev>"]
