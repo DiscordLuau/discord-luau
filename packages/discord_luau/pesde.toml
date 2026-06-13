@@ -1,5 +1,5 @@
 name = "discord_luau/discord_luau"
-version = "0.0.3"
+version = "0.0.4"
 description = "Discord-Luau - The entrypoint for the Discord Luau library."
 license = "MIT"
 authors = ["Async Matrix <hi@asyncmatrix.dev>"]
