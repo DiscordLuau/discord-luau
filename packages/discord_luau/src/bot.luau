@@ -816,12 +816,14 @@ function Bot.Prototype.connectAsync(self: Bot): future.FutureLike<string, nil>
 
 					if guildData.channels then
 						for _, channelData in guildData.channels do
+							channelData.guild_id = guildData.id
 							self.state.cache.channels:set(channelData.id :: apiTypes.Snowflake, channelData)
 						end
 					end
 
 					if guildData.threads then
 						for _, threadData in guildData.threads do
+							threadData.guild_id = guildData.id
 							self.state.cache.channels:set(threadData.id :: apiTypes.Snowflake, threadData)
 						end
 					end
