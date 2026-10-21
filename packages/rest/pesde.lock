@@ -2,7 +2,7 @@
 # It is not intended for manual editing.
 format = 2
 name = "discord_luau/rest"
-version = "0.0.4"
+version = "0.0.5"
 target = "luau"
 
 [graph."4x8matrix/int64@1.0.1 luau".pkg_ref]

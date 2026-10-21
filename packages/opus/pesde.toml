@@ -1,5 +1,5 @@
 name = "discord_luau/opus"
-version = "0.0.3"
+version = "0.0.4"
 description = "Discord Luau Opus - FFI bindings for libopus, providing Opus audio encoding and decoding."
 license = "MIT"
 authors = ["Async Matrix <hi@asyncmatrix.dev>"]

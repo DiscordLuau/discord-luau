@@ -2,7 +2,7 @@
 # It is not intended for manual editing.
 format = 2
 name = "discord_luau/debuggify"
-version = "0.0.3"
+version = "0.0.4"
 target = "luau"
 
 [graph."4x8matrix/cli_builder@0.1.0-dev.1 luau"]

@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.0.5
+
 ### Added
 
 - `Request` accepts a `baseUrl` setting so requests can target a local test server instead of the Discord API

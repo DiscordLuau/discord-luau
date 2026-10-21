@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.0.5
+
 ### Fixed
 
 - Windows (x64 and x86) loads the current `libsodium.dll`; `binary.load` pointed at the `sodium-0.0.1` tag, which holds the old DLL, so the download failed its checksum. It now uses `sodium-0.0.3`

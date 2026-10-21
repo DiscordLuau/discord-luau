@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.0.4
+
 ### Fixed
 
 - `DISCORD_FRAME_SIZE`, `DISCORD_SAMPLE_RATE`, `DISCORD_CHANNELS`, `MAX_PACKET_SIZE`, `MAX_FRAME_SIZE`, `application`, `sampleRate` and `channels` are now plain values on runtimes without FFI, so `Opus.stats` works there; before, they were placeholder tables that errored when used

@@ -1,5 +1,5 @@
 name = "discord_luau/state"
-version = "0.0.3"
+version = "0.0.4"
 description = "Discord-Luau State - contains the state for a discord bot."
 license = "MIT"
 authors = ["Async Matrix <hi@asyncmatrix.dev>"]

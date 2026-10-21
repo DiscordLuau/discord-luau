@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.0.6
+
 ### Fixed
 
 - Scaffolded `rokit.toml` pins Lute to an exact version, so `rokit install` accepts it
@@ -15,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Scaffolded `rokit.toml` now pins Lune 0.11.0, Zune 0.5.9 and Lute 1.0.1-nightly.20261021
+- Scaffolded projects depend on discord_luau 0.0.5, which carries the gateway reconnect fix
 
 ## 0.0.5
 

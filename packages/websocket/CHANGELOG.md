@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.0.4
+
 ### Added
 
 - `Shard:sendResumeAsync`, which sends op 6 Resume for the current session with the last sequence seen

@@ -2,7 +2,7 @@
 # It is not intended for manual editing.
 format = 2
 name = "discord_luau/binary"
-version = "0.0.5"
+version = "0.0.6"
 target = "luau"
 
 [graph."discord_luau/std_polyfills@0.0.3 luau"]
