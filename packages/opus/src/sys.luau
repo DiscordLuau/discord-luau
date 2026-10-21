@@ -9,50 +9,7 @@
 local binary = require("../luau_packages/binary")
 local stdPolyfills = require("../luau_packages/std_polyfills")
 
-if not stdPolyfills.runtime.capabilities().ffi then
-	local function makeStub(name: string): any
-		return setmetatable({} :: any, {
-			__index = function(_, key)
-				return makeStub(`{name}.{key}`)
-			end,
-			__call = function()
-				error(`Opus requires FFI which is not available on this runtime (accessed: {name})`)
-			end,
-		})
-	end
-	return makeStub("Opus.Sys")
-end
-
-local types = stdPolyfills.ffi.getTypes()
-
-local void = types.void
-local i32 = types.i32
-local pointer = types.pointer
-
-export type Lib = {
-	opus_encoder_create: (Fs: number, channels: number, application: number, error: FFIPointer) -> FFIPointer,
-	opus_encode: (st: FFIPointer, pcm: FFIPointer, frameSize: number, data: FFIPointer, maxDataBytes: number) -> number,
-	opus_encoder_destroy: (st: FFIPointer) -> (),
-
-	opus_decoder_create: (Fs: number, channels: number, error: FFIPointer) -> FFIPointer,
-	opus_decode: (
-		st: FFIPointer,
-		data: FFIPointer,
-		length: number,
-		pcm: FFIPointer,
-		frameSize: number,
-		decodeFec: number
-	) -> number,
-	opus_decoder_destroy: (st: FFIPointer) -> (),
-
-	opus_strerror: (error: number) -> FFIPointer,
-}
-
-local platform = stdPolyfills.process.getPlatform()
-local rawArch = stdPolyfills.process.getArch()
-local architecture = if rawArch == "aarch64" then "arm64" elseif rawArch == "x86" then "x86" else "x64"
-
-local checksums: { [string]: string } = {
+local CHECKSUMS: { [string]: string } = {
 	["linux-arm64"] = "sha256:b2bbb70c86a9c819c35796cd37d8fdae0292fa2424ce131ec7df6e6f174fa68f",
 	["linux-x64"] = "sha256:57d2875a85a8a31918f802664137f843d70e4911bcda4ac7ac2b5a7f00ca3e6a",
 	["macos-arm64"] = "sha256:d4e65ac92a40b106d6f856ae4d04def8a3a0c2631f1495c69a8b46058ffc4222",
@@ -60,30 +17,8 @@ local checksums: { [string]: string } = {
 	["windows-x86"] = "sha256:3b5bfe12950f35043ed75d2b6fa902c936d67a507160bf76358d67c76c1dbde8",
 }
 
-local result = binary.load({
-	id = "libopus",
-	version = "0.0.1",
-	url = "https://raw.githubusercontent.com/DiscordLuau/discord-luau/refs/tags/opus-{version}/packages/opus/binaries/{os}-{arch}/libopus{ext}",
-	checksum = checksums[`{platform}-{architecture}`]
-		or error(`Unsupported platform '{platform}-{architecture}' for libopus`),
-})
-
-local lib = (
-	stdPolyfills.ffi.dlopen(result.path, {
-		opus_encoder_create = { returns = pointer, args = { i32, i32, i32, pointer } },
-		opus_encode = { returns = i32, args = { pointer, pointer, i32, pointer, i32 } },
-		opus_encoder_destroy = { returns = void, args = { pointer } },
-
-		opus_decoder_create = { returns = pointer, args = { i32, i32, pointer } },
-		opus_decode = { returns = i32, args = { pointer, pointer, i32, pointer, i32, i32 } },
-		opus_decoder_destroy = { returns = void, args = { pointer } },
-
-		opus_strerror = { returns = pointer, args = { i32 } },
-	}) :: any
-) :: Lib
-
-return {
-	lib = lib,
+local Sys = {
+	lib = (nil :: any) :: Lib,
 
 	application = {
 		voip = 2048,
@@ -110,3 +45,75 @@ return {
 	DISCORD_SAMPLE_RATE = 48000,
 	DISCORD_CHANNELS = 2,
 }
+
+local function makeStub(name: string): any
+	return setmetatable({} :: any, {
+		__index = function(_, key)
+			return makeStub(`{name}.{key}`)
+		end,
+		__call = function()
+			error(`Opus requires FFI which is not available on this runtime (accessed: {name})`)
+		end,
+	})
+end
+
+local function loadLibrary(): Lib
+	local types = stdPolyfills.ffi.getTypes()
+	local void = types.void
+	local i32 = types.i32
+	local pointer = types.pointer
+	local platform = stdPolyfills.process.getPlatform()
+	local rawArchitecture = stdPolyfills.process.getArch()
+	local architecture = if rawArchitecture == "aarch64"
+		then "arm64"
+		elseif rawArchitecture == "x86" then "x86"
+		else "x64"
+	local result = binary.load({
+		id = "libopus",
+		version = "0.0.2",
+		url = "https://raw.githubusercontent.com/DiscordLuau/discord-luau/refs/tags/opus-{version}/packages/opus/binaries/{os}-{arch}/libopus{ext}",
+		checksum = CHECKSUMS[`{platform}-{architecture}`]
+			or error(`Unsupported platform '{platform}-{architecture}' for libopus`),
+	})
+
+	return (
+		stdPolyfills.ffi.dlopen(result.path, {
+			opus_encoder_create = { returns = pointer, args = { i32, i32, i32, pointer } },
+			opus_encode = { returns = i32, args = { pointer, pointer, i32, pointer, i32 } },
+			opus_encoder_destroy = { returns = void, args = { pointer } },
+
+			opus_decoder_create = { returns = pointer, args = { i32, i32, pointer } },
+			opus_decode = { returns = i32, args = { pointer, pointer, i32, pointer, i32, i32 } },
+			opus_decoder_destroy = { returns = void, args = { pointer } },
+
+			opus_strerror = { returns = pointer, args = { i32 } },
+		}) :: any
+	) :: Lib
+end
+
+if stdPolyfills.runtime.capabilities().ffi then
+	Sys.lib = loadLibrary()
+else
+	Sys.lib = makeStub("Opus.Sys.lib")
+end
+
+export type Lib = {
+	opus_encoder_create: (Fs: number, channels: number, application: number, error: FFIPointer) -> FFIPointer,
+	opus_encode: (st: FFIPointer, pcm: FFIPointer, frameSize: number, data: FFIPointer, maxDataBytes: number) -> number,
+	opus_encoder_destroy: (st: FFIPointer) -> (),
+
+	opus_decoder_create: (Fs: number, channels: number, error: FFIPointer) -> FFIPointer,
+	opus_decode: (
+		st: FFIPointer,
+		data: FFIPointer,
+		length: number,
+		pcm: FFIPointer,
+		frameSize: number,
+		decodeFec: number
+	) -> number,
+	opus_decoder_destroy: (st: FFIPointer) -> (),
+
+	opus_strerror: (error: number) -> FFIPointer,
+}
+
+return Sys

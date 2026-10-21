@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- `DISCORD_FRAME_SIZE`, `DISCORD_SAMPLE_RATE`, `DISCORD_CHANNELS`, `MAX_PACKET_SIZE`, `MAX_FRAME_SIZE`, `application`, `sampleRate` and `channels` are now plain values on runtimes without FFI, so `Opus.stats` works there; before, they were placeholder tables that errored when used
+- Windows (x64 and x86) loads the current `libopus.dll`; `binary.load` pointed at the `opus-0.0.1` tag, which holds the old DLL, so the download failed its checksum. It now uses `opus-0.0.2`
+- Native libraries load on platforms without a system copy, through the `binary` checksum fix
+
 ## 0.0.3
 
 ### Changed

@@ -5,28 +5,26 @@ name = "discord_luau/opus"
 version = "0.0.3"
 target = "luau"
 
+[overrides."binary>std_polyfills"]
+workspace = "discord_luau/std_polyfills"
+version = ">=0.0.0"
+
 [graph."discord_luau/binary@0.0.5 luau"]
-direct = ["binary", { name = "discord_luau/binary", version = ">=0.0.0", index = "default" }, "standard"]
+direct = ["binary", { workspace = "discord_luau/binary", version = ">=0.0.0" }, "standard"]
 
 [graph."discord_luau/binary@0.0.5 luau".dependencies]
-sha256 = ["kimpure/sha256@0.1.1 luau", "standard"]
 std_polyfills = ["discord_luau/std_polyfills@0.0.3 luau", "standard"]
 
 [graph."discord_luau/binary@0.0.5 luau".pkg_ref]
-ref_ty = "pesde"
-index_url = "https://github.com/pesde-pkg/index"
+ref_ty = "workspace"
+path = "packages/binary"
 
 [graph."discord_luau/binary@0.0.5 luau".pkg_ref.dependencies]
-sha256 = [{ name = "kimpure/sha256", version = "^0.1.1", index = "https://github.com/pesde-pkg/index" }, "standard"]
 std_polyfills = [{ name = "discord_luau/std_polyfills", version = ">=0.0.0", index = "https://github.com/pesde-pkg/index" }, "standard"]
 
 [graph."discord_luau/std_polyfills@0.0.3 luau"]
-direct = ["std_polyfills", { name = "discord_luau/std_polyfills", version = ">=0.0.0", index = "default" }, "standard"]
+direct = ["std_polyfills", { workspace = "discord_luau/std_polyfills", version = ">=0.0.0" }, "standard"]
 
 [graph."discord_luau/std_polyfills@0.0.3 luau".pkg_ref]
-ref_ty = "pesde"
-index_url = "https://github.com/pesde-pkg/index"
-
-[graph."kimpure/sha256@0.1.1 luau".pkg_ref]
-ref_ty = "pesde"
-index_url = "https://github.com/pesde-pkg/index"
+ref_ty = "workspace"
+path = "packages/std_polyfills"
