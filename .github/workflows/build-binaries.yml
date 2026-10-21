@@ -1,0 +1,40 @@
+name: Build macOS binaries
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Cross-compile libopus and libsodium for macOS
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install Zig
+        uses: mlugg/setup-zig@v2.2.1
+        with:
+          version: 0.16.0
+      - name: Build
+        run: bash .github/scripts/build-macos-binaries.sh dist | tee checksums.txt
+      - name: Write checksums to the summary
+        run: |
+          {
+            echo "### macOS binaries"
+            echo
+            echo "Copy these into the repository and update the matching \`sys.luau\` checksums; \`binary.load\` downloads from a release tag, so shipping them needs a new tag."
+            echo
+            echo '```'
+            tail -n 4 checksums.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-binaries
+          path: dist/
+          if-no-files-found: error

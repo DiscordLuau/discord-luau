@@ -4,14 +4,19 @@ on:
   pull_request:
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   fmt:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Install tooling
-        uses: CompeyDev/setup-rokit@v0.1.0
+        uses: CompeyDev/setup-rokit@v0.2.1
         with:
           cache: true
       - name: Check formatting
@@ -19,18 +24,20 @@ jobs:
 
   lint:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     needs: ["fmt"]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Install tooling
-        uses: CompeyDev/setup-rokit@v0.1.0
+        uses: CompeyDev/setup-rokit@v0.2.1
         with:
           cache: true
       - name: Lint
         run: zune run .zune/lint.luau
   typecheck:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     needs: ["lint"]
     steps:
       - name: Checkout repository
@@ -41,7 +48,7 @@ jobs:
           cache: true
           version: v0.7.0-rc.7+registry.0.2.3-rc.3
       - name: Install tooling
-        uses: CompeyDev/setup-rokit@v0.1.0
+        uses: CompeyDev/setup-rokit@v0.2.1
         with:
           cache: true
       - name: Setup zune typedefs
@@ -54,7 +61,10 @@ jobs:
         run: zune run .zune/analyze.luau
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     needs: ["typecheck"]
+    env:
+      DISCORD_LUAU_REQUIRE_FFI: "1"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -64,7 +74,7 @@ jobs:
           cache: true
           version: v0.7.0-rc.7+registry.0.2.3-rc.3
       - name: Install tooling
-        uses: CompeyDev/setup-rokit@v0.1.0
+        uses: CompeyDev/setup-rokit@v0.2.1
         with:
           cache: true
       - name: Bundle api-types
