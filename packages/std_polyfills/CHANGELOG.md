@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Lute `task.delay` returns a thread, so `task.cancel` works on it
+- Lute `io.stderrWrite` no longer prints a stray `2`; it writes to stdout because Lute has no stderr writer
+- Lune `process.getArch` returns the CPU architecture
+- Lune `fileSystem.stat` returns the size of a file
+- Zune `serde.decode("json", buffer)` accepts a buffer
+- Eryx `ffi` requires `@eryx/experimental/_ffi`
+
+### Changed
+
+- `runtime.capabilities().ffi` is `true` on Zune again, so `dave`, `opus` and `sodium` work there; tested on Linux x64 and Windows x64 with Zune 0.5.9
+- Verified on Lune 0.11.0, Zune 0.5.9, Lute 1.0.1-nightly.20261021 and Eryx 0.1.0
+
 ## 0.0.3
 
 ### Added
