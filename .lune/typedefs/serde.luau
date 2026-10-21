@@ -6,13 +6,14 @@
 
 	Currently supported formats:
 
-	| Name   | Learn More           |
-	|:-------|:---------------------|
-	| `json` | https://www.json.org |
-	| `yaml` | https://yaml.org     |
-	| `toml` | https://toml.io      |
+	| Name    | Learn More           | Note                        |
+	|:--------|:---------------------|:----------------------------|
+	| `json`  | https://www.json.org |                             |
+	| `jsonc` | https://www.json.org | JSON, with comments allowed |
+	| `yaml`  | https://yaml.org     |                             |
+	| `toml`  | https://toml.io      |                             |
 ]=]
-export type EncodeDecodeFormat = "json" | "yaml" | "toml"
+export type EncodeDecodeFormat = "json" | "jsonc" | "yaml" | "toml"
 
 --[=[
 	@within Serde
@@ -28,8 +29,9 @@ export type EncodeDecodeFormat = "json" | "yaml" | "toml"
 	| `gzip`   | https://www.gnu.org/software/gzip |
 	| `lz4`    | https://github.com/lz4/lz4        |
 	| `zlib`   | https://www.zlib.net              |
+	| `zstd`   | https://github.com/facebook/zstd  |
 ]=]
-export type CompressDecompressFormat = "brotli" | "gzip" | "lz4" | "zlib"
+export type CompressDecompressFormat = "brotli" | "gzip" | "lz4" | "zlib" | "zstd"
 
 --[=[
 	@within Serde
@@ -80,12 +82,12 @@ export type HashAlgorithm =
 	local fs = require("@lune/fs")
 	local serde = require("@lune/serde")
 
-	-- Parse different file formats into lua tables
+	-- Parse different file formats into lua values
 	local someJson = serde.decode("json", fs.readFile("myFile.json"))
 	local someToml = serde.decode("toml", fs.readFile("myFile.toml"))
 	local someYaml = serde.decode("yaml", fs.readFile("myFile.yaml"))
 
-	-- Write lua tables to files in different formats
+	-- Write lua values to files in different formats
 	fs.writeFile("myFile.json", serde.encode("json", someJson))
 	fs.writeFile("myFile.toml", serde.encode("toml", someToml))
 	fs.writeFile("myFile.yaml", serde.encode("yaml", someYaml))
@@ -181,13 +183,14 @@ end
 	@tag must_use
 
 	Hashes the given message using HMAC with the given secret
-	and algorithm, returning the hash as a base64 string.
+	and algorithm, returning the hash as a hex string.
 
 	See [`HashAlgorithm`] for a list of supported algorithms.
 
 	@param algorithm The algorithm to use
 	@param message The message to hash
-	@return The hash as a base64 string
+	@param secret The secret key to use
+	@return The hash as a hex string
 ]=]
 function serde.hmac(algorithm: HashAlgorithm, message: string | buffer, secret: string | buffer): string
 	return nil :: any
