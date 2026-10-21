@@ -1,4 +1,4 @@
--- selene: allow(undefined_variable)
+--# selene: allow(undefined_variable)
 local HttpService = game:GetService("HttpService")
 
 local net = {}

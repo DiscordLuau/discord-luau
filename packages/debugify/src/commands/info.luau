@@ -1,3 +1,4 @@
+--# selene: allow(bad_string_escape)
 local CliBuilder = require("../../luau_packages/cli_builder")
 local StdPolyfills = require("../../luau_packages/std_polyfills")
 local diagnostics = require("../utilities/diagnostics")

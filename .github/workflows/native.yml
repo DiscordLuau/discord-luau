@@ -1,0 +1,70 @@
+name: Native libraries
+
+on:
+  pull_request:
+    paths:
+      - "packages/binary/**"
+      - "packages/dave/**"
+      - "packages/opus/**"
+      - "packages/sodium/**"
+      - "packages/std_polyfills/**"
+      - ".zune/**"
+      - "pesde.toml"
+      - "pesde.lock"
+      - "rokit.toml"
+      - ".github/workflows/native.yml"
+      - ".github/scripts/**"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  release-tags:
+    name: Release tags serve the expected binaries
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Check every platform's binary against its release tag
+        run: bash .github/scripts/check-binary-tags.sh
+
+  test:
+    name: Native tests (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
+    env:
+      DISCORD_LUAU_REQUIRE_FFI: "1"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install pesde
+        uses: lumin-org/setup-pesde@v0.4.1
+        with:
+          cache: true
+          version: v0.7.4+registry.0.2.3
+      - name: Install tooling
+        uses: CompeyDev/setup-rokit@v0.2.1
+        with:
+          cache: true
+      - name: Install dependencies
+        run: pesde install
+      - name: Seed native libraries from this checkout
+        run: zune run .github/scripts/seedBinaryCache.luau
+      - name: Test binary
+        run: zune run .zune/test.luau packages/binary
+      - name: Test sodium
+        run: zune run .zune/test.luau packages/sodium
+      - name: Test opus
+        run: zune run .zune/test.luau packages/opus
+      - name: Test dave
+        run: zune run .zune/test.luau packages/dave

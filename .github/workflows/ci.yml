@@ -4,14 +4,19 @@ on:
   pull_request:
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   fmt:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Install tooling
-        uses: CompeyDev/setup-rokit@v0.1.0
+        uses: CompeyDev/setup-rokit@v0.2.1
         with:
           cache: true
       - name: Check formatting
@@ -19,18 +24,20 @@ jobs:
 
   lint:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     needs: ["fmt"]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Install tooling
-        uses: CompeyDev/setup-rokit@v0.1.0
+        uses: CompeyDev/setup-rokit@v0.2.1
         with:
           cache: true
       - name: Lint
         run: zune run .zune/lint.luau
   typecheck:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     needs: ["lint"]
     steps:
       - name: Checkout repository
@@ -39,9 +46,9 @@ jobs:
         uses: lumin-org/setup-pesde@v0.4.1
         with:
           cache: true
-          version: v0.7.0-rc.7+registry.0.2.3-rc.3
+          version: v0.7.4+registry.0.2.3
       - name: Install tooling
-        uses: CompeyDev/setup-rokit@v0.1.0
+        uses: CompeyDev/setup-rokit@v0.2.1
         with:
           cache: true
       - name: Setup zune typedefs
@@ -54,7 +61,10 @@ jobs:
         run: zune run .zune/analyze.luau
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     needs: ["typecheck"]
+    env:
+      DISCORD_LUAU_REQUIRE_FFI: "1"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -62,14 +72,16 @@ jobs:
         uses: lumin-org/setup-pesde@v0.4.1
         with:
           cache: true
-          version: v0.7.0-rc.7+registry.0.2.3-rc.3
+          version: v0.7.4+registry.0.2.3
       - name: Install tooling
-        uses: CompeyDev/setup-rokit@v0.1.0
+        uses: CompeyDev/setup-rokit@v0.2.1
         with:
           cache: true
       - name: Bundle api-types
         run: zune run .zune/bundle.luau
       - name: Install dependencies
         run: pesde install
+      - name: Seed native libraries from this checkout
+        run: zune run .github/scripts/seedBinaryCache.luau
       - name: Run unit-tests
         run: zune run .zune/test.luau

@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.0.4
+
+### Fixed
+
+- `info` command reads the Lute version from the bare `lute --version` output
+
 ### Added
 
 - `info` command now resolves the Lute version string by running `lute --version` when the detected runtime is Lute, rather than reporting the generic Luau `_VERSION`

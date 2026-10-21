@@ -3,6 +3,7 @@ local cache = require("@self/cache")
 local state = require("@self/state")
 
 export type State = state.State
+export type Stub = state.Stub
 
 --[=[
 	@class State

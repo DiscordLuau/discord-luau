@@ -5,7 +5,7 @@ sidebar:
   order: 0
 ---
 
-This guide walks through installing the tools required to develop a discord-luau application. Complete this before moving on to the [Installation](/getting-started/installation) page.
+This guide walks through installing the tools required to develop a discord-luau application. Complete this before moving on to the [Installation](/getting-started/installation) page. If you want to contribute to discord-luau itself, see [Testing your changes](/ai/testing) for the extra setup steps.
 
 ## Required tools
 
@@ -21,7 +21,7 @@ rokit --version
 
 ### pesde
 
-[pesde](https://pesde.dev) is the Luau package manager used to install discord-luau and to run the project scaffolder. Follow the installation instructions at [pesde.dev](https://pesde.dev).
+[pesde](https://pesde.dev) is the Luau package manager used to install discord-luau and to run the project scaffolder. Follow the installation instructions at [pesde.dev](https://pesde.dev), and use version 0.7.4 or newer: on Windows, older versions fail to apply dependency patches (`hunk at line 1 did not apply`) when Git's `core.autocrlf` is on, which is Git for Windows' default.
 
 Verify the installation:
 
@@ -34,7 +34,7 @@ pesde --version
 [Lune](https://lune-org.github.io/docs) is a Luau runtime required by pesde to execute CLI scripts such as `pesde x`. Install it via Rokit:
 
 ```sh
-rokit add lune-org/lune@0.10.4
+rokit add lune-org/lune@0.11.0
 ```
 
 Verify it is available:
@@ -48,7 +48,7 @@ lune --version
 [Zune](https://github.com/Scythe-Technology/zune) is a Luau runtime used to run the `create_app` wizard and, by default, your bot itself. Install it via Rokit:
 
 ```sh
-rokit add Scythe-Technology/zune@0.5.5
+rokit add Scythe-Technology/zune@0.5.9
 ```
 
 Verify it is available:

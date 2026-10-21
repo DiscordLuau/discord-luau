@@ -21,6 +21,7 @@ function runtime.getRuntime(): RuntimeValue
 		if game and workspace then
 			return "Roblox"
 		end
+
 		-- Lute does not override _VERSION, so it stays "Luau". Probe for its exclusive module alias.
 		local luteOk = pcall(require, "@lute/fs")
 
@@ -81,7 +82,7 @@ function runtime.capabilities(): Capabilities
 
 	if current == "Zune" then
 		return {
-			ffi = false,
+			ffi = true,
 			udp = true,
 			onSignal = true,
 			compress = true,
@@ -96,9 +97,9 @@ function runtime.capabilities(): Capabilities
 			forbidCustomUserAgent = false,
 		}
 	elseif current == "Eryx" then
+		-- @eryx/_ffi uses a different model (loadLibrary + getFunction) and lacks the structs, closures,
+		-- allocation and tagged pointers that dave, sodium and opus need, so FFI stays off on Eryx.
 		return {
-			-- @eryx/_ffi exists but uses a different model (loadLibrary+getFunction)
-			-- and lacks struct/closure/alloc/tagged pointers that dave/sodium/opus require.
 			ffi = false,
 			udp = true,
 			onSignal = false,

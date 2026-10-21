@@ -38,6 +38,9 @@ luau = "packages/debugify"
 [workspace."discord_luau/discord_luau"]
 luau = "packages/discord_luau"
 
+[workspace."discord_luau/discord_stub"]
+luau = "packages/discord_stub"
+
 [workspace."discord_luau/emitter"]
 luau = "packages/emitter"
 

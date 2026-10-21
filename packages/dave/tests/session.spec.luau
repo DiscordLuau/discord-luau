@@ -1,18 +1,24 @@
 local frktest = require("../../../luau_packages/frktest")
+local stdPolyfills = require("../luau_packages/std_polyfills")
+
+local Dave = require("../src")
+
+local GROUP_ID = "1234567890123456789"
+local USER_ID_A = "111111111111111111"
 
 local test = frktest.test
 local check = frktest.assert.check
 
-local ok, Dave = pcall(require, "../src")
+if not stdPolyfills.runtime.capabilities().ffi then
+	assert(
+		not stdPolyfills.process.getEnv().DISCORD_LUAU_REQUIRE_FFI,
+		"DISCORD_LUAU_REQUIRE_FFI is set but this runtime has no FFI"
+	)
 
-if not ok then
-	return function() end
+	return function()
+		test.skip.suite("Session", function() end)
+	end
 end
-
-Dave = Dave :: any
-
-local GROUP_ID = "1234567890123456789"
-local USER_ID_A = "111111111111111111"
 
 local maxVersion = Dave.sys.lib.daveMaxSupportedProtocolVersion()
 

@@ -3,7 +3,13 @@ local reporter = frktest.reporters.console_reporter
 
 local requireTests = require("./task/requireTests")
 
-requireTests("./packages")
+local testFolder = string.gsub(zune.process.args[2] or "./packages", "/+$", "")
+
+if string.sub(testFolder, 1, 2) ~= "./" then
+	testFolder = `./{testFolder}`
+end
+
+requireTests(testFolder)
 
 reporter.init()
 

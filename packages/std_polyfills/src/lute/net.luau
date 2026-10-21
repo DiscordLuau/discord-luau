@@ -2,9 +2,11 @@ local luteNet = require("@std/net")
 local luteTask = require("@std/task")
 
 local function urlEncode(str: string, _binary: boolean?): string
-	return (string.gsub(str, "[^A-Za-z0-9%-%.%_%~]", function(character)
-		return string.format("%%%02X", string.byte(character))
-	end))
+	return (
+		string.gsub(str, "[^A-Za-z0-9%-%.%_%~]", function(character)
+			return string.format("%%%02X", string.byte(character))
+		end)
+	)
 end
 
 local function normalizeResponse(response: any): any

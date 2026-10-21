@@ -2,7 +2,7 @@
 # It is not intended for manual editing.
 format = 2
 name = "discord_luau/websocket"
-version = "0.0.3"
+version = "0.0.4"
 target = "luau"
 
 [graph."4x8matrix/int64@1.0.1 luau".pkg_ref]
@@ -42,6 +42,21 @@ index_url = "https://github.com/pesde-pkg/index"
 
 [graph."discord_luau/bit@0.0.2 luau".pkg_ref.dependencies]
 int64 = [{ name = "4x8matrix/int64", version = "^1.0.1", index = "https://github.com/pesde-pkg/index" }, "standard"]
+
+[graph."discord_luau/discord_stub@0.0.1 luau"]
+direct = ["discord_stub", { workspace = "discord_luau/discord_stub", version = ">=0.0.0" }, "dev"]
+
+[graph."discord_luau/discord_stub@0.0.1 luau".dependencies]
+api_types = ["discord_luau/api_types@0.0.4 luau", "standard"]
+std_polyfills = ["discord_luau/std_polyfills@0.0.3 luau", "standard"]
+
+[graph."discord_luau/discord_stub@0.0.1 luau".pkg_ref]
+ref_ty = "workspace"
+path = "packages/discord_stub"
+
+[graph."discord_luau/discord_stub@0.0.1 luau".pkg_ref.dependencies]
+api_types = [{ name = "discord_luau/api_types", version = ">=0.0.0", index = "https://github.com/pesde-pkg/index" }, "standard"]
+std_polyfills = [{ name = "discord_luau/std_polyfills", version = ">=0.0.0", index = "https://github.com/pesde-pkg/index" }, "standard"]
 
 [graph."discord_luau/emitter@0.0.3 luau"]
 direct = ["emitter", { name = "discord_luau/emitter", version = ">=0.0.0", index = "default" }, "standard"]

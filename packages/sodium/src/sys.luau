@@ -76,29 +76,273 @@
 local binary = require("../luau_packages/binary")
 local stdPolyfills = require("../luau_packages/std_polyfills")
 
-if not stdPolyfills.runtime.capabilities().ffi then
-	local function makeStub(name: string): any
-		return setmetatable({} :: any, {
-			__index = function(_, key)
-				return makeStub(`{name}.{key}`)
-			end,
-			__call = function()
-				error(`Sodium requires FFI which is not available on this runtime (accessed: {name})`)
-			end,
-		})
-	end
-	return makeStub("Sodium.Sys")
+local CHECKSUMS: { [string]: string } = {
+	["linux-arm64"] = "sha256:dccbbedba8d50c4dca0061d4255e3cc6ff11e3def564b3b4ac0efac3da22b915",
+	["linux-x64"] = "sha256:13373e2914d27a8796568de878e62242f1076dc9c05ee6c6e31c71df829c10e2",
+	["macos-arm64"] = "sha256:f8d4e805cc5426b11eaad5d8782f38a414b4666868e019526ff7228439433b35",
+	["macos-x64"] = "sha256:391fd170b4dc52f91a9c123e12e55bcdb75b320e88f79df654250a2171db6dca",
+	["windows-x64"] = "sha256:f1485ce247ce946e2c17ee2c56811c22838703309c7944a03867bbc45ce91cf9",
+	["windows-x86"] = "sha256:ada13ecb6fe5bd7bc5b9e7d256639c40bcb00794c58b8bb21abea0b090601ada",
+}
+
+local Sys = {
+	lib = (nil :: any) :: Lib,
+
+	aes256gcm = {
+		KEY_BYTES = 32,
+		NONCE_BYTES = 12,
+		TAG_BYTES = 16,
+	},
+
+	chacha20poly1305 = {
+		KEY_BYTES = 32,
+		NONCE_BYTES = 12,
+		TAG_BYTES = 16,
+	},
+
+	xchacha20poly1305 = {
+		KEY_BYTES = 32,
+		NONCE_BYTES = 24,
+		TAG_BYTES = 16,
+	},
+
+	secretbox = {
+		KEY_BYTES = 32,
+		NONCE_BYTES = 24,
+		MAC_BYTES = 16,
+	},
+
+	box = {
+		PUBLIC_KEY_BYTES = 32,
+		SECRET_KEY_BYTES = 32,
+		NONCE_BYTES = 24,
+		MAC_BYTES = 16,
+		BEFORENM_BYTES = 32,
+	},
+
+	sign = {
+		PUBLIC_KEY_BYTES = 32,
+		SECRET_KEY_BYTES = 64,
+		BYTES = 64,
+	},
+
+	generichash = {
+		BYTES = 32,
+		BYTES_MIN = 16,
+		BYTES_MAX = 64,
+		KEY_BYTES = 32,
+		KEY_BYTES_MIN = 16,
+		KEY_BYTES_MAX = 64,
+	},
+
+	hash = {
+		SHA256_BYTES = 32,
+		SHA512_BYTES = 64,
+	},
+
+	auth = {
+		BYTES = 32,
+		KEY_BYTES = 32,
+	},
+
+	kdf = {
+		BYTES_MIN = 16,
+		BYTES_MAX = 64,
+		CONTEXT_BYTES = 8,
+		KEY_BYTES = 32,
+	},
+
+	pwhash = {
+		BYTES_MIN = 16,
+		BYTES_MAX = 4294967295,
+		SALT_BYTES = 16,
+		STR_BYTES = 128,
+		ALG_ARGON2ID13 = 2,
+		OPSLIMIT_INTERACTIVE = 2,
+		MEMLIMIT_INTERACTIVE = 67108864,
+		OPSLIMIT_MODERATE = 3,
+		MEMLIMIT_MODERATE = 268435456,
+		OPSLIMIT_SENSITIVE = 4,
+		MEMLIMIT_SENSITIVE = 1073741824,
+	},
+
+	base64 = {
+		VARIANT_ORIGINAL = 1,
+		VARIANT_ORIGINAL_NO_PADDING = 3,
+		VARIANT_URLSAFE = 5,
+		VARIANT_URLSAFE_NO_PADDING = 7,
+	},
+}
+
+local function makeStub(name: string): any
+	return setmetatable({} :: any, {
+		__index = function(_, key)
+			return makeStub(`{name}.{key}`)
+		end,
+		__call = function()
+			error(`Sodium requires FFI which is not available on this runtime (accessed: {name})`)
+		end,
+	})
 end
 
-local types = stdPolyfills.ffi.getTypes()
+local function loadLibrary(): Lib
+	local types = stdPolyfills.ffi.getTypes()
+	local void = types.void
+	local u32 = types.u32
+	local u64 = types.u64
+	local i32 = types.i32
+	local pointer = types.pointer
+	local cSizeT = u64
+	local platform = stdPolyfills.process.getPlatform()
+	local rawArchitecture = stdPolyfills.process.getArch()
+	local architecture = if rawArchitecture == "aarch64"
+		then "arm64"
+		elseif rawArchitecture == "x86" then "x86"
+		else "x64"
+	local result = binary.load({
+		id = "libsodium",
+		version = "0.0.3",
+		url = "https://raw.githubusercontent.com/DiscordLuau/discord-luau/refs/tags/sodium-{version}/packages/sodium/binaries/{os}-{arch}/libsodium{ext}",
+		checksum = CHECKSUMS[`{platform}-{architecture}`]
+			or error(`Unsupported platform '{platform}-{architecture}' for libsodium`),
+	})
+	local lib = (
+		stdPolyfills.ffi.dlopen(result.path, {
+			crypto_aead_aes256gcm_is_available = { returns = i32, args = {} },
+			crypto_aead_aes256gcm_keygen = { returns = void, args = { pointer } },
+			crypto_aead_aes256gcm_encrypt = {
+				returns = i32,
+				args = { pointer, pointer, pointer, cSizeT, pointer, cSizeT, pointer, pointer, pointer },
+			},
+			crypto_aead_aes256gcm_decrypt = {
+				returns = i32,
+				args = { pointer, pointer, pointer, pointer, cSizeT, pointer, cSizeT, pointer, pointer },
+			},
+			crypto_aead_aes256gcm_encrypt_detached = {
+				returns = i32,
+				args = { pointer, pointer, pointer, pointer, cSizeT, pointer, cSizeT, pointer, pointer, pointer },
+			},
+			crypto_aead_aes256gcm_decrypt_detached = {
+				returns = i32,
+				args = { pointer, pointer, pointer, cSizeT, pointer, pointer, cSizeT, pointer, pointer },
+			},
 
-local void = types.void
-local u32 = types.u32
-local u64 = types.u64
-local i32 = types.i32
-local pointer = types.pointer
+			crypto_aead_chacha20poly1305_ietf_keygen = { returns = void, args = { pointer } },
+			crypto_aead_chacha20poly1305_ietf_encrypt = {
+				returns = i32,
+				args = { pointer, pointer, pointer, cSizeT, pointer, cSizeT, pointer, pointer, pointer },
+			},
+			crypto_aead_chacha20poly1305_ietf_decrypt = {
+				returns = i32,
+				args = { pointer, pointer, pointer, pointer, cSizeT, pointer, cSizeT, pointer, pointer },
+			},
+			crypto_aead_chacha20poly1305_ietf_encrypt_detached = {
+				returns = i32,
+				args = { pointer, pointer, pointer, pointer, cSizeT, pointer, cSizeT, pointer, pointer, pointer },
+			},
+			crypto_aead_chacha20poly1305_ietf_decrypt_detached = {
+				returns = i32,
+				args = { pointer, pointer, pointer, cSizeT, pointer, pointer, cSizeT, pointer, pointer },
+			},
 
-local cSizeT = u64
+			crypto_aead_xchacha20poly1305_ietf_keygen = { returns = void, args = { pointer } },
+			crypto_aead_xchacha20poly1305_ietf_encrypt = {
+				returns = i32,
+				args = { pointer, pointer, pointer, cSizeT, pointer, cSizeT, pointer, pointer, pointer },
+			},
+			crypto_aead_xchacha20poly1305_ietf_decrypt = {
+				returns = i32,
+				args = { pointer, pointer, pointer, pointer, cSizeT, pointer, cSizeT, pointer, pointer },
+			},
+			crypto_aead_xchacha20poly1305_ietf_encrypt_detached = {
+				returns = i32,
+				args = { pointer, pointer, pointer, pointer, cSizeT, pointer, cSizeT, pointer, pointer, pointer },
+			},
+			crypto_aead_xchacha20poly1305_ietf_decrypt_detached = {
+				returns = i32,
+				args = { pointer, pointer, pointer, cSizeT, pointer, pointer, cSizeT, pointer, pointer },
+			},
+
+			crypto_secretbox_keygen = { returns = void, args = { pointer } },
+			crypto_secretbox_easy = { returns = i32, args = { pointer, pointer, cSizeT, pointer, pointer } },
+			crypto_secretbox_open_easy = { returns = i32, args = { pointer, pointer, cSizeT, pointer, pointer } },
+			crypto_secretbox_detached = {
+				returns = i32,
+				args = { pointer, pointer, pointer, cSizeT, pointer, pointer },
+			},
+			crypto_secretbox_open_detached = {
+				returns = i32,
+				args = { pointer, pointer, pointer, cSizeT, pointer, pointer },
+			},
+
+			crypto_box_keypair = { returns = i32, args = { pointer, pointer } },
+			crypto_box_beforenm = { returns = i32, args = { pointer, pointer, pointer } },
+			crypto_box_easy = { returns = i32, args = { pointer, pointer, cSizeT, pointer, pointer, pointer } },
+			crypto_box_open_easy = { returns = i32, args = { pointer, pointer, cSizeT, pointer, pointer, pointer } },
+			crypto_box_detached = {
+				returns = i32,
+				args = { pointer, pointer, pointer, cSizeT, pointer, pointer, pointer },
+			},
+			crypto_box_open_detached = {
+				returns = i32,
+				args = { pointer, pointer, pointer, cSizeT, pointer, pointer, pointer },
+			},
+			crypto_box_easy_afternm = { returns = i32, args = { pointer, pointer, cSizeT, pointer, pointer } },
+			crypto_box_open_easy_afternm = { returns = i32, args = { pointer, pointer, cSizeT, pointer, pointer } },
+
+			crypto_sign_keypair = { returns = i32, args = { pointer, pointer } },
+			crypto_sign_ed25519_sk_to_pk = { returns = i32, args = { pointer, pointer } },
+			crypto_sign_detached = { returns = i32, args = { pointer, pointer, pointer, cSizeT, pointer } },
+			crypto_sign_verify_detached = { returns = i32, args = { pointer, pointer, cSizeT, pointer } },
+
+			crypto_generichash_statebytes = { returns = cSizeT, args = {} },
+			crypto_generichash = { returns = i32, args = { pointer, cSizeT, pointer, cSizeT, pointer, cSizeT } },
+			crypto_generichash_init = { returns = i32, args = { pointer, pointer, cSizeT, cSizeT } },
+			crypto_generichash_update = { returns = i32, args = { pointer, pointer, cSizeT } },
+			crypto_generichash_final = { returns = i32, args = { pointer, pointer, cSizeT } },
+
+			crypto_hash_sha256 = { returns = i32, args = { pointer, pointer, cSizeT } },
+			crypto_hash_sha512 = { returns = i32, args = { pointer, pointer, cSizeT } },
+
+			crypto_auth_keygen = { returns = void, args = { pointer } },
+			crypto_auth = { returns = i32, args = { pointer, pointer, cSizeT, pointer } },
+			crypto_auth_verify = { returns = i32, args = { pointer, pointer, cSizeT, pointer } },
+
+			crypto_kdf_keygen = { returns = void, args = { pointer } },
+			crypto_kdf_derive_from_key = { returns = i32, args = { pointer, cSizeT, u64, pointer, pointer } },
+
+			crypto_pwhash = { returns = i32, args = { pointer, u64, pointer, u64, pointer, u64, cSizeT, i32 } },
+			crypto_pwhash_str = { returns = i32, args = { pointer, pointer, u64, u64, cSizeT } },
+			crypto_pwhash_str_verify = { returns = i32, args = { pointer, pointer, u64 } },
+			crypto_pwhash_str_needs_rehash = { returns = i32, args = { pointer, u64, cSizeT } },
+
+			randombytes_buf = { returns = void, args = { pointer, cSizeT } },
+			randombytes_uniform = { returns = u32, args = { u32 } },
+
+			sodium_init = { returns = i32, args = {} },
+			sodium_memcmp = { returns = i32, args = { pointer, pointer, cSizeT } },
+			sodium_memzero = { returns = void, args = { pointer, cSizeT } },
+			sodium_bin2hex = { returns = pointer, args = { pointer, cSizeT, pointer, cSizeT } },
+			sodium_hex2bin = { returns = i32, args = { pointer, cSizeT, pointer, cSizeT, pointer, pointer, pointer } },
+			sodium_base64_encoded_len = { returns = cSizeT, args = { cSizeT, i32 } },
+			sodium_bin2base64 = { returns = pointer, args = { pointer, cSizeT, pointer, cSizeT, i32 } },
+			sodium_base642bin = {
+				returns = i32,
+				args = { pointer, cSizeT, pointer, cSizeT, pointer, pointer, pointer, i32 },
+			},
+		}) :: any
+	) :: Lib
+
+	assert(lib.sodium_init() >= 0, "libsodium initialization failed")
+
+	return lib
+end
+
+if stdPolyfills.runtime.capabilities().ffi then
+	Sys.lib = loadLibrary()
+else
+	Sys.lib = makeStub("Sodium.Sys.lib")
+end
 
 export type Lib = {
 	sodium_init: () -> number,
@@ -435,264 +679,4 @@ export type Lib = {
 	) -> number,
 }
 
-local platform = stdPolyfills.process.getPlatform()
-local rawArch = stdPolyfills.process.getArch()
-local architecture = if rawArch == "aarch64" then "arm64" elseif rawArch == "x86" then "x86" else "x64"
-
-local checksums: { [string]: string } = {
-	["linux-arm64"] = "sha256:dccbbedba8d50c4dca0061d4255e3cc6ff11e3def564b3b4ac0efac3da22b915",
-	["linux-x64"] = "sha256:13373e2914d27a8796568de878e62242f1076dc9c05ee6c6e31c71df829c10e2",
-	["macos-arm64"] = "sha256:f8d4e805cc5426b11eaad5d8782f38a414b4666868e019526ff7228439433b35",
-	["macos-x64"] = "sha256:391fd170b4dc52f91a9c123e12e55bcdb75b320e88f79df654250a2171db6dca",
-	["windows-x64"] = "sha256:f1485ce247ce946e2c17ee2c56811c22838703309c7944a03867bbc45ce91cf9",
-	["windows-x86"] = "sha256:ada13ecb6fe5bd7bc5b9e7d256639c40bcb00794c58b8bb21abea0b090601ada",
-}
-
-local result = binary.load({
-	id = "libsodium",
-	version = "0.0.1",
-	url = "https://raw.githubusercontent.com/DiscordLuau/discord-luau/refs/tags/sodium-{version}/packages/sodium/binaries/{os}-{arch}/libsodium{ext}",
-	checksum = checksums[`{platform}-{architecture}`]
-		or error(`Unsupported platform '{platform}-{architecture}' for libsodium`),
-})
-
-local lib = (
-	stdPolyfills.ffi.dlopen(result.path, {
-		--  AEAD: AES-256-GCM
-
-		crypto_aead_aes256gcm_is_available = { returns = i32, args = {} },
-		crypto_aead_aes256gcm_keygen = { returns = void, args = { pointer } },
-		crypto_aead_aes256gcm_encrypt = {
-			returns = i32,
-			args = { pointer, pointer, pointer, cSizeT, pointer, cSizeT, pointer, pointer, pointer },
-		},
-		crypto_aead_aes256gcm_decrypt = {
-			returns = i32,
-			args = { pointer, pointer, pointer, pointer, cSizeT, pointer, cSizeT, pointer, pointer },
-		},
-		crypto_aead_aes256gcm_encrypt_detached = {
-			returns = i32,
-			args = { pointer, pointer, pointer, pointer, cSizeT, pointer, cSizeT, pointer, pointer, pointer },
-		},
-		crypto_aead_aes256gcm_decrypt_detached = {
-			returns = i32,
-			args = { pointer, pointer, pointer, cSizeT, pointer, pointer, cSizeT, pointer, pointer },
-		},
-
-		--  AEAD: ChaCha20-Poly1305 (IETF)
-
-		crypto_aead_chacha20poly1305_ietf_keygen = { returns = void, args = { pointer } },
-		crypto_aead_chacha20poly1305_ietf_encrypt = {
-			returns = i32,
-			args = { pointer, pointer, pointer, cSizeT, pointer, cSizeT, pointer, pointer, pointer },
-		},
-		crypto_aead_chacha20poly1305_ietf_decrypt = {
-			returns = i32,
-			args = { pointer, pointer, pointer, pointer, cSizeT, pointer, cSizeT, pointer, pointer },
-		},
-		crypto_aead_chacha20poly1305_ietf_encrypt_detached = {
-			returns = i32,
-			args = { pointer, pointer, pointer, pointer, cSizeT, pointer, cSizeT, pointer, pointer, pointer },
-		},
-		crypto_aead_chacha20poly1305_ietf_decrypt_detached = {
-			returns = i32,
-			args = { pointer, pointer, pointer, cSizeT, pointer, pointer, cSizeT, pointer, pointer },
-		},
-
-		--  AEAD: XChaCha20-Poly1305
-
-		crypto_aead_xchacha20poly1305_ietf_keygen = { returns = void, args = { pointer } },
-		crypto_aead_xchacha20poly1305_ietf_encrypt = {
-			returns = i32,
-			args = { pointer, pointer, pointer, cSizeT, pointer, cSizeT, pointer, pointer, pointer },
-		},
-		crypto_aead_xchacha20poly1305_ietf_decrypt = {
-			returns = i32,
-			args = { pointer, pointer, pointer, pointer, cSizeT, pointer, cSizeT, pointer, pointer },
-		},
-		crypto_aead_xchacha20poly1305_ietf_encrypt_detached = {
-			returns = i32,
-			args = { pointer, pointer, pointer, pointer, cSizeT, pointer, cSizeT, pointer, pointer, pointer },
-		},
-		crypto_aead_xchacha20poly1305_ietf_decrypt_detached = {
-			returns = i32,
-			args = { pointer, pointer, pointer, cSizeT, pointer, pointer, cSizeT, pointer, pointer },
-		},
-
-		--  Secret-key authenticated encryption
-
-		crypto_secretbox_keygen = { returns = void, args = { pointer } },
-		crypto_secretbox_easy = { returns = i32, args = { pointer, pointer, cSizeT, pointer, pointer } },
-		crypto_secretbox_open_easy = { returns = i32, args = { pointer, pointer, cSizeT, pointer, pointer } },
-		crypto_secretbox_detached = { returns = i32, args = { pointer, pointer, pointer, cSizeT, pointer, pointer } },
-		crypto_secretbox_open_detached = {
-			returns = i32,
-			args = { pointer, pointer, pointer, cSizeT, pointer, pointer },
-		},
-
-		--  Public-key authenticated encryption
-
-		crypto_box_keypair = { returns = i32, args = { pointer, pointer } },
-		crypto_box_beforenm = { returns = i32, args = { pointer, pointer, pointer } },
-		crypto_box_easy = { returns = i32, args = { pointer, pointer, cSizeT, pointer, pointer, pointer } },
-		crypto_box_open_easy = { returns = i32, args = { pointer, pointer, cSizeT, pointer, pointer, pointer } },
-		crypto_box_detached = {
-			returns = i32,
-			args = { pointer, pointer, pointer, cSizeT, pointer, pointer, pointer },
-		},
-		crypto_box_open_detached = {
-			returns = i32,
-			args = { pointer, pointer, pointer, cSizeT, pointer, pointer, pointer },
-		},
-		crypto_box_easy_afternm = { returns = i32, args = { pointer, pointer, cSizeT, pointer, pointer } },
-		crypto_box_open_easy_afternm = { returns = i32, args = { pointer, pointer, cSizeT, pointer, pointer } },
-
-		--  Signatures (Ed25519)
-
-		crypto_sign_keypair = { returns = i32, args = { pointer, pointer } },
-		crypto_sign_ed25519_sk_to_pk = { returns = i32, args = { pointer, pointer } },
-		crypto_sign_detached = { returns = i32, args = { pointer, pointer, pointer, cSizeT, pointer } },
-		crypto_sign_verify_detached = { returns = i32, args = { pointer, pointer, cSizeT, pointer } },
-
-		--  Generic hash (BLAKE2b)
-
-		crypto_generichash_statebytes = { returns = cSizeT, args = {} },
-		crypto_generichash = { returns = i32, args = { pointer, cSizeT, pointer, cSizeT, pointer, cSizeT } },
-		crypto_generichash_init = { returns = i32, args = { pointer, pointer, cSizeT, cSizeT } },
-		crypto_generichash_update = { returns = i32, args = { pointer, pointer, cSizeT } },
-		crypto_generichash_final = { returns = i32, args = { pointer, pointer, cSizeT } },
-
-		--  Hash (SHA-256 / SHA-512)
-
-		crypto_hash_sha256 = { returns = i32, args = { pointer, pointer, cSizeT } },
-		crypto_hash_sha512 = { returns = i32, args = { pointer, pointer, cSizeT } },
-
-		--  Authentication (HMAC-SHA512256)
-
-		crypto_auth_keygen = { returns = void, args = { pointer } },
-		crypto_auth = { returns = i32, args = { pointer, pointer, cSizeT, pointer } },
-		crypto_auth_verify = { returns = i32, args = { pointer, pointer, cSizeT, pointer } },
-
-		--  Key derivation
-
-		crypto_kdf_keygen = { returns = void, args = { pointer } },
-		crypto_kdf_derive_from_key = { returns = i32, args = { pointer, cSizeT, u64, pointer, pointer } },
-
-		--  Password hashing (Argon2id)
-
-		crypto_pwhash = { returns = i32, args = { pointer, u64, pointer, u64, pointer, u64, cSizeT, i32 } },
-		crypto_pwhash_str = { returns = i32, args = { pointer, pointer, u64, u64, cSizeT } },
-		crypto_pwhash_str_verify = { returns = i32, args = { pointer, pointer, u64 } },
-		crypto_pwhash_str_needs_rehash = { returns = i32, args = { pointer, u64, cSizeT } },
-
-		--  Random bytes
-
-		randombytes_buf = { returns = void, args = { pointer, cSizeT } },
-		randombytes_uniform = { returns = u32, args = { u32 } },
-
-		--  Utilities
-
-		sodium_init = { returns = i32, args = {} },
-		sodium_memcmp = { returns = i32, args = { pointer, pointer, cSizeT } },
-		sodium_memzero = { returns = void, args = { pointer, cSizeT } },
-		sodium_bin2hex = { returns = pointer, args = { pointer, cSizeT, pointer, cSizeT } },
-		sodium_hex2bin = { returns = i32, args = { pointer, cSizeT, pointer, cSizeT, pointer, pointer, pointer } },
-		sodium_base64_encoded_len = { returns = cSizeT, args = { cSizeT, i32 } },
-		sodium_bin2base64 = { returns = pointer, args = { pointer, cSizeT, pointer, cSizeT, i32 } },
-		sodium_base642bin = {
-			returns = i32,
-			args = { pointer, cSizeT, pointer, cSizeT, pointer, pointer, pointer, i32 },
-		},
-	}) :: any
-) :: Lib
-
-assert(lib.sodium_init() >= 0, "libsodium initialization failed")
-
-return {
-	lib = lib,
-
-	aes256gcm = {
-		KEY_BYTES = 32,
-		NONCE_BYTES = 12,
-		TAG_BYTES = 16,
-	},
-
-	chacha20poly1305 = {
-		KEY_BYTES = 32,
-		NONCE_BYTES = 12,
-		TAG_BYTES = 16,
-	},
-
-	xchacha20poly1305 = {
-		KEY_BYTES = 32,
-		NONCE_BYTES = 24,
-		TAG_BYTES = 16,
-	},
-
-	secretbox = {
-		KEY_BYTES = 32,
-		NONCE_BYTES = 24,
-		MAC_BYTES = 16,
-	},
-
-	box = {
-		PUBLIC_KEY_BYTES = 32,
-		SECRET_KEY_BYTES = 32,
-		NONCE_BYTES = 24,
-		MAC_BYTES = 16,
-		BEFORENM_BYTES = 32,
-	},
-
-	sign = {
-		PUBLIC_KEY_BYTES = 32,
-		SECRET_KEY_BYTES = 64,
-		BYTES = 64,
-	},
-
-	generichash = {
-		BYTES = 32,
-		BYTES_MIN = 16,
-		BYTES_MAX = 64,
-		KEY_BYTES = 32,
-		KEY_BYTES_MIN = 16,
-		KEY_BYTES_MAX = 64,
-	},
-
-	hash = {
-		SHA256_BYTES = 32,
-		SHA512_BYTES = 64,
-	},
-
-	auth = {
-		BYTES = 32,
-		KEY_BYTES = 32,
-	},
-
-	kdf = {
-		BYTES_MIN = 16,
-		BYTES_MAX = 64,
-		CONTEXT_BYTES = 8,
-		KEY_BYTES = 32,
-	},
-
-	pwhash = {
-		BYTES_MIN = 16,
-		BYTES_MAX = 4294967295,
-		SALT_BYTES = 16,
-		STR_BYTES = 128,
-		ALG_ARGON2ID13 = 2,
-		OPSLIMIT_INTERACTIVE = 2,
-		MEMLIMIT_INTERACTIVE = 67108864,
-		OPSLIMIT_MODERATE = 3,
-		MEMLIMIT_MODERATE = 268435456,
-		OPSLIMIT_SENSITIVE = 4,
-		MEMLIMIT_SENSITIVE = 1073741824,
-	},
-
-	base64 = {
-		VARIANT_ORIGINAL = 1,
-		VARIANT_ORIGINAL_NO_PADDING = 3,
-		VARIANT_URLSAFE = 5,
-		VARIANT_URLSAFE_NO_PADDING = 7,
-	},
-}
+return Sys

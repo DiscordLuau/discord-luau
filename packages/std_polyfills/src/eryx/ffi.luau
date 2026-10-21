@@ -1,5 +1,5 @@
 -- selene: allow(undefined_variable)
-local erxFfi = require("@eryx/_ffi")
+local erxFfi = require("@eryx/experimental/_ffi")
 local erxOs = require("@eryx/os")
 
 local ffi = {}

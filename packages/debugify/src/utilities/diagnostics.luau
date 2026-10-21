@@ -8,8 +8,7 @@ local function resolveVersion(): string
 	if detectedRuntime == "Lute" then
 		local ok, result = pcall(StdPolyfills.process.run, "lute", { "--version" })
 		if ok and result.ok then
-			local version = string.match(result.stdout, "lute%s+([%d%.]+)")
-				or string.match(result.stderr, "lute%s+([%d%.]+)")
+			local version = string.match(result.stdout, "^%s*(%S+)") or string.match(result.stderr, "^%s*(%S+)")
 			if version then
 				return "lute " .. version
 			end

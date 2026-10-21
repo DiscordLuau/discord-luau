@@ -26,7 +26,9 @@ function fileSystem.stat(path: string): { kind: string, modified: number?, size:
 	local meta = fs.metadata(path)
 	local modified = if meta.modifiedAt then meta.modifiedAt.unixTimestamp else nil
 	local kind = if meta.kind == "dir" then "directory" else "file"
-	return { kind = kind, modified = modified, size = nil }
+	local size = if kind == "file" then meta.size else nil
+
+	return { kind = kind, modified = modified, size = size }
 end
 
 function fileSystem.watch(path: string, callback: (path: string, events: { string }) -> ()): { stop: () -> () }

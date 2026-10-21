@@ -131,7 +131,7 @@ function process.getArch(): Arch
 	local target = runtime.assertRuntime()
 
 	if target == "Lune" then
-		error(`The Lune runtime does not expose CPU architecture`)
+		return require("./lune/process").arch :: Arch
 	elseif target == "Zune" then
 		return require("./zune/process").arch :: Arch
 	elseif target == "Roblox" then

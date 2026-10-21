@@ -1,20 +1,26 @@
 local frktest = require("../../../luau_packages/frktest")
+local stdPolyfills = require("../luau_packages/std_polyfills")
+
+local Sodium = require("../src")
 local helpers = require("./helpers")
+
+local PLAINTEXT = helpers.makeBuffer("secretbox test message")
 
 local test = frktest.test
 local check = frktest.assert.check
 
-local ok, Sodium = pcall(require, "../src")
+if not stdPolyfills.runtime.capabilities().ffi then
+	assert(
+		not stdPolyfills.process.getEnv().DISCORD_LUAU_REQUIRE_FFI,
+		"DISCORD_LUAU_REQUIRE_FFI is set but this runtime has no FFI"
+	)
 
-if not ok then
-	return function() end
+	return function()
+		test.skip.suite("secretbox", function() end)
+	end
 end
 
-Sodium = Sodium :: any
-local makeBuffer = helpers.makeBuffer
 local bufferEqual = helpers.bufferEqual
-
-local PLAINTEXT = makeBuffer("secretbox test message")
 
 return function()
 	test.suite("secretbox", function()
@@ -44,6 +50,7 @@ return function()
 			local sealed = Sodium.secretbox.seal(PLAINTEXT, key1, nonce)
 			check.should_error(function()
 				Sodium.secretbox.open(sealed, key2, nonce)
+
 				return
 			end)
 		end)
@@ -52,6 +59,7 @@ return function()
 			local tiny = buffer.create(Sodium.sys.secretbox.MAC_BYTES - 1)
 			check.should_error(function()
 				Sodium.secretbox.open(tiny, Sodium.secretbox.keygen(), Sodium.secretbox.nonce())
+
 				return
 			end)
 		end)
@@ -73,6 +81,7 @@ return function()
 			local badMac = Sodium.randombytes.buf(Sodium.sys.secretbox.MAC_BYTES)
 			check.should_error(function()
 				Sodium.secretbox.openDetached(sealResult.cipher, badMac, key, nonce)
+
 				return
 			end)
 		end)

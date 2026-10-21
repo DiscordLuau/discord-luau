@@ -253,7 +253,7 @@ function Manager.Prototype.sendAsync<T>(self: Manager, operation: apiTypes.Opcod
 			table.insert(
 				requests,
 				future.Future.new(function()
-					while not shardObject.socketIdentified do
+					while not shardObject.socketIdentified and not shardObject.stayDisconnected do
 						stdPolyfills.task.wait(0.5)
 					end
 

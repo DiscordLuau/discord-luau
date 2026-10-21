@@ -57,7 +57,7 @@ local function makeForwarderClosure(callbackRef: { current: ((source: string, re
 		pcall(function()
 			local callback = callbackRef.current
 
-			if callback ~= nil then
+			if callback then
 				local sourceSuccess, source = pcall(Buffer.fromCString, sourcePointer)
 				local reasonSuccess, reason = pcall(Buffer.fromCString, reasonPointer)
 
@@ -188,7 +188,7 @@ function Session.Prototype.processProposals(self: Session, proposals: buffer, re
 		stdPolyfills.ffi.free(dataSlot)
 		stdPolyfills.ffi.free(lengthSlot)
 
-		return nil
+		return
 	end
 
 	local result = Buffer.readLibBytes(dataSlot, lengthSlot)
@@ -250,7 +250,7 @@ function Session.Prototype.processWelcome(
 	stdPolyfills.ffi.free(checkSlot)
 
 	if isNull then
-		return nil
+		return
 	end
 
 	return WelcomeResult.new(resultHandle)
@@ -308,15 +308,14 @@ end
 function Session.Prototype.getPairwiseFingerprint(self: Session, version: number, userId: string): string?
 	local types = stdPolyfills.ffi.getTypes()
 	local captured: string? = nil
-
 	local fingerprintClosure = stdPolyfills.ffi.closure({
 		returns = types.void,
 		args = { types.pointer, types.u64, types.pointer },
 	}, function(fingerprintPointer: FFIPointer, lengthValue: any, _userData: any)
 		captured = Buffer.bufferToHex(Buffer.readPointerBytes(fingerprintPointer, lengthValue))
+
 		return
 	end)
-
 	local userIdPointer = Buffer.toCString(userId)
 	local nullPointer = stdPolyfills.ffi.getNull()
 
@@ -359,14 +358,13 @@ function Session.Interface.new(authSessionId: string, onMlsFailure: ((source: st
 	local callbackRef: { current: ((source: string, reason: string) -> ())? } = {
 		current = onMlsFailure,
 	}
-
 	local mlsFailureClosure = makeForwarderClosure(callbackRef)
-
 	local authSessionIdPointer = Buffer.toCString(authSessionId)
 	local nullPointer = stdPolyfills.ffi.getNull()
-
 	local handle = Sys.lib.daveSessionCreate(nullPointer, authSessionIdPointer, mlsFailureClosure, nullPointer)
 
+	-- libdave leaves a new session's protocol version uninitialised until Init or Reset, so reset it to 0 here.
+	Sys.lib.daveSessionReset(handle)
 	stdPolyfills.ffi.free(authSessionIdPointer)
 
 	return setmetatable(

@@ -1,5 +1,5 @@
 name = "discord_luau/rest"
-version = "0.0.4"
+version = "0.0.5"
 description = "Discord-Luau Rest - providing calls to the discord HTTP Rest API"
 license = "MIT"
 authors = ["Async Matrix <hi@asyncmatrix.dev>"]

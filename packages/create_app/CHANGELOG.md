@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.0.6
+
+### Fixed
+
+- Scaffolded `rokit.toml` pins Lute to an exact version, so `rokit install` accepts it
+- Scaffolded `.luaurc` points Lute at `~/.lute/typedefs/1.0.1/` and Lune at `~/.lune/.typedefs/0.11.0/`
+
+### Changed
+
+- Scaffolded `rokit.toml` now pins Lune 0.11.0, Zune 0.5.9 and Lute 1.0.1-nightly.20261021
+- Scaffolded projects depend on discord_luau 0.0.5, which carries the gateway reconnect fix
+
+## 0.0.5
+
+### Fixed
+
+- SillyKitr fix - https://github.com/DiscordLuau/discord-luau/pull/45
+
 ### Added
 
 - Lute added as a valid runtime option in the project creation wizard

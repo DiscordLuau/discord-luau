@@ -1,26 +1,27 @@
 local frktest = require("../../../luau_packages/frktest")
 local stdPolyfills = require("../luau_packages/std_polyfills")
 
+local Opus = require("../src")
+
+local SAMPLE_RATE = 48000
+local CHANNELS = 2
+local FRAME_SIZE = 960
+
 local test = frktest.test
 local check = frktest.assert.check
 
-local opusOk, Opus = pcall(require, "../src")
-
-if not opusOk then
-	return function() end
-end
-
-Opus = Opus :: any
-
 local hasFfi = stdPolyfills.runtime.capabilities().ffi
 
-local SAMPLE_RATE = Opus.DISCORD_SAMPLE_RATE
-local CHANNELS = Opus.DISCORD_CHANNELS
-local FRAME_SIZE = Opus.DISCORD_FRAME_SIZE
+assert(
+	hasFfi or not stdPolyfills.process.getEnv().DISCORD_LUAU_REQUIRE_FFI,
+	"DISCORD_LUAU_REQUIRE_FFI is set but this runtime has no FFI"
+)
 
 local function makeSilenceFrame(): buffer
 	local frame = buffer.create(FRAME_SIZE * CHANNELS * 2)
+
 	buffer.fill(frame, 0, 0)
+
 	return frame
 end
 
@@ -35,6 +36,19 @@ local function makeFullScaleFrame(): buffer
 end
 
 return function()
+	test.suite("Constants", function()
+		test.case("are plain numbers with or without FFI", function()
+			check.equal(Opus.DISCORD_FRAME_SIZE, 960)
+			check.equal(Opus.DISCORD_SAMPLE_RATE, 48000)
+			check.equal(Opus.DISCORD_CHANNELS, 2)
+			check.equal(Opus.MAX_PACKET_SIZE, 4000)
+			check.equal(Opus.MAX_FRAME_SIZE, 5760)
+			check.equal(Opus.application.voip, 2048)
+			check.equal(Opus.sampleRate.hz48000, 48000)
+			check.equal(Opus.channels.stereo, 2)
+		end)
+	end)
+
 	test.suite("Stats", function()
 		test.case("silence frame has zero peak and rms", function()
 			local stats = Opus.stats(makeSilenceFrame(), SAMPLE_RATE, CHANNELS)
@@ -132,7 +146,6 @@ return function()
 
 			test.case("encodes a silence frame without error", function()
 				local encoder = Opus.encoder.new(SAMPLE_RATE, CHANNELS, Opus.application.voip)
-
 				local packet = encoder:encode(makeSilenceFrame())
 
 				check.not_nil(packet)
@@ -143,7 +156,6 @@ return function()
 
 			test.case("encoded packet is smaller than the raw frame", function()
 				local encoder = Opus.encoder.new(SAMPLE_RATE, CHANNELS, Opus.application.voip)
-
 				local frame = makeSilenceFrame()
 				local packet = encoder:encode(frame)
 
@@ -210,7 +222,6 @@ return function()
 			test.case("decoded output has the expected PCM byte length", function()
 				local encoder = Opus.encoder.new(SAMPLE_RATE, CHANNELS, Opus.application.voip)
 				local decoder = Opus.decoder.new(SAMPLE_RATE, CHANNELS)
-
 				local packet = encoder:encode(makeSilenceFrame())
 				local pcm = decoder:decode(packet)
 
@@ -223,7 +234,6 @@ return function()
 			test.case("decoded silence frame contains only zero samples", function()
 				local encoder = Opus.encoder.new(SAMPLE_RATE, CHANNELS, Opus.application.voip)
 				local decoder = Opus.decoder.new(SAMPLE_RATE, CHANNELS)
-
 				local pcm = decoder:decode(encoder:encode(makeSilenceFrame()))
 				local stats = Opus.stats(pcm, SAMPLE_RATE, CHANNELS)
 

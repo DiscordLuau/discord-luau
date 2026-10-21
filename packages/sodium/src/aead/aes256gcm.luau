@@ -10,19 +10,17 @@
 local Sys = require("../sys")
 local Buffer = require("../buffer")
 
-export type EncryptResult = Buffer.EncryptResult
-
 local KEY_BYTES = Sys.aes256gcm.KEY_BYTES
 local NONCE_BYTES = Sys.aes256gcm.NONCE_BYTES
 local TAG_BYTES = Sys.aes256gcm.TAG_BYTES
 
 local Aes256gcm = {}
 
-Aes256gcm.Interface = {}
-
-Aes256gcm.Interface.KEY_BYTES = KEY_BYTES
-Aes256gcm.Interface.NONCE_BYTES = NONCE_BYTES
-Aes256gcm.Interface.TAG_BYTES = TAG_BYTES
+Aes256gcm.Interface = {
+	KEY_BYTES = KEY_BYTES,
+	NONCE_BYTES = NONCE_BYTES,
+	TAG_BYTES = TAG_BYTES,
+}
 
 --[=[
 	@within Sodium.Aes256gcm
@@ -62,23 +60,22 @@ function Aes256gcm.Interface.encrypt(plaintext: buffer, key: buffer, nonce: buff
 
 	local plaintextLength = buffer.len(plaintext)
 	local additionalDataLength = if ad then buffer.len(ad) else 0
-
 	local cipherPointer = Buffer.alloc(plaintextLength)
 	local tagPointer = Buffer.alloc(TAG_BYTES)
 	local plaintextPointer = Buffer.dupe(plaintext)
 	local keyPointer = Buffer.dupe(key)
 	local noncePointer = Buffer.dupe(nonce)
-	local additionalDataPointer = if ad then Buffer.dupe(ad) else nil
-
+	local additionalDataPointer = if ad then Buffer.dupe(ad) else Buffer.getNull()
+	local nullPointer = Buffer.getNull()
 	local result = Sys.lib.crypto_aead_aes256gcm_encrypt_detached(
 		cipherPointer,
 		tagPointer,
-		nil,
+		nullPointer,
 		plaintextPointer,
 		plaintextLength,
 		additionalDataPointer,
 		additionalDataLength,
-		nil,
+		nullPointer,
 		noncePointer,
 		keyPointer
 	)
@@ -90,7 +87,7 @@ function Aes256gcm.Interface.encrypt(plaintext: buffer, key: buffer, nonce: buff
 	Buffer.free(noncePointer)
 
 	if ad then
-		Buffer.free(additionalDataPointer :: FFIPointer)
+		Buffer.free(additionalDataPointer)
 	end
 
 	if result ~= 0 then
@@ -121,17 +118,16 @@ function Aes256gcm.Interface.decrypt(cipher: buffer, tag: buffer, key: buffer, n
 
 	local ciphertextLength = buffer.len(cipher)
 	local additionalDataLength = if ad then buffer.len(ad) else 0
-
 	local plaintextPointer = Buffer.alloc(ciphertextLength)
 	local cipherPointer = Buffer.dupe(cipher)
 	local tagPointer = Buffer.dupe(tag)
 	local keyPointer = Buffer.dupe(key)
 	local noncePointer = Buffer.dupe(nonce)
-	local additionalDataPointer = if ad then Buffer.dupe(ad) else nil
-
+	local additionalDataPointer = if ad then Buffer.dupe(ad) else Buffer.getNull()
+	local nullPointer = Buffer.getNull()
 	local result = Sys.lib.crypto_aead_aes256gcm_decrypt_detached(
 		plaintextPointer,
-		nil,
+		nullPointer,
 		cipherPointer,
 		ciphertextLength,
 		tagPointer,
@@ -148,7 +144,7 @@ function Aes256gcm.Interface.decrypt(cipher: buffer, tag: buffer, key: buffer, n
 	Buffer.free(noncePointer)
 
 	if ad then
-		Buffer.free(additionalDataPointer :: FFIPointer)
+		Buffer.free(additionalDataPointer)
 	end
 
 	if result ~= 0 then
@@ -163,5 +159,7 @@ function Aes256gcm.Interface.decrypt(cipher: buffer, tag: buffer, key: buffer, n
 
 	return plaintext
 end
+
+export type EncryptResult = Buffer.EncryptResult
 
 return Aes256gcm.Interface
