@@ -81,5 +81,7 @@ jobs:
         run: zune run .zune/bundle.luau
       - name: Install dependencies
         run: pesde install
+      - name: Seed native libraries from this checkout
+        run: zune run .github/scripts/seedBinaryCache.luau
       - name: Run unit-tests
         run: zune run .zune/test.luau

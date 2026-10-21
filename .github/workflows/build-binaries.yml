@@ -1,4 +1,4 @@
-name: Build macOS binaries
+name: Build native binaries
 
 on:
   workflow_dispatch:
@@ -9,7 +9,7 @@ concurrency:
 
 jobs:
   build:
-    name: Cross-compile libopus and libsodium for macOS
+    name: Cross-compile libopus and libsodium
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -20,21 +20,21 @@ jobs:
         with:
           version: 0.16.0
       - name: Build
-        run: bash .github/scripts/build-macos-binaries.sh dist | tee checksums.txt
+        run: bash .github/scripts/build-binaries.sh dist
       - name: Write checksums to the summary
         run: |
           {
-            echo "### macOS binaries"
+            echo "### Native binaries"
             echo
             echo "Copy these into the repository and update the matching \`sys.luau\` checksums; \`binary.load\` downloads from a release tag, so shipping them needs a new tag."
             echo
             echo '```'
-            tail -n 4 checksums.txt
+            cat dist/SHA256SUMS
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
       - name: Upload binaries
         uses: actions/upload-artifact@v4
         with:
-          name: macos-binaries
+          name: native-binaries
           path: dist/
           if-no-files-found: error

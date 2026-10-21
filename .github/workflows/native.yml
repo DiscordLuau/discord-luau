@@ -13,7 +13,7 @@ on:
       - "pesde.lock"
       - "rokit.toml"
       - ".github/workflows/native.yml"
-      - ".github/scripts/check-binary-tags.sh"
+      - ".github/scripts/**"
   workflow_dispatch:
 
 concurrency:
@@ -58,6 +58,8 @@ jobs:
           cache: true
       - name: Install dependencies
         run: pesde install
+      - name: Seed native libraries from this checkout
+        run: zune run .github/scripts/seedBinaryCache.luau
       - name: Test binary
         run: zune run .zune/test.luau packages/binary
       - name: Test sodium
