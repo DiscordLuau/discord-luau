@@ -32,5 +32,8 @@ emitter = { name = "discord_luau/emitter", version = ">=0.0.0" }
 secret = { name = "discord_luau/secret", version = ">=0.0.0" }
 accumulator = { name = "discord_luau/accumulator", version = ">=0.0.0" }
 
+[dev_dependencies]
+discord_stub = { workspace = "discord_luau/discord_stub", version = ">=0.0.0" }
+
 [patches]
 "yetanotherclown/luau_futures" = { "2.0.0-beta.3 luau" = "patches/yetanotherclown+luau_futures-2.0.0-beta.3+luau.patch" }
