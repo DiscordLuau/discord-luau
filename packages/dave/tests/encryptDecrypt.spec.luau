@@ -1,29 +1,38 @@
 local frktest = require("../../../luau_packages/frktest")
+local stdPolyfills = require("../luau_packages/std_polyfills")
+
+local Dave = require("../src")
 
 local test = frktest.test
 local check = frktest.assert.check
 
-local ok, Dave = pcall(require, "../src")
+if not stdPolyfills.runtime.capabilities().ffi then
+	assert(
+		not stdPolyfills.process.getEnv().DISCORD_LUAU_REQUIRE_FFI,
+		"DISCORD_LUAU_REQUIRE_FFI is set but this runtime has no FFI"
+	)
 
-if not ok then
-	return function() end
+	return function()
+		test.skip.suite("Encryptor", function() end)
+	end
 end
-
-Dave = Dave :: any
 
 local sys = Dave.sys
 
 local function makeFrame(content: string): buffer
-	local buf = buffer.create(#content)
-	buffer.writestring(buf, 0, content)
-	return buf
+	local frame = buffer.create(#content)
+
+	buffer.writestring(frame, 0, content)
+
+	return frame
 end
 
-local function frameEq(a: buffer, b: buffer): boolean
-	if buffer.len(a) ~= buffer.len(b) then
+local function frameEq(first: buffer, second: buffer): boolean
+	if buffer.len(first) ~= buffer.len(second) then
 		return false
 	end
-	return buffer.readstring(a, 0, buffer.len(a)) == buffer.readstring(b, 0, buffer.len(b))
+
+	return buffer.readstring(first, 0, buffer.len(first)) == buffer.readstring(second, 0, buffer.len(second))
 end
 
 return function()
@@ -59,6 +68,7 @@ return function()
 			local enc = Dave.Encryptor.new()
 			check.should_not_error(function()
 				enc:assignSsrcToCodec(12345, sys.codec.opus)
+
 				return
 			end)
 			enc:destroy()

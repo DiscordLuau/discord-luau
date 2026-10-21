@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- `Session:getProtocolVersion()` returns 0 before `init` on every platform; libdave leaves it uninitialised until then, so it returned garbage on Windows
+- Native libraries load on Windows and other platforms without a system copy, through the `binary` checksum fix
+
 ## 0.0.3
 
 ### Changed
