@@ -146,6 +146,10 @@ function Request.Prototype.executeAsync<Resolve>(self: Request)
 		local headerTable: stdPolyfills.HttpHeaderMap = {}
 		local baseUrl = `https://discord.com/api/v{self.restApiVersion}{self.url}`
 
+		if self.baseUrl then
+			baseUrl = `{self.baseUrl}{self.url}`
+		end
+
 		headerTable["user-agent"] = "DiscordBot (https://github.com/DiscordLuau/discord-luau, 0.1.0)"
 
 		if self.body ~= nil then
@@ -246,11 +250,13 @@ function Request.Interface.new(settings: {
 	token: string?,
 
 	restApiVersion: number,
+	baseUrl: string?,
 }): Request
 	return setmetatable(
 		{
 			token = settings.token,
 			restApiVersion = settings.restApiVersion,
+			baseUrl = settings.baseUrl,
 			flags = {},
 			headers = {},
 			urlParams = {},
@@ -272,6 +278,7 @@ export type RequestInformation = {
 export type Request = typeof(Request.Prototype) & {
 	token: string?,
 	restApiVersion: number,
+	baseUrl: string?,
 
 	beforeHooks: { (RequestInformation) -> (boolean?, string | RequestInformation?) },
 	afterHooks: { (RequestInformation, stdPolyfills.FetchResponse) -> (boolean?, string | RequestInformation?) },

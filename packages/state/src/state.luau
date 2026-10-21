@@ -23,6 +23,11 @@
 ]=]
 
 --[=[
+	@prop stub Stub?
+	@within State.State
+]=]
+
+--[=[
 	@prop rest State.Rest
 	@within State.State
 ]=]
@@ -85,14 +90,20 @@ function State.Interface.new(settings: {
 	reconnect: boolean,
 	globalRatelimit: number,
 	logLevel: logger.LogLevel?,
+	isUsingStub: Stub?,
 }): State
+	local stub = settings.isUsingStub
+	local restUrl: string? = stub and stub.restUrl
 	local secretToken = secret.new(settings.token)
+
+	assert(not stub or restUrl, "isUsingStub requires a stub with an HTTP server - call stub:createHttpServer() first")
 
 	local self = setmetatable(
 		{
 			token = secretToken,
 			applicationId = "",
 			logLevel = settings.logLevel or "Warn" :: any,
+			stub = stub,
 
 			rest = rest.new({
 				token = secretToken,
@@ -100,6 +111,7 @@ function State.Interface.new(settings: {
 				intents = settings.intents,
 				version = settings.version,
 				globalRatelimit = settings.globalRatelimit,
+				baseUrl = restUrl,
 			}),
 
 			webSocketManager = websocket.manager.new({
@@ -130,10 +142,15 @@ function State.Interface.new(settings: {
 	return self
 end
 
+export type Stub = {
+	restUrl: string?,
+}
+
 export type State = typeof(State.Prototype) & {
 	token: secret.Secret<string>,
 	applicationId: apiTypes.Snowflake,
 	logLevel: logger.LogLevel,
+	stub: Stub?,
 	rest: rest.REST,
 	webSocketManager: websocket.Manager,
 	intents: number,

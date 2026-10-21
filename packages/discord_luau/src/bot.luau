@@ -1729,6 +1729,7 @@ function Bot.Interface.new(options: {
 	reconnect: boolean?,
 	logLevel: logger.LogLevel?,
 	globalRatelimit: number?,
+	isUsingStub: state.Stub?,
 })
 	local self: Bot = setmetatable(
 		{
@@ -1739,6 +1740,7 @@ function Bot.Interface.new(options: {
 				version = DISCORD_VERSION,
 				reconnect = options.reconnect or false,
 				globalRatelimit = options.globalRatelimit or 50,
+				isUsingStub = options.isUsingStub,
 			}),
 
 			logger = logger.new("Bot"),

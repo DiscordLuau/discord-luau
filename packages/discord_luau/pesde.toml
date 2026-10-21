@@ -26,14 +26,21 @@ default = "https://github.com/pesde-pkg/index"
 std_polyfills = { name = "discord_luau/std_polyfills", version = ">=0.0.0" }
 api_types = { name = "discord_luau/api_types", version = ">=0.0.0" }
 util = { name = "discord_luau/util", version = ">=0.0.0" }
-state = { name = "discord_luau/state", version = ">=0.0.0" }
+state = { workspace = "discord_luau/state", version = ">=0.0.0" }
 future = { name = "yetanotherclown/luau_futures", version = "2.0.0-beta.3" }
 builders = { name = "discord_luau/builders", version = ">=0.0.0" }
-rest = { name = "discord_luau/rest", version = ">=0.0.0" }
+rest = { workspace = "discord_luau/rest", version = ">=0.0.0" }
 classes = { name = "discord_luau/classes", version = ">=0.0.0" }
 logger = { name = "discord_luau/logger", version = ">=0.0.0" }
 bit = { name = "discord_luau/bit", version = ">=0.0.0" }
 emitter = { name = "discord_luau/emitter", version = ">=0.0.0" }
+
+[dev_dependencies]
+discord_stub = { workspace = "discord_luau/discord_stub", version = ">=0.0.0" }
+
+[overrides]
+"state>rest" = { workspace = "discord_luau/rest", version = ">=0.0.0" }
+"state>websocket" = { workspace = "discord_luau/websocket", version = ">=0.0.0" }
 
 [patches]
 "yetanotherclown/luau_futures" = { "2.0.0-beta.3 luau" = "patches/yetanotherclown+luau_futures-2.0.0-beta.3+luau.patch" }

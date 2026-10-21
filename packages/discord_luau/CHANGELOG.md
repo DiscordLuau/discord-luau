@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `bot.new` accepts `isUsingStub`, a `discord_stub` world for running a bot against a local Discord
+
 ## 0.0.4
 
 ### Fixed

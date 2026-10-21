@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `State` accepts an `isUsingStub` stub and derives the REST base URL from its `restUrl`
+- `Rest` accepts a `baseUrl` setting and passes it to every request
+
 ## 0.0.3
 
 ### Changed

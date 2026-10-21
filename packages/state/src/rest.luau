@@ -57,6 +57,11 @@
 	@within State.Rest
 ]=]
 
+--[=[
+	@prop baseUrl string?
+	@within State.Rest
+]=]
+
 local secret = require("../luau_packages/secret")
 local formdata = require("../luau_packages/formdata")
 local stdPolyfills = require("../luau_packages/std_polyfills")
@@ -308,6 +313,7 @@ function REST.Prototype.newRequest(self: REST): rest.Request
 	local newRequest = rest.request.new({
 		token = self.token.value,
 		restApiVersion = self.version,
+		baseUrl = self.baseUrl,
 	})
 
 	self:implementBucketRatelimitsFor(newRequest)
@@ -328,6 +334,7 @@ function REST.Interface.new(settings: {
 	token: secret.Secret<string>,
 	intents: number,
 	version: number,
+	baseUrl: string?,
 	globalRatelimit: number,
 	logLevel: logger.LogLevel?,
 }): REST
@@ -343,6 +350,7 @@ function REST.Interface.new(settings: {
 			resourcesBlocked = {},
 			intents = settings.intents,
 			version = settings.version,
+			baseUrl = settings.baseUrl,
 		} :: REST,
 		{
 			__index = REST.Prototype,
@@ -370,6 +378,7 @@ export type REST = typeof(REST.Prototype) & {
 	resourcesBlocked: { [string]: boolean? },
 	intents: number,
 	version: number,
+	baseUrl: string?,
 }
 
 return REST.Interface
