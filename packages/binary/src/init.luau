@@ -2,21 +2,20 @@
 	@class Binary
 ]=]
 
-local sha256 = require("@self/../luau_packages/sha256")
 local stdPolyfills = require("@self/../luau_packages/std_polyfills")
+
+local sha256 = require("@self/sha256")
 
 local Binary = {}
 
 local function resolveTokens(url: string, version: string): string
 	local platform = stdPolyfills.process.getPlatform()
 	local rawArchitecture = stdPolyfills.process.getArch()
-
 	local extension = if platform == "linux" then ".so" elseif platform == "macos" then ".dylib" else ".dll"
 	local architecture = if rawArchitecture == "aarch64"
 		then "arm64"
 		elseif rawArchitecture == "x86" then "x86"
 		else "x64"
-
 	local resolved = string.gsub(url, "{version}", version)
 
 	resolved = string.gsub(resolved, "{os}", platform)
@@ -32,7 +31,6 @@ end
 
 local function getCacheDir(id: string, version: string): string
 	local environment = stdPolyfills.process.getEnv()
-
 	local home = environment["HOME"] or environment["USERPROFILE"]
 
 	if not home then
@@ -112,7 +110,7 @@ local function probeSystemPaths(id: string): string?
 		table.insert(paths, "C:/Windows/System32")
 	end
 
-	for _, directory in ipairs(paths) do
+	for _, directory in paths do
 		local candidate = `{directory}/{libraryFilename}`
 
 		if stdPolyfills.fileSystem.isFile(candidate) then
@@ -140,7 +138,6 @@ function Binary.load(options: LoadOptions): LoadResult
 	local filename = filenameFromUrl(resolvedUrl)
 	local cacheDir = getCacheDir(options.id, options.version)
 	local cachePath = `{cacheDir}/{filename}`
-
 	local systemPath = probeSystemPaths(options.id)
 
 	if systemPath then

@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Checksums of downloaded native libraries are correct in every project; the SHA-256 code is now part of `binary`, because the pesde patch that made it hash raw bytes was never applied to projects that install `binary`, so they computed wrong hashes (all zeros for large files) and rejected valid downloads
+- Hashing an empty download no longer errors
+
 ## 0.0.4
 
 ### Fixed
