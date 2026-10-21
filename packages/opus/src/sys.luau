@@ -10,8 +10,8 @@ local binary = require("../luau_packages/binary")
 local stdPolyfills = require("../luau_packages/std_polyfills")
 
 local CHECKSUMS: { [string]: string } = {
-	["linux-arm64"] = "sha256:b2bbb70c86a9c819c35796cd37d8fdae0292fa2424ce131ec7df6e6f174fa68f",
-	["linux-x64"] = "sha256:57d2875a85a8a31918f802664137f843d70e4911bcda4ac7ac2b5a7f00ca3e6a",
+	["linux-arm64"] = "sha256:cea2e22c4704e75d402aad0307adfa2b6ab4794a4e42a651cc34b75a874913aa",
+	["linux-x64"] = "sha256:3f6fe6536e182d1aee8aed9e49f9d024798dfa43aac9d3f76675f6fcfbc1db1f",
 	["macos-arm64"] = "sha256:d4e65ac92a40b106d6f856ae4d04def8a3a0c2631f1495c69a8b46058ffc4222",
 	["windows-x64"] = "sha256:c84da836e8d92421ac305842cfe5a724898ed09d340d46b129e210bdc9448131",
 	["windows-x86"] = "sha256:3b5bfe12950f35043ed75d2b6fa902c936d67a507160bf76358d67c76c1dbde8",
@@ -70,7 +70,7 @@ local function loadLibrary(): Lib
 		else "x64"
 	local result = binary.load({
 		id = "libopus",
-		version = "0.0.2",
+		version = "0.0.4",
 		url = "https://raw.githubusercontent.com/DiscordLuau/discord-luau/refs/tags/opus-{version}/packages/opus/binaries/{os}-{arch}/libopus{ext}",
 		checksum = CHECKSUMS[`{platform}-{architecture}`]
 			or error(`Unsupported platform '{platform}-{architecture}' for libopus`),
