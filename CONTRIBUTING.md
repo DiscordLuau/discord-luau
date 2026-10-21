@@ -6,10 +6,15 @@ Please note we have a [code of conduct](CODE_OF_CONDUCT.md), please follow it in
 
 ## Development environment setup
 1. Git clone the projects repository *(`git clone https://github.com/DiscordLuau/discord-luau.git`)*
-2. Bundle the Types for the project *(`lune bundle`)*
-3. Install all dependencies *(`pesde install`)*
-4. Use `Lune` to start the `development.luau` script
-	i. `lune run development`
+2. Install [pesde](https://pesde.dev) and [Rokit](https://github.com/rojo-rbx/rokit), then the pinned tools *(`rokit install`; Rokit asks once before installing a tool it has not seen)*
+3. Write the Zune type definitions *(`zune setup`)*
+4. Bundle the API types *(`zune run .zune/bundle.luau`)*
+5. Install all dependencies *(`pesde install`)*
+6. Run the checks CI runs *(`zune run .zune/fmt.luau`, `zune run .zune/lint.luau`, `zune run .zune/analyze.luau`, `zune run .zune/test.luau`)*
+
+## AI-assisted contributions
+
+You are welcome to use AI tools. You are responsible for every line you submit, you test it, and you say in the pull request description that AI was used. The full rules are in [docs/ai](docs/ai/overview.md); AI tools read the same rules from `AGENTS.md`.
 
 ## Code Style Guide
 - **Classes:** Use PascalCase for classes.
@@ -22,7 +27,7 @@ Please note we have a [code of conduct](CODE_OF_CONDUCT.md), please follow it in
 	- instead of naming files `PostgresClient.luau` and `PostgresServer.luau`, group them under a module directory called `postgres` with an `init.luau` that exports both `client.luau` and `server.luau`.
 - **Modules:** Prefer grouping modules as a tree. For instance, rather than having separate files like `RobloxInputMouseHandler.luau` and `RobloxInputKeyboardHandler.luau`, structure them as `inputHandlers/roblox/mouse.luau` and `inputHandlers/roblox/keyboard.luau`.
 	- another example; use `builders/X.luau` instead of `builders/XBuilder.luau`.
-- **Formatting:** Adhere to a maximum line width of 100 characters and follow the default settings of stylua.
+- **Formatting:** Run stylua with the repository's `stylua.toml` (tabs, 120-character lines).
 - **Variable Naming:** One-word variable names are discouraged, even in closures.
 - **Comments:** This project uses Moonwave documentation - ensure your format meets the requirements for Moonwave.
 
