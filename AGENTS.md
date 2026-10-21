@@ -4,7 +4,7 @@ A Luau library for the Discord API, split into packages under `packages/<name>/`
 
 ## Setup
 
-Install [pesde](https://pesde.dev) and [Rokit](https://github.com/rojo-rbx/rokit) first; pesde is not in `rokit.toml`.
+Install [pesde](https://pesde.dev) 0.7.4 or newer and [Rokit](https://github.com/rojo-rbx/rokit) first; pesde is not in `rokit.toml`. Older pesde fails to apply dependency patches on Windows when Git's `core.autocrlf` is on.
 
 ```sh
 rokit install                 # pinned tools from rokit.toml; Rokit asks once before installing a tool it has not seen, answer yes

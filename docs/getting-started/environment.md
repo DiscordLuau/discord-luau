@@ -21,7 +21,7 @@ rokit --version
 
 ### pesde
 
-[pesde](https://pesde.dev) is the Luau package manager used to install discord-luau and to run the project scaffolder. Follow the installation instructions at [pesde.dev](https://pesde.dev).
+[pesde](https://pesde.dev) is the Luau package manager used to install discord-luau and to run the project scaffolder. Follow the installation instructions at [pesde.dev](https://pesde.dev), and use version 0.7.4 or newer: on Windows, older versions fail to apply dependency patches (`hunk at line 1 did not apply`) when Git's `core.autocrlf` is on, which is Git for Windows' default.
 
 Verify the installation:
 
