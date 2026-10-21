@@ -1,28 +1,34 @@
 local frktest = require("../../../luau_packages/frktest")
+local stdPolyfills = require("../luau_packages/std_polyfills")
+
+local Sodium = require("../src")
 local helpers = require("./helpers")
+
+local PLAINTEXT = helpers.makeBuffer("hello sodium aead")
+local AD = helpers.makeBuffer("additional data")
 
 local test = frktest.test
 local check = frktest.assert.check
 
-local ok, Sodium = pcall(require, "../src")
+if not stdPolyfills.runtime.capabilities().ffi then
+	assert(
+		not stdPolyfills.process.getEnv().DISCORD_LUAU_REQUIRE_FFI,
+		"DISCORD_LUAU_REQUIRE_FFI is set but this runtime has no FFI"
+	)
 
-if not ok then
-	return function() end
+	return function()
+		test.skip.suite("aes256gcm", function() end)
+	end
 end
 
-Sodium = Sodium :: any
-local makeBuffer = helpers.makeBuffer
 local bufferEqual = helpers.bufferEqual
-
-local PLAINTEXT = makeBuffer("hello sodium aead")
-local AD = makeBuffer("additional data")
 
 return function()
 	test.suite("aes256gcm", function()
 		test.case("isAvailable returns a boolean", function()
 			local available = Sodium.aes256gcm.isAvailable()
 
-			check.is_true(type(available) == "boolean")
+			check.is_true(available == true or available == false)
 		end)
 
 		test.case("keygen produces KEY_BYTES bytes", function()

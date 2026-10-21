@@ -1,22 +1,29 @@
 local frktest = require("../../../luau_packages/frktest")
+local stdPolyfills = require("../luau_packages/std_polyfills")
+
+local Sodium = require("../src")
 local helpers = require("./helpers")
+
+local DATA = helpers.makeBuffer("generichash test data")
+local CHUNK1 = helpers.makeBuffer("chunk one ")
+local CHUNK2 = helpers.makeBuffer("chunk two")
 
 local test = frktest.test
 local check = frktest.assert.check
 
-local ok, Sodium = pcall(require, "../src")
+if not stdPolyfills.runtime.capabilities().ffi then
+	assert(
+		not stdPolyfills.process.getEnv().DISCORD_LUAU_REQUIRE_FFI,
+		"DISCORD_LUAU_REQUIRE_FFI is set but this runtime has no FFI"
+	)
 
-if not ok then
-	return function() end
+	return function()
+		test.skip.suite("generichash", function() end)
+	end
 end
 
-Sodium = Sodium :: any
 local makeBuffer = helpers.makeBuffer
 local bufferEqual = helpers.bufferEqual
-
-local DATA = makeBuffer("generichash test data")
-local CHUNK1 = makeBuffer("chunk one ")
-local CHUNK2 = makeBuffer("chunk two")
 
 return function()
 	test.suite("generichash", function()
@@ -51,7 +58,6 @@ return function()
 			local combined = makeBuffer(
 				buffer.readstring(CHUNK1, 0, buffer.len(CHUNK1)) .. buffer.readstring(CHUNK2, 0, buffer.len(CHUNK2))
 			)
-
 			local oneShot = Sodium.generichash.hash(combined)
 			local state = Sodium.generichash.new()
 

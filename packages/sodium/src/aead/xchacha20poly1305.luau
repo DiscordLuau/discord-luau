@@ -10,19 +10,17 @@
 local Sys = require("../sys")
 local Buffer = require("../buffer")
 
-export type EncryptResult = Buffer.EncryptResult
-
 local KEY_BYTES = Sys.xchacha20poly1305.KEY_BYTES
 local NONCE_BYTES = Sys.xchacha20poly1305.NONCE_BYTES
 local TAG_BYTES = Sys.xchacha20poly1305.TAG_BYTES
 
 local Xchacha20poly1305 = {}
 
-Xchacha20poly1305.Interface = {}
-
-Xchacha20poly1305.Interface.KEY_BYTES = KEY_BYTES
-Xchacha20poly1305.Interface.NONCE_BYTES = NONCE_BYTES
-Xchacha20poly1305.Interface.TAG_BYTES = TAG_BYTES
+Xchacha20poly1305.Interface = {
+	KEY_BYTES = KEY_BYTES,
+	NONCE_BYTES = NONCE_BYTES,
+	TAG_BYTES = TAG_BYTES,
+}
 
 --[=[
 	@within Sodium.Xchacha20poly1305
@@ -53,23 +51,22 @@ function Xchacha20poly1305.Interface.encrypt(plaintext: buffer, key: buffer, non
 
 	local plaintextLength = buffer.len(plaintext)
 	local additionalDataLength = if ad then buffer.len(ad) else 0
-
 	local cipherPointer = Buffer.alloc(plaintextLength)
 	local tagPointer = Buffer.alloc(TAG_BYTES)
 	local plaintextPointer = Buffer.dupe(plaintext)
 	local keyPointer = Buffer.dupe(key)
 	local noncePointer = Buffer.dupe(nonce)
-	local additionalDataPointer = if ad then Buffer.dupe(ad) else nil
-
+	local additionalDataPointer = if ad then Buffer.dupe(ad) else Buffer.getNull()
+	local nullPointer = Buffer.getNull()
 	local result = Sys.lib.crypto_aead_xchacha20poly1305_ietf_encrypt_detached(
 		cipherPointer,
 		tagPointer,
-		nil,
+		nullPointer,
 		plaintextPointer,
 		plaintextLength,
 		additionalDataPointer,
 		additionalDataLength,
-		nil,
+		nullPointer,
 		noncePointer,
 		keyPointer
 	)
@@ -81,7 +78,7 @@ function Xchacha20poly1305.Interface.encrypt(plaintext: buffer, key: buffer, non
 	Buffer.free(noncePointer)
 
 	if ad then
-		Buffer.free(additionalDataPointer :: FFIPointer)
+		Buffer.free(additionalDataPointer)
 	end
 
 	if result ~= 0 then
@@ -118,17 +115,16 @@ function Xchacha20poly1305.Interface.decrypt(
 
 	local ciphertextLength = buffer.len(cipher)
 	local additionalDataLength = if ad then buffer.len(ad) else 0
-
 	local plaintextPointer = Buffer.alloc(ciphertextLength)
 	local cipherPointer = Buffer.dupe(cipher)
 	local tagPointer = Buffer.dupe(tag)
 	local keyPointer = Buffer.dupe(key)
 	local noncePointer = Buffer.dupe(nonce)
-	local additionalDataPointer = if ad then Buffer.dupe(ad) else nil
-
+	local additionalDataPointer = if ad then Buffer.dupe(ad) else Buffer.getNull()
+	local nullPointer = Buffer.getNull()
 	local result = Sys.lib.crypto_aead_xchacha20poly1305_ietf_decrypt_detached(
 		plaintextPointer,
-		nil,
+		nullPointer,
 		cipherPointer,
 		ciphertextLength,
 		tagPointer,
@@ -145,7 +141,7 @@ function Xchacha20poly1305.Interface.decrypt(
 	Buffer.free(noncePointer)
 
 	if ad then
-		Buffer.free(additionalDataPointer :: FFIPointer)
+		Buffer.free(additionalDataPointer)
 	end
 
 	if result ~= 0 then
@@ -160,5 +156,7 @@ function Xchacha20poly1305.Interface.decrypt(
 
 	return plaintext
 end
+
+export type EncryptResult = Buffer.EncryptResult
 
 return Xchacha20poly1305.Interface

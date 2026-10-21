@@ -1,26 +1,32 @@
 local frktest = require("../../../luau_packages/frktest")
+local stdPolyfills = require("../luau_packages/std_polyfills")
+
+local Sodium = require("../src")
 
 local test = frktest.test
 local check = frktest.assert.check
 
-local ok, Sodium = pcall(require, "../src")
+if not stdPolyfills.runtime.capabilities().ffi then
+	assert(
+		not stdPolyfills.process.getEnv().DISCORD_LUAU_REQUIRE_FFI,
+		"DISCORD_LUAU_REQUIRE_FFI is set but this runtime has no FFI"
+	)
 
-if not ok then
-	return function() end
+	return function()
+		test.skip.suite("randombytes", function() end)
+	end
 end
-
-Sodium = Sodium :: any
 
 return function()
 	test.suite("randombytes", function()
 		test.case("buf returns a buffer of the requested size", function()
-			local b = Sodium.randombytes.buf(32)
-			check.equal(buffer.len(b), 32)
+			local bytes = Sodium.randombytes.buf(32)
+			check.equal(buffer.len(bytes), 32)
 		end)
 
 		test.case("buf(0) returns an empty buffer", function()
-			local b = Sodium.randombytes.buf(0)
-			check.equal(buffer.len(b), 0)
+			local bytes = Sodium.randombytes.buf(0)
+			check.equal(buffer.len(bytes), 0)
 		end)
 
 		test.case("two calls to buf(32) almost certainly differ", function()
