@@ -1,4 +1,4 @@
--- selene: allow(undefined_variable)
+--# selene: allow(undefined_variable)
 local datetime = {}
 
 -- Roblox's DateTime uses PascalCase; wrap to match the polyfill's camelCase shape

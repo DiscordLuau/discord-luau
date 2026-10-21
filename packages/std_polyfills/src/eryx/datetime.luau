@@ -12,7 +12,7 @@ local function wrap(dt)
 	return {
 		unixTimestamp = math.floor(diff.totalSeconds),
 		unixTimestampMillis = math.floor(totalMilliseconds),
-		toIsoDate = function(self: any): string
+		toIsoDate = function(_self: any): string
 			return dt:toIsoString()
 		end,
 	}

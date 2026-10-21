@@ -19,7 +19,7 @@ function io.stdoutWrite(data: string)
 end
 
 function io.stderrWrite(data: string)
-	luteIo.write(data, 2)
+	luteIo.write(data)
 end
 
 function io.stdinRead(amount: number?): string

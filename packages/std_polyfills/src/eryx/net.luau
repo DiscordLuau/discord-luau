@@ -7,7 +7,7 @@ local function urlEncodeChar(character: string): string
 	return string.format("%%%02X", string.byte(character))
 end
 
-function net.urlEncode(url: string, binary: boolean?): string
+function net.urlEncode(url: string, _binary: boolean?): string
 	return (string.gsub(url, "[^%w%-%.%_%~]", urlEncodeChar))
 end
 

@@ -18,7 +18,9 @@ end
 
 function serde.decode(format: string, encoded: string | buffer): any
 	if format == "json" then
-		return zuneSerde.json.decode(encoded :: string)
+		local text = if typeof(encoded) == "buffer" then buffer.tostring(encoded) else encoded
+
+		return zuneSerde.json.decode(text)
 	elseif format == "yaml" then
 		return zuneSerde.yaml.decode(encoded)
 	elseif format == "toml" then
