@@ -206,7 +206,7 @@ function REST.Prototype.implementErrorHandlerFor(self: REST, request: rest.Reque
 			local decodeSuccess, decodedBody = pcall(stdPolyfills.serde.decode, "json" :: "json", data.body)
 			local scope = data.headers["x-ratelimit-scope"] :: string
 
-			assert(decodeSuccess, `Failed to decode JSON value for ratelimit`)
+			assert(decodeSuccess, `Failed to decode JSON value for ratelimit: {decodedBody} (body: {data.body})`)
 
 			success = false
 			message = decodedBody.message

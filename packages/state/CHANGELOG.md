@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- A 429 response whose body cannot be decoded now fails with the decode error and the body in the message
+
+### Added
+
+- `State.userId` and `setUserId` hold the bot's own user ID from READY, and `State.logger` gives packages without a logger somewhere to log
+
 ## 0.0.4
 
 ### Added
