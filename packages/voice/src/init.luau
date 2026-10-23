@@ -4,8 +4,11 @@ local udp = require("@self/udp")
 local rtp = require("@self/rtp")
 local dave = require("@self/dave")
 local jitter = require("@self/jitter")
+local opusPacket = require("@self/opusPacket")
 
 export type Connection = connection.Connection
+export type Status = connection.Status
+export type CloseReason = connection.CloseReason
 export type WebSocketTransport = webSocket.WebSocketTransport
 export type UdpTransport = udp.UdpTransport
 export type RtpCrypto = rtp.RtpCrypto
@@ -48,6 +51,14 @@ export type Jitter = jitter.Jitter
 	@within Voice
 ]=]
 
+--[=[
+	@prop opusSamples (packet: buffer) -> number
+	@within Voice
+
+	Returns how many 48 kHz samples an Opus packet holds, read from its TOC byte; raises for an invalid packet. See
+	`Voice.OpusPacket`.
+]=]
+
 return {
 	connection = connection,
 	webSocket = webSocket,
@@ -55,4 +66,5 @@ return {
 	rtp = rtp,
 	dave = dave,
 	jitter = jitter,
+	opusSamples = opusPacket.opusSamples,
 }
