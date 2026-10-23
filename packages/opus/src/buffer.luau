@@ -38,11 +38,21 @@ end
 --[=[
 	@within Opus.Buffer
 
+	Copies all of `source` into the start of the native memory at `pointer`.
+]=]
+function OpusBuffer.Interface.write(pointer: FFIPointer, source: buffer)
+	pointer:write(0, source, 0, buffer.len(source))
+end
+
+--[=[
+	@within Opus.Buffer
+
 	Reads `length` bytes from `pointer` into a freshly created Luau buffer.
 ]=]
 function OpusBuffer.Interface.read(pointer: FFIPointer, length: number): buffer
 	local result = buffer.create(length)
 	pointer:read(0, result, 0, length)
+
 	return result
 end
 
