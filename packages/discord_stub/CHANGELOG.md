@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- `clock:wait` returns the time that passed on the clock, as `task.wait` does, instead of the duration it was asked for, so callers that add up waits no longer drift from `waitFor` deadlines under load
+- An undecodable client message and an error raised by a socket open, message or close callback are recorded in `handlerErrors` instead of being dropped or printed by the runtime
+
+### Added
+
+- `stub:createVoiceServer`, a voice gateway (version 8) double and its UDP server on `127.0.0.1`, attached to the gateway websocket server
+- `discordStub.VoiceServer`: Hello, Ready, Session Description, heartbeat ACK echoing `t`, Resumed or close 4006 on Resume, scripted Speaking, Clients Connect, Client Disconnect, JSON and binary messages with `seq`, and every received message with its raw text or buffer
+- `discordStub.UdpServer`: IP discovery answers, keepalive echoes and recorded RTP packets
+- A default Voice State Update reply on the gateway: VOICE_STATE_UPDATE and VOICE_SERVER_UPDATE pointing at the voice server, a null channel closing the voice connection with 4014, and `ws:moveVoice`
+- `connection:sendRaw`, sending a string as a text frame and a buffer as a binary frame
+- `opcode` and `raw` on every received record, so a test can see a JSON null that decoding drops
+- `WebsocketServer:disconnectVoice(guildId)` takes the stub user out of voice the way a kick does: a null-channel VOICE_STATE_UPDATE, then 4014 on every voice socket
+- The voice server can withhold heartbeat ACKs (`ackHeartbeats`), refuse upgrades (`refuseUpgrades`) and hold them (`upgradeDelaySeconds`), and the UDP server can drop discovery requests (`ignoreDiscovery`), so voice reconnect paths can be tested
+
+### Changed
+
+- Helper methods drop their leading underscore (`_name` is now `name`); they stay marked `@private` and out of the docs
+- `stub:runScenario` also returns the first voice or UDP server error
+
 ## 0.0.1
 
 ### Added

@@ -2,9 +2,10 @@
 	@class DiscordStub.WebsocketServer
 	@__index Prototype
 
-	A localhost gateway: Hello on open, ACK on heartbeat, a new session on Identify, replay and RESUMED on Resume, and
-	whatever the handler returns. Every connection is dialled by URL, so the library's own shard code speaks to it
-	unchanged, and every upgrade and payload is recorded for the test to assert on.
+	A localhost gateway: Hello on open, ACK on heartbeat, a new session on Identify, replay and RESUMED on Resume, the
+	voice dispatches on Voice State Update once a voice server is attached, and whatever the handler returns. Every
+	connection is dialled by URL, so the library's own shard code speaks to it unchanged, and every upgrade and
+	payload is recorded, raw text included, for the test to assert on.
 ]=]
 
 --[=[
@@ -115,12 +116,21 @@
 	Every error the handler raised, which Zune would otherwise print and swallow.
 ]=]
 
+--[=[
+	@prop voiceServer VoiceServer?
+	@within DiscordStub.WebsocketServer
+	The voice server Voice State Update answers point at. Without one, Voice State Update gets no default reply.
+]=]
+
 local stdPolyfills = require("../luau_packages/std_polyfills")
 local apiTypes = require("../luau_packages/api_types")
 
 local clock = require("./clock")
 local gatewayConnection = require("./connection")
 local loopback = require("./loopback")
+local voiceServer = require("./voiceServer")
+
+local STUB_USER_ID = "1"
 
 local WebsocketServer = {}
 
@@ -135,7 +145,7 @@ local function readyPayload(sequence: number, sessionId: string, resumeGatewayUr
 		d = {
 			v = 10,
 			user = {
-				id = "1",
+				id = STUB_USER_ID,
 				username = "Stub",
 				discriminator = "0",
 				global_name = "Stub",
@@ -155,16 +165,6 @@ local function readyPayload(sequence: number, sessionId: string, resumeGatewayUr
 			},
 		},
 	}
-end
-
-local function findConnection(connections: { Connection }, socket: ZuneSocket): Connection?
-	for _, connection in connections do
-		if connection.socket == socket then
-			return connection
-		end
-	end
-
-	return
 end
 
 --[=[
@@ -231,6 +231,27 @@ end
 --[=[
 	@within DiscordStub.WebsocketServer
 
+	Dispatches the VOICE_STATE_UPDATE and VOICE_SERVER_UPDATE pair Discord sends when the bot moves to `channelId` in
+	`guildId`. Errors when no voice server is attached.
+]=]
+function WebsocketServer.Prototype.moveVoice(self: WebsocketServer, guildId: string, channelId: string)
+	self:updateVoiceState(guildId, channelId, false, false)
+end
+
+--[=[
+	@within DiscordStub.WebsocketServer
+
+	Takes the stub user out of voice in `guildId` the way Discord does for a kick or a moderator disconnect: dispatches
+	VOICE_STATE_UPDATE with a null channel, then closes every open voice connection with 4014. Errors when no voice
+	server is attached.
+]=]
+function WebsocketServer.Prototype.disconnectVoice(self: WebsocketServer, guildId: string)
+	self:updateVoiceState(guildId, nil, false, false)
+end
+
+--[=[
+	@within DiscordStub.WebsocketServer
+
 	The most recently opened connection, nil before the first.
 ]=]
 function WebsocketServer.Prototype.latestConnection(self: WebsocketServer): Connection?
@@ -282,10 +303,8 @@ end
 	Answers one upgrade request: counts it, holds it for `upgradeDelaySeconds`, then refuses it while
 	`refuseUpgrades` lasts or queues its path for the connection that opens next.
 ]=]
-function WebsocketServer.Prototype._upgrade(self: WebsocketServer, request: ZuneRequest): boolean
-	local path = if #request.path > 1 and string.sub(request.path, -1) == "/"
-		then string.sub(request.path, 1, -2)
-		else request.path
+function WebsocketServer.Prototype.upgrade(self: WebsocketServer, request: ZuneRequest): boolean
+	local path = loopback.upgradePath(request)
 
 	self.connectAttempts += 1
 
@@ -312,7 +331,7 @@ end
 
 	Records a newly opened socket as a connection on the oldest queued path and sends it Hello.
 ]=]
-function WebsocketServer.Prototype._open(self: WebsocketServer, socket: ZuneSocket)
+function WebsocketServer.Prototype.open(self: WebsocketServer, socket: ZuneSocket)
 	local connection = gatewayConnection.new({
 		index = #self.connections + 1,
 		path = table.remove(self.pendingPaths, 1) or "?",
@@ -331,10 +350,24 @@ end
 	@within DiscordStub.WebsocketServer
 	@private
 
+	Runs a socket callback body and keeps its error in `handlerErrors`, so `runScenario` reports it.
+]=]
+function WebsocketServer.Prototype.guarded(self: WebsocketServer, body: () -> ())
+	local succeeded, bodyError = xpcall(body :: () -> any, debug.traceback)
+
+	if not succeeded then
+		table.insert(self.handlerErrors, tostring(bodyError))
+	end
+end
+
+--[=[
+	@within DiscordStub.WebsocketServer
+	@private
+
 	Marks the socket's connection closed with the code the server saw.
 ]=]
-function WebsocketServer.Prototype._closed(self: WebsocketServer, socket: ZuneSocket, code: number)
-	local connection = findConnection(self.connections, socket)
+function WebsocketServer.Prototype.closed(self: WebsocketServer, socket: ZuneSocket, code: number)
+	local connection = gatewayConnection.find(self.connections, socket)
 
 	if not connection then
 		return
@@ -348,10 +381,15 @@ end
 	@within DiscordStub.WebsocketServer
 	@private
 
-	Answers one message: records it on its connection, lets the handler answer it, then falls through to the default
-	replies when the handler returned nil. A handler error is kept in `handlerErrors` and nothing is sent.
+	Answers one message: records it and its raw text on its connection, lets the handler answer it, then falls
+	through to the default replies when the handler returned nil. A handler error is kept in `handlerErrors` and
+	nothing is sent.
 ]=]
-function WebsocketServer.Prototype._handleMessage(self: WebsocketServer, connection: Connection, message: string)
+function WebsocketServer.Prototype.handleMessage(
+	self: WebsocketServer,
+	connection: Connection,
+	message: string | buffer
+)
 	local decoded, payload = pcall(function(): Payload
 		local value = stdPolyfills.serde.decode("json" :: "json", message)
 		assert(type(value) == "table" and type(value.op) == "number", "expected a gateway payload")
@@ -360,10 +398,12 @@ function WebsocketServer.Prototype._handleMessage(self: WebsocketServer, connect
 	end)
 
 	if not decoded then
+		table.insert(self.handlerErrors, `undecodable gateway message: {payload}`)
+
 		return
 	end
 
-	table.insert(connection.received, { payload = payload, at = self.clock:now() })
+	table.insert(connection.received, { opcode = payload.op, payload = payload, raw = message, at = self.clock:now() })
 
 	local handled, response = pcall(function(): (Payload | false)?
 		return if self.handler then self.handler(connection, payload) else nil
@@ -389,9 +429,13 @@ function WebsocketServer.Prototype._handleMessage(self: WebsocketServer, connect
 	if payload.op == apiTypes.gateway.opcodes.Heartbeat then
 		connection:send({ op = apiTypes.gateway.opcodes.HeartbeatACK })
 	elseif payload.op == apiTypes.gateway.opcodes.Identify then
-		self:_answerIdentify(connection)
+		self:answerIdentify(connection)
 	elseif payload.op == apiTypes.gateway.opcodes.Resume then
-		self:_answerResume(connection, payload)
+		self:answerResume(connection, payload)
+	elseif payload.op == apiTypes.gateway.opcodes.VoiceStateUpdate and self.voiceServer then
+		local data = payload.d or {}
+
+		self:updateVoiceState(data.guild_id, data.channel_id, data.self_mute == true, data.self_deaf == true)
 	end
 end
 
@@ -402,7 +446,7 @@ end
 	Starts a new session for an Identify: clears the dispatch log, binds the connection and sends it READY, which is
 	never logged.
 ]=]
-function WebsocketServer.Prototype._answerIdentify(self: WebsocketServer, connection: Connection)
+function WebsocketServer.Prototype.answerIdentify(self: WebsocketServer, connection: Connection)
 	local identifyCount = self.identifyCount + 1
 	local sessionId = `stub-session-{identifyCount}`
 	local sequence = self.sequence + 1
@@ -423,7 +467,7 @@ end
 	Resumes the current session: binds the connection, replays every logged dispatch after the client's `seq` in
 	order, then sends RESUMED, which is never logged. Any other session id is answered with `{ op = 9, d = false }`.
 ]=]
-function WebsocketServer.Prototype._answerResume(self: WebsocketServer, connection: Connection, payload: Payload)
+function WebsocketServer.Prototype.answerResume(self: WebsocketServer, connection: Connection, payload: Payload)
 	local data = payload.d or {}
 	local lastSequence = data.seq or 0
 	local sequence = self.sequence + 1
@@ -453,6 +497,51 @@ end
 
 --[=[
 	@within DiscordStub.WebsocketServer
+	@private
+
+	Dispatches VOICE_STATE_UPDATE for the stub user with the voice server's session id. Joining or moving
+	(`channelId` set) then dispatches VOICE_SERVER_UPDATE with the voice server's token and URL as `endpoint`;
+	leaving (`channelId` nil, sent as JSON null) closes every open voice connection with 4014.
+]=]
+function WebsocketServer.Prototype.updateVoiceState(
+	self: WebsocketServer,
+	guildId: string,
+	channelId: string?,
+	selfMute: boolean,
+	selfDeaf: boolean
+)
+	local attachedVoiceServer = self.voiceServer
+
+	assert(attachedVoiceServer, "discord_stub: attach a voice server to the websocket server first")
+
+	self:dispatch(apiTypes.gateway.receiveEvents.VoiceStateUpdate, {
+		guild_id = guildId,
+		channel_id = channelId or zune.serde.json.values.null,
+		user_id = STUB_USER_ID,
+		session_id = attachedVoiceServer.sessionId,
+		deaf = false,
+		mute = false,
+		self_deaf = selfDeaf,
+		self_mute = selfMute,
+		self_video = false,
+		suppress = false,
+	})
+
+	if not channelId then
+		attachedVoiceServer:close(apiTypes.voice.closeCodes.Disconnected)
+
+		return
+	end
+
+	self:dispatch(apiTypes.gateway.receiveEvents.VoiceServerUpdate, {
+		token = attachedVoiceServer.token,
+		guild_id = guildId,
+		endpoint = attachedVoiceServer.url,
+	})
+end
+
+--[=[
+	@within DiscordStub.WebsocketServer
 
 	Stops listening, closing every open connection first. Safe to call twice.
 ]=]
@@ -477,6 +566,7 @@ end
 function WebsocketServer.Interface.new(settings: {
 	clock: clock.Clock,
 	handler: Handler?,
+	voiceServer: voiceServer.VoiceServer?,
 	onStop: ((server: WebsocketServer) -> ())?,
 }): WebsocketServer
 	local self = setmetatable(
@@ -497,6 +587,7 @@ function WebsocketServer.Interface.new(settings: {
 			dispatchLog = {},
 			identifyCount = 0,
 			handlerErrors = {},
+			voiceServer = settings.voiceServer,
 		} :: WebsocketServer,
 		{ __index = WebsocketServer.Prototype }
 	)
@@ -506,20 +597,26 @@ function WebsocketServer.Interface.new(settings: {
 		end,
 		websocket = {
 			upgrade = function(request)
-				return self:_upgrade(request)
+				return self:upgrade(request)
 			end,
 			open = function(socket)
-				self:_open(socket)
+				self:guarded(function()
+					self:open(socket)
+				end)
 			end,
 			message = function(socket, message)
-				local connection = findConnection(self.connections, socket)
+				self:guarded(function()
+					local connection = gatewayConnection.find(self.connections, socket)
 
-				if connection then
-					self:_handleMessage(connection, message)
-				end
+					if connection then
+						self:handleMessage(connection, message)
+					end
+				end)
 			end,
 			close = function(socket, code)
-				self:_closed(socket, code)
+				self:guarded(function()
+					self:closed(socket, code)
+				end)
 			end,
 		},
 	})
@@ -560,6 +657,7 @@ export type WebsocketServer = typeof(WebsocketServer.Prototype) & {
 	dispatchLog: { Payload },
 	identifyCount: number,
 	handlerErrors: { string },
+	voiceServer: voiceServer.VoiceServer?,
 }
 
 return WebsocketServer.Interface

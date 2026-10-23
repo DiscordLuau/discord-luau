@@ -2,8 +2,8 @@
 	@class DiscordStub.Connection
 	@__index Prototype
 
-	One accepted gateway websocket: where it was dialled, which session it is bound to, and every payload the client
-	sent on it.
+	One accepted websocket, on the gateway or the voice gateway: where it was dialled, which session it is bound to,
+	and every message the client sent on it.
 ]=]
 
 --[=[
@@ -15,7 +15,8 @@
 --[=[
 	@prop sessionId string?
 	@within DiscordStub.Connection
-	The session the server bound this connection to by answering it with READY or RESUMED.
+	The session the server bound this connection to by answering it with READY or RESUMED, or the voice Ready or
+	Resumed.
 ]=]
 
 --[=[
@@ -45,7 +46,8 @@
 --[=[
 	@prop received { Received }
 	@within DiscordStub.Connection
-	Every payload the client sent, with the world clock's time it arrived.
+	Every message the client sent: its opcode, the decoded payload, the raw text or binary buffer, and the world
+	clock's time it arrived.
 ]=]
 
 local stdPolyfills = require("../luau_packages/std_polyfills")
@@ -58,15 +60,25 @@ Connection.Prototype = {}
 --[=[
 	@within DiscordStub.Connection
 
-	Sends one payload as JSON and returns whether it went. Zune throws once the socket is closing, before the server's
-	close callback clears `open`, so a send to a closing socket returns false.
+	Sends one message as it is, a string as a text frame and a buffer as a binary frame, and returns whether it went.
+	Zune throws once the socket is closing, before the server's close callback clears `open`, so a send to a closing
+	socket returns false.
 ]=]
-function Connection.Prototype.send(self: Connection, payload: Payload): boolean
+function Connection.Prototype.sendRaw(self: Connection, message: string | buffer): boolean
 	local sent = pcall(function()
-		self.socket:send(stdPolyfills.serde.encode("json", payload))
+		self.socket:send(message)
 	end)
 
 	return sent
+end
+
+--[=[
+	@within DiscordStub.Connection
+
+	Sends one payload as JSON text and returns whether it went, as `sendRaw` does.
+]=]
+function Connection.Prototype.send(self: Connection, payload: Payload): boolean
+	return self:sendRaw(stdPolyfills.serde.encode("json", payload))
 end
 
 --[=[
@@ -89,12 +101,27 @@ function Connection.Prototype.receivedOps(self: Connection, opcode: number): { R
 	local found = {}
 
 	for _, record in self.received do
-		if record.payload.op == opcode then
+		if record.opcode == opcode then
 			table.insert(found, record)
 		end
 	end
 
 	return found
+end
+
+--[=[
+	@within DiscordStub.Connection
+
+	Returns the connection in `connections` that wraps `socket`, nil when none does.
+]=]
+function Connection.Interface.find(connections: { Connection }, socket: ZuneSocket): Connection?
+	for _, connection in connections do
+		if connection.socket == socket then
+			return connection
+		end
+	end
+
+	return
 end
 
 --[=[
@@ -121,11 +148,14 @@ export type Payload = {
 	op: number,
 	t: string?,
 	s: number?,
+	seq: number?,
 	d: any?,
 }
 
 export type Received = {
+	opcode: number,
 	payload: Payload,
+	raw: string | buffer,
 	at: number,
 }
 

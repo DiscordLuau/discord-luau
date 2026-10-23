@@ -53,6 +53,29 @@ return function()
 			check.equal(stdPolyfills.task, originalTask)
 		end)
 
+		test.case("runScenario returns a voice server error after handler errors, then a UDP server error", function()
+			local originalTask = stdPolyfills.task
+			local stub = discordStub.new({ clock = "virtual" })
+			local ws = stub:createWebsocketServer()
+			local voice = stub:createVoiceServer()
+
+			table.insert(voice.errors, "a voice error")
+			table.insert(voice.udpServer.errors, "a udp error")
+
+			check.equal(stub:runScenario(function() end), "a voice error")
+			check.equal(#ws.handlerErrors, 0)
+			check.equal(stub.voiceServer, nil)
+
+			local udpOnlyStub = discordStub.new({ clock = "virtual" })
+			local udpOnlyVoice = udpOnlyStub:createVoiceServer()
+
+			table.insert(udpOnlyVoice.udpServer.errors, "the only udp error")
+
+			check.equal(udpOnlyStub:runScenario(function() end), "the only udp error")
+			check.equal(udpOnlyStub.udpServer, nil)
+			check.equal(stdPolyfills.task, originalTask)
+		end)
+
 		test.case("recordEmits records each invoke's arguments in order", function()
 			local listeners: { (...any) -> () } = {}
 			local emitter = {

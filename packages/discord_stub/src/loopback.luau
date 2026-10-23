@@ -23,6 +23,19 @@ end
 --[=[
 	@within DiscordStub.Loopback
 
+	The path of a websocket upgrade request with one trailing `/` removed: `/resume/` becomes `/resume`, `/` stays.
+]=]
+function Loopback.upgradePath(request: Request): string
+	if #request.path > 1 and string.sub(request.path, -1) == "/" then
+		return string.sub(request.path, 1, -2)
+	end
+
+	return request.path
+end
+
+--[=[
+	@within DiscordStub.Loopback
+
 	Builds a JSON response with `statusCode` and `value`.
 ]=]
 function Loopback.jsonResponse(statusCode: number, value: any): Response
