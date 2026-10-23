@@ -18,9 +18,10 @@ zune run .zune/bundle.luau         # builds the api_types bundle
 pesde install                      # installs package dependencies
 ```
 
-Then run the checks in the order CI runs them:
+Then run the checks in the order CI runs them. Seed the binary cache first, and again after any change to a binary or a checksum: `opus` always loads its own checksummed libopus, and until a version's release tag exists its download fails with HTTP 404.
 
 ```sh
+zune run .github/scripts/seedBinaryCache.luau # before the tests: copies the committed binaries into the cache
 zune run .zune/fmt.luau            # formatting (StyLua)
 zune run .zune/lint.luau           # linting (Selene)
 zune run .zune/analyze.luau        # type checking (luau-lsp)
@@ -33,7 +34,7 @@ To test only the packages you changed, pass the package folder:
 zune run .zune/test.luau packages/websocket
 ```
 
-Some packages (`dave`, `opus`, `sodium`) need FFI, which lets Luau call native libraries. Zune has it, and the first test run downloads the library for your platform. On a runtime without FFI, their native tests show as skipped rather than failed. If you write a test that calls a native library, copy the start of `packages/dave/tests/session.spec.luau`: it fails loudly if the library cannot load, and skips the suite when FFI is missing. Do not call the library at the top of the file, because an error there stops the whole test run. When your pull request touches these packages, CI also runs their tests on Windows and macOS.
+Some packages (`dave`, `opus`, `sodium`, `symphonia`) need FFI, which lets Luau call native libraries. Zune has it, and the seeded cache (or, once a release tag exists, the first test run's download) supplies the library for your platform. On a runtime without FFI, their native tests show as skipped rather than failed. If you write a test that calls a native library, copy the start of `packages/dave/tests/session.spec.luau`: it fails loudly if the library cannot load, and skips the suite when FFI is missing. Do not call the library at the top of the file, because an error there stops the whole test run. When your pull request touches these packages, CI also runs their tests on Windows and macOS.
 
 ## Every fix comes with a test
 
