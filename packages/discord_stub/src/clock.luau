@@ -68,14 +68,16 @@ end
 --[=[
 	@within DiscordStub.Clock
 
-	Sleeps `seconds` of the clock's time and returns them.
+	Sleeps `seconds` of the clock's time and returns the time that passed on this clock, like `task.wait`: at least
+	`seconds`, and more when the scheduler was late.
 ]=]
 function Clock.Prototype.wait(self: Clock, seconds: number?): number
 	local duration = seconds or 0
+	local startedAt = self:now()
 
 	self.originalTask.wait(if self.mode == "real" then duration else duration * VIRTUAL_TIME_SCALE)
 
-	return duration
+	return self:now() - startedAt
 end
 
 --[=[
