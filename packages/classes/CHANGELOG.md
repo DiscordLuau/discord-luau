@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Voice channel objects forward `onMediaReady`, which fires when audio can flow on the guild's voice connection (with DAVE, after `onReady`); the `onDaveEpochTransition` docs say what its number counts
+
+### Changed
+
+- Helper methods drop their leading underscore (`_name` is now `name`); they stay marked `@private` and out of the docs
+- The voice channel docs describe `onRawAudioFrame`, `onAudioFrame`, `onReady` and `onMediaReady` as the connection does, and point at `discord_luau/audio` for playback
+- `VoiceChannel:joinAsync()` resolves with the guild's voice `Connection` once it is ready and fails with a reason; a guild has one connection, so joining another channel of the guild leaves the old one first, and joining the same channel again resolves with the existing connection
+- Voice identifies as the bot's user ID instead of the application ID, which differs on older applications
+- The `connection` docs say how to switch off Opus decoding with `connection.decodeAudio`
+
+### Fixed
+
+- `VoiceChannel:leaveAsync()` sends the gateway leave and works from any channel object of the guild; it used to be a no-op unless called on the exact object that joined
+- Voice connections are keyed by guild in `state.voiceConnections`, not by channel
+- A voice join fails at once, with a message saying so, before READY or without the `GuildVoiceStates` intent, instead of waiting for events Discord will never send
+- `VoiceChannel:sendOpusAsync()` and `setSpeakingAsync()` return an Err when the guild has no voice connection, instead of throwing before a future exists
+
 ## 0.0.6
 
 ### Added

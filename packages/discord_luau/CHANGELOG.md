@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- `Bot:connectAsync` resolves Err when the gateway information request fails, instead of never resolving after an emergency log
+- `Bot:connectAsync` resolves Err when the gateway manager cannot connect, instead of dropping the failure and waiting for a connection that never opens
+
+### Changed
+
+- The bot records its own user ID on READY for voice, and SIGINT destroys each guild's voice connection
+
 ## 0.0.5
 
 ### Added
