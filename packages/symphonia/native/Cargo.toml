@@ -1,0 +1,54 @@
+[package]
+name = "discord_luau_symphonia"
+version = "0.0.1"
+edition = "2024"
+description = "A C ABI over Symphonia that decodes audio files to 48 kHz stereo f32, or passes Opus packets through, for the discord_luau/symphonia package."
+license = "MIT"
+repository = "https://github.com/DiscordLuau/discord-luau/tree/main/packages/symphonia/native"
+publish = false
+
+# cdylib only: an rlib beside it makes Cargo drop LTO from the release build (3.0 MB becomes
+# 4.0 MB), and the unit tests in src/ reach the internals without one.
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+symphonia = { version = "0.6.1", default-features = false, features = ["all", "opt-simd"] }
+rubato = "5.0.1"
+audioadapter-buffers = "5.2.0"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true
+# The panic guard catches only unwinding panics; "abort" would let a panic end the host process.
+panic = "unwind"
+
+[lints.rust]
+# Already a warning in edition 2024; deny makes "one unsafe block per operation, inside unsafe fn too" a rule.
+unsafe_op_in_unsafe_fn = "deny"
+
+[lints.clippy]
+# The whole pedantic group, like uv, ruff and Clippy itself; priority -1 lets the lines below override it.
+pedantic = { level = "warn", priority = -1 }
+
+# Cherry-picked from nursery (the Clippy book advises against enabling the group):
+use_self = "warn"                      # inside an impl, the type is Self
+redundant_pub_crate = "warn"           # no pub(crate) inside private modules
+too_long_first_doc_paragraph = "warn"  # a doc's first line is one sentence
+
+# Cherry-picked from restriction, each encoding a rule of the crate's card:
+undocumented_unsafe_blocks = "warn"     # every unsafe block has a // SAFETY: comment
+multiple_unsafe_ops_per_block = "warn"  # one operation per unsafe block
+unwrap_used = "warn"                    # no unwrap in production; clippy.toml allows it in tests
+expect_used = "warn"
+panic = "warn"
+unreachable = "warn"
+todo = "warn"
+print_stdout = "warn"                   # the crate never prints; Luau logs
+print_stderr = "warn"
+dbg_macro = "warn"
+allow_attributes = "warn"               # use #[expect], which warns once it goes stale
+allow_attributes_without_reason = "warn"
+self_named_module_files = "warn"        # a module with tests is src/<module>/mod.rs beside its tests.rs

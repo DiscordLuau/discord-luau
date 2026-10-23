@@ -61,12 +61,12 @@ local logger = require("../luau_packages/logger")
 local stdPolyfills = require("../luau_packages/std_polyfills")
 
 local CHECKSUMS: { [string]: string } = {
-	["linux-arm64"] = "sha256:506bfa354f56d120f764915da89bdc17f2d9e9ab4e6c56311e0cadde4ed922e0",
-	["linux-x64"] = "sha256:d0939c28396c9cbfff864e86d910d6c535c9e5f33cde99b1981cb60ec839122a",
-	["macos-arm64"] = "sha256:891ae901a9b2d1e869011a0fe6108b73ad76076f5d8fe50a9f37c418fa8bc324",
-	["macos-x64"] = "sha256:61e5aafcdcf806df7e0ce696da5d26a8a4608935fa0248733dcd78223a9d8115",
-	["windows-x64"] = "sha256:f42e55df7b6a1bc6b3ea176cb268a518662b662a436785431435d3d2e879c706",
-	["windows-x86"] = "sha256:94f244c11d4b92ce09210a757e2e6fadad11702c01e12bf7e035b4a1d9899c04",
+	["linux-arm64"] = "sha256:09e4851773c494ce8822cb1bcb190642e5634f1759ceac55f20b598e0225ca48",
+	["linux-x64"] = "sha256:89b145006d20e97518f08103ff70008b778f85417be9a460970db82f705eb6a4",
+	["macos-arm64"] = "sha256:34d4aad0e05055ac68405a260276cb86323c9aa12e3b26f794a25b958a1f4209",
+	["macos-x64"] = "sha256:3b9ffb823b086df6a3028619ac5424b3d9968d35b3c3732288ef8066925c1021",
+	["windows-x64"] = "sha256:33f8d7b780edb094f995aad03975104697a3acd5f3d761b12993be41c2239258",
+	["windows-x86"] = "sha256:4b012e67c6b02ad8db5c81b4b3b615d094443af43521e3d28afe34e6116f5718",
 }
 local ABI_VERSION = 2
 
