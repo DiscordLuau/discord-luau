@@ -1,8 +1,10 @@
 local stdPolyfills = require("../luau_packages/std_polyfills")
 local future = require("../luau_packages/future")
 local logger = require("../luau_packages/logger")
-local util = require("../luau_packages/util")
 local apiTypes = require("../luau_packages/api_types")
+
+local NORMAL_CLOSE_CODE = 1000
+local JSON_OPENING_BRACE = string.byte("{")
 
 --[=[
 	@class Voice.WebSocketTransport
@@ -19,13 +21,21 @@ local apiTypes = require("../luau_packages/api_types")
 ]=]
 
 --[=[
-	@prop socketReconnecting boolean
+	@prop socketDisconnecting boolean
 	@within Voice.WebSocketTransport
 ]=]
 
 --[=[
-	@prop socketDisconnecting boolean
+	@prop socketOpening boolean
 	@within Voice.WebSocketTransport
+]=]
+
+--[=[
+	@prop openAttempt number
+	@within Voice.WebSocketTransport
+
+	Counts opens and `forceClose` calls; an open that finishes under an older count was abandoned and leaves
+	`socketOpening` alone.
 ]=]
 
 --[=[
@@ -128,12 +138,22 @@ end
 --[=[
 	@within Voice.WebSocketTransport
 
-	Decodes an incoming voice gateway message and dispatches it to `onMessage`. Binary frames are
-	unwrapped from the voice binary framing format; JSON payloads are decoded directly.
+	Decodes an incoming voice gateway message and dispatches it to `onMessage`. A binary frame is unwrapped from the
+	voice binary framing (a 2-byte sequence number, then the opcode); a text frame is decoded as JSON. When the socket
+	cannot say which kind of frame it was (`isBinary` is nil), a message whose first byte is not `{` is treated as
+	binary.
 ]=]
-function WebSocketTransport.Prototype._handleMessage(self: WebSocketTransport, message: string)
-	if string.byte(message, 1) ~= 123 then -- first byte is not '{' (ASCII 123), so this is a binary-framed voice message
+function WebSocketTransport.Prototype.handleMessage(self: WebSocketTransport, message: string, isBinary: boolean?)
+	local binary = if isBinary == nil then string.byte(message, 1) ~= JSON_OPENING_BRACE else isBinary
+
+	if binary then
 		local messageBuffer = buffer.fromstring(message)
+
+		if buffer.len(messageBuffer) < 3 then
+			self.logger:warn(`ignoring a binary voice message of {buffer.len(messageBuffer)} bytes, too short to frame`)
+
+			return
+		end
 
 		local sequenceAcknowledgement =
 			bit32.bor(bit32.lshift(buffer.readu8(messageBuffer, 0), 8), buffer.readu8(messageBuffer, 1))
@@ -154,7 +174,8 @@ function WebSocketTransport.Prototype._handleMessage(self: WebSocketTransport, m
 		local ok, payload = pcall(stdPolyfills.serde.decode, "json" :: any, message)
 
 		if not ok then
-			self.logger:error(`failed to decode voice WebSocket message: {payload}`)
+			self.logger:warn(`failed to decode voice WebSocket message: {payload}`)
+
 			return
 		end
 
@@ -189,19 +210,15 @@ function WebSocketTransport.Prototype.heartbeatAsync(self: WebSocketTransport, r
 
 		self.logger:info(`sending voice heartbeat`)
 
-		self:sendAsync(stdPolyfills.serde.encode("json" :: any, {
+		local sent = self:sendAsync(stdPolyfills.serde.encode("json" :: any, {
 			op = apiTypes.voice.opcodes.Heartbeat,
 			d = {
 				t = math.floor(os.clock() * 1000),
 				seq_ack = self.sequenceAcknowledgement,
 			},
-		}, true))
-			:after(function(result)
-				if result:isErr() then
-					self.logger:warn(`heartbeat send failed: {result:unwrapErr()}`)
-				end
-			end)
-			:await()
+		}, true)):await()
+
+		assert(sent:isOk(), `heartbeat send failed: {sent:unwrapErr()}`)
 	end) :: future.FutureLike<string, nil>
 end
 
@@ -211,45 +228,120 @@ end
 	Schedules the next heartbeat to fire after the given number of milliseconds, cancelling any pending heartbeat.
 ]=]
 function WebSocketTransport.Prototype.heartbeatIn(self: WebSocketTransport, milliseconds: number)
-	if self.heartbeatThread then
-		coroutine.close(self.heartbeatThread)
-	end
-
-	self.heartbeatThread = util.coroutineRun(function()
+	local thread = coroutine.create(function()
 		stdPolyfills.task.wait(milliseconds / 1000)
 
 		self.heartbeatThread = nil
 
-		self:heartbeatAsync()
-			:andThen(function()
-				return future.Future.new(function()
-					self:heartbeatIn(milliseconds)
-				end) :: future.FutureLike<string, nil>
-			end)
-			:after(function(result)
-				if result:isErr() then
-					self.logger:warn(`heartbeat loop error: {result:unwrapErr()}`)
-				end
-			end)
-			:await()
+		if not self.socketActive then
+			self.logger:debug(`not sending a voice heartbeat: the socket is down`)
+
+			return
+		end
+
+		local beat = self:heartbeatAsync():await()
+
+		if beat:isErr() then
+			self.logger:warn(`heartbeat loop error: {beat:unwrapErr()}`)
+		end
+
+		self:heartbeatIn(milliseconds)
 	end)
+
+	self:stopHeartbeat()
+
+	self.heartbeatThread = thread
+
+	self:resumeThread(thread, "heartbeat")
 end
 
 --[=[
 	@within Voice.WebSocketTransport
 
-	Opens the WebSocket to the given URL, starts the receive loop, and fires `onConnected`.
+	Cancels the pending heartbeat, if any.
 ]=]
-function WebSocketTransport.Prototype._openSocket(self: WebSocketTransport, url: string)
-	local ok, socket = pcall(stdPolyfills.net.tcpSocket, url)
-	assert(ok, tostring(socket))
+function WebSocketTransport.Prototype.stopHeartbeat(self: WebSocketTransport)
+	local thread = self.heartbeatThread
 
-	self.socketInstance = socket
-	self.socketActive = true
+	self.heartbeatThread = nil
 
-	self.logger:info(`voice WebSocket connected, starting receive loop`)
+	self:closeThread(thread, "heartbeat")
+end
 
-	self.socketThread = util.coroutineRun(function()
+--[=[
+	@within Voice.WebSocketTransport
+	@private
+
+	Resumes a thread this transport owns, logging at warn with a traceback if it errors before its first yield.
+]=]
+function WebSocketTransport.Prototype.resumeThread(self: WebSocketTransport, thread: thread, purpose: string)
+	local resumed, resumeError = coroutine.resume(thread)
+
+	if not resumed then
+		self.logger:warn(`voice {purpose} thread errored:\n{debug.traceback(thread, tostring(resumeError))}`)
+	end
+end
+
+--[=[
+	@within Voice.WebSocketTransport
+	@private
+
+	Closes a thread this transport owns when it is suspended. A running or resuming thread cannot be closed;
+	its loop checks the transport's state and stops on its own.
+]=]
+function WebSocketTransport.Prototype.closeThread(self: WebSocketTransport, thread: thread?, purpose: string)
+	if not thread or coroutine.status(thread) ~= "suspended" then
+		self.logger:debug(
+			`not closing the {purpose} thread: {if thread then coroutine.status(thread) else "there is none"}`
+		)
+
+		return
+	end
+
+	local closed, closeError = coroutine.close(thread)
+
+	if not closed then
+		self.logger:warn(`voice {purpose} thread errored while closing: {closeError}`)
+	end
+end
+
+--[=[
+	@within Voice.WebSocketTransport
+
+	Opens the WebSocket to the given URL, starts the receive loop, and fires `onConnected`. Raises when a socket is
+	already open or opening. When `isStillWanted` returns false once the handshake finishes, or `forceClose` abandoned
+	the open during it, the new socket is closed at once and nothing starts.
+]=]
+function WebSocketTransport.Prototype.openSocket(self: WebSocketTransport, url: string, isStillWanted: (() -> boolean)?)
+	local openAttempt = self.openAttempt + 1
+
+	assert(not self.socketActive and not self.socketOpening, `voice WebSocket is already open or opening`)
+
+	self.openAttempt = openAttempt
+	self.socketOpening = true
+
+	local opened, socket = pcall(stdPolyfills.net.tcpSocket, url)
+	local abandoned = self.openAttempt ~= openAttempt
+
+	if not abandoned then
+		self.socketOpening = false
+	end
+
+	assert(opened, tostring(socket))
+
+	if abandoned or (isStillWanted and not isStillWanted()) then
+		local closed, closeError = pcall((socket :: any).close, NORMAL_CLOSE_CODE)
+
+		if not closed then
+			self.logger:debug(`closing an unwanted voice WebSocket errored: {closeError}`)
+		end
+
+		self.logger:debug(`closed a voice WebSocket that finished opening after it stopped being wanted`)
+
+		return
+	end
+
+	local thread = coroutine.create(function()
 		local myThread = coroutine.running()
 
 		if self.onConnected then
@@ -260,26 +352,43 @@ function WebSocketTransport.Prototype._openSocket(self: WebSocketTransport, url:
 			assert(self.socketInstance, `Voice socket instance is nil.`)
 
 			if self.socketInstance.closeCode then
-				self.logger:warn(`voice socket closed by server: {self.socketInstance.closeCode}`)
+				self.logger:info(`voice socket closed by server: {self.socketInstance.closeCode}`)
 				self.socketActive = false
 			else
-				local success, response = pcall(self.socketInstance.next)
+				local success, response, isBinary = pcall(self.socketInstance.nextMessage or self.socketInstance.next)
 
 				if not self.socketActive then
+					self.logger:debug(`voice socket was closed while waiting for a message`)
+
 					continue
 				elseif not self.socketInstance then
-					self.logger:warn(`voice socket missing: {response and response or "no error"}`)
+					self.logger:warn(`voice socket missing: {response or "no error"}`)
 					self.socketActive = false
 				elseif success and response then
-					self:_handleMessage(response :: string)
+					local handled, handleError = xpcall(
+						self.handleMessage :: (...any) -> ...any,
+						debug.traceback,
+						self,
+						response :: string,
+						isBinary
+					)
+
+					if not handled then
+						self.logger:warn(`voice WebSocket message handler errored:\n{handleError}`)
+					end
+				elseif success then
+					self.logger:info(`voice socket closed: {self.socketInstance.closeCode or "no close code"}`)
+					self.socketActive = false
 				else
-					self.logger:warn(`voice socket receive error: {response and response or "no error"}`)
+					self.logger:warn(`voice socket receive error: {response}`)
 					self.socketActive = false
 				end
 			end
 		end
 
 		if self.socketThread ~= myThread then
+			self.logger:debug(`a newer voice receive loop replaced this one, stopping without cleanup`)
+
 			return
 		end
 
@@ -288,10 +397,6 @@ function WebSocketTransport.Prototype._openSocket(self: WebSocketTransport, url:
 		self.socketInstance = nil
 
 		self.logger:info(`voice receive loop stopped`)
-
-		if self.socketReconnecting then
-			return
-		end
 
 		if self.onDisconnected then
 			if sock then
@@ -303,26 +408,32 @@ function WebSocketTransport.Prototype._openSocket(self: WebSocketTransport, url:
 			end
 		end
 	end)
+
+	self.socketInstance = socket
+	self.socketActive = true
+	self.socketThread = thread
+
+	self.logger:info(`voice WebSocket connected, starting receive loop`)
+
+	self:resumeThread(thread, "receive loop")
 end
 
 --[=[
 	@within Voice.WebSocketTransport
 
 	Synchronously closes the voice WebSocket and kills all associated threads. Safe to call from
-	a signal handler or any context where yielding is not permitted.
+	a signal handler or any context where yielding is not permitted. An open still in its handshake is abandoned: it
+	closes its socket when the handshake finishes, and a new open may start at once.
 ]=]
 function WebSocketTransport.Prototype.forceClose(self: WebSocketTransport, code: number?)
-	if self.heartbeatThread then
-		coroutine.close(self.heartbeatThread)
-		self.heartbeatThread = nil
-	end
+	local socketThread = self.socketThread
 
-	if self.socketThread then
-		if coroutine.status(self.socketThread) == "suspended" then
-			coroutine.close(self.socketThread)
-		end
-		self.socketThread = nil
-	end
+	self.socketThread = nil
+	self.openAttempt += 1
+	self.socketOpening = false
+
+	self:stopHeartbeat()
+	self:closeThread(socketThread, "receive loop")
 
 	if self.socketInstance and not self.socketInstance.closeCode then
 		xpcall(function()
@@ -347,11 +458,11 @@ function WebSocketTransport.Interface.new(loggerInstance: logger.Logger): WebSoc
 	return setmetatable(
 		{
 			socketActive = false,
-			socketReconnecting = false,
 			socketDisconnecting = false,
+			openAttempt = 0,
 			isResuming = false,
 			heartbeatAcknowledged = true,
-			sequenceAcknowledgement = 0,
+			sequenceAcknowledgement = -1,
 			logger = loggerInstance,
 		} :: WebSocketTransport,
 		{ __index = WebSocketTransport.Prototype }
@@ -360,8 +471,9 @@ end
 
 export type WebSocketTransport = typeof(WebSocketTransport.Prototype) & {
 	socketActive: boolean,
-	socketReconnecting: boolean,
 	socketDisconnecting: boolean,
+	socketOpening: boolean,
+	openAttempt: number,
 	isResuming: boolean,
 	socketInstance: any?,
 	socketThread: thread?,
