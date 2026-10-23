@@ -41,7 +41,9 @@ end
 --[=[
 	@within StdPolyfills.ffi
 
-	Returns a null (`0x0`) FFI pointer. Pass this wherever a C function expects a NULL pointer argument.
+	Returns a null (`0x0`) FFI pointer. Pass this wherever a C function expects a NULL pointer argument. Never tag
+	the returned pointer, and never declare a function that can return NULL with a tagged return: Zune shares one
+	null object between every library in the process, so a tag on it breaks every later call that passes NULL.
 ]=]
 function ffi.getNull(): FFIPointer
 	local target = runtime.assertRuntime()
@@ -283,7 +285,11 @@ end
 --[=[
 	@within StdPolyfills.ffi
 
-	Frees native memory previously allocated with `alloc` or `create`.
+	Frees native memory previously allocated with `alloc`, `dupe` or `create`. The pointer must not be used
+	afterwards.
+
+	On Zune the block goes back to a pool that `alloc` and `dupe` reuse, instead of being returned to the
+	system allocator (see `zune/ffi.luau`).
 ]=]
 function ffi.free(src: FFIPointer): ()
 	local target = runtime.assertRuntime()
