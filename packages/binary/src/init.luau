@@ -132,13 +132,16 @@ end
 	`{ext}` is `.so`, `.dylib`, or `.dll` (includes leading dot).
 
 	The checksum must be in `sha256:<hex>` format.
+
+	`allowSystem` defaults to true. When false, the system-path search is skipped,
+	so only the checksummed cache file or download is ever loaded.
 ]=]
 function Binary.load(options: LoadOptions): LoadResult
 	local resolvedUrl = resolveTokens(options.url, options.version)
 	local filename = filenameFromUrl(resolvedUrl)
 	local cacheDir = getCacheDir(options.id, options.version)
 	local cachePath = `{cacheDir}/{filename}`
-	local systemPath = probeSystemPaths(options.id)
+	local systemPath = if options.allowSystem == false then nil else probeSystemPaths(options.id)
 
 	if systemPath then
 		return { path = systemPath }
@@ -179,6 +182,7 @@ export type LoadOptions = {
 	version: string,
 	url: string,
 	checksum: string,
+	allowSystem: boolean?,
 }
 
 export type LoadResult = {
