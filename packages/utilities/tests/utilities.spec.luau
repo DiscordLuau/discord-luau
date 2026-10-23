@@ -1,5 +1,13 @@
 local frktest = require("../../../luau_packages/frktest")
+local stdPolyfills = require("../../std_polyfills/src")
 local utilities = require("../src")
+
+local PROBE_PATH = ".createGuidSeedProbe.luau"
+local PROBE_SOURCE = [[
+local utilities = require("./packages/utilities/src")
+
+print(utilities.createGuid(), math.random(1, 1e9))
+]]
 
 local test = frktest.test
 local check = frktest.assert.check
@@ -83,15 +91,15 @@ return function()
 	end)
 
 	test.suite("createGuid", function()
-		test.case("returns a string", function()
-			check.is_true(type(utilities.createGuid()) == "string")
+		test.case("returns a 36-character GUID", function()
+			check.equal(#utilities.createGuid(), 36)
 		end)
 
 		test.case("matches the UUID v4 format", function()
 			local guid = utilities.createGuid()
 
-			check.is_true(
-				string.match(guid, "^%x%x%x%x%x%x%x%x%-%x%x%x%x%-4%x%x%x%-%x%x%x%x%-%x%x%x%x%x%x%x%x%x%x%x%x$") ~= nil
+			check.not_nil(
+				string.match(guid, "^%x%x%x%x%x%x%x%x%-%x%x%x%x%-4%x%x%x%-%x%x%x%x%-%x%x%x%x%x%x%x%x%x%x%x%x$")
 			)
 		end)
 
@@ -124,6 +132,24 @@ return function()
 
 				guids[guid] = true
 			end
+		end)
+
+		test.case("requiring utilities does not pin math.random to one sequence across processes", function()
+			stdPolyfills.fileSystem.writeFile(PROBE_PATH, PROBE_SOURCE)
+
+			local cwd = stdPolyfills.process.getCwd()
+			local succeeded, firstRun, secondRun = pcall(function()
+				return stdPolyfills.process.run("zune", { "run", PROBE_PATH }, { cwd = cwd }),
+					stdPolyfills.process.run("zune", { "run", PROBE_PATH }, { cwd = cwd })
+			end)
+
+			stdPolyfills.fileSystem.removeFile(PROBE_PATH)
+
+			assert(succeeded, tostring(firstRun))
+			assert(firstRun.ok and secondRun.ok, firstRun.stderr .. secondRun.stderr)
+
+			check.is_true(firstRun.stdout .. firstRun.stderr ~= "")
+			check.is_false(firstRun.stdout .. firstRun.stderr == secondRun.stdout .. secondRun.stderr)
 		end)
 	end)
 
@@ -172,7 +198,7 @@ return function()
 		test.case("returns the spawned thread", function()
 			local thread = utilities.coroutineRun(function() end)
 
-			check.is_true(type(thread) == "thread")
+			check.equal(coroutine.status(thread), "dead")
 		end)
 
 		test.case("executes the callback immediately", function()
@@ -188,8 +214,8 @@ return function()
 		test.case("forwards arguments to the callback", function()
 			local received: { any } = {}
 
-			utilities.coroutineRun(function(a, b, c)
-				received = { a, b, c }
+			utilities.coroutineRun(function(first, second, third)
+				received = { first, second, third }
 			end, 1, "two", true)
 
 			check.equal(received[1], 1)
@@ -205,6 +231,17 @@ return function()
 
 				return
 			end)
+		end)
+
+		test.case("re-raises errors with the thread traceback", function()
+			local function failingBody()
+				error("inner error")
+			end
+
+			local succeeded, errorMessage = pcall(utilities.coroutineRun :: any, failingBody)
+
+			check.is_false(succeeded)
+			check.not_nil((string.find(tostring(errorMessage), "failingBody", 1, true)))
 		end)
 
 		test.case("thread is alive after yielding", function()

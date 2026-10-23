@@ -13,7 +13,7 @@ return function(callback: () -> (), ...)
 	local success, errorMessage = coroutine.resume(thread, ...)
 
 	if not success then
-		error(errorMessage, 0)
+		error(debug.traceback(thread, tostring(errorMessage)), 0)
 	end
 
 	return thread

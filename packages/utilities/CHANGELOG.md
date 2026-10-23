@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Requiring utilities no longer reseeds `math.random` to the same sequence in every process, so GUIDs no longer repeat across restarts
+- `coroutineRun` rethrows a first-run error with the thread traceback instead of the bare message
+
 ## 0.0.2
 
 ## 0.0.1
