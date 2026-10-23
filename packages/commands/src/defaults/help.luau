@@ -24,6 +24,7 @@ local function buildCommandLines(commandDefinition: command.CommandDefinition): 
 
 	if not options then
 		table.insert(lines, `**/{commandDefinition.command.name}** - {commandDefinition.command.description or ""}`)
+
 		return lines
 	end
 
@@ -87,7 +88,6 @@ local function buildPages(commands: { command.CommandDefinition }): { { title: s
 			end
 
 			local lines = buildCommandLines(commandDefinition)
-
 			local category = commandDefinition.category
 
 			if category then
@@ -153,36 +153,35 @@ end
 
 local function buildMessage(pageIndex: number, pages: { { title: string, lines: { string } } }): any
 	local page = pages[pageIndex]
-
 	local header = messageComponents.textDisplay.new({ content = `## {page.title}` })
 	local divider = messageComponents.separator.new({ divider = true, spacing = 1 })
 	local commandList = messageComponents.textDisplay.new({ content = table.concat(page.lines, "\n") })
 	local spacer = messageComponents.separator.new({ divider = false, spacing = 1 })
-
 	local prevButton = messageComponents.button.new()
+	local nextButton = messageComponents.button.new()
+	local pageIndicator = messageComponents.button.new()
+	local actionRow = messageComponents.actionRow.new()
+	local container = messageComponents.container.new()
+
 	prevButton:setStyle("Blurple")
 	prevButton:setLabel("← Previous")
 	prevButton:setCustomId(`{HELP_NAVIGATE_ID}:prev:{pageIndex}`)
 	prevButton:setDisabled(pageIndex <= 1)
 
-	local nextButton = messageComponents.button.new()
 	nextButton:setStyle("Blurple")
 	nextButton:setLabel("Next →")
 	nextButton:setCustomId(`{HELP_NAVIGATE_ID}:next:{pageIndex}`)
 	nextButton:setDisabled(pageIndex >= #pages)
 
-	local pageIndicator = messageComponents.button.new()
 	pageIndicator:setStyle("Grey")
 	pageIndicator:setLabel(`Page {pageIndex} of {#pages}`)
 	pageIndicator:setCustomId(`{HELP_NAVIGATE_ID}:page:{pageIndex}`)
 	pageIndicator:setDisabled(true)
 
-	local actionRow = messageComponents.actionRow.new()
 	actionRow:addComponent(prevButton:build())
 	actionRow:addComponent(pageIndicator:build())
 	actionRow:addComponent(nextButton:build())
 
-	local container = messageComponents.container.new()
 	container:addComponent(header:build())
 	container:addComponent(divider:build())
 	container:addComponent(commandList:build())
@@ -211,24 +210,22 @@ return function(registryInstance: registry.Registry): command.CommandDefinition
 
 		execute = function(interaction)
 			local pages = buildPages(registryInstance:getAll())
+			local replyResult = interaction:messageAsync(buildMessage(1, pages)):await()
 
-			interaction:messageAsync(buildMessage(1, pages)):await()
+			assert(replyResult:isOk(), `failed to send the help reply: {replyResult:unwrapErr()}`)
 		end,
 
 		components = {
 			[HELP_NAVIGATE_ID .. ":**"] = function(interaction: classes.Component)
 				local anyInteraction = interaction :: any
-
 				local parts: { string } = {}
+				local pages = buildPages(registryInstance:getAll())
 
 				for part in string.gmatch(anyInteraction.data.customId, "[^:]+") do
 					table.insert(parts, part)
 				end
 
 				local action = parts[3]
-
-				local pages = buildPages(registryInstance:getAll())
-
 				local pageIndex = math.clamp(tonumber(parts[4]) or 1, 1, #pages)
 
 				if action == "prev" then
@@ -237,8 +234,16 @@ return function(registryInstance: registry.Registry): command.CommandDefinition
 					pageIndex = math.min(#pages, pageIndex + 1)
 				end
 
-				anyInteraction:acknowledgeAsync():await()
-				anyInteraction:editResponseAsync(buildMessage(pageIndex, pages)):await()
+				local acknowledgeResult = anyInteraction:acknowledgeAsync():await()
+
+				assert(
+					acknowledgeResult:isOk(),
+					`failed to acknowledge the help navigation: {acknowledgeResult:unwrapErr()}`
+				)
+
+				local editResult = anyInteraction:editResponseAsync(buildMessage(pageIndex, pages)):await()
+
+				assert(editResult:isOk(), `failed to edit the help page: {editResult:unwrapErr()}`)
 			end,
 		},
 	}

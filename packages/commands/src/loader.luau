@@ -25,11 +25,7 @@ local stdPolyfills = require("../luau_packages/std_polyfills")
 
 local registry = require("./registry")
 
--- debug.info(1, "s") returns the path of this source file, which we use to
--- compute how many directory levels separate the loader from the project root.
--- That depth determines the `../` prefix we must prepend to user-supplied paths
--- so that require() resolves them relative to the project root, not to this file.
-local SOURCE = debug.info(1, "s")
+local LOADER_SOURCE_PATH = debug.info(1, "s")
 
 local Loader = {}
 
@@ -37,8 +33,8 @@ Loader.Interface = {}
 Loader.Prototype = {}
 
 local function computeRequirePrefix(): string
-	local sourcePath = string.gsub(SOURCE, "\\", "/")
-	local isAbsolute = string.sub(sourcePath, 1, 1) == "/" or string.match(sourcePath, "^%a:/") ~= nil
+	local sourcePath = string.gsub(LOADER_SOURCE_PATH, "\\", "/")
+	local isAbsolute = string.sub(sourcePath, 1, 1) == "/" or if string.match(sourcePath, "^%a:/") then true else false
 
 	if isAbsolute then
 		local cwd = string.gsub(stdPolyfills.process.getCwd(), "\\", "/")
@@ -78,26 +74,19 @@ local function generateTemporaryId(): string
 	)
 end
 
+local function assertCommandDefinition(value: any)
+	assert(type(value) == "table", "command module is not a table")
+	assert(type(value.command) == "table" and type(value.command.name) == "string", "missing .command.name")
+	assert(type(value.execute) == "function", "missing .execute")
+end
+
 local function isValidCommandDefinition(value: any): boolean
-	if type(value) ~= "table" then
-		return false
-	end
-
-	if type(value.command) ~= "table" or type(value.command.name) ~= "string" then
-		return false
-	end
-
-	if type(value.execute) ~= "function" then
-		return false
-	end
-
-	return true
+	return (pcall(assertCommandDefinition, value))
 end
 
 local function resolveModule(rawModule: any, context: any): (boolean, any)
 	if type(rawModule) == "function" then
 		local result: any
-
 		local success, errorMessage = xpcall(function()
 			result = (rawModule :: (any) -> any)(context)
 		end, debug.traceback)
@@ -115,7 +104,6 @@ end
 ]=]
 function Loader.Prototype.load(self: Loader, directoryPath: string)
 	local entries = stdPolyfills.fileSystem.readDirEntries(directoryPath)
-
 	local normalizedDirectory = normalizePath(directoryPath)
 
 	for _, directoryEntry in entries do
@@ -133,7 +121,6 @@ function Loader.Prototype.load(self: Loader, directoryPath: string)
 		end
 
 		local moduleName = stripExtension(directoryEntry.name)
-
 		local requireSuccess, rawModule =
 			pcall(require, computeRequirePrefix() .. normalizedDirectory .. "/" .. moduleName)
 
@@ -172,22 +159,34 @@ function Loader.Prototype.reload(self: Loader, directoryPath: string, name: stri
 
 	if not readSuccess then
 		self.logger:warn(`failed to read '{name}' for reload: {fileContent}`)
+
 		return
 	end
 
 	local temporaryName = name .. "." .. generateTemporaryId()
 	local temporaryPath = directoryPath .. "/" .. temporaryName .. ".luau"
+	local writeSuccess, writeError = pcall(stdPolyfills.fileSystem.writeFile, temporaryPath, fileContent)
 
-	stdPolyfills.fileSystem.writeFile(temporaryPath, fileContent)
+	if not writeSuccess then
+		self.logger:warn(`failed to write the temporary file for '{name}' reload: {writeError}`)
+
+		return
+	end
 
 	local normalizedDirectory = normalizePath(directoryPath)
 	local requireSuccess, rawModule =
 		pcall(require, computeRequirePrefix() .. normalizedDirectory .. "/" .. temporaryName)
+	local removeSuccess, removeError = pcall(stdPolyfills.fileSystem.removeFile, temporaryPath)
 
-	stdPolyfills.fileSystem.removeFile(temporaryPath)
+	if not removeSuccess then
+		self.logger:warn(
+			`failed to remove the temporary file '{temporaryPath}' after reloading '{name}': {removeError}`
+		)
+	end
 
 	if not requireSuccess then
 		self.logger:warn(`failed to reload '{name}': {rawModule}`)
+
 		return
 	end
 
@@ -195,11 +194,13 @@ function Loader.Prototype.reload(self: Loader, directoryPath: string, name: stri
 
 	if not resolveSuccess then
 		self.logger:warn(`factory for '{name}' threw on reload: {loadedModule}`)
+
 		return
 	end
 
 	if not isValidCommandDefinition(loadedModule) then
 		self.logger:warn(`'{name}' reload skipped: invalid CommandDefinition shape`)
+
 		return
 	end
 
@@ -237,26 +238,45 @@ function Loader.Prototype.watch(self: Loader, directoryPath: string): () -> ()
 
 			if eventName == "write" or eventName == "change" then
 				local now = os.clock()
+
 				if now - (reloadTimestamps[path] or 0) < DEBOUNCE_S then
+					self.logger:debug(
+						`ignoring a repeated {eventName} event for '{moduleName}' within the debounce window`
+					)
+
 					return
 				end
+
 				reloadTimestamps[path] = now
 				self:reload(directory, moduleName)
 			elseif eventName == "create" then
 				local normalizedDirectory = normalizePath(directory)
-
 				local requireSuccess, rawModule =
 					pcall(require, computeRequirePrefix() .. normalizedDirectory .. "/" .. moduleName)
 
-				if requireSuccess then
-					local resolveSuccess, loadedModule = resolveModule(rawModule, self.context)
+				if not requireSuccess then
+					self.logger:warn(`failed to load new file '{fileName}': {rawModule}`)
 
-					if resolveSuccess and isValidCommandDefinition(loadedModule) then
-						self.logger:info(`loaded new command '{loadedModule.command.name}'`)
-
-						self.registry:set(loadedModule)
-					end
+					return
 				end
+
+				local resolveSuccess, loadedModule = resolveModule(rawModule, self.context)
+
+				if not resolveSuccess then
+					self.logger:warn(`factory for new file '{fileName}' threw: {loadedModule}`)
+
+					return
+				end
+
+				if not isValidCommandDefinition(loadedModule) then
+					self.logger:warn(`new file '{fileName}' skipped: missing .command.name or .execute`)
+
+					return
+				end
+
+				self.logger:info(`loaded new command '{loadedModule.command.name}'`)
+
+				self.registry:set(loadedModule)
 			elseif eventName == "remove" or eventName == "rename" then
 				self.logger:info(`unloaded command '{moduleName}'`)
 				self.registry:remove(moduleName)
@@ -274,7 +294,8 @@ function Loader.Prototype.watch(self: Loader, directoryPath: string): () -> ()
 		local success, entries = pcall(stdPolyfills.fileSystem.readDirEntries, directory)
 
 		if not success then
-			self.logger:warn(`failed to read directory '{directory}' during watch setup`)
+			self.logger:warn(`failed to read directory '{directory}' during watch setup: {entries}`)
+
 			return
 		end
 

@@ -1,12 +1,13 @@
 --[=[
 	@class Commands.Pipeline
 
-	Utility functions for the command dispatch pipeline - error responses, guards, permissionission
+	Utility functions for the command dispatch pipeline - error responses, guards, permission
 	checks, option transforms, middleware, and post-execute hooks.
 ]=]
 
 local apiTypes = require("../luau_packages/api_types")
 local classes = require("../luau_packages/classes")
+local future = require("../luau_packages/future")
 local logger = require("../luau_packages/logger")
 
 local command = require("./command")
@@ -19,22 +20,34 @@ local command = require("./command")
 local function sendErrorResponse(
 	interaction: classes.TypesCommand | classes.Component | classes.Modal,
 	errorMessage: string,
-	override: ((classes.TypesCommand | classes.Component | classes.Modal, string) -> ())?
+	override: ((classes.TypesCommand | classes.Component | classes.Modal, string) -> ())?,
+	log: logger.Logger
 )
 	if override then
+		log:debug("delegating the error reply to the error handler")
 		override(interaction, errorMessage)
+
 		return
 	end
 
+	local reply: future.FutureLike<string, any>
+
 	if interaction.isReplied then
-		interaction
-			:createFollowupResponseAsync({ content = "An error occurred while running this command.", flags = 64 })
-			:poll()
+		reply = interaction:createFollowupResponseAsync({
+			content = "An error occurred while running this command.",
+			flags = 64,
+		})
 	elseif interaction.isDeferred then
-		interaction:messageAsync({ content = "An error occurred while running this command." }):poll()
+		reply = interaction:messageAsync({ content = "An error occurred while running this command." })
 	else
-		interaction:messageAsync({ content = "An error occurred while running this command.", flags = 64 }):poll()
+		reply = interaction:messageAsync({ content = "An error occurred while running this command.", flags = 64 })
 	end
+
+	reply
+		:inspectErr(function(replyError)
+			log:warn(`failed to send the error reply: {replyError}`)
+		end)
+		:poll()
 end
 
 --[=[
@@ -56,7 +69,10 @@ local function runGuards(
 			onGuardFailed(interaction)
 		elseif not interaction.isReplied then
 			interaction
-				:messageAsync({ content = "You don't have permissionission to use this command.", flags = 64 })
+				:messageAsync({ content = "You don't have permission to use this command.", flags = 64 })
+				:inspectErr(function(replyError)
+					log:warn(`failed to send the guard denial reply for '{name}': {replyError}`)
+				end)
 				:poll()
 		end
 	end
@@ -64,38 +80,37 @@ local function runGuards(
 	for _, entry in guardEntries do
 		if type(entry) == "function" then
 			local guard = entry :: (classes.TypesCommand) -> boolean
-
 			local passed = false
-
 			local success, errorMessage = xpcall(function()
 				passed = guard(interaction)
 			end, debug.traceback)
 
 			if not success then
 				log:warn(`guard threw for '{name}':\n{errorMessage}`)
-				sendErrorResponse(interaction, tostring(errorMessage), onError)
+				sendErrorResponse(interaction, tostring(errorMessage), onError, log)
+
 				return false
 			end
 
 			if not passed then
 				denyGuard()
+
 				return false
 			end
 		else
 			local orGroup = entry :: { (classes.TypesCommand) -> boolean }
-
 			local anyPassed = false
 
 			for _, guard in orGroup do
 				local passed = false
-
 				local success, errorMessage = xpcall(function()
 					passed = guard(interaction)
 				end, debug.traceback)
 
 				if not success then
 					log:warn(`guard threw for '{name}':\n{errorMessage}`)
-					sendErrorResponse(interaction, tostring(errorMessage), onError)
+					sendErrorResponse(interaction, tostring(errorMessage), onError, log)
+
 					return false
 				end
 
@@ -107,6 +122,7 @@ local function runGuards(
 
 			if not anyPassed then
 				denyGuard()
+
 				return false
 			end
 		end
@@ -118,7 +134,7 @@ end
 --[=[
 	@within Commands.Pipeline
 
-	Returns permissionissions from `required` that are absent from `permissionObject`.
+	Returns permissions from `required` that are absent from `permissionObject`.
 ]=]
 local function getMissingPermissions(
 	permissionObject: classes.Permission,
@@ -152,18 +168,16 @@ local function runTransforms(
 
 	for optionName, transformFunction in transforms do
 		local option: any = interaction:getOption(optionName)
-
 		local rawValue: any = if option then option.value else nil
-
 		local transformResult: any
-
 		local success, errorMessage = xpcall(function()
 			transformResult = (transformFunction :: (any, any) -> any)(rawValue, interaction)
 		end, debug.traceback)
 
 		if not success then
 			log:warn(`transform '{optionName}' threw for '{name}':\n{errorMessage}`)
-			sendErrorResponse(interaction, tostring(errorMessage), onError)
+			sendErrorResponse(interaction, tostring(errorMessage), onError, log)
+
 			return
 		end
 
@@ -231,6 +245,7 @@ local function runMiddleware(
 )
 	if index > #middlewares then
 		final()
+
 		return
 	end
 
