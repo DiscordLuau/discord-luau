@@ -1,0 +1,64 @@
+name: Binaries match the recipe
+
+on:
+  pull_request:
+    paths:
+      - "packages/*/binaries/**"
+      - "packages/opus/native/**"
+      - "packages/symphonia/native/**"
+      - ".github/scripts/build-binaries.sh"
+      - ".github/workflows/binaries-match-recipe.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  match:
+    name: Committed libopus, libsodium and libsymphonia equal the build script's output
+    runs-on: ubuntu-latest
+    # The build took 6m 13s on 4 CPUs, plus the Rust and cargo-zigbuild installs, plus headroom.
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install the Rust toolchain for Symphonia
+        working-directory: packages/symphonia/native
+        run: rustup toolchain install
+      - name: Install cargo-zigbuild
+        run: cargo install cargo-zigbuild --version 0.24.0 --locked
+      - name: Build
+        run: bash .github/scripts/build-binaries.sh dist
+      - name: Compare every built file with the committed one
+        run: |
+          mismatches=0
+          rows=""
+          while read -r builtHash path; do
+            if [ -f "$path" ]; then
+              committedHash=$(sha256sum "$path" | cut -d' ' -f1)
+            else
+              committedHash="(not committed)"
+            fi
+            if [ "$committedHash" != "$builtHash" ]; then
+              rows+="$path | $committedHash | $builtHash"$'\n'
+              mismatches=$((mismatches + 1))
+            fi
+          done < <(sed -E 's/^([0-9a-f]{64}) [ *]?(.*)$/\1 \2/' dist/SHA256SUMS)
+
+          if [ "$mismatches" -gt 0 ]; then
+            {
+              echo "### Committed binaries differ from the recipe"
+              echo
+              echo "| path | committed | built |"
+              echo "| --- | --- | --- |"
+              printf '%s' "$rows" | while IFS= read -r row; do echo "| $row |"; done
+              echo
+              echo "Commit the files from the Build native binaries artifact, never a local build."
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "path | committed | built"
+            printf '%s' "$rows"
+            echo "$mismatches file(s) differ from what .github/scripts/build-binaries.sh builds"
+            exit 1
+          fi
+          echo "All $(wc -l < dist/SHA256SUMS) files match the committed ones"

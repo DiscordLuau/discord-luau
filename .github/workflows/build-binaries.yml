@@ -9,16 +9,17 @@ concurrency:
 
 jobs:
   build:
-    name: Cross-compile libopus and libsodium
+    name: Cross-compile libopus, libsodium and libsymphonia
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 45
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Install Zig
-        uses: mlugg/setup-zig@v2.2.1
-        with:
-          version: 0.16.0
+      - name: Install the Rust toolchain for Symphonia
+        working-directory: packages/symphonia/native
+        run: rustup toolchain install
+      - name: Install cargo-zigbuild
+        run: cargo install cargo-zigbuild --version 0.24.0 --locked
       - name: Build
         run: bash .github/scripts/build-binaries.sh dist
       - name: Write checksums to the summary
@@ -26,7 +27,7 @@ jobs:
           {
             echo "### Native binaries"
             echo
-            echo "Copy these into the repository and update the matching \`sys.luau\` checksums; \`binary.load\` downloads from a release tag, so shipping them needs a new tag."
+            echo "Commit this artifact's files, never a local build, and update the matching \`sys.luau\` checksums; \`binary.load\` downloads from a release tag, so shipping them needs a new tag."
             echo
             echo '```'
             cat dist/SHA256SUMS

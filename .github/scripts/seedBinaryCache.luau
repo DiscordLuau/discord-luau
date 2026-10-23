@@ -8,7 +8,7 @@
 local Logger = require("../../packages/logger/src")
 local stdPolyfills = require("../../packages/binary/luau_packages/std_polyfills")
 
-local PACKAGES = { "dave", "opus", "sodium" }
+local PACKAGES = { "dave", "opus", "sodium", "symphonia" }
 
 local platform = stdPolyfills.process.getPlatform()
 local rawArchitecture = stdPolyfills.process.getArch()
