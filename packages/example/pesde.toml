@@ -24,10 +24,11 @@ environment = "luau"
 lib = "src/init.luau"
 
 [dependencies]
-discord = { name = "discord_luau/discord_luau", version = ">=0.0.0" }
-builders = { name = "discord_luau/builders", version = ">=0.0.0" }
-classes = { name = "discord_luau/classes", version = ">=0.0.0" }
-opus = { name = "discord_luau/opus", version = ">=0.0.0" }
+discord = { workspace = "discord_luau/discord_luau", version = ">=0.0.0" }
+builders = { workspace = "discord_luau/builders", version = ">=0.0.0" }
+classes = { workspace = "discord_luau/classes", version = ">=0.0.0" }
+opus = { workspace = "discord_luau/opus", version = ">=0.0.0" }
+audio = { workspace = "discord_luau/audio", version = ">=0.0.0" }
 
 [patches]
 "yetanotherclown/luau_futures" = { "2.0.0-beta.3 luau" = "patches/yetanotherclown+luau_futures-2.0.0-beta.3+luau.patch" }

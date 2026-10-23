@@ -1,3 +1,4 @@
 .env.luau
+packages/example/song.mp3
 *_packages/
 darklua

@@ -1,40 +1,52 @@
 local discordLuau = require("@self/../luau_packages/discord")
 local discordBuilders = require("@self/../luau_packages/builders")
-local opus = require("@self/../luau_packages/opus")
+local audio = require("@self/../luau_packages/audio")
 
 local env = require("@self/../../../.env")
 
-local MAX_BARS = 60
-local MIN_DBFS = -40
+local VOICE_CHANNEL_ID = "1266808027668021268"
+local SONG_PATH = "packages/example/song.mp3"
 
-local discordBot = discordLuau.bot.new({
+local bot = discordLuau.bot.new({
 	token = env.DISCORD_BOT_TOKEN,
-	intents = discordBuilders.intents.new({ "Guilds", "GuildMessages" }):build(),
-	reconnect = true,
-	logLevel = "Debug",
+	intents = discordBuilders.intents.new({ "Guilds", "GuildVoiceStates" }):build(),
 })
 
-discordBot.onAllShardsReady:listenOnce(function()
-	print("Bot is ready!")
+bot.onAllShardsReady:listenOnce(function()
+	local fetched = bot:getVoiceChannelAsync(VOICE_CHANNEL_ID):await()
 
-	local channel = discordBot:getVoiceChannelAsync("1266808027668021268"):await():unwrapOk()
+	if fetched:isErr() then
+		bot.logger:warn(`could not find the voice channel: {fetched:unwrapErr()}`)
 
-	channel.onAudioFrame:listen(function(object)
-		local frameStats = opus.stats(object.frame, opus.DISCORD_SAMPLE_RATE, opus.DISCORD_CHANNELS)
+		return
+	end
 
-		local bars = 0
+	local channel = fetched:unwrapOk()
+	local joined = channel:joinAsync():await()
 
-		if frameStats.dBFS ~= -math.huge then
-			bars = math.floor(math.clamp((frameStats.dBFS - MIN_DBFS) / -MIN_DBFS, 0, 1) * MAX_BARS)
-		end
+	if joined:isErr() then
+		bot.logger:warn(`could not join the voice channel: {joined:unwrapErr()}`)
 
-		local userId = object.userId or "unknown"
-		print(
-			`{userId}: {("█"):rep(bars)}{("░"):rep(MAX_BARS - bars)} {string.format("%.1f", frameStats.dBFS)} dBFS`
-		)
-	end)
+		return
+	end
 
-	channel:joinAsync():await()
+	local player = audio.player.new(joined:unwrapOk())
+
+	bot.logger:info(`playing {SONG_PATH}`)
+
+	local played = player:playAsync(audio.fromFile(SONG_PATH)):await()
+
+	if played:isErr() then
+		bot.logger:warn(`could not play the song: {played:unwrapErr()}`)
+
+		return
+	end
+
+	bot.logger:info(`the song {played:unwrapOk()}`)
 end)
 
-discordBot:connectAsync():poll()
+local connected = bot:connectAsync():await()
+
+if connected:isErr() then
+	bot.logger:warn(`could not connect: {connected:unwrapErr()}`)
+end
