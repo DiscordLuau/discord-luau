@@ -11,6 +11,9 @@ luau = "packages/accumulator"
 [workspace."discord_luau/api_types"]
 luau = "packages/api_types"
 
+[workspace."discord_luau/audio"]
+luau = "packages/audio"
+
 [workspace."discord_luau/binary"]
 luau = "packages/binary"
 
@@ -76,6 +79,9 @@ luau = "packages/std_polyfills"
 
 [workspace."discord_luau/stream"]
 luau = "packages/stream"
+
+[workspace."discord_luau/symphonia"]
+luau = "packages/symphonia"
 
 [workspace."discord_luau/util"]
 luau = "packages/utilities"
