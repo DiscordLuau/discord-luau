@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `process.spawn(command, arguments)` starts a program without a shell and returns `read`, `wait`, `exited`, `kill`, `errorTail` and `errorEnded`, which turns true once stderr is read to its end (or its reader stopped after a kill or failed). At the end of stderr, `errorTail` holds its last line; after a kill, only what was read so far. `kill` never waits for the exit: it closes the program's stdout and stderr, so a program blocked on writing them exits even if it ignores SIGTERM, and stops it in the background. Only Zune has it; other runtimes raise `process.spawn is not supported on this runtime`
+- `WebSocket.nextMessage()` returns a message and whether it arrived as a binary frame. Zune reports the frame type; the other runtimes return nil for it. `next()` is unchanged
+
+### Fixed
+
+- On Roblox, a WebStream signal no longer defers a waiting thread its owner already closed, and a socket `Error` after open is raised from `next()` instead of reading as a clean close
+- On Lute, a socket `onerror` is raised from `next()`, and a failed `@lute/net/client` load keeps its cause in the message
+- On Lune and Lute, `fileSystem.watch` reports an unreadable directory once on stderr, skips an entry whose metadata fails, and runs the callback in its own thread so a throwing callback no longer ends watching
+- On Zune, native memory freed through `ffi.free` goes back to a pool that `ffi.alloc` and `ffi.dupe` reuse (zeroed) instead of returning to the system allocator. Zune leaves a freed pointer object cached by address until it is garbage collected, so a native library that received that address from `malloc` (a new libopus decoder or libdave session) got the dead object and failed with "unavailable address" at random. Freeing a pooled block twice raises "Double free"
+- On Zune, closing a WebSocket whose waiting thread was already closed (as a voice connection does when it tears down) no longer raises "cannot resume non-suspended coroutine"
+- On Zune, a block reused from the FFI pool no longer keeps a tag set on it before it was freed
+
+### Changed
+
+- The `ffi.getNull` docs say the shared null must never be tagged
+
 ## 0.0.4
 
 ### Fixed
