@@ -108,21 +108,58 @@ return function()
 			)
 		end)
 
-		test.case("4a. retries when the new socket closes right after its first ACK", function()
+		test.case("4a. retries when the new socket closes right after its Resume", function()
 			local stub = discordStub.new({ clock = "virtual", polyfills = stdPolyfills })
 			local closingIndex = 2
 			local server = stub:createWebsocketServer(function(connection, payload)
-				if connection.index ~= closingIndex or payload.op ~= opcodes.Heartbeat then
+				if connection.index ~= closingIndex or payload.op ~= opcodes.Resume then
 					return
 				end
 
-				connection:send({ op = opcodes.HeartbeatACK })
 				connection:close(closeCodes.UnknownError)
 
 				return false
 			end)
 			local shard = newShard(true)
 			local reconnects = discordStub.recordEmits(shard.onSocketReconnected)
+
+			local function scenario()
+				check.is_true(connectFresh(stub, shard, server.url))
+
+				server.connections[1]:send({ op = opcodes.Reconnect })
+
+				check.is_true(stub.clock:waitFor(reconnected(shard, reconnects, 1), 300))
+
+				local latestConnection = assert(server:latestConnection(), "the server saw no connection")
+
+				check.greater(latestConnection.index, closingIndex)
+			end
+
+			check.equal(
+				stub:runScenario(scenario, function()
+					shard:forceClose()
+				end),
+				nil
+			)
+		end)
+
+		test.case("4c. retries when the new socket closes in the same tick as its Hello", function()
+			local stub = discordStub.new({ clock = "virtual", polyfills = stdPolyfills })
+			local closingIndex = 2
+			local server = stub:createWebsocketServer()
+			local shard = newShard(true)
+			local reconnects = discordStub.recordEmits(shard.onSocketReconnected)
+			local open = server.open
+
+			server.open = function(self, socket)
+				open(self, socket)
+
+				local connection = self.connections[closingIndex]
+
+				if connection and connection.open and #self.connections == closingIndex then
+					connection:close(closeCodes.UnknownError)
+				end
+			end
 
 			local function scenario()
 				check.is_true(connectFresh(stub, shard, server.url))
