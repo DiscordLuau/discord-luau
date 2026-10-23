@@ -15,52 +15,75 @@ local Emitter = {}
 Emitter.Interface = {}
 Emitter.Prototype = {}
 
+local function runCallback(emitter: any, callback: (...any) -> (), arguments: { n: number, [number]: any })
+	local succeeded, callbackError = xpcall(function()
+		callback(table.unpack(arguments, 1, arguments.n))
+	end, function(errorMessage)
+		return debug.traceback(errorMessage, 2)
+	end)
+
+	if not succeeded then
+		local invokeTrace = emitter.lastInvokeTrace
+		local message = `listener callback errored:\n{callbackError}`
+
+		if invokeTrace then
+			message ..= `\n\ninvoke site:\n{invokeTrace}`
+		end
+
+		logger:warn(message)
+	end
+end
+
 --[=[
 	@within Emitter
 
-	Listen to this event, returns a function that can be called to disconnect the listener
+	Listen to this event, returns a function that can be called to disconnect the listener.
+
+	The callback may yield. An event that arrives while the callback is still running (yielded) is handled
+	in a new thread with its own arguments, so a slow listener never receives another event's arguments.
 ]=]
 function Emitter.Prototype.listen<T...>(self: Emitter<T...>, callback: (T...) -> ()): () -> ()
-	local emitterRef = self
+	local thread: thread
 
-	local thread = coroutine.create(function()
+	thread = coroutine.create(function()
 		while true do
-			local args = table.pack(coroutine.yield())
+			local arguments = table.pack(coroutine.yield())
 
-			local ok, err = xpcall(function()
-				(callback :: any)(table.unpack(args, 1, args.n))
-			end, function(errMsg)
-				return debug.traceback(errMsg, 2)
-			end)
-
-			if not ok then
-				local invokeTrace = emitterRef._lastInvokeTrace
-				local message = `listener callback errored:\n{err}`
-
-				if invokeTrace then
-					message ..= `\n\ninvoke site:\n{invokeTrace}`
-				end
-
-				logger:warn(message)
-			end
+			self.busyListeners[thread] = true
+			runCallback(self, callback :: any, arguments)
+			self.busyListeners[thread] = nil
 		end
 	end)
 
-	local status, err = coroutine.resume(thread)
+	local resumed, resumeError = coroutine.resume(thread)
 
-	if not status then
-		logger:warn(`failed to initialise listener thread: {err}`)
+	if not resumed then
+		logger:warn(`failed to initialise listener thread: {resumeError}`)
 	end
 
-	table.insert(self._connectedThreads, thread)
+	table.insert(self.connectedThreads, thread)
+	self.listenerCallbacks[thread] = callback :: any
 
 	return function()
-		local index = table.find(self._connectedThreads, thread)
-
-		if index then
-			table.remove(self._connectedThreads, index)
-		end
+		self:removeListener(thread)
 	end
+end
+
+--[=[
+	@within Emitter
+	@private
+
+	Forgets a listener thread: it receives no further events.
+]=]
+function Emitter.Prototype.removeListener<T...>(self: Emitter<T...>, thread: thread)
+	local index = table.find(self.connectedThreads, thread)
+
+	if index then
+		table.remove(self.connectedThreads, index)
+	end
+
+	self.listenerCallbacks[thread] = nil
+	self.busyListeners[thread] = nil
 end
 
 --[=[
@@ -86,7 +109,7 @@ end
 	Wait for this event to be emitted from, returns the result of the emittion
 ]=]
 function Emitter.Prototype.wait<T...>(self: Emitter<T...>): T...
-	table.insert(self._yieldingThreads, coroutine.running())
+	table.insert(self.yieldingThreads, coroutine.running())
 
 	return coroutine.yield()
 end
@@ -99,40 +122,55 @@ end
 	This will additionally resume all the threads that are currently waiting for an event to be emitted.
 ]=]
 function Emitter.Prototype.invoke<T...>(self: Emitter<T...>, ...: T...): ()
-	self._lastInvokeTrace = debug.traceback()
+	local waitingThreads = self.yieldingThreads
 
-	for _, thread in self._yieldingThreads do
+	self.lastInvokeTrace = debug.traceback()
+	self.yieldingThreads = {}
+
+	for _, thread in waitingThreads do
 		if coroutine.status(thread) == "dead" then
 			continue
 		end
 
-		local status, response = coroutine.resume(thread, ...)
+		local resumed, resumeError = coroutine.resume(thread, ...)
 
-		if not status then
-			logger:warn(`failed to resume yielding thread: {response}\n\ninvoke site:\n{self._lastInvokeTrace}`)
+		if not resumed then
+			logger:warn(`failed to resume waiting thread: {resumeError}\n\ninvoke site:\n{self.lastInvokeTrace}`)
 		end
 	end
 
-	self._yieldingThreads = {}
-
-	for i = #self._connectedThreads, 1, -1 do
-		local thread = self._connectedThreads[i]
+	for _, thread in table.clone(self.connectedThreads) do
+		local callback = self.listenerCallbacks[thread]
 		local threadStatus = coroutine.status(thread)
 
+		if not callback then
+			continue
+		end
+
 		if threadStatus == "dead" then
-			table.remove(self._connectedThreads, i)
+			self:removeListener(thread)
+
 			continue
 		end
 
-		if threadStatus == "normal" then
+		if self.busyListeners[thread] then
+			local resumed, resumeError =
+				coroutine.resume(coroutine.create(runCallback), self, callback, table.pack(...))
+
+			if not resumed then
+				logger:warn(
+					`failed to run busy listener in a new thread: {resumeError}\n\ninvoke site:\n{self.lastInvokeTrace}`
+				)
+			end
+
 			continue
 		end
 
-		local status, response = coroutine.resume(thread, ...)
+		local resumed, resumeError = coroutine.resume(thread, ...)
 
-		if not status then
-			logger:warn(`failed to resume connected thread: {response}\n\ninvoke site:\n{self._lastInvokeTrace}`)
-			table.remove(self._connectedThreads, i)
+		if not resumed then
+			logger:warn(`failed to resume connected thread: {resumeError}\n\ninvoke site:\n{self.lastInvokeTrace}`)
+			self:removeListener(thread)
 		end
 	end
 end
@@ -145,8 +183,10 @@ end
 function Emitter.Interface.new<T...>(): Emitter<T...>
 	return setmetatable(
 		{
-			_yieldingThreads = {},
-			_connectedThreads = {},
+			yieldingThreads = {},
+			connectedThreads = {},
+			listenerCallbacks = {},
+			busyListeners = {},
 		} :: Emitter<T...>,
 		{
 			__index = Emitter.Prototype,
@@ -155,9 +195,11 @@ function Emitter.Interface.new<T...>(): Emitter<T...>
 end
 
 export type Emitter<T...> = typeof(Emitter.Prototype) & {
-	_yieldingThreads: { thread },
-	_connectedThreads: { thread },
-	_lastInvokeTrace: string?,
+	yieldingThreads: { thread },
+	connectedThreads: { thread },
+	lastInvokeTrace: string?,
+	listenerCallbacks: { [thread]: (...any) -> () },
+	busyListeners: { [thread]: boolean },
 }
 
 return Emitter.Interface
