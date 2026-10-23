@@ -3,8 +3,6 @@ local StdPolyfills = require("../../luau_packages/std_polyfills")
 
 local Logger = require("../objects/logger")
 
-local command = CliBuilder.command
-
 local OS_SLASH_MAP = table.freeze({
 	["linux"] = "/",
 	["macos"] = "/",
@@ -17,17 +15,7 @@ local OS_HOME_VARS = table.freeze({
 	["windows"] = "USERPROFILE",
 })
 
-type VFile = (information: Information) -> string?
-type VDirectory = { [string]: VDirectory | VFile }
-
-type Information = {
-	ProjectName: string,
-	IDE: string,
-	Runtime: string,
-	UseGit: string,
-	License: string,
-	DiscordToken: string,
-}
+local command = CliBuilder.command
 
 local function stripBanners(output: string): string
 	local lines = {}
@@ -75,10 +63,11 @@ local function resolveDirectory(directory: string?): string?
 		local home = homeVarName and StdPolyfills.process.getEnv()[homeVarName]
 
 		if not home then
-			Logger:error(
+			Logger:warn(
 				`Unable to resolve {OS_HOME_VARS[platform]} environment variable! Does this environment variable exist?`
 			)
-			return nil
+
+			return
 		end
 
 		local restOfPath = string.sub(directory, 2)
@@ -100,11 +89,7 @@ local function resolveDirectory(directory: string?): string?
 		resolvedPath = cwd .. separator .. directory
 	end
 
-	if StdPolyfills.fileSystem.isDir(resolvedPath) then
-		return resolvedPath
-	end
-
-	return nil
+	return if StdPolyfills.fileSystem.isDir(resolvedPath) then resolvedPath else nil
 end
 
 local function buildProjectMap(projectMap: VDirectory, path: string, information: Information, separator: string)
@@ -147,6 +132,18 @@ local function setupProject(path: string, projectFile: string, information: Info
 	Logger:debug(`Finished setting up project in the following dir: '{projectRoot}'`)
 end
 
+type VFile = (information: Information) -> string?
+type VDirectory = { [string]: VDirectory | VFile }
+
+type Information = {
+	ProjectName: string,
+	IDE: string,
+	Runtime: string,
+	UseGit: string,
+	License: string,
+	DiscordToken: string,
+}
+
 return command
 	.new()
 	:setName("create")
@@ -155,10 +152,11 @@ return command
 		local currentRuntime = StdPolyfills.runtime.getRuntime()
 
 		if currentRuntime ~= "Zune" then
-			Logger:error(
+			Logger:warn(
 				`create_app must be run with the Zune runtime (detected: '{currentRuntime}'). `
 					.. `Please run this tool via 'pesde x discord_luau/create_app', which will invoke Zune automatically.`
 			)
+
 			return
 		end
 
@@ -213,7 +211,7 @@ return command
 				local gitOk, gitInitResult = pcall(StdPolyfills.process.run, "git", { "init" }, { cwd = projectPath })
 
 				if not gitOk then
-					error("git is not installed or not in PATH")
+					error(`git is not installed or not in PATH: {gitInitResult}`)
 				end
 
 				if not gitInitResult.ok then

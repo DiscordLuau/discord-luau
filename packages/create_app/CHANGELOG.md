@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- The scaffolded `src/init.luau` prints a failed `connectAsync` and exits non-zero instead of dropping the Result
+- `create` logs at warn instead of error so the command returns, the git init failure keeps its cause, and an error in the wizard input loop is shown as a build error instead of leaving the screen running
+
 ## 0.0.6
 
 ### Fixed
