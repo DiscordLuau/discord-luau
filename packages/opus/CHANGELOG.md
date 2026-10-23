@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `Opus.checkBitrate(bitsPerSecond)` raises unless the bitrate is a whole number from 500 to 510000
+- `Encoder:setBitrate`, `getBitrate`, `setSignal` and `getSignal` set and read the target bitrate and the `"auto"`, `"voice"` or `"music"` signal hint
+
+### Changed
+
+- The Windows libopus is 1.6.1 built from source, and every libopus binary is reproducible
+- The README explains the frame length `encode` takes, `decodeFec`, `decodePLC`, `stats` and that opus needs FFI
+
+### Fixed
+
+- macOS on Intel (macos-x64) now has a libopus, and macos-arm64 is built with NEON
+- A system libopus no longer replaces ours: the package always loads its own checksummed libopus
+- `Decoder` and `Encoder` no longer leak native memory: every `decode`, `decodePLC`, `decodeFec` and `encode` used to allocate input and output buffers that were never freed (about 24 KB per decoded frame, roughly 4 GB per hour per speaking user); each object now allocates them once and frees them in `destroy`
+- `Decoder:decodeFec` recovers exactly one 20 ms frame; it asked libopus for 120 ms, so every recovered packet added 100 ms of extra audio
+- Using a `Decoder` or `Encoder` after `destroy()` raises an error instead of crashing the process
+
 ## 0.0.4
 
 ### Fixed

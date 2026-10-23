@@ -5,6 +5,7 @@ local Stats = require("@self/stats")
 
 export type Encoder = Encoder.Encoder
 export type Decoder = Decoder.Decoder
+export type Signal = Encoder.Signal
 export type FrameStats = Stats.FrameStats
 
 --[=[
@@ -35,11 +36,20 @@ export type FrameStats = Stats.FrameStats
 	@within Opus
 ]=]
 
+--[=[
+	@function checkBitrate
+	@within Opus
+	@param bitsPerSecond unknown
+
+	Raises unless `bitsPerSecond` is a whole number from 500 to 510000. The same function as `Opus.Encoder.checkBitrate`.
+]=]
+
 return {
 	sys = Sys,
 	encoder = Encoder,
 	decoder = Decoder,
 	stats = Stats.stats,
+	checkBitrate = Encoder.checkBitrate,
 
 	application = Sys.application,
 	sampleRate = Sys.sampleRate,
