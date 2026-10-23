@@ -59,7 +59,7 @@ HttpServer.Prototype = {}
 	Answers a request the handler left alone: `GET /api/v10/gateway/bot` returns the websocket URL, or a 503 before
 	the websocket server exists; anything else is a 404.
 ]=]
-function HttpServer.Prototype._defaultResponse(self: HttpServer, request: ZuneRequest): ZuneResponse
+function HttpServer.Prototype.defaultResponse(self: HttpServer, request: ZuneRequest): ZuneResponse
 	if request.method == "GET" and request.path == "/api/v10/gateway/bot" then
 		local gatewayUrl = self.gatewayUrl()
 
@@ -99,7 +99,7 @@ function HttpServer.Prototype.respond(self: HttpServer, request: ZuneRequest): s
 		return response
 	end
 
-	return self:_defaultResponse(request)
+	return self:defaultResponse(request)
 end
 
 --[=[
