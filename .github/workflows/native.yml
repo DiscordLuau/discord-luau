@@ -135,5 +135,9 @@ jobs:
         uses: actions/checkout@v4
       - name: Install the Rust toolchain
         run: rustup toolchain install
+      - name: Check the formatting
+        run: cargo fmt --check
+      - name: Run Clippy with warnings as errors
+        run: cargo clippy --all-targets --locked -- -D warnings
       - name: Run the unit tests
         run: cargo test --locked
