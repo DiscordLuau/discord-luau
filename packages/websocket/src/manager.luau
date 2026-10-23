@@ -120,11 +120,10 @@ function Manager.Prototype.connectAsync(
 ): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local maxConcurrency = gatewayInformation.session_start_limit.max_concurrency
-
 		local websocketUrl = gatewayInformation.url
 		local shardCount = gatewayInformation.shards
-
 		local readyShards = {}
+		local connectedShards = 0
 
 		self.logger:debug(`Creating all Shards required for Manager..`)
 
@@ -150,8 +149,11 @@ function Manager.Prototype.connectAsync(
 
 		self.logger:debug(`Connecting all Shards to the Discord Gateway..`)
 
-		for shardIndex, shardInstance in next, self.shards do
+		-- indexed: the old solver mistypes a shard taken by generalised iteration over `shards`
+		for shardIndex in self.shards do
+			local shardInstance = self.shards[shardIndex]
 			local shardId = shardIndex - 1
+
 			if shardId > 0 and shardId % maxConcurrency == 0 then
 				stdPolyfills.task.wait(CONCURRENT_IDENTIFY_YIELD)
 			end
@@ -220,15 +222,16 @@ function Manager.Prototype.connectAsync(
 
 			self.logger:debug(`Connecting Shard '{shardId}' to Discord Gateway`)
 
-			shardInstance
-				:connectAsync(websocketUrl, self.webSocketVersion)
-				:after(function(result)
-					if result:isErr() then
-						self.logger:warn(`shard has run into an error during gateway connection: {result:unwrapErr()}`)
-					end
-				end)
-				:await()
+			local connected = shardInstance:connectAsync(websocketUrl, self.webSocketVersion):await()
+
+			if connected:isOk() then
+				connectedShards += 1
+			else
+				self.logger:warn(`shard '{shardId}' failed to connect to the gateway: {connected:unwrapErr()}`)
+			end
 		end
+
+		assert(connectedShards > 0, `none of the {shardCount} shards could connect to the gateway`)
 	end)
 end
 
@@ -263,6 +266,7 @@ function Manager.Prototype.sendAsync<T>(self: Manager, operation: apiTypes.Opcod
 							["d"] = data,
 						}, false))
 						:await()
+
 					if sendResult:isErr() then
 						self.logger:warn(
 							`shard has run into an error during message dispatch: {sendResult:unwrapErr()}`
@@ -278,6 +282,7 @@ function Manager.Prototype.sendAsync<T>(self: Manager, operation: apiTypes.Opcod
 
 		for _, request in requests do
 			local result = request:await()
+
 			if result:isErr() then
 				self.logger:warn(`shard has run into an error during send request: {result:unwrapErr()}`)
 			end

@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- The first heartbeat waits `heartbeat_interval * jitter` after Hello, as Discord documents, instead of up to one second, while Identify or Resume goes out on Hello rather than after the first heartbeat ACK; the new `heartbeatJitter` field (default `math.random`) pins the jitter in tests, and a first heartbeat skipped for a replaced socket is logged at debug
+- A gateway message whose handler raises is logged at warn and no longer ends the receive loop
+- `heartbeatAsync` and `identifyAsync` resolve Err when the send fails, and every caller logs that Err at warn instead of dropping it
+- `Manager:connectAsync` logs each shard that fails to connect and resolves Err when none connected, instead of resolving Ok
+- Manager test 12a holds the reconnect handshake, so it no longer misses a reconnect that finishes inside one poll
+
+### Added
+
+- `Shard:sendAsync` takes an optional `isStillWanted` callback, checked after any rate-limit wait and just before the send, so a caller can cancel a queued send. Voice uses it so a join request that waited out the rate limit after the connection closed is never sent
+
+### Changed
+
+- Helper methods drop their leading underscore (`_name` is now `name`); they stay marked `@private` and out of the docs
+
 ## 0.0.4
 
 ### Added
