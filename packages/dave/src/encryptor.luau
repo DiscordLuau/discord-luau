@@ -20,7 +20,7 @@
 ]=]
 
 --[=[
-	@prop handle Sys.EncryptorHandle
+	@prop handle Sys.EncryptorHandle?
 	@within Dave.Encryptor
 ]=]
 
@@ -35,29 +35,17 @@
 ]=]
 
 local stdPolyfills = require("../luau_packages/std_polyfills")
-local Logger = require("../luau_packages/logger")
 local Sys = require("./sys")
 local Buffer = require("./buffer")
+local log = require("./log")
 local KeyRatchet = require("./keyRatchet")
 
-local logger = Logger.new("Dave.Encryptor")
+local encryptorResultMessages: { [number]: string }?
 
 local Encryptor = {}
 
 Encryptor.Interface = {}
 Encryptor.Prototype = {}
-
-export type EncryptorStats = {
-	passthroughCount: number,
-	encryptSuccessCount: number,
-	encryptFailureCount: number,
-	encryptDuration: number,
-	encryptAttempts: number,
-	encryptMaxAttempts: number,
-	encryptMissingKeyCount: number,
-}
-
-local encryptorResultMessages: { [number]: string }?
 
 --[=[
 	@within Dave.Encryptor
@@ -67,7 +55,9 @@ local encryptorResultMessages: { [number]: string }?
 	MLS group has been established.
 ]=]
 function Encryptor.Prototype.setKeyRatchet(self: Encryptor, keyRatchet: KeyRatchet.KeyRatchet)
-	Sys.lib.daveEncryptorSetKeyRatchet(self.handle, keyRatchet.handle)
+	local handle = assert(self.handle, "Encryptor has been destroyed")
+
+	Sys.lib.daveEncryptorSetKeyRatchet(handle, keyRatchet.handle)
 end
 
 --[=[
@@ -78,7 +68,9 @@ end
 	yet ready.
 ]=]
 function Encryptor.Prototype.setPassthroughMode(self: Encryptor, enabled: boolean)
-	Sys.lib.daveEncryptorSetPassthroughMode(self.handle, if enabled then 1 else 0)
+	local handle = assert(self.handle, "Encryptor has been destroyed")
+
+	Sys.lib.daveEncryptorSetPassthroughMode(handle, if enabled then 1 else 0)
 end
 
 --[=[
@@ -87,7 +79,9 @@ end
 	Returns `true` if a key ratchet has been set on this encryptor.
 ]=]
 function Encryptor.Prototype.hasKeyRatchet(self: Encryptor): boolean
-	return Sys.lib.daveEncryptorHasKeyRatchet(self.handle) ~= 0
+	local handle = assert(self.handle, "Encryptor has been destroyed")
+
+	return Sys.lib.daveEncryptorHasKeyRatchet(handle) ~= 0
 end
 
 --[=[
@@ -96,7 +90,9 @@ end
 	Returns `true` if the encryptor is currently in passthrough mode.
 ]=]
 function Encryptor.Prototype.isPassthroughMode(self: Encryptor): boolean
-	return Sys.lib.daveEncryptorIsPassthroughMode(self.handle) ~= 0
+	local handle = assert(self.handle, "Encryptor has been destroyed")
+
+	return Sys.lib.daveEncryptorIsPassthroughMode(handle) ~= 0
 end
 
 --[=[
@@ -107,7 +103,9 @@ end
 	`codec` should be a value from `Dave.sys.codec`.
 ]=]
 function Encryptor.Prototype.assignSsrcToCodec(self: Encryptor, ssrc: number, codec: number)
-	Sys.lib.daveEncryptorAssignSsrcToCodec(self.handle, ssrc, codec)
+	local handle = assert(self.handle, "Encryptor has been destroyed")
+
+	Sys.lib.daveEncryptorAssignSsrcToCodec(handle, ssrc, codec)
 end
 
 --[=[
@@ -116,7 +114,9 @@ end
 	Returns the DAVE protocol version this encryptor is currently operating at.
 ]=]
 function Encryptor.Prototype.getProtocolVersion(self: Encryptor): number
-	return Sys.lib.daveEncryptorGetProtocolVersion(self.handle)
+	local handle = assert(self.handle, "Encryptor has been destroyed")
+
+	return Sys.lib.daveEncryptorGetProtocolVersion(handle)
 end
 
 --[=[
@@ -127,25 +127,27 @@ end
 	validate output size expectations.
 ]=]
 function Encryptor.Prototype.getMaxCiphertextByteSize(self: Encryptor, mediaType: number, frameSize: number): number
-	return Buffer.readRawU64(Sys.lib.daveEncryptorGetMaxCiphertextByteSize(self.handle, mediaType, frameSize))
+	local handle = assert(self.handle, "Encryptor has been destroyed")
+
+	return Buffer.readRawU64(Sys.lib.daveEncryptorGetMaxCiphertextByteSize(handle, mediaType, frameSize))
 end
 
 --[=[
 	@within Dave.Encryptor
 
 	Encrypts `frame` and returns the ciphertext as a new buffer. The SSRC must have been
-	registered via `assignSsrcToCodec`. Logs an error and halts the calling coroutine on
-	any non-success result code (missing ratchet, too many retries, etc.).
+	registered via `assignSsrcToCodec`. Raises an error naming the result code on any
+	non-success result (missing ratchet, too many retries, etc.).
 ]=]
 function Encryptor.Prototype.encrypt(self: Encryptor, mediaType: number, ssrc: number, frame: buffer): buffer
+	local handle = assert(self.handle, "Encryptor has been destroyed")
 	local frameSize = buffer.len(frame)
 	local maxOutputSize = self:getMaxCiphertextByteSize(mediaType, frameSize)
 	local outputPointer = stdPolyfills.ffi.alloc(maxOutputSize, 1)
 	local framePointer = stdPolyfills.ffi.dupe(frame)
 	local bytesWrittenSlot = Buffer.allocateSlot()
-
 	local resultCode = Sys.lib.daveEncryptorEncrypt(
-		self.handle,
+		handle,
 		mediaType,
 		ssrc,
 		framePointer,
@@ -170,8 +172,9 @@ function Encryptor.Prototype.encrypt(self: Encryptor, mediaType: number, ssrc: n
 			}
 		end
 
-		logger:error(
-			(encryptorResultMessages :: { [number]: string })[resultCode] or `unknown error (code {resultCode})`
+		error(
+			`DAVE encrypt failed: {(encryptorResultMessages :: { [number]: string })[resultCode] or `unknown error (code {resultCode})`}`,
+			2
 		)
 	end
 
@@ -206,11 +209,12 @@ end
 	since the encryptor was created. `mediaType` should be a value from `Dave.sys.mediaType`.
 ]=]
 function Encryptor.Prototype.getStats(self: Encryptor, mediaType: number): EncryptorStats
+	local handle = assert(self.handle, "Encryptor has been destroyed")
 	local structType = Sys.structs.encryptorStats
 	local statsBuffer = structType:new({})
 	local statsPointer = stdPolyfills.ffi.dupe(statsBuffer)
 
-	Sys.lib.daveEncryptorGetStats(self.handle, mediaType, statsPointer)
+	Sys.lib.daveEncryptorGetStats(handle, mediaType, statsPointer)
 
 	local result: EncryptorStats = {
 		passthroughCount = Buffer.readU64AtOffset(statsPointer, structType:offset("passthroughCount")),
@@ -234,7 +238,13 @@ end
 	not be used after this call.
 ]=]
 function Encryptor.Prototype.destroy(self: Encryptor)
-	Sys.lib.daveEncryptorDestroy(self.handle)
+	local handle = self.handle
+
+	self.handle = nil
+
+	if handle then
+		Sys.lib.daveEncryptorDestroy(handle)
+	end
 end
 
 --[=[
@@ -246,30 +256,35 @@ end
 ]=]
 function Encryptor.Interface.new(): Encryptor
 	local versionChangedCallbackRef: { current: (() -> ())? } = { current = nil }
-	local handle = Sys.lib.daveEncryptorCreate()
-
+	local handle = Buffer.adopt(Sys.lib.daveEncryptorCreate(), Sys.pointers.encryptorHandle)
 	local types = stdPolyfills.ffi.getTypes()
 	local versionChangedClosure = stdPolyfills.ffi.closure({
 		returns = types.void,
 		args = { types.pointer },
 	}, function(_userData: FFIPointer)
-		pcall(function()
+		local succeeded, failure = pcall(function()
 			local callback = versionChangedCallbackRef.current
 
-			if callback ~= nil then
+			if callback then
 				callback()
 			end
 		end)
 
+		if not succeeded then
+			log:warn(`protocol version changed callback raised: {failure}`)
+		end
+
 		return
 	end)
-
 	local nullPointer = stdPolyfills.ffi.getNull()
+
+	assert(handle, "daveEncryptorCreate returned NULL")
+
 	Sys.lib.daveEncryptorSetProtocolVersionChangedCallback(handle, versionChangedClosure, nullPointer)
 
 	return setmetatable(
 		{
-			handle = handle,
+			handle = handle :: Sys.EncryptorHandle?,
 			versionChangedClosure = versionChangedClosure,
 			versionChangedCallbackRef = versionChangedCallbackRef,
 		} :: Encryptor,
@@ -277,8 +292,18 @@ function Encryptor.Interface.new(): Encryptor
 	)
 end
 
+export type EncryptorStats = {
+	passthroughCount: number,
+	encryptSuccessCount: number,
+	encryptFailureCount: number,
+	encryptDuration: number,
+	encryptAttempts: number,
+	encryptMaxAttempts: number,
+	encryptMissingKeyCount: number,
+}
+
 export type Encryptor = typeof(Encryptor.Prototype) & {
-	handle: Sys.EncryptorHandle,
+	handle: Sys.EncryptorHandle?,
 	versionChangedClosure: FFIPointer,
 	versionChangedCallbackRef: { current: (() -> ())? },
 }

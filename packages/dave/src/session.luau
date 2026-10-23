@@ -15,12 +15,12 @@
 
 	In normal operation the Discord voice server acts as an external sender: it sends the
 	`setExternalSender` payload first, then relays proposal/commit/welcome messages between
-	participants. `getMarshalledKeyPackage` returns an empty buffer until `setExternalSender`
-	has been called and the session has a valid MLS leaf node.
+	participants. `getMarshalledKeyPackage` returns an empty buffer until `init` has given the
+	session an MLS leaf node; the external sender is not needed for it.
 ]=]
 
 --[=[
-	@prop handle Sys.SessionHandle
+	@prop handle Sys.SessionHandle?
 	@within Dave.Session
 ]=]
 
@@ -36,6 +36,7 @@
 
 local stdPolyfills = require("../luau_packages/std_polyfills")
 local Sys = require("./sys")
+local log = require("./log")
 local Buffer = require("./buffer")
 local KeyRatchet = require("./keyRatchet")
 local CommitResult = require("./commitResult")
@@ -54,16 +55,28 @@ local function makeForwarderClosure(callbackRef: { current: ((source: string, re
 		args = { types.pointer, types.pointer, types.pointer },
 	}, function(sourcePointer: FFIPointer, reasonPointer: FFIPointer)
 		-- errors must not escape C closure boundaries or Zune panics
-		pcall(function()
+		local succeeded, failure = pcall(function()
 			local callback = callbackRef.current
 
 			if callback then
 				local sourceSuccess, source = pcall(Buffer.fromCString, sourcePointer)
 				local reasonSuccess, reason = pcall(Buffer.fromCString, reasonPointer)
 
+				if not sourceSuccess then
+					log:warn(`libdave MLS failure source could not be read: {source}`)
+				end
+
+				if not reasonSuccess then
+					log:warn(`libdave MLS failure reason could not be read: {reason}`)
+				end
+
 				callback(if sourceSuccess then source else "", if reasonSuccess then reason else "")
 			end
 		end)
+
+		if not succeeded then
+			log:warn(`MLS failure callback raised: {failure}`)
+		end
 
 		return
 	end)
@@ -74,14 +87,14 @@ end
 
 	Initialises the MLS group state for the given protocol version, voice channel group ID,
 	and local user ID. Must be called before `getMarshalledKeyPackage` or any proposal/commit
-	processing. `setExternalSender` must also be called *(with data from the voice server)*
-	before the session can produce a valid key package.
+	processing.
 ]=]
 function Session.Prototype.init(self: Session, version: number, groupId: string, selfUserId: string)
+	local handle = assert(self.handle, "Session has been destroyed")
 	local groupIdBuffer = Buffer.u64StringToBuffer(groupId)
 	local userIdPointer = Buffer.toCString(selfUserId)
 
-	Sys.lib.daveSessionInit(self.handle, version, groupIdBuffer :: any, userIdPointer)
+	Sys.lib.daveSessionInit(handle, version, groupIdBuffer :: any, userIdPointer)
 
 	stdPolyfills.ffi.free(userIdPointer)
 end
@@ -93,7 +106,9 @@ end
 	The session must be re-initialised via `init` before it can be used again.
 ]=]
 function Session.Prototype.reset(self: Session)
-	Sys.lib.daveSessionReset(self.handle)
+	local handle = assert(self.handle, "Session has been destroyed")
+
+	Sys.lib.daveSessionReset(handle)
 end
 
 --[=[
@@ -103,7 +118,9 @@ end
 	when the voice server signals a version upgrade mid-session.
 ]=]
 function Session.Prototype.setProtocolVersion(self: Session, version: number)
-	Sys.lib.daveSessionSetProtocolVersion(self.handle, version)
+	local handle = assert(self.handle, "Session has been destroyed")
+
+	Sys.lib.daveSessionSetProtocolVersion(handle, version)
 end
 
 --[=[
@@ -113,7 +130,9 @@ end
 	session has not yet been initialised.
 ]=]
 function Session.Prototype.getProtocolVersion(self: Session): number
-	return Sys.lib.daveSessionGetProtocolVersion(self.handle)
+	local handle = assert(self.handle, "Session has been destroyed")
+
+	return Sys.lib.daveSessionGetProtocolVersion(handle)
 end
 
 --[=[
@@ -126,10 +145,11 @@ end
 	Returns an empty buffer before any commit has been processed.
 ]=]
 function Session.Prototype.getLastEpochAuthenticator(self: Session): buffer
+	local handle = assert(self.handle, "Session has been destroyed")
 	local dataSlot = Buffer.allocateSlot()
 	local lengthSlot = Buffer.allocateSlot()
 
-	Sys.lib.daveSessionGetLastEpochAuthenticator(self.handle, dataSlot, lengthSlot)
+	Sys.lib.daveSessionGetLastEpochAuthenticator(handle, dataSlot, lengthSlot)
 
 	local result = Buffer.readLibBytes(dataSlot, lengthSlot)
 
@@ -143,12 +163,13 @@ end
 	@within Dave.Session
 
 	Provides the external sender credential package received from the Discord voice server.
-	This must be called before the session can produce a valid MLS key package.
+	The session needs it before it can process proposals, commits or welcomes.
 ]=]
 function Session.Prototype.setExternalSender(self: Session, data: buffer)
+	local handle = assert(self.handle, "Session has been destroyed")
 	local dataPointer = stdPolyfills.ffi.dupe(data)
 
-	Sys.lib.daveSessionSetExternalSender(self.handle, dataPointer, buffer.len(data))
+	Sys.lib.daveSessionSetExternalSender(handle, dataPointer, buffer.len(data))
 
 	stdPolyfills.ffi.free(dataPointer)
 end
@@ -164,13 +185,14 @@ end
 	channel.
 ]=]
 function Session.Prototype.processProposals(self: Session, proposals: buffer, recognizedUserIds: { string }): buffer?
+	local handle = assert(self.handle, "Session has been destroyed")
 	local proposalsPointer = stdPolyfills.ffi.dupe(proposals)
 	local dataSlot = Buffer.allocateSlot()
 	local lengthSlot = Buffer.allocateSlot()
 
 	Buffer.withCStringArray(recognizedUserIds, function(userIdsPointer, userIdsCount)
 		Sys.lib.daveSessionProcessProposals(
-			self.handle,
+			handle,
 			proposalsPointer,
 			buffer.len(proposals),
 			userIdsPointer,
@@ -202,15 +224,21 @@ end
 --[=[
 	@within Dave.Session
 
-	Applies a serialised MLS commit message to advance the group epoch. Returns a
-	`CommitResult` describing the new roster state. Inspect `CommitResult:isFailed()` to
-	detect hard rejections and `CommitResult:isIgnored()` for soft rejections.
+	Applies a serialised MLS commit message to advance the group epoch. Returns a `CommitResult` holding a change set
+	against the session's previous roster: members added, or removed when their signature is empty. It is not the
+	roster itself. Inspect `CommitResult:isFailed()` to detect hard rejections and `CommitResult:isIgnored()` for soft
+	rejections.
 ]=]
 function Session.Prototype.processCommit(self: Session, commit: buffer): CommitResult.CommitResult
+	local handle = assert(self.handle, "Session has been destroyed")
 	local commitPointer = stdPolyfills.ffi.dupe(commit)
-	local resultHandle = Sys.lib.daveSessionProcessCommit(self.handle, commitPointer, buffer.len(commit))
+	local resultHandle = Buffer.adopt(
+		Sys.lib.daveSessionProcessCommit(handle, commitPointer, buffer.len(commit)),
+		Sys.pointers.commitResultHandle
+	)
 
 	stdPolyfills.ffi.free(commitPointer)
+	assert(resultHandle, "daveSessionProcessCommit returned NULL")
 
 	return CommitResult.new(resultHandle)
 end
@@ -218,42 +246,29 @@ end
 --[=[
 	@within Dave.Session
 
-	Processes an MLS welcome message to join an existing group as a new participant.
-	Returns a `WelcomeResult` containing the initial roster. `recognizedUserIds` should
-	list every user ID this client considers valid for this channel.
+	Processes an MLS welcome message to join an existing group as a new participant. Returns a `WelcomeResult` holding
+	a change set against the session's previous roster: members added, or removed when their signature is empty. It is
+	not the roster itself. `recognizedUserIds` should list every user ID this client considers valid for this channel.
 ]=]
 function Session.Prototype.processWelcome(
 	self: Session,
 	welcome: buffer,
 	recognizedUserIds: { string }
 ): WelcomeResult.WelcomeResult?
+	local handle = assert(self.handle, "Session has been destroyed")
 	local welcomePointer = stdPolyfills.ffi.dupe(welcome)
-	local resultHandle: Sys.WelcomeResultHandle = nil :: any
+	local resultPointer: FFIPointer? = nil
 
 	Buffer.withCStringArray(recognizedUserIds, function(userIdsPointer, userIdsCount)
-		resultHandle = Sys.lib.daveSessionProcessWelcome(
-			self.handle,
-			welcomePointer,
-			buffer.len(welcome),
-			userIdsPointer,
-			userIdsCount
-		)
+		resultPointer =
+			Sys.lib.daveSessionProcessWelcome(handle, welcomePointer, buffer.len(welcome), userIdsPointer, userIdsCount)
 	end)
 
 	stdPolyfills.ffi.free(welcomePointer)
 
-	-- daveSessionProcessWelcome returns nullptr on failure (e.g. welcome not for our key package).
-	-- Detect null by round-tripping the handle through a u64 slot - address 0 == null.
-	local checkSlot = Buffer.allocateSlot()
-	checkSlot:writeptr(0, resultHandle)
-	local isNull = Buffer.readSizeT(checkSlot) == 0
-	stdPolyfills.ffi.free(checkSlot)
+	local resultHandle = if resultPointer then Buffer.adopt(resultPointer, Sys.pointers.welcomeResultHandle) else nil
 
-	if isNull then
-		return
-	end
-
-	return WelcomeResult.new(resultHandle)
+	return if resultHandle then WelcomeResult.new(resultHandle) else nil
 end
 
 --[=[
@@ -263,13 +278,14 @@ end
 	send as a proposal to add this client to the group.
 	
 	Returns an empty buffer if the session does not yet have a valid leaf node *(i.e.
-	`setExternalSender` has not been called yet)*.
+	`init` has not been called, or failed)*.
 ]=]
 function Session.Prototype.getMarshalledKeyPackage(self: Session): buffer
+	local handle = assert(self.handle, "Session has been destroyed")
 	local dataSlot = Buffer.allocateSlot()
 	local lengthSlot = Buffer.allocateSlot()
 
-	Sys.lib.daveSessionGetMarshalledKeyPackage(self.handle, dataSlot, lengthSlot)
+	Sys.lib.daveSessionGetMarshalledKeyPackage(handle, dataSlot, lengthSlot)
 
 	local result = Buffer.readLibBytes(dataSlot, lengthSlot)
 
@@ -285,14 +301,18 @@ end
 	Derives a `KeyRatchet` for the given user ID from the current MLS group state.
 	The ratchet is passed to an `Encryptor` or `Decryptor` to enable authenticated
 	encryption for that participant's media stream.
+
+	Returns nil when the session has no group yet, or `userId` is not in it.
 ]=]
-function Session.Prototype.getKeyRatchet(self: Session, userId: string): KeyRatchet.KeyRatchet
+function Session.Prototype.getKeyRatchet(self: Session, userId: string): KeyRatchet.KeyRatchet?
+	local handle = assert(self.handle, "Session has been destroyed")
 	local userIdPointer = Buffer.toCString(userId)
-	local handle = Sys.lib.daveSessionGetKeyRatchet(self.handle, userIdPointer)
+	local ratchetHandle =
+		Buffer.adopt(Sys.lib.daveSessionGetKeyRatchet(handle, userIdPointer), Sys.pointers.keyRatchetHandle)
 
 	stdPolyfills.ffi.free(userIdPointer)
 
-	return KeyRatchet.new(handle)
+	return if ratchetHandle then KeyRatchet.new(ratchetHandle) else nil
 end
 
 --[=[
@@ -302,24 +322,33 @@ end
 	`userId` as a lowercase hex string. The fingerprint is derived from both parties'
 	MLS leaf credentials and can be compared out-of-band to verify there is no
 	man-in-the-middle.
-	
-	The callback fires synchronously inside libdave.
+
+	Do not call this once the session has a group: libdave then derives the fingerprint on a thread of its own and
+	calls back from it, and Zune panics when an FFI callback runs off the main thread. Without a group, or on any
+	other error, libdave answers at once with an empty fingerprint.
 ]=]
 function Session.Prototype.getPairwiseFingerprint(self: Session, version: number, userId: string): string?
+	local handle = assert(self.handle, "Session has been destroyed")
 	local types = stdPolyfills.ffi.getTypes()
 	local captured: string? = nil
 	local fingerprintClosure = stdPolyfills.ffi.closure({
 		returns = types.void,
 		args = { types.pointer, types.u64, types.pointer },
 	}, function(fingerprintPointer: FFIPointer, lengthValue: any, _userData: any)
-		captured = Buffer.bufferToHex(Buffer.readPointerBytes(fingerprintPointer, lengthValue))
+		local succeeded, failure = pcall(function()
+			captured = Buffer.bufferToHex(Buffer.readPointerBytes(fingerprintPointer, lengthValue))
+		end)
+
+		if not succeeded then
+			log:warn(`pairwise fingerprint could not be read: {failure}`)
+		end
 
 		return
 	end)
 	local userIdPointer = Buffer.toCString(userId)
 	local nullPointer = stdPolyfills.ffi.getNull()
 
-	Sys.lib.daveSessionGetPairwiseFingerprint(self.handle, version, userIdPointer, fingerprintClosure, nullPointer)
+	Sys.lib.daveSessionGetPairwiseFingerprint(handle, version, userIdPointer, fingerprintClosure, nullPointer)
 
 	stdPolyfills.ffi.free(userIdPointer)
 
@@ -343,7 +372,13 @@ end
 	not be used after this call.
 ]=]
 function Session.Prototype.destroy(self: Session)
-	Sys.lib.daveSessionDestroy(self.handle)
+	local handle = self.handle
+
+	self.handle = nil
+
+	if handle then
+		Sys.lib.daveSessionDestroy(handle)
+	end
 end
 
 --[=[
@@ -361,15 +396,19 @@ function Session.Interface.new(authSessionId: string, onMlsFailure: ((source: st
 	local mlsFailureClosure = makeForwarderClosure(callbackRef)
 	local authSessionIdPointer = Buffer.toCString(authSessionId)
 	local nullPointer = stdPolyfills.ffi.getNull()
-	local handle = Sys.lib.daveSessionCreate(nullPointer, authSessionIdPointer, mlsFailureClosure, nullPointer)
+	local handle = Buffer.adopt(
+		Sys.lib.daveSessionCreate(nullPointer, authSessionIdPointer, mlsFailureClosure, nullPointer),
+		Sys.pointers.sessionHandle
+	)
 
+	stdPolyfills.ffi.free(authSessionIdPointer)
+	assert(handle, "daveSessionCreate returned NULL")
 	-- libdave leaves a new session's protocol version uninitialised until Init or Reset, so reset it to 0 here.
 	Sys.lib.daveSessionReset(handle)
-	stdPolyfills.ffi.free(authSessionIdPointer)
 
 	return setmetatable(
 		{
-			handle = handle,
+			handle = handle :: Sys.SessionHandle?,
 			mlsFailureClosure = mlsFailureClosure,
 			mlsFailureCallbackRef = callbackRef,
 		} :: Session,
@@ -378,7 +417,7 @@ function Session.Interface.new(authSessionId: string, onMlsFailure: ((source: st
 end
 
 export type Session = typeof(Session.Prototype) & {
-	handle: Sys.SessionHandle,
+	handle: Sys.SessionHandle?,
 	mlsFailureClosure: FFIPointer,
 	mlsFailureCallbackRef: { current: ((source: string, reason: string) -> ())? },
 }

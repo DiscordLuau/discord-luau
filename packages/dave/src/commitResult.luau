@@ -51,9 +51,9 @@ end
 --[=[
 	@within Dave.CommitResult
 
-	Returns the user IDs of every member in the group roster after the commit was applied,
-	as a list of decimal snowflake strings. An empty list means no members remain (the
-	group was torn down).
+	Returns the user IDs whose keys this commit added, changed or removed, as decimal snowflake strings. This is a
+	change set against the session's previous roster, not the whole roster: members whose keys did not change are not
+	listed. A removed member's `getRosterMemberSignature` is empty. Empty for a failed or ignored commit.
 ]=]
 function CommitResult.Prototype.getRosterMemberIds(self: CommitResult): { string }
 	local pointerSlot = Buffer.allocateSlot()
@@ -75,6 +75,9 @@ end
 	Returns the MLS credential signature for the roster member identified by `rosterId`
 	(a decimal snowflake string). The signature bytes can be used to verify that the
 	member's key package was signed by a trusted identity key.
+
+	Empty for a member this commit removed. Pass only an id from this result's `getRosterMemberIds`: libdave aborts
+	the process for any other.
 ]=]
 function CommitResult.Prototype.getRosterMemberSignature(self: CommitResult, rosterId: string): buffer
 	local rosterIdBuffer = Buffer.u64StringToBuffer(rosterId)

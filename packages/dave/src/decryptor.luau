@@ -21,32 +21,14 @@
 ]=]
 
 --[=[
-	@prop handle Sys.DecryptorHandle
+	@prop handle Sys.DecryptorHandle?
 	@within Dave.Decryptor
 ]=]
 
 local stdPolyfills = require("../luau_packages/std_polyfills")
-local Logger = require("../luau_packages/logger")
 local Sys = require("./sys")
 local Buffer = require("./buffer")
 local KeyRatchet = require("./keyRatchet")
-
-local logger = Logger.new("Dave.Decryptor")
-
-local Decryptor = {}
-
-Decryptor.Interface = {}
-Decryptor.Prototype = {}
-
-export type DecryptorStats = {
-	passthroughCount: number,
-	decryptSuccessCount: number,
-	decryptFailureCount: number,
-	decryptDuration: number,
-	decryptAttempts: number,
-	decryptMissingKeyCount: number,
-	decryptInvalidNonceCount: number,
-}
 
 local decryptorResultMessages = {
 	[Sys.decryptorResultCode.decryptionFailure] = "decryption failure",
@@ -54,6 +36,11 @@ local decryptorResultMessages = {
 	[Sys.decryptorResultCode.invalidNonce] = "invalid nonce",
 	[Sys.decryptorResultCode.missingCryptor] = "missing cryptor",
 }
+
+local Decryptor = {}
+
+Decryptor.Interface = {}
+Decryptor.Prototype = {}
 
 --[=[
 	@within Dave.Decryptor
@@ -64,7 +51,9 @@ local decryptorResultMessages = {
 	Obtain a ratchet from `Session:getKeyRatchet(remoteUserId)`.
 ]=]
 function Decryptor.Prototype.transitionToKeyRatchet(self: Decryptor, keyRatchet: KeyRatchet.KeyRatchet)
-	Sys.lib.daveDecryptorTransitionToKeyRatchet(self.handle, keyRatchet.handle)
+	local handle = assert(self.handle, "Decryptor has been destroyed")
+
+	Sys.lib.daveDecryptorTransitionToKeyRatchet(handle, keyRatchet.handle)
 end
 
 --[=[
@@ -75,7 +64,9 @@ end
 	while the MLS group is not yet established.
 ]=]
 function Decryptor.Prototype.transitionToPassthroughMode(self: Decryptor, enabled: boolean)
-	Sys.lib.daveDecryptorTransitionToPassthroughMode(self.handle, if enabled then 1 else 0)
+	local handle = assert(self.handle, "Decryptor has been destroyed")
+
+	Sys.lib.daveDecryptorTransitionToPassthroughMode(handle, if enabled then 1 else 0)
 end
 
 --[=[
@@ -90,25 +81,27 @@ function Decryptor.Prototype.getMaxPlaintextByteSize(
 	mediaType: number,
 	encryptedFrameSize: number
 ): number
-	return Buffer.readRawU64(Sys.lib.daveDecryptorGetMaxPlaintextByteSize(self.handle, mediaType, encryptedFrameSize))
+	local handle = assert(self.handle, "Decryptor has been destroyed")
+
+	return Buffer.readRawU64(Sys.lib.daveDecryptorGetMaxPlaintextByteSize(handle, mediaType, encryptedFrameSize))
 end
 
 --[=[
 	@within Dave.Decryptor
 
-	Decrypts `encryptedFrame` and returns the plaintext as a new buffer. Logs an error
-	and halts the calling coroutine on any non-success result code (missing ratchet,
-	invalid nonce, etc.).
+	Decrypts `encryptedFrame` and returns the plaintext as a new buffer. Raises an error
+	naming the result code on any non-success result (missing ratchet, invalid nonce,
+	etc.), so a caller that expects failures during key transitions can `pcall` it.
 ]=]
 function Decryptor.Prototype.decrypt(self: Decryptor, mediaType: number, encryptedFrame: buffer): buffer
+	local handle = assert(self.handle, "Decryptor has been destroyed")
 	local encryptedFrameSize = buffer.len(encryptedFrame)
 	local maxOutputSize = self:getMaxPlaintextByteSize(mediaType, encryptedFrameSize)
 	local outputPointer = stdPolyfills.ffi.alloc(maxOutputSize, 1)
 	local encryptedFramePointer = stdPolyfills.ffi.dupe(encryptedFrame)
 	local bytesWrittenSlot = Buffer.allocateSlot()
-
 	local resultCode = Sys.lib.daveDecryptorDecrypt(
-		self.handle,
+		handle,
 		mediaType,
 		encryptedFramePointer,
 		encryptedFrameSize,
@@ -123,7 +116,7 @@ function Decryptor.Prototype.decrypt(self: Decryptor, mediaType: number, encrypt
 		stdPolyfills.ffi.free(outputPointer)
 		stdPolyfills.ffi.free(bytesWrittenSlot)
 
-		logger:error(decryptorResultMessages[resultCode] or `unknown error (code {resultCode})`)
+		error(`DAVE decrypt failed: {decryptorResultMessages[resultCode] or `unknown error (code {resultCode})`}`, 2)
 	end
 
 	local bytesWritten = Buffer.readSizeT(bytesWrittenSlot)
@@ -146,11 +139,12 @@ end
 	since the decryptor was created. `mediaType` should be a value from `Dave.sys.mediaType`.
 ]=]
 function Decryptor.Prototype.getStats(self: Decryptor, mediaType: number): DecryptorStats
+	local handle = assert(self.handle, "Decryptor has been destroyed")
 	local structType = Sys.structs.decryptorStats
 	local statsBuffer = structType:new({})
 	local statsPointer = stdPolyfills.ffi.dupe(statsBuffer)
 
-	Sys.lib.daveDecryptorGetStats(self.handle, mediaType, statsPointer)
+	Sys.lib.daveDecryptorGetStats(handle, mediaType, statsPointer)
 
 	local result: DecryptorStats = {
 		passthroughCount = Buffer.readU64AtOffset(statsPointer, structType:offset("passthroughCount")),
@@ -174,7 +168,13 @@ end
 	not be used after this call.
 ]=]
 function Decryptor.Prototype.destroy(self: Decryptor)
-	Sys.lib.daveDecryptorDestroy(self.handle)
+	local handle = self.handle
+
+	self.handle = nil
+
+	if handle then
+		Sys.lib.daveDecryptorDestroy(handle)
+	end
 end
 
 --[=[
@@ -183,12 +183,25 @@ end
 	Constructs a new Decryptor.
 ]=]
 function Decryptor.Interface.new(): Decryptor
-	local handle = Sys.lib.daveDecryptorCreate()
-	return setmetatable({ handle = handle } :: Decryptor, { __index = Decryptor.Prototype })
+	local handle = Buffer.adopt(Sys.lib.daveDecryptorCreate(), Sys.pointers.decryptorHandle)
+
+	assert(handle, "daveDecryptorCreate returned NULL")
+
+	return setmetatable({ handle = handle :: Sys.DecryptorHandle? } :: Decryptor, { __index = Decryptor.Prototype })
 end
 
+export type DecryptorStats = {
+	passthroughCount: number,
+	decryptSuccessCount: number,
+	decryptFailureCount: number,
+	decryptDuration: number,
+	decryptAttempts: number,
+	decryptMissingKeyCount: number,
+	decryptInvalidNonceCount: number,
+}
+
 export type Decryptor = typeof(Decryptor.Prototype) & {
-	handle: Sys.DecryptorHandle,
+	handle: Sys.DecryptorHandle?,
 }
 
 return Decryptor.Interface
