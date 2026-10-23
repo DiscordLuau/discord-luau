@@ -1,6 +1,8 @@
 local stdFs = require("@std/fs")
 local luteTask = require("@std/task")
 
+local io = require("./io")
+
 local fileSystem = {}
 
 function fileSystem.readFile(path: string): string
@@ -60,22 +62,30 @@ end
 
 function fileSystem.watch(path: string, callback: (path: string, events: { string }) -> ()): { stop: () -> () }
 	local stopped = false
+	local reportedReadFailure = false
 	local snapshots: { [string]: number } = {}
 
 	local function snapshot(): { [string]: number }?
 		local ok, entries = pcall(stdFs.listDirectory, path)
 
 		if not ok then
+			if not reportedReadFailure then
+				reportedReadFailure = true
+				io.stderrWrite(`fileSystem.watch: could not read '{path}': {entries}\n`)
+			end
+
 			return nil
 		end
+
+		reportedReadFailure = false
 
 		local current: { [string]: number } = {}
 
 		for _, entry in entries do
 			local entryPath = path .. "/" .. entry.name
-			local meta = stdFs.metadata(entryPath)
+			local metadataOk, meta = pcall(stdFs.metadata, entryPath)
 
-			if meta and (meta :: any).modified then
+			if metadataOk and meta and (meta :: any).modified then
 				current[entry.name] = tonumber(tostring((meta :: any).modified)) or 0
 			else
 				current[entry.name] = 0
@@ -83,6 +93,12 @@ function fileSystem.watch(path: string, callback: (path: string, events: { strin
 		end
 
 		return current
+	end
+
+	local function notify(entryPath: string, events: { string })
+		luteTask.spawn(function()
+			callback(entryPath, events)
+		end)
 	end
 
 	local initial = snapshot()
@@ -109,15 +125,15 @@ function fileSystem.watch(path: string, callback: (path: string, events: { strin
 				local prev = snapshots[name]
 
 				if not prev then
-					callback(path .. "/" .. name, { "create" })
+					notify(path .. "/" .. name, { "create" })
 				elseif modifiedAt ~= prev then
-					callback(path .. "/" .. name, { "change" })
+					notify(path .. "/" .. name, { "change" })
 				end
 			end
 
 			for name in snapshots do
 				if not current[name] then
-					callback(path .. "/" .. name, { "remove" })
+					notify(path .. "/" .. name, { "remove" })
 				end
 			end
 
