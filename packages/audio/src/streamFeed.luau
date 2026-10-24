@@ -851,8 +851,6 @@ function StreamFeed.Prototype.pumpChunks(self: StreamFeed)
 		end
 	end
 
-	print(`[trace {string.format("%.3f", os.clock())}] pump loop ended: stopping={self.stopping} failed={self.pendingFailure ~= nil} producerEnded={self.producerEnded}`)
-
 	if self.fallingBack and not self.stopping and not self.pendingFailure then
 		self:runFallback()
 	end
@@ -1153,7 +1151,6 @@ end
 	message.
 ]=]
 function StreamFeed.Prototype.endInput(self: StreamFeed)
-	print(`[trace {string.format("%.3f", os.clock())}] feed endInput`)
 	self.producerEnded = true
 
 	if self.streamBytes == 0 then
