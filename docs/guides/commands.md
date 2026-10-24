@@ -12,10 +12,10 @@ This guide covers registering a global slash command and responding to it when a
 Use `builders.interaction.interaction` to describe the command before registering it.
 
 ```lua
-local discord  = require("@self/../luau_packages/discord")
-local classes  = require("@self/../luau_packages/classes")
+local discord = require("@self/../luau_packages/discord")
+local classes = require("@self/../luau_packages/classes")
 local builders = require("@self/../luau_packages/builders")
-local env      = require("@self/../.env")
+local env = require("@self/../.env")
 
 local pingCommand = builders.interaction.interaction.new()
     :setName("ping")
@@ -128,10 +128,10 @@ end)
 <summary>Full script</summary>
 
 ```lua
-local discord  = require("@self/../luau_packages/discord")
-local classes  = require("@self/../luau_packages/classes")
+local discord = require("@self/../luau_packages/discord")
+local classes = require("@self/../luau_packages/classes")
 local builders = require("@self/../luau_packages/builders")
-local env      = require("@self/../.env")
+local env = require("@self/../.env")
 
 local pingCommand = builders.interaction.interaction.new()
     :setName("ping")

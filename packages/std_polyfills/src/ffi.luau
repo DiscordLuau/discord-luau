@@ -121,7 +121,7 @@ end
 	```lua
 	local lib = ffi.dlopen("/usr/lib/libfoo.so", {
 	    fooInit = { returns = ffi.getTypes().void, args = {} },
-	    fooAdd  = { returns = ffi.getTypes().i32, args = { ffi.getTypes().i32, ffi.getTypes().i32 } },
+	    fooAdd = { returns = ffi.getTypes().i32, args = { ffi.getTypes().i32, ffi.getTypes().i32 } },
 	})
 	lib.fooInit()
 	print(lib.fooAdd(1, 2))

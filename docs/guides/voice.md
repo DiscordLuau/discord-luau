@@ -21,9 +21,9 @@ pesde add discord_luau/opus
 Call `channel:joinAsync()` on a voice channel. It resolves with the voice connection once it is ready.
 
 ```lua
-local discord  = require("@self/../luau_packages/discord")
+local discord = require("@self/../luau_packages/discord")
 local builders = require("@self/../luau_packages/builders")
-local env      = require("@self/../.env")
+local env = require("@self/../.env")
 
 local bot = discord.bot.new({
     token = env.DISCORD_BOT_TOKEN,

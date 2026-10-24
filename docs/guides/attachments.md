@@ -16,10 +16,10 @@ This guide uses the `onMessage` event. To match on `message.content` in your han
 Call `:addAttachment(content, name)` on a `builders.message.message` object, where `content` is the raw file data as a string and `name` is the filename that will appear in Discord.
 
 ```lua
-local discord  = require("@self/../luau_packages/discord")
-local classes  = require("@self/../luau_packages/classes")
+local discord = require("@self/../luau_packages/discord")
+local classes = require("@self/../luau_packages/classes")
 local builders = require("@self/../luau_packages/builders")
-local env      = require("@self/../.env")
+local env = require("@self/../.env")
 
 local bot = discord.bot.new({
     token = env.DISCORD_BOT_TOKEN,
@@ -80,10 +80,10 @@ The `content` argument to `:addAttachment()` is always a plain Luau string. For 
 <summary>Full script</summary>
 
 ```lua
-local discord  = require("@self/../luau_packages/discord")
-local classes  = require("@self/../luau_packages/classes")
+local discord = require("@self/../luau_packages/discord")
+local classes = require("@self/../luau_packages/classes")
 local builders = require("@self/../luau_packages/builders")
-local env      = require("@self/../.env")
+local env = require("@self/../.env")
 
 local bot = discord.bot.new({
     token = env.DISCORD_BOT_TOKEN,

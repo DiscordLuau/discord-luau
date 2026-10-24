@@ -22,10 +22,10 @@ For downloading and streaming, install [yt-dlp](https://github.com/yt-dlp/yt-dlp
 Join the channel, make a player, and play the file:
 
 ```lua
-local discord  = require("@self/../luau_packages/discord")
+local discord = require("@self/../luau_packages/discord")
 local builders = require("@self/../luau_packages/builders")
-local audio    = require("@self/../luau_packages/audio")
-local env      = require("@self/../.env")
+local audio = require("@self/../luau_packages/audio")
+local env = require("@self/../.env")
 
 local bot = discord.bot.new({
     token = env.DISCORD_BOT_TOKEN,

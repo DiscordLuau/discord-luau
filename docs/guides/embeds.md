@@ -57,10 +57,10 @@ local embed = builders.embed.embed.new()
 Attach the built embed to a `builders.message.message` using `:addEmbed()`, then reply to the incoming message.
 
 ```lua
-local discord  = require("@self/../luau_packages/discord")
-local classes  = require("@self/../luau_packages/classes")
+local discord = require("@self/../luau_packages/discord")
+local classes = require("@self/../luau_packages/classes")
 local builders = require("@self/../luau_packages/builders")
-local env      = require("@self/../.env")
+local env = require("@self/../.env")
 
 local bot = discord.bot.new({
     token = env.DISCORD_BOT_TOKEN,
@@ -114,10 +114,10 @@ Colors are plain integers. You can write hex literals directly in Luau:
 <summary>Full script</summary>
 
 ```lua
-local discord  = require("@self/../luau_packages/discord")
-local classes  = require("@self/../luau_packages/classes")
+local discord = require("@self/../luau_packages/discord")
+local classes = require("@self/../luau_packages/classes")
 local builders = require("@self/../luau_packages/builders")
-local env      = require("@self/../.env")
+local env = require("@self/../.env")
 
 local bot = discord.bot.new({
     token = env.DISCORD_BOT_TOKEN,
