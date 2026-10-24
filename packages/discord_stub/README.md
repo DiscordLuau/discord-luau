@@ -43,3 +43,5 @@ Contributions are welcome via the repository at [github.com/DiscordLuau/discord-
 ## License
 
 This package is licensed under the MIT License.
+
+`discord_stub` is an independent implementation built from Discord's public developer documentation. It is not affiliated with or endorsed by Discord, and it ships no Discord marks or logos. Use it only as a local test double.
