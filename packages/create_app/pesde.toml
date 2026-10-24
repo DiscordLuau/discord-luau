@@ -1,5 +1,5 @@
 name = "discord_luau/create_app"
-version = "0.0.6"
+version = "0.0.7"
 description = "DiscordLuau - Create App, an interactive command-line tool to scaffold a new Discord bot project in Luau."
 license = "MIT"
 authors = ["Async Matrix <hi@asyncmatrix.dev>"]

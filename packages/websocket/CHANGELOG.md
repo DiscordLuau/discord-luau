@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.0.5
+
 ### Fixed
 
 - The first heartbeat waits `heartbeat_interval * jitter` after Hello, as Discord documents, instead of up to one second, while Identify or Resume goes out on Hello rather than after the first heartbeat ACK; the new `heartbeatJitter` field (default `math.random`) pins the jitter in tests, and a first heartbeat skipped for a replaced socket is logged at debug

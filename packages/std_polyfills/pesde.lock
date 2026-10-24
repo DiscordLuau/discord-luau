@@ -2,5 +2,5 @@
 # It is not intended for manual editing.
 format = 2
 name = "discord_luau/std_polyfills"
-version = "0.0.4"
+version = "0.0.5"
 target = "luau"

@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.0.5
+
 ### Fixed
 
 - A 429 response whose body cannot be decoded now fails with the decode error and the body in the message

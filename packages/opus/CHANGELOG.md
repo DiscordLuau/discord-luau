@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.0.5
+
 ### Added
 
 - `Opus.checkBitrate(bitsPerSecond)` raises unless the bitrate is a whole number from 500 to 510000

@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.0.7
+
 ### Added
 
 - Voice channel objects forward `onMediaReady`, which fires when audio can flow on the guild's voice connection (with DAVE, after `onReady`); the `onDaveEpochTransition` docs say what its number counts

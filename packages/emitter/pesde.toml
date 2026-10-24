@@ -1,5 +1,5 @@
 name = "discord_luau/emitter"
-version = "0.0.3"
+version = "0.0.4"
 description = "Discord-Luau Emitter - A signal-like alternative for luau"
 license = "MIT"
 authors = ["Async Matrix <hi@asyncmatrix.dev>"]

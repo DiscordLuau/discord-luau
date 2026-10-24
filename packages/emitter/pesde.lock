@@ -2,7 +2,7 @@
 # It is not intended for manual editing.
 format = 2
 name = "discord_luau/emitter"
-version = "0.0.3"
+version = "0.0.4"
 target = "luau"
 
 [graph."discord_luau/logger@0.0.4 luau"]

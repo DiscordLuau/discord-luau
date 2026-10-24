@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.0.6
+
 ### Fixed
 
 - `Bot:connectAsync` resolves Err when the gateway information request fails, instead of never resolving after an emergency log

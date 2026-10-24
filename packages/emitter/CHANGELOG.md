@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.0.4
+
 ### Fixed
 
 - An event invoked from a thread that a listener itself resumed is no longer dropped silently; it is handled in a new thread like any event that arrives while the listener is busy

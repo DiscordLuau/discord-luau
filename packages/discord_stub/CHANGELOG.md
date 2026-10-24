@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.0.2
+
 ### Fixed
 
 - On Windows, the UDP server keeps receiving after a send to a client that has gone. Windows reports it as `ConnectionResetByPeer` on the next receive, which ended the receive loop and failed the scenario with that error

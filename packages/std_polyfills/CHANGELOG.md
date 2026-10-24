@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.0.5
+
 ### Added
 
 - `process.spawn(command, arguments)` starts a program without a shell and returns `read`, `wait`, `exited`, `kill`, `errorTail` and `errorEnded`, which turns true once stderr is read to its end (or its reader stopped after a kill or failed). At the end of stderr, `errorTail` holds its last line; after a kill, only what was read so far. `kill` never waits for the exit: it closes the program's stdout and stderr, so a program blocked on writing them exits even if it ignores SIGTERM, and stops it in the background. Only Zune has it; other runtimes raise `process.spawn is not supported on this runtime`

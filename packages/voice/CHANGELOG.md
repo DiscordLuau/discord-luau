@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.0.4
+
 ### Added
 
 - `DaveManager:hasPendingDowngrade()` says whether a transition to DAVE protocol version 0 is prepared and not executed yet

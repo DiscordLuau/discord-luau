@@ -1,5 +1,5 @@
 name = "discord_luau/commands"
-version = "0.0.3"
+version = "0.0.4"
 description = "Discord-Luau Commands - A commands framework for discord-luau."
 license = "MIT"
 authors = ["Async Matrix <hi@asyncmatrix.dev>"]

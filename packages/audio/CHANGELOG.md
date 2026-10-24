@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.0.2
+
 ### Added
 
 - `options.bitrate` on `audio.fromPCM`, `audio.fromFile`, `audio.fromEncoded` and the named sources sets the Opus bitrate (128000 by default, a whole number from 500 to 510000), checked at the call with `opus.checkBitrate`. Every encoder a source creates now also gets the `"music"` signal hint, and sources hold `bitrate`. The default raises PCM sources from the encoder's automatic bitrate, about 98 kbps for noisy music, to 128 kbps
