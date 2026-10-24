@@ -99,15 +99,16 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      # Both actions key their cache by OS alone, so the Intel and ARM runners would restore each other's binaries.
       - name: Install pesde
         uses: lumin-org/setup-pesde@v0.4.1
         with:
-          cache: true
+          cache: ${{ runner.os != 'macOS' }}
           version: v0.7.4+registry.0.2.3
       - name: Install tooling
         uses: CompeyDev/setup-rokit@v0.2.1
         with:
-          cache: true
+          cache: ${{ runner.os != 'macOS' }}
       - name: Install dependencies
         run: pesde install
       - name: Seed native libraries from this checkout
