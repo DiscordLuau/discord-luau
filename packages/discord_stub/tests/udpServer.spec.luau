@@ -2,6 +2,10 @@ local frktest = require("../../../luau_packages/frktest")
 
 local discordStub = require("../src/init")
 
+local UNSET_ADDRESS: NetworkAddress = { family = 0, port = 0, address = "::" }
+local CLIENT_ADDRESS: NetworkAddress = { family = 2, port = 50000, address = "127.0.0.1" }
+local KEEPALIVE_SIZE = 5
+
 local test = frktest.test
 local check = frktest.assert.check
 
@@ -36,6 +40,51 @@ local function discoveryRequest(ssrc: number): buffer
 
 	return request
 end
+
+local function keepalivePacket(): buffer
+	local packet = buffer.create(KEEPALIVE_SIZE)
+
+	buffer.writeu8(packet, 0, 0xC9)
+	buffer.writeu8(packet, 4, 7)
+
+	return packet
+end
+
+--[=[
+	Runs the server's receive loop over a socket that hands out `receives` in order, then ends the loop the way `stop`
+	does, and returns every datagram the server sent. A real socket cannot receive a Windows-only report on demand.
+]=]
+local function runScriptedReceives(
+	udp: discordStub.UdpServer,
+	receives: { () -> (NetworkAddress, buffer) }
+): { SentDatagram }
+	local realSocket = udp.socket :: NetworkSocket
+	local sent: { SentDatagram } = {}
+	local scripted = {}
+
+	function scripted.recvMsg(_socket: any, _maxSize: number?): (NetworkAddress, buffer)
+		local receive = table.remove(receives, 1)
+
+		if not receive then
+			udp.socket = nil
+			error("Canceled", 0)
+		end
+
+		return receive()
+	end
+
+	function scripted.sendMsg(_socket: any, port: number, address: string, data: buffer)
+		table.insert(sent, { address = address, port = port, length = buffer.len(data) })
+	end
+
+	udp.socket = scripted :: any
+	realSocket:close()
+	udp:receiveLoop(scripted :: any)
+
+	return sent
+end
+
+type SentDatagram = { address: string, port: number, length: number }
 
 return function()
 	test.suite("discord_stub udp server", function()
@@ -195,6 +244,39 @@ return function()
 			client:close()
 			udp:stop()
 			stub:stop()
+		end)
+
+		test.case("a ConnectionResetByPeer receive, Windows' report of a client that has gone, is skipped", function()
+			local udp = discordStub.UdpServer.new()
+			local sent = runScriptedReceives(udp, {
+				function(): (NetworkAddress, buffer)
+					error("ConnectionResetByPeer", 0)
+				end,
+				function()
+					return CLIENT_ADDRESS, keepalivePacket()
+				end,
+			})
+
+			check.table.equal(udp.errors, {})
+			check.table.equal(sent, { { address = "127.0.0.1", port = 50000, length = KEEPALIVE_SIZE } })
+			check.is_false(udp.receiving)
+		end)
+
+		test.case("an empty datagram from no address, which Zune on Windows can return, is skipped", function()
+			local udp = discordStub.UdpServer.new()
+			local sent = runScriptedReceives(udp, {
+				function()
+					return UNSET_ADDRESS, buffer.create(0)
+				end,
+				function()
+					return CLIENT_ADDRESS, keepalivePacket()
+				end,
+			})
+
+			check.table.equal(udp.errors, {})
+			check.table.equal(sent, { { address = "127.0.0.1", port = 50000, length = KEEPALIVE_SIZE } })
+			check.equal(udp.clientAddress, "127.0.0.1")
+			check.equal(udp.clientPort, 50000)
 		end)
 	end)
 end

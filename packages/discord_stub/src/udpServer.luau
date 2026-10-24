@@ -46,7 +46,8 @@
 --[=[
 	@prop errors { string }
 	@within DiscordStub.UdpServer
-	Every error the receive loop raised, other than the cancelled receive that `stop` causes.
+	Every error the receive loop raised, other than the cancelled receive that `stop` causes and Windows' report of a
+	client that has gone.
 ]=]
 
 --[=[
@@ -71,6 +72,7 @@ local DISCOVERY_ADDRESS_OFFSET = 8
 local DISCOVERY_ADDRESS_SIZE = 64
 local DISCOVERY_PORT_OFFSET = 72
 local RTP_VERSION = 2
+local UNREACHABLE_CLIENT_ERROR = "ConnectionResetByPeer"
 
 local UdpServer = {}
 
@@ -154,13 +156,24 @@ end
 	@private
 
 	Receives packets until `stop` replaces the socket. A receive error while the server still runs ends the loop and
-	lands in `errors`; an error answering one packet lands in `errors` and the loop carries on.
+	lands in `errors`; an error answering one packet lands in `errors` and the loop carries on. Windows' report of a
+	client that has gone (`ConnectionResetByPeer`) and an empty datagram are skipped.
 ]=]
 function UdpServer.Prototype.receiveLoop(self: UdpServer, socket: NetworkSocket)
 	self.receiving = true
 
 	while self.socket == socket do
 		local received, address, packet = pcall(socket.recvMsg, socket, MAX_PACKET_SIZE)
+
+		-- On Windows a send to a client that has gone fails the next receive with this error. Zune 0.5.9 on Windows can
+		-- also complete a receive with an empty datagram from no address, which has nothing to answer.
+		if not received and tostring(address) == UNREACHABLE_CLIENT_ERROR then
+			continue
+		end
+
+		if received and buffer.len(packet) == 0 then
+			continue
+		end
 
 		if not received then
 			if self.socket == socket then
