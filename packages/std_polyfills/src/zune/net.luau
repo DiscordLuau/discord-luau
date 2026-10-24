@@ -80,9 +80,14 @@ function net.socket(url: string)
 
 		waitingThread = nil
 
-		-- A waiting thread can be closed by its owner (a voice transport tearing down) before the socket wakes it.
+		-- The owner can close a waiting thread (a voice transport tearing down) before the socket wakes it, or after the
+		-- wake is queued but before it runs. Zune still resumes a closed thread it deferred, so both are checked.
 		if thread and coroutine.status(thread) == "suspended" then
-			zuneTask.defer(thread)
+			zuneTask.defer(function()
+				if coroutine.status(thread) == "suspended" then
+					zuneTask.spawn(thread)
+				end
+			end)
 		end
 	end
 

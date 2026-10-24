@@ -28,6 +28,35 @@ return function()
 			check.equal(resumeErrorAt, nil)
 		end)
 
+		test.case("a waiting thread closed after a message woke it, but before the wake ran, is not resumed", function()
+			local server = zune.net.http.serve({
+				port = 0,
+				address = "127.0.0.1",
+				request = function()
+					return { status_code = 404, body = "" }
+				end,
+				websocket = {
+					upgrade = function()
+						return true
+					end,
+					message = function(socket)
+						socket:send(TEXT_FRAME)
+					end,
+				},
+			})
+			local result = stdPolyfills.process.run(
+				"zune",
+				{ "run", "packages/std_polyfills/tests/socketWakeRace.luau", tostring(server:getPort()) }
+			)
+			local output = `{result.stdout}\n{result.stderr}`
+
+			server:stop()
+
+			check.not_nil((string.find(output, "race staged: true", 1, true)))
+			check.not_nil((string.find(output, "socket wake race finished", 1, true)))
+			check.equal(string.find(output, "cannot resume", 1, true), nil)
+		end)
+
 		test.case("nextMessage says which frames were binary, and next still returns only the text", function()
 			local server = zune.net.http.serve({
 				port = 0,

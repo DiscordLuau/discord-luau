@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - On Roblox, a WebStream signal no longer defers a waiting thread its owner already closed, and a socket `Error` after open is raised from `next()` instead of reading as a clean close
 - On Lute, a socket `onerror` is raised from `next()`, and a failed `@lute/net/client` load keeps its cause in the message
 - On Lune and Lute, `fileSystem.watch` reports an unreadable directory once on stderr, skips an entry whose metadata fails, and runs the callback in its own thread so a throwing callback no longer ends watching
+- On Zune, a socket no longer resumes a waiting thread that its owner closed after a message queued the wake but before the wake ran. Zune resumes a closed thread it deferred and printed "cannot resume dead coroutine"
 - On Zune, native memory freed through `ffi.free` goes back to a pool that `ffi.alloc` and `ffi.dupe` reuse (zeroed) instead of returning to the system allocator. Zune leaves a freed pointer object cached by address until it is garbage collected, so a native library that received that address from `malloc` (a new libopus decoder or libdave session) got the dead object and failed with "unavailable address" at random. Freeing a pooled block twice raises "Double free"
 - On Zune, closing a WebSocket whose waiting thread was already closed (as a voice connection does when it tears down) no longer raises "cannot resume non-suspended coroutine"
 - On Zune, a block reused from the FFI pool no longer keeps a tag set on it before it was freed
