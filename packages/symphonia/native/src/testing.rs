@@ -12,7 +12,6 @@ use crate::decoder::Decoder;
 use crate::demuxer::Demuxer;
 use crate::error::Error;
 use crate::ffi::{self, TextBuffer};
-use crate::fields::State;
 use crate::guard::lock;
 use crate::handle::Handle;
 use crate::opus::OpusHead;
@@ -132,14 +131,6 @@ pub fn resampled_frames(resampler: &StereoResampler) -> u64 {
 
 pub fn expected_frames(resampler: &StereoResampler) -> u64 {
     resampler.expected_frames()
-}
-
-pub fn stream_state(stream: &StreamSession) -> State {
-    stream.state()
-}
-
-pub fn stream_failure(stream: &StreamSession) -> Option<Error> {
-    stream.failure()
 }
 
 pub fn output_closed(stream: &StreamSession) -> (bool, bool) {

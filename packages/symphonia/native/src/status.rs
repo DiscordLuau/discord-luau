@@ -37,11 +37,7 @@ impl Status {
     }
 
     pub(crate) fn describe(&self, field: DescribeField) -> Cow<'static, str> {
-        match field {
-            DescribeField::Codec => Cow::Borrowed(self.codec_name),
-            DescribeField::Container => Cow::Borrowed(self.container_name),
-            DescribeField::Failure => self.failure.as_ref().map_or(Cow::Borrowed(""), |error| error.to_string().into()),
-        }
+        field.describe(self.codec_name, self.container_name, self.failure.as_ref())
     }
 
     pub(crate) fn failure(&self) -> Option<&Error> {

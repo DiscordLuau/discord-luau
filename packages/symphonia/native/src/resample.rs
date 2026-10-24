@@ -128,13 +128,9 @@ fn process(
     scratch: &mut [f32],
 ) -> Result<usize, Error> {
     let capacity = scratch.len() / OUTPUT_CHANNELS;
-    let input = InterleavedSlice::new(input, OUTPUT_CHANNELS, input.len() / OUTPUT_CHANNELS)
-        .map_err(|failure| Error::ResampleFailed(failure.to_string()))?;
-    let mut output = InterleavedSlice::new_mut(scratch, OUTPUT_CHANNELS, capacity)
-        .map_err(|failure| Error::ResampleFailed(failure.to_string()))?;
-    let (_, produced) = fft
-        .process_into_buffer(&input, &mut output, indexing)
-        .map_err(|failure| Error::ResampleFailed(failure.to_string()))?;
+    let input = InterleavedSlice::new(input, OUTPUT_CHANNELS, input.len() / OUTPUT_CHANNELS)?;
+    let mut output = InterleavedSlice::new_mut(scratch, OUTPUT_CHANNELS, capacity)?;
+    let (_, produced) = fft.process_into_buffer(&input, &mut output, indexing)?;
 
     Ok(produced)
 }

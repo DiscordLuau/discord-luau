@@ -15,8 +15,7 @@ use std::time::{Duration, Instant};
 
 use symphonia::core::io::{MediaSourceStream, MediaSourceStreamOptions, ReadBytes, ReadOnlySource};
 use discord_luau_symphonia::testing::{
-    BLOCK_FRAMES, INPUT_CHUNKS, OUTPUT_BLOCKS, PANIC, blocks_sent, chunk_reader, output_closed, stream_failure,
-    stream_state,
+    BLOCK_FRAMES, INPUT_CHUNKS, OUTPUT_BLOCKS, PANIC, blocks_sent, chunk_reader, output_closed,
 };
 use discord_luau_symphonia::{
     Error, FULL, Handle, InfoField, NOT_READY, PushOutcome, State, StreamSession, symphonia_describe,
@@ -453,10 +452,10 @@ fn a_failure_reports_the_skipped_packets_it_ended_on() {
 
     assert_eq!(session.push(corrupted_adpcm_wav(10_002, 0..10_001)), PushOutcome::Queued);
     session.finish();
-    wait_until("the stream fails", WAIT, || stream_state(&session) == State::Failed);
+    wait_until("the stream fails", WAIT, || session.state() == State::Failed);
 
     assert_eq!(
-        stream_failure(&session).map(|failure| failure.to_string()).as_deref(),
+        session.failure().map(|failure| failure.to_string()).as_deref(),
         Some("the audio has more than 10000 undecodable packets in a row")
     );
     assert_eq!(session.info().map(|info| info.skipped_packets), Some(10_001));

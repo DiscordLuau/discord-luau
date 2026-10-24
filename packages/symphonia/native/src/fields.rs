@@ -1,3 +1,6 @@
+use std::borrow::Cow;
+
+use crate::error::Error;
 use crate::ffi::saturate_to_i32;
 use crate::session::Info;
 
@@ -67,5 +70,18 @@ impl DescribeField {
 
     pub fn from_number(number: i32) -> Option<Self> {
         usize::try_from(number).ok().and_then(|index| Self::ALL.get(index).copied())
+    }
+
+    pub(crate) fn describe(
+        self,
+        codec_name: &'static str,
+        container_name: &'static str,
+        failure: Option<&Error>,
+    ) -> Cow<'static, str> {
+        match self {
+            Self::Codec => Cow::Borrowed(codec_name),
+            Self::Container => Cow::Borrowed(container_name),
+            Self::Failure => failure.map_or(Cow::Borrowed(""), |error| error.to_string().into()),
+        }
     }
 }

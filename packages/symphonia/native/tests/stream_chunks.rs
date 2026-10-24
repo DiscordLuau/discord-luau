@@ -7,7 +7,7 @@ use std::task::Poll;
 use std::thread;
 use std::time::{Duration, Instant};
 
-use discord_luau_symphonia::testing::{BLOCK_FRAMES, stream_failure, stream_state};
+use discord_luau_symphonia::testing::BLOCK_FRAMES;
 use symphonia::core::io::ReadOnlySource;
 use discord_luau_symphonia::{
     BYTES_PER_FRAME, DescribeField, Error, Info, PushOutcome, Session, State, StreamSession, symphonia_worker_count,
@@ -100,7 +100,7 @@ fn a_65535_frame_flac_block_reaches_the_output_in_4800_frame_pieces() {
         assert!(pieces.len() <= 100, "{} pieces", pieces.len());
     }
 
-    assert_eq!(stream_state(&session), State::Ended);
+    assert_eq!(session.state(), State::Ended);
     assert!(decoded == expected, "the pieces join into the block");
     assert!(pieces.iter().all(|&frames| frames <= BLOCK_FRAMES), "pieces of {pieces:?} frames");
     assert_eq!(pieces[..13], [BLOCK_FRAMES; 13]);
@@ -239,7 +239,7 @@ fn read_once(session: &mut StreamSession, decoded: &mut Decoded) -> Poll<bool> {
                 .read(&mut output)
                 .map(|read| read.map(|frames| decoded.add_pcm(&output[..frames * BYTES_PER_FRAME])))
         }
-        None => stream_failure(session).map_or(Ok(Poll::Pending), Err),
+        None => session.failure().map_or(Ok(Poll::Pending), Err),
     };
 
     decoded.check_bounds();

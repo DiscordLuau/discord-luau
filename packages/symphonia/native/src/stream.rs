@@ -85,7 +85,7 @@ impl StreamSession {
         self.input = None;
     }
 
-    pub(crate) fn state(&self) -> State {
+    pub fn state(&self) -> State {
         lock(&self.status).state()
     }
 
@@ -97,7 +97,7 @@ impl StreamSession {
         lock(&self.status).describe(field)
     }
 
-    pub(crate) fn failure(&self) -> Option<Error> {
+    pub fn failure(&self) -> Option<Error> {
         lock(&self.status).failure().cloned()
     }
 

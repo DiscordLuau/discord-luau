@@ -1,5 +1,8 @@
 use std::fmt::{self, Display, Formatter};
 
+use audioadapter_buffers::SizeError;
+use rubato::ResampleError;
+
 use crate::opus::{FAMILY_HEADER_LENGTH, MAPPING_HEADER_LENGTH};
 use crate::limits::{
     MAX_CHANNELS, MAX_CONSECUTIVE_SKIPS, MAX_FRAMES_PER_PACKET, MAX_SAMPLE_RATE, MIN_CHANNELS, MIN_SAMPLE_RATE,
@@ -120,3 +123,15 @@ impl Display for Error {
 }
 
 impl std::error::Error for Error {}
+
+impl From<SizeError> for Error {
+    fn from(failure: SizeError) -> Self {
+        Self::ResampleFailed(failure.to_string())
+    }
+}
+
+impl From<ResampleError> for Error {
+    fn from(failure: ResampleError) -> Self {
+        Self::ResampleFailed(failure.to_string())
+    }
+}
