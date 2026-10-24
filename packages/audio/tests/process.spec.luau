@@ -991,6 +991,7 @@ return function()
 		end)
 
 		test.case("a decode failure while a quiet program holds stdout open kills it and surfaces at once", function()
+			print(`[trace {string.format("%.3f", os.clock())}] quiet case starts`)
 			local path = writeInput("quiet.wav", sineWav(2 * SAMPLE_RATE))
 
 			for _, wrap in { sameHandle, closedReadHandle } do
@@ -1029,6 +1030,7 @@ return function()
 					check.is_true(pumpDead(source))
 					check.equal(countLines(lines, "did not exit within"), 0)
 					check.equal(countLines(lines, "audio stream read failed"), 0)
+					print(`[trace {string.format("%.3f", os.clock())}] quiet case: producerEnded={feed.producerEnded} at the check`)
 					check.is_true(feed.producerEnded)
 				end)
 			end
