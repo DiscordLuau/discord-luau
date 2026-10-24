@@ -5,6 +5,7 @@ local discordStub = require("../src/init")
 local UNSET_ADDRESS: NetworkAddress = { family = 0, port = 0, address = "::" }
 local CLIENT_ADDRESS: NetworkAddress = { family = 2, port = 50000, address = "127.0.0.1" }
 local KEEPALIVE_SIZE = 5
+local OVERLAPPING_SENDS = 8
 
 local test = frktest.test
 local check = frktest.assert.check
@@ -15,6 +16,28 @@ local function openClient(port: number): NetworkSocket
 	client:connect("127.0.0.1", port)
 
 	return client
+end
+
+local function bindClient(): NetworkSocket
+	local client = zune.net.createSocket(zune.net.ADDRF.INET, zune.net.SOCKF.DGRAM, zune.net.IPPROTO.UDP)
+
+	client:bindIp("127.0.0.1", 0)
+
+	return client
+end
+
+local function receiveMessagesInto(client: NetworkSocket, replies: { buffer })
+	zune.task.spawn(function()
+		while client:isOpen() do
+			local received, _address, reply = pcall(client.recvMsg, client, 65536)
+
+			if not received then
+				break
+			end
+
+			table.insert(replies, reply)
+		end
+	end)
 end
 
 local function receiveInto(client: NetworkSocket, replies: { buffer })
@@ -185,6 +208,81 @@ return function()
 			client:close()
 			udp:stop()
 			stub:stop()
+		end)
+
+		test.case("sends that overlap all return, and their packets reach the client in order", function()
+			local stub = discordStub.new({ clock = "virtual" })
+			local udp = discordStub.UdpServer.new()
+			local client = bindClient()
+			local replies: { buffer } = {}
+			local expected: { string } = {}
+			local returned = 0
+
+			receiveMessagesInto(client, replies)
+			client:sendMsg(udp.port, "127.0.0.1", keepalivePacket())
+
+			check.is_true(stub.clock:waitFor(function()
+				return #replies == 1
+			end, 30))
+
+			for index = 1, OVERLAPPING_SENDS do
+				table.insert(expected, `packet {index}`)
+				zune.task.spawn(function()
+					udp:send(buffer.fromstring(`packet {index}`))
+					returned += 1
+				end)
+			end
+
+			stub.clock:waitFor(function()
+				return returned == OVERLAPPING_SENDS and #replies == OVERLAPPING_SENDS + 1
+			end, 30)
+
+			local arrived: { string } = {}
+
+			for index = 2, #replies do
+				table.insert(arrived, buffer.tostring(replies[index]))
+			end
+
+			client:close()
+			udp:stop()
+			stub:stop()
+
+			check.equal(returned, OVERLAPPING_SENDS)
+			check.equal(table.concat(arrived, ", "), table.concat(expected, ", "))
+		end)
+
+		test.case("a send waiting for its turn when the server stops fails at once", function()
+			local stub = discordStub.new({ clock = "virtual" })
+			local udp = discordStub.UdpServer.new()
+			local client = bindClient()
+			local replies: { buffer } = {}
+			local waiting = { done = false, failed = false }
+
+			receiveMessagesInto(client, replies)
+			client:sendMsg(udp.port, "127.0.0.1", keepalivePacket())
+
+			check.is_true(stub.clock:waitFor(function()
+				return #replies == 1
+			end, 30))
+
+			zune.task.spawn(function()
+				pcall(udp.send, udp, buffer.fromstring("in flight"))
+			end)
+			zune.task.spawn(function()
+				local sent = pcall(udp.send, udp, buffer.fromstring("waiting"))
+
+				waiting.done = true
+				waiting.failed = not sent
+			end)
+			udp:stop()
+			stub.clock:waitFor(function()
+				return waiting.done
+			end, 30)
+			client:close()
+			stub:stop()
+
+			check.is_true(waiting.done)
+			check.is_true(waiting.failed)
 		end)
 
 		test.case("stop cancels the pending receive and ends the loop without an error, and is safe twice", function()

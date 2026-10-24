@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - On Windows, the UDP server keeps receiving after a send to a client that has gone. Windows reports it as `ConnectionResetByPeer` on the next receive, which ended the receive loop and failed the scenario with that error
 - The UDP server skips an empty datagram. Zune 0.5.9 on Windows can complete a receive with one from no address (seen only while the audio tests kill child processes), and the server took `::` port 0 as the client's address and failed the scenario with "offset out of bounds" when it echoed the empty buffer
+- The UDP server sends one packet at a time. On macOS a send that overlapped another, such as a test's `send` during a keepalive echo, was never sent and never returned, which hung the voice specs there. Stopping the server fails the sends still waiting for their turn
 - `clock:wait` returns the time that passed on the clock, as `task.wait` does, instead of the duration it was asked for, so callers that add up waits no longer drift from `waitFor` deadlines under load
 - An undecodable client message and an error raised by a socket open, message or close callback are recorded in `handlerErrors` instead of being dropped or printed by the runtime
 

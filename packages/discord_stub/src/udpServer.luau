@@ -62,6 +62,20 @@
 	Called with the handle after it stops.
 ]=]
 
+--[=[
+	@prop sendingThread thread?
+	@within DiscordStub.UdpServer
+	@private
+	The thread whose send has the socket, nil while no send is in flight.
+]=]
+
+--[=[
+	@prop waitingSends { thread }
+	@within DiscordStub.UdpServer
+	@private
+	Threads waiting for their turn to send, oldest first.
+]=]
+
 local MAX_PACKET_SIZE = 65536
 local DISCOVERY_PACKET_SIZE = 74
 local DISCOVERY_REQUEST_TYPE = 0x0001
@@ -90,19 +104,71 @@ end
 
 --[=[
 	@within DiscordStub.UdpServer
+	@private
 
-	Sends one packet to the client the latest packet came from. Errors before any client has sent a packet or after
-	the server stops.
+	Waits until no other send has the socket, then gives it to `thread`. On macOS Zune keeps one pending write per
+	socket, so a send that overlaps another replaces it, and the first is never sent and never returns. A send in
+	flight when the socket closes never returns there either, so a stopped server never makes a send wait.
+]=]
+function UdpServer.Prototype.waitForSendTurn(self: UdpServer, thread: thread)
+	local sendingThread = self.sendingThread
+
+	if self.socket and sendingThread and coroutine.status(sendingThread) ~= "dead" then
+		table.insert(self.waitingSends, thread)
+		coroutine.yield()
+	end
+
+	self.sendingThread = thread
+end
+
+--[=[
+	@within DiscordStub.UdpServer
+	@private
+
+	Gives the socket to the oldest waiting send, passing over a thread its owner closed while it waited.
+]=]
+function UdpServer.Prototype.startNextSend(self: UdpServer)
+	local nextThread = table.remove(self.waitingSends, 1)
+
+	self.sendingThread = nextThread
+
+	if nextThread then
+		zune.task.defer(function()
+			if coroutine.status(nextThread) == "suspended" then
+				zune.task.spawn(nextThread)
+			elseif self.sendingThread == nextThread then
+				self:startNextSend()
+			end
+		end)
+	end
+end
+
+--[=[
+	@within DiscordStub.UdpServer
+
+	Sends one packet to the client the latest packet came from, after any send already in flight. Errors before any
+	client has sent a packet or after the server stops.
 ]=]
 function UdpServer.Prototype.send(self: UdpServer, packet: buffer)
 	local socket = self.socket
 	local clientAddress = self.clientAddress
 	local clientPort = self.clientPort
+	local thread = coroutine.running()
 
 	assert(socket, "discord_stub: the UDP server has stopped")
 	assert(clientAddress and clientPort, "discord_stub: no client has sent the UDP server a packet yet")
 
-	socket:sendMsg(clientPort, clientAddress, packet)
+	self:waitForSendTurn(thread)
+
+	local sent, sendError = pcall(socket.sendMsg, socket, clientPort, clientAddress, packet)
+
+	if self.sendingThread == thread then
+		self:startNextSend()
+	end
+
+	if not sent then
+		error(sendError, 0)
+	end
 end
 
 --[=[
@@ -198,15 +264,26 @@ end
 --[=[
 	@within DiscordStub.UdpServer
 
-	Closes the socket, which cancels the pending receive and ends the receive loop. Safe to call twice.
+	Closes the socket, which cancels the pending receive and ends the receive loop, and wakes every send waiting for
+	its turn so it fails on the closed socket. Safe to call twice.
 ]=]
 function UdpServer.Prototype.stop(self: UdpServer)
 	local socket = self.socket
+	local waitingSends = self.waitingSends
 
 	self.socket = nil
+	self.waitingSends = {}
 
 	if socket then
 		socket:close()
+	end
+
+	for _, thread in waitingSends do
+		zune.task.defer(function()
+			if coroutine.status(thread) == "suspended" then
+				zune.task.spawn(thread)
+			end
+		end)
 	end
 
 	if self.onStop then
@@ -232,6 +309,7 @@ function UdpServer.Interface.new(settings: { onStop: ((server: UdpServer) -> ())
 			errors = {},
 			ignoreDiscovery = 0,
 			onStop = if settings then settings.onStop else nil,
+			waitingSends = {},
 		} :: UdpServer,
 		{ __index = UdpServer.Prototype }
 	)
@@ -255,6 +333,8 @@ export type UdpServer = typeof(UdpServer.Prototype) & {
 	errors: { string },
 	ignoreDiscovery: number,
 	onStop: ((server: UdpServer) -> ())?,
+	sendingThread: thread?,
+	waitingSends: { thread },
 }
 
 return UdpServer.Interface
