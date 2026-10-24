@@ -107,16 +107,15 @@ end
 	@private
 
 	Waits until no other send has the socket, then gives it to `thread`. On macOS Zune keeps one pending write per
-	socket, so a send that overlaps another replaces it, and the first is never sent and never returns.
+	socket, so a send that overlaps another replaces it, and the first is never sent and never returns. A send in
+	flight when the socket closes never returns there either, so a stopped server never makes a send wait.
 ]=]
 function UdpServer.Prototype.waitForSendTurn(self: UdpServer, thread: thread)
 	local sendingThread = self.sendingThread
 
-	if sendingThread and coroutine.status(sendingThread) ~= "dead" then
+	if self.socket and sendingThread and coroutine.status(sendingThread) ~= "dead" then
 		table.insert(self.waitingSends, thread)
-		print(`[trace {string.format("%.3f", os.clock())}] stub send waits for its turn ({#self.waitingSends} waiting)`)
 		coroutine.yield()
-		print(`[trace {string.format("%.3f", os.clock())}] stub send got its turn`)
 	end
 
 	self.sendingThread = thread
@@ -135,7 +134,6 @@ function UdpServer.Prototype.startNextSend(self: UdpServer)
 
 	if nextThread then
 		zune.task.defer(function()
-			print(`[trace {string.format("%.3f", os.clock())}] stub turn handed over, waiter status {coroutine.status(nextThread)}`)
 			if coroutine.status(nextThread) == "suspended" then
 				zune.task.spawn(nextThread)
 			elseif self.sendingThread == nextThread then
@@ -162,9 +160,7 @@ function UdpServer.Prototype.send(self: UdpServer, packet: buffer)
 
 	self:waitForSendTurn(thread)
 
-	print(`[trace {string.format("%.3f", os.clock())}] stub sendMsg {buffer.len(packet)}B to {clientAddress}:{clientPort}`)
 	local sent, sendError = pcall(socket.sendMsg, socket, clientPort, clientAddress, packet)
-	print(`[trace {string.format("%.3f", os.clock())}] stub sendMsg returned ok={sent}`)
 
 	if self.sendingThread == thread then
 		self:startNextSend()
@@ -233,9 +229,7 @@ function UdpServer.Prototype.receiveLoop(self: UdpServer, socket: NetworkSocket)
 	self.receiving = true
 
 	while self.socket == socket do
-		print(`[trace {string.format("%.3f", os.clock())}] stub recvMsg waiting`)
 		local received, address, packet = pcall(socket.recvMsg, socket, MAX_PACKET_SIZE)
-		print(`[trace {string.format("%.3f", os.clock())}] stub recvMsg returned ok={received} {if received then `{buffer.len(packet)}B` else tostring(address)}`)
 
 		-- On Windows a send to a client that has gone fails the next receive with this error. Zune 0.5.9 on Windows can
 		-- also complete a receive with an empty datagram from no address, which has nothing to answer.
@@ -270,15 +264,26 @@ end
 --[=[
 	@within DiscordStub.UdpServer
 
-	Closes the socket, which cancels the pending receive and ends the receive loop. Safe to call twice.
+	Closes the socket, which cancels the pending receive and ends the receive loop, and wakes every send waiting for
+	its turn so it fails on the closed socket. Safe to call twice.
 ]=]
 function UdpServer.Prototype.stop(self: UdpServer)
 	local socket = self.socket
+	local waitingSends = self.waitingSends
 
 	self.socket = nil
+	self.waitingSends = {}
 
 	if socket then
 		socket:close()
+	end
+
+	for _, thread in waitingSends do
+		zune.task.defer(function()
+			if coroutine.status(thread) == "suspended" then
+				zune.task.spawn(thread)
+			end
+		end)
 	end
 
 	if self.onStop then

@@ -153,5 +153,29 @@ return function()
 			check.equal(returned, OVERLAPPING_SENDS)
 			check.equal(table.concat(received, ", "), table.concat(expected, ", "))
 		end)
+
+		test.case("a send waiting for its turn when the socket closes fails at once", function()
+			local peer = bindPeer()
+			local udpSocket = openSocket(peer)
+			local waiting = { done = false, failed = false }
+
+			stdPolyfills.task.spawn(function()
+				pcall(udpSocket.send, buffer.fromstring("in flight"))
+			end)
+			stdPolyfills.task.spawn(function()
+				local sent = pcall(udpSocket.send, buffer.fromstring("waiting"))
+
+				waiting.done = true
+				waiting.failed = not sent
+			end)
+			udpSocket.close()
+			waitUntil(function()
+				return waiting.done
+			end)
+			peer:close()
+
+			check.is_true(waiting.done)
+			check.is_true(waiting.failed)
+		end)
 	end)
 end

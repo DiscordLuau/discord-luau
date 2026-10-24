@@ -10,15 +10,6 @@ local RESET = "\27[0m"
 
 local reporter = frktest.reporters.console_reporter
 local testModule = frktest.test
-local originalCase = testModule.case
-
-testModule.case = function(name: string, body: () -> nil)
-	originalCase(name, function()
-		print(`[trace {string.format("%.3f", os.clock())}] case start: {name}`)
-		body()
-		print(`[trace {string.format("%.3f", os.clock())}] case end: {name}`)
-	end)
-end
 local summaryPath = zune.process.env[SUMMARY_PATH_VARIABLE]
 local testFolder = string.gsub(zune.process.args[2] or "./packages", "/+$", "")
 local suiteName = ""

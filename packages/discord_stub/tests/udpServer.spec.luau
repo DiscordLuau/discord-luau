@@ -251,6 +251,40 @@ return function()
 			check.equal(table.concat(arrived, ", "), table.concat(expected, ", "))
 		end)
 
+		test.case("a send waiting for its turn when the server stops fails at once", function()
+			local stub = discordStub.new({ clock = "virtual" })
+			local udp = discordStub.UdpServer.new()
+			local client = bindClient()
+			local replies: { buffer } = {}
+			local waiting = { done = false, failed = false }
+
+			receiveMessagesInto(client, replies)
+			client:sendMsg(udp.port, "127.0.0.1", keepalivePacket())
+
+			check.is_true(stub.clock:waitFor(function()
+				return #replies == 1
+			end, 30))
+
+			zune.task.spawn(function()
+				pcall(udp.send, udp, buffer.fromstring("in flight"))
+			end)
+			zune.task.spawn(function()
+				local sent = pcall(udp.send, udp, buffer.fromstring("waiting"))
+
+				waiting.done = true
+				waiting.failed = not sent
+			end)
+			udp:stop()
+			stub.clock:waitFor(function()
+				return waiting.done
+			end, 30)
+			client:close()
+			stub:stop()
+
+			check.is_true(waiting.done)
+			check.is_true(waiting.failed)
+		end)
+
 		test.case("stop cancels the pending receive and ends the loop without an error, and is safe twice", function()
 			local stub = discordStub.new({ clock = "virtual" })
 			local udp = discordStub.UdpServer.new()

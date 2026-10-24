@@ -24,6 +24,14 @@ local function buildQueryString(query: { [string]: string | { string } }): strin
 	return table.concat(parts, "&")
 end
 
+local function resumeLater(thread: thread)
+	zuneTask.defer(function()
+		if coroutine.status(thread) == "suspended" then
+			zuneTask.spawn(thread)
+		end
+	end)
+end
+
 function net.urlEncode(url: string, _binary: boolean?): string
 	return (string.gsub(url, "[^%w%-%.%_%~]", urlEncodeCharacter))
 end
@@ -83,11 +91,7 @@ function net.socket(url: string)
 		-- The owner can close a waiting thread (a voice transport tearing down) before the socket wakes it, or after the
 		-- wake is queued but before it runs. Zune still resumes a closed thread it deferred, so both are checked.
 		if thread and coroutine.status(thread) == "suspended" then
-			zuneTask.defer(function()
-				if coroutine.status(thread) == "suspended" then
-					zuneTask.spawn(thread)
-				end
-			end)
+			resumeLater(thread)
 		end
 	end
 
@@ -145,6 +149,7 @@ end
 function net.udpSocket(host: string, port: number)
 	local handle = zuneNet.createSocket(zuneNet.ADDRF.INET, zuneNet.SOCKF.DGRAM, zuneNet.IPPROTO.UDP)
 	local value = { closeCode = nil :: number? }
+	local closed = false
 	local sendingThread: thread? = nil
 	local waitingSends: { thread } = {}
 
@@ -154,6 +159,7 @@ function net.udpSocket(host: string, port: number)
 
 	-- On macOS Zune keeps one pending write per socket, so a send that overlaps another replaces it, and the first is
 	-- never sent and never returns. Sends therefore take turns, and a waiting thread its owner closed is passed over.
+	-- A send in flight when the socket closes never returns there either, so closing releases the turn.
 	local function startNextSend()
 		local nextThread = table.remove(waitingSends, 1)
 
@@ -161,7 +167,6 @@ function net.udpSocket(host: string, port: number)
 
 		if nextThread then
 			zuneTask.defer(function()
-				print(`[trace {string.format("%.3f", os.clock())}] client turn handed over, waiter status {coroutine.status(nextThread)}`)
 				if coroutine.status(nextThread) == "suspended" then
 					zuneTask.spawn(nextThread)
 				elseif sendingThread == nextThread then
@@ -172,11 +177,9 @@ function net.udpSocket(host: string, port: number)
 	end
 
 	local function waitForTurn(thread: thread)
-		if sendingThread and coroutine.status(sendingThread) ~= "dead" then
+		if not closed and sendingThread and coroutine.status(sendingThread) ~= "dead" then
 			table.insert(waitingSends, thread)
-			print(`[trace {string.format("%.3f", os.clock())}] client send waits for its turn ({#waitingSends} waiting)`)
 			coroutine.yield()
-			print(`[trace {string.format("%.3f", os.clock())}] client send got its turn`)
 		end
 
 		sendingThread = thread
@@ -188,9 +191,7 @@ function net.udpSocket(host: string, port: number)
 
 			waitForTurn(thread)
 
-			print(`[trace {string.format("%.3f", os.clock())}] client sendMsg {if type(message) == "string" then #message else buffer.len(message)}B`)
 			local sent, sendError = pcall(handle.sendMsg, handle, port, host, message)
-			print(`[trace {string.format("%.3f", os.clock())}] client sendMsg returned ok={sent}`)
 
 			if sendingThread == thread then
 				startNextSend()
@@ -204,9 +205,7 @@ function net.udpSocket(host: string, port: number)
 
 	function value.next(): string?
 		while true do
-			print(`[trace {string.format("%.3f", os.clock())}] client recvMsg waiting`)
 			local address, response = handle:recvMsg(65536)
-			print(`[trace {string.format("%.3f", os.clock())}] client recvMsg got {buffer.len(response)}B from {address.address}:{address.port}`)
 
 			if address.address == host and address.port == port then
 				return buffer.tostring(response)
@@ -215,9 +214,15 @@ function net.udpSocket(host: string, port: number)
 	end
 
 	function value.close(_code: number?)
-		print(`[trace {string.format("%.3f", os.clock())}] client close`)
+		local waiting = waitingSends
+
+		closed = true
+		waitingSends = {}
 		handle:close()
-		print(`[trace {string.format("%.3f", os.clock())}] client close returned`)
+
+		for _, thread in waiting do
+			resumeLater(thread)
+		end
 	end
 
 	return value

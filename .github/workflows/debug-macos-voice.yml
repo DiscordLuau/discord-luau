@@ -34,15 +34,35 @@ jobs:
         run: pesde install
       - name: Seed native libraries from this checkout
         run: zune run .github/scripts/seedBinaryCache.luau
-      - name: Voice, every suite, traced
+      - name: "Red: the close cases with the first fix (9f49d11), which does not release the turn on close"
         run: |
-          perl -e 'alarm shift @ARGV; exec @ARGV' 90 zune run .zune/test.luau packages/voice || echo "voice exit=$?"
+          git show 9f49d11:packages/std_polyfills/src/zune/net.luau > packages/std_polyfills/src/zune/net.luau
+          git show 9f49d11:packages/discord_stub/src/udpServer.luau > packages/discord_stub/src/udpServer.luau
+          perl -pi -e 's/test\.case\("a send waiting for its turn when the socket closes/test.focus.case("a send waiting for its turn when the socket closes/' packages/std_polyfills/tests/udp.spec.luau
+          perl -pi -e 's/test\.case\("a send waiting for its turn when the server stops/test.focus.case("a send waiting for its turn when the server stops/' packages/discord_stub/tests/udpServer.spec.luau
+          bash .github/debug/runAlone.sh std_polyfills udp 60
+          bash .github/debug/runAlone.sh discord_stub udpServer 60
+          git checkout -- packages/std_polyfills packages/discord_stub
+      - name: "Green: the same close cases with this fix"
+        run: |
+          perl -pi -e 's/test\.case\("a send waiting for its turn when the socket closes/test.focus.case("a send waiting for its turn when the socket closes/' packages/std_polyfills/tests/udp.spec.luau
+          perl -pi -e 's/test\.case\("a send waiting for its turn when the server stops/test.focus.case("a send waiting for its turn when the server stops/' packages/discord_stub/tests/udpServer.spec.luau
+          bash .github/debug/runAlone.sh std_polyfills udp 60
+          bash .github/debug/runAlone.sh discord_stub udpServer 60
+          git checkout -- packages/std_polyfills packages/discord_stub
+      - name: Test voice with the fix
+        run: |
+          perl -e 'alarm shift @ARGV; exec @ARGV' 120 zune run .zune/test.luau packages/voice || echo "voice exit=$?"
           pkill -f 'zune run' || true
-      - name: The voice UDP spec alone, traced
-        run: bash .github/debug/runAlone.sh voice udp 60
-      - name: The quiet-program audio case alone, traced
+      - name: Test audio with the fix, first run
         run: |
-          perl -pi -e 's/test\.case\("a decode failure while a quiet program holds stdout open/test.focus.case("a decode failure while a quiet program holds stdout open/' packages/audio/tests/process.spec.luau
-          grep -c 'test.focus.case' packages/audio/tests/process.spec.luau
-          bash .github/debug/runAlone.sh audio process 120
-          git checkout -- packages/audio/tests/process.spec.luau
+          perl -e 'alarm shift @ARGV; exec @ARGV' 300 zune run .zune/test.luau packages/audio || echo "audio exit=$?"
+          pkill -f 'zune run' || true
+      - name: Test audio with the fix, second run
+        run: |
+          perl -e 'alarm shift @ARGV; exec @ARGV' 300 zune run .zune/test.luau packages/audio || echo "audio exit=$?"
+          pkill -f 'zune run' || true
+      - name: Test std_polyfills with the fix
+        run: |
+          perl -e 'alarm shift @ARGV; exec @ARGV' 300 zune run .zune/test.luau packages/std_polyfills || echo "std_polyfills exit=$?"
+          pkill -f 'zune run' || true
