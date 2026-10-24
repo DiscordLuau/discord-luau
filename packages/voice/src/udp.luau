@@ -380,6 +380,8 @@ end
 function UdpTransport.Prototype.handlePacket(self: UdpTransport, rawPacket: string)
 	local packetBuffer = buffer.fromstring(rawPacket)
 	local packetLength = buffer.len(packetBuffer)
+
+	print(`[trace {string.format("%.3f", os.clock())}] voice handlePacket {packetLength}B`)
 	local firstByte = if packetLength > 0 then buffer.readu8(packetBuffer, 0) else 0
 
 	if packetLength < RTP_HEADER_SIZE or bit32.rshift(firstByte, 6) ~= 2 then
@@ -404,7 +406,9 @@ function UdpTransport.Prototype.handlePacket(self: UdpTransport, rawPacket: stri
 		return
 	end
 
+	print(`[trace {string.format("%.3f", os.clock())}] voice decrypting`)
 	local decryptSuccess, decryptedPacket, dropReason = pcall(decryptPacket, packetBuffer)
+	print(`[trace {string.format("%.3f", os.clock())}] voice decrypted ok={decryptSuccess} {if decryptSuccess then (if decryptedPacket then "packet" else `dropped: {dropReason}`) else tostring(decryptedPacket)}`)
 
 	if not decryptSuccess then
 		local now = os.clock()
@@ -447,6 +451,8 @@ function UdpTransport.Prototype.handlePacket(self: UdpTransport, rawPacket: stri
 	local audioFrame = buffer.create(frameLength)
 
 	buffer.copy(audioFrame, 0, decryptedPacket, RTP_HEADER_SIZE, frameLength)
+
+	print(`[trace {string.format("%.3f", os.clock())}] voice delivering seq {sequence} ssrc {senderSsrc}`)
 
 	if self.onAudioPacket then
 		local delivered, deliveryError =

@@ -102,7 +102,9 @@ function UdpServer.Prototype.send(self: UdpServer, packet: buffer)
 	assert(socket, "discord_stub: the UDP server has stopped")
 	assert(clientAddress and clientPort, "discord_stub: no client has sent the UDP server a packet yet")
 
+	print(`[trace {string.format("%.3f", os.clock())}] stub send {buffer.len(packet)}B to {clientAddress}:{clientPort}`)
 	socket:sendMsg(clientPort, clientAddress, packet)
+	print(`[trace {string.format("%.3f", os.clock())}] stub send returned`)
 end
 
 --[=[
@@ -163,7 +165,9 @@ function UdpServer.Prototype.receiveLoop(self: UdpServer, socket: NetworkSocket)
 	self.receiving = true
 
 	while self.socket == socket do
+		print(`[trace {string.format("%.3f", os.clock())}] stub recvMsg waiting`)
 		local received, address, packet = pcall(socket.recvMsg, socket, MAX_PACKET_SIZE)
+		print(`[trace {string.format("%.3f", os.clock())}] stub recvMsg returned ok={received} {if received then `{buffer.len(packet)}B from {address.address}:{address.port}` else tostring(address)}`)
 
 		-- On Windows a send to a client that has gone fails the next receive with this error. Zune 0.5.9 on Windows can
 		-- also complete a receive with an empty datagram from no address, which has nothing to answer.

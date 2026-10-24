@@ -152,13 +152,17 @@ function net.udpSocket(host: string, port: number)
 
 	function value.send(message: (string | buffer)?, _asBinaryMessage: boolean?)
 		if message then
+			print(`[trace {string.format("%.3f", os.clock())}] client sendMsg {if type(message) == "string" then #message else buffer.len(message)}B to {host}:{port}`)
 			handle:sendMsg(port, host, message)
+			print(`[trace {string.format("%.3f", os.clock())}] client sendMsg returned`)
 		end
 	end
 
 	function value.next(): string?
 		while true do
+			print(`[trace {string.format("%.3f", os.clock())}] client recvMsg waiting`)
 			local address, response = handle:recvMsg(65536)
+			print(`[trace {string.format("%.3f", os.clock())}] client recvMsg got {buffer.len(response)}B from {address.address}:{address.port}`)
 
 			if address.address == host and address.port == port then
 				return buffer.tostring(response)
@@ -167,7 +171,9 @@ function net.udpSocket(host: string, port: number)
 	end
 
 	function value.close(_code: number?)
+		print(`[trace {string.format("%.3f", os.clock())}] client close`)
 		handle:close()
+		print(`[trace {string.format("%.3f", os.clock())}] client close returned`)
 	end
 
 	return value
