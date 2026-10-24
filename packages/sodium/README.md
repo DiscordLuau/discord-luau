@@ -34,19 +34,6 @@ if sodium.aes256gcm.isAvailable() then
     print(buffer.tostring(decrypted))
 end
 
--- XChaCha20-Poly1305 (no hardware requirement)
-local chachaKey = sodium.xchacha20poly1305.keygen()
-
-local chachaNonce = sodium.randombytes.buf(sodium.xchacha20poly1305.NONCE_BYTES)
-
-local chachaSealed = sodium.xchacha20poly1305.encrypt(buffer.fromstring("hello, world"), chachaKey, chachaNonce)
-
-local chachaOpened = sodium.xchacha20poly1305.decrypt(
-    chachaSealed.cipher, chachaSealed.tag, chachaKey, chachaNonce
-)
-
-print(buffer.tostring(chachaOpened))
-
 local key = sodium.secretbox.keygen()
 
 local nonce = sodium.secretbox.nonce()

@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Helper methods drop their leading underscore (`_name` is now `name`; DAVE's `_createDecryptor` is now `createMemberDecryptor`); they stay marked `@private` and out of the docs
-- The connection docs describe `onRawAudioFrame` (the Opus payload without the RTP header, as the jitter buffer plays it), `onAudioFrame`, `onReady` and `Connection.new`'s settings, and the README shows `logLevel`, Zune only and playing audio with `discord_luau/audio`
+- The connection docs describe `onRawAudioFrame` (the Opus payload without the RTP header, as the jitter buffer plays it), `onAudioFrame`, `onReady` and `Connection.new`'s settings, and the README points to `discord_luau/audio` for playing audio
 - A supervisor owns every lifecycle decision. It waits for both VOICE_STATE_UPDATE and VOICE_SERVER_UPDATE before connecting, follows moves and voice server changes, resumes once after 4015, abnormal closes and missed heartbeat ACKs, waits five seconds after 4014 and 4022 to tell a kick from a server change or a replaced gateway session, closes for good on fatal codes, and rejoins with backoff up to five attempts otherwise. Every connect is bounded by its deadline, even when the voice handshake never finishes
 - Every terminal close except a kick sends op 4 with a null channel, so a failed or abandoned connection no longer leaves the bot sitting in the channel
 - `requestVoiceAsync` is now an alias of `joinAsync`, `disconnectAsync` closes the connection for good, and `forceClose` is treated as a drop that the supervisor recovers from

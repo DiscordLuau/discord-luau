@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - The Windows libopus is 1.6.1 built from source, and every libopus binary is reproducible
-- The README explains the frame length `encode` takes, `decodeFec`, `decodePLC`, `stats` and that opus needs FFI
+- The README is cut to a short example; the details live in the doc comments
 
 ### Fixed
 
