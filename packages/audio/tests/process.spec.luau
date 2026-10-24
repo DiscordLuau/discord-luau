@@ -1029,6 +1029,12 @@ return function()
 					check.is_true(pumpDead(source))
 					check.equal(countLines(lines, "did not exit within"), 0)
 					check.equal(countLines(lines, "audio stream read failed"), 0)
+					print(`[trace {string.format("%.3f", os.clock())}] quiet case: producerEnded={feed.producerEnded} at the check`)
+					local waitStarted = os.clock()
+					local endedLater = waitUntil(function()
+						return feed.producerEnded
+					end, 10)
+					print(`[trace {string.format("%.3f", os.clock())}] quiet case: producerEnded={endedLater} after {string.format("%.3f", os.clock() - waitStarted)}s more`)
 					check.is_true(feed.producerEnded)
 				end)
 			end

@@ -52,7 +52,9 @@ function process.wrap(child: ZuneChild): ProcessHandle
 
 	zune.task.spawn(function()
 		local succeeded, result = pcall(function()
-			return child:wait()
+			local waited = child:wait()
+			print(`[trace {string.format("%.3f", os.clock())}] proc exit watcher woke, code {waited.code}`)
+			return waited
 		end)
 
 		if succeeded then
@@ -107,6 +109,7 @@ function process.wrap(child: ZuneChild): ProcessHandle
 	-- `kill` used. The program is stopped only while its exit is unrecorded, since another program may own the pid after
 	-- that. On Linux and macOS the exit code then reads SIGTERM, as it does after Zune's `kill`.
 	local function terminate()
+		print(`[trace {string.format("%.3f", os.clock())}] proc terminate, exited={exited}`)
 		local library = LIBC_BY_OS[process.os]
 		local pid = child.pid
 		local onWindows = process.os == "windows"
@@ -171,10 +174,12 @@ function process.wrap(child: ZuneChild): ProcessHandle
 		end
 
 		stdoutReading = true
+		print(`[trace {string.format("%.3f", os.clock())}] proc stdout read waiting`)
 		succeeded, data = pcall(function()
 			return child.stdout:read(count, true)
 		end)
 		stdoutReading = false
+		print(`[trace {string.format("%.3f", os.clock())}] proc stdout read returned ok={succeeded} killed={killed} {if succeeded then `{buffer.len(data)}B` else tostring(data)}`)
 
 		if killed then
 			closeStream(child.stdout, "stdout")

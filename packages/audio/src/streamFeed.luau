@@ -1151,6 +1151,7 @@ end
 	message.
 ]=]
 function StreamFeed.Prototype.endInput(self: StreamFeed)
+	print(`[trace {string.format("%.3f", os.clock())}] feed endInput, producerEnded`)
 	self.producerEnded = true
 
 	if self.streamBytes == 0 then

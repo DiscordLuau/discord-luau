@@ -161,6 +161,7 @@ function net.udpSocket(host: string, port: number)
 
 		if nextThread then
 			zuneTask.defer(function()
+				print(`[trace {string.format("%.3f", os.clock())}] client turn handed over, waiter status {coroutine.status(nextThread)}`)
 				if coroutine.status(nextThread) == "suspended" then
 					zuneTask.spawn(nextThread)
 				elseif sendingThread == nextThread then
@@ -173,7 +174,9 @@ function net.udpSocket(host: string, port: number)
 	local function waitForTurn(thread: thread)
 		if sendingThread and coroutine.status(sendingThread) ~= "dead" then
 			table.insert(waitingSends, thread)
+			print(`[trace {string.format("%.3f", os.clock())}] client send waits for its turn ({#waitingSends} waiting)`)
 			coroutine.yield()
+			print(`[trace {string.format("%.3f", os.clock())}] client send got its turn`)
 		end
 
 		sendingThread = thread
@@ -185,7 +188,9 @@ function net.udpSocket(host: string, port: number)
 
 			waitForTurn(thread)
 
+			print(`[trace {string.format("%.3f", os.clock())}] client sendMsg {if type(message) == "string" then #message else buffer.len(message)}B`)
 			local sent, sendError = pcall(handle.sendMsg, handle, port, host, message)
+			print(`[trace {string.format("%.3f", os.clock())}] client sendMsg returned ok={sent}`)
 
 			if sendingThread == thread then
 				startNextSend()
@@ -199,7 +204,9 @@ function net.udpSocket(host: string, port: number)
 
 	function value.next(): string?
 		while true do
+			print(`[trace {string.format("%.3f", os.clock())}] client recvMsg waiting`)
 			local address, response = handle:recvMsg(65536)
+			print(`[trace {string.format("%.3f", os.clock())}] client recvMsg got {buffer.len(response)}B from {address.address}:{address.port}`)
 
 			if address.address == host and address.port == port then
 				return buffer.tostring(response)
@@ -208,7 +215,9 @@ function net.udpSocket(host: string, port: number)
 	end
 
 	function value.close(_code: number?)
+		print(`[trace {string.format("%.3f", os.clock())}] client close`)
 		handle:close()
+		print(`[trace {string.format("%.3f", os.clock())}] client close returned`)
 	end
 
 	return value
