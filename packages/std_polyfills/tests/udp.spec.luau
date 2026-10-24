@@ -7,6 +7,7 @@ local REQUEST = "request"
 local MAX_PACKET_SIZE = 65536
 local READ_TIMEOUT_SECONDS = 5
 local POLL_SECONDS = 0.01
+local OVERLAPPING_SENDS = 8
 
 local test = frktest.test
 local check = frktest.assert.check
@@ -61,12 +62,18 @@ local function readOnce(udpSocket: stdPolyfills.UdpSocket): Read
 	return read
 end
 
-local function waitForRead(read: Read)
+local function waitUntil(condition: () -> boolean)
 	local deadline = os.clock() + READ_TIMEOUT_SECONDS
 
-	while not read.done and os.clock() < deadline do
+	while not condition() and os.clock() < deadline do
 		stdPolyfills.task.wait(POLL_SECONDS)
 	end
+end
+
+local function waitForRead(read: Read)
+	waitUntil(function()
+		return read.done
+	end)
 end
 
 type Read = { done: boolean, response: string?, failure: string? }
@@ -108,6 +115,43 @@ return function()
 
 			check.equal(read.failure, nil)
 			check.equal(read.response, "reply")
+		end)
+
+		test.case("sends that overlap all return, and their datagrams reach the peer in order", function()
+			local peer = bindPeer()
+			local udpSocket = openSocket(peer)
+			local received: { string } = {}
+			local expected: { string } = {}
+			local returned = 0
+
+			stdPolyfills.task.spawn(function()
+				while #received < OVERLAPPING_SENDS do
+					local succeeded, _address, datagram = pcall(peer.recvMsg, peer, MAX_PACKET_SIZE)
+
+					if not succeeded then
+						break
+					end
+
+					table.insert(received, buffer.tostring(datagram))
+				end
+			end)
+
+			for index = 1, OVERLAPPING_SENDS do
+				table.insert(expected, `datagram {index}`)
+				stdPolyfills.task.spawn(function()
+					udpSocket.send(buffer.fromstring(`datagram {index}`))
+					returned += 1
+				end)
+			end
+
+			waitUntil(function()
+				return returned == OVERLAPPING_SENDS and #received == OVERLAPPING_SENDS
+			end)
+			udpSocket.close()
+			peer:close()
+
+			check.equal(returned, OVERLAPPING_SENDS)
+			check.equal(table.concat(received, ", "), table.concat(expected, ", "))
 		end)
 	end)
 end

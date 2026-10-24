@@ -34,26 +34,29 @@ jobs:
         run: pesde install
       - name: Seed native libraries from this checkout
         run: zune run .github/scripts/seedBinaryCache.luau
-      - name: Probe sends and closes on UDP sockets with a receive pending
-        run: perl -e 'alarm shift @ARGV; exec @ARGV' 30 zune run .github/debug/udpSendWhileReceiving.luau || echo "probe exit=$?"
-      - name: Run the udp and connection voice specs alone, traced
+      - name: "Red: the new overlap cases with the fix's source files reverted"
         run: |
-          held="$RUNNER_TEMP/held-voice-specs"
-          mkdir -p "$held"
-          for name in udp connection; do
-            spec="packages/voice/tests/$name.spec.luau"
-            for other in packages/voice/tests/*.spec.luau; do
-              if [ "$other" != "$spec" ]; then mv "$other" "$held/"; fi
-            done
-            echo "::group::$name"
-            set +e
-            perl -e 'alarm shift @ARGV; exec @ARGV' 150 zune run .zune/test.luau packages/voice
-            code=$?
-            set -e
-            echo "::endgroup::"
-            echo "$name exit=$code (142 means killed after 150 s)"
-            pkill -f 'zune run' || true
-            for other in "$held"/*.spec.luau; do
-              if [ -e "$other" ]; then mv "$other" packages/voice/tests/; fi
-            done
-          done
+          git show 44220bf:packages/std_polyfills/src/zune/net.luau > packages/std_polyfills/src/zune/net.luau
+          git show 44220bf:packages/discord_stub/src/udpServer.luau > packages/discord_stub/src/udpServer.luau
+          bash .github/debug/runAlone.sh std_polyfills udp 120
+          perl -pi -e 's/test\.case\("sends that overlap all return/test.focus.case("sends that overlap all return/' packages/discord_stub/tests/udpServer.spec.luau
+          bash .github/debug/runAlone.sh discord_stub udpServer 120
+          git checkout -- packages/std_polyfills/src/zune/net.luau packages/discord_stub/src/udpServer.luau packages/discord_stub/tests/udpServer.spec.luau
+      - name: "Green: the same cases with the fix"
+        run: |
+          bash .github/debug/runAlone.sh std_polyfills udp 120
+          perl -pi -e 's/test\.case\("sends that overlap all return/test.focus.case("sends that overlap all return/' packages/discord_stub/tests/udpServer.spec.luau
+          bash .github/debug/runAlone.sh discord_stub udpServer 120
+          git checkout -- packages/discord_stub/tests/udpServer.spec.luau
+      - name: Test voice with the fix
+        run: |
+          perl -e 'alarm shift @ARGV; exec @ARGV' 600 zune run .zune/test.luau packages/voice || echo "voice exit=$?"
+          pkill -f 'zune run' || true
+      - name: Test audio with the fix
+        run: |
+          perl -e 'alarm shift @ARGV; exec @ARGV' 900 zune run .zune/test.luau packages/audio || echo "audio exit=$?"
+          pkill -f 'zune run' || true
+      - name: Test std_polyfills with the fix
+        run: |
+          perl -e 'alarm shift @ARGV; exec @ARGV' 300 zune run .zune/test.luau packages/std_polyfills || echo "std_polyfills exit=$?"
+          pkill -f 'zune run' || true

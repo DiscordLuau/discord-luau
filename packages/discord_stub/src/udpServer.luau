@@ -62,6 +62,20 @@
 	Called with the handle after it stops.
 ]=]
 
+--[=[
+	@prop sendingThread thread?
+	@within DiscordStub.UdpServer
+	@private
+	The thread whose send has the socket, nil while no send is in flight.
+]=]
+
+--[=[
+	@prop waitingSends { thread }
+	@within DiscordStub.UdpServer
+	@private
+	Threads waiting for their turn to send, oldest first.
+]=]
+
 local MAX_PACKET_SIZE = 65536
 local DISCOVERY_PACKET_SIZE = 74
 local DISCOVERY_REQUEST_TYPE = 0x0001
@@ -90,21 +104,70 @@ end
 
 --[=[
 	@within DiscordStub.UdpServer
+	@private
 
-	Sends one packet to the client the latest packet came from. Errors before any client has sent a packet or after
-	the server stops.
+	Waits until no other send has the socket, then gives it to `thread`. On macOS Zune keeps one pending write per
+	socket, so a send that overlaps another replaces it, and the first is never sent and never returns.
+]=]
+function UdpServer.Prototype.waitForSendTurn(self: UdpServer, thread: thread)
+	local sendingThread = self.sendingThread
+
+	if sendingThread and coroutine.status(sendingThread) ~= "dead" then
+		table.insert(self.waitingSends, thread)
+		coroutine.yield()
+	end
+
+	self.sendingThread = thread
+end
+
+--[=[
+	@within DiscordStub.UdpServer
+	@private
+
+	Gives the socket to the oldest waiting send, passing over a thread its owner closed while it waited.
+]=]
+function UdpServer.Prototype.startNextSend(self: UdpServer)
+	local nextThread = table.remove(self.waitingSends, 1)
+
+	self.sendingThread = nextThread
+
+	if nextThread then
+		zune.task.defer(function()
+			if coroutine.status(nextThread) == "suspended" then
+				zune.task.spawn(nextThread)
+			elseif self.sendingThread == nextThread then
+				self:startNextSend()
+			end
+		end)
+	end
+end
+
+--[=[
+	@within DiscordStub.UdpServer
+
+	Sends one packet to the client the latest packet came from, after any send already in flight. Errors before any
+	client has sent a packet or after the server stops.
 ]=]
 function UdpServer.Prototype.send(self: UdpServer, packet: buffer)
 	local socket = self.socket
 	local clientAddress = self.clientAddress
 	local clientPort = self.clientPort
+	local thread = coroutine.running()
 
 	assert(socket, "discord_stub: the UDP server has stopped")
 	assert(clientAddress and clientPort, "discord_stub: no client has sent the UDP server a packet yet")
 
-	print(`[trace {string.format("%.3f", os.clock())}] stub send {buffer.len(packet)}B to {clientAddress}:{clientPort}`)
-	socket:sendMsg(clientPort, clientAddress, packet)
-	print(`[trace {string.format("%.3f", os.clock())}] stub send returned`)
+	self:waitForSendTurn(thread)
+
+	local sent, sendError = pcall(socket.sendMsg, socket, clientPort, clientAddress, packet)
+
+	if self.sendingThread == thread then
+		self:startNextSend()
+	end
+
+	if not sent then
+		error(sendError, 0)
+	end
 end
 
 --[=[
@@ -165,9 +228,7 @@ function UdpServer.Prototype.receiveLoop(self: UdpServer, socket: NetworkSocket)
 	self.receiving = true
 
 	while self.socket == socket do
-		print(`[trace {string.format("%.3f", os.clock())}] stub recvMsg waiting`)
 		local received, address, packet = pcall(socket.recvMsg, socket, MAX_PACKET_SIZE)
-		print(`[trace {string.format("%.3f", os.clock())}] stub recvMsg returned ok={received} {if received then `{buffer.len(packet)}B from {address.address}:{address.port}` else tostring(address)}`)
 
 		-- On Windows a send to a client that has gone fails the next receive with this error. Zune 0.5.9 on Windows can
 		-- also complete a receive with an empty datagram from no address, which has nothing to answer.
@@ -236,6 +297,7 @@ function UdpServer.Interface.new(settings: { onStop: ((server: UdpServer) -> ())
 			errors = {},
 			ignoreDiscovery = 0,
 			onStop = if settings then settings.onStop else nil,
+			waitingSends = {},
 		} :: UdpServer,
 		{ __index = UdpServer.Prototype }
 	)
@@ -259,6 +321,8 @@ export type UdpServer = typeof(UdpServer.Prototype) & {
 	errors: { string },
 	ignoreDiscovery: number,
 	onStop: ((server: UdpServer) -> ())?,
+	sendingThread: thread?,
+	waitingSends: { thread },
 }
 
 return UdpServer.Interface

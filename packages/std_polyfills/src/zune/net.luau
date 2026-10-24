@@ -145,24 +145,61 @@ end
 function net.udpSocket(host: string, port: number)
 	local handle = zuneNet.createSocket(zuneNet.ADDRF.INET, zuneNet.SOCKF.DGRAM, zuneNet.IPPROTO.UDP)
 	local value = { closeCode = nil :: number? }
+	local sendingThread: thread? = nil
+	local waitingSends: { thread } = {}
 
 	-- Zune's connect is TCP-only on Windows, so the socket stays unconnected and filters by peer itself. It binds
 	-- first because a receive on an unbound UDP socket fails at once on Windows.
 	handle:bindIp("0.0.0.0", 0)
 
+	-- On macOS Zune keeps one pending write per socket, so a send that overlaps another replaces it, and the first is
+	-- never sent and never returns. Sends therefore take turns, and a waiting thread its owner closed is passed over.
+	local function startNextSend()
+		local nextThread = table.remove(waitingSends, 1)
+
+		sendingThread = nextThread
+
+		if nextThread then
+			zuneTask.defer(function()
+				if coroutine.status(nextThread) == "suspended" then
+					zuneTask.spawn(nextThread)
+				elseif sendingThread == nextThread then
+					startNextSend()
+				end
+			end)
+		end
+	end
+
+	local function waitForTurn(thread: thread)
+		if sendingThread and coroutine.status(sendingThread) ~= "dead" then
+			table.insert(waitingSends, thread)
+			coroutine.yield()
+		end
+
+		sendingThread = thread
+	end
+
 	function value.send(message: (string | buffer)?, _asBinaryMessage: boolean?)
 		if message then
-			print(`[trace {string.format("%.3f", os.clock())}] client sendMsg {if type(message) == "string" then #message else buffer.len(message)}B to {host}:{port}`)
-			handle:sendMsg(port, host, message)
-			print(`[trace {string.format("%.3f", os.clock())}] client sendMsg returned`)
+			local thread = coroutine.running()
+
+			waitForTurn(thread)
+
+			local sent, sendError = pcall(handle.sendMsg, handle, port, host, message)
+
+			if sendingThread == thread then
+				startNextSend()
+			end
+
+			if not sent then
+				error(sendError, 0)
+			end
 		end
 	end
 
 	function value.next(): string?
 		while true do
-			print(`[trace {string.format("%.3f", os.clock())}] client recvMsg waiting`)
 			local address, response = handle:recvMsg(65536)
-			print(`[trace {string.format("%.3f", os.clock())}] client recvMsg got {buffer.len(response)}B from {address.address}:{address.port}`)
 
 			if address.address == host and address.port == port then
 				return buffer.tostring(response)
@@ -171,9 +208,7 @@ function net.udpSocket(host: string, port: number)
 	end
 
 	function value.close(_code: number?)
-		print(`[trace {string.format("%.3f", os.clock())}] client close`)
 		handle:close()
-		print(`[trace {string.format("%.3f", os.clock())}] client close returned`)
 	end
 
 	return value
