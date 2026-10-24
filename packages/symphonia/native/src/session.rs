@@ -1,6 +1,7 @@
 //! One open audio source: probing it, choosing its track, and reading it as 48 kHz stereo f32 or as Opus packets passed
 //! through untouched.
 
+use std::borrow::Cow;
 use std::ffi::OsStr;
 use std::fs::File;
 use std::io::{self, Cursor};
@@ -45,8 +46,8 @@ pub struct Session {
     output: Output,
     pub(crate) sample_rate: u32,
     channel_count: Option<usize>,
-    codec_name: &'static str,
-    container_name: &'static str,
+    pub(crate) codec_name: &'static str,
+    pub(crate) container_name: &'static str,
     duration_milliseconds: Option<u64>,
     ended: bool,
     failure: Option<Error>,
@@ -122,15 +123,15 @@ impl Session {
         })
     }
 
-    pub fn read(&mut self, capacity_frames: usize) -> Result<&[u8], Error> {
+    pub fn read(&mut self, output: &mut [u8]) -> Result<usize, Error> {
         let Output::Decoded(decoder) = &mut self.output else {
             return Err(Error::OpusNeedsReadPacket);
         };
-        let bytes = decoder.read(&mut self.demuxer, self.sample_rate, capacity_frames)?;
+        let frames = decoder.read(&mut self.demuxer, self.sample_rate, output)?;
 
-        self.ended = bytes.is_empty();
+        self.ended = frames == 0;
 
-        Ok(bytes)
+        Ok(frames)
     }
 
     /// Skips and counts empty packets. A packet over `capacity` bytes is an error, and stays next for a bigger buffer.
@@ -191,11 +192,11 @@ impl Session {
         }
     }
 
-    pub fn describe(&self, field: DescribeField) -> String {
+    pub fn describe(&self, field: DescribeField) -> Cow<'static, str> {
         match field {
-            DescribeField::Codec => self.codec_name.to_string(),
-            DescribeField::Container => self.container_name.to_string(),
-            DescribeField::Failure => self.failure.as_ref().map(Error::to_string).unwrap_or_default(),
+            DescribeField::Codec => Cow::Borrowed(self.codec_name),
+            DescribeField::Container => Cow::Borrowed(self.container_name),
+            DescribeField::Failure => self.failure.as_ref().map_or(Cow::Borrowed(""), |error| error.to_string().into()),
         }
     }
 

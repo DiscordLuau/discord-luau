@@ -3,29 +3,20 @@
 
 use symphonia::core::audio::{Channels, Position};
 
+use crate::limits::MAX_CHANNELS;
+
 pub const OUTPUT_CHANNELS: usize = 2;
 
+const LEFT: usize = 0;
+const RIGHT: usize = 1;
 const MINUS_3_DB: f32 = std::f32::consts::FRAC_1_SQRT_2;
 const OPPOSITE_CENTRE: f32 = 1.0 - MINUS_3_DB;
 const REAR_CENTRE: f32 = 0.5;
 
-#[derive(Debug, Clone, Copy, PartialEq)]
-struct Contribution {
-    plane: usize,
-    coefficient: f32,
-}
-
-impl Contribution {
-    fn new(plane: usize, coefficient: f32) -> Self {
-        Self { plane, coefficient }
-    }
-}
-
 /// How the planes of one decoded buffer sum into the left and right outputs.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, Copy, Default, PartialEq)]
 pub struct StereoMix {
-    left: Vec<Contribution>,
-    right: Vec<Contribution>,
+    gains: [[f32; OUTPUT_CHANNELS]; MAX_CHANNELS],
 }
 
 impl StereoMix {
@@ -49,32 +40,36 @@ impl StereoMix {
         output.reserve(frames * OUTPUT_CHANNELS);
 
         for frame in 0..frames {
-            output.push(Self::side(&self.left, planes, frame));
-            output.push(Self::side(&self.right, planes, frame));
+            output.push(self.side(LEFT, planes, frame));
+            output.push(self.side(RIGHT, planes, frame));
         }
     }
 
     fn mono(plane: usize) -> Self {
-        let only = vec![Contribution::new(plane, 1.0)];
+        let mut mix = Self::default();
 
-        Self { left: only.clone(), right: only }
+        mix.gains[plane] = [1.0, 1.0];
+        mix
     }
 
     fn first_two() -> Self {
-        Self { left: vec![Contribution::new(0, 1.0)], right: vec![Contribution::new(1, 1.0)] }
+        let mut mix = Self::default();
+
+        mix.gains[0] = [1.0, 0.0];
+        mix.gains[1] = [0.0, 1.0];
+        mix
     }
 
     fn first_planes(plane_count: usize) -> Self {
         match plane_count {
-            0 => Self { left: Vec::new(), right: Vec::new() },
+            0 => Self::default(),
             1 => Self::mono(0),
             _ => Self::first_two(),
         }
     }
 
     fn positioned(channels: &Channels, positions: Position, plane_count: usize) -> Self {
-        let mut left = Vec::new();
-        let mut right = Vec::new();
+        let mut mix = Self::default();
 
         for bit in 0..u64::BITS {
             let position = Position::from_bits_retain(1 << bit);
@@ -91,32 +86,52 @@ impl StereoMix {
                 continue;
             }
 
+            let Some(gain) = mix.gains.get_mut(plane) else {
+                continue;
+            };
             let (left_coefficient, right_coefficient) = coefficients(position);
 
-            if left_coefficient != 0.0 {
-                left.push(Contribution::new(plane, left_coefficient));
-            }
-
-            if right_coefficient != 0.0 {
-                right.push(Contribution::new(plane, right_coefficient));
-            }
+            *gain = [left_coefficient, right_coefficient];
         }
 
-        match (left.is_empty(), right.is_empty()) {
+        match (mix.is_silent(LEFT), mix.is_silent(RIGHT)) {
             (true, true) => return Self::first_planes(plane_count),
-            (true, false) => left.clone_from(&right),
-            (false, true) => right.clone_from(&left),
+            (true, false) => mix.copy_side(RIGHT, LEFT),
+            (false, true) => mix.copy_side(LEFT, RIGHT),
             (false, false) => {}
         }
 
-        normalise(&mut left);
-        normalise(&mut right);
-
-        Self { left, right }
+        mix.normalise(LEFT);
+        mix.normalise(RIGHT);
+        mix
     }
 
-    fn side(contributions: &[Contribution], planes: &[Vec<f32>], frame: usize) -> f32 {
-        contributions.iter().map(|contribution| planes[contribution.plane][frame] * contribution.coefficient).sum()
+    fn is_silent(&self, side: usize) -> bool {
+        self.gains.iter().all(|gain| gain[side] == 0.0)
+    }
+
+    fn copy_side(&mut self, from: usize, to: usize) {
+        for gain in &mut self.gains {
+            gain[to] = gain[from];
+        }
+    }
+
+    fn side(&self, side: usize, planes: &[Vec<f32>], frame: usize) -> f32 {
+        planes
+            .iter()
+            .zip(&self.gains)
+            .filter(|(_, gain)| gain[side] != 0.0)
+            .map(|(plane, gain)| plane[frame] * gain[side])
+            .sum()
+    }
+
+    /// Divides each gain by the sum of the side's absolute gains.
+    fn normalise(&mut self, side: usize) {
+        let total: f32 = self.gains.iter().filter(|gain| gain[side] != 0.0).map(|gain| gain[side].abs()).sum();
+
+        for gain in &mut self.gains {
+            gain[side] /= total;
+        }
     }
 }
 
@@ -161,14 +176,5 @@ fn coefficients(position: Position) -> (f32, f32) {
         (REAR_CENTRE, REAR_CENTRE)
     } else {
         (0.0, 0.0)
-    }
-}
-
-/// Divides each coefficient by the sum of the side's absolute coefficients.
-fn normalise(side: &mut [Contribution]) {
-    let total: f32 = side.iter().map(|contribution| contribution.coefficient.abs()).sum();
-
-    for contribution in side.iter_mut() {
-        contribution.coefficient /= total;
     }
 }

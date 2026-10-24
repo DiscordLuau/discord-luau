@@ -1,6 +1,7 @@
 //! Stream sessions: audio pushed in chunks, decoded on a worker thread under the panic guard, and read without
 //! blocking. Test hook: `testing::count_block`.
 
+use std::borrow::Cow;
 use std::sync::atomic::{AtomicI32, Ordering};
 use std::sync::mpsc::{self, Receiver, SyncSender, TryRecvError, TrySendError};
 use std::sync::{Arc, Mutex};
@@ -99,7 +100,7 @@ impl StreamSession {
         lock(&self.status).info()
     }
 
-    pub fn describe(&self, field: DescribeField) -> String {
+    pub fn describe(&self, field: DescribeField) -> Cow<'static, str> {
         lock(&self.status).describe(field)
     }
 
@@ -111,22 +112,23 @@ impl StreamSession {
         lock(&self.status).mark_failed(error);
     }
 
-    /// Reads up to `capacity_frames` frames from one ready block, keeping the rest of it for the next read.
-    pub fn read(&mut self, capacity_frames: usize) -> Result<Poll<&[u8]>, Error> {
+    /// Fills `output` with whole frames from one ready block, keeping the rest of it for the next read.
+    pub fn read(&mut self, output: &mut [u8]) -> Result<Poll<usize>, Error> {
         let held = self.hold_block()?;
 
         self.check_pcm()?;
 
         match held {
             Poll::Pending => Ok(Poll::Pending),
-            Poll::Ready(Held::End) => Ok(Poll::Ready(&[])),
+            Poll::Ready(Held::End) => Ok(Poll::Ready(0)),
             Poll::Ready(Held::Block) => {
-                let start = self.offset;
-                let wanted = capacity_frames.saturating_mul(BYTES_PER_FRAME);
+                let block = &self.block[self.offset..];
+                let length = block.len().min(output.len() / BYTES_PER_FRAME * BYTES_PER_FRAME);
 
-                self.offset = self.block.len().min(start.saturating_add(wanted));
+                output[..length].copy_from_slice(&block[..length]);
+                self.offset += length;
 
-                Ok(Poll::Ready(&self.block[start..self.offset]))
+                Ok(Poll::Ready(length / BYTES_PER_FRAME))
             }
         }
     }
@@ -225,7 +227,12 @@ fn decode(reader: ChunkReader, output: &SyncSender<Vec<u8>>, status: &Mutex<Stat
         let block = if is_opus {
             session.read_packet(usize::MAX).map(|packet| packet.map(Vec::from))
         } else {
-            session.read(BLOCK_FRAMES).map(|bytes| Some(bytes.to_vec()).filter(|block| !block.is_empty()))
+            let mut block = vec![0; BLOCK_FRAMES * BYTES_PER_FRAME];
+
+            session.read(&mut block).map(|frames| {
+                block.truncate(frames * BYTES_PER_FRAME);
+                (frames > 0).then_some(block)
+            })
         };
 
         lock(status).publish(&session, State::Open);

@@ -17,7 +17,7 @@ use crate::files::{
     ADPCM_BLOCK_FRAMES, adpcm_wav, aiff, caf_lpcm, corrupted_adpcm_wav, fixture, float_wav, ogg_opus, opus_packet,
     s16_wav, stereo_sine, wav, wav_with, with_fact,
 };
-use crate::util::read_packets;
+use crate::util::{read_packets, read_session};
 
 /// Ten times the longest audio these tests make.
 const READ_ALL_MAX_FRAMES: usize = 480_000;
@@ -41,13 +41,13 @@ fn read_floats(session: &mut Session, capacity: usize) -> Vec<f32> {
     let mut samples = Vec::new();
 
     loop {
-        let bytes = session.read(capacity).unwrap();
+        let bytes = read_session(session, capacity).unwrap();
 
         if bytes.is_empty() {
             return samples;
         }
 
-        samples.extend(floats(bytes));
+        samples.extend(floats(&bytes));
 
         assert!(
             samples.len() <= READ_ALL_MAX_FRAMES * 2,
@@ -146,16 +146,16 @@ fn reads_after_the_end_stay_empty() {
     let (left, _) = read_all(&mut session);
 
     assert_eq!(left.len(), 480);
-    assert_eq!(session.read(4800).unwrap(), b"");
-    assert_eq!(session.read(4800).unwrap(), b"");
+    assert_eq!(read_session(&mut session, 4800).unwrap(), b"");
+    assert_eq!(read_session(&mut session, 4800).unwrap(), b"");
 }
 
 #[test]
 fn reads_respect_the_capacity() {
     let mut session = Session::open_memory(wav(48_000, 2, 1_000), None).unwrap();
 
-    assert_eq!(session.read(300).unwrap().len(), 300 * BYTES_PER_FRAME);
-    assert_eq!(session.read(1).unwrap().len(), BYTES_PER_FRAME);
+    assert_eq!(read_session(&mut session, 300).unwrap().len(), 300 * BYTES_PER_FRAME);
+    assert_eq!(read_session(&mut session, 1).unwrap().len(), BYTES_PER_FRAME);
 }
 
 #[test]
@@ -248,7 +248,7 @@ fn a_decoded_rate_that_differs_from_the_tracks_is_an_error() {
     set_sample_rate(&mut session, 44_100);
 
     assert_eq!(
-        session.read(4800).err().unwrap(),
+        read_session(&mut session, 4800).err().unwrap(),
         Error::SampleRateChanged { track_rate: 44_100, decoded_rate: 48_000 }
     );
 }
@@ -278,7 +278,7 @@ fn more_than_ten_thousand_undecodable_packets_in_a_row_are_an_error() {
     let mut session = Session::open_memory(bytes, None).unwrap();
 
     assert_eq!(
-        session.read(4800).err().unwrap().to_string(),
+        read_session(&mut session, 4800).err().unwrap().to_string(),
         "the audio has more than 10000 undecodable packets in a row"
     );
 }
@@ -308,7 +308,7 @@ fn a_truncated_wav_ends_early_and_cleanly() {
 
     assert!(!left.is_empty() && left.len() <= present, "{} of {present} frames", left.len());
     assert!(session.info().ended_early);
-    assert_eq!(session.read(4800).unwrap(), b"", "the end stays the end");
+    assert_eq!(read_session(&mut session, 4800).unwrap(), b"", "the end stays the end");
 }
 
 #[test]
@@ -513,7 +513,7 @@ fn short_audio_keeps_its_length_at_any_read_size() {
             let interleaved: Vec<i16> = left.iter().zip(&right).flat_map(|(&left, &right)| [left, right]).collect();
 
             assert_eq!(interleaved, samples, "{context} at 48 kHz");
-            assert_eq!(session.read(capacity).unwrap(), b"", "{context}");
+            assert_eq!(read_session(&mut session, capacity).unwrap(), b"", "{context}");
 
             let mut session = Session::open_memory(resampled.clone(), None).unwrap();
 
@@ -527,9 +527,9 @@ fn a_session_is_open_until_a_read_reaches_the_end() {
     let mut session = Session::open_memory(wav(48_000, 2, 4_800), None).unwrap();
 
     assert_eq!(session.state(), State::Open);
-    assert_eq!(session.read(4_800).unwrap().len(), 4_800 * BYTES_PER_FRAME);
+    assert_eq!(read_session(&mut session, 4_800).unwrap().len(), 4_800 * BYTES_PER_FRAME);
     assert_eq!(session.state(), State::Open, "the last frames are not yet the end");
-    assert_eq!(session.read(4_800).unwrap(), b"");
+    assert_eq!(read_session(&mut session, 4_800).unwrap(), b"");
     assert_eq!(session.state(), State::Ended);
 
     let packets = vec![opus_packet(10)];

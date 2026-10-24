@@ -46,16 +46,10 @@ impl StereoResampler {
             Some(fft)
         };
         let delay = fft.as_ref().map_or(0, Resampler::output_delay);
+        let pending = if fft.is_some() { Vec::with_capacity(CHUNK_SAMPLES) } else { Vec::new() };
+        let scratch = vec![0.0; fft.as_ref().map_or(0, Resampler::output_frames_max) * OUTPUT_CHANNELS];
 
-        Ok(Self {
-            source_rate,
-            fft,
-            pending: Vec::new(),
-            scratch: Vec::new(),
-            input_frames: 0,
-            trim: Trim::new(delay),
-            finished: false,
-        })
+        Ok(Self { source_rate, fft, pending, scratch, input_frames: 0, trim: Trim::new(delay), finished: false })
     }
 
     /// Takes interleaved stereo `input`, and appends the output that is ready to `output`.
@@ -69,27 +63,32 @@ impl StereoResampler {
             return Ok(());
         };
 
-        self.pending.extend_from_slice(input);
+        let missing = CHUNK_SAMPLES.saturating_sub(self.pending.len()).min(input.len());
+        let (head, input) = if self.pending.is_empty() { (&[][..], input) } else { input.split_at(missing) };
 
-        let mut consumed = 0;
+        self.pending.extend_from_slice(head);
 
-        while self.pending.len() - consumed >= CHUNK_SAMPLES {
-            let chunk = &self.pending[consumed..consumed + CHUNK_SAMPLES];
-            let produced = process(fft, chunk, None, &mut self.scratch)?;
+        if self.pending.len() == CHUNK_SAMPLES {
+            let produced = process(fft, &self.pending, None, &mut self.scratch)?;
 
-            consumed += CHUNK_SAMPLES;
+            self.pending.clear();
             self.trim.emit(&self.scratch[..produced * OUTPUT_CHANNELS], expected, output);
         }
 
-        self.pending.drain(..consumed);
+        let (chunks, remainder) = input.as_chunks::<CHUNK_SAMPLES>();
+
+        for chunk in chunks {
+            let produced = process(fft, chunk, None, &mut self.scratch)?;
+
+            self.trim.emit(&self.scratch[..produced * OUTPUT_CHANNELS], expected, output);
+        }
+
+        self.pending.extend_from_slice(remainder);
 
         Ok(())
     }
 
-    /// Appends the rest of the output, up to exactly the expected length; later calls do nothing.
-    ///
-    /// The first round gives the pending input as a partial chunk, and later rounds give silence, for at most
-    /// `flush_rounds` rounds.
+    /// Appends the rest of the output, up to exactly the expected length, in at most `flush_rounds` rounds.
     pub fn finish(&mut self, output: &mut Vec<f32>) -> Result<(), Error> {
         if self.finished {
             return Ok(());
@@ -102,30 +101,31 @@ impl StereoResampler {
             return Ok(());
         };
         let rounds = flush_rounds(fft, expected.saturating_sub(self.trim.output_frames), self.trim.delay_remaining);
-        let silence = vec![0.0_f32; CHUNK_SAMPLES];
 
         for _ in 0..rounds {
             if self.trim.output_frames >= expected {
                 break;
             }
 
-            let pending_frames = self.pending.len() / OUTPUT_CHANNELS;
-            let produced = if pending_frames > 0 {
-                let mut chunk = std::mem::take(&mut self.pending);
+            let indexing = Indexing { partial_len: Some(self.pending.len() / OUTPUT_CHANNELS), ..Indexing::new() };
+            let produced = process(fft, &self.pending, Some(&indexing), &mut self.scratch)?;
 
-                chunk.resize(CHUNK_SAMPLES, 0.0);
-
-                let indexing = Indexing { partial_len: Some(pending_frames), ..Indexing::new() };
-
-                process(fft, &chunk, Some(&indexing), &mut self.scratch)?
-            } else {
-                process(fft, &silence, None, &mut self.scratch)?
-            };
-
+            self.pending.clear();
             self.trim.emit(&self.scratch[..produced * OUTPUT_CHANNELS], expected, output);
         }
 
         Ok(())
+    }
+
+    pub(crate) fn passes_through(&self) -> bool {
+        self.fft.is_none()
+    }
+
+    pub(crate) fn output_frames_max(&self, input_frames: usize) -> usize {
+        match &self.fft {
+            Some(fft) => input_frames.div_ceil(CHUNK_FRAMES) * fft.output_frames_max(),
+            None => input_frames,
+        }
     }
 
     pub(crate) fn expected_frames(&self) -> u64 {
@@ -154,20 +154,17 @@ impl Trim {
     }
 }
 
-/// Runs one round over exactly `CHUNK_FRAMES` frames, and returns the frames written to `scratch`.
+/// Runs one round over `input`, which holds a whole chunk unless `indexing` gives a partial length.
 fn process(
     fft: &mut Fft<f32>,
-    chunk: &[f32],
+    input: &[f32],
     indexing: Option<&Indexing>,
-    scratch: &mut Vec<f32>,
+    scratch: &mut [f32],
 ) -> Result<usize, Error> {
-    let capacity = fft.output_frames_max();
-
-    scratch.resize(capacity * OUTPUT_CHANNELS, 0.0);
-
-    let input = InterleavedSlice::new(chunk, OUTPUT_CHANNELS, CHUNK_FRAMES)
+    let capacity = scratch.len() / OUTPUT_CHANNELS;
+    let input = InterleavedSlice::new(input, OUTPUT_CHANNELS, input.len() / OUTPUT_CHANNELS)
         .map_err(|failure| Error::ResampleFailed(failure.to_string()))?;
-    let mut output = InterleavedSlice::new_mut(scratch.as_mut_slice(), OUTPUT_CHANNELS, capacity)
+    let mut output = InterleavedSlice::new_mut(scratch, OUTPUT_CHANNELS, capacity)
         .map_err(|failure| Error::ResampleFailed(failure.to_string()))?;
     let (_, produced) = fft
         .process_into_buffer(&input, &mut output, indexing)

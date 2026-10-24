@@ -1,6 +1,8 @@
 //! What a stream session and its worker share behind one lock: what the worker last published, the failure and the
 //! stop flag. The session answers calls from it, so it never waits on a decode.
 
+use std::borrow::Cow;
+
 use crate::error::Error;
 use crate::fields::{DescribeField, State};
 use crate::session::{Info, Session};
@@ -9,27 +11,20 @@ pub(crate) struct Status {
     state: State,
     failure: Option<Error>,
     info: Option<Info>,
-    codec_name: String,
-    container_name: String,
+    codec_name: &'static str,
+    container_name: &'static str,
     stopped: bool,
 }
 
 impl Status {
     pub(crate) fn new() -> Self {
-        Self {
-            state: State::Probing,
-            failure: None,
-            info: None,
-            codec_name: String::new(),
-            container_name: String::new(),
-            stopped: false,
-        }
+        Self { state: State::Probing, failure: None, info: None, codec_name: "", container_name: "", stopped: false }
     }
 
     pub(crate) fn publish(&mut self, session: &Session, state: State) {
         if self.state == State::Probing {
-            self.codec_name = session.describe(DescribeField::Codec);
-            self.container_name = session.describe(DescribeField::Container);
+            self.codec_name = session.codec_name;
+            self.container_name = session.container_name;
         }
 
         self.info = Some(session.info());
@@ -44,11 +39,11 @@ impl Status {
         self.info
     }
 
-    pub(crate) fn describe(&self, field: DescribeField) -> String {
+    pub(crate) fn describe(&self, field: DescribeField) -> Cow<'static, str> {
         match field {
-            DescribeField::Codec => self.codec_name.clone(),
-            DescribeField::Container => self.container_name.clone(),
-            DescribeField::Failure => self.failure.as_ref().map(Error::to_string).unwrap_or_default(),
+            DescribeField::Codec => Cow::Borrowed(self.codec_name),
+            DescribeField::Container => Cow::Borrowed(self.container_name),
+            DescribeField::Failure => self.failure.as_ref().map_or(Cow::Borrowed(""), |error| error.to_string().into()),
         }
     }
 

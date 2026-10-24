@@ -4,14 +4,24 @@
 #![expect(clippy::undocumented_unsafe_blocks, reason = "every ABI call passes buffers the test owns")]
 
 use std::ffi::CStr;
+use std::io::Cursor;
 use std::sync::{Mutex, MutexGuard, PoisonError};
 use std::thread;
 use std::time::{Duration, Instant};
+use std::vec::IntoIter;
 
 use discord_luau_symphonia::{
-    BYTES_PER_FRAME, Handle, Session, symphonia_close, symphonia_finish, symphonia_info, symphonia_open_memory,
+    BYTES_PER_FRAME, Error, Handle, Session, symphonia_close, symphonia_finish, symphonia_info, symphonia_open_memory,
     symphonia_read, symphonia_worker_count,
 };
+use symphonia::core::errors::Result as SymphoniaResult;
+use symphonia::core::formats::probe::Hint;
+use symphonia::core::formats::{FormatInfo, FormatOptions, FormatReader, MediaInfo, SeekMode, SeekTo, SeekedTo, Track};
+use symphonia::core::io::{MediaSourceStream, MediaSourceStreamOptions};
+use symphonia::core::meta::{Metadata, MetadataOptions};
+use symphonia::core::packet::Packet;
+
+use crate::files::fixture;
 
 pub(crate) const ERROR_CAPACITY: u32 = 256;
 /// How long a stream's worker, or a read it is blocked in, may take to return once the stream is done or closed.
@@ -103,6 +113,15 @@ pub(crate) fn read_to_end(handle: *mut Handle, max_frames: i32) -> i32 {
     }
 }
 
+pub(crate) fn read_session(session: &mut Session, capacity_frames: usize) -> Result<Vec<u8>, Error> {
+    let mut output = vec![0; capacity_frames * BYTES_PER_FRAME];
+    let frames = session.read(&mut output)?;
+
+    output.truncate(frames * BYTES_PER_FRAME);
+
+    Ok(output)
+}
+
 /// Panics after `READ_PACKETS_MAX`, so a session that never ends fails the test instead of growing forever.
 pub(crate) fn read_packets(session: &mut Session) -> Vec<Box<[u8]>> {
     let mut packets = Vec::new();
@@ -117,4 +136,58 @@ pub(crate) fn read_packets(session: &mut Session) -> Vec<Box<[u8]>> {
     }
 
     packets
+}
+
+pub(crate) struct Replay {
+    reader: Box<dyn FormatReader>,
+    packets: IntoIter<Packet>,
+}
+
+impl Replay {
+    pub(crate) fn demux(name: &str) -> Self {
+        let media = MediaSourceStream::new(Box::new(Cursor::new(fixture(name))), MediaSourceStreamOptions::default());
+        let mut reader = symphonia::default::get_probe()
+            .probe(&Hint::new(), media, FormatOptions::default(), MetadataOptions::default())
+            .unwrap();
+        let mut packets = Vec::new();
+
+        while let Ok(Some(packet)) = reader.next_packet() {
+            packets.push(packet);
+        }
+
+        Self { reader, packets: packets.into_iter() }
+    }
+}
+
+impl FormatReader for Replay {
+    fn format_info(&self) -> &FormatInfo {
+        self.reader.format_info()
+    }
+
+    fn media_info(&self) -> &MediaInfo {
+        self.reader.media_info()
+    }
+
+    fn metadata(&mut self) -> Metadata<'_> {
+        self.reader.metadata()
+    }
+
+    fn seek(&mut self, mode: SeekMode, to: SeekTo) -> SymphoniaResult<SeekedTo> {
+        self.reader.seek(mode, to)
+    }
+
+    fn tracks(&self) -> &[Track] {
+        self.reader.tracks()
+    }
+
+    fn next_packet(&mut self) -> SymphoniaResult<Option<Packet>> {
+        Ok(self.packets.next())
+    }
+
+    fn into_inner<'source>(self: Box<Self>) -> MediaSourceStream<'source>
+    where
+        Self: 'source,
+    {
+        self.reader.into_inner()
+    }
 }

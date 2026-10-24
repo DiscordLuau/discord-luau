@@ -6,6 +6,7 @@ mod files;
 mod util;
 
 mod abi;
+mod allocations;
 mod errors;
 mod mix;
 mod passthrough;

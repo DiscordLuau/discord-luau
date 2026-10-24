@@ -7,7 +7,12 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::mpsc::{Receiver, TryRecvError};
 use std::sync::{Arc, Mutex};
 
+use symphonia::core::codecs::audio::AudioDecoder;
+use symphonia::core::formats::FormatReader;
+
 use crate::chunk_reader::ChunkReader;
+use crate::decoder::Decoder;
+use crate::demuxer::Demuxer;
 use crate::error::Error;
 use crate::ffi::{self, TextBuffer};
 use crate::fields::State;
@@ -120,6 +125,16 @@ pub fn saturate_to_i32(value: u64) -> i32 {
 /// them.
 pub fn parse_opus_head(bytes: &[u8]) -> Result<Option<(u8, u8)>, Error> {
     Ok(OpusHead::parse(bytes)?.map(|head| (head.mapping_family, head.stream_count)))
+}
+
+pub fn decode_with(
+    codec: Box<dyn AudioDecoder>,
+    reader: Box<dyn FormatReader>,
+    track_id: u32,
+    sample_rate: u32,
+    output: &mut [u8],
+) -> Result<usize, Error> {
+    Decoder::new(codec, sample_rate, None)?.read(&mut Demuxer::new(reader, track_id), sample_rate, output)
 }
 
 /// Changes the sample rate `session` expects its decoded audio at.

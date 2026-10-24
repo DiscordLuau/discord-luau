@@ -1,8 +1,7 @@
 //! A track decoded to 48 kHz interleaved stereo f32 and trimmed to its playable length. Nothing here scales, limits
 //! or clamps a sample.
 
-use std::collections::VecDeque;
-
+use symphonia::core::audio::Channels;
 use symphonia::core::codecs::audio::AudioDecoder;
 use symphonia::core::errors::Error as SymphoniaError;
 
@@ -21,11 +20,13 @@ pub(crate) struct Decoder {
     decoded_frames: u64,
     ended_early: bool,
     finished: bool,
+    mix: StereoMix,
+    mix_layout: Option<(Channels, usize)>,
+    packet_samples_max: usize,
     planes: Vec<Vec<f32>>,
     stereo: Vec<f32>,
-    resampled: Vec<f32>,
-    ready: VecDeque<f32>,
-    bytes: Vec<u8>,
+    ready: Vec<f32>,
+    read_offset: usize,
 }
 
 impl Decoder {
@@ -37,11 +38,13 @@ impl Decoder {
             decoded_frames: 0,
             ended_early: false,
             finished: false,
+            mix: StereoMix::default(),
+            mix_layout: None,
+            packet_samples_max: 0,
             planes: Vec::new(),
             stereo: Vec::new(),
-            resampled: Vec::new(),
-            ready: VecDeque::new(),
-            bytes: Vec::new(),
+            ready: Vec::new(),
+            read_offset: 0,
         })
     }
 
@@ -49,27 +52,32 @@ impl Decoder {
         self.ended_early
     }
 
-    /// Reads up to `capacity_frames` frames as little-endian f32 bytes; an empty result is the end.
-    ///
-    /// Every decoded buffer must be at the track's `sample_rate`.
-    pub(crate) fn read(
-        &mut self,
-        demuxer: &mut Demuxer,
-        sample_rate: u32,
-        capacity_frames: usize,
-    ) -> Result<&[u8], Error> {
-        let wanted_samples = capacity_frames.saturating_mul(OUTPUT_CHANNELS);
+    /// Fills `output` with whole frames of little-endian f32 and returns the frame count; 0 is the end.
+    pub(crate) fn read(&mut self, demuxer: &mut Demuxer, sample_rate: u32, output: &mut [u8]) -> Result<usize, Error> {
+        let wanted_samples = output.len() / BYTES_PER_FRAME * OUTPUT_CHANNELS;
 
-        while self.ready.len() < wanted_samples && !self.finished {
-            self.decode_next(demuxer, sample_rate)?;
+        if self.ready.len() - self.read_offset < wanted_samples {
+            self.ready.drain(..self.read_offset);
+            self.read_offset = 0;
+
+            while self.ready.len() < wanted_samples && !self.finished {
+                self.decode_next(demuxer, sample_rate)?;
+            }
+
+            self.ready.reserve((wanted_samples + self.packet_samples_max).saturating_sub(self.ready.len()));
         }
 
-        let taken = self.ready.len().min(wanted_samples);
+        let samples = &self.ready[self.read_offset..];
+        let taken = samples.len().min(wanted_samples);
+        let (words, _) = output.as_chunks_mut::<{ size_of::<f32>() }>();
 
-        self.bytes.clear();
-        self.bytes.extend(self.ready.drain(..taken).flat_map(f32::to_le_bytes));
+        for (word, sample) in words.iter_mut().zip(&samples[..taken]) {
+            *word = sample.to_le_bytes();
+        }
 
-        Ok(&self.bytes)
+        self.read_offset += taken;
+
+        Ok(taken / OUTPUT_CHANNELS)
     }
 
     /// Decodes one packet, or flushes once the track or its playable frames end.
@@ -101,27 +109,35 @@ impl Decoder {
 
         let remaining = self.frame_limit.map_or(u64::MAX, |limit| limit - self.decoded_frames);
         let frames = buffer.frames().min(usize::try_from(remaining).unwrap_or(usize::MAX));
-        let mix = StereoMix::for_channels(buffer.spec().channels(), buffer.num_planes());
+        let channels = buffer.spec().channels();
+        let plane_count = buffer.num_planes();
+
+        if self.mix_layout.as_ref().is_none_or(|(mixed, count)| mixed != channels || *count != plane_count) {
+            self.mix = StereoMix::for_channels(channels, plane_count);
+            self.mix_layout = Some((channels.clone(), plane_count));
+            self.packet_samples_max = self.resampler.output_frames_max(buffer.capacity()) * OUTPUT_CHANNELS;
+        }
 
         buffer.copy_to_vecs_planar::<f32>(&mut self.planes);
         self.decoded_frames += frames as u64;
-        self.stereo.clear();
-        mix.apply(&self.planes, frames, &mut self.stereo);
-        self.resampled.clear();
-        self.resampler.push(&self.stereo, &mut self.resampled)?;
-        self.ready.extend(&self.resampled);
+        self.append(frames)
+    }
 
-        Ok(())
+    fn append(&mut self, frames: usize) -> Result<(), Error> {
+        if self.resampler.passes_through() {
+            self.mix.apply(&self.planes, frames, &mut self.ready);
+            return Ok(());
+        }
+
+        self.stereo.clear();
+        self.mix.apply(&self.planes, frames, &mut self.stereo);
+        self.resampler.push(&self.stereo, &mut self.ready)
     }
 
     /// Ending short of the playable length, however the container ended, is ending early.
     fn finish(&mut self) -> Result<(), Error> {
         self.finished = true;
         self.ended_early = self.frame_limit.is_some_and(|limit| self.decoded_frames < limit);
-        self.resampled.clear();
-        self.resampler.finish(&mut self.resampled)?;
-        self.ready.extend(&self.resampled);
-
-        Ok(())
+        self.resampler.finish(&mut self.ready)
     }
 }

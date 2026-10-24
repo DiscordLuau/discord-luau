@@ -3,6 +3,7 @@
 
 #![expect(clippy::cast_possible_truncation, reason = "the frame and chunk counts here are small")]
 
+use std::borrow::Cow;
 use std::io::Cursor;
 use std::path::{Path, PathBuf};
 use std::task::Poll;
@@ -16,7 +17,7 @@ use discord_luau_symphonia::{
 use symphonia::core::io::ReadOnlySource;
 
 use crate::files::tone_sample;
-use crate::util::{WAIT, serial, wait_for_workers};
+use crate::util::{WAIT, read_session, serial, wait_for_workers};
 
 /// The chunked runs per file.
 const SEEDS: u64 = 10;
@@ -77,7 +78,7 @@ fn a_65535_frame_flac_block_reaches_the_output_in_4800_frame_pieces() {
     let workers_before = symphonia_worker_count();
     let bytes = one_block_flac(u16::MAX);
     let mut whole = Session::open_memory(bytes.clone(), None).unwrap();
-    let expected = whole.read(usize::from(u16::MAX) + 1).unwrap().to_vec();
+    let expected = read_session(&mut whole, usize::from(u16::MAX) + 1).unwrap();
     let mut session = StreamSession::open().unwrap();
     let mut pieces = Vec::new();
     let mut decoded = Vec::new();
@@ -88,13 +89,15 @@ fn a_65535_frame_flac_block_reaches_the_output_in_4800_frame_pieces() {
 
     let mut deadline = Instant::now() + WAIT;
 
+    let mut block = vec![0; BLOCK_FRAMES * BYTES_PER_FRAME];
+
     loop {
         // A read never spans two blocks, so a read with room for any block takes exactly one.
-        match session.read(usize::MAX).unwrap() {
-            Poll::Ready([]) => break,
-            Poll::Ready(block) => {
-                pieces.push(block.len() / BYTES_PER_FRAME);
-                decoded.extend_from_slice(block);
+        match session.read(&mut block).unwrap() {
+            Poll::Ready(0) => break,
+            Poll::Ready(frames) => {
+                pieces.push(frames);
+                decoded.extend_from_slice(&block[..frames * BYTES_PER_FRAME]);
                 deadline = Instant::now() + WAIT;
             }
             Poll::Pending => {
@@ -146,7 +149,7 @@ fn chunk_sizes(seed: u64, total: usize) -> Vec<usize> {
 #[derive(Default)]
 struct Decoded {
     /// The info and the codec and container names, once open.
-    opened: Option<(Info, Vec<String>)>,
+    opened: Option<(Info, Vec<Cow<'static, str>>)>,
     pcm: Vec<u8>,
     packets: Vec<Box<[u8]>>,
     failure: Option<Error>,
@@ -204,8 +207,8 @@ fn reference(bytes: &[u8]) -> Decoded {
                 more
             })
         } else {
-            session.read(READ_FRAMES).map(|bytes| {
-                decoded.pcm.extend_from_slice(bytes);
+            read_session(&mut session, READ_FRAMES).map(|bytes| {
+                decoded.pcm.extend_from_slice(&bytes);
                 !bytes.is_empty()
             })
         };
@@ -241,12 +244,16 @@ fn read_once(session: &mut StreamSession, decoded: &mut Decoded) -> Poll<bool> {
                 more
             })
         }),
-        Some(false) => session.read(READ_FRAMES).map(|read| {
-            read.map(|bytes| {
-                decoded.pcm.extend_from_slice(bytes);
-                !bytes.is_empty()
+        Some(false) => {
+            let mut output = vec![0; READ_FRAMES * BYTES_PER_FRAME];
+
+            session.read(&mut output).map(|read| {
+                read.map(|frames| {
+                    decoded.pcm.extend_from_slice(&output[..frames * BYTES_PER_FRAME]);
+                    frames > 0
+                })
             })
-        }),
+        }
         None => stream_failure(session).map_or(Ok(Poll::Pending), Err),
     };
 

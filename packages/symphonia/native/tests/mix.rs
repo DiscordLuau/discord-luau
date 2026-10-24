@@ -1,12 +1,86 @@
 //! Downmixing every kind of layout to stereo, without clipping.
 
-use discord_luau_symphonia::StereoMix;
-use symphonia::core::audio::{Channels, Position, layouts};
+use discord_luau_symphonia::testing::decode_with;
+use discord_luau_symphonia::{BYTES_PER_FRAME, OUTPUT_CHANNELS, StereoMix};
+use symphonia::core::audio::{AudioBuffer, AudioSpec, Channels, GenericAudioBufferRef, Position, layouts};
+use symphonia::core::codecs::CodecInfo;
+use symphonia::core::codecs::audio::{AudioCodecParameters, AudioDecoder, FinalizeResult};
+use symphonia::core::errors::Result as SymphoniaResult;
+use symphonia::core::formats::{FormatReader, TrackType};
+use symphonia::core::packet::PacketRef;
+
+use crate::util::Replay;
 
 /// The gains of the mix's table, stated here so the tests check its values.
 const MINUS_3_DB: f32 = std::f32::consts::FRAC_1_SQRT_2;
 const OPPOSITE_CENTRE: f32 = 1.0 - MINUS_3_DB;
 const REAR_CENTRE: f32 = 0.5;
+const RELAYOUT_FRAMES: usize = 4;
+const STEREO_VALUES: [f32; 2] = [0.25, -0.5];
+const FIVE_ONE_VALUES: [f32; 6] = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6];
+const RELAYOUT_INFO: CodecInfo = CodecInfo { short_name: "relayout", long_name: "relayout", profiles: &[] };
+
+struct Relayout {
+    parameters: AudioCodecParameters,
+    buffers: [AudioBuffer<f32>; 2],
+    decoded: usize,
+}
+
+impl Relayout {
+    fn stereo_then_five_one() -> Self {
+        Self {
+            parameters: AudioCodecParameters::default(),
+            buffers: [
+                constant_buffer(layouts::CHANNEL_LAYOUT_STEREO, &STEREO_VALUES),
+                constant_buffer(layouts::CHANNEL_LAYOUT_5P1, &FIVE_ONE_VALUES),
+            ],
+            decoded: 0,
+        }
+    }
+}
+
+impl AudioDecoder for Relayout {
+    fn reset(&mut self) {}
+
+    fn codec_info(&self) -> &CodecInfo {
+        &RELAYOUT_INFO
+    }
+
+    fn codec_params(&self) -> &AudioCodecParameters {
+        &self.parameters
+    }
+
+    fn decode_ref(&mut self, _packet: &PacketRef<'_>) -> SymphoniaResult<GenericAudioBufferRef<'_>> {
+        let index = self.decoded.min(1);
+
+        self.decoded += 1;
+
+        Ok((&self.buffers[index]).into())
+    }
+
+    fn finalize(&mut self) -> FinalizeResult {
+        FinalizeResult::default()
+    }
+
+    fn last_decoded(&self) -> GenericAudioBufferRef<'_> {
+        (&self.buffers[self.decoded.saturating_sub(1).min(1)]).into()
+    }
+}
+
+fn constant_buffer(channels: Channels, values: &[f32]) -> AudioBuffer<f32> {
+    let mut buffer = AudioBuffer::new(AudioSpec::new(48_000, channels), RELAYOUT_FRAMES);
+
+    buffer.render(None, values);
+    buffer
+}
+
+fn fresh_mix(channels: &Channels, values: &[f32]) -> Vec<f32> {
+    let planes: Vec<Vec<f32>> = values.iter().map(|&value| vec![value; RELAYOUT_FRAMES]).collect();
+    let mut output = Vec::new();
+
+    StereoMix::for_channels(channels, planes.len()).apply(&planes, RELAYOUT_FRAMES, &mut output);
+    output
+}
 
 /// Mixes one frame where each plane holds the given value.
 fn mix_frame(channels: &Channels, values: &[f32]) -> (f32, f32) {
@@ -231,4 +305,22 @@ fn a_layout_with_one_side_only_feeds_both() {
     let expected = 1.0 / (1.0 + MINUS_3_DB);
 
     assert!(close(left, expected) && close(right, expected));
+}
+
+#[test]
+fn a_layout_change_mid_stream_mixes_with_the_new_layouts_table() {
+    let replay = Replay::demux("tone.flac");
+    let track_id = replay.default_track(TrackType::Audio).unwrap().id;
+    let codec = Box::new(Relayout::stereo_then_five_one());
+    let mut output = vec![0_u8; 4_096 * BYTES_PER_FRAME];
+    let frames = decode_with(codec, Box::new(replay), track_id, 48_000, &mut output).unwrap();
+    let samples: Vec<f32> =
+        output[..frames * BYTES_PER_FRAME].as_chunks::<4>().0.iter().map(|&bytes| f32::from_le_bytes(bytes)).collect();
+    let packet_samples = RELAYOUT_FRAMES * OUTPUT_CHANNELS;
+
+    assert_eq!(&samples[..packet_samples], fresh_mix(&layouts::CHANNEL_LAYOUT_STEREO, &STEREO_VALUES).as_slice());
+    assert_eq!(
+        &samples[packet_samples..2 * packet_samples],
+        fresh_mix(&layouts::CHANNEL_LAYOUT_5P1, &FIVE_ONE_VALUES).as_slice()
+    );
 }

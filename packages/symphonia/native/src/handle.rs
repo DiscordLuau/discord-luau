@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use std::ffi::CStr;
 use std::sync::atomic::{AtomicI32, Ordering};
 use std::task::Poll;
@@ -64,7 +65,7 @@ impl Handle {
         }
     }
 
-    pub(crate) fn describe(&self, field: DescribeField) -> String {
+    pub(crate) fn describe(&self, field: DescribeField) -> Cow<'static, str> {
         match self {
             Self::Direct(session) => session.describe(field),
             Self::Stream(stream) => stream.describe(field),
@@ -86,23 +87,14 @@ impl Handle {
     }
 
     pub(crate) fn read(&mut self, output: &mut [u8]) -> Result<Poll<usize>, Error> {
-        let capacity_frames = output.len() / BYTES_PER_FRAME;
-
-        if capacity_frames == 0 {
+        if output.len() < BYTES_PER_FRAME {
             return Err(Error::ZeroCapacity);
         }
 
-        let bytes = match self {
-            Self::Direct(session) => session.read(capacity_frames)?,
-            Self::Stream(stream) => match stream.read(capacity_frames)? {
-                Poll::Ready(bytes) => bytes,
-                Poll::Pending => return Ok(Poll::Pending),
-            },
-        };
-
-        output[..bytes.len()].copy_from_slice(bytes);
-
-        Ok(Poll::Ready(bytes.len() / BYTES_PER_FRAME))
+        match self {
+            Self::Direct(session) => session.read(output).map(Poll::Ready),
+            Self::Stream(stream) => stream.read(output),
+        }
     }
 
     pub(crate) fn read_packet(&mut self, output: &mut [u8]) -> Result<Poll<Option<usize>>, Error> {
