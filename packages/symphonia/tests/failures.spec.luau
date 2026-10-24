@@ -14,7 +14,7 @@ local WAV_BITS_PER_SAMPLE = 16
 local QUICK_OPEN_SECONDS = 1
 local TRUNCATED_MP3_BYTES = 2048
 local CORRUPTION_BYTES = 64
-local MAX_LOAD_WAITS = 10
+local LOAD_TIMEOUT_SECONDS = 30
 local UNKNOWN_CHUNK_SIZE = 0xFFFFFFFF
 local ENDED_EARLY_WARNING = "the audio ended early, short of the length the file states; it may be truncated or damaged"
 
@@ -142,12 +142,23 @@ local function swapLoader(openLibrary: () -> symphonia.Lib, work: () -> ())
 	local sys = symphonia.sys
 	local loaded = sys.load()
 	local originalOpenLibrary = sys.openLibrary
+	local loaderThreads: { thread } = {}
 	local succeeded, failure = pcall(function()
 		sys.library = nil
-		sys.openLibrary = openLibrary
+		sys.openLibrary = function()
+			table.insert(loaderThreads, coroutine.running())
+
+			return openLibrary()
+		end
 
 		work()
 	end)
+
+	for _, loaderThread in loaderThreads do
+		if coroutine.status(loaderThread) == "suspended" then
+			stdPolyfills.task.cancel(loaderThread)
+		end
+	end
 
 	sys.openLibrary = originalOpenLibrary
 	sys.library = loaded
@@ -180,7 +191,7 @@ end
 
 local function loadInThread(): LoadAttempt
 	local attempt: LoadAttempt = { finished = false }
-	local waits = 0
+	local deadline = os.clock() + LOAD_TIMEOUT_SECONDS
 
 	startThread(function()
 		local succeeded, result = pcall(symphonia.load)
@@ -190,9 +201,8 @@ local function loadInThread(): LoadAttempt
 		attempt.finished = true
 	end)
 
-	while not attempt.finished and waits < MAX_LOAD_WAITS do
+	while not attempt.finished and os.clock() < deadline do
 		runDeferredThreads()
-		waits += 1
 	end
 
 	return attempt
