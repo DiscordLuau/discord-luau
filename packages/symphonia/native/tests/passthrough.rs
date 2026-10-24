@@ -5,7 +5,7 @@ use std::io::Cursor;
 
 use discord_luau_symphonia::opus::{FAMILY_HEADER_LENGTH, check_passthrough};
 use discord_luau_symphonia::testing::parse_opus_head;
-use discord_luau_symphonia::{DescribeField, Error, InfoField, Session};
+use discord_luau_symphonia::{DescribeField, Error, Session};
 use symphonia::core::audio::layouts;
 use symphonia::core::codecs::CodecParameters;
 use symphonia::core::codecs::audio::AudioCodecParameters;
@@ -43,7 +43,7 @@ fn empty_opus_packets_are_skipped_and_counted() {
         "the empty packet is not returned, so it cannot look like the end"
     );
     assert_eq!(session.read_packet(8000).unwrap(), None);
-    assert_eq!(session.info(InfoField::SkippedPackets), 1);
+    assert_eq!(session.info().skipped_packets, 1);
 }
 
 #[test]
@@ -68,7 +68,7 @@ fn more_than_ten_thousand_empty_opus_packets_in_a_row_are_an_error() {
     let mut session = Session::open_memory(ogg_opus(7, 2, &packets), None).unwrap();
 
     assert_eq!(read_packets(&mut session).len(), 1, "10000 in a row are allowed");
-    assert_eq!(session.info(InfoField::SkippedPackets), 10_000);
+    assert_eq!(session.info().skipped_packets, 10_000);
 
     let packets = vec![Vec::new(); 10_001];
     let mut session = Session::open_memory(ogg_opus(7, 2, &packets), None).unwrap();
@@ -190,7 +190,7 @@ fn read_packet_ends_cleanly_at_an_unexpected_end_of_file() {
 
     assert_eq!(session.read_packet(8000).unwrap().as_deref(), Some(&opus_packet(10)[..]));
     assert_eq!(session.read_packet(8000).unwrap(), None);
-    assert_eq!(session.info(InfoField::EndedEarly), 0, "Opus is passed through, not decoded, so it is never flagged");
+    assert!(!session.info().ended_early, "Opus is passed through, not decoded, so it is never flagged");
     assert_eq!(session.read_packet(8000).unwrap(), None, "the end stays the end");
 }
 
@@ -204,7 +204,7 @@ fn packets_of_other_tracks_count_toward_the_run_of_skips() {
     let mut session = scripted_opus_session(allowed);
 
     assert_eq!(session.read_packet(8000).unwrap().as_deref(), Some(&opus_packet(10)[..]));
-    assert_eq!(session.info(InfoField::SkippedPackets), 0, "other tracks are passed over, not counted as skipped");
+    assert_eq!(session.info().skipped_packets, 0, "other tracks are passed over, not counted as skipped");
 
     let mut session = scripted_opus_session((0..10_001).map(|_| other()));
 

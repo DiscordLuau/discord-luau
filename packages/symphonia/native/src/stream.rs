@@ -12,9 +12,9 @@ use symphonia::core::io::ReadOnlySource;
 use crate::chunk_reader::ChunkReader;
 use crate::decoder::BYTES_PER_FRAME;
 use crate::error::Error;
-use crate::fields::{DescribeField, InfoField, State};
-use crate::guard::{catch_quietly, lock};
-use crate::session::Session;
+use crate::fields::{DescribeField, State};
+use crate::guard::{catch, lock};
+use crate::session::{Info, Session};
 use crate::status::Status;
 
 pub(crate) const INPUT_CHUNKS: usize = 64;
@@ -95,8 +95,8 @@ impl StreamSession {
         lock(&self.status).state()
     }
 
-    pub fn info(&self, field: InfoField) -> i32 {
-        lock(&self.status).info(field)
+    pub fn info(&self) -> Option<Info> {
+        lock(&self.status).info()
     }
 
     pub fn describe(&self, field: DescribeField) -> String {
@@ -148,11 +148,17 @@ impl StreamSession {
     }
 
     fn check_pcm(&self) -> Result<(), Error> {
-        if self.info(InfoField::IsOpus) == 1 { Err(Error::OpusNeedsReadPacket) } else { Ok(()) }
+        match self.info() {
+            Some(info) if info.is_opus => Err(Error::OpusNeedsReadPacket),
+            _ => Ok(()),
+        }
     }
 
     fn check_opus(&self) -> Result<(), Error> {
-        if self.info(InfoField::IsOpus) == 0 { Err(Error::NotOpus) } else { Ok(()) }
+        match self.info() {
+            Some(info) if !info.is_opus => Err(Error::NotOpus),
+            _ => Ok(()),
+        }
     }
 
     /// Holds a block with bytes left: `Ready(Held::Block)` once it holds one, `Pending` while none is ready, and
@@ -196,7 +202,7 @@ pub(crate) fn worker_count() -> i32 {
 #[expect(clippy::needless_pass_by_value, reason = "the worker thread owns its handles until it exits")]
 fn work(chunks: Arc<Mutex<Receiver<Vec<u8>>>>, output: SyncSender<Vec<u8>>, status: Arc<Mutex<Status>>) {
     let reader = ChunkReader::new(Arc::clone(&chunks), Arc::clone(&status));
-    let outcome = catch_quietly(|| decode(reader, &output, &status));
+    let outcome = catch(|| decode(reader, &output, &status));
 
     if let Ok(Err(error)) | Err(error) = outcome {
         lock(&status).mark_failed(error);

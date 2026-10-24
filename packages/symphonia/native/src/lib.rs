@@ -14,12 +14,12 @@ mod error;
 mod ffi;
 mod fields;
 mod guard;
+mod handle;
 pub mod limits;
 mod mix;
 pub mod opus;
 mod resample;
 mod session;
-mod session_table;
 mod status;
 mod stream;
 #[cfg(feature = "testing")]
@@ -29,22 +29,22 @@ pub mod wav;
 pub use crate::{
     decoder::BYTES_PER_FRAME,
     error::Error,
-    ffi::{OutputBuffer, TextBuffer, capped_capacity, copy_in, saturate_to_i32},
     fields::{DescribeField, InfoField, State, UNKNOWN},
-    guard::guarded,
+    handle::Handle,
     mix::{OUTPUT_CHANNELS, StereoMix},
     resample::StereoResampler,
-    session::Session,
-    session_table::{Entry, with_session, with_stream},
+    session::{Info, Session},
     stream::{PushOutcome, StreamSession},
 };
 
-use std::ffi::{CStr, c_char};
+use std::ffi::c_char;
+use std::ptr;
 use std::task::Poll;
 
-use crate::guard::catch_quietly;
+use crate::ffi::TextBuffer;
+use crate::guard::{catch, guarded, guarded_session};
 
-pub const ABI_VERSION: i32 = 2;
+pub const ABI_VERSION: i32 = 3;
 pub const FAILED: i32 = -1;
 pub const NOT_READY: i32 = -2;
 pub const FULL: i32 = -3;
@@ -57,14 +57,11 @@ pub extern "C" fn symphonia_abi_version() -> i32 {
     ABI_VERSION
 }
 
-/// Opens a copy of the `length` bytes at `data`, and returns its id or `FAILED` with the error in `error_out`.
-///
-/// An empty buffer is an error. `extension` is an optional hint, which Symphonia 0.6.1's probe ignores.
+/// Opens a copy of the `length` bytes at `data`, returning the session or null with the error in `error_out`.
 ///
 /// # Safety
 ///
-/// `data` must be valid for reads of `length` bytes. `extension` must be null or a NUL-terminated string. `error_out`
-/// must be null or valid for writes of `error_capacity` bytes.
+/// `data` must hold `length` bytes, `extension` be null or NUL-terminated, `error_out` null or `error_capacity` long.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn symphonia_open_memory(
     data: *const u8,
@@ -72,221 +69,196 @@ pub unsafe extern "C" fn symphonia_open_memory(
     extension: *const c_char,
     error_out: *mut u8,
     error_capacity: u32,
-) -> i32 {
+) -> *mut Handle {
+    // SAFETY: the caller guarantees `length` readable bytes at `data`.
+    let bytes = unsafe { ffi::input_slice(data, length) };
+    // SAFETY: the caller guarantees that `extension` is null or a NUL-terminated string.
+    let extension = unsafe { ffi::c_str(extension) };
     // SAFETY: the caller guarantees that `error_out` is null or has `error_capacity` writable bytes.
     let error_out = unsafe { TextBuffer::new(error_out, error_capacity) };
 
-    guarded(error_out, FAILED, || {
-        // SAFETY: the caller guarantees `length` readable bytes at `data`.
-        let bytes = unsafe { ffi::copy_in(data, length) }.ok_or(Error::NullAudio)?;
-        // SAFETY: the caller guarantees that `extension` is null or a NUL-terminated string.
-        let extension = unsafe { ffi::c_str(extension) }.map(CStr::to_string_lossy);
-
-        session_table::insert(Entry::Direct(Session::open_memory(bytes, extension.as_deref())?))
-    })
+    guarded(error_out, ptr::null_mut(), || Handle::open_memory(bytes, extension).map(Handle::into_raw))
 }
 
-/// Opens the file at `path`, read as it plays, and returns the session's id or `FAILED` with the error in `error_out`.
-///
-/// With a null `extension`, the path's extension is the hint.
+/// Opens the file at `path`, read as it plays, returning the session or null with the error in `error_out`.
 ///
 /// # Safety
 ///
-/// `path` and `extension` must each be null or a NUL-terminated string. `error_out` must be null or valid for writes
-/// of `error_capacity` bytes.
+/// `path` and `extension` must be null or NUL-terminated, and `error_out` null or `error_capacity` bytes long.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn symphonia_open_file(
     path: *const c_char,
     extension: *const c_char,
     error_out: *mut u8,
     error_capacity: u32,
-) -> i32 {
+) -> *mut Handle {
+    // SAFETY: the caller guarantees that `path` is null or a NUL-terminated string.
+    let path = unsafe { ffi::c_str(path) };
+    // SAFETY: the caller guarantees that `extension` is null or a NUL-terminated string.
+    let extension = unsafe { ffi::c_str(extension) };
     // SAFETY: the caller guarantees that `error_out` is null or has `error_capacity` writable bytes.
     let error_out = unsafe { TextBuffer::new(error_out, error_capacity) };
 
-    guarded(error_out, FAILED, || {
-        // SAFETY: the caller guarantees that `path` is null or a NUL-terminated string.
-        let path = unsafe { ffi::c_str(path) }.ok_or(Error::NullPath)?;
-        let path = path.to_str().map_err(|_| Error::PathNotUtf8)?;
-        // SAFETY: the caller guarantees that `extension` is null or a NUL-terminated string.
-        let extension = unsafe { ffi::c_str(extension) }.map(CStr::to_string_lossy);
-
-        session_table::insert(Entry::Direct(Session::open_file(path, extension.as_deref())?))
-    })
+    guarded(error_out, ptr::null_mut(), || Handle::open_file(path, extension).map(Handle::into_raw))
 }
 
-/// Starts a stream session, whose worker thread decodes the bytes `symphonia_push` gives it.
-///
-/// Returns the session's id, or `FAILED` with the error in `error_out`.
+/// Starts a stream session, returning it or null with the error in `error_out`.
 ///
 /// # Safety
 ///
 /// `error_out` must be null or valid for writes of `error_capacity` bytes.
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn symphonia_open_stream(error_out: *mut u8, error_capacity: u32) -> i32 {
+pub unsafe extern "C" fn symphonia_open_stream(error_out: *mut u8, error_capacity: u32) -> *mut Handle {
     // SAFETY: the caller guarantees that `error_out` is null or has `error_capacity` writable bytes.
     let error_out = unsafe { TextBuffer::new(error_out, error_capacity) };
 
-    guarded(error_out, FAILED, || session_table::insert(Entry::Stream(StreamSession::open()?)))
+    guarded(error_out, ptr::null_mut(), || StreamSession::open().map(|stream| Handle::Stream(stream).into_raw()))
 }
 
-/// Queues a copy of the `length` bytes at `data` for stream `id`'s worker, without blocking.
-///
-/// Returns `SUCCEEDED` (an empty push queues nothing), `FULL` while the input holds `INPUT_CHUNKS` chunks, or `FAILED`
-/// for an id that is not a live stream, after `symphonia_finish`, and once the stream has ended or failed.
+/// Queues a copy of the `length` bytes at `data` for the stream's worker: `SUCCEEDED`, `FULL` or `FAILED`.
 ///
 /// # Safety
 ///
-/// `data` must be valid for reads of `length` bytes when `length` is not 0.
+/// `handle` must be null or an open session, and `data` hold `length` bytes when `length` is not 0.
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn symphonia_push(id: i32, data: *const u8, length: u32) -> i32 {
-    let outcome = catch_quietly(|| {
-        // SAFETY: the caller guarantees `length` readable bytes at `data` when `length` is not 0.
-        let chunk = unsafe { ffi::copy_in(data, length) }?;
+pub unsafe extern "C" fn symphonia_push(handle: *mut Handle, data: *const u8, length: u32) -> i32 {
+    // SAFETY: the caller guarantees that `handle` is null or an open session.
+    let stream = unsafe { handle.as_ref() }.and_then(Handle::as_stream);
+    // SAFETY: the caller guarantees `length` readable bytes at `data` when `length` is not 0.
+    let chunk = unsafe { ffi::input_slice(data, length) };
 
-        session_table::with_stream(id, |stream| stream.push(chunk))
-    });
-
-    match outcome {
+    match catch(|| Some(stream?.push(chunk?.to_vec()))) {
         Ok(Some(PushOutcome::Queued)) => SUCCEEDED,
         Ok(Some(PushOutcome::Full)) => FULL,
         Ok(Some(PushOutcome::Refused) | None) | Err(_) => FAILED,
     }
 }
 
-/// Ends stream `id`'s input, so its worker decodes what was pushed and then ends.
+/// Ends the stream's input: `SUCCEEDED`, also for a second call, or `FAILED` for anything but a stream.
 ///
-/// Returns `SUCCEEDED`, also for a second call, or `FAILED` for an id that is not a live stream.
+/// # Safety
+///
+/// `handle` must be null or an open session.
 #[unsafe(no_mangle)]
-pub extern "C" fn symphonia_finish(id: i32) -> i32 {
-    match catch_quietly(|| session_table::with_stream(id, StreamSession::finish)) {
+pub unsafe extern "C" fn symphonia_finish(handle: *mut Handle) -> i32 {
+    // SAFETY: the caller guarantees that `handle` is null or an open session.
+    let stream = unsafe { handle.as_mut() }.and_then(Handle::as_stream_mut);
+
+    match catch(|| stream.map(StreamSession::finish)) {
         Ok(Some(())) => SUCCEEDED,
         Ok(None) | Err(_) => FAILED,
     }
 }
 
-/// Returns `InfoField` number `field` of session `id`, or `FAILED` for an unknown id or field.
-#[unsafe(no_mangle)]
-pub extern "C" fn symphonia_info(id: i32, field: i32) -> i32 {
-    catch_quietly(|| {
-        let field = InfoField::from_number(field)?;
-
-        session_table::with_entry(id, |entry| entry.info(field))
-    })
-    .ok()
-    .flatten()
-    .unwrap_or(FAILED)
-}
-
-/// Writes `DescribeField` number `field` of session `id` into `output` as NUL-terminated text, truncated to `capacity`.
-///
-/// Returns the bytes written without the NUL, or `FAILED` for an unknown id or field.
+/// Returns `InfoField` number `field` of the session, or `FAILED` for a null `handle` or an unknown field.
 ///
 /// # Safety
 ///
-/// `output` must be null or valid for writes of `capacity` bytes.
+/// `handle` must be null or an open session.
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn symphonia_describe(id: i32, field: i32, output: *mut u8, capacity: u32) -> i32 {
+pub unsafe extern "C" fn symphonia_info(handle: *mut Handle, field: i32) -> i32 {
+    // SAFETY: the caller guarantees that `handle` is null or an open session.
+    let handle = unsafe { handle.as_ref() };
+
+    match (handle, InfoField::from_number(field)) {
+        (Some(handle), Some(field)) => catch(|| field.value(handle.state(), handle.info().as_ref())).unwrap_or(FAILED),
+        _ => FAILED,
+    }
+}
+
+/// Writes `DescribeField` number `field` of the session into `output` as NUL-terminated text, truncated.
+///
+/// # Safety
+///
+/// `handle` must be null or an open session, and `output` null or valid for writes of `capacity` bytes.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn symphonia_describe(handle: *mut Handle, field: i32, output: *mut u8, capacity: u32) -> i32 {
+    // SAFETY: the caller guarantees that `handle` is null or an open session.
+    let handle = unsafe { handle.as_ref() };
     // SAFETY: the caller guarantees that `output` is null or has `capacity` writable bytes.
     let output = unsafe { TextBuffer::new(output, capacity) };
 
-    catch_quietly(|| {
-        let field = DescribeField::from_number(field)?;
-        let text = session_table::with_entry(id, |entry| entry.describe(field))?;
-
-        Some(ffi::saturate_to_i32(output.write(&text)))
-    })
-    .ok()
-    .flatten()
-    .unwrap_or(FAILED)
+    match (handle, DescribeField::from_number(field)) {
+        (Some(handle), Some(field)) => {
+            catch(|| ffi::saturate_to_i32(output.write(&handle.describe(field)))).unwrap_or(FAILED)
+        }
+        _ => FAILED,
+    }
 }
 
-/// Reads up to `capacity_frames` frames of 48 kHz interleaved stereo f32 into `output`, `BYTES_PER_FRAME` bytes each.
-///
-/// Returns the frames written, 0 at the end, `NOT_READY` while a stream has nothing decoded, or `FAILED` with the
-/// error in `error_out`. A `capacity_frames` of 0 is an error, since 0 frames would read as the end. A stream read
-/// never blocks, returns at most one `BLOCK_FRAMES` block, and gives its failure only after every block before it.
+/// Reads up to `capacity_frames` frames of 48 kHz stereo f32 into `output`: the count, 0 at the end, or a code.
 ///
 /// # Safety
 ///
-/// `output` must be null or valid for writes of `capacity_frames * BYTES_PER_FRAME` bytes. `error_out` must be null
-/// or valid for writes of `error_capacity` bytes.
+/// `handle` must be null or an open session, `output` null or `capacity_frames * BYTES_PER_FRAME` initialized bytes
+/// nothing else uses, and `error_out` null or `error_capacity` writable bytes.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn symphonia_read(
-    id: i32,
+    handle: *mut Handle,
     output: *mut u8,
     capacity_frames: u32,
     error_out: *mut u8,
     error_capacity: u32,
 ) -> i32 {
-    let capacity = (capacity_frames as usize).saturating_mul(BYTES_PER_FRAME);
-    // SAFETY: the caller guarantees that `output` is null or has `capacity_frames * BYTES_PER_FRAME` writable bytes,
-    // which is at least `capacity`.
-    let output = unsafe { OutputBuffer::new(output, capacity) };
+    let capacity = ffi::capped_capacity(capacity_frames).saturating_mul(BYTES_PER_FRAME);
+    // SAFETY: the caller guarantees that `handle` is null or an open session.
+    let handle = unsafe { handle.as_mut() };
+    // SAFETY: the caller guarantees that `output` is null or has at least `capacity` unshared initialized bytes.
+    let output = unsafe { ffi::output_slice(output, capacity) };
     // SAFETY: the caller guarantees that `error_out` is null or has `error_capacity` writable bytes.
     let error_out = unsafe { TextBuffer::new(error_out, error_capacity) };
 
-    guarded(error_out, FAILED, || {
-        with_session(id, |entry| {
-            let output = output.ok_or(Error::NullOutput)?;
-
-            if capacity_frames == 0 {
-                return Err(Error::ZeroCapacity);
-            }
-
-            match entry.read(ffi::capped_capacity(capacity_frames))? {
-                Poll::Ready(bytes) => Ok(ffi::saturate_to_i32(output.write(bytes) / BYTES_PER_FRAME)),
-                Poll::Pending => Ok(NOT_READY),
-            }
-        })
+    guarded_session(handle, error_out, FAILED, |handle| match handle.read(output.ok_or(Error::NullOutput)?)? {
+        Poll::Ready(frames) => Ok(ffi::saturate_to_i32(frames)),
+        Poll::Pending => Ok(NOT_READY),
     })
 }
 
-/// Reads the next Opus packet into `output`, and returns its length in bytes.
-///
-/// Returns `END` at the end, `NOT_READY` while a stream has no packet, or `FAILED` with the error in `error_out`. Empty
-/// packets are skipped and counted. A packet over `capacity` bytes is an error, and stays next for a bigger buffer.
+/// Reads the next Opus packet into `output`: its length, `END` at the end, or a code.
 ///
 /// # Safety
 ///
-/// `output` must be null or valid for writes of `capacity` bytes. `error_out` must be null or valid for writes of
-/// `error_capacity` bytes.
+/// `handle` must be null or an open session, `output` null or `capacity` initialized bytes nothing else uses, and
+/// `error_out` null or `error_capacity` writable bytes.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn symphonia_read_packet(
-    id: i32,
+    handle: *mut Handle,
     output: *mut u8,
     capacity: u32,
     error_out: *mut u8,
     error_capacity: u32,
 ) -> i32 {
-    // SAFETY: the caller guarantees that `output` is null or has `capacity` writable bytes.
-    let output = unsafe { OutputBuffer::new(output, capacity as usize) };
+    // SAFETY: the caller guarantees that `handle` is null or an open session.
+    let handle = unsafe { handle.as_mut() };
+    // SAFETY: the caller guarantees `output` is null or has at least the capped `capacity` unshared initialized bytes.
+    let output = unsafe { ffi::output_slice(output, ffi::capped_capacity(capacity)) };
     // SAFETY: the caller guarantees that `error_out` is null or has `error_capacity` writable bytes.
     let error_out = unsafe { TextBuffer::new(error_out, error_capacity) };
 
-    guarded(error_out, FAILED, || {
-        with_session(id, |entry| {
-            let output = output.ok_or(Error::NullOutput)?;
-
-            match entry.read_packet(ffi::capped_capacity(capacity))? {
-                Poll::Ready(Some(packet)) => Ok(ffi::saturate_to_i32(output.write(&packet))),
-                Poll::Ready(None) => Ok(END),
-                Poll::Pending => Ok(NOT_READY),
-            }
-        })
+    guarded_session(handle, error_out, FAILED, |handle| match handle.read_packet(output.ok_or(Error::NullOutput)?)? {
+        Poll::Ready(Some(length)) => Ok(ffi::saturate_to_i32(length)),
+        Poll::Ready(None) => Ok(END),
+        Poll::Pending => Ok(NOT_READY),
     })
 }
 
-/// Frees session `id`; an unknown id does nothing. A stream's worker is stopped, never waited for.
+/// Frees the session; a null `handle` does nothing, and a stream's worker is stopped, never waited for.
+///
+/// # Safety
+///
+/// `handle` must be null or an open session, and is never used again.
 #[unsafe(no_mangle)]
-pub extern "C" fn symphonia_close(id: i32) {
-    let _ = catch_quietly(|| drop(session_table::remove(id)));
+pub unsafe extern "C" fn symphonia_close(handle: *mut Handle) {
+    // SAFETY: the caller guarantees that `handle` is null or an open session, never used again.
+    let handle = unsafe { Handle::from_raw(handle) };
+
+    let _ = catch(|| drop(handle));
 }
 
-/// Returns the number of live sessions.
+/// Returns the number of sessions opened and not closed yet.
 #[unsafe(no_mangle)]
 pub extern "C" fn symphonia_open_count() -> i32 {
-    catch_quietly(|| ffi::saturate_to_i32(session_table::count())).unwrap_or(FAILED)
+    handle::open_count()
 }
 
 /// Returns the number of stream worker threads that have not exited, which the specs use to show none leak.

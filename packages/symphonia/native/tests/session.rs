@@ -11,7 +11,7 @@
 use discord_luau_symphonia::limits::{check_packet_size, check_sample_rate_and_channels};
 use discord_luau_symphonia::testing::set_sample_rate;
 use discord_luau_symphonia::wav::fact_frames;
-use discord_luau_symphonia::{BYTES_PER_FRAME, DescribeField, Error, InfoField, Session, State};
+use discord_luau_symphonia::{BYTES_PER_FRAME, DescribeField, Error, Session, State};
 
 use crate::files::{
     ADPCM_BLOCK_FRAMES, adpcm_wav, aiff, caf_lpcm, corrupted_adpcm_wav, fixture, float_wav, ogg_opus, opus_packet,
@@ -91,9 +91,9 @@ fn a_wav_decodes_to_48_khz_stereo_with_the_exact_length() {
         assert_eq!(left.len(), (frames as u64 * 48_000).div_ceil(u64::from(rate)) as usize, "{rate} Hz");
         assert!((frequency(&left) - 440.0).abs() < 3.0, "{rate} Hz: {} Hz", frequency(&left));
         assert!(peak(&left) > 1000 && peak(&right) > 1000);
-        assert_eq!(session.info(InfoField::SampleRate), rate as i32);
-        assert_eq!(session.info(InfoField::Channels), i32::from(channels));
-        assert_eq!(session.info(InfoField::DurationMilliseconds), 500);
+        assert_eq!(session.info().sample_rate, rate);
+        assert_eq!(session.info().channels, Some(usize::from(channels)));
+        assert_eq!(session.info().duration_milliseconds, Some(500));
     }
 }
 
@@ -103,8 +103,8 @@ fn a_wav_names_its_codec_and_container() {
 
     assert_eq!(session.describe(DescribeField::Codec), "pcm_s16le");
     assert_eq!(session.describe(DescribeField::Container), "wave");
-    assert_eq!(session.info(InfoField::IsOpus), 0);
-    assert_eq!(session.info(InfoField::IsFailed), 0);
+    assert!(!session.info().is_opus);
+    assert_eq!(session.state(), State::Open);
 }
 
 #[test]
@@ -130,7 +130,7 @@ fn discrete_channels_use_the_first_two() {
     // AIFF states four or more channels as discrete.
     let mut session = Session::open_memory(aiff(48_000, 4, 1_600), None).unwrap();
 
-    assert_eq!(session.info(InfoField::Channels), 4);
+    assert_eq!(session.info().channels, Some(4));
     assert_eq!(session.describe(DescribeField::Container), "aiff");
 
     let (left, right) = read_all(&mut session);
@@ -204,7 +204,7 @@ fn adpcm_block_padding_is_trimmed_to_the_fact_chunk() {
     let mut session = Session::open_memory(adpcm_wav(22_050, 11_025, 6), None).unwrap();
 
     assert_eq!(session.describe(DescribeField::Codec), "adpcm_ima_wav");
-    assert_eq!(session.info(InfoField::DurationMilliseconds), 500);
+    assert_eq!(session.info().duration_milliseconds, Some(500));
 
     let (left, _) = read_all(&mut session);
 
@@ -225,7 +225,7 @@ fn adpcm_from_a_file_is_trimmed_too() {
     let (left, _) = read_all(&mut session);
 
     assert_eq!(left.len(), 24_000);
-    assert_eq!(session.info(InfoField::DurationMilliseconds), 500);
+    assert_eq!(session.info().duration_milliseconds, Some(500));
 }
 
 #[test]
@@ -259,7 +259,7 @@ fn an_undecodable_packet_is_skipped_and_counted() {
     let (left, _) = read_all(&mut session);
 
     assert_eq!(left.len(), 5 * ADPCM_BLOCK_FRAMES as usize);
-    assert_eq!(session.info(InfoField::SkippedPackets), 1);
+    assert_eq!(session.info().skipped_packets, 1);
 }
 
 #[test]
@@ -269,7 +269,7 @@ fn ten_thousand_undecodable_packets_in_a_row_are_allowed() {
     let (left, _) = read_all(&mut session);
 
     assert_eq!(left.len(), ADPCM_BLOCK_FRAMES as usize);
-    assert_eq!(session.info(InfoField::SkippedPackets), 10_000);
+    assert_eq!(session.info().skipped_packets, 10_000);
 }
 
 #[test]
@@ -291,7 +291,7 @@ fn a_decoded_packet_resets_the_run_of_skips() {
     let (left, _) = read_all(&mut session);
 
     assert_eq!(left.len(), ADPCM_BLOCK_FRAMES as usize);
-    assert_eq!(session.info(InfoField::SkippedPackets), 12_000);
+    assert_eq!(session.info().skipped_packets, 12_000);
 }
 
 #[test]
@@ -307,7 +307,7 @@ fn a_truncated_wav_ends_early_and_cleanly() {
     let (left, _) = read_all(&mut session);
 
     assert!(!left.is_empty() && left.len() <= present, "{} of {present} frames", left.len());
-    assert_eq!(session.info(InfoField::EndedEarly), 1);
+    assert!(session.info().ended_early);
     assert_eq!(session.read(4800).unwrap(), b"", "the end stays the end");
 }
 
@@ -317,7 +317,7 @@ fn a_complete_wav_does_not_end_early() {
     let (left, _) = read_all(&mut session);
 
     assert_eq!(left.len(), 4_800);
-    assert_eq!(session.info(InfoField::EndedEarly), 0);
+    assert!(!session.info().ended_early);
 }
 
 #[test]
@@ -331,7 +331,7 @@ fn a_truncated_adpcm_wav_skips_its_partial_last_block() {
     let (left, _) = read_all(&mut session);
 
     assert_eq!(left.len(), 5 * ADPCM_BLOCK_FRAMES as usize);
-    assert_eq!(session.info(InfoField::SkippedPackets), 1);
+    assert_eq!(session.info().skipped_packets, 1);
 }
 
 fn cut(mut bytes: Vec<u8>, percent: usize) -> Vec<u8> {
@@ -346,7 +346,7 @@ fn a_flac_cut_before_its_first_frame_ends_early() {
     let (left, _) = read_all(&mut session);
 
     assert_eq!(left.len(), 0);
-    assert_eq!(session.info(InfoField::EndedEarly), 1);
+    assert!(session.info().ended_early);
 }
 
 #[test]
@@ -355,7 +355,7 @@ fn a_flac_cut_late_ends_early() {
     let (left, _) = read_all(&mut session);
 
     assert!(left.len() < 24_000, "{} frames", left.len());
-    assert_eq!(session.info(InfoField::EndedEarly), 1);
+    assert!(session.info().ended_early);
 }
 
 #[test]
@@ -368,12 +368,12 @@ fn a_streaming_wav_with_no_stated_length_does_not_end_early() {
 
     let mut session = Session::open_memory(bytes, None).unwrap();
 
-    assert_eq!(session.info(InfoField::DurationMilliseconds), -1, "no stated length");
+    assert_eq!(session.info().duration_milliseconds, None, "no stated length");
 
     let (left, _) = read_all(&mut session);
 
     assert_eq!(left.len(), 24_000, "it plays to its end");
-    assert_eq!(session.info(InfoField::EndedEarly), 0);
+    assert!(!session.info().ended_early);
 }
 
 #[test]
@@ -387,7 +387,7 @@ fn a_wav_whose_data_size_is_zero_does_not_end_early() {
     let (left, _) = read_all(&mut session);
 
     assert_eq!(left.len(), 0);
-    assert_eq!(session.info(InfoField::EndedEarly), 0);
+    assert!(!session.info().ended_early);
 }
 
 /// The Luau package's fixtures that decode to PCM.
@@ -415,7 +415,7 @@ fn complete_files_do_not_end_early() {
         let (left, _) = read_all(&mut session);
 
         assert!(left.len() > 20_000, "{name}: {} frames", left.len());
-        assert_eq!(session.info(InfoField::EndedEarly), 0, "{name}");
+        assert!(!session.info().ended_early, "{name}");
     }
 }
 
@@ -426,7 +426,7 @@ fn a_pcm_fact_chunk_is_ignored() {
     let (left, _) = read_all(&mut session);
 
     assert_eq!(left.len(), 4_800);
-    assert_eq!(session.info(InfoField::DurationMilliseconds), 100);
+    assert_eq!(session.info().duration_milliseconds, Some(100));
 }
 
 fn fnv1a(bytes: impl IntoIterator<Item = u8>) -> u64 {
@@ -526,18 +526,18 @@ fn short_audio_keeps_its_length_at_any_read_size() {
 fn a_session_is_open_until_a_read_reaches_the_end() {
     let mut session = Session::open_memory(wav(48_000, 2, 4_800), None).unwrap();
 
-    assert_eq!(session.info(InfoField::State), State::Open as i32);
+    assert_eq!(session.state(), State::Open);
     assert_eq!(session.read(4_800).unwrap().len(), 4_800 * BYTES_PER_FRAME);
-    assert_eq!(session.info(InfoField::State), State::Open as i32, "the last frames are not yet the end");
+    assert_eq!(session.state(), State::Open, "the last frames are not yet the end");
     assert_eq!(session.read(4_800).unwrap(), b"");
-    assert_eq!(session.info(InfoField::State), State::Ended as i32);
+    assert_eq!(session.state(), State::Ended);
 
     let packets = vec![opus_packet(10)];
     let mut session = Session::open_memory(ogg_opus(7, 2, &packets), None).unwrap();
 
-    assert_eq!(session.info(InfoField::State), State::Open as i32);
+    assert_eq!(session.state(), State::Open);
     assert_eq!(read_packets(&mut session).len(), 1);
-    assert_eq!(session.info(InfoField::State), State::Ended as i32);
+    assert_eq!(session.state(), State::Ended);
 }
 
 #[test]
@@ -549,8 +549,7 @@ fn a_failed_session_reports_state_3_and_its_failure() {
     session.mark_failed(Error::Panicked(Some("a deliberate failure".to_string())));
     session.mark_failed(Error::Panicked(Some("a later failure".to_string())));
 
-    assert_eq!(session.info(InfoField::State), State::Failed as i32);
-    assert_eq!(session.info(InfoField::IsFailed), 1);
+    assert_eq!(session.state(), State::Failed);
     assert_eq!(
         session.describe(DescribeField::Failure),
         "symphonia wrapper panicked: a deliberate failure",
@@ -621,5 +620,5 @@ fn frames_beyond_the_stated_count_are_dropped() {
     let (left, _) = read_all(&mut session);
 
     assert_eq!(left.len(), 600);
-    assert_eq!(session.info(InfoField::EndedEarly), 0, "stopping at the stated length is not early");
+    assert!(!session.info().ended_early, "stopping at the stated length is not early");
 }

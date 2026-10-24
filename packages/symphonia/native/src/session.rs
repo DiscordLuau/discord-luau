@@ -18,8 +18,7 @@ use symphonia::core::meta::MetadataOptions;
 use crate::decoder::Decoder;
 use crate::demuxer::Demuxer;
 use crate::error::Error;
-use crate::ffi::saturate_to_i32;
-use crate::fields::{DescribeField, InfoField, State, UNKNOWN};
+use crate::fields::{DescribeField, State};
 use crate::{limits, opus, wav};
 
 /// An Opus session has no decoder to name its codec.
@@ -29,6 +28,16 @@ const MILLISECONDS_PER_SECOND: u32 = 1_000;
 enum Output {
     Decoded(Box<Decoder>),
     Opus,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct Info {
+    pub sample_rate: u32,
+    pub channels: Option<usize>,
+    pub is_opus: bool,
+    pub duration_milliseconds: Option<u64>,
+    pub skipped_packets: u64,
+    pub ended_early: bool,
 }
 
 pub struct Session {
@@ -158,7 +167,7 @@ impl Session {
         matches!(self.output, Output::Opus)
     }
 
-    fn state(&self) -> State {
+    pub fn state(&self) -> State {
         if self.failure.is_some() {
             State::Failed
         } else if self.ended {
@@ -168,19 +177,17 @@ impl Session {
         }
     }
 
-    pub fn info(&self, field: InfoField) -> i32 {
-        match field {
-            InfoField::SampleRate => saturate_to_i32(self.sample_rate),
-            InfoField::Channels => self.channel_count.map_or(0, saturate_to_i32),
-            InfoField::IsOpus => i32::from(self.is_opus()),
-            InfoField::DurationMilliseconds => self.duration_milliseconds.map_or(UNKNOWN, saturate_to_i32),
-            InfoField::SkippedPackets => saturate_to_i32(self.demuxer.skipped_packets()),
-            InfoField::IsFailed => i32::from(self.state() == State::Failed),
-            InfoField::EndedEarly => match &self.output {
-                Output::Decoded(decoder) => i32::from(decoder.ended_early()),
-                Output::Opus => 0,
+    pub fn info(&self) -> Info {
+        Info {
+            sample_rate: self.sample_rate,
+            channels: self.channel_count,
+            is_opus: self.is_opus(),
+            duration_milliseconds: self.duration_milliseconds,
+            skipped_packets: self.demuxer.skipped_packets(),
+            ended_early: match &self.output {
+                Output::Decoded(decoder) => decoder.ended_early(),
+                Output::Opus => false,
             },
-            InfoField::State => self.state() as i32,
         }
     }
 

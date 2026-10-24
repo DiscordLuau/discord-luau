@@ -8,7 +8,10 @@ use std::sync::{Mutex, MutexGuard, PoisonError};
 use std::thread;
 use std::time::{Duration, Instant};
 
-use discord_luau_symphonia::{BYTES_PER_FRAME, Session, symphonia_open_memory, symphonia_read, symphonia_worker_count};
+use discord_luau_symphonia::{
+    BYTES_PER_FRAME, Handle, Session, symphonia_close, symphonia_finish, symphonia_info, symphonia_open_memory,
+    symphonia_read, symphonia_worker_count,
+};
 
 pub(crate) const ERROR_CAPACITY: u32 = 256;
 /// How long a stream's worker, or a read it is blocked in, may take to return once the stream is done or closed.
@@ -17,8 +20,8 @@ pub(crate) const EXIT_WAIT: Duration = Duration::from_secs(1);
 pub(crate) const WAIT: Duration = Duration::from_secs(30);
 const READ_PACKETS_MAX: usize = 100_000;
 
-/// Serialises the tests that open sessions or start stream workers, since they share one table and one worker count,
-/// and count them.
+/// Serialises the tests that open sessions or start stream workers, since they share one session count and one worker
+/// count, and count them.
 pub(crate) fn serial() -> MutexGuard<'static, ()> {
     static LOCK: Mutex<()> = Mutex::new(());
 
@@ -46,34 +49,47 @@ pub(crate) fn wait_for_workers(baseline: i32) {
     wait_until("the workers exit", EXIT_WAIT, || symphonia_worker_count() == baseline);
 }
 
-/// Returns the id, and the error if the open failed.
-pub(crate) fn open(bytes: &[u8], extension: Option<&CStr>) -> (i32, String) {
+/// Returns the session, null if the open failed, and the error.
+pub(crate) fn open(bytes: &[u8], extension: Option<&CStr>) -> (*mut Handle, String) {
     let mut error = vec![0xAA_u8; ERROR_CAPACITY as usize];
     let extension = extension.map_or(std::ptr::null(), CStr::as_ptr);
     let length = u32::try_from(bytes.len()).unwrap();
-    let id = unsafe { symphonia_open_memory(bytes.as_ptr(), length, extension, error.as_mut_ptr(), ERROR_CAPACITY) };
-    let message = if id < 0 { text(&error) } else { String::new() };
+    let handle =
+        unsafe { symphonia_open_memory(bytes.as_ptr(), length, extension, error.as_mut_ptr(), ERROR_CAPACITY) };
+    let message = if handle.is_null() { text(&error) } else { String::new() };
 
-    (id, message)
+    (handle, message)
 }
 
 /// Returns the result, and the error if the read failed.
-pub(crate) fn read(id: i32, capacity_frames: u32) -> (i32, String) {
+pub(crate) fn read(handle: *mut Handle, capacity_frames: u32) -> (i32, String) {
     let mut output = vec![0_u8; capacity_frames as usize * BYTES_PER_FRAME];
     let mut error = vec![0xAA_u8; ERROR_CAPACITY as usize];
     let result =
-        unsafe { symphonia_read(id, output.as_mut_ptr(), capacity_frames, error.as_mut_ptr(), ERROR_CAPACITY) };
+        unsafe { symphonia_read(handle, output.as_mut_ptr(), capacity_frames, error.as_mut_ptr(), ERROR_CAPACITY) };
     let message = if result == -1 { text(&error) } else { String::new() };
 
     (result, message)
 }
 
+pub(crate) fn info(handle: *mut Handle, field: i32) -> i32 {
+    unsafe { symphonia_info(handle, field) }
+}
+
+pub(crate) fn finish(handle: *mut Handle) -> i32 {
+    unsafe { symphonia_finish(handle) }
+}
+
+pub(crate) fn close(handle: *mut Handle) {
+    unsafe { symphonia_close(handle) };
+}
+
 /// Panics after `max_frames`, so a session that never ends fails the test instead of growing forever.
-pub(crate) fn read_to_end(id: i32, max_frames: i32) -> i32 {
+pub(crate) fn read_to_end(handle: *mut Handle, max_frames: i32) -> i32 {
     let mut total = 0;
 
     loop {
-        let (frames, message) = read(id, 4800);
+        let (frames, message) = read(handle, 4800);
 
         assert!(frames >= 0, "{message}");
 

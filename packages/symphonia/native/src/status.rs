@@ -2,15 +2,13 @@
 //! stop flag. The session answers calls from it, so it never waits on a decode.
 
 use crate::error::Error;
-use crate::fields::{DescribeField, InfoField, State, UNKNOWN};
-use crate::session::Session;
-
-const INFO_WHILE_PROBING: [i32; InfoField::ALL.len()] = [UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN, 0, 0, 0, 0];
+use crate::fields::{DescribeField, State};
+use crate::session::{Info, Session};
 
 pub(crate) struct Status {
     state: State,
     failure: Option<Error>,
-    info: [i32; InfoField::ALL.len()],
+    info: Option<Info>,
     codec_name: String,
     container_name: String,
     stopped: bool,
@@ -21,7 +19,7 @@ impl Status {
         Self {
             state: State::Probing,
             failure: None,
-            info: INFO_WHILE_PROBING,
+            info: None,
             codec_name: String::new(),
             container_name: String::new(),
             stopped: false,
@@ -34,10 +32,7 @@ impl Status {
             self.container_name = session.describe(DescribeField::Container);
         }
 
-        for field in InfoField::ALL {
-            self.info[field as usize] = session.info(field);
-        }
-
+        self.info = Some(session.info());
         self.state = state;
     }
 
@@ -45,12 +40,8 @@ impl Status {
         if self.failure.is_some() { State::Failed } else { self.state }
     }
 
-    pub(crate) fn info(&self, field: InfoField) -> i32 {
-        match field {
-            InfoField::IsFailed => i32::from(self.state() == State::Failed),
-            InfoField::State => self.state() as i32,
-            published => self.info[published as usize],
-        }
+    pub(crate) fn info(&self) -> Option<Info> {
+        self.info
     }
 
     pub(crate) fn describe(&self, field: DescribeField) -> String {

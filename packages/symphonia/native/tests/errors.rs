@@ -13,8 +13,7 @@ fn call_errors() -> Vec<(Error, &'static str)> {
         (Error::PathNotUtf8, "the path is not valid UTF-8"),
         (Error::NullOutput, "the output buffer is null"),
         (Error::ZeroCapacity, "the output buffer has room for no frames"),
-        (Error::UnknownId(-7), "no decoder has the id -7"),
-        (Error::IdsExhausted, "no decoder ids are left"),
+        (Error::NullSession, "the session pointer is null"),
         (Error::Panicked(Some(String::from("broken"))), "symphonia wrapper panicked: broken"),
         (Error::Panicked(None), "symphonia wrapper panicked: a panic without a message"),
         (Error::File { path: String::from("/missing.mp3"), detail: DETAIL.to_string() }, "/missing.mp3: detail"),
@@ -79,7 +78,7 @@ fn audio_errors() -> Vec<(Error, &'static str)> {
 fn every_message_is_the_text_luau_expects() {
     let errors: Vec<(Error, &str)> = call_errors().into_iter().chain(audio_errors()).collect();
 
-    assert_eq!(errors.len(), 36, "every variant, and both kinds of panic");
+    assert_eq!(errors.len(), 35, "every variant, and both kinds of panic");
 
     for (error, text) in errors {
         assert_eq!(error.to_string(), text, "{error:?}");

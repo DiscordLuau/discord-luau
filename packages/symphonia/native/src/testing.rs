@@ -9,14 +9,16 @@ use std::sync::{Arc, Mutex};
 
 use crate::chunk_reader::ChunkReader;
 use crate::error::Error;
+use crate::ffi::{self, TextBuffer};
 use crate::fields::State;
 use crate::guard::lock;
+use crate::handle::Handle;
 use crate::opus::OpusHead;
 use crate::resample::StereoResampler;
 use crate::session::Session;
 use crate::status::Status;
 use crate::stream::StreamSession;
-use crate::{guard, resample, stream};
+use crate::{FAILED, guard, resample, stream};
 
 /// A chunk that starts with this makes the worker's reader panic, with the rest of the chunk as the message.
 pub const PANIC: &[u8] = b"\0a test panic: ";
@@ -53,6 +55,65 @@ pub fn blocks_sent() -> usize {
 /// The error the panic guard makes from a caught panic's `payload`.
 pub fn panic_error(payload: &(dyn Any + Send)) -> Error {
     guard::panic_error(payload)
+}
+
+/// # Safety
+///
+/// `error_out` must be null or valid for writes of `error_capacity` bytes.
+pub unsafe fn guarded(error_out: *mut u8, error_capacity: u32, body: impl FnOnce() -> Result<i32, Error>) -> i32 {
+    // SAFETY: the caller guarantees that `error_out` is null or has `error_capacity` writable bytes.
+    let error_out = unsafe { TextBuffer::new(error_out, error_capacity) };
+
+    guard::guarded(error_out, FAILED, body)
+}
+
+/// # Safety
+///
+/// `handle` must be null or an open session, and `error_out` null or valid for writes of `error_capacity` bytes.
+pub unsafe fn guarded_session(
+    handle: *mut Handle,
+    error_out: *mut u8,
+    error_capacity: u32,
+    body: impl FnOnce(&mut Handle) -> Result<i32, Error>,
+) -> i32 {
+    // SAFETY: the caller guarantees that `handle` is null or an open session.
+    let handle = unsafe { handle.as_mut() };
+    // SAFETY: the caller guarantees that `error_out` is null or has `error_capacity` writable bytes.
+    let error_out = unsafe { TextBuffer::new(error_out, error_capacity) };
+
+    guard::guarded_session(handle, error_out, FAILED, body)
+}
+
+/// # Safety
+///
+/// `pointer` must be null or valid for writes of `capacity` bytes.
+pub unsafe fn write_text(pointer: *mut u8, capacity: u32, text: &str) -> usize {
+    // SAFETY: the caller guarantees that `pointer` is null or has `capacity` writable bytes.
+    unsafe { TextBuffer::new(pointer, capacity) }.write(text)
+}
+
+/// # Safety
+///
+/// `data` must be null or hold `length` bytes, unless 0, that nothing writes during `'data`.
+pub unsafe fn input<'data>(data: *const u8, length: u32) -> Option<&'data [u8]> {
+    // SAFETY: the caller upholds `input_slice`'s contract.
+    unsafe { ffi::input_slice(data, length) }
+}
+
+/// # Safety
+///
+/// `pointer` must be null or hold `length` initialized bytes, unless 0, that nothing else uses during `'output`.
+pub unsafe fn output<'output>(pointer: *mut u8, length: usize) -> Option<&'output mut [u8]> {
+    // SAFETY: the caller upholds `output_slice`'s contract.
+    unsafe { ffi::output_slice(pointer, length) }
+}
+
+pub fn capped_capacity(capacity: u32) -> usize {
+    ffi::capped_capacity(capacity)
+}
+
+pub fn saturate_to_i32(value: u64) -> i32 {
+    ffi::saturate_to_i32(value)
 }
 
 /// The mapping family and stream count of the `OpusHead` at the start of `bytes`, as `opus::check_passthrough` reads

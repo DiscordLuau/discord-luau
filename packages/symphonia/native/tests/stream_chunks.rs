@@ -11,8 +11,7 @@ use std::time::{Duration, Instant};
 
 use discord_luau_symphonia::testing::{BLOCK_FRAMES, stream_failure, stream_state};
 use discord_luau_symphonia::{
-    BYTES_PER_FRAME, DescribeField, Error, InfoField, PushOutcome, Session, State, StreamSession,
-    symphonia_worker_count,
+    BYTES_PER_FRAME, DescribeField, Error, Info, PushOutcome, Session, State, StreamSession, symphonia_worker_count,
 };
 use symphonia::core::io::ReadOnlySource;
 
@@ -27,14 +26,6 @@ const MAX_PCM_BYTES: usize = 2 * 60 * 48_000 * BYTES_PER_FRAME;
 const MAX_PACKETS: usize = 100_000;
 /// Names the folder of the streaming spike's generated files, which the chunked runs add when it is set.
 const SPIKE_FILES: &str = "DISCORD_LUAU_STREAM_FILES";
-const PUBLISHED_FIELDS: [InfoField; 6] = [
-    InfoField::SampleRate,
-    InfoField::Channels,
-    InfoField::IsOpus,
-    InfoField::DurationMilliseconds,
-    InfoField::SkippedPackets,
-    InfoField::EndedEarly,
-];
 
 /// The FLAC frame and header checksum: a CRC of `width` bits with `polynomial`, starting at 0.
 fn flac_crc(bytes: &[u8], width: u32, polynomial: u32) -> u32 {
@@ -154,8 +145,8 @@ fn chunk_sizes(seed: u64, total: usize) -> Vec<usize> {
 /// What a session gave.
 #[derive(Default)]
 struct Decoded {
-    /// The published info fields and the codec and container names, once open.
-    opened: Option<(Vec<i32>, Vec<String>)>,
+    /// The info and the codec and container names, once open.
+    opened: Option<(Info, Vec<String>)>,
     pcm: Vec<u8>,
     packets: Vec<Box<[u8]>>,
     failure: Option<Error>,
@@ -232,7 +223,7 @@ fn reference(bytes: &[u8]) -> Decoded {
     }
 
     decoded.opened = Some((
-        PUBLISHED_FIELDS.map(|field| session.info(field)).to_vec(),
+        session.info(),
         [DescribeField::Codec, DescribeField::Container].map(|field| session.describe(field)).to_vec(),
     ));
     decoded
@@ -241,8 +232,8 @@ fn reference(bytes: &[u8]) -> Decoded {
 /// Reads once from `session` into `decoded`: `Ready(true)` when it gave frames or a packet, `Ready(false)` at the end
 /// or a failure, `Pending` when nothing was ready.
 fn read_once(session: &mut StreamSession, decoded: &mut Decoded) -> Poll<bool> {
-    let read = match session.info(InfoField::IsOpus) {
-        1 => session.read_packet(usize::MAX).map(|read| {
+    let read = match session.info().map(|info| info.is_opus) {
+        Some(true) => session.read_packet(usize::MAX).map(|read| {
             read.map(|packet| {
                 let more = packet.is_some();
 
@@ -250,13 +241,13 @@ fn read_once(session: &mut StreamSession, decoded: &mut Decoded) -> Poll<bool> {
                 more
             })
         }),
-        0 => session.read(READ_FRAMES).map(|read| {
+        Some(false) => session.read(READ_FRAMES).map(|read| {
             read.map(|bytes| {
                 decoded.pcm.extend_from_slice(bytes);
                 !bytes.is_empty()
             })
         }),
-        _ => stream_failure(session).map_or(Ok(Poll::Pending), Err),
+        None => stream_failure(session).map_or(Ok(Poll::Pending), Err),
     };
 
     decoded.check_bounds();
@@ -312,9 +303,9 @@ fn decode_pushed(bytes: &[u8], seed: u64) -> Decoded {
         }
     }
 
-    if session.info(InfoField::SampleRate) != -1 {
+    if let Some(info) = session.info() {
         decoded.opened = Some((
-            PUBLISHED_FIELDS.map(|field| session.info(field)).to_vec(),
+            info,
             [DescribeField::Codec, DescribeField::Container].map(|field| session.describe(field)).to_vec(),
         ));
     }
