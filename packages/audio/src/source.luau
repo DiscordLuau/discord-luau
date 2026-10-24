@@ -1190,7 +1190,7 @@ end
 --[=[
 	@within Audio.Source
 
-	Plays an audio file that arrives in pieces, such as internet radio or a media URL fetched in HTTP range requests.
+	Plays an audio file that arrives in pieces, such as internet radio or a program's output.
 	`read` returns the next chunk of the file's bytes, as a buffer or a string of any length, and nil at the end; it may
 	yield for as long as the next bytes take. The formats are those of `fromEncoded`. An MP4 or M4A with its index at
 	the end, and a CAF, cannot be read from the front: once the stream fails to open on one, the rest of the file is

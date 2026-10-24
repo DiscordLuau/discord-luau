@@ -143,39 +143,9 @@ local played = player:playAsync(source):await()
 
 Format 251 is YouTube's original Opus in WebM, which is passed through as stored, with no decoding and no second lossy encode; keep it when you can.
 
-To stay in Luau, give `audio.fromStream` a function that returns the next chunk of the file's bytes, and nil at the end. It may yield as long as it needs. This one fetches a media URL in HTTP range requests, 1 MiB at a time, and ends at a 416 status or a short body:
+To stay in Luau, give `audio.fromStream` a function that returns the next chunk of the file's bytes, and nil at the end. It may yield as long as it needs.
 
-```lua
-local RANGE_BYTES = 1024 * 1024
-
-local function rangeReader(url: string): () -> buffer?
-    local offset = 0
-    local ended = false
-
-    return function(): buffer?
-        if ended then
-            return nil
-        end
-
-        local response = zune.net.http.request(url, {
-            headers = { Range = `bytes={offset}-{offset + RANGE_BYTES - 1}` },
-        }, true)
-
-        if response.status_code == 416 then
-            return nil
-        end
-
-        assert(response.ok, `range request failed: {response.status_code} {response.status_reason}`)
-
-        offset += buffer.len(response.body)
-        ended = response.status_code ~= 206 or buffer.len(response.body) < RANGE_BYTES
-
-        return response.body
-    end
-end
-
-local played = player:playAsync(audio.fromStream(rangeReader(url))):await()
-```
+For a step-by-step walkthrough of playing, downloading and streaming music, see [Playing Music](/guides/playing-music).
 
 Neither call reads, opens or starts anything; the playback does. It sends nothing, not even Speaking, until `bufferSeconds` of audio is buffered (1 second by default). When the stream stalls, it sends the silence frames and Speaking 0, waits, and speaks again once it has audio, so listeners hear a clean pause; `player:stop()` ends that wait within about one 20 ms poll. `volume` and `bitrate` work as for files, and `source:setVolume` is heard at the next packet; Opus passed through is unaffected by volume.
 

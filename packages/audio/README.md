@@ -124,41 +124,9 @@ local played = player:playAsync(source):await()
 
 On YouTube, keep the original Opus: format 251 is Opus in WebM, which is passed through as stored, with no decoding and no second lossy encode. Other formats are decoded and encoded again, and YouTube's M4A formats, such as 140, are fragmented MP4, which libsymphonia does not decode yet.
 
-**A Luau function.** `audio.fromStream(read, options?)` calls `read` for the next chunk of the file's bytes, a buffer or a string of any length, and nil at the end; `read` may yield for as long as the next bytes take. This reader fetches a media URL in HTTP range requests, 1 MiB at a time:
+**A Luau function.** `audio.fromStream(read, options?)` calls `read` for the next chunk of the file's bytes, a buffer or a string of any length, and nil at the end; `read` may yield for as long as the next bytes take.
 
-```luau
-local RANGE_BYTES = 1024 * 1024
-
-local function rangeReader(url: string): () -> buffer?
-    local offset = 0
-    local ended = false
-
-    return function(): buffer?
-        if ended then
-            return nil
-        end
-
-        local response = zune.net.http.request(url, {
-            headers = { Range = `bytes={offset}-{offset + RANGE_BYTES - 1}` },
-        }, true)
-
-        if response.status_code == 416 then
-            return nil
-        end
-
-        assert(response.ok, `range request failed: {response.status_code} {response.status_reason}`)
-
-        offset += buffer.len(response.body)
-        ended = response.status_code ~= 206 or buffer.len(response.body) < RANGE_BYTES
-
-        return response.body
-    end
-end
-
-local played = player:playAsync(audio.fromStream(rangeReader(url))):await()
-```
-
-A 416 status, or a body shorter than the range, ends the stream; a server that ignores `Range` and answers 200 sends the whole file at once.
+The [Playing Music](https://github.com/DiscordLuau/discord-luau/blob/main/docs/guides/playing-music.md) guide walks through playing, downloading and streaming with yt-dlp.
 
 Both routes share the rest:
 
