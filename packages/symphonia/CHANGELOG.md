@@ -22,3 +22,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `symphonia.limiter.new()` creates that `Limiter` on its own, for floats from `readFloat`: `setVolume(volume)`, `process(floats, frames)`, which returns 16-bit PCM shorter by what the 240-frame look-ahead holds, and `flush()`, which returns the held frames at the end. `symphonia.limiter.checkVolume(volume)` owns the volume range and its message, and `symphonia.decoder.checkVolume` checks that a volume is a number before using it
 - libsymphonia ABI 2 decodes to 48 kHz stereo 32-bit floats and leaves volume, limiting and the conversion to 16-bit to Luau; `decoder:readFloat()` returns those floats untouched. It also takes a file pushed in chunks as a stream session, decoded on a worker thread: `Sys` binds `symphonia_open_stream`, `symphonia_push`, `symphonia_finish` and `symphonia_worker_count`, info field 7 (`state`) and describe field 2 (the failure text). The binaries are rebuilt
 - `symphonia.decoder.fromStream(options?)` opens a decoder for a file that arrives in pieces: `decoder:push(chunk)` queues bytes and returns false, with nothing queued, when the input is full; `decoder:finish()` ends the input; `decoder:refresh()` reads the session's `state` and fills the shape fields on the first open. A push the session cannot take raises `could not push audio: <reason>`. Reads on a stream never block: they return nil with `dry` set while nothing is ready and with `ended` set only at the true end, and `read` keeps its limiter running through dry reads. New fields: `opened`, `dry`, `state`, `failed`, `failure` and `failedBeforeOpen`
+
+### Changed
+
+- libsymphonia ABI 3 hands sessions to Luau as pointers instead of numeric ids. The binaries are rebuilt
+- A decoder's `id` (a number) is now `handle`, the session's FFI pointer
+- libsymphonia builds its downmix and resampler once per stream and reuses its buffers, so its own read path no longer allocates
+- The Rust crate's tests live in `native/tests/`
