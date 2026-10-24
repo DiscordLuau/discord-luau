@@ -39,9 +39,11 @@ jobs:
       - name: Run each voice spec alone with a 120 s limit
         run: |
           results=""
+          held="$RUNNER_TEMP/held-voice-specs"
+          mkdir -p "$held"
           for spec in packages/voice/tests/*.spec.luau; do
             for other in packages/voice/tests/*.spec.luau; do
-              if [ "$other" != "$spec" ]; then mv "$other" "$other.off"; fi
+              if [ "$other" != "$spec" ]; then mv "$other" "$held/"; fi
             done
             echo "::group::$(basename "$spec")"
             started=$SECONDS
@@ -51,8 +53,8 @@ jobs:
             set -e
             echo "::endgroup::"
             pkill -f 'zune run' || true
-            for other in packages/voice/tests/*.spec.luau.off; do
-              if [ -e "$other" ]; then mv "$other" "${other%.off}"; fi
+            for other in "$held"/*.spec.luau; do
+              if [ -e "$other" ]; then mv "$other" packages/voice/tests/; fi
             done
             results+="$(basename "$spec") exit=$code $((SECONDS - started))s"$'\n'
           done
