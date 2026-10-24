@@ -79,8 +79,8 @@ local stdPolyfills = require("../luau_packages/std_polyfills")
 local CHECKSUMS: { [string]: string } = {
 	["linux-arm64"] = "sha256:dccbbedba8d50c4dca0061d4255e3cc6ff11e3def564b3b4ac0efac3da22b915",
 	["linux-x64"] = "sha256:13373e2914d27a8796568de878e62242f1076dc9c05ee6c6e31c71df829c10e2",
-	["macos-arm64"] = "sha256:7bcd1839639a08da6ba83e926c3874191288126f410731122efdc3084227c18a",
-	["macos-x64"] = "sha256:83dece005388b04e9f5538eafaed358dd24dd110b66cb1fbf310be4c4eb2147e",
+	["macos-arm64"] = "sha256:dece6f34d1a9b23d520e67e458e37f17b47153b17a497633b3a7c84f1657cd0c",
+	["macos-x64"] = "sha256:68e207a98e00c7c2280abaf1c4eb6cd5d9387cd1cb3f701ff122b1d9be38ff15",
 	["windows-x64"] = "sha256:f1485ce247ce946e2c17ee2c56811c22838703309c7944a03867bbc45ce91cf9",
 	["windows-x86"] = "sha256:ada13ecb6fe5bd7bc5b9e7d256639c40bcb00794c58b8bb21abea0b090601ada",
 }

@@ -1,0 +1,41 @@
+libsodium's build.zig adds its C and assembly files in the order a directory walk returns them, and that order comes
+from the filesystem: ext4 hashes names with a per-filesystem seed, so each machine linked the files in its own order and
+got different bytes. Sorting the paths first makes every machine build the same library.
+
+--- a/build.zig
++++ b/build.zig
+@@ -264,18 +264,30 @@
+ 
+         const allocator = heap.page_allocator;
+ 
++        var source_paths: std.ArrayListUnmanaged([]const u8) = .empty;
++        defer source_paths.deinit(allocator);
++
+         var walker = try src_dir.walk(allocator);
+         while (if (is_zig_16) try walker.next(io) else try walker.next()) |entry| {
+             const name = entry.basename;
+-            if (mem.endsWith(u8, name, ".c")) {
+-                const full_path = try fmt.allocPrint(allocator, "{s}/{s}", .{ src_path, entry.path });
++            if (mem.endsWith(u8, name, ".c") or mem.endsWith(u8, name, ".S")) {
++                try source_paths.append(allocator, try fmt.allocPrint(allocator, "{s}/{s}", .{ src_path, entry.path }));
++            }
++        }
++
++        mem.sort([]const u8, source_paths.items, {}, struct {
++            fn lessThan(_: void, left: []const u8, right: []const u8) bool {
++                return mem.lessThan(u8, left, right);
++            }
++        }.lessThan);
+ 
++        for (source_paths.items) |full_path| {
++            if (mem.endsWith(u8, full_path, ".c")) {
+                 lib.root_module.addCSourceFiles(.{
+                     .files = &.{full_path},
+                     .flags = flags,
+                 });
+-            } else if (mem.endsWith(u8, name, ".S")) {
+-                const full_path = try fmt.allocPrint(allocator, "{s}/{s}", .{ src_path, entry.path });
++            } else {
+                 lib.root_module.addAssemblyFile(b.path(full_path));
+             }
+         }

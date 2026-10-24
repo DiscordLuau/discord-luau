@@ -3,7 +3,8 @@
 # packages/<package>/binaries/<os>-<arch>/lib<package><ext> under the output folder, with a SHA256SUMS file:
 #   libopus:      linux x64/arm64 (built against glibc 2.17, so it loads on old distributions), macOS x64/arm64
 #                 (macOS 11) and windows x64/x86, from the libopus source plus the settings shim in packages/opus/native
-#   libsodium:    macOS x64/arm64
+#   libsodium:    macOS x64/arm64, from the libsodium source plus libsodium-sorted-sources.patch, which sorts the
+#                 files its build.zig would take in directory order, an order that differs between filesystems
 #   libsymphonia: linux x64/arm64 (glibc 2.17), macOS x64/arm64 and windows x64/x86, from the Rust crate in
 #                 packages/symphonia/native with cargo zigbuild
 # Every output is reproducible: a run on any Linux x86_64 machine gives the same bytes, because the script brings its
@@ -74,6 +75,7 @@ echo "$SODIUM_SHA256  $workDirectory/libsodium.tar.gz" | sha256sum -c -
 tar -xJf "$workDirectory/zig.tar.xz" -C "$workDirectory"
 tar -xzf "$workDirectory/opus.tar.gz" -C "$workDirectory"
 tar -xzf "$workDirectory/libsodium.tar.gz" -C "$workDirectory"
+patch -s -p1 -d "$workDirectory/libsodium-$SODIUM_VERSION" <"$repositoryDirectory/.github/scripts/libsodium-sorted-sources.patch"
 
 # cargo-zigbuild and `zig build` look zig up on PATH. A zig of the same version built differently (Arch's links the
 # system LLVM) stamps other bytes, so this one comes first and keeps its own cache. cargo-zigbuild tries a Python
