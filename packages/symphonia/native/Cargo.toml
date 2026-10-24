@@ -6,49 +6,81 @@ description = "A C ABI over Symphonia that decodes audio files to 48 kHz stereo 
 license = "MIT"
 repository = "https://github.com/DiscordLuau/discord-luau/tree/main/packages/symphonia/native"
 publish = false
+autotests = false
 
-# cdylib only: an rlib beside it makes Cargo drop LTO from the release build (3.0 MB becomes
-# 4.0 MB), and the unit tests in src/ reach the internals without one.
 [lib]
-crate-type = ["cdylib"]
+crate-type = ["cdylib", "rlib"]
+test = false
+doctest = false
+
+[[test]]
+name = "integration"
+path = "tests/tests.rs"
+
+[features]
+testing = []
 
 [dependencies]
 symphonia = { version = "0.6.1", default-features = false, features = ["all", "opt-simd"] }
 rubato = "5.0.1"
 audioadapter-buffers = "5.2.0"
 
+[dev-dependencies]
+discord_luau_symphonia = { path = ".", features = ["testing"] }
+
 [profile.release]
 opt-level = 3
 lto = true
 codegen-units = 1
 strip = true
-# The panic guard catches only unwinding panics; "abort" would let a panic end the host process.
 panic = "unwind"
 
 [lints.rust]
-# Already a warning in edition 2024; deny makes "one unsafe block per operation, inside unsafe fn too" a rule.
 unsafe_op_in_unsafe_fn = "deny"
+unreachable_pub = "warn"
+rust_2018_idioms = { level = "warn", priority = -1 }
+unused_qualifications = "warn"
+unused_lifetimes = "warn"
+trivial_numeric_casts = "warn"
 
 [lints.clippy]
-# The whole pedantic group, like uv, ruff and Clippy itself; priority -1 lets the lines below override it.
 pedantic = { level = "warn", priority = -1 }
+cargo = { level = "warn", priority = -1 }
+missing_errors_doc = "allow"
+missing_panics_doc = "allow"
+must_use_candidate = "allow"
 
-# Cherry-picked from nursery (the Clippy book advises against enabling the group):
-use_self = "warn"                      # inside an impl, the type is Self
-redundant_pub_crate = "warn"           # no pub(crate) inside private modules
-too_long_first_doc_paragraph = "warn"  # a doc's first line is one sentence
+use_self = "warn"
+too_long_first_doc_paragraph = "warn"
+redundant_clone = "warn"
+needless_collect = "warn"
+or_fun_call = "warn"
+needless_pass_by_ref_mut = "warn"
+as_ptr_cast_mut = "warn"
 
-# Cherry-picked from restriction, each encoding a rule of the crate's card:
-undocumented_unsafe_blocks = "warn"     # every unsafe block has a // SAFETY: comment
-multiple_unsafe_ops_per_block = "warn"  # one operation per unsafe block
-unwrap_used = "warn"                    # no unwrap in production; clippy.toml allows it in tests
+undocumented_unsafe_blocks = "warn"
+multiple_unsafe_ops_per_block = "warn"
+unnecessary_safety_comment = "warn"
+unnecessary_safety_doc = "warn"
+unwrap_used = "warn"
 expect_used = "warn"
 panic = "warn"
 unreachable = "warn"
 todo = "warn"
-print_stdout = "warn"                   # the crate never prints; Luau logs
+exit = "warn"
+print_stdout = "warn"
 print_stderr = "warn"
 dbg_macro = "warn"
-allow_attributes = "warn"               # use #[expect], which warns once it goes stale
+allow_attributes = "warn"
 allow_attributes_without_reason = "warn"
-self_named_module_files = "warn"        # a module with tests is src/<module>/mod.rs beside its tests.rs
+mod_module_files = "warn"
+clone_on_ref_ptr = "warn"
+rc_buffer = "warn"
+min_ident_chars = "warn"
+doc_paragraphs_missing_punctuation = "warn"
+redundant_test_prefix = "warn"
+empty_drop = "warn"
+empty_structs_with_brackets = "warn"
+rest_pat_in_fully_bound_structs = "warn"
+semicolon_outside_block = "warn"
+unseparated_literal_suffix = "warn"

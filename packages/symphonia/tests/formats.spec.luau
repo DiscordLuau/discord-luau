@@ -249,8 +249,8 @@ type FormatCase = {
 
 return function()
 	test.suite("Symphonia formats", function()
-		test.case("loads libsymphonia with ABI version 2", function()
-			check.equal(symphonia.load().symphonia_abi_version(), 2)
+		test.case("loads libsymphonia with ABI version 3", function()
+			check.equal(symphonia.load().symphonia_abi_version(), 3)
 		end)
 
 		for _, format in FORMATS do

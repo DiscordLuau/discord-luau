@@ -238,8 +238,8 @@ type LoadAttempt = {
 
 return function()
 	test.suite("Symphonia failures", function()
-		test.case("loads libsymphonia with ABI version 2", function()
-			check.equal(symphonia.load().symphonia_abi_version(), 2)
+		test.case("loads libsymphonia with ABI version 3", function()
+			check.equal(symphonia.load().symphonia_abi_version(), 3)
 		end)
 
 		test.case("garbage fails to open", function()
@@ -402,8 +402,8 @@ return function()
 	end)
 
 	test.suite("Symphonia loading", function()
-		test.case("loads libsymphonia with ABI version 2", function()
-			check.equal(symphonia.load().symphonia_abi_version(), 2)
+		test.case("loads libsymphonia with ABI version 3", function()
+			check.equal(symphonia.load().symphonia_abi_version(), 3)
 			check.equal(symphonia.load(), symphonia.sys.load())
 		end)
 
@@ -573,7 +573,7 @@ return function()
 			check.is_true((attempt :: LoadAttempt).finished)
 			check.equal(
 				(attempt :: LoadAttempt).message,
-				"libsymphonia ABI version 1 does not match 2; update the symphonia package"
+				"libsymphonia ABI version 1 does not match 3; update the symphonia package"
 			)
 		end)
 	end)

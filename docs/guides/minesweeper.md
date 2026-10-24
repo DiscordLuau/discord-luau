@@ -102,10 +102,10 @@ The function returns a single string - one row per line, cells joined without sp
 ## Registering the command and handling it
 
 ```lua
-local discord  = require("@self/../luau_packages/discord")
-local classes  = require("@self/../luau_packages/classes")
+local discord = require("@self/../luau_packages/discord")
+local classes = require("@self/../luau_packages/classes")
 local builders = require("@self/../luau_packages/builders")
-local env      = require("@self/../.env")
+local env = require("@self/../.env")
 
 local minesweeperCommand = builders.interaction.interaction.new()
     :setName("minesweeper")
@@ -169,10 +169,10 @@ Avoid going above roughly 13×13 or you risk hitting the limit.
 <summary>Full script</summary>
 
 ```lua
-local discord  = require("@self/../luau_packages/discord")
-local classes  = require("@self/../luau_packages/classes")
+local discord = require("@self/../luau_packages/discord")
+local classes = require("@self/../luau_packages/classes")
 local builders = require("@self/../luau_packages/builders")
-local env      = require("@self/../.env")
+local env = require("@self/../.env")
 
 local ROWS = 9
 local COLUMNS = 9

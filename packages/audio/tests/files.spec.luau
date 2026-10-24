@@ -340,8 +340,8 @@ type Playback = { result: any }
 
 return function()
 	test.suite("Audio file sources", function()
-		test.case("loads libsymphonia with ABI version 2", function()
-			check.equal(symphonia.load().symphonia_abi_version(), 2)
+		test.case("loads libsymphonia with ABI version 3", function()
+			check.equal(symphonia.load().symphonia_abi_version(), 3)
 		end)
 
 		test.case("loadFileDecoder loads the library, so the next file source does not load it again", function()

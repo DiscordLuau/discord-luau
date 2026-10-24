@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Helper methods drop their leading underscore (`_name` is now `name`); they stay marked `@private` and out of the docs
 - `stub:runScenario` also returns the first voice or UDP server error
+- The README is cut to a short example; the details live in the doc comments
 
 ## 0.0.1
 

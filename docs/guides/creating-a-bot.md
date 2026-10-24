@@ -10,8 +10,8 @@ This guide walks through the code inside `src/init.luau` that `create_app` gener
 ## Imports
 
 ```lua
-local discord  = require("@self/../luau_packages/discord")
-local classes  = require("@self/../luau_packages/classes")
+local discord = require("@self/../luau_packages/discord")
+local classes = require("@self/../luau_packages/classes")
 local builders = require("@self/../luau_packages/builders")
 
 local env = require("@self/../.env")
@@ -90,8 +90,8 @@ bot:connectAsync():await()
 <summary>Full script</summary>
 
 ```lua
-local discord  = require("@self/../luau_packages/discord")
-local classes  = require("@self/../luau_packages/classes")
+local discord = require("@self/../luau_packages/discord")
+local classes = require("@self/../luau_packages/classes")
 local builders = require("@self/../luau_packages/builders")
 
 local env = require("@self/../.env")

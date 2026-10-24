@@ -145,8 +145,9 @@ buildSymphonia() {
 		rustFlags+=$'\x1f'"$flag"
 	done
 
+	# The crate is also an rlib for its tests, and cargo turns LTO off when an rlib is built beside the cdylib.
 	(cd "$repositoryDirectory/packages/symphonia/native" && CARGO_TARGET_DIR="$targetDirectory" \
-		CARGO_ENCODED_RUSTFLAGS="$rustFlags" cargo zigbuild --release --locked --target "$target")
+		CARGO_ENCODED_RUSTFLAGS="$rustFlags" cargo-zigbuild rustc --release --locked --target "$target" --lib --crate-type cdylib)
 	mkdir -p "$outputDirectory/packages/symphonia/binaries/$platform"
 	cp -L "$targetDirectory/${target%.2.17}/release/$builtName" "$outputDirectory/packages/symphonia/binaries/$platform/libsymphonia$extension"
 }
@@ -161,8 +162,8 @@ buildSodium x86_64-macos macos-x64
 buildSodium aarch64-macos macos-arm64
 buildSymphonia x86_64-unknown-linux-gnu.2.17 linux-x64 libdiscord_luau_symphonia.so .so
 buildSymphonia aarch64-unknown-linux-gnu.2.17 linux-arm64 libdiscord_luau_symphonia.so .so
-buildSymphonia x86_64-apple-darwin macos-x64 libdiscord_luau_symphonia.dylib .dylib -Clink-arg=-Wl,-S
-buildSymphonia aarch64-apple-darwin macos-arm64 libdiscord_luau_symphonia.dylib .dylib -Clink-arg=-Wl,-S
+buildSymphonia x86_64-apple-darwin macos-x64 libdiscord_luau_symphonia.dylib .dylib -Clink-arg=-Wl,-S -Clink-arg=-Wl,-install_name,@rpath/libsymphonia.dylib
+buildSymphonia aarch64-apple-darwin macos-arm64 libdiscord_luau_symphonia.dylib .dylib -Clink-arg=-Wl,-S -Clink-arg=-Wl,-install_name,@rpath/libsymphonia.dylib
 buildSymphonia x86_64-pc-windows-gnu windows-x64 discord_luau_symphonia.dll .dll -Clink-arg=-Wl,-Brepro
 buildSymphonia i686-pc-windows-gnu windows-x86 discord_luau_symphonia.dll .dll -Clink-arg=-Wl,-Brepro
 
