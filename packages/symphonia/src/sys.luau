@@ -61,14 +61,14 @@ local logger = require("../luau_packages/logger")
 local stdPolyfills = require("../luau_packages/std_polyfills")
 
 local CHECKSUMS: { [string]: string } = {
-	["linux-arm64"] = "sha256:09e4851773c494ce8822cb1bcb190642e5634f1759ceac55f20b598e0225ca48",
-	["linux-x64"] = "sha256:89b145006d20e97518f08103ff70008b778f85417be9a460970db82f705eb6a4",
-	["macos-arm64"] = "sha256:34d4aad0e05055ac68405a260276cb86323c9aa12e3b26f794a25b958a1f4209",
-	["macos-x64"] = "sha256:3b9ffb823b086df6a3028619ac5424b3d9968d35b3c3732288ef8066925c1021",
-	["windows-x64"] = "sha256:33f8d7b780edb094f995aad03975104697a3acd5f3d761b12993be41c2239258",
-	["windows-x86"] = "sha256:4b012e67c6b02ad8db5c81b4b3b615d094443af43521e3d28afe34e6116f5718",
+	["linux-arm64"] = "sha256:cfd78103a5d48f67d1532187bff63a6f84efb03f7023e9b63c92a7e048c45fb3",
+	["linux-x64"] = "sha256:3776ba3387155e4b8a25012dba5c5bf597686dea530ef0c3519a26bccb88203a",
+	["macos-arm64"] = "sha256:6b3780d1816db61d193e2794370ba2ec10abd0fbc50d7670f9e218d48a2ad14a",
+	["macos-x64"] = "sha256:4b75baebded6d54589cffde7fb89f1f1bb5ade370cb4a857e3bfffe92db17beb",
+	["windows-x64"] = "sha256:5d9a43c6d63eebb2e41e79554c020aeaa87a0e046ccad184e5573c8cb4dbd9a8",
+	["windows-x86"] = "sha256:7384fc3a299312a9ccdd8f8e74b38db5053c11c45ca957d8002afad35ead1f49",
 }
-local ABI_VERSION = 2
+local ABI_VERSION = 3
 
 local Sys = {
 	library = nil :: Lib?,
@@ -118,7 +118,7 @@ local Sys = {
 	failed load is not cached, so the next call tries again.
 
 	Raises `Symphonia requires FFI which is not available on this runtime` without FFI, and
-	`libsymphonia ABI version <n> does not match 2; update the symphonia package` for a library this package cannot use.
+	`libsymphonia ABI version <n> does not match 3; update the symphonia package` for a library this package cannot use.
 ]=]
 function Sys.load(): Lib
 	local library = Sys.library
@@ -220,7 +220,7 @@ function Sys.openLibrary(): Lib
 		else "x64"
 	local result = binary.load({
 		id = "libsymphonia",
-		version = "0.0.1",
+		version = "0.0.2",
 		url = "https://raw.githubusercontent.com/DiscordLuau/discord-luau/refs/tags/symphonia-{version}/packages/symphonia/binaries/{os}-{arch}/libsymphonia{ext}",
 		checksum = CHECKSUMS[`{platform}-{architecture}`]
 			or error(`Unsupported platform '{platform}-{architecture}' for libsymphonia`, 0),
@@ -228,16 +228,16 @@ function Sys.openLibrary(): Lib
 	local library = (
 		stdPolyfills.ffi.dlopen(result.path, {
 			symphonia_abi_version = { returns = i32, args = {} },
-			symphonia_open_memory = { returns = i32, args = { pointer, u32, pointer, pointer, u32 } },
-			symphonia_open_file = { returns = i32, args = { pointer, pointer, pointer, u32 } },
-			symphonia_info = { returns = i32, args = { i32, i32 } },
-			symphonia_describe = { returns = i32, args = { i32, i32, pointer, u32 } },
-			symphonia_read = { returns = i32, args = { i32, pointer, u32, pointer, u32 } },
-			symphonia_read_packet = { returns = i32, args = { i32, pointer, u32, pointer, u32 } },
-			symphonia_open_stream = { returns = i32, args = { pointer, u32 } },
-			symphonia_push = { returns = i32, args = { i32, pointer, u32 } },
-			symphonia_finish = { returns = i32, args = { i32 } },
-			symphonia_close = { returns = void, args = { i32 } },
+			symphonia_open_memory = { returns = pointer, args = { pointer, u32, pointer, pointer, u32 } },
+			symphonia_open_file = { returns = pointer, args = { pointer, pointer, pointer, u32 } },
+			symphonia_info = { returns = i32, args = { pointer, i32 } },
+			symphonia_describe = { returns = i32, args = { pointer, i32, pointer, u32 } },
+			symphonia_read = { returns = i32, args = { pointer, pointer, u32, pointer, u32 } },
+			symphonia_read_packet = { returns = i32, args = { pointer, pointer, u32, pointer, u32 } },
+			symphonia_open_stream = { returns = pointer, args = { pointer, u32 } },
+			symphonia_push = { returns = i32, args = { pointer, pointer, u32 } },
+			symphonia_finish = { returns = i32, args = { pointer } },
+			symphonia_close = { returns = void, args = { pointer } },
 			symphonia_open_count = { returns = i32, args = {} },
 			symphonia_worker_count = { returns = i32, args = {} },
 		}) :: any
@@ -261,33 +261,33 @@ export type Lib = {
 		extension: buffer | FFIPointer,
 		errorOut: FFIPointer,
 		errorCapacity: number
-	) -> number,
+	) -> FFIPointer,
 	symphonia_open_file: (
 		path: buffer,
 		extension: buffer | FFIPointer,
 		errorOut: FFIPointer,
 		errorCapacity: number
-	) -> number,
-	symphonia_info: (id: number, field: number) -> number,
-	symphonia_describe: (id: number, field: number, out: FFIPointer, capacity: number) -> number,
+	) -> FFIPointer,
+	symphonia_info: (handle: FFIPointer, field: number) -> number,
+	symphonia_describe: (handle: FFIPointer, field: number, out: FFIPointer, capacity: number) -> number,
 	symphonia_read: (
-		id: number,
+		handle: FFIPointer,
 		out: FFIPointer,
 		capacityFrames: number,
 		errorOut: FFIPointer,
 		errorCapacity: number
 	) -> number,
 	symphonia_read_packet: (
-		id: number,
+		handle: FFIPointer,
 		out: FFIPointer,
 		capacity: number,
 		errorOut: FFIPointer,
 		errorCapacity: number
 	) -> number,
-	symphonia_open_stream: (errorOut: FFIPointer, errorCapacity: number) -> number,
-	symphonia_push: (id: number, data: buffer, length: number) -> number,
-	symphonia_finish: (id: number) -> number,
-	symphonia_close: (id: number) -> (),
+	symphonia_open_stream: (errorOut: FFIPointer, errorCapacity: number) -> FFIPointer,
+	symphonia_push: (handle: FFIPointer, data: buffer, length: number) -> number,
+	symphonia_finish: (handle: FFIPointer) -> number,
+	symphonia_close: (handle: FFIPointer) -> (),
 	symphonia_open_count: () -> number,
 	symphonia_worker_count: () -> number,
 }

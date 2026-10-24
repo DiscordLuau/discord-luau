@@ -114,8 +114,8 @@ type OpusCase = {
 
 return function()
 	test.suite("Symphonia Opus passthrough", function()
-		test.case("loads libsymphonia with ABI version 2", function()
-			check.equal(symphonia.load().symphonia_abi_version(), 2)
+		test.case("loads libsymphonia with ABI version 3", function()
+			check.equal(symphonia.load().symphonia_abi_version(), 3)
 		end)
 
 		for _, opusFile in OPUS_FILES do

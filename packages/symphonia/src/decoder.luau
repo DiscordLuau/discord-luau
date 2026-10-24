@@ -18,10 +18,10 @@
 ]=]
 
 --[=[
-	@prop id number
+	@prop handle FFIPointer
 	@within Symphonia.Decoder
 
-	The native session's id.
+	The native session.
 ]=]
 
 --[=[
@@ -244,40 +244,40 @@ Decoder.Prototype = {}
 
 local function describe(
 	library: Sys.Lib,
-	id: number,
+	handle: FFIPointer,
 	field: number,
 	outputPointer: FFIPointer,
 	capacity: number?
 ): string
-	local written = library.symphonia_describe(id, field, outputPointer, capacity or Sys.NAME_CAPACITY)
+	local written = library.symphonia_describe(handle, field, outputPointer, capacity or Sys.NAME_CAPACITY)
 
 	return buffer.tostring(Buffer.read(outputPointer, math.max(written, 0)))
 end
 
 local function buildDecoder(
 	library: Sys.Lib,
-	id: number,
+	handle: FFIPointer,
 	errorPointer: FFIPointer,
 	outputPointer: FFIPointer,
 	decoderLogger: logger.Logger,
 	isStream: boolean
 ): Decoder
-	local durationMilliseconds = library.symphonia_info(id, Sys.infoField.durationMilliseconds)
-	local codec = describe(library, id, Sys.describeField.codec, outputPointer)
-	local container = describe(library, id, Sys.describeField.container, outputPointer)
-	local sampleRate = library.symphonia_info(id, Sys.infoField.sampleRate)
+	local durationMilliseconds = library.symphonia_info(handle, Sys.infoField.durationMilliseconds)
+	local codec = describe(library, handle, Sys.describeField.codec, outputPointer)
+	local container = describe(library, handle, Sys.describeField.container, outputPointer)
+	local sampleRate = library.symphonia_info(handle, Sys.infoField.sampleRate)
 	local self = setmetatable(
 		{
-			id = id,
+			handle = handle,
 			codec = codec,
 			container = container,
 			sampleRate = sampleRate,
-			channels = library.symphonia_info(id, Sys.infoField.channels),
+			channels = library.symphonia_info(handle, Sys.infoField.channels),
 			durationSeconds = if durationMilliseconds >= 0 then durationMilliseconds / 1000 else nil,
-			isOpus = library.symphonia_info(id, Sys.infoField.isOpus) == 1,
+			isOpus = library.symphonia_info(handle, Sys.infoField.isOpus) == 1,
 			opened = sampleRate >= 0,
 			dry = false,
-			state = library.symphonia_info(id, Sys.infoField.state),
+			state = library.symphonia_info(handle, Sys.infoField.state),
 			failed = false,
 			failure = nil :: string?,
 			failedBeforeOpen = false,
@@ -300,9 +300,9 @@ local function buildDecoder(
 	)
 
 	if self.opened then
-		self.logger:debug(`decoder {id} opened {codec} audio in a {container} container`)
+		self.logger:debug(`decoder {handle} opened {codec} audio in a {container} container`)
 	else
-		self.logger:debug(`decoder {id} is a stream waiting for bytes`)
+		self.logger:debug(`decoder {handle} is a stream waiting for bytes`)
 	end
 
 	return self
@@ -310,12 +310,12 @@ end
 
 local function newDecoder(
 	library: Sys.Lib,
-	id: number,
+	handle: FFIPointer,
 	errorPointer: FFIPointer,
 	decoderLogger: logger.Logger,
 	isStream: boolean
 ): Decoder
-	if id < 0 then
+	if handle == Buffer.getNull() then
 		local message = Buffer.fromCString(errorPointer, Sys.ERROR_CAPACITY)
 
 		Buffer.free(errorPointer)
@@ -323,13 +323,13 @@ local function newDecoder(
 	end
 
 	local outputPointer = Buffer.alloc(OUTPUT_BYTES)
-	local succeeded, result = pcall(buildDecoder, library, id, errorPointer, outputPointer, decoderLogger, isStream)
+	local succeeded, result = pcall(buildDecoder, library, handle, errorPointer, outputPointer, decoderLogger, isStream)
 
 	if not succeeded then
-		library.symphonia_close(id)
+		library.symphonia_close(handle)
 		Buffer.free(errorPointer)
 		Buffer.free(outputPointer)
-		decoderLogger:debug(`decoder {id} was closed because building it failed: {result}`)
+		decoderLogger:debug(`decoder {handle} was closed because building it failed: {result}`)
 		error(result, 0)
 	end
 
@@ -369,37 +369,39 @@ end
 ]=]
 function Decoder.Prototype.refresh(self: Decoder)
 	if self.destroyed then
-		self.logger:debug(`decoder {self.id} was refreshed after it was destroyed; nothing to read`)
+		self.logger:debug(`decoder {self.handle} was refreshed after it was destroyed; nothing to read`)
 
 		return
 	end
 
 	local library = self.library
-	local state = library.symphonia_info(self.id, Sys.infoField.state)
-	local sampleRate = library.symphonia_info(self.id, Sys.infoField.sampleRate)
+	local state = library.symphonia_info(self.handle, Sys.infoField.state)
+	local sampleRate = library.symphonia_info(self.handle, Sys.infoField.sampleRate)
 	local opensNow = not self.opened and sampleRate >= 0
 	local failsNow = state == FAILED_STATE and not self.failed
 
 	self.state = state
 
 	if opensNow then
-		local durationMilliseconds = library.symphonia_info(self.id, Sys.infoField.durationMilliseconds)
+		local durationMilliseconds = library.symphonia_info(self.handle, Sys.infoField.durationMilliseconds)
 
-		self.codec = describe(library, self.id, Sys.describeField.codec, self.outputPointer)
-		self.container = describe(library, self.id, Sys.describeField.container, self.outputPointer)
+		self.codec = describe(library, self.handle, Sys.describeField.codec, self.outputPointer)
+		self.container = describe(library, self.handle, Sys.describeField.container, self.outputPointer)
 		self.sampleRate = sampleRate
-		self.channels = library.symphonia_info(self.id, Sys.infoField.channels)
+		self.channels = library.symphonia_info(self.handle, Sys.infoField.channels)
 		self.durationSeconds = if durationMilliseconds >= 0 then durationMilliseconds / 1000 else nil
-		self.isOpus = library.symphonia_info(self.id, Sys.infoField.isOpus) == 1
+		self.isOpus = library.symphonia_info(self.handle, Sys.infoField.isOpus) == 1
 		self.opened = true
-		self.logger:debug(`decoder {self.id} opened {self.codec} audio in a {self.container} container`)
+		self.logger:debug(`decoder {self.handle} opened {self.codec} audio in a {self.container} container`)
 	end
 
 	if failsNow then
 		self.failed = true
-		self.failure = describe(library, self.id, Sys.describeField.failure, self.outputPointer, Sys.ERROR_CAPACITY)
+		self.failure = describe(library, self.handle, Sys.describeField.failure, self.outputPointer, Sys.ERROR_CAPACITY)
 		self.failedBeforeOpen = not self.opened
-		self.logger:debug(`decoder {self.id} failed{if self.opened then "" else " before it opened"}: {self.failure}`)
+		self.logger:debug(
+			`decoder {self.handle} failed{if self.opened then "" else " before it opened"}: {self.failure}`
+		)
 	end
 end
 
@@ -418,10 +420,10 @@ function Decoder.Prototype.push(self: Decoder, chunk: buffer | string): boolean
 	self:checkStream()
 
 	local input = if type(chunk) == "string" then buffer.fromstring(chunk) else chunk
-	local result = self.library.symphonia_push(self.id, input, buffer.len(input))
+	local result = self.library.symphonia_push(self.handle, input, buffer.len(input))
 
 	if result == Sys.FULL then
-		self.logger:debug(`decoder {self.id} refused {buffer.len(input)} bytes because its input is full`)
+		self.logger:debug(`decoder {self.handle} refused {buffer.len(input)} bytes because its input is full`)
 
 		return false
 	end
@@ -452,14 +454,14 @@ function Decoder.Prototype.finish(self: Decoder)
 	self:checkStream()
 
 	if self.finished then
-		self.logger:debug(`decoder {self.id} was finished again; nothing to do`)
+		self.logger:debug(`decoder {self.handle} was finished again; nothing to do`)
 
 		return
 	end
 
 	self.finished = true
-	self.library.symphonia_finish(self.id)
-	self.logger:debug(`decoder {self.id} input finished`)
+	self.library.symphonia_finish(self.handle)
+	self.logger:debug(`decoder {self.handle} input finished`)
 end
 
 --[=[
@@ -486,7 +488,7 @@ end
 	logged at debug, so a damaged file cannot warn on every read.
 ]=]
 function Decoder.Prototype.noteSkippedPackets(self: Decoder)
-	local skippedPackets = self.library.symphonia_info(self.id, Sys.infoField.skippedPackets)
+	local skippedPackets = self.library.symphonia_info(self.handle, Sys.infoField.skippedPackets)
 	local newlySkipped = skippedPackets - self.skippedPackets
 	local isFirstSkip = self.skippedPackets == 0 and newlySkipped > 0
 	local laterSkips = if isFirstSkip then newlySkipped - 1 else newlySkipped
@@ -519,14 +521,14 @@ function Decoder.Prototype.readNext(self: Decoder, readsOpus: boolean, floatFram
 	self:checkReadable(readsOpus)
 
 	if self.ended then
-		self.logger:debug(`decoder {self.id} was read after its end`)
+		self.logger:debug(`decoder {self.handle} was read after its end`)
 
 		return
 	end
 
 	if not self.opened and not self.failed then
 		self.dry = true
-		self.logger:debug(`decoder {self.id} was read before its stream opened`)
+		self.logger:debug(`decoder {self.handle} was read before its stream opened`)
 
 		return
 	end
@@ -534,14 +536,14 @@ function Decoder.Prototype.readNext(self: Decoder, readsOpus: boolean, floatFram
 	local library = self.library
 	local count = if readsOpus
 		then library.symphonia_read_packet(
-			self.id,
+			self.handle,
 			self.outputPointer,
 			Sys.MAX_PACKET_SIZE,
 			self.errorPointer,
 			Sys.ERROR_CAPACITY
 		)
 		else library.symphonia_read(
-			self.id,
+			self.handle,
 			self.outputPointer,
 			floatFrames,
 			self.errorPointer,
@@ -552,7 +554,7 @@ function Decoder.Prototype.readNext(self: Decoder, readsOpus: boolean, floatFram
 
 	if count == Sys.NOT_READY then
 		self.dry = true
-		self.logger:debug(`decoder {self.id} has no audio ready yet`)
+		self.logger:debug(`decoder {self.handle} has no audio ready yet`)
 
 		return
 	end
@@ -565,7 +567,7 @@ function Decoder.Prototype.readNext(self: Decoder, readsOpus: boolean, floatFram
 
 	if count == 0 then
 		self.ended = true
-		self.endedEarly = library.symphonia_info(self.id, Sys.infoField.endedEarly) == 1
+		self.endedEarly = library.symphonia_info(self.handle, Sys.infoField.endedEarly) == 1
 
 		if self.endedEarly then
 			self.logger:warn(
@@ -573,7 +575,7 @@ function Decoder.Prototype.readNext(self: Decoder, readsOpus: boolean, floatFram
 			)
 		end
 
-		self.logger:debug(`decoder {self.id} reached the end of the audio`)
+		self.logger:debug(`decoder {self.handle} reached the end of the audio`)
 
 		return
 	end
@@ -714,7 +716,7 @@ end
 ]=]
 function Decoder.Prototype.destroy(self: Decoder)
 	if self.destroyed then
-		self.logger:debug(`decoder {self.id} is already destroyed; nothing to free`)
+		self.logger:debug(`decoder {self.handle} is already destroyed; nothing to free`)
 
 		return
 	end
@@ -722,10 +724,10 @@ function Decoder.Prototype.destroy(self: Decoder)
 	self.destroyed = true
 	self.ended = true
 	self.limiter = nil
-	self.library.symphonia_close(self.id)
+	self.library.symphonia_close(self.handle)
 	Buffer.free(self.errorPointer)
 	Buffer.free(self.outputPointer)
-	self.logger:debug(`decoder {self.id} destroyed`)
+	self.logger:debug(`decoder {self.handle} destroyed`)
 end
 
 --[=[
@@ -761,9 +763,9 @@ function Decoder.Interface.fromBuffer(bytes: buffer | string, options: DecoderOp
 	local length = buffer.len(input)
 	local extension = if decoderOptions.extension then Buffer.cString(decoderOptions.extension) else Buffer.getNull()
 	local errorPointer = Buffer.alloc(Sys.ERROR_CAPACITY)
-	local id = library.symphonia_open_memory(input, length, extension, errorPointer, Sys.ERROR_CAPACITY)
+	local handle = library.symphonia_open_memory(input, length, extension, errorPointer, Sys.ERROR_CAPACITY)
 
-	return newDecoder(library, id, errorPointer, decoderLogger, false)
+	return newDecoder(library, handle, errorPointer, decoderLogger, false)
 end
 
 --[=[
@@ -791,9 +793,9 @@ function Decoder.Interface.fromFile(path: string, options: DecoderOptions?): Dec
 	end
 
 	local errorPointer = Buffer.alloc(Sys.ERROR_CAPACITY)
-	local id = library.symphonia_open_file(pathString, extension, errorPointer, Sys.ERROR_CAPACITY)
+	local handle = library.symphonia_open_file(pathString, extension, errorPointer, Sys.ERROR_CAPACITY)
 
-	return newDecoder(library, id, errorPointer, decoderLogger, false)
+	return newDecoder(library, handle, errorPointer, decoderLogger, false)
 end
 
 --[=[
@@ -813,9 +815,9 @@ function Decoder.Interface.fromStream(options: DecoderOptions?): Decoder
 	local decoderOptions: DecoderOptions = options or {}
 	local decoderLogger = logger.new("SymphoniaDecoder", decoderOptions.logLevel or "Info")
 	local errorPointer = Buffer.alloc(Sys.ERROR_CAPACITY)
-	local id = library.symphonia_open_stream(errorPointer, Sys.ERROR_CAPACITY)
+	local handle = library.symphonia_open_stream(errorPointer, Sys.ERROR_CAPACITY)
 
-	return newDecoder(library, id, errorPointer, decoderLogger, true)
+	return newDecoder(library, handle, errorPointer, decoderLogger, true)
 end
 
 --[=[
@@ -830,7 +832,7 @@ export type DecoderOptions = {
 }
 
 export type Decoder = typeof(Decoder.Prototype) & {
-	id: number,
+	handle: FFIPointer,
 	codec: string,
 	container: string,
 	sampleRate: number,

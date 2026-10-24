@@ -76,8 +76,8 @@ end
 
 return function()
 	test.suite("Symphonia native memory", function()
-		test.case("loads libsymphonia with ABI version 2", function()
-			check.equal(symphonia.load().symphonia_abi_version(), 2)
+		test.case("loads libsymphonia with ABI version 3", function()
+			check.equal(symphonia.load().symphonia_abi_version(), 3)
 		end)
 
 		test.case(`{CYCLES} open, read and destroy cycles return the open count to its start`, function()
