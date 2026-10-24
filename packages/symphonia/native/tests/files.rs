@@ -67,9 +67,7 @@ pub(crate) fn wav_with(sample_rate: u32, channel_count: u16, frames: usize, acti
     for frame in 0..frames {
         let sample = tone_sample(frame, sample_rate);
 
-        for channel in 0..channel_count {
-            samples.push(if active.contains(&channel) { sample } else { 0 });
-        }
+        samples.extend((0..channel_count).map(|channel| if active.contains(&channel) { sample } else { 0 }));
     }
 
     s16_wav(sample_rate, channel_count, &samples)
@@ -169,7 +167,10 @@ fn ogg_crc(bytes: &[u8]) -> u32 {
         crc ^= u32::from(byte) << 24;
 
         for _ in 0..8 {
-            crc = if crc & 0x8000_0000 == 0 { crc << 1 } else { (crc << 1) ^ 0x04c1_1db7 };
+            crc = match crc & 0x8000_0000 {
+                0 => crc << 1,
+                _ => (crc << 1) ^ 0x04c1_1db7,
+            };
         }
     }
 

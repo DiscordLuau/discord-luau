@@ -8,13 +8,13 @@ use symphonia::core::errors::Error as SymphoniaError;
 use crate::demuxer::{Demuxer, is_unexpected_end};
 use crate::error::Error;
 use crate::mix::{OUTPUT_CHANNELS, StereoMix};
-use crate::resample::StereoResampler;
+use crate::resample::{OUTPUT_SAMPLE_RATE, StereoResampler};
 
 pub const BYTES_PER_FRAME: usize = OUTPUT_CHANNELS * size_of::<f32>();
 
 pub(crate) struct Decoder {
     codec: Box<dyn AudioDecoder>,
-    resampler: StereoResampler,
+    resampler: Option<StereoResampler>,
     /// The playable frame count, when known; decoded frames past it are dropped.
     frame_limit: Option<u64>,
     decoded_frames: u64,
@@ -31,9 +31,14 @@ pub(crate) struct Decoder {
 
 impl Decoder {
     pub(crate) fn new(codec: Box<dyn AudioDecoder>, sample_rate: u32, frame_limit: Option<u64>) -> Result<Self, Error> {
+        let resampler = match sample_rate {
+            OUTPUT_SAMPLE_RATE => None,
+            source_rate => Some(StereoResampler::new(source_rate)?),
+        };
+
         Ok(Self {
             codec,
-            resampler: StereoResampler::new(sample_rate)?,
+            resampler,
             frame_limit,
             decoded_frames: 0,
             ended_early: false,
@@ -57,14 +62,7 @@ impl Decoder {
         let wanted_samples = output.len() / BYTES_PER_FRAME * OUTPUT_CHANNELS;
 
         if self.ready.len() - self.read_offset < wanted_samples {
-            self.ready.drain(..self.read_offset);
-            self.read_offset = 0;
-
-            while self.ready.len() < wanted_samples && !self.finished {
-                self.decode_next(demuxer, sample_rate)?;
-            }
-
-            self.ready.reserve((wanted_samples + self.packet_samples_max).saturating_sub(self.ready.len()));
+            self.fill(demuxer, sample_rate, wanted_samples)?;
         }
 
         let samples = &self.ready[self.read_offset..];
@@ -78,6 +76,19 @@ impl Decoder {
         self.read_offset += taken;
 
         Ok(taken / OUTPUT_CHANNELS)
+    }
+
+    fn fill(&mut self, demuxer: &mut Demuxer, sample_rate: u32, wanted_samples: usize) -> Result<(), Error> {
+        self.ready.drain(..self.read_offset);
+        self.read_offset = 0;
+
+        while self.ready.len() < wanted_samples && !self.finished {
+            self.decode_next(demuxer, sample_rate)?;
+        }
+
+        self.ready.reserve((wanted_samples + self.packet_samples_max).saturating_sub(self.ready.len()));
+
+        Ok(())
     }
 
     /// Decodes one packet, or flushes once the track or its playable frames end.
@@ -113,9 +124,13 @@ impl Decoder {
         let plane_count = buffer.num_planes();
 
         if self.mix_layout.as_ref().is_none_or(|(mixed, count)| mixed != channels || *count != plane_count) {
+            let capacity = buffer.capacity();
+            let output_frames =
+                self.resampler.as_ref().map_or(capacity, |resampler| resampler.output_frames_max(capacity));
+
             self.mix = StereoMix::for_channels(channels, plane_count);
             self.mix_layout = Some((channels.clone(), plane_count));
-            self.packet_samples_max = self.resampler.output_frames_max(buffer.capacity()) * OUTPUT_CHANNELS;
+            self.packet_samples_max = output_frames * OUTPUT_CHANNELS;
         }
 
         buffer.copy_to_vecs_planar::<f32>(&mut self.planes);
@@ -124,20 +139,27 @@ impl Decoder {
     }
 
     fn append(&mut self, frames: usize) -> Result<(), Error> {
-        if self.resampler.passes_through() {
-            self.mix.apply(&self.planes, frames, &mut self.ready);
-            return Ok(());
+        match &mut self.resampler {
+            None => {
+                self.mix.apply(&self.planes, frames, &mut self.ready);
+                Ok(())
+            }
+            Some(resampler) => {
+                self.stereo.clear();
+                self.mix.apply(&self.planes, frames, &mut self.stereo);
+                resampler.push(&self.stereo, &mut self.ready)
+            }
         }
-
-        self.stereo.clear();
-        self.mix.apply(&self.planes, frames, &mut self.stereo);
-        self.resampler.push(&self.stereo, &mut self.ready)
     }
 
     /// Ending short of the playable length, however the container ended, is ending early.
     fn finish(&mut self) -> Result<(), Error> {
         self.finished = true;
         self.ended_early = self.frame_limit.is_some_and(|limit| self.decoded_frames < limit);
-        self.resampler.finish(&mut self.ready)
+
+        match &mut self.resampler {
+            None => Ok(()),
+            Some(resampler) => resampler.finish(&mut self.ready),
+        }
     }
 }

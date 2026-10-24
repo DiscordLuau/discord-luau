@@ -35,7 +35,10 @@ fn flac_crc(bytes: &[u8], width: u32, polynomial: u32) -> u32 {
 
     bytes.iter().fold(0, |crc, &byte| {
         (0..8).fold(crc ^ (u32::from(byte) << (width - 8)), |crc, _| {
-            (if crc & top == 0 { crc << 1 } else { (crc << 1) ^ polynomial }) & mask
+            (match crc & top {
+                0 => crc << 1,
+                _ => (crc << 1) ^ polynomial,
+            }) & mask
         })
     })
 }
@@ -156,6 +159,18 @@ struct Decoded {
 }
 
 impl Decoded {
+    fn add_packet(&mut self, packet: Option<Box<[u8]>>) -> bool {
+        let more = packet.is_some();
+
+        self.packets.extend(packet);
+        more
+    }
+
+    fn add_pcm(&mut self, pcm: &[u8]) -> bool {
+        self.pcm.extend_from_slice(pcm);
+        !pcm.is_empty()
+    }
+
     fn check_bounds(&self) {
         assert!(self.pcm.len() <= MAX_PCM_BYTES, "more than 2 minutes");
         assert!(self.packets.len() <= MAX_PACKETS, "too many packets");
@@ -171,20 +186,27 @@ impl Decoded {
         let packet = self.packets.iter().zip(&actual.packets).position(|(left, right)| left != right);
 
         if self.failure != actual.failure {
-            Some(format!("failure {:?}, not {:?}", actual.failure, self.failure))
-        } else if self.opened != actual.opened {
-            Some(format!("opened {:?}, not {:?}", actual.opened, self.opened))
-        } else if let Some(frame) = frame {
-            Some(format!("frame {frame} differs"))
-        } else if self.pcm.len() != actual.pcm.len() {
-            Some(format!("{} bytes, not {}", actual.pcm.len(), self.pcm.len()))
-        } else if let Some(packet) = packet {
-            Some(format!("packet {packet} differs"))
-        } else if self.packets.len() != actual.packets.len() {
-            Some(format!("{} packets, not {}", actual.packets.len(), self.packets.len()))
-        } else {
-            None
+            return Some(format!("failure {:?}, not {:?}", actual.failure, self.failure));
         }
+
+        if self.opened != actual.opened {
+            return Some(format!("opened {:?}, not {:?}", actual.opened, self.opened));
+        }
+
+        if let Some(frame) = frame {
+            return Some(format!("frame {frame} differs"));
+        }
+
+        if self.pcm.len() != actual.pcm.len() {
+            return Some(format!("{} bytes, not {}", actual.pcm.len(), self.pcm.len()));
+        }
+
+        if let Some(packet) = packet {
+            return Some(format!("packet {packet} differs"));
+        }
+
+        (self.packets.len() != actual.packets.len())
+            .then(|| format!("{} packets, not {}", actual.packets.len(), self.packets.len()))
     }
 }
 
@@ -200,17 +222,9 @@ fn reference(bytes: &[u8]) -> Decoded {
 
     loop {
         let read = if is_opus {
-            session.read_packet(usize::MAX).map(|packet| {
-                let more = packet.is_some();
-
-                decoded.packets.extend(packet);
-                more
-            })
+            session.read_packet(usize::MAX).map(|packet| decoded.add_packet(packet))
         } else {
-            read_session(&mut session, READ_FRAMES).map(|bytes| {
-                decoded.pcm.extend_from_slice(&bytes);
-                !bytes.is_empty()
-            })
+            read_session(&mut session, READ_FRAMES).map(|bytes| decoded.add_pcm(&bytes))
         };
 
         decoded.check_bounds();
@@ -236,23 +250,13 @@ fn reference(bytes: &[u8]) -> Decoded {
 /// or a failure, `Pending` when nothing was ready.
 fn read_once(session: &mut StreamSession, decoded: &mut Decoded) -> Poll<bool> {
     let read = match session.info().map(|info| info.is_opus) {
-        Some(true) => session.read_packet(usize::MAX).map(|read| {
-            read.map(|packet| {
-                let more = packet.is_some();
-
-                decoded.packets.extend(packet);
-                more
-            })
-        }),
+        Some(true) => session.read_packet(usize::MAX).map(|read| read.map(|packet| decoded.add_packet(packet))),
         Some(false) => {
             let mut output = vec![0; READ_FRAMES * BYTES_PER_FRAME];
 
-            session.read(&mut output).map(|read| {
-                read.map(|frames| {
-                    decoded.pcm.extend_from_slice(&output[..frames * BYTES_PER_FRAME]);
-                    frames > 0
-                })
-            })
+            session
+                .read(&mut output)
+                .map(|read| read.map(|frames| decoded.add_pcm(&output[..frames * BYTES_PER_FRAME])))
         }
         None => stream_failure(session).map_or(Ok(Poll::Pending), Err),
     };
@@ -269,6 +273,20 @@ fn take_ready(session: &mut StreamSession, decoded: &mut Decoded) {
     while read_once(session, decoded) == Poll::Ready(true) {}
 }
 
+fn push_retrying(session: &mut StreamSession, decoded: &mut Decoded, chunk: &[u8]) -> PushOutcome {
+    let deadline = Instant::now() + WAIT;
+
+    loop {
+        match session.push(chunk.to_vec()) {
+            PushOutcome::Full => take_ready(session, decoded),
+            outcome => return outcome,
+        }
+
+        assert!(Instant::now() < deadline, "the input stayed full");
+        thread::yield_now();
+    }
+}
+
 /// Pushes `bytes` into a new stream in chunks sized by `seed`, retrying a full input and reading what is ready along
 /// the way; then finishes and reads to the end, waiting at most `WAIT` for each output.
 fn decode_pushed(bytes: &[u8], seed: u64) -> Decoded {
@@ -276,19 +294,9 @@ fn decode_pushed(bytes: &[u8], seed: u64) -> Decoded {
     let mut decoded = Decoded::default();
     let mut offset = 0;
 
-    'pushing: for size in chunk_sizes(seed, bytes.len()) {
-        let deadline = Instant::now() + WAIT;
-
-        loop {
-            match session.push(bytes[offset..offset + size].to_vec()) {
-                PushOutcome::Queued => break,
-                PushOutcome::Full => {
-                    take_ready(&mut session, &mut decoded);
-                    assert!(Instant::now() < deadline, "the input stayed full");
-                    thread::yield_now();
-                }
-                PushOutcome::Refused => break 'pushing,
-            }
+    for size in chunk_sizes(seed, bytes.len()) {
+        if push_retrying(&mut session, &mut decoded, &bytes[offset..offset + size]) == PushOutcome::Refused {
+            break;
         }
 
         offset += size;
@@ -362,6 +370,7 @@ fn chunked_pushes_decode_like_a_source_that_never_runs_dry() {
     for (name, bytes) in &files {
         let expected = reference(bytes);
         let results: Vec<(u64, Decoded)> = thread::scope(|scope| {
+            #[expect(clippy::needless_collect, reason = "every run starts before the first is joined")]
             let started: Vec<_> =
                 (0..SEEDS).map(|seed| scope.spawn(move || (seed, decode_pushed(bytes, seed)))).collect();
 
@@ -369,10 +378,7 @@ fn chunked_pushes_decode_like_a_source_that_never_runs_dry() {
         });
 
         for (seed, actual) in &results {
-            if let Some(found) = expected.difference(actual) {
-                panic!("{name}, seed {seed}: {found}");
-            }
-
+            assert_eq!(expected.difference(actual), None, "{name}, seed {seed}");
             runs += 1;
         }
 

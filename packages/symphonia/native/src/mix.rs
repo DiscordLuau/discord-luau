@@ -28,7 +28,7 @@ impl StereoMix {
         }
 
         match channels {
-            Channels::Positioned(positions) => Self::positioned(channels, *positions, plane_count),
+            Channels::Positioned(positions) => Self::positioned(*positions, plane_count),
             Channels::Ambisonic(_) if plane_count > 0 => Self::mono(0),
             _ => Self::first_planes(plane_count),
         }
@@ -37,11 +37,14 @@ impl StereoMix {
     /// Appends the first `frames` frames of `planes` to `output` as interleaved stereo; a mix of no planes appends
     /// silence, so the length is kept.
     pub fn apply(&self, planes: &[Vec<f32>], frames: usize, output: &mut Vec<f32>) {
-        output.reserve(frames * OUTPUT_CHANNELS);
+        let start = output.len();
 
-        for frame in 0..frames {
-            output.push(self.side(LEFT, planes, frame));
-            output.push(self.side(RIGHT, planes, frame));
+        output.resize(start + frames * OUTPUT_CHANNELS, -0.0);
+
+        let (stereo, _) = output[start..].as_chunks_mut::<OUTPUT_CHANNELS>();
+
+        for (plane, gain) in planes.iter().zip(self.gains) {
+            add_plane(stereo, plane, gain);
         }
     }
 
@@ -68,30 +71,11 @@ impl StereoMix {
         }
     }
 
-    fn positioned(channels: &Channels, positions: Position, plane_count: usize) -> Self {
+    fn positioned(positions: Position, plane_count: usize) -> Self {
         let mut mix = Self::default();
 
-        for bit in 0..u64::BITS {
-            let position = Position::from_bits_retain(1 << bit);
-
-            if !positions.contains(position) {
-                continue;
-            }
-
-            let Some(plane) = channels.get_canonical_index_for_positioned_channel(position) else {
-                continue;
-            };
-
-            if plane >= plane_count {
-                continue;
-            }
-
-            let Some(gain) = mix.gains.get_mut(plane) else {
-                continue;
-            };
-            let (left_coefficient, right_coefficient) = coefficients(position);
-
-            *gain = [left_coefficient, right_coefficient];
+        for (gain, position) in mix.gains.iter_mut().zip(positions.iter()).take(plane_count) {
+            *gain = coefficients(position);
         }
 
         match (mix.is_silent(LEFT), mix.is_silent(RIGHT)) {
@@ -110,19 +94,10 @@ impl StereoMix {
         self.gains.iter().all(|gain| gain[side] == 0.0)
     }
 
-    fn copy_side(&mut self, from: usize, to: usize) {
+    fn copy_side(&mut self, source: usize, target: usize) {
         for gain in &mut self.gains {
-            gain[to] = gain[from];
+            gain[target] = gain[source];
         }
-    }
-
-    fn side(&self, side: usize, planes: &[Vec<f32>], frame: usize) -> f32 {
-        planes
-            .iter()
-            .zip(&self.gains)
-            .filter(|(_, gain)| gain[side] != 0.0)
-            .map(|(plane, gain)| plane[frame] * gain[side])
-            .sum()
     }
 
     /// Divides each gain by the sum of the side's absolute gains.
@@ -135,9 +110,20 @@ impl StereoMix {
     }
 }
 
-/// The `(left, right)` coefficients for one position. LFE channels, and positions Symphonia may add later, are
-/// dropped.
-fn coefficients(position: Position) -> (f32, f32) {
+fn add_plane(stereo: &mut [[f32; OUTPUT_CHANNELS]], plane: &[f32], [left_gain, right_gain]: [f32; OUTPUT_CHANNELS]) {
+    for ([left, right], sample) in stereo.iter_mut().zip(plane) {
+        if left_gain != 0.0 {
+            *left += sample * left_gain;
+        }
+
+        if right_gain != 0.0 {
+            *right += sample * right_gain;
+        }
+    }
+}
+
+/// The `[left, right]` coefficients for one position; LFE channels and positions Symphonia may add later are dropped.
+fn coefficients(position: Position) -> [f32; OUTPUT_CHANNELS] {
     const FRONT_LEFT: Position = Position::FRONT_LEFT
         .union(Position::TOP_FRONT_LEFT)
         .union(Position::BOTTOM_FRONT_LEFT)
@@ -158,23 +144,15 @@ fn coefficients(position: Position) -> (f32, f32) {
         .union(Position::TOP_REAR_RIGHT);
     const BACK_CENTRE: Position = Position::REAR_CENTER.union(Position::TOP_REAR_CENTER);
 
-    if FRONT_LEFT.contains(position) {
-        (1.0, 0.0)
-    } else if FRONT_RIGHT.contains(position) {
-        (0.0, 1.0)
-    } else if CENTRE.contains(position) {
-        (MINUS_3_DB, MINUS_3_DB)
-    } else if position == Position::FRONT_LEFT_CENTER {
-        (MINUS_3_DB, OPPOSITE_CENTRE)
-    } else if position == Position::FRONT_RIGHT_CENTER {
-        (OPPOSITE_CENTRE, MINUS_3_DB)
-    } else if SURROUND_LEFT.contains(position) {
-        (MINUS_3_DB, 0.0)
-    } else if SURROUND_RIGHT.contains(position) {
-        (0.0, MINUS_3_DB)
-    } else if BACK_CENTRE.contains(position) {
-        (REAR_CENTRE, REAR_CENTRE)
-    } else {
-        (0.0, 0.0)
+    match position {
+        _ if FRONT_LEFT.contains(position) => [1.0, 0.0],
+        _ if FRONT_RIGHT.contains(position) => [0.0, 1.0],
+        _ if CENTRE.contains(position) => [MINUS_3_DB, MINUS_3_DB],
+        Position::FRONT_LEFT_CENTER => [MINUS_3_DB, OPPOSITE_CENTRE],
+        Position::FRONT_RIGHT_CENTER => [OPPOSITE_CENTRE, MINUS_3_DB],
+        _ if SURROUND_LEFT.contains(position) => [MINUS_3_DB, 0.0],
+        _ if SURROUND_RIGHT.contains(position) => [0.0, MINUS_3_DB],
+        _ if BACK_CENTRE.contains(position) => [REAR_CENTRE, REAR_CENTRE],
+        _ => [0.0, 0.0],
     }
 }

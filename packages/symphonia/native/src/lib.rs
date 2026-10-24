@@ -1,12 +1,6 @@
 //! The C ABI over Symphonia for the `discord_luau/symphonia` Luau package. Every export is named `symphonia_<name>`,
 //! which keeps each `#[unsafe(no_mangle)]` symbol unique.
 
-#![expect(
-    clippy::missing_errors_doc,
-    clippy::must_use_candidate,
-    reason = "the Rust API is for the crate's own tests in tests/; callers use the C ABI"
-)]
-
 mod chunk_reader;
 mod decoder;
 mod demuxer;

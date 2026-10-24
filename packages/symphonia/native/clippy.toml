@@ -5,3 +5,13 @@ allow-unwrap-in-tests = true
 allow-expect-in-tests = true
 allow-panic-in-tests = true
 allow-print-in-tests = true
+excessive-nesting-threshold = 3
+min-ident-chars-threshold = 2
+allowed-idents-below-min-chars = ["..", "id"]
+disallowed-names = ["..", "buf", "len", "idx", "ctx", "cfg", "tmp", "res", "err", "msg", "val", "ptr", "dir", "num", "cnt", "pos", "src", "dst", "arg", "obj", "ret", "acc", "elem", "iter"]
+check-inconsistent-struct-field-initializers = true
+lint-commented-code = true
+matches-for-let-else = "AllTypes"
+disallowed-methods = [
+    { path = "std::process::abort", reason = "a cdylib must never end the host process" },
+]

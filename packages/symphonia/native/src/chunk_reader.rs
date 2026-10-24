@@ -22,6 +22,14 @@ impl ChunkReader {
     pub(crate) fn new(chunks: Arc<Mutex<Receiver<Vec<u8>>>>, status: Arc<Mutex<Status>>) -> Self {
         Self { chunks, chunk: Vec::new(), offset: 0, status }
     }
+
+    fn hold(&mut self, chunk: Vec<u8>) {
+        #[cfg(feature = "testing")]
+        crate::testing::panic_on_request(&chunk);
+
+        self.chunk = chunk;
+        self.offset = 0;
+    }
 }
 
 impl Read for ChunkReader {
@@ -31,20 +39,13 @@ impl Read for ChunkReader {
     fn read(&mut self, buffer: &mut [u8]) -> io::Result<usize> {
         while self.offset == self.chunk.len() && !buffer.is_empty() {
             let received = lock(&self.chunks).recv();
+            let stopped = lock(&self.status).is_stopped();
 
-            if lock(&self.status).is_stopped() {
-                return Err(io::Error::new(ErrorKind::BrokenPipe, Error::StreamClosed));
+            match (stopped, received) {
+                (true, _) => return Err(io::Error::new(ErrorKind::BrokenPipe, Error::StreamClosed)),
+                (false, Ok(chunk)) => self.hold(chunk),
+                (false, Err(_)) => return Ok(0),
             }
-
-            let Ok(chunk) = received else {
-                return Ok(0);
-            };
-
-            #[cfg(feature = "testing")]
-            crate::testing::panic_on_request(&chunk);
-
-            self.chunk = chunk;
-            self.offset = 0;
         }
 
         let copied = buffer.len().min(self.chunk.len() - self.offset);

@@ -355,6 +355,22 @@ fn read_until_ready(handle: *mut Handle) -> (i32, String) {
     }
 }
 
+fn read_packets_until_failure(handle: *mut Handle, run: usize, deadline: Instant) -> (usize, String) {
+    let mut packets = 0;
+
+    loop {
+        match read_packet(handle) {
+            (-1, message) => return (packets, message),
+            (0, _) => panic!("run {run}: the failure read as the end"),
+            (NOT_READY, _) => {
+                assert!(Instant::now() < deadline, "run {run}: no failure");
+                thread::yield_now();
+            }
+            _ => packets += 1,
+        }
+    }
+}
+
 #[test]
 fn a_failure_before_the_open_is_stored_before_the_output_closes() {
     let _serial = serial();
@@ -378,7 +394,7 @@ fn a_failure_before_the_open_is_stored_before_the_output_closes() {
             closed
         }) {
             assert!(Instant::now() < deadline, "run {run}: the worker never ended");
-            std::thread::yield_now();
+            thread::yield_now();
         }
 
         let (result, message) = read_until_ready(handle);
@@ -430,7 +446,6 @@ fn a_failure_after_the_open_drains_its_packets_and_is_never_read_as_the_end() {
     for run in 0..FAILING_RUNS {
         let handle = open_stream();
         let deadline = Instant::now() + WAIT;
-        let mut packets = 0;
 
         push(handle, &chained);
         finish(handle);
@@ -441,21 +456,10 @@ fn a_failure_after_the_open_drains_its_packets_and_is_never_read_as_the_end() {
             wait_until("the stream fails", WAIT, || state(handle) == 3);
         }
 
-        loop {
-            match read_packet(handle) {
-                (-1, message) => {
-                    assert_eq!(message, Error::StreamChanged.to_string(), "run {run}");
-                    assert_eq!(packets, 2, "run {run}: the first stream's packets come first");
-                    break;
-                }
-                (0, _) => panic!("run {run}: the failure read as the end"),
-                (NOT_READY, _) => {
-                    assert!(Instant::now() < deadline, "run {run}: no failure");
-                    thread::yield_now();
-                }
-                _ => packets += 1,
-            }
-        }
+        let (packets, message) = read_packets_until_failure(handle, run, deadline);
+
+        assert_eq!(message, Error::StreamChanged.to_string(), "run {run}");
+        assert_eq!(packets, 2, "run {run}: the first stream's packets come first");
 
         close(handle);
     }
@@ -547,23 +551,23 @@ fn close_ends_a_read_waiting_inside_read_buf_exact_with_broken_pipe() {
     );
 }
 
+/// Interrupted a thousand times, then bytes of 7.
+struct Flaky(Arc<AtomicUsize>);
+
+impl Read for Flaky {
+    fn read(&mut self, buffer: &mut [u8]) -> io::Result<usize> {
+        if self.0.fetch_add(1, Ordering::SeqCst) < 1_000 {
+            return Err(io::Error::from(ErrorKind::Interrupted));
+        }
+
+        buffer.fill(7);
+
+        Ok(buffer.len())
+    }
+}
+
 #[test]
 fn media_source_stream_retries_interrupted_reads() {
-    /// Interrupted a thousand times, then bytes of 7.
-    struct Flaky(Arc<AtomicUsize>);
-
-    impl Read for Flaky {
-        fn read(&mut self, buffer: &mut [u8]) -> io::Result<usize> {
-            if self.0.fetch_add(1, Ordering::SeqCst) < 1_000 {
-                return Err(io::Error::from(ErrorKind::Interrupted));
-            }
-
-            buffer.fill(7);
-
-            Ok(buffer.len())
-        }
-    }
-
     // Why a closed stream's reader does not return `Interrupted`: Symphonia calls it again.
     let calls = Arc::new(AtomicUsize::new(0));
     let mut stream = MediaSourceStream::new(

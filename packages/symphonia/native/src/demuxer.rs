@@ -41,20 +41,18 @@ impl Demuxer {
             match self.reader.next_packet() {
                 Ok(Some(packet)) if packet.track_id == self.track_id => return Ok(Some(packet)),
                 Ok(Some(_)) => self.extend_run()?,
-                Ok(None) => {
-                    self.ended = true;
-                    return Ok(None);
-                }
+                Ok(None) => break,
                 // Symphonia's own idiom for the end of the bytes. Whether that was early is decided against the stated
                 // length when decoding finishes.
-                Err(failure) if is_unexpected_end(&failure) => {
-                    self.ended = true;
-                    return Ok(None);
-                }
+                Err(failure) if is_unexpected_end(&failure) => break,
                 Err(SymphoniaError::ResetRequired) => return Err(Error::StreamChanged),
                 Err(failure) => return Err(Error::UnreadableContainer(failure.to_string())),
             }
         }
+
+        self.ended = true;
+
+        Ok(None)
     }
 
     pub(crate) fn put_back(&mut self, packet: Packet) {

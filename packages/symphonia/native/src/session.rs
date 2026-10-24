@@ -140,28 +140,29 @@ impl Session {
             return Err(Error::NotOpus);
         }
 
-        while let Some(packet) = self.demuxer.next_packet()? {
-            if packet.data.is_empty() {
-                self.demuxer.skip()?;
-                continue;
+        let packet = loop {
+            match self.demuxer.next_packet()? {
+                Some(packet) if packet.data.is_empty() => self.demuxer.skip()?,
+                packet => break packet,
             }
+        };
 
-            if packet.data.len() > capacity {
+        match packet {
+            None => {
+                self.ended = true;
+                Ok(None)
+            }
+            Some(packet) if packet.data.len() > capacity => {
                 let error = Error::PacketTooLarge { length: packet.data.len(), capacity };
 
                 self.demuxer.put_back(packet);
-
-                return Err(error);
+                Err(error)
             }
-
-            self.demuxer.reset_skips();
-
-            return Ok(Some(packet.data));
+            Some(packet) => {
+                self.demuxer.reset_skips();
+                Ok(Some(packet.data))
+            }
         }
-
-        self.ended = true;
-
-        Ok(None)
     }
 
     pub fn is_opus(&self) -> bool {
@@ -169,12 +170,10 @@ impl Session {
     }
 
     pub fn state(&self) -> State {
-        if self.failure.is_some() {
-            State::Failed
-        } else if self.ended {
-            State::Ended
-        } else {
-            State::Open
+        match (&self.failure, self.ended) {
+            (Some(_), _) => State::Failed,
+            (None, true) => State::Ended,
+            (None, false) => State::Open,
         }
     }
 

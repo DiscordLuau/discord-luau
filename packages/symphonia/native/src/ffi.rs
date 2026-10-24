@@ -30,12 +30,7 @@ impl TextBuffer {
             return 0;
         }
 
-        let room = self.capacity as usize - 1;
-        let mut length = text.len().min(room);
-
-        while !text.is_char_boundary(length) {
-            length -= 1;
-        }
+        let length = text.floor_char_boundary(self.capacity as usize - 1);
 
         // SAFETY: `new`'s caller guarantees `capacity` writable bytes, and `length` is below `capacity`. `text` is the
         // crate's own memory, so the two cannot overlap.

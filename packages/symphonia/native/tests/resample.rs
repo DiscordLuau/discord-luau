@@ -41,7 +41,7 @@ fn flushed_in_full(resampler: &StereoResampler) -> bool {
 
 #[test]
 fn the_output_length_is_exact_for_common_and_odd_rates() {
-    for rate in [8_000, 11_025, 22_050, 44_100, 47_999, 48_000] {
+    for rate in [8_000, 11_025, 22_050, 44_100, 47_999] {
         for frames in [1, 100, 1023, 1024, 1025, 4_410, 22_050, 100_003] {
             let (output, resampler) = resample(rate, frames, 1152);
 
@@ -54,7 +54,7 @@ fn the_output_length_is_exact_for_common_and_odd_rates() {
 
 #[test]
 fn no_input_makes_no_output() {
-    for rate in [8_000, 44_100, 47_999, 48_000] {
+    for rate in [8_000, 44_100, 47_999] {
         let (output, resampler) = resample(rate, 0, 1152);
 
         assert!(output.is_empty(), "{rate} Hz");

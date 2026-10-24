@@ -7,14 +7,13 @@ use rubato::{Fft, FixedSync, Indexing, Resampler};
 use crate::error::Error;
 use crate::mix::OUTPUT_CHANNELS;
 
-const OUTPUT_SAMPLE_RATE: u32 = 48_000;
+pub(crate) const OUTPUT_SAMPLE_RATE: u32 = 48_000;
 pub(crate) const CHUNK_FRAMES: usize = 1024;
 const CHUNK_SAMPLES: usize = CHUNK_FRAMES * OUTPUT_CHANNELS;
 
 pub struct StereoResampler {
     source_rate: u32,
-    /// `None` at 48 kHz, where the input passes through.
-    fft: Option<Fft<f32>>,
+    fft: Fft<f32>,
     pending: Vec<f32>,
     scratch: Vec<f32>,
     input_frames: u64,
@@ -31,23 +30,17 @@ pub(crate) struct Trim {
 impl StereoResampler {
     /// `source_rate` must not be 0.
     pub fn new(source_rate: u32) -> Result<Self, Error> {
-        let fft = if source_rate == OUTPUT_SAMPLE_RATE {
-            None
-        } else {
-            let fft = Fft::<f32>::new(
-                source_rate as usize,
-                OUTPUT_SAMPLE_RATE as usize,
-                CHUNK_FRAMES,
-                OUTPUT_CHANNELS,
-                FixedSync::Input,
-            )
-            .map_err(|failure| Error::ResamplerUnavailable { source_rate, detail: failure.to_string() })?;
-
-            Some(fft)
-        };
-        let delay = fft.as_ref().map_or(0, Resampler::output_delay);
-        let pending = if fft.is_some() { Vec::with_capacity(CHUNK_SAMPLES) } else { Vec::new() };
-        let scratch = vec![0.0; fft.as_ref().map_or(0, Resampler::output_frames_max) * OUTPUT_CHANNELS];
+        let fft = Fft::<f32>::new(
+            source_rate as usize,
+            OUTPUT_SAMPLE_RATE as usize,
+            CHUNK_FRAMES,
+            OUTPUT_CHANNELS,
+            FixedSync::Input,
+        )
+        .map_err(|failure| Error::ResamplerUnavailable { source_rate, detail: failure.to_string() })?;
+        let delay = fft.output_delay();
+        let pending = Vec::with_capacity(CHUNK_SAMPLES);
+        let scratch = vec![0.0; fft.output_frames_max() * OUTPUT_CHANNELS];
 
         Ok(Self { source_rate, fft, pending, scratch, input_frames: 0, trim: Trim::new(delay), finished: false })
     }
@@ -57,19 +50,13 @@ impl StereoResampler {
         self.input_frames += (input.len() / OUTPUT_CHANNELS) as u64;
 
         let expected = self.expected_frames();
-        let Some(fft) = self.fft.as_mut() else {
-            output.extend_from_slice(input);
-            self.trim.output_frames += (input.len() / OUTPUT_CHANNELS) as u64;
-            return Ok(());
-        };
-
         let missing = CHUNK_SAMPLES.saturating_sub(self.pending.len()).min(input.len());
         let (head, input) = if self.pending.is_empty() { (&[][..], input) } else { input.split_at(missing) };
 
         self.pending.extend_from_slice(head);
 
         if self.pending.len() == CHUNK_SAMPLES {
-            let produced = process(fft, &self.pending, None, &mut self.scratch)?;
+            let produced = process(&mut self.fft, &self.pending, None, &mut self.scratch)?;
 
             self.pending.clear();
             self.trim.emit(&self.scratch[..produced * OUTPUT_CHANNELS], expected, output);
@@ -78,7 +65,7 @@ impl StereoResampler {
         let (chunks, remainder) = input.as_chunks::<CHUNK_SAMPLES>();
 
         for chunk in chunks {
-            let produced = process(fft, chunk, None, &mut self.scratch)?;
+            let produced = process(&mut self.fft, chunk, None, &mut self.scratch)?;
 
             self.trim.emit(&self.scratch[..produced * OUTPUT_CHANNELS], expected, output);
         }
@@ -97,35 +84,23 @@ impl StereoResampler {
         self.finished = true;
 
         let expected = self.expected_frames();
-        let Some(fft) = self.fft.as_mut() else {
-            return Ok(());
-        };
-        let rounds = flush_rounds(fft, expected.saturating_sub(self.trim.output_frames), self.trim.delay_remaining);
+        let mut rounds =
+            flush_rounds(&self.fft, expected.saturating_sub(self.trim.output_frames), self.trim.delay_remaining);
 
-        for _ in 0..rounds {
-            if self.trim.output_frames >= expected {
-                break;
-            }
-
+        while rounds > 0 && self.trim.output_frames < expected {
             let indexing = Indexing { partial_len: Some(self.pending.len() / OUTPUT_CHANNELS), ..Indexing::new() };
-            let produced = process(fft, &self.pending, Some(&indexing), &mut self.scratch)?;
+            let produced = process(&mut self.fft, &self.pending, Some(&indexing), &mut self.scratch)?;
 
             self.pending.clear();
             self.trim.emit(&self.scratch[..produced * OUTPUT_CHANNELS], expected, output);
+            rounds -= 1;
         }
 
         Ok(())
     }
 
-    pub(crate) fn passes_through(&self) -> bool {
-        self.fft.is_none()
-    }
-
     pub(crate) fn output_frames_max(&self, input_frames: usize) -> usize {
-        match &self.fft {
-            Some(fft) => input_frames.div_ceil(CHUNK_FRAMES) * fft.output_frames_max(),
-            None => input_frames,
-        }
+        input_frames.div_ceil(CHUNK_FRAMES) * self.fft.output_frames_max()
     }
 
     pub(crate) fn expected_frames(&self) -> u64 {

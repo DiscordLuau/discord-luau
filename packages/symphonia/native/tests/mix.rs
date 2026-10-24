@@ -324,3 +324,30 @@ fn a_layout_change_mid_stream_mixes_with_the_new_layouts_table() {
         fresh_mix(&layouts::CHANNEL_LAYOUT_5P1, &FIVE_ONE_VALUES).as_slice()
     );
 }
+
+#[test]
+fn an_infinite_lfe_sample_leaves_the_mix_unchanged() {
+    let channels = layouts::CHANNEL_LAYOUT_5P1;
+    let lfe = channels.get_canonical_index_for_positioned_channel(Position::LFE1).unwrap();
+    let mut values = FIVE_ONE_VALUES.to_vec();
+
+    values[lfe] = 0.0;
+
+    let silent_lfe = mix_frame(&channels, &values);
+
+    values[lfe] = f32::INFINITY;
+
+    let infinite_lfe = mix_frame(&channels, &values);
+
+    assert!(silent_lfe.0.is_finite() && silent_lfe.1.is_finite());
+    assert_eq!(infinite_lfe, silent_lfe);
+}
+
+#[test]
+fn a_mix_of_no_planes_appends_negative_zero() {
+    let mut output = Vec::new();
+
+    StereoMix::for_channels(&Channels::None, 0).apply(&[], 3, &mut output);
+
+    assert_eq!(output.iter().map(|sample| sample.to_bits()).collect::<Vec<_>>(), vec![(-0.0_f32).to_bits(); 6]);
+}

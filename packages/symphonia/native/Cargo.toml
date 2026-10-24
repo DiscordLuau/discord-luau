@@ -12,6 +12,8 @@ autotests = false
 # build script builds the shipped library alone with `--crate-type cdylib`, which keeps LTO.
 [lib]
 crate-type = ["cdylib", "rlib"]
+test = false
+doctest = false
 
 # One test binary, so the tests share tests/util.rs and tests/files.rs.
 [[test]]
@@ -43,26 +45,52 @@ panic = "unwind"
 unsafe_op_in_unsafe_fn = "deny"
 # `pub` only on what lib.rs re-exports; everything else is pub(crate).
 unreachable_pub = "warn"
+rust_2018_idioms = { level = "warn", priority = -1 }
+unused_qualifications = "warn"
+unused_lifetimes = "warn"
+trivial_numeric_casts = "warn"
 
 [lints.clippy]
 # The whole pedantic group, like uv, ruff and Clippy itself; priority -1 lets the lines below override it.
 pedantic = { level = "warn", priority = -1 }
+cargo = { level = "warn", priority = -1 }
+missing_errors_doc = "allow"
+missing_panics_doc = "allow"
+must_use_candidate = "allow"
 
 # Cherry-picked from nursery (the Clippy book advises against enabling the group):
 use_self = "warn"                      # inside an impl, the type is Self
 too_long_first_doc_paragraph = "warn"  # a doc's first line is one sentence
+redundant_clone = "warn"
+needless_collect = "warn"
+or_fun_call = "warn"
+needless_pass_by_ref_mut = "warn"
+as_ptr_cast_mut = "warn"
 
 # Cherry-picked from restriction, each encoding a rule of the crate's card:
 undocumented_unsafe_blocks = "warn"     # every unsafe block has a // SAFETY: comment
 multiple_unsafe_ops_per_block = "warn"  # one operation per unsafe block
+unnecessary_safety_comment = "warn"
+unnecessary_safety_doc = "warn"
 unwrap_used = "warn"                    # no unwrap in production; clippy.toml allows it in tests
 expect_used = "warn"
 panic = "warn"
 unreachable = "warn"
 todo = "warn"
+exit = "warn"
 print_stdout = "warn"                   # the crate never prints; Luau logs
 print_stderr = "warn"
 dbg_macro = "warn"
 allow_attributes = "warn"               # use #[expect], which warns once it goes stale
 allow_attributes_without_reason = "warn"
 mod_module_files = "warn"               # a module is src/<module>.rs, never src/<module>/mod.rs
+clone_on_ref_ptr = "warn"
+rc_buffer = "warn"
+min_ident_chars = "warn"
+doc_paragraphs_missing_punctuation = "warn"
+redundant_test_prefix = "warn"
+empty_drop = "warn"
+empty_structs_with_brackets = "warn"
+rest_pat_in_fully_bound_structs = "warn"
+semicolon_outside_block = "warn"
+unseparated_literal_suffix = "warn"

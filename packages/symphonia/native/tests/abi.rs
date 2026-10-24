@@ -300,10 +300,10 @@ fn output_is_little_endian_f32_at_any_alignment() {
 
     let sample = f32::from(tone_sample(10, 48_000));
     let expected = sample / 32_768.0;
-    let at = |offset: usize| f32::from_le_bytes(storage[1 + offset..1 + offset + 4].try_into().unwrap());
+    let sample_at = |offset: usize| f32::from_le_bytes(storage[1 + offset..1 + offset + 4].try_into().unwrap());
 
-    assert_eq!(at(80), expected, "frame 10, left");
-    assert_eq!(at(84), expected, "frame 10, right");
+    assert_eq!(sample_at(80), expected, "frame 10, left");
+    assert_eq!(sample_at(84), expected, "frame 10, right");
 
     close(handle);
 }

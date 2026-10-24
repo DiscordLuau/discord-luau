@@ -174,16 +174,18 @@ impl StreamSession {
             let settled = matches!(self.state(), State::Ended | State::Failed);
 
             match self.output.try_recv() {
-                Ok(block) => {
-                    self.block = block;
-                    self.offset = 0;
-                }
+                Ok(block) => self.hold(block),
                 Err(TryRecvError::Empty) if !settled => return Ok(Poll::Pending),
                 Err(_) => return self.failure().map_or(Ok(Poll::Ready(Held::End)), Err),
             }
         }
 
         Ok(Poll::Ready(Held::Block))
+    }
+
+    fn hold(&mut self, block: Vec<u8>) {
+        self.block = block;
+        self.offset = 0;
     }
 }
 
@@ -227,12 +229,7 @@ fn decode(reader: ChunkReader, output: &SyncSender<Vec<u8>>, status: &Mutex<Stat
         let block = if is_opus {
             session.read_packet(usize::MAX).map(|packet| packet.map(Vec::from))
         } else {
-            let mut block = vec![0; BLOCK_FRAMES * BYTES_PER_FRAME];
-
-            session.read(&mut block).map(|frames| {
-                block.truncate(frames * BYTES_PER_FRAME);
-                (frames > 0).then_some(block)
-            })
+            read_pcm_block(&mut session)
         };
 
         lock(status).publish(&session, State::Open);
@@ -252,4 +249,13 @@ fn decode(reader: ChunkReader, output: &SyncSender<Vec<u8>>, status: &Mutex<Stat
     lock(status).publish(&session, State::Ended);
 
     Ok(())
+}
+
+fn read_pcm_block(session: &mut Session) -> Result<Option<Vec<u8>>, Error> {
+    let mut block = vec![0; BLOCK_FRAMES * BYTES_PER_FRAME];
+    let frames = session.read(&mut block)?;
+
+    block.truncate(frames * BYTES_PER_FRAME);
+
+    Ok((frames > 0).then_some(block))
 }
