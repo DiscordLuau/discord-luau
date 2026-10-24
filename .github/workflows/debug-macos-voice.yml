@@ -8,12 +8,8 @@ on:
 
 jobs:
   voice-per-spec:
-    name: Voice specs one at a time (${{ matrix.os }})
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [macos-latest, macos-15-intel]
-    runs-on: ${{ matrix.os }}
+    name: Voice hang probe (macos-latest)
+    runs-on: macos-latest
     timeout-minutes: 45
     defaults:
       run:
@@ -23,6 +19,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Install pesde
         uses: lumin-org/setup-pesde@v0.4.1
         with:
@@ -36,27 +34,37 @@ jobs:
         run: pesde install
       - name: Seed native libraries from this checkout
         run: zune run .github/scripts/seedBinaryCache.luau
-      - name: Run each voice spec alone with a 120 s limit
+      - name: Probe the sender address a UDP reply reports
+        run: perl -e 'alarm shift @ARGV; exec @ARGV' 20 zune run .github/debug/udpProbe.luau || echo "probe exit=$?"
+      - name: Run the hanging voice specs with the current and the pre-rewrite net.luau
         run: |
           results=""
           held="$RUNNER_TEMP/held-voice-specs"
+          netFile=packages/std_polyfills/src/zune/net.luau
           mkdir -p "$held"
-          for spec in packages/voice/tests/*.spec.luau; do
-            for other in packages/voice/tests/*.spec.luau; do
-              if [ "$other" != "$spec" ]; then mv "$other" "$held/"; fi
+          cp "$netFile" "$RUNNER_TEMP/net.current.luau"
+          git show 53a3621:$netFile > "$RUNNER_TEMP/net.before.luau"
+          for variant in current before; do
+            cp "$RUNNER_TEMP/net.$variant.luau" "$netFile"
+            for name in udp connection dave errorSurfacing; do
+              spec="packages/voice/tests/$name.spec.luau"
+              for other in packages/voice/tests/*.spec.luau; do
+                if [ "$other" != "$spec" ]; then mv "$other" "$held/"; fi
+              done
+              echo "::group::$variant $name"
+              started=$SECONDS
+              set +e
+              perl -e 'alarm shift @ARGV; exec @ARGV' 120 zune run .zune/test.luau packages/voice
+              code=$?
+              set -e
+              echo "::endgroup::"
+              pkill -f 'zune run' || true
+              for other in "$held"/*.spec.luau; do
+                if [ -e "$other" ]; then mv "$other" packages/voice/tests/; fi
+              done
+              results+="$variant $name exit=$code $((SECONDS - started))s"$'\n'
             done
-            echo "::group::$(basename "$spec")"
-            started=$SECONDS
-            set +e
-            perl -e 'alarm shift @ARGV; exec @ARGV' 120 zune run .zune/test.luau packages/voice
-            code=$?
-            set -e
-            echo "::endgroup::"
-            pkill -f 'zune run' || true
-            for other in "$held"/*.spec.luau; do
-              if [ -e "$other" ]; then mv "$other" packages/voice/tests/; fi
-            done
-            results+="$(basename "$spec") exit=$code $((SECONDS - started))s"$'\n'
           done
-          echo "===== per-spec results (exit 142 means killed after 120 s)"
+          cp "$RUNNER_TEMP/net.current.luau" "$netFile"
+          echo "===== results (exit 142 means killed after 120 s)"
           printf '%s' "$results"
