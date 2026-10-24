@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- The Zune process adapter's private `wrap` documentation names its class, so Moonwave no longer stops the documentation site's build on it
 - On Roblox, a WebStream signal no longer defers a waiting thread its owner already closed, and a socket `Error` after open is raised from `next()` instead of reading as a clean close
 - On Lute, a socket `onerror` is raised from `next()`, and a failed `@lute/net/client` load keeps its cause in the message
 - On Lune and Lute, `fileSystem.watch` reports an unreadable directory once on stderr, skips an entry whose metadata fails, and runs the callback in its own thread so a throwing callback no longer ends watching
