@@ -1029,7 +1029,11 @@ return function()
 					check.is_true(pumpDead(source))
 					check.equal(countLines(lines, "did not exit within"), 0)
 					check.equal(countLines(lines, "audio stream read failed"), 0)
-					check.is_true(feed.producerEnded)
+					check.is_true(waitUntil(function()
+						local process = feed.process
+
+						return if process then process.exited() else false
+					end, GATE_SECONDS))
 				end)
 			end
 
