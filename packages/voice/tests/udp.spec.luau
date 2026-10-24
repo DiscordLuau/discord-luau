@@ -267,6 +267,15 @@ return function()
 
 				manager = connectedManager
 				connection = joined
+
+				-- On macOS a send in flight when its socket closes never returns, so Zune could never exit; the
+				-- transport's own close waits for its sends the same way.
+				assert(
+					stub.clock:waitFor(function()
+						return not joined.udp.pendingSends[udpSocket]
+					end, WAIT_SECONDS),
+					"the keepalive send never finished"
+				)
 				udpSocket.close()
 
 				local result = joined:sendOpusAsync(buffer.create(3)):await()
