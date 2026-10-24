@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.0.3
+
 ### Fixed
 
 - Requiring utilities no longer reseeds `math.random` to the same sequence in every process, so GUIDs no longer repeat across restarts

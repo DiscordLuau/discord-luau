@@ -1,5 +1,5 @@
 name = "discord_luau/binary"
-version = "0.0.6"
+version = "0.0.7"
 description = "Platform binary acquisition layer for FFI packages - resolves, caches, and downloads native shared libraries"
 license = "MIT"
 authors = ["Async Matrix <hi@asyncmatrix.dev>"]

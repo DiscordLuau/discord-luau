@@ -1,5 +1,5 @@
 name = "discord_luau/symphonia"
-version = "0.0.1"
+version = "0.0.2"
 description = "Discord Luau Symphonia - FFI bindings for libsymphonia, decoding audio files to 48 kHz stereo PCM and passing Opus through."
 license = "MIT"
 authors = ["Async Matrix <hi@asyncmatrix.dev>"]

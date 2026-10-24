@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.0.2
+
 ### Added
 
 - `symphonia.decoder.fromBuffer(bytes, options?)` and `symphonia.decoder.fromFile(path, options?)` open an audio file, held in memory as a buffer or string or streamed from the disk, through libsymphonia, a Rust wrapper around Symphonia 0.6.1 loaded over FFI. They raise `could not open audio: <message>` for anything that cannot be opened, including a path that contains a NUL byte

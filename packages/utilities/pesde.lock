@@ -2,5 +2,5 @@
 # It is not intended for manual editing.
 format = 2
 name = "discord_luau/util"
-version = "0.0.2"
+version = "0.0.3"
 target = "luau"

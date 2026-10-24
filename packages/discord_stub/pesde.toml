@@ -1,5 +1,5 @@
 name = "discord_luau/discord_stub"
-version = "0.0.1"
+version = "0.0.2"
 description = "A local Discord stub, hosted on 127.0.0.1, for testing discord-luau bots."
 license = "MIT"
 authors = ["Async Matrix <hi@asyncmatrix.dev>"]

@@ -1,5 +1,5 @@
 name = "discord_luau/sodium"
-version = "0.0.5"
+version = "0.0.6"
 description = "Discord Luau Sodium - FFI bindings for libsodium, providing AES-256-GCM authenticated encryption."
 license = "MIT"
 authors = ["Async Matrix <hi@asyncmatrix.dev>"]

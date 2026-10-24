@@ -1,6 +1,6 @@
 name = "discord_luau/example"
 private = true
-version = "0.0.3"
+version = "0.0.4"
 description = "Discord-Luau Example - Example/Test scripts for discord-luau."
 license = "MIT"
 authors = ["Async Matrix <hi@asyncmatrix.dev>"]

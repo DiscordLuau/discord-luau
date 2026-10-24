@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.0.7
+
 ### Added
 
 - `binary.load` takes `allowSystem` (default true); when false it skips the system-path search and always loads the checksummed cache file or download

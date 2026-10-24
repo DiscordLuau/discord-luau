@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.0.5
+
 ### Fixed
 
 - An error raised by the MLS failure callback, the encryptor's protocol-version-changed callback or the log sink callback is logged at warn through the package logger (`Dave.log`) instead of vanishing; an unreadable MLS failure source or reason is warned instead of becoming an empty string
