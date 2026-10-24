@@ -1,10 +1,7 @@
-//! Every error's message, byte for byte, as the Luau package and its specs expect it.
-
 use discord_luau_symphonia::Error;
 
 const DETAIL: &str = "detail";
 
-/// The errors of a call itself, each with the exact text the crate showed for it before the enum.
 fn call_errors() -> Vec<(Error, &'static str)> {
     vec![
         (Error::EmptyAudio, "the audio is empty"),
@@ -24,7 +21,6 @@ fn call_errors() -> Vec<(Error, &'static str)> {
     ]
 }
 
-/// The errors the audio makes, each with the exact text the crate showed for it before the enum.
 fn audio_errors() -> Vec<(Error, &'static str)> {
     let detail = String::from(DETAIL);
 

@@ -1,6 +1,3 @@
-//! Stream sessions: audio pushed in chunks, decoded on a worker thread under the panic guard, and read without
-//! blocking. Test hook: `testing::count_block`.
-
 use std::borrow::Cow;
 use std::sync::atomic::{AtomicI32, Ordering};
 use std::sync::mpsc::{self, Receiver, SyncSender, TryRecvError, TrySendError};
@@ -20,7 +17,6 @@ use crate::status::Status;
 
 pub(crate) const INPUT_CHUNKS: usize = 64;
 pub(crate) const OUTPUT_BLOCKS: usize = 64;
-/// 100 ms; a longer decoded packet is split.
 pub(crate) const BLOCK_FRAMES: usize = 4_800;
 const WORKER_NAME: &str = "symphonia stream";
 
@@ -28,14 +24,11 @@ static WORKERS: AtomicI32 = AtomicI32::new(0);
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum PushOutcome {
-    /// Also for an empty chunk, which needs no queueing.
     Queued,
     Full,
-    /// After `finish`, or once the stream has ended or failed.
     Refused,
 }
 
-/// What `hold_block` holds once it is ready.
 enum Held {
     Block,
     End,
@@ -112,7 +105,6 @@ impl StreamSession {
         lock(&self.status).mark_failed(error);
     }
 
-    /// Fills `output` with whole frames from one ready block, keeping the rest of it for the next read.
     pub fn read(&mut self, output: &mut [u8]) -> Result<Poll<usize>, Error> {
         let held = self.hold_block()?;
 
@@ -133,7 +125,6 @@ impl StreamSession {
         }
     }
 
-    /// A packet over `capacity` bytes is an error, and stays next for a bigger buffer.
     pub fn read_packet(&mut self, capacity: usize) -> Result<Poll<Option<Box<[u8]>>>, Error> {
         let held = self.hold_block()?;
 
@@ -163,12 +154,6 @@ impl StreamSession {
         }
     }
 
-    /// Holds a block with bytes left: `Ready(Held::Block)` once it holds one, `Pending` while none is ready, and
-    /// `Ready(Held::End)` or the failure once none is left.
-    ///
-    /// The state is read before the queue, and the worker stores its final state after its last block, so an empty
-    /// queue under a final state is the end of it, and every block decoded comes before the failure. The worker
-    /// publishes the kind before its first block, so a held block always knows whether it is Opus.
     fn hold_block(&mut self) -> Result<Poll<Held>, Error> {
         while self.offset == self.block.len() {
             let settled = matches!(self.state(), State::Ended | State::Failed);
@@ -190,8 +175,6 @@ impl StreamSession {
 }
 
 impl Drop for StreamSession {
-    /// Stops the worker without waiting for it. The flag is set before the fields drop the channel ends, so a reader
-    /// woken by the disconnect sees it.
     fn drop(&mut self) {
         lock(&self.status).stop();
     }
@@ -201,8 +184,6 @@ pub(crate) fn worker_count() -> i32 {
     WORKERS.load(Ordering::SeqCst)
 }
 
-/// Decodes under the panic guard, stores any failure, and only then drops its channel ends, so a disconnect always
-/// finds the final state.
 #[expect(clippy::needless_pass_by_value, reason = "the worker thread owns its handles until it exits")]
 fn work(chunks: Arc<Mutex<Receiver<Vec<u8>>>>, output: SyncSender<Vec<u8>>, status: Arc<Mutex<Status>>) {
     let reader = ChunkReader::new(Arc::clone(&chunks), Arc::clone(&status));
@@ -216,9 +197,6 @@ fn work(chunks: Arc<Mutex<Receiver<Vec<u8>>>>, output: SyncSender<Vec<u8>>, stat
     WORKERS.fetch_sub(1, Ordering::SeqCst);
 }
 
-/// Publishes after every read, the failing one too, and returns early once the session has closed.
-///
-/// A stream cannot seek back for a WAV `fact` chunk, so an ADPCM WAV keeps the padding of its last block.
 fn decode(reader: ChunkReader, output: &SyncSender<Vec<u8>>, status: &Mutex<Status>) -> Result<(), Error> {
     let mut session = Session::open(Box::new(ReadOnlySource::new(reader)), None, None)?;
     let is_opus = session.is_opus();

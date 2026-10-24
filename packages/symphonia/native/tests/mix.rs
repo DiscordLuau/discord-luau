@@ -1,5 +1,3 @@
-//! Downmixing every kind of layout to stereo, without clipping.
-
 use discord_luau_symphonia::testing::decode_with;
 use discord_luau_symphonia::{BYTES_PER_FRAME, OUTPUT_CHANNELS, StereoMix};
 use symphonia::core::audio::{AudioBuffer, AudioSpec, Channels, GenericAudioBufferRef, Position, layouts};
@@ -11,7 +9,6 @@ use symphonia::core::packet::PacketRef;
 
 use crate::util::Replay;
 
-/// The gains of the mix's table, stated here so the tests check its values.
 const MINUS_3_DB: f32 = std::f32::consts::FRAC_1_SQRT_2;
 const OPPOSITE_CENTRE: f32 = 1.0 - MINUS_3_DB;
 const REAR_CENTRE: f32 = 0.5;
@@ -82,7 +79,6 @@ fn fresh_mix(channels: &Channels, values: &[f32]) -> Vec<f32> {
     output
 }
 
-/// Mixes one frame where each plane holds the given value.
 fn mix_frame(channels: &Channels, values: &[f32]) -> (f32, f32) {
     let planes: Vec<Vec<f32>> = values.iter().map(|&value| vec![value]).collect();
     let mix = StereoMix::for_channels(channels, planes.len());
@@ -93,7 +89,6 @@ fn mix_frame(channels: &Channels, values: &[f32]) -> (f32, f32) {
     (output[0], output[1])
 }
 
-/// The value of each plane for a layout, with `active` set to one and the rest zero.
 fn only(channels: &Channels, active: Position) -> Vec<f32> {
     let index = channels.get_canonical_index_for_positioned_channel(active).unwrap();
     let mut values = vec![0.0; channels.count()];
@@ -148,7 +143,6 @@ fn five_one_uses_the_coefficient_table() {
 
 #[test]
 fn five_one_keeps_distinct_channels_apart() {
-    // The layout-51 fixture: a tone on FL and another on the rear right, silence elsewhere.
     let channels = layouts::CHANNEL_LAYOUT_5P1;
     let mut values = only(&channels, Position::FRONT_LEFT);
     let rear_right = channels.get_canonical_index_for_positioned_channel(Position::REAR_RIGHT);
@@ -234,7 +228,6 @@ fn full_scale_cannot_clip() {
             assert!(close(left.abs(), 1.0) && close(right.abs(), 1.0), "{channels}");
         }
 
-        // Alternating signs cannot clip either.
         let values: Vec<f32> = (0..channels.count()).map(|index| if index % 2 == 0 { 1.0 } else { -1.0 }).collect();
         let (left, right) = mix_frame(channels, &values);
 

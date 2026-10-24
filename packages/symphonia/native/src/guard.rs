@@ -1,6 +1,3 @@
-//! The panic guard. Every export that can panic, and every stream worker, runs under `catch`, so no panic crosses the
-//! ABI and none takes another session down with it.
-
 use std::any::Any;
 use std::panic::{self, AssertUnwindSafe};
 use std::sync::{Mutex, MutexGuard, PoisonError};
@@ -38,7 +35,6 @@ pub(crate) fn guarded_session<T>(
     value_or_failure(outcome, error_out, failure)
 }
 
-/// Locks `mutex`, recovering it if a panic poisoned it.
 pub(crate) fn lock<T>(mutex: &Mutex<T>) -> MutexGuard<'_, T> {
     mutex.lock().unwrap_or_else(PoisonError::into_inner)
 }

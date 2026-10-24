@@ -1,6 +1,3 @@
-//! Stereo resampling to 48 kHz with an exact output length: `n` frames at `rate` Hz make `ceil(n * 48000 / rate)`.
-//! The resampler's delay is dropped from the start, and the end is flushed in a bounded number of rounds.
-
 use audioadapter_buffers::direct::InterleavedSlice;
 use rubato::{Fft, FixedSync, Indexing, Resampler};
 
@@ -21,14 +18,12 @@ pub struct StereoResampler {
     finished: bool,
 }
 
-/// What comes off the output: the resampler's delay from the start, and anything past the expected length.
 pub(crate) struct Trim {
     delay_remaining: usize,
     pub(crate) output_frames: u64,
 }
 
 impl StereoResampler {
-    /// `source_rate` must not be 0.
     pub fn new(source_rate: u32) -> Result<Self, Error> {
         let fft = Fft::<f32>::new(
             source_rate as usize,
@@ -45,7 +40,6 @@ impl StereoResampler {
         Ok(Self { source_rate, fft, pending, scratch, input_frames: 0, trim: Trim::new(delay), finished: false })
     }
 
-    /// Takes interleaved stereo `input`, and appends the output that is ready to `output`.
     pub fn push(&mut self, input: &[f32], output: &mut Vec<f32>) -> Result<(), Error> {
         self.input_frames += (input.len() / OUTPUT_CHANNELS) as u64;
 
@@ -75,7 +69,6 @@ impl StereoResampler {
         Ok(())
     }
 
-    /// Appends the rest of the output, up to exactly the expected length, in at most `flush_rounds` rounds.
     pub fn finish(&mut self, output: &mut Vec<f32>) -> Result<(), Error> {
         if self.finished {
             return Ok(());
@@ -113,7 +106,6 @@ impl Trim {
         Self { delay_remaining: delay, output_frames: 0 }
     }
 
-    /// Drops what is left of the delay from `produced`, caps the total at `expected` frames, and appends the rest.
     fn emit(&mut self, produced: &[f32], expected: u64, output: &mut Vec<f32>) {
         let produced_frames = produced.len() / OUTPUT_CHANNELS;
         let dropped = self.delay_remaining.min(produced_frames);
@@ -129,7 +121,6 @@ impl Trim {
     }
 }
 
-/// Runs one round over `input`, which holds a whole chunk unless `indexing` gives a partial length.
 fn process(
     fft: &mut Fft<f32>,
     input: &[f32],
@@ -148,8 +139,6 @@ fn process(
     Ok(produced)
 }
 
-/// Enough rounds for `missing` output frames plus the undropped `delay`, and one more. Every `fft_size_in` input
-/// frames make `fft_size_out` output frames, so the count is known in advance.
 fn flush_rounds(fft: &Fft<f32>, missing: u64, delay: usize) -> u64 {
     let subchunks = (missing + delay as u64).div_ceil(fft.fft_size_out() as u64);
 

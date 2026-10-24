@@ -1,5 +1,3 @@
-//! Whether an Opus track can be passed through.
-
 use crate::error::Error;
 
 const MAGIC: &[u8; 8] = b"OpusHead";
@@ -19,7 +17,6 @@ pub(crate) struct OpusHead {
 }
 
 impl OpusHead {
-    /// `None` when `bytes` does not start with the magic; an error when it does but is too short for the fields.
     pub(crate) fn parse(bytes: &[u8]) -> Result<Option<Self>, Error> {
         if !bytes.starts_with(MAGIC) {
             return Ok(None);
@@ -41,10 +38,6 @@ impl OpusHead {
     }
 }
 
-/// With an `OpusHead` in `extra_data`, its stream count decides; without one, the stated channel count does.
-///
-/// Voice sends each packet as one Opus frame, so only a single stream passes: a multistream packet sent as plain Opus
-/// would play as noise. The `OpusHead` layout is RFC 7845's.
 pub fn check_passthrough(extra_data: Option<&[u8]>, channel_count: Option<usize>) -> Result<(), Error> {
     let head = match extra_data {
         Some(bytes) => OpusHead::parse(bytes)?,

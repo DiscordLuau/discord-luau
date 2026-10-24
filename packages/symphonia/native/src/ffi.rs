@@ -1,13 +1,9 @@
-//! The caller's buffers and strings as safe values, and counts as the ABI's `i32`. A raw buffer or string becomes a
-//! safe value only through an `unsafe fn` here.
-
 use std::ffi::{CStr, c_char};
 use std::ptr;
 use std::slice;
 
 const MAX_COUNT: u32 = i32::MAX.unsigned_abs();
 
-/// A caller's buffer for NUL-terminated UTF-8, or none when its pointer is null.
 #[derive(Clone, Copy)]
 pub(crate) struct TextBuffer {
     pointer: *mut u8,
@@ -22,9 +18,6 @@ impl TextBuffer {
         Self { pointer, capacity }
     }
 
-    /// Writes `text`, cut at a character boundary to fit with its NUL, and returns the bytes written without the NUL.
-    ///
-    /// A null or zero-capacity buffer gets nothing.
     pub(crate) fn write(self, text: &str) -> usize {
         if self.pointer.is_null() || self.capacity == 0 {
             return 0;
@@ -32,8 +25,7 @@ impl TextBuffer {
 
         let length = text.floor_char_boundary(self.capacity as usize - 1);
 
-        // SAFETY: `new`'s caller guarantees `capacity` writable bytes, and `length` is below `capacity`. `text` is the
-        // crate's own memory, so the two cannot overlap.
+        // SAFETY: `capacity` bytes are writable per `new`, `length` is below it, and `text` is separate memory.
         unsafe { ptr::copy_nonoverlapping(text.as_ptr(), self.pointer, length) };
         // SAFETY: `length` is below `capacity`, so the NUL lands inside the buffer.
         unsafe { self.pointer.wrapping_add(length).write(0) };
@@ -86,7 +78,6 @@ pub(crate) unsafe fn c_str<'text>(text: *const c_char) -> Option<&'text CStr> {
     Some(unsafe { CStr::from_ptr(text) })
 }
 
-/// A caller's capacity, capped so that a count of what fills it fits an export's `i32` result.
 pub(crate) fn capped_capacity(capacity: u32) -> usize {
     capacity.min(MAX_COUNT) as usize
 }

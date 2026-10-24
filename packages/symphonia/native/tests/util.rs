@@ -1,6 +1,3 @@
-//! The harness the tests share: the lock that serialises them, waiting, reading text back, and the ABI and session
-//! calls more than one concern makes.
-
 #![expect(clippy::undocumented_unsafe_blocks, reason = "every ABI call passes buffers the test owns")]
 
 use std::ffi::CStr;
@@ -10,42 +7,36 @@ use std::thread;
 use std::time::{Duration, Instant};
 use std::vec::IntoIter;
 
-use discord_luau_symphonia::{
-    BYTES_PER_FRAME, Error, Handle, Session, symphonia_close, symphonia_finish, symphonia_info, symphonia_open_memory,
-    symphonia_read, symphonia_worker_count,
-};
 use symphonia::core::errors::Result as SymphoniaResult;
 use symphonia::core::formats::probe::Hint;
 use symphonia::core::formats::{FormatInfo, FormatOptions, FormatReader, MediaInfo, SeekMode, SeekTo, SeekedTo, Track};
 use symphonia::core::io::{MediaSourceStream, MediaSourceStreamOptions};
 use symphonia::core::meta::{Metadata, MetadataOptions};
 use symphonia::core::packet::Packet;
+use discord_luau_symphonia::{
+    BYTES_PER_FRAME, Error, Handle, Session, symphonia_close, symphonia_finish, symphonia_info, symphonia_open_memory,
+    symphonia_read, symphonia_worker_count,
+};
 
 use crate::files::fixture;
 
 pub(crate) const ERROR_CAPACITY: u32 = 256;
-/// How long a stream's worker, or a read it is blocked in, may take to return once the stream is done or closed.
 pub(crate) const EXIT_WAIT: Duration = Duration::from_secs(1);
-/// The longest a test waits for the worker at any one point.
 pub(crate) const WAIT: Duration = Duration::from_secs(30);
 const READ_PACKETS_MAX: usize = 100_000;
 
-/// Serialises the tests that open sessions or start stream workers, since they share one session count and one worker
-/// count, and count them.
 pub(crate) fn serial() -> MutexGuard<'static, ()> {
     static LOCK: Mutex<()> = Mutex::new(());
 
     LOCK.lock().unwrap_or_else(PoisonError::into_inner)
 }
 
-/// The NUL-terminated text at the start of `buffer`.
 pub(crate) fn text(buffer: &[u8]) -> String {
     let end = buffer.iter().position(|&byte| byte == 0).expect("a NUL");
 
     String::from_utf8(buffer[..end].to_vec()).unwrap()
 }
 
-/// Checks `condition` every millisecond, and panics past `bound`.
 pub(crate) fn wait_until(what: &str, bound: Duration, mut condition: impl FnMut() -> bool) {
     let deadline = Instant::now() + bound;
 
@@ -59,7 +50,6 @@ pub(crate) fn wait_for_workers(baseline: i32) {
     wait_until("the workers exit", EXIT_WAIT, || symphonia_worker_count() == baseline);
 }
 
-/// Returns the session, null if the open failed, and the error.
 pub(crate) fn open(bytes: &[u8], extension: Option<&CStr>) -> (*mut Handle, String) {
     let mut error = vec![0xAA_u8; ERROR_CAPACITY as usize];
     let extension = extension.map_or(std::ptr::null(), CStr::as_ptr);
@@ -71,7 +61,6 @@ pub(crate) fn open(bytes: &[u8], extension: Option<&CStr>) -> (*mut Handle, Stri
     (handle, message)
 }
 
-/// Returns the result, and the error if the read failed.
 pub(crate) fn read(handle: *mut Handle, capacity_frames: u32) -> (i32, String) {
     let mut output = vec![0_u8; capacity_frames as usize * BYTES_PER_FRAME];
     let mut error = vec![0xAA_u8; ERROR_CAPACITY as usize];
@@ -94,7 +83,6 @@ pub(crate) fn close(handle: *mut Handle) {
     unsafe { symphonia_close(handle) };
 }
 
-/// Panics after `max_frames`, so a session that never ends fails the test instead of growing forever.
 pub(crate) fn read_to_end(handle: *mut Handle, max_frames: i32) -> i32 {
     let mut total = 0;
 
@@ -122,7 +110,6 @@ pub(crate) fn read_session(session: &mut Session, capacity_frames: usize) -> Res
     Ok(output)
 }
 
-/// Panics after `READ_PACKETS_MAX`, so a session that never ends fails the test instead of growing forever.
 pub(crate) fn read_packets(session: &mut Session) -> Vec<Box<[u8]>> {
     let mut packets = Vec::new();
 

@@ -1,6 +1,3 @@
-//! The C ABI over Symphonia for the `discord_luau/symphonia` Luau package. Every export is named `symphonia_<name>`,
-//! which keeps each `#[unsafe(no_mangle)]` symbol unique.
-
 mod chunk_reader;
 mod decoder;
 mod demuxer;
@@ -20,6 +17,12 @@ mod stream;
 pub mod testing;
 pub mod wav;
 
+use std::ffi::c_char;
+use std::ptr;
+use std::task::Poll;
+
+use crate::ffi::TextBuffer;
+use crate::guard::{catch, guarded, guarded_session};
 pub use crate::{
     decoder::BYTES_PER_FRAME,
     error::Error,
@@ -30,13 +33,6 @@ pub use crate::{
     session::{Info, Session},
     stream::{PushOutcome, StreamSession},
 };
-
-use std::ffi::c_char;
-use std::ptr;
-use std::task::Poll;
-
-use crate::ffi::TextBuffer;
-use crate::guard::{catch, guarded, guarded_session};
 
 pub const ABI_VERSION: i32 = 3;
 pub const FAILED: i32 = -1;

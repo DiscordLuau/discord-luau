@@ -1,6 +1,3 @@
-//! The stream worker's source: a reader over the pushed chunks that blocks until the next one arrives, so no format
-//! reader ever sees a dry source. Test hook: `testing::panic_on_request`.
-
 use std::io::{self, ErrorKind, Read};
 use std::sync::mpsc::Receiver;
 use std::sync::{Arc, Mutex};
@@ -10,8 +7,6 @@ use crate::guard::lock;
 use crate::status::Status;
 
 pub(crate) struct ChunkReader {
-    /// Behind a `Mutex` because `ReadOnlySource` needs `Sync`. The worker holds a second handle, so the channel
-    /// outlives the format reader that owns this one.
     chunks: Arc<Mutex<Receiver<Vec<u8>>>>,
     chunk: Vec<u8>,
     offset: usize,
@@ -33,9 +28,6 @@ impl ChunkReader {
 }
 
 impl Read for ChunkReader {
-    /// After `finish`, the end is `Ok(0)`. Once the session closes, every read is `BrokenPipe`, even with chunks
-    /// queued: never `Ok(0)`, a clean end, nor `Interrupted`, which `MediaSourceStream::read_buf_exact` retries
-    /// forever.
     fn read(&mut self, buffer: &mut [u8]) -> io::Result<usize> {
         while self.offset == self.chunk.len() && !buffer.is_empty() {
             let received = lock(&self.chunks).recv();

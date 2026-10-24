@@ -1,6 +1,3 @@
-//! Any channel layout to stereo. Positioned layouts use a coefficient per position, scaled so full-scale input cannot
-//! clip; Ambisonic audio uses its W component as mono; other layouts use their first one or two channels.
-
 use symphonia::core::audio::{Channels, Position};
 
 use crate::limits::MAX_CHANNELS;
@@ -13,15 +10,12 @@ const MINUS_3_DB: f32 = std::f32::consts::FRAC_1_SQRT_2;
 const OPPOSITE_CENTRE: f32 = 1.0 - MINUS_3_DB;
 const REAR_CENTRE: f32 = 0.5;
 
-/// How the planes of one decoded buffer sum into the left and right outputs.
 #[derive(Debug, Clone, Copy, Default, PartialEq)]
 pub struct StereoMix {
     gains: [[f32; OUTPUT_CHANNELS]; MAX_CHANNELS],
 }
 
 impl StereoMix {
-    /// One plane is always duplicated, and a positioned layout where no channel feeds a side (only LFE, say) falls
-    /// back to the first planes.
     pub fn for_channels(channels: &Channels, plane_count: usize) -> Self {
         if plane_count == 1 {
             return Self::mono(0);
@@ -34,8 +28,6 @@ impl StereoMix {
         }
     }
 
-    /// Appends the first `frames` frames of `planes` to `output` as interleaved stereo; a mix of no planes appends
-    /// silence, so the length is kept.
     pub fn apply(&self, planes: &[Vec<f32>], frames: usize, output: &mut Vec<f32>) {
         let start = output.len();
 
@@ -100,7 +92,6 @@ impl StereoMix {
         }
     }
 
-    /// Divides each gain by the sum of the side's absolute gains.
     fn normalise(&mut self, side: usize) {
         let total: f32 = self.gains.iter().filter(|gain| gain[side] != 0.0).map(|gain| gain[side].abs()).sum();
 
@@ -122,8 +113,8 @@ fn add_plane(stereo: &mut [[f32; OUTPUT_CHANNELS]], plane: &[f32], [left_gain, r
     }
 }
 
-/// The `[left, right]` coefficients for one position; LFE channels and positions Symphonia may add later are dropped.
 fn coefficients(position: Position) -> [f32; OUTPUT_CHANNELS] {
+    const BACK_CENTRE: Position = Position::REAR_CENTER.union(Position::TOP_REAR_CENTER);
     const FRONT_LEFT: Position = Position::FRONT_LEFT
         .union(Position::TOP_FRONT_LEFT)
         .union(Position::BOTTOM_FRONT_LEFT)
@@ -142,7 +133,6 @@ fn coefficients(position: Position) -> [f32; OUTPUT_CHANNELS] {
         .union(Position::REAR_RIGHT)
         .union(Position::TOP_SIDE_RIGHT)
         .union(Position::TOP_REAR_RIGHT);
-    const BACK_CENTRE: Position = Position::REAR_CENTER.union(Position::TOP_REAR_CENTER);
 
     match position {
         _ if FRONT_LEFT.contains(position) => [1.0, 0.0],

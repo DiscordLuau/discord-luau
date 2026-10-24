@@ -1,11 +1,9 @@
-//! The crate's one error type. Its messages are part of the ABI: the Luau package and its specs match them exactly.
-
 use std::fmt::{self, Display, Formatter};
 
+use crate::opus::{FAMILY_HEADER_LENGTH, MAPPING_HEADER_LENGTH};
 use crate::limits::{
     MAX_CHANNELS, MAX_CONSECUTIVE_SKIPS, MAX_FRAMES_PER_PACKET, MAX_SAMPLE_RATE, MIN_CHANNELS, MIN_SAMPLE_RATE,
 };
-use crate::opus::{FAMILY_HEADER_LENGTH, MAPPING_HEADER_LENGTH};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Error {

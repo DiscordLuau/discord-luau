@@ -1,6 +1,3 @@
-//! The exports, called as Luau calls them: session pointers, error buffers, field numbers, codes and the panic guard.
-//! Also the pieces under them: the caller's buffers, the field enums and the panic payloads.
-
 #![expect(clippy::undocumented_unsafe_blocks, reason = "every ABI call passes buffers the test owns")]
 
 use std::ptr;
@@ -308,7 +305,6 @@ fn output_is_little_endian_f32_at_any_alignment() {
     close(handle);
 }
 
-/// Writes `text` into a 16-byte buffer of `0xAA` that claims `capacity` bytes.
 fn written(capacity: u32, text: &str) -> (usize, Vec<u8>) {
     let mut buffer = vec![0xAA_u8; 16];
     let length = unsafe { write_text(buffer.as_mut_ptr(), capacity, text) };
@@ -345,7 +341,6 @@ fn a_capacity_of_one_writes_only_the_nul() {
 
 #[test]
 fn truncation_keeps_utf8_whole() {
-    // "é" is two bytes, so a capacity of 3 leaves room for "a" and the NUL only.
     let (length, buffer) = written(3, "aé");
 
     assert_eq!(length, 1);

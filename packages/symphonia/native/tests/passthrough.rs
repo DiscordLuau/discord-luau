@@ -1,5 +1,3 @@
-//! Opus passed through as packets: Ogg Opus files, a scripted reader's edge cases, and which `OpusHead`s pass.
-
 use std::collections::VecDeque;
 use std::io::Cursor;
 
@@ -93,13 +91,10 @@ fn a_packet_too_large_for_the_buffer_stays_pending() {
 }
 
 enum Step {
-    /// A packet of the track with this id, holding these bytes.
     Packet(u32, Vec<u8>),
-    /// The `UnexpectedEof` I/O error a reader returns when the bytes run out partway through a packet.
     UnexpectedEnd,
 }
 
-/// A format reader with one stereo Opus track, track 1, that plays back a list of steps, then ends.
 struct ScriptedReader {
     steps: VecDeque<Step>,
     tracks: [Track; 1],
@@ -162,7 +157,6 @@ impl FormatReader for ScriptedReader {
     }
 }
 
-/// An Opus session over a `ScriptedReader` whose chosen track is track 1.
 fn scripted_opus_session(steps: impl IntoIterator<Item = Step>) -> Session {
     let mut parameters = AudioCodecParameters::new();
     let mut track = Track::new(1);
@@ -226,7 +220,6 @@ fn other_track_and_empty_packets_share_one_run() {
     );
 }
 
-/// `streams` is `(stream count, coupled count)`, for families other than 0.
 fn head(channel_count: u8, mapping_family: u8, streams: Option<(u8, u8)>) -> Vec<u8> {
     let mut bytes = Vec::from(&b"OpusHead"[..]);
 
@@ -283,12 +276,10 @@ fn other_families_are_rejected() {
 
 #[test]
 fn the_head_wins_over_the_channel_count() {
-    // A mono track would pass on its channel count alone, but its head says two streams.
     let result = check_passthrough(Some(&head(1, 1, Some((2, 0)))), Some(1));
 
     assert_eq!(result, Err(Error::MultistreamOpus));
 
-    // A track with no channel count would fail alone, but its head says one stream.
     assert_eq!(check_passthrough(Some(&head(2, 1, Some((1, 1)))), None), Ok(()));
 }
 

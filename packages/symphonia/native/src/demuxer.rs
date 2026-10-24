@@ -1,5 +1,3 @@
-//! The chosen track's packets, taken from the container, and the run of packets passed over on the way.
-
 use std::io::ErrorKind;
 
 use symphonia::core::errors::Error as SymphoniaError;
@@ -13,7 +11,6 @@ pub(crate) struct Demuxer {
     reader: Box<dyn FormatReader>,
     track_id: u32,
     skipped_packets: u64,
-    /// Skipped packets of the chosen track and packets of other tracks, since the last packet used.
     consecutive_skips: u64,
     pending: Option<Packet>,
     ended: bool,
@@ -42,8 +39,7 @@ impl Demuxer {
                 Ok(Some(packet)) if packet.track_id == self.track_id => return Ok(Some(packet)),
                 Ok(Some(_)) => self.extend_run()?,
                 Ok(None) => break,
-                // Symphonia's own idiom for the end of the bytes. Whether that was early is decided against the stated
-                // length when decoding finishes.
+                // Symphonia's end of the bytes; the stated length decides later whether it came early.
                 Err(failure) if is_unexpected_end(&failure) => break,
                 Err(SymphoniaError::ResetRequired) => return Err(Error::StreamChanged),
                 Err(failure) => return Err(Error::UnreadableContainer(failure.to_string())),
@@ -59,7 +55,6 @@ impl Demuxer {
         self.pending = Some(packet);
     }
 
-    /// Counts a skipped packet of the chosen track, which also extends the run.
     pub(crate) fn skip(&mut self) -> Result<(), Error> {
         self.skipped_packets += 1;
         self.extend_run()
@@ -80,7 +75,6 @@ impl Demuxer {
     }
 }
 
-/// Symphonia's idiom for bytes that ran out partway through a read.
 pub(crate) fn is_unexpected_end(error: &SymphoniaError) -> bool {
     matches!(error, SymphoniaError::IoError(failure) if failure.kind() == ErrorKind::UnexpectedEof)
 }

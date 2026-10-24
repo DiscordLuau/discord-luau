@@ -1,5 +1,3 @@
-//! A WAV file's `fact` chunk.
-
 use std::io::{self, Read, Seek, SeekFrom};
 
 const IDENTIFIER_LENGTH: usize = 4;
@@ -12,7 +10,6 @@ const HEADER_LIMIT: u64 = 65_536;
 const WAVE_CONTAINER_NAME: &str = "wave";
 const PCM_CODEC_PREFIX: &str = "pcm_";
 
-/// `None` for anything but RIFF/WAVE, and when no `fact` chunk comes before the `data` chunk within `header`.
 pub fn fact_frames(header: &[u8]) -> Option<u64> {
     if !header.starts_with(b"RIFF") || header.get(FORM_TYPE_OFFSET..RIFF_HEADER_LENGTH)? != b"WAVE" {
         return None;
@@ -40,7 +37,6 @@ pub fn fact_frames(header: &[u8]) -> Option<u64> {
     None
 }
 
-/// `fact_frames` over the first `HEADER_LIMIT` bytes of `source`, which is left at its start again.
 pub fn read_fact_frames(source: &mut (impl Read + Seek)) -> io::Result<Option<u64>> {
     let mut header = Vec::new();
 
@@ -50,10 +46,6 @@ pub fn read_fact_frames(source: &mut (impl Read + Seek)) -> io::Result<Option<u6
     Ok(fact_frames(&header))
 }
 
-/// The stated frame count, or a smaller non-zero `fact` count for a WAV codec whose blocks are padded; PCM's is exact.
-///
-/// Symphonia 0.6.1 reads the `fact` chunk, then replaces its frame count with one that includes the block padding of
-/// ADPCM and other non-PCM codecs, so a session finds it again to trim that padding.
 pub fn playable_frames(
     stated_frames: Option<u64>,
     container_name: &str,

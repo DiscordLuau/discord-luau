@@ -1,6 +1,3 @@
-//! What a stream session and its worker share behind one lock: what the worker last published, the failure and the
-//! stop flag. The session answers calls from it, so it never waits on a decode.
-
 use std::borrow::Cow;
 
 use crate::error::Error;

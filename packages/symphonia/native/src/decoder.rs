@@ -1,6 +1,3 @@
-//! A track decoded to 48 kHz interleaved stereo f32 and trimmed to its playable length. Nothing here scales, limits
-//! or clamps a sample.
-
 use symphonia::core::audio::Channels;
 use symphonia::core::codecs::audio::AudioDecoder;
 use symphonia::core::errors::Error as SymphoniaError;
@@ -15,7 +12,6 @@ pub const BYTES_PER_FRAME: usize = OUTPUT_CHANNELS * size_of::<f32>();
 pub(crate) struct Decoder {
     codec: Box<dyn AudioDecoder>,
     resampler: Option<StereoResampler>,
-    /// The playable frame count, when known; decoded frames past it are dropped.
     frame_limit: Option<u64>,
     decoded_frames: u64,
     ended_early: bool,
@@ -57,7 +53,6 @@ impl Decoder {
         self.ended_early
     }
 
-    /// Fills `output` with whole frames of little-endian f32 and returns the frame count; 0 is the end.
     pub(crate) fn read(&mut self, demuxer: &mut Demuxer, sample_rate: u32, output: &mut [u8]) -> Result<usize, Error> {
         let wanted_samples = output.len() / BYTES_PER_FRAME * OUTPUT_CHANNELS;
 
@@ -91,7 +86,6 @@ impl Decoder {
         Ok(())
     }
 
-    /// Decodes one packet, or flushes once the track or its playable frames end.
     fn decode_next(&mut self, demuxer: &mut Demuxer, sample_rate: u32) -> Result<(), Error> {
         if self.frame_limit.is_some_and(|limit| self.decoded_frames >= limit) {
             return self.finish();
@@ -103,8 +97,7 @@ impl Decoder {
         let buffer = match self.codec.decode(&packet) {
             Ok(buffer) => buffer,
             Err(SymphoniaError::DecodeError(_)) => return demuxer.skip(),
-            // A packet shorter than its own data says, like a truncated file's last packet, underruns the decoder. It
-            // is a bad packet like any other.
+            // A truncated last packet underruns the decoder; skip it like any other bad packet.
             Err(failure) if is_unexpected_end(&failure) => return demuxer.skip(),
             Err(SymphoniaError::ResetRequired) => return Err(Error::StreamChanged),
             Err(failure) => return Err(Error::UndecodablePacket(failure.to_string())),
@@ -152,7 +145,6 @@ impl Decoder {
         }
     }
 
-    /// Ending short of the playable length, however the container ended, is ending early.
     fn finish(&mut self) -> Result<(), Error> {
         self.finished = true;
         self.ended_early = self.frame_limit.is_some_and(|limit| self.decoded_frames < limit);

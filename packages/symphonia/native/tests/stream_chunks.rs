@@ -1,6 +1,3 @@
-//! Stream blocks and chunked pushes: a long decoded block reaches the output in pieces, and audio pushed in chunks of
-//! any size decodes like a source that never runs dry.
-
 #![expect(clippy::cast_possible_truncation, reason = "the frame and chunk counts here are small")]
 
 use std::borrow::Cow;
@@ -11,24 +8,21 @@ use std::thread;
 use std::time::{Duration, Instant};
 
 use discord_luau_symphonia::testing::{BLOCK_FRAMES, stream_failure, stream_state};
+use symphonia::core::io::ReadOnlySource;
 use discord_luau_symphonia::{
     BYTES_PER_FRAME, DescribeField, Error, Info, PushOutcome, Session, State, StreamSession, symphonia_worker_count,
 };
-use symphonia::core::io::ReadOnlySource;
 
 use crate::files::tone_sample;
 use crate::util::{WAIT, read_session, serial, wait_for_workers};
 
-/// The chunked runs per file.
 const SEEDS: u64 = 10;
 const MAX_CHUNK: usize = 65_536;
 const READ_FRAMES: usize = 4_800;
 const MAX_PCM_BYTES: usize = 2 * 60 * 48_000 * BYTES_PER_FRAME;
 const MAX_PACKETS: usize = 100_000;
-/// Names the folder of the streaming spike's generated files, which the chunked runs add when it is set.
 const SPIKE_FILES: &str = "DISCORD_LUAU_STREAM_FILES";
 
-/// The FLAC frame and header checksum: a CRC of `width` bits with `polynomial`, starting at 0.
 fn flac_crc(bytes: &[u8], width: u32, polynomial: u32) -> u32 {
     let top = 1 << (width - 1);
     let mask = (1 << width) - 1;
@@ -43,13 +37,10 @@ fn flac_crc(bytes: &[u8], width: u32, polynomial: u32) -> u32 {
     })
 }
 
-/// A 48 kHz stereo 16-bit FLAC of one frame of `frames` frames of the test tone, stored verbatim.
 fn one_block_flac(frames: u16) -> Vec<u8> {
-    // A verbatim subframe: its header, then every sample.
     let subframe: Vec<u8> = std::iter::once(0x02)
         .chain((0..frames).flat_map(|frame| tone_sample(usize::from(frame), 48_000).to_be_bytes()))
         .collect();
-    // STREAMINFO: 20 bits of rate, 3 of channels less one, 5 of bits per sample less one, and 36 of total frames.
     let format = (48_000_u64 << 44) | (1 << 41) | (15 << 36) | u64::from(frames);
     let mut bytes = b"fLaC\x80\0\0\x22".to_vec();
 
@@ -59,8 +50,6 @@ fn one_block_flac(frames: u16) -> Vec<u8> {
     bytes.extend_from_slice(&format.to_be_bytes());
     bytes.extend_from_slice(&[0; 16]);
 
-    // The frame header: a fixed block size given at its end, 48 kHz, left and right, 16 bits, frame 0, then the block
-    // size less one, then its CRC-8.
     let frame_start = bytes.len();
 
     bytes.extend_from_slice(&[0xFF, 0xF8, 0x7A, 0x18, 0x00]);
@@ -95,7 +84,6 @@ fn a_65535_frame_flac_block_reaches_the_output_in_4800_frame_pieces() {
     let mut block = vec![0; BLOCK_FRAMES * BYTES_PER_FRAME];
 
     loop {
-        // A read never spans two blocks, so a read with room for any block takes exactly one.
         match session.read(&mut block).unwrap() {
             Poll::Ready(0) => break,
             Poll::Ready(frames) => {
@@ -122,8 +110,6 @@ fn a_65535_frame_flac_block_reaches_the_output_in_4800_frame_pieces() {
     wait_for_workers(workers_before);
 }
 
-/// Chunk sizes from 1 byte to 64 KB covering `total`, log-uniform so small chunks are common. The streaming spike's
-/// generator.
 fn chunk_sizes(seed: u64, total: usize) -> Vec<usize> {
     let mut state = seed.wrapping_mul(0x9e37_79b9_7f4a_7c15) | 1;
     let mut next = move || {
@@ -148,10 +134,8 @@ fn chunk_sizes(seed: u64, total: usize) -> Vec<usize> {
     sizes
 }
 
-/// What a session gave.
 #[derive(Default)]
 struct Decoded {
-    /// The info and the codec and container names, once open.
     opened: Option<(Info, Vec<Cow<'static, str>>)>,
     pcm: Vec<u8>,
     packets: Vec<Box<[u8]>>,
@@ -210,7 +194,6 @@ impl Decoded {
     }
 }
 
-/// What a source holding the whole file, unseekable and of unknown length, gives: what every chunked run must equal.
 fn reference(bytes: &[u8]) -> Decoded {
     let source = ReadOnlySource::new(Cursor::new(bytes.to_vec()));
     let mut session = match Session::open(Box::new(source), None, None) {
@@ -246,8 +229,6 @@ fn reference(bytes: &[u8]) -> Decoded {
     decoded
 }
 
-/// Reads once from `session` into `decoded`: `Ready(true)` when it gave frames or a packet, `Ready(false)` at the end
-/// or a failure, `Pending` when nothing was ready.
 fn read_once(session: &mut StreamSession, decoded: &mut Decoded) -> Poll<bool> {
     let read = match session.info().map(|info| info.is_opus) {
         Some(true) => session.read_packet(usize::MAX).map(|read| read.map(|packet| decoded.add_packet(packet))),
@@ -287,8 +268,6 @@ fn push_retrying(session: &mut StreamSession, decoded: &mut Decoded, chunk: &[u8
     }
 }
 
-/// Pushes `bytes` into a new stream in chunks sized by `seed`, retrying a full input and reading what is ready along
-/// the way; then finishes and reads to the end, waiting at most `WAIT` for each output.
 fn decode_pushed(bytes: &[u8], seed: u64) -> Decoded {
     let mut session = StreamSession::open().unwrap();
     let mut decoded = Decoded::default();
@@ -328,8 +307,6 @@ fn decode_pushed(bytes: &[u8], seed: u64) -> Decoded {
     decoded
 }
 
-/// The files of the chunked runs: the package's fixtures, and the streaming spike's generated files when
-/// `DISCORD_LUAU_STREAM_FILES` names their folder.
 #[expect(clippy::print_stdout, reason = "the run says when it leaves the spike's files out")]
 fn stream_files() -> Vec<(String, Vec<u8>)> {
     let mut folders = vec![Path::new(env!("CARGO_MANIFEST_DIR")).join("../tests/fixtures")];

@@ -1,5 +1,3 @@
-//! The crate's tests, as one binary over its Rust API, its C ABI and the hooks of its `testing` feature.
-
 #![expect(clippy::unwrap_used, clippy::expect_used, clippy::panic, reason = "test helpers")]
 
 mod files;

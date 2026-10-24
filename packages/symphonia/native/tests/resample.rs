@@ -1,5 +1,3 @@
-//! The resampler's exact output length, dropped delay and kept frequency.
-
 #![expect(
     clippy::cast_possible_truncation,
     clippy::cast_precision_loss,
@@ -10,7 +8,6 @@ use discord_luau_symphonia::testing::{RESAMPLER_CHUNK_FRAMES, expected_frames, r
 use discord_luau_symphonia::{OUTPUT_CHANNELS, StereoResampler};
 use rubato::{Fft, FixedSync, Resampler};
 
-/// Resamples `frames` frames of a 440 Hz tone at `rate`, pushed in packets of `packet_frames`.
 fn resample(rate: u32, frames: usize, packet_frames: usize) -> (Vec<f32>, StereoResampler) {
     let mut resampler = StereoResampler::new(rate).unwrap();
     let mut output = Vec::new();
@@ -34,7 +31,6 @@ fn expected_length(rate: u32, frames: usize) -> usize {
     (frames as u64 * 48_000).div_ceil(u64::from(rate)) as usize
 }
 
-/// Whether the flush reached the expected length before it ran out of rounds.
 fn flushed_in_full(resampler: &StereoResampler) -> bool {
     resampled_frames(resampler) >= expected_frames(resampler)
 }
@@ -88,7 +84,6 @@ fn the_packet_size_does_not_change_the_length() {
 
 #[test]
 fn the_delay_is_dropped() {
-    // A step from silence to 0.5 at frame 0 must start at output frame 0, not after the resampler's delay.
     let mut resampler = StereoResampler::new(44_100).unwrap();
     let mut output = Vec::new();
 

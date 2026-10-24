@@ -1,6 +1,4 @@
-# The card's function length. Clippy's default is 100.
 too-many-lines-threshold = 50
-# Tests may unwrap, expect, panic and print; production may not.
 allow-unwrap-in-tests = true
 allow-expect-in-tests = true
 allow-panic-in-tests = true

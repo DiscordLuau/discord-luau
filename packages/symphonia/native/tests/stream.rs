@@ -1,6 +1,3 @@
-//! Stream sessions through the ABI and directly: codes, states, closing and failures. Also how the worker's reader
-//! ends: `Ok(0)` after `finish`, `BrokenPipe` after close, and never `Interrupted`.
-
 #![expect(clippy::undocumented_unsafe_blocks, reason = "every ABI call passes buffers the test owns")]
 #![expect(
     clippy::cast_possible_truncation,
@@ -16,6 +13,7 @@ use std::sync::mpsc::{self, SyncSender};
 use std::thread;
 use std::time::{Duration, Instant};
 
+use symphonia::core::io::{MediaSourceStream, MediaSourceStreamOptions, ReadBytes, ReadOnlySource};
 use discord_luau_symphonia::testing::{
     BLOCK_FRAMES, INPUT_CHUNKS, OUTPUT_BLOCKS, PANIC, blocks_sent, chunk_reader, output_closed, stream_failure,
     stream_state,
@@ -24,14 +22,12 @@ use discord_luau_symphonia::{
     Error, FULL, Handle, InfoField, NOT_READY, PushOutcome, State, StreamSession, symphonia_describe,
     symphonia_open_count, symphonia_open_stream, symphonia_push, symphonia_read_packet, symphonia_worker_count,
 };
-use symphonia::core::io::{MediaSourceStream, MediaSourceStreamOptions, ReadBytes, ReadOnlySource};
 
 use crate::files::{corrupted_adpcm_wav, ogg_opus, opus_packet, wav};
 use crate::util::{
     ERROR_CAPACITY, EXIT_WAIT, WAIT, close, finish, info, open, read, serial, text, wait_for_workers, wait_until,
 };
 
-/// How long a call that must not block may take, generously.
 const AT_ONCE: Duration = Duration::from_millis(500);
 const FAILING_RUNS: usize = 1_000;
 const TEST_CHUNKS: usize = 64;
@@ -49,7 +45,6 @@ fn push(handle: *mut Handle, bytes: &[u8]) -> i32 {
     unsafe { symphonia_push(handle, bytes.as_ptr(), bytes.len() as u32) }
 }
 
-/// Checks on every call that field 5 is 1 exactly when the state is 3.
 fn state(handle: *mut Handle) -> i32 {
     let state = info(handle, InfoField::State as i32);
 
@@ -88,7 +83,6 @@ fn with_stream<T>(handle: *mut Handle, check: impl FnOnce(&StreamSession) -> T) 
     }
 }
 
-/// Closes on another thread, so a close that blocks fails the test instead of hanging it.
 fn close_at_once(handle: *mut Handle, point: &str, baseline: i32) {
     let (closed, returned) = mpsc::channel();
     let address = handle.expose_provenance();
@@ -179,7 +173,6 @@ fn push_and_finish_return_their_codes() {
 
     close(handle);
 
-    // A WAV that states its length ends there, with no finish, and takes no more.
     let handle = open_stream();
 
     assert_eq!(push(handle, &wav(48_000, 2, 1_000)), 0);
@@ -190,7 +183,6 @@ fn push_and_finish_return_their_codes() {
 
     close(handle);
 
-    // Bytes that are not audio fail the stream with Symphonia's message.
     let handle = open_stream();
 
     assert_eq!(push(handle, &b"not audio ".repeat(400)), 0);
@@ -217,12 +209,9 @@ fn push_is_full_at_64_chunks_and_never_blocks() {
     let workers_before = symphonia_worker_count();
     let (results, received) = mpsc::channel();
 
-    // On its own thread, so a push that blocks fails the test instead of hanging it.
     thread::spawn(move || {
         let handle = open_stream();
 
-        // The worker holds this one chunk of 10 s until it has decoded all of it, which a full output stops at
-        // 6.4 s, so every later chunk stays queued.
         assert_eq!(push(handle, &wav(48_000, 2, 480_000)), 0);
         wait_until("the stream opens", WAIT, || state(handle) == State::Open as i32);
 
@@ -246,13 +235,11 @@ fn close_returns_at_once_wherever_the_worker_waits() {
     let _serial = serial();
     let workers_before = symphonia_worker_count();
 
-    // Probing: nothing pushed yet.
     let handle = open_stream();
 
     assert_eq!(state(handle), 0);
     close_at_once(handle, "probing", workers_before);
 
-    // Waiting for input mid-stream: half a WAV, read until no more is coming.
     let handle = open_stream();
     let bytes = wav(48_000, 2, 48_000);
 
@@ -267,7 +254,6 @@ fn close_returns_at_once_wherever_the_worker_waits() {
     assert_eq!(state(handle), 1);
     close_at_once(handle, "waiting for input", workers_before);
 
-    // Blocked on a full output: 10 s of WAV, unread.
     let handle = open_stream();
     let sent_before = blocks_sent();
 
@@ -281,7 +267,6 @@ fn panics_before_and_after_the_open_fail_the_stream_with_their_messages() {
     let _serial = serial();
     let workers_before = symphonia_worker_count();
 
-    // Before the open: the panic comes inside the probe.
     let handle = open_stream();
 
     assert_eq!(push(handle, &[PANIC, b"before the open"].concat()), 0);
@@ -301,7 +286,6 @@ fn panics_before_and_after_the_open_fail_the_stream_with_their_messages() {
 
     close(handle);
 
-    // After the open: half a WAV opens it, then the panic comes while it decodes.
     let handle = open_stream();
     let bytes = wav(48_000, 2, 48_000);
 
@@ -316,8 +300,6 @@ fn panics_before_and_after_the_open_fail_the_stream_with_their_messages() {
     assert_eq!(info(handle, 0), 48_000, "it had opened");
     assert_eq!(describe(handle, 1), "wave");
 
-    // The blocks decoded before the panic come first: the half held 20 whole packets of 1152 frames, which filled
-    // four blocks. Then the failure.
     let mut frames = 0;
 
     loop {
@@ -384,8 +366,6 @@ fn a_failure_before_the_open_is_stored_before_the_output_closes() {
         push(handle, &junk);
         finish(handle);
 
-        // While this holds the status lock the worker cannot store its failure, so an output seen closed under the
-        // lock must already have the failure stored.
         while !with_stream(handle, |stream| {
             let (closed, failure_stored) = output_closed(stream);
 
@@ -450,8 +430,6 @@ fn a_failure_after_the_open_drains_its_packets_and_is_never_read_as_the_end() {
         push(handle, &chained);
         finish(handle);
 
-        // Even runs read only once the stream has failed, so both packets wait behind the failure; odd runs read
-        // while the worker decodes.
         if run % 2 == 0 {
             wait_until("the stream fails", WAIT, || state(handle) == 3);
         }
@@ -473,7 +451,6 @@ fn a_failure_reports_the_skipped_packets_it_ended_on() {
     let workers_before = symphonia_worker_count();
     let mut session = StreamSession::open().unwrap();
 
-    // 10,001 undecodable blocks in a row: one more than a read passes over.
     assert_eq!(session.push(corrupted_adpcm_wav(10_002, 0..10_001)), PushOutcome::Queued);
     session.finish();
     wait_until("the stream fails", WAIT, || stream_state(&session) == State::Failed);
@@ -488,7 +465,6 @@ fn a_failure_reports_the_skipped_packets_it_ended_on() {
     wait_for_workers(workers_before);
 }
 
-/// The input of a new channel, a worker's reader over it, and the function that stops the reader.
 fn reader() -> (SyncSender<Vec<u8>>, impl Read + Send + Sync, impl Fn()) {
     let (input, chunks) = mpsc::sync_channel(TEST_CHUNKS);
     let (reader, stop) = chunk_reader(chunks);
@@ -500,7 +476,6 @@ fn reader() -> (SyncSender<Vec<u8>>, impl Read + Send + Sync, impl Fn()) {
 fn the_reader_ends_with_ok_0_after_finish_and_broken_pipe_after_close() {
     let mut buffer = [0_u8; 8];
 
-    // Finish: the chunks, then the end, every time.
     let (input, mut finished, _) = reader();
 
     input.send(b"abc".to_vec()).unwrap();
@@ -511,7 +486,6 @@ fn the_reader_ends_with_ok_0_after_finish_and_broken_pipe_after_close() {
     assert_eq!(finished.read(&mut buffer).unwrap(), 0);
     assert_eq!(finished.read(&mut buffer).unwrap(), 0);
 
-    // Close, as `StreamSession::drop` does it: the stop error, even with a chunk queued.
     let (input, mut closed, stop) = reader();
 
     input.send(vec![1; 4]).unwrap();
@@ -551,7 +525,6 @@ fn close_ends_a_read_waiting_inside_read_buf_exact_with_broken_pipe() {
     );
 }
 
-/// Interrupted a thousand times, then bytes of 7.
 struct Flaky(Arc<AtomicUsize>);
 
 impl Read for Flaky {
@@ -568,7 +541,6 @@ impl Read for Flaky {
 
 #[test]
 fn media_source_stream_retries_interrupted_reads() {
-    // Why a closed stream's reader does not return `Interrupted`: Symphonia calls it again.
     let calls = Arc::new(AtomicUsize::new(0));
     let mut stream = MediaSourceStream::new(
         Box::new(ReadOnlySource::new(Flaky(Arc::clone(&calls)))),

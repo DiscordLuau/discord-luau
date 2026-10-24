@@ -1,5 +1,3 @@
-//! Sessions over synthetic files and the Luau package's fixtures, and the limits and `fact` chunks they open with.
-
 #![expect(
     clippy::cast_possible_truncation,
     clippy::cast_possible_wrap,
@@ -13,17 +11,14 @@ use discord_luau_symphonia::testing::set_sample_rate;
 use discord_luau_symphonia::wav::fact_frames;
 use discord_luau_symphonia::{BYTES_PER_FRAME, DescribeField, Error, Session, State};
 
+use crate::util::{read_packets, read_session};
 use crate::files::{
     ADPCM_BLOCK_FRAMES, adpcm_wav, aiff, caf_lpcm, corrupted_adpcm_wav, fixture, float_wav, ogg_opus, opus_packet,
     s16_wav, stereo_sine, wav, wav_with, with_fact,
 };
-use crate::util::{read_packets, read_session};
 
-/// Ten times the longest audio these tests make.
 const READ_ALL_MAX_FRAMES: usize = 480_000;
 
-/// The Luau decoder's plain conversion of a float sample to s16: non-finite to 0, scaled by 32768, rounded half away
-/// from zero, and clamped.
 fn to_s16(sample: f32) -> i16 {
     if !sample.is_finite() {
         return 0;
@@ -36,7 +31,6 @@ fn floats(bytes: &[u8]) -> Vec<f32> {
     bytes.as_chunks::<4>().0.iter().map(|&sample| f32::from_le_bytes(sample)).collect()
 }
 
-/// Panics after `READ_ALL_MAX_FRAMES`, so a session that never ends fails the test instead of growing forever.
 fn read_floats(session: &mut Session, capacity: usize) -> Vec<f32> {
     let mut samples = Vec::new();
 
@@ -56,7 +50,6 @@ fn read_floats(session: &mut Session, capacity: usize) -> Vec<f32> {
     }
 }
 
-/// The left and right samples to the end, converted to s16 as the Luau decoder converts them.
 fn read_all(session: &mut Session) -> (Vec<i16>, Vec<i16>) {
     read_all_in(session, 4800)
 }
@@ -69,7 +62,6 @@ fn read_all_in(session: &mut Session, capacity: usize) -> (Vec<i16>, Vec<i16>) {
     (left, right)
 }
 
-/// The frequency of `samples` at 48 kHz, from the zero crossings of their middle three fifths.
 fn frequency(samples: &[i16]) -> f64 {
     let middle = &samples[samples.len() / 5..samples.len() * 4 / 5];
     let crossings = middle.windows(2).filter(|pair| (pair[0] < 0) != (pair[1] < 0)).count();
@@ -109,7 +101,6 @@ fn a_wav_names_its_codec_and_container() {
 
 #[test]
 fn five_one_keeps_front_left_and_rear_right_apart() {
-    // The 5.1 order is FL, FR, FC, LFE, RL, RR. The tone is on FL alone, then on RR alone.
     let bytes = wav_with(48_000, 6, 24_000, &[0]);
     let mut session = Session::open_memory(bytes, None).unwrap();
     let (left, right) = read_all(&mut session);
@@ -127,7 +118,6 @@ fn five_one_keeps_front_left_and_rear_right_apart() {
 
 #[test]
 fn discrete_channels_use_the_first_two() {
-    // AIFF states four or more channels as discrete.
     let mut session = Session::open_memory(aiff(48_000, 4, 1_600), None).unwrap();
 
     assert_eq!(session.info().channels, Some(4));
@@ -200,7 +190,6 @@ fn read_packet_needs_opus_and_read_needs_pcm() {
 
 #[test]
 fn adpcm_block_padding_is_trimmed_to_the_fact_chunk() {
-    // 0.5 s at 22050 Hz in six blocks holds 12246 frames, 1221 of them padding.
     let mut session = Session::open_memory(adpcm_wav(22_050, 11_025, 6), None).unwrap();
 
     assert_eq!(session.describe(DescribeField::Codec), "adpcm_ima_wav");
@@ -230,8 +219,6 @@ fn adpcm_from_a_file_is_trimmed_too() {
 
 #[test]
 fn a_huge_packet_size_fails_at_open() {
-    // The PCM decoder allocates the claimed frames per packet times the channel count when it is made, so this
-    // 368-byte file asked for 16 GB.
     let bytes = caf_lpcm(u32::MAX);
 
     assert_eq!(bytes.len(), 368);
@@ -285,7 +272,6 @@ fn more_than_ten_thousand_undecodable_packets_in_a_row_are_an_error() {
 
 #[test]
 fn a_decoded_packet_resets_the_run_of_skips() {
-    // Two runs of 6000 with one good block between them never reach 10000 in a row.
     let corrupt = (0..6_000).chain(6_001..12_001);
     let mut session = Session::open_memory(corrupted_adpcm_wav(12_001, corrupt), None).unwrap();
     let (left, _) = read_all(&mut session);
@@ -296,7 +282,6 @@ fn a_decoded_packet_resets_the_run_of_skips() {
 
 #[test]
 fn a_truncated_wav_ends_early_and_cleanly() {
-    // The data chunk still claims 4800 frames, but the last 1000 bytes are gone.
     let mut bytes = wav(48_000, 2, 4_800);
 
     bytes.truncate(bytes.len() - 1_000);
@@ -322,7 +307,6 @@ fn a_complete_wav_does_not_end_early() {
 
 #[test]
 fn a_truncated_adpcm_wav_skips_its_partial_last_block() {
-    // The reader hands the decoder a partial last block, which it cannot fill.
     let mut bytes = adpcm_wav(48_000, 6 * ADPCM_BLOCK_FRAMES, 6);
 
     bytes.truncate(bytes.len() - 500);
@@ -341,7 +325,6 @@ fn cut(mut bytes: Vec<u8>, percent: usize) -> Vec<u8> {
 
 #[test]
 fn a_flac_cut_before_its_first_frame_ends_early() {
-    // The FLAC reader returns the end, not an error, when it runs out before a packet.
     let mut session = Session::open_memory(cut(fixture("tone.flac"), 60), None).unwrap();
     let (left, _) = read_all(&mut session);
 
@@ -360,7 +343,6 @@ fn a_flac_cut_late_ends_early() {
 
 #[test]
 fn a_streaming_wav_with_no_stated_length_does_not_end_early() {
-    // ffmpeg writing to a pipe cannot go back to fill in the sizes, so it leaves 0xFFFFFFFF.
     let mut bytes = wav(22_050, 2, 11_025);
 
     bytes[4..8].copy_from_slice(&u32::MAX.to_le_bytes());
@@ -378,7 +360,6 @@ fn a_streaming_wav_with_no_stated_length_does_not_end_early() {
 
 #[test]
 fn a_wav_whose_data_size_is_zero_does_not_end_early() {
-    // Symphonia takes a data size of 0 as a stated length of 0 frames, so it reads nothing.
     let mut bytes = wav(22_050, 2, 11_025);
 
     bytes[40..44].copy_from_slice(&0_u32.to_le_bytes());
@@ -390,7 +371,6 @@ fn a_wav_whose_data_size_is_zero_does_not_end_early() {
     assert!(!session.info().ended_early);
 }
 
-/// The Luau package's fixtures that decode to PCM.
 const DECODED_FIXTURES: [&str; 14] = [
     "tone.wav",
     "tone-mono.wav",
@@ -421,7 +401,6 @@ fn complete_files_do_not_end_early() {
 
 #[test]
 fn a_pcm_fact_chunk_is_ignored() {
-    // PCM's length comes from its data; a stale fact chunk must not cut it short.
     let mut session = Session::open_memory(with_fact(wav(48_000, 1, 4_800), 10), None).unwrap();
     let (left, _) = read_all(&mut session);
 
@@ -435,9 +414,6 @@ fn fnv1a(bytes: impl IntoIterator<Item = u8>) -> u64 {
         .fold(0xcbf2_9ce4_8422_2325, |hash, byte| (hash ^ u64::from(byte)).wrapping_mul(0x0000_0100_0000_01b3))
 }
 
-/// What the crate's A1-1 snapshot (8b33971a) read from each fixture that never passes full scale, through its limiter
-/// at volume 1 and `to_i16`: the frame count and the FNV-1a hash of the interleaved s16le bytes. The overs fixture,
-/// which the limiter changed, is left out.
 const A1_1_OUTPUT: [(&str, usize, u64); 14] = [
     ("tone.wav", 24_000, 0xbad1_ce28_7268_f945),
     ("tone-mono.wav", 24_000, 0xbca9_74dc_7491_6049),
@@ -472,7 +448,6 @@ fn float_reads_with_the_plain_conversion_give_the_a1_1_output() {
 
 #[test]
 fn reads_are_the_decoded_floats_untouched() {
-    // A 48 kHz float WAV comes out bit for bit, +6 dBFS peaks included: nothing in the crate scales, limits or clamps.
     let overs = stereo_sine(48_000, 24_000, 2.0);
     let mut session = Session::open_memory(float_wav(48_000, 2, &overs), None).unwrap();
     let read = read_floats(&mut session, 4_800);
@@ -482,7 +457,6 @@ fn reads_are_the_decoded_floats_untouched() {
         overs.iter().map(|sample| sample.to_bits()).collect::<Vec<_>>()
     );
 
-    // A 48 kHz s16 WAV comes out as each sample over 32768, -32768 and 32767 included.
     let mut samples: Vec<i16> = (0..9_600).map(|index| (index * 7_919 % 65_536) as u16 as i16).collect();
 
     samples[..4].copy_from_slice(&[i16::MIN, i16::MAX, i16::MAX, i16::MIN]);
@@ -605,7 +579,6 @@ fn the_fact_chunk_is_found() {
     assert_eq!(fact_frames(b"OggS not a wav file"), None);
     assert_eq!(fact_frames(&adpcm_wav(22_050, 11_025, 6)[..50]), None, "truncated");
 
-    // An odd-sized chunk is padded to an even length before the next one.
     let mut padded = Vec::from(&b"RIFF\0\0\0\0WAVEodd \x03\0\0\0abc\0"[..]);
 
     padded.extend_from_slice(b"fact\x04\0\0\0\x2a\0\0\0");
@@ -615,7 +588,6 @@ fn the_fact_chunk_is_found() {
 
 #[test]
 fn frames_beyond_the_stated_count_are_dropped() {
-    // One ADPCM block of 2041 frames whose `fact` chunk says 600, at 48 kHz so nothing is resampled.
     let mut session = Session::open_memory(adpcm_wav(48_000, 600, 1), None).unwrap();
     let (left, _) = read_all(&mut session);
 

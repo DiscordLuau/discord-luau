@@ -1,6 +1,3 @@
-//! One open audio source: probing it, choosing its track, and reading it as 48 kHz stereo f32 or as Opus packets passed
-//! through untouched.
-
 use std::borrow::Cow;
 use std::ffi::OsStr;
 use std::fs::File;
@@ -22,7 +19,6 @@ use crate::error::Error;
 use crate::fields::{DescribeField, State};
 use crate::{limits, opus, wav};
 
-/// An Opus session has no decoder to name its codec.
 const OPUS_CODEC_NAME: &str = "opus";
 const MILLISECONDS_PER_SECOND: u32 = 1_000;
 
@@ -54,7 +50,6 @@ pub struct Session {
 }
 
 impl Session {
-    /// `extension` is a hint, which Symphonia 0.6.1's probe ignores.
     pub fn open_memory(bytes: Vec<u8>, extension: Option<&str>) -> Result<Self, Error> {
         if bytes.is_empty() {
             return Err(Error::EmptyAudio);
@@ -65,7 +60,6 @@ impl Session {
         Self::open(Box::new(Cursor::new(bytes)), extension, fact_frames)
     }
 
-    /// Without an `extension`, the path's is the hint.
     pub fn open_file(path: &str, extension: Option<&str>) -> Result<Self, Error> {
         let file_error = |failure: io::Error| Error::File { path: path.to_string(), detail: failure.to_string() };
         let mut file = File::open(path).map_err(file_error)?;
@@ -75,7 +69,6 @@ impl Session {
         Self::open(Box::new(file), extension.or(path_extension), fact_frames)
     }
 
-    /// Probes `source`, then opens it as `from_reader` does.
     pub fn open(
         source: Box<dyn MediaSource>,
         extension: Option<&str>,
@@ -84,7 +77,6 @@ impl Session {
         Self::from_reader(probe(source, extension)?, fact_frames)
     }
 
-    /// Takes `reader`'s default audio track and checks the limits; `fact_frames` is a WAV `fact` chunk's.
     pub fn from_reader(reader: Box<dyn FormatReader>, fact_frames: Option<u64>) -> Result<Self, Error> {
         let track = reader.default_track(TrackType::Audio).ok_or(Error::NoAudioTrack)?;
         let Some(CodecParameters::Audio(parameters)) = &track.codec_params else {
@@ -134,7 +126,6 @@ impl Session {
         Ok(frames)
     }
 
-    /// Skips and counts empty packets. A packet over `capacity` bytes is an error, and stays next for a bigger buffer.
     pub fn read_packet(&mut self, capacity: usize) -> Result<Option<Box<[u8]>>, Error> {
         if !self.is_opus() {
             return Err(Error::NotOpus);
@@ -227,7 +218,6 @@ fn make_codec(parameters: &AudioCodecParameters) -> Result<Box<dyn AudioDecoder>
         .map_err(|failure| Error::NoDecoder(failure.to_string()))
 }
 
-/// From the playable frame count when known, else from the track's duration and time base.
 #[expect(
     clippy::cast_possible_truncation,
     clippy::cast_sign_loss,
@@ -238,7 +228,6 @@ fn duration_milliseconds(track: &Track, frame_count: Option<u64>, sample_rate: u
         let rate = u128::from(sample_rate);
         let scaled = u128::from(frames) * u128::from(MILLISECONDS_PER_SECOND);
 
-        // Adding half the rate before dividing rounds to the nearest millisecond.
         return u64::try_from((scaled + rate / 2) / rate).ok();
     }
 

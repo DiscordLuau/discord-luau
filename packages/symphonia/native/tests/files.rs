@@ -1,5 +1,3 @@
-//! Synthetic audio files built byte by byte, and the Luau package's fixtures.
-
 #![expect(
     clippy::cast_possible_truncation,
     clippy::cast_possible_wrap,
@@ -13,11 +11,9 @@ pub(crate) const ADPCM_BLOCK_FRAMES: u32 = 2041;
 const ADPCM_DATA_OFFSET: usize = 60;
 const WAVE_FORMAT_PCM: u16 = 1;
 const TONE_FREQUENCY: f64 = 440.0;
-/// Half scale.
 const TONE_PEAK: f64 = 16_384.0;
 const WAVE_FORMAT_IEEE_FLOAT: u16 = 3;
 
-/// A WAV file with a 16-byte `fmt ` chunk and `data` as its samples.
 pub(crate) fn wav_file(
     format: u16,
     bits_per_sample: u16,
@@ -60,7 +56,6 @@ pub(crate) fn tone_sample(frame: usize, sample_rate: u32) -> i16 {
     (tone_phase(frame, sample_rate).sin() * TONE_PEAK) as i16
 }
 
-/// A 16-bit PCM WAV with the test tone on the `active` channels and silence on the rest.
 pub(crate) fn wav_with(sample_rate: u32, channel_count: u16, frames: usize, active: &[u16]) -> Vec<u8> {
     let mut samples = Vec::with_capacity(frames * usize::from(channel_count));
 
@@ -73,15 +68,12 @@ pub(crate) fn wav_with(sample_rate: u32, channel_count: u16, frames: usize, acti
     s16_wav(sample_rate, channel_count, &samples)
 }
 
-/// A 16-bit PCM WAV with the test tone on every channel.
 pub(crate) fn wav(sample_rate: u32, channel_count: u16, frames: usize) -> Vec<u8> {
     let active: Vec<u16> = (0..channel_count).collect();
 
     wav_with(sample_rate, channel_count, frames, &active)
 }
 
-/// A silent mono IMA ADPCM WAV of `blocks` 1024-byte blocks (2041 frames each) whose `fact` chunk says
-/// `fact_frames`, as ffmpeg writes it.
 pub(crate) fn adpcm_wav(sample_rate: u32, fact_frames: u32, blocks: usize) -> Vec<u8> {
     let data_length = blocks as u32 * 1024;
     let mut bytes = Vec::new();
@@ -108,7 +100,6 @@ pub(crate) fn adpcm_wav(sample_rate: u32, fact_frames: u32, blocks: usize) -> Ve
     bytes
 }
 
-/// Inserts a `fact` chunk saying `frames` after the 16-byte `fmt ` chunk of a PCM WAV.
 pub(crate) fn with_fact(mut wav: Vec<u8>, frames: u32) -> Vec<u8> {
     let mut fact = Vec::from(&b"fact"[..]);
 
@@ -122,8 +113,6 @@ pub(crate) fn with_fact(mut wav: Vec<u8>, frames: u32) -> Vec<u8> {
     wav
 }
 
-/// A 368-byte CAF of 100 frames of mono 24-bit big-endian LPCM whose description claims `frames_per_packet` frames in
-/// every 3-byte packet.
 pub(crate) fn caf_lpcm(frames_per_packet: u32) -> Vec<u8> {
     let data_length = 300_u32;
     let mut bytes = Vec::from(&b"caff"[..]);
@@ -147,8 +136,6 @@ pub(crate) fn caf_lpcm(frames_per_packet: u32) -> Vec<u8> {
     bytes
 }
 
-/// A 48 kHz `adpcm_wav` of `blocks` blocks with no padding, where the blocks in `corrupt` have an invalid step index,
-/// which the decoder rejects with `DecodeError`.
 pub(crate) fn corrupted_adpcm_wav(blocks: usize, corrupt: impl Iterator<Item = usize>) -> Vec<u8> {
     let mut bytes = adpcm_wav(48_000, blocks as u32 * ADPCM_BLOCK_FRAMES, blocks);
 
@@ -159,7 +146,6 @@ pub(crate) fn corrupted_adpcm_wav(blocks: usize, corrupt: impl Iterator<Item = u
     bytes
 }
 
-/// The Ogg page checksum: CRC-32 with polynomial 0x04c11db7, no reflection, zero start.
 fn ogg_crc(bytes: &[u8]) -> u32 {
     let mut crc = 0_u32;
 
@@ -177,7 +163,6 @@ fn ogg_crc(bytes: &[u8]) -> u32 {
     crc
 }
 
-/// One Ogg page holding whole `packets`. `header_type` is 0x02 for the first page of a stream and 0x04 for its last.
 fn ogg_page(header_type: u8, granule: u64, serial: u32, sequence: u32, packets: &[&[u8]]) -> Vec<u8> {
     let mut lacing = Vec::new();
 
@@ -208,7 +193,6 @@ fn ogg_page(header_type: u8, granule: u64, serial: u32, sequence: u32, packets: 
     page
 }
 
-/// A 20 ms stereo CELT packet followed by `filler` bytes of `1`. It is never decoded.
 pub(crate) fn opus_packet(filler: usize) -> Vec<u8> {
     let mut packet = vec![0xFC];
 
@@ -216,8 +200,6 @@ pub(crate) fn opus_packet(filler: usize) -> Vec<u8> {
     packet
 }
 
-/// A complete Ogg Opus stream with serial `serial`: an `OpusHead` (family 0, pre-skip 312), `OpusTags`, then
-/// `packets`, 200 to a page.
 pub(crate) fn ogg_opus(serial: u32, channel_count: u8, packets: &[Vec<u8>]) -> Vec<u8> {
     let mut head = Vec::from(&b"OpusHead\x01"[..]);
 
@@ -251,7 +233,6 @@ pub(crate) fn float_wav(sample_rate: u32, channel_count: u16, samples: &[f32]) -
     wav_file(WAVE_FORMAT_IEEE_FLOAT, 32, sample_rate, channel_count, &data)
 }
 
-/// The test tone peaking at `amplitude`, where 1 is full scale, with the same sample on both sides.
 pub(crate) fn stereo_sine(sample_rate: u32, frames: usize, amplitude: f64) -> Vec<f32> {
     (0..frames)
         .flat_map(|frame| {
@@ -262,7 +243,6 @@ pub(crate) fn stereo_sine(sample_rate: u32, frames: usize, amplitude: f64) -> Ve
         .collect()
 }
 
-/// A 16-bit AIFF, which can state any channel count. Channel `n` holds the constant `(n % 32 + 1) * 1000`.
 pub(crate) fn aiff(sample_rate: u32, channel_count: u16, frames: u32) -> Vec<u8> {
     let data_length = frames * u32::from(channel_count) * 2;
     let exponent = sample_rate.ilog2();
@@ -290,7 +270,6 @@ pub(crate) fn aiff(sample_rate: u32, channel_count: u16, frames: u32) -> Vec<u8>
     bytes
 }
 
-/// A fixture of the Luau package, made by `tests/fixtures/generate.sh`.
 pub(crate) fn fixture(name: &str) -> Vec<u8> {
     let path = Path::new(env!("CARGO_MANIFEST_DIR")).join("../tests/fixtures").join(name);
 
