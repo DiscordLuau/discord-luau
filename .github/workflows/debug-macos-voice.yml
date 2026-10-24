@@ -1,0 +1,60 @@
+name: Debug macOS voice hang
+
+on:
+  push:
+    branches:
+      - debug/macos-voice
+  workflow_dispatch:
+
+jobs:
+  voice-per-spec:
+    name: Voice specs one at a time (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, macos-15-intel]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: bash
+    env:
+      DISCORD_LUAU_REQUIRE_FFI: "1"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install pesde
+        uses: lumin-org/setup-pesde@v0.4.1
+        with:
+          cache: true
+          version: v0.7.4+registry.0.2.3
+      - name: Install tooling
+        uses: CompeyDev/setup-rokit@v0.2.1
+        with:
+          cache: true
+      - name: Install dependencies
+        run: pesde install
+      - name: Seed native libraries from this checkout
+        run: zune run .github/scripts/seedBinaryCache.luau
+      - name: Run each voice spec alone with a 120 s limit
+        run: |
+          results=""
+          for spec in packages/voice/tests/*.spec.luau; do
+            for other in packages/voice/tests/*.spec.luau; do
+              if [ "$other" != "$spec" ]; then mv "$other" "$other.off"; fi
+            done
+            echo "::group::$(basename "$spec")"
+            started=$SECONDS
+            set +e
+            perl -e 'alarm shift @ARGV; exec @ARGV' 120 zune run .zune/test.luau packages/voice
+            code=$?
+            set -e
+            echo "::endgroup::"
+            pkill -f 'zune run' || true
+            for other in packages/voice/tests/*.spec.luau.off; do
+              if [ -e "$other" ]; then mv "$other" "${other%.off}"; fi
+            done
+            results+="$(basename "$spec") exit=$code $((SECONDS - started))s"$'\n'
+          done
+          echo "===== per-spec results (exit 142 means killed after 120 s)"
+          printf '%s' "$results"
