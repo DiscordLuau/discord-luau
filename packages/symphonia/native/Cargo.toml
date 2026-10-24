@@ -6,16 +6,29 @@ description = "A C ABI over Symphonia that decodes audio files to 48 kHz stereo 
 license = "MIT"
 repository = "https://github.com/DiscordLuau/discord-luau/tree/main/packages/symphonia/native"
 publish = false
+autotests = false
 
-# cdylib only: an rlib beside it makes Cargo drop LTO from the release build (3.0 MB becomes
-# 4.0 MB), and the unit tests in src/ reach the internals without one.
+# The rlib is for the tests in tests/. Beside it Cargo drops LTO from the release build (3.0 MB becomes 4.0 MB), so the
+# build script builds the shipped library alone with `--crate-type cdylib`, which keeps LTO.
 [lib]
-crate-type = ["cdylib"]
+crate-type = ["cdylib", "rlib"]
+
+# One test binary, so the tests share tests/util.rs and tests/files.rs.
+[[test]]
+name = "integration"
+path = "tests/tests.rs"
+
+[features]
+# Test hooks and white-box accessors in src/testing.rs; only the dev-dependency below turns it on.
+testing = []
 
 [dependencies]
 symphonia = { version = "0.6.1", default-features = false, features = ["all", "opt-simd"] }
 rubato = "5.0.1"
 audioadapter-buffers = "5.2.0"
+
+[dev-dependencies]
+discord_luau_symphonia = { path = ".", features = ["testing"] }
 
 [profile.release]
 opt-level = 3
@@ -28,6 +41,8 @@ panic = "unwind"
 [lints.rust]
 # Already a warning in edition 2024; deny makes "one unsafe block per operation, inside unsafe fn too" a rule.
 unsafe_op_in_unsafe_fn = "deny"
+# `pub` only on what lib.rs re-exports; everything else is pub(crate).
+unreachable_pub = "warn"
 
 [lints.clippy]
 # The whole pedantic group, like uv, ruff and Clippy itself; priority -1 lets the lines below override it.
@@ -35,7 +50,6 @@ pedantic = { level = "warn", priority = -1 }
 
 # Cherry-picked from nursery (the Clippy book advises against enabling the group):
 use_self = "warn"                      # inside an impl, the type is Self
-redundant_pub_crate = "warn"           # no pub(crate) inside private modules
 too_long_first_doc_paragraph = "warn"  # a doc's first line is one sentence
 
 # Cherry-picked from restriction, each encoding a rule of the crate's card:
@@ -51,4 +65,4 @@ print_stderr = "warn"
 dbg_macro = "warn"
 allow_attributes = "warn"               # use #[expect], which warns once it goes stale
 allow_attributes_without_reason = "warn"
-self_named_module_files = "warn"        # a module with tests is src/<module>/mod.rs beside its tests.rs
+mod_module_files = "warn"               # a module is src/<module>.rs, never src/<module>/mod.rs

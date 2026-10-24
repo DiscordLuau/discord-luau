@@ -1,6 +1,12 @@
 //! The C ABI over Symphonia for the `discord_luau/symphonia` Luau package. Every export is named `symphonia_<name>`,
 //! which keeps each `#[unsafe(no_mangle)]` symbol unique.
 
+#![expect(
+    clippy::missing_errors_doc,
+    clippy::must_use_candidate,
+    reason = "the Rust API is for the crate's own tests in tests/; callers use the C ABI"
+)]
+
 mod chunk_reader;
 mod decoder;
 mod demuxer;
@@ -8,34 +14,42 @@ mod error;
 mod ffi;
 mod fields;
 mod guard;
-mod limits;
+pub mod limits;
 mod mix;
-mod opus;
+pub mod opus;
 mod resample;
 mod session;
 mod session_table;
 mod status;
 mod stream;
-mod wav;
+#[cfg(feature = "testing")]
+pub mod testing;
+pub mod wav;
+
+pub use crate::{
+    decoder::BYTES_PER_FRAME,
+    error::Error,
+    ffi::{OutputBuffer, TextBuffer, capped_capacity, copy_in, saturate_to_i32},
+    fields::{DescribeField, InfoField, State, UNKNOWN},
+    guard::guarded,
+    mix::{OUTPUT_CHANNELS, StereoMix},
+    resample::StereoResampler,
+    session::Session,
+    session_table::{Entry, with_session, with_stream},
+    stream::{PushOutcome, StreamSession},
+};
 
 use std::ffi::{CStr, c_char};
 use std::task::Poll;
 
-use crate::decoder::BYTES_PER_FRAME;
-use crate::error::Error;
-use crate::ffi::{OutputBuffer, TextBuffer};
-use crate::fields::{DescribeField, InfoField};
-use crate::guard::{catch_quietly, guarded};
-use crate::session::Session;
-use crate::session_table::{Entry, with_session};
-use crate::stream::{PushOutcome, StreamSession};
+use crate::guard::catch_quietly;
 
-const ABI_VERSION: i32 = 2;
-const FAILED: i32 = -1;
-const NOT_READY: i32 = -2;
-const FULL: i32 = -3;
-const SUCCEEDED: i32 = 0;
-const END: i32 = 0;
+pub const ABI_VERSION: i32 = 2;
+pub const FAILED: i32 = -1;
+pub const NOT_READY: i32 = -2;
+pub const FULL: i32 = -3;
+pub const SUCCEEDED: i32 = 0;
+pub const END: i32 = 0;
 
 /// Returns `ABI_VERSION`; the Luau package refuses any other.
 #[unsafe(no_mangle)]
@@ -280,6 +294,3 @@ pub extern "C" fn symphonia_open_count() -> i32 {
 pub extern "C" fn symphonia_worker_count() -> i32 {
     stream::worker_count()
 }
-
-#[cfg(test)]
-mod tests;

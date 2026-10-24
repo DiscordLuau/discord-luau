@@ -9,7 +9,7 @@ use symphonia::core::packet::Packet;
 use crate::error::Error;
 use crate::limits::MAX_CONSECUTIVE_SKIPS;
 
-pub struct Demuxer {
+pub(crate) struct Demuxer {
     reader: Box<dyn FormatReader>,
     track_id: u32,
     skipped_packets: u64,
@@ -20,15 +20,15 @@ pub struct Demuxer {
 }
 
 impl Demuxer {
-    pub fn new(reader: Box<dyn FormatReader>, track_id: u32) -> Self {
+    pub(crate) fn new(reader: Box<dyn FormatReader>, track_id: u32) -> Self {
         Self { reader, track_id, skipped_packets: 0, consecutive_skips: 0, pending: None, ended: false }
     }
 
-    pub fn skipped_packets(&self) -> u64 {
+    pub(crate) fn skipped_packets(&self) -> u64 {
         self.skipped_packets
     }
 
-    pub fn next_packet(&mut self) -> Result<Option<Packet>, Error> {
+    pub(crate) fn next_packet(&mut self) -> Result<Option<Packet>, Error> {
         if let Some(packet) = self.pending.take() {
             return Ok(Some(packet));
         }
@@ -57,17 +57,17 @@ impl Demuxer {
         }
     }
 
-    pub fn put_back(&mut self, packet: Packet) {
+    pub(crate) fn put_back(&mut self, packet: Packet) {
         self.pending = Some(packet);
     }
 
     /// Counts a skipped packet of the chosen track, which also extends the run.
-    pub fn skip(&mut self) -> Result<(), Error> {
+    pub(crate) fn skip(&mut self) -> Result<(), Error> {
         self.skipped_packets += 1;
         self.extend_run()
     }
 
-    pub fn reset_skips(&mut self) {
+    pub(crate) fn reset_skips(&mut self) {
         self.consecutive_skips = 0;
     }
 
@@ -83,6 +83,6 @@ impl Demuxer {
 }
 
 /// Symphonia's idiom for bytes that ran out partway through a read.
-pub fn is_unexpected_end(error: &SymphoniaError) -> bool {
+pub(crate) fn is_unexpected_end(error: &SymphoniaError) -> bool {
     matches!(error, SymphoniaError::IoError(failure) if failure.kind() == ErrorKind::UnexpectedEof)
 }

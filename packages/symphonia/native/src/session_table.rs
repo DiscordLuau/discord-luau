@@ -23,28 +23,28 @@ pub enum Entry {
 }
 
 impl Entry {
-    pub fn info(&self, field: InfoField) -> i32 {
+    pub(crate) fn info(&self, field: InfoField) -> i32 {
         match self {
             Self::Direct(session) => session.info(field),
             Self::Stream(stream) => stream.info(field),
         }
     }
 
-    pub fn describe(&self, field: DescribeField) -> String {
+    pub(crate) fn describe(&self, field: DescribeField) -> String {
         match self {
             Self::Direct(session) => session.describe(field),
             Self::Stream(stream) => stream.describe(field),
         }
     }
 
-    pub fn read(&mut self, capacity_frames: usize) -> Result<Poll<&[u8]>, Error> {
+    pub(crate) fn read(&mut self, capacity_frames: usize) -> Result<Poll<&[u8]>, Error> {
         match self {
             Self::Direct(session) => session.read(capacity_frames).map(Poll::Ready),
             Self::Stream(stream) => stream.read(capacity_frames),
         }
     }
 
-    pub fn read_packet(&mut self, capacity: usize) -> Result<Poll<Option<Box<[u8]>>>, Error> {
+    pub(crate) fn read_packet(&mut self, capacity: usize) -> Result<Poll<Option<Box<[u8]>>>, Error> {
         match self {
             Self::Direct(session) => session.read_packet(capacity).map(Poll::Ready),
             Self::Stream(stream) => stream.read_packet(capacity),
@@ -68,7 +68,7 @@ impl Entry {
     }
 }
 
-pub fn insert(entry: Entry) -> Result<i32, Error> {
+pub(crate) fn insert(entry: Entry) -> Result<i32, Error> {
     let id = NEXT_ID
         .try_update(Ordering::SeqCst, Ordering::SeqCst, |id| id.checked_add(1))
         .map_err(|_| Error::IdsExhausted)?;
@@ -78,7 +78,7 @@ pub fn insert(entry: Entry) -> Result<i32, Error> {
     Ok(id)
 }
 
-pub fn with_entry<T>(id: i32, body: impl FnOnce(&mut Entry) -> T) -> Option<T> {
+pub(crate) fn with_entry<T>(id: i32, body: impl FnOnce(&mut Entry) -> T) -> Option<T> {
     lock(&SESSIONS).get_mut(&id).map(body)
 }
 
@@ -110,10 +110,10 @@ pub fn with_session<T>(id: i32, body: impl FnOnce(&mut Entry) -> Result<T, Error
 }
 
 /// Removes session `id`, releasing the lock before it returns, so a stream's `Drop` never runs under the lock.
-pub fn remove(id: i32) -> Option<Entry> {
+pub(crate) fn remove(id: i32) -> Option<Entry> {
     lock(&SESSIONS).remove(&id)
 }
 
-pub fn count() -> usize {
+pub(crate) fn count() -> usize {
     lock(&SESSIONS).len()
 }

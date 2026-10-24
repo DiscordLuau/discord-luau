@@ -58,6 +58,7 @@ name = "discord_luau_symphonia"
 version = "0.0.1"
 dependencies = [
  "audioadapter-buffers",
+ "discord_luau_symphonia",
  "rubato",
  "symphonia",
 ]
