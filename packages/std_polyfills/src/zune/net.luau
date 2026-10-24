@@ -146,22 +146,24 @@ function net.udpSocket(host: string, port: number)
 	local handle = zuneNet.createSocket(zuneNet.ADDRF.INET, zuneNet.SOCKF.DGRAM, zuneNet.IPPROTO.UDP)
 	local value = { closeCode = nil :: number? }
 
-	handle:connect(host, port)
+	-- Zune's connect is TCP-only on Windows, so the socket stays unconnected and filters by peer itself. It binds
+	-- first because a receive on an unbound UDP socket fails at once on Windows.
+	handle:bindIp("0.0.0.0", 0)
 
 	function value.send(message: (string | buffer)?, _asBinaryMessage: boolean?)
 		if message then
-			handle:send(message)
+			handle:sendMsg(port, host, message)
 		end
 	end
 
 	function value.next(): string?
-		local response = handle:recv(65536)
+		while true do
+			local address, response = handle:recvMsg(65536)
 
-		if not response then
-			return
+			if address.address == host and address.port == port then
+				return buffer.tostring(response)
+			end
 		end
-
-		return buffer.tostring(response)
 	end
 
 	function value.close(_code: number?)
