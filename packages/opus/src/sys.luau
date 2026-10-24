@@ -10,11 +10,12 @@ local binary = require("../luau_packages/binary")
 local stdPolyfills = require("../luau_packages/std_polyfills")
 
 local CHECKSUMS: { [string]: string } = {
-	["linux-arm64"] = "sha256:cea2e22c4704e75d402aad0307adfa2b6ab4794a4e42a651cc34b75a874913aa",
-	["linux-x64"] = "sha256:3f6fe6536e182d1aee8aed9e49f9d024798dfa43aac9d3f76675f6fcfbc1db1f",
-	["macos-arm64"] = "sha256:d4e65ac92a40b106d6f856ae4d04def8a3a0c2631f1495c69a8b46058ffc4222",
-	["windows-x64"] = "sha256:c84da836e8d92421ac305842cfe5a724898ed09d340d46b129e210bdc9448131",
-	["windows-x86"] = "sha256:3b5bfe12950f35043ed75d2b6fa902c936d67a507160bf76358d67c76c1dbde8",
+	["linux-arm64"] = "sha256:4cb8a22124493de4ab5098c45bd796da3064cfdbeefc25db7a2a7ece7bee5716",
+	["linux-x64"] = "sha256:683a614238508cffa0817ad780ec8e3d7f14f9f22b9098b02ba3706bdf428009",
+	["macos-arm64"] = "sha256:21075a0e56eebe4c3967d7b3b7d4b365e904f6c0363f2d3569f46076f9cb4e76",
+	["macos-x64"] = "sha256:b57d6555f3aafcdee2dbd46315353c3ac61ed9945a3745b0835df5653ae931b4",
+	["windows-x64"] = "sha256:9f0918506e823ae3544e13c7c4c3ea7b549afc85bb13838f04a5b3083251381f",
+	["windows-x86"] = "sha256:b2ee3ec4faa4a58d2ef52a8d9127d3dffa9527b10aa7afde3ef89c6f7d67797a",
 }
 
 local Sys = {
@@ -38,6 +39,22 @@ local Sys = {
 		mono = 1,
 		stereo = 2,
 	},
+
+	request = {
+		setBitrate = 4002,
+		getBitrate = 4003,
+		setSignal = 4024,
+		getSignal = 4025,
+	},
+
+	signal = {
+		auto = -1000,
+		voice = 3001,
+		music = 3002,
+	},
+
+	MIN_BITRATE = 500,
+	MAX_BITRATE = 510000,
 
 	MAX_PACKET_SIZE = 4000,
 	MAX_FRAME_SIZE = 5760,
@@ -70,10 +87,11 @@ local function loadLibrary(): Lib
 		else "x64"
 	local result = binary.load({
 		id = "libopus",
-		version = "0.0.4",
+		version = "0.0.5",
 		url = "https://raw.githubusercontent.com/DiscordLuau/discord-luau/refs/tags/opus-{version}/packages/opus/binaries/{os}-{arch}/libopus{ext}",
 		checksum = CHECKSUMS[`{platform}-{architecture}`]
 			or error(`Unsupported platform '{platform}-{architecture}' for libopus`),
+		allowSystem = false,
 	})
 
 	return (
@@ -87,6 +105,9 @@ local function loadLibrary(): Lib
 			opus_decoder_destroy = { returns = void, args = { pointer } },
 
 			opus_strerror = { returns = pointer, args = { i32 } },
+
+			discord_luau_opus_encoder_set = { returns = i32, args = { pointer, i32, i32 } },
+			discord_luau_opus_encoder_get = { returns = i32, args = { pointer, i32, pointer } },
 		}) :: any
 	) :: Lib
 end
@@ -114,6 +135,9 @@ export type Lib = {
 	opus_decoder_destroy: (st: FFIPointer) -> (),
 
 	opus_strerror: (error: number) -> FFIPointer,
+
+	discord_luau_opus_encoder_set: (st: FFIPointer, request: number, value: number) -> number,
+	discord_luau_opus_encoder_get: (st: FFIPointer, request: number, value: FFIPointer) -> number,
 }
 
 return Sys

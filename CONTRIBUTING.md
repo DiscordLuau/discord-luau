@@ -10,7 +10,8 @@ Please note we have a [code of conduct](CODE_OF_CONDUCT.md), please follow it in
 3. Write the Zune type definitions *(`zune setup`)*
 4. Bundle the API types *(`zune run .zune/bundle.luau`)*
 5. Install all dependencies *(`pesde install`)*
-6. Run the checks CI runs *(`zune run .zune/fmt.luau`, `zune run .zune/lint.luau`, `zune run .zune/analyze.luau`, `zune run .zune/test.luau`)*
+6. Seed the binary cache from the checkout *(`zune run .github/scripts/seedBinaryCache.luau`)*; `opus` always loads its own checksummed libopus, and until a version's release tag exists its download fails
+7. Run the checks CI runs *(`zune run .zune/fmt.luau`, `zune run .zune/lint.luau`, `zune run .zune/analyze.luau`, `zune run .zune/test.luau`)*
 
 ## AI-assisted contributions
 

@@ -64,6 +64,7 @@ if not stdPolyfills.runtime.capabilities().ffi then
 			end,
 		})
 	end
+
 	return makeStub("Dave.Sys")
 end
 
@@ -108,6 +109,104 @@ local DecryptorStats = stdPolyfills.ffi.struct({
 	{ decryptInvalidNonceCount = u64 },
 })
 
+local platform = stdPolyfills.process.getPlatform()
+local architecture = if stdPolyfills.process.getArch() == "aarch64" then "arm64" else "x64"
+
+local checksums: { [string]: string } = {
+	["linux-arm64"] = "sha256:6e16bdda78718767c7fb25236f48e20a845afc4050d073fbecae5eb9bd85ef03",
+	["linux-x64"] = "sha256:76ec5e0d8a97d2d8b2601a011c3b9e7ae9144528718baeb9a78ed76b9994c7e1",
+	["macos-arm64"] = "sha256:e0739c49ccf8ca497facf22b2eb6b3a534be7195ebee4f4bb4db5550555176d5",
+	["macos-x64"] = "sha256:a67b38937665717300a77f8e6eedc9dd0418054c79be500d332b5f5563805243",
+	["windows-x64"] = "sha256:cdd3ad04ec5f5588e320594d2abe878da7ba5385b254f207d86c8cb1649739bd",
+}
+
+local result = binary.load({
+	id = "libdave",
+	version = "0.0.1",
+	url = "https://raw.githubusercontent.com/DiscordLuau/discord-luau/refs/tags/dave-{version}/packages/dave/binaries/{os}-{arch}/libdave{ext}",
+	checksum = checksums[`{platform}-{architecture}`]
+		or error(`Unsupported platform '{platform}-{architecture}' for libdave`),
+})
+
+local lib = (
+	stdPolyfills.ffi.dlopen(result.path, {
+		daveMaxSupportedProtocolVersion = { returns = u16, args = {} },
+
+		daveFree = { returns = void, args = { pointer } },
+
+		daveSessionCreate = { returns = pointer, args = { pointer, pointer, pointer, pointer } },
+		daveSessionDestroy = { returns = void, args = { SessionHandle } },
+		daveSessionInit = { returns = void, args = { SessionHandle, u16, u64, pointer } },
+		daveSessionReset = { returns = void, args = { SessionHandle } },
+		daveSessionSetProtocolVersion = { returns = void, args = { SessionHandle, u16 } },
+		daveSessionGetProtocolVersion = { returns = u16, args = { SessionHandle } },
+		daveSessionGetLastEpochAuthenticator = { returns = void, args = { SessionHandle, pointer, pointer } },
+		daveSessionSetExternalSender = { returns = void, args = { SessionHandle, pointer, cSizeT } },
+		daveSessionProcessProposals = {
+			returns = void,
+			args = { SessionHandle, pointer, cSizeT, pointer, cSizeT, pointer, pointer },
+		},
+		daveSessionProcessCommit = { returns = pointer, args = { SessionHandle, pointer, cSizeT } },
+		daveSessionProcessWelcome = {
+			returns = pointer,
+			args = { SessionHandle, pointer, cSizeT, pointer, cSizeT },
+		},
+		daveSessionGetMarshalledKeyPackage = { returns = void, args = { SessionHandle, pointer, pointer } },
+		daveSessionGetKeyRatchet = { returns = pointer, args = { SessionHandle, pointer } },
+		daveSessionGetPairwiseFingerprint = { returns = void, args = { SessionHandle, u16, pointer, pointer, pointer } },
+
+		daveKeyRatchetDestroy = { returns = void, args = { KeyRatchetHandle } },
+
+		daveCommitResultIsFailed = { returns = cBool, args = { CommitResultHandle } },
+		daveCommitResultIsIgnored = { returns = cBool, args = { CommitResultHandle } },
+		daveCommitResultGetRosterMemberIds = { returns = void, args = { CommitResultHandle, pointer, pointer } },
+		daveCommitResultGetRosterMemberSignature = {
+			returns = void,
+			args = { CommitResultHandle, u64, pointer, pointer },
+		},
+		daveCommitResultDestroy = { returns = void, args = { CommitResultHandle } },
+
+		daveWelcomeResultGetRosterMemberIds = { returns = void, args = { WelcomeResultHandle, pointer, pointer } },
+		daveWelcomeResultGetRosterMemberSignature = {
+			returns = void,
+			args = { WelcomeResultHandle, u64, pointer, pointer },
+		},
+		daveWelcomeResultDestroy = { returns = void, args = { WelcomeResultHandle } },
+
+		daveEncryptorCreate = { returns = pointer, args = {} },
+		daveEncryptorDestroy = { returns = void, args = { EncryptorHandle } },
+		daveEncryptorSetKeyRatchet = { returns = void, args = { EncryptorHandle, KeyRatchetHandle } },
+		daveEncryptorSetPassthroughMode = { returns = void, args = { EncryptorHandle, cBool } },
+		daveEncryptorAssignSsrcToCodec = { returns = void, args = { EncryptorHandle, u32, cEnum } },
+		daveEncryptorGetProtocolVersion = { returns = u16, args = { EncryptorHandle } },
+		daveEncryptorGetMaxCiphertextByteSize = { returns = cSizeT, args = { EncryptorHandle, cEnum, cSizeT } },
+		daveEncryptorHasKeyRatchet = { returns = cBool, args = { EncryptorHandle } },
+		daveEncryptorIsPassthroughMode = { returns = cBool, args = { EncryptorHandle } },
+		daveEncryptorEncrypt = {
+			returns = cEnum,
+			args = { EncryptorHandle, cEnum, u32, pointer, cSizeT, pointer, cSizeT, pointer },
+		},
+		daveEncryptorSetProtocolVersionChangedCallback = {
+			returns = void,
+			args = { EncryptorHandle, pointer, pointer },
+		},
+		daveEncryptorGetStats = { returns = void, args = { EncryptorHandle, cEnum, pointer } },
+
+		daveDecryptorCreate = { returns = pointer, args = {} },
+		daveDecryptorDestroy = { returns = void, args = { DecryptorHandle } },
+		daveDecryptorTransitionToKeyRatchet = { returns = void, args = { DecryptorHandle, KeyRatchetHandle } },
+		daveDecryptorTransitionToPassthroughMode = { returns = void, args = { DecryptorHandle, cBool } },
+		daveDecryptorDecrypt = {
+			returns = cEnum,
+			args = { DecryptorHandle, cEnum, pointer, cSizeT, pointer, cSizeT, pointer },
+		},
+		daveDecryptorGetMaxPlaintextByteSize = { returns = cSizeT, args = { DecryptorHandle, cEnum, cSizeT } },
+		daveDecryptorGetStats = { returns = void, args = { DecryptorHandle, cEnum, pointer } },
+
+		daveSetLogSinkCallback = { returns = void, args = { pointer } },
+	}) :: any
+) :: Lib
+
 export type SessionHandle = FFIPointer
 export type CommitResultHandle = FFIPointer
 export type WelcomeResultHandle = FFIPointer
@@ -129,7 +228,7 @@ export type Lib = {
 		authSessionId: FFIPointer,
 		onMlsFailure: FFIPointer,
 		userData: FFIPointer
-	) -> SessionHandle,
+	) -> FFIPointer,
 	daveSessionDestroy: (session: SessionHandle) -> (),
 	daveSessionInit: (session: SessionHandle, version: number, groupId: buffer, selfUserId: FFIPointer) -> (),
 	daveSessionReset: (session: SessionHandle) -> (),
@@ -146,16 +245,16 @@ export type Lib = {
 		outCommit: FFIPointer,
 		outLength: FFIPointer
 	) -> (),
-	daveSessionProcessCommit: (session: SessionHandle, commit: FFIPointer, length: number) -> CommitResultHandle,
+	daveSessionProcessCommit: (session: SessionHandle, commit: FFIPointer, length: number) -> FFIPointer,
 	daveSessionProcessWelcome: (
 		session: SessionHandle,
 		welcome: FFIPointer,
 		length: number,
 		userIds: FFIPointer,
 		userIdsLength: number
-	) -> WelcomeResultHandle,
+	) -> FFIPointer,
 	daveSessionGetMarshalledKeyPackage: (session: SessionHandle, outData: FFIPointer, outLength: FFIPointer) -> (),
-	daveSessionGetKeyRatchet: (session: SessionHandle, userId: FFIPointer) -> KeyRatchetHandle,
+	daveSessionGetKeyRatchet: (session: SessionHandle, userId: FFIPointer) -> FFIPointer,
 	daveSessionGetPairwiseFingerprint: (
 		session: SessionHandle,
 		version: number,
@@ -186,13 +285,13 @@ export type Lib = {
 	) -> (),
 	daveWelcomeResultDestroy: (result: WelcomeResultHandle) -> (),
 
-	daveEncryptorCreate: () -> EncryptorHandle,
+	daveEncryptorCreate: () -> FFIPointer,
 	daveEncryptorDestroy: (encryptor: EncryptorHandle) -> (),
 	daveEncryptorSetKeyRatchet: (encryptor: EncryptorHandle, keyRatchet: KeyRatchetHandle) -> (),
 	daveEncryptorSetPassthroughMode: (encryptor: EncryptorHandle, passthroughMode: number) -> (),
 	daveEncryptorAssignSsrcToCodec: (encryptor: EncryptorHandle, ssrc: number, codec: number) -> (),
 	daveEncryptorGetProtocolVersion: (encryptor: EncryptorHandle) -> number,
-	daveEncryptorGetMaxCiphertextByteSize: (encryptor: EncryptorHandle, mediaType: number, frameSize: number) -> number,
+	daveEncryptorGetMaxCiphertextByteSize: (encryptor: EncryptorHandle, mediaType: number, frameSize: number) -> buffer,
 	daveEncryptorHasKeyRatchet: (encryptor: EncryptorHandle) -> number,
 	daveEncryptorIsPassthroughMode: (encryptor: EncryptorHandle) -> number,
 	daveEncryptorEncrypt: (
@@ -212,7 +311,7 @@ export type Lib = {
 	) -> (),
 	daveEncryptorGetStats: (encryptor: EncryptorHandle, mediaType: number, outStats: FFIPointer) -> (),
 
-	daveDecryptorCreate: () -> DecryptorHandle,
+	daveDecryptorCreate: () -> FFIPointer,
 	daveDecryptorDestroy: (decryptor: DecryptorHandle) -> (),
 	daveDecryptorTransitionToKeyRatchet: (decryptor: DecryptorHandle, keyRatchet: KeyRatchetHandle) -> (),
 	daveDecryptorTransitionToPassthroughMode: (decryptor: DecryptorHandle, passthroughMode: number) -> (),
@@ -229,109 +328,11 @@ export type Lib = {
 		decryptor: DecryptorHandle,
 		mediaType: number,
 		encFrameSize: number
-	) -> number,
+	) -> buffer,
 	daveDecryptorGetStats: (decryptor: DecryptorHandle, mediaType: number, outStats: FFIPointer) -> (),
 
 	daveSetLogSinkCallback: (onLog: FFIPointer) -> (),
 }
-
-local platform = stdPolyfills.process.getPlatform()
-local architecture = if stdPolyfills.process.getArch() == "aarch64" then "arm64" else "x64"
-
-local checksums: { [string]: string } = {
-	["linux-arm64"] = "sha256:6e16bdda78718767c7fb25236f48e20a845afc4050d073fbecae5eb9bd85ef03",
-	["linux-x64"] = "sha256:76ec5e0d8a97d2d8b2601a011c3b9e7ae9144528718baeb9a78ed76b9994c7e1",
-	["macos-arm64"] = "sha256:e0739c49ccf8ca497facf22b2eb6b3a534be7195ebee4f4bb4db5550555176d5",
-	["macos-x64"] = "sha256:a67b38937665717300a77f8e6eedc9dd0418054c79be500d332b5f5563805243",
-	["windows-x64"] = "sha256:cdd3ad04ec5f5588e320594d2abe878da7ba5385b254f207d86c8cb1649739bd",
-}
-
-local result = binary.load({
-	id = "libdave",
-	version = "0.0.1",
-	url = "https://raw.githubusercontent.com/DiscordLuau/discord-luau/refs/tags/dave-{version}/packages/dave/binaries/{os}-{arch}/libdave{ext}",
-	checksum = checksums[`{platform}-{architecture}`]
-		or error(`Unsupported platform '{platform}-{architecture}' for libdave`),
-})
-
-local lib = (
-	stdPolyfills.ffi.dlopen(result.path, {
-		daveMaxSupportedProtocolVersion = { returns = u16, args = {} },
-
-		daveFree = { returns = void, args = { pointer } },
-
-		daveSessionCreate = { returns = SessionHandle, args = { pointer, pointer, pointer, pointer } },
-		daveSessionDestroy = { returns = void, args = { SessionHandle } },
-		daveSessionInit = { returns = void, args = { SessionHandle, u16, u64, pointer } },
-		daveSessionReset = { returns = void, args = { SessionHandle } },
-		daveSessionSetProtocolVersion = { returns = void, args = { SessionHandle, u16 } },
-		daveSessionGetProtocolVersion = { returns = u16, args = { SessionHandle } },
-		daveSessionGetLastEpochAuthenticator = { returns = void, args = { SessionHandle, pointer, pointer } },
-		daveSessionSetExternalSender = { returns = void, args = { SessionHandle, pointer, cSizeT } },
-		daveSessionProcessProposals = {
-			returns = void,
-			args = { SessionHandle, pointer, cSizeT, pointer, cSizeT, pointer, pointer },
-		},
-		daveSessionProcessCommit = { returns = CommitResultHandle, args = { SessionHandle, pointer, cSizeT } },
-		daveSessionProcessWelcome = {
-			returns = WelcomeResultHandle,
-			args = { SessionHandle, pointer, cSizeT, pointer, cSizeT },
-		},
-		daveSessionGetMarshalledKeyPackage = { returns = void, args = { SessionHandle, pointer, pointer } },
-		daveSessionGetKeyRatchet = { returns = KeyRatchetHandle, args = { SessionHandle, pointer } },
-		daveSessionGetPairwiseFingerprint = { returns = void, args = { SessionHandle, u16, pointer, pointer, pointer } },
-
-		daveKeyRatchetDestroy = { returns = void, args = { KeyRatchetHandle } },
-
-		daveCommitResultIsFailed = { returns = cBool, args = { CommitResultHandle } },
-		daveCommitResultIsIgnored = { returns = cBool, args = { CommitResultHandle } },
-		daveCommitResultGetRosterMemberIds = { returns = void, args = { CommitResultHandle, pointer, pointer } },
-		daveCommitResultGetRosterMemberSignature = {
-			returns = void,
-			args = { CommitResultHandle, u64, pointer, pointer },
-		},
-		daveCommitResultDestroy = { returns = void, args = { CommitResultHandle } },
-
-		daveWelcomeResultGetRosterMemberIds = { returns = void, args = { WelcomeResultHandle, pointer, pointer } },
-		daveWelcomeResultGetRosterMemberSignature = {
-			returns = void,
-			args = { WelcomeResultHandle, u64, pointer, pointer },
-		},
-		daveWelcomeResultDestroy = { returns = void, args = { WelcomeResultHandle } },
-
-		daveEncryptorCreate = { returns = EncryptorHandle, args = {} },
-		daveEncryptorDestroy = { returns = void, args = { EncryptorHandle } },
-		daveEncryptorSetKeyRatchet = { returns = void, args = { EncryptorHandle, KeyRatchetHandle } },
-		daveEncryptorSetPassthroughMode = { returns = void, args = { EncryptorHandle, cBool } },
-		daveEncryptorAssignSsrcToCodec = { returns = void, args = { EncryptorHandle, u32, cEnum } },
-		daveEncryptorGetProtocolVersion = { returns = u16, args = { EncryptorHandle } },
-		daveEncryptorGetMaxCiphertextByteSize = { returns = cSizeT, args = { EncryptorHandle, cEnum, cSizeT } },
-		daveEncryptorHasKeyRatchet = { returns = cBool, args = { EncryptorHandle } },
-		daveEncryptorIsPassthroughMode = { returns = cBool, args = { EncryptorHandle } },
-		daveEncryptorEncrypt = {
-			returns = cEnum,
-			args = { EncryptorHandle, cEnum, u32, pointer, cSizeT, pointer, cSizeT, pointer },
-		},
-		daveEncryptorSetProtocolVersionChangedCallback = {
-			returns = void,
-			args = { EncryptorHandle, pointer, pointer },
-		},
-		daveEncryptorGetStats = { returns = void, args = { EncryptorHandle, cEnum, pointer } },
-
-		daveDecryptorCreate = { returns = DecryptorHandle, args = {} },
-		daveDecryptorDestroy = { returns = void, args = { DecryptorHandle } },
-		daveDecryptorTransitionToKeyRatchet = { returns = void, args = { DecryptorHandle, KeyRatchetHandle } },
-		daveDecryptorTransitionToPassthroughMode = { returns = void, args = { DecryptorHandle, cBool } },
-		daveDecryptorDecrypt = {
-			returns = cEnum,
-			args = { DecryptorHandle, cEnum, pointer, cSizeT, pointer, cSizeT, pointer },
-		},
-		daveDecryptorGetMaxPlaintextByteSize = { returns = cSizeT, args = { DecryptorHandle, cEnum, cSizeT } },
-		daveDecryptorGetStats = { returns = void, args = { DecryptorHandle, cEnum, pointer } },
-
-		daveSetLogSinkCallback = { returns = void, args = { pointer } },
-	}) :: any
-) :: Lib
 
 return {
 	lib = lib,

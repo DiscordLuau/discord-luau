@@ -23,17 +23,25 @@ lib = "src/init.luau"
 default = "https://github.com/pesde-pkg/index"
 
 [dependencies]
-util = { name = "discord_luau/util", version = ">=0.0.0" }
-std_polyfills = { name = "discord_luau/std_polyfills", version = ">=0.0.0" }
+util = { workspace = "discord_luau/util", version = ">=0.0.0" }
+std_polyfills = { workspace = "discord_luau/std_polyfills", version = ">=0.0.0" }
 api_types = { name = "discord_luau/api_types", version = ">=0.0.0" }
 future = { name = "yetanotherclown/luau_futures", version = "2.0.0-beta.3" }
 logger = { name = "discord_luau/logger", version = ">=0.0.0" }
-emitter = { name = "discord_luau/emitter", version = ">=0.0.0" }
+emitter = { workspace = "discord_luau/emitter", version = ">=0.0.0" }
 secret = { name = "discord_luau/secret", version = ">=0.0.0" }
-dave = { name = "discord_luau/dave", version = ">=0.0.0" }
+dave = { workspace = "discord_luau/dave", version = ">=0.0.0" }
 websocket = { name = "discord_luau/websocket", version = ">=0.0.0" }
-sodium = { name = "discord_luau/sodium", version = ">=0.0.0" }
-opus = { name = "discord_luau/opus", version = ">=0.0.0" }
+sodium = { workspace = "discord_luau/sodium", version = ">=0.0.0" }
+opus = { workspace = "discord_luau/opus", version = ">=0.0.0" }
+
+[dev_dependencies]
+discord_stub = { workspace = "discord_luau/discord_stub", version = ">=0.0.0" }
+
+[overrides]
+"websocket>emitter" = "emitter"
+"websocket>util,api_types>util" = "util"
+"websocket>std_polyfills,logger>std_polyfills,discord_stub>std_polyfills" = "std_polyfills"
 
 [patches]
 "yetanotherclown/luau_futures" = { "2.0.0-beta.3 luau" = "patches/yetanotherclown+luau_futures-2.0.0-beta.3+luau.patch" }

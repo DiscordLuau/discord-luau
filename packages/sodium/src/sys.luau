@@ -79,8 +79,8 @@ local stdPolyfills = require("../luau_packages/std_polyfills")
 local CHECKSUMS: { [string]: string } = {
 	["linux-arm64"] = "sha256:dccbbedba8d50c4dca0061d4255e3cc6ff11e3def564b3b4ac0efac3da22b915",
 	["linux-x64"] = "sha256:13373e2914d27a8796568de878e62242f1076dc9c05ee6c6e31c71df829c10e2",
-	["macos-arm64"] = "sha256:f8d4e805cc5426b11eaad5d8782f38a414b4666868e019526ff7228439433b35",
-	["macos-x64"] = "sha256:391fd170b4dc52f91a9c123e12e55bcdb75b320e88f79df654250a2171db6dca",
+	["macos-arm64"] = "sha256:dece6f34d1a9b23d520e67e458e37f17b47153b17a497633b3a7c84f1657cd0c",
+	["macos-x64"] = "sha256:68e207a98e00c7c2280abaf1c4eb6cd5d9387cd1cb3f701ff122b1d9be38ff15",
 	["windows-x64"] = "sha256:f1485ce247ce946e2c17ee2c56811c22838703309c7944a03867bbc45ce91cf9",
 	["windows-x86"] = "sha256:ada13ecb6fe5bd7bc5b9e7d256639c40bcb00794c58b8bb21abea0b090601ada",
 }
@@ -201,7 +201,7 @@ local function loadLibrary(): Lib
 		else "x64"
 	local result = binary.load({
 		id = "libsodium",
-		version = "0.0.3",
+		version = "0.0.6",
 		url = "https://raw.githubusercontent.com/DiscordLuau/discord-luau/refs/tags/sodium-{version}/packages/sodium/binaries/{os}-{arch}/libsodium{ext}",
 		checksum = CHECKSUMS[`{platform}-{architecture}`]
 			or error(`Unsupported platform '{platform}-{architecture}' for libsodium`),

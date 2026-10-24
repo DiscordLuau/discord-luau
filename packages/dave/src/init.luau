@@ -86,6 +86,7 @@ local Decryptor = require("@self/decryptor")
 local CommitResult = require("@self/commitResult")
 local WelcomeResult = require("@self/welcomeResult")
 local Buffer = require("@self/buffer")
+local log = require("@self/log")
 
 local _logSinkClosure: FFIPointer? = nil
 
@@ -105,6 +106,7 @@ return {
 	CommitResult = CommitResult,
 	WelcomeResult = WelcomeResult,
 	Buffer = Buffer,
+	log = log,
 
 	setLogSinkCallback = function(callback: (severity: number, message: string) -> ())
 		local types = stdPolyfills.ffi.getTypes()
@@ -113,11 +115,15 @@ return {
 			args = { types.i32, types.pointer, types.i32, types.pointer },
 		}, function(severity: number, _filePtr: FFIPointer, _line: number, messagePtr: FFIPointer)
 			-- errors must not escape C closure boundaries or Zune panics
-			pcall(function()
+			local succeeded, failure = pcall(function()
 				local success, message = pcall(Buffer.fromCString, messagePtr)
 
-				callback(severity, if success then message else "")
+				callback(severity, if success then message else `libdave log message could not be read: {message}`)
 			end)
+
+			if not succeeded then
+				log:warn(`log sink callback raised: {failure}`)
+			end
 
 			return
 		end)

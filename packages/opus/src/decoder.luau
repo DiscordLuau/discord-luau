@@ -16,6 +16,20 @@
 ]=]
 
 --[=[
+	@prop inputPointer FFIPointer
+	@within Opus.Decoder
+
+	Native buffer that each Opus packet is copied into before decoding, reused for every call.
+]=]
+
+--[=[
+	@prop outputPointer FFIPointer
+	@within Opus.Decoder
+
+	Native buffer that libopus decodes PCM into, reused for every call.
+]=]
+
+--[=[
 	@prop sampleRate number
 	@within Opus.Decoder
 ]=]
@@ -41,15 +55,14 @@ Decoder.Prototype = {}
 function Decoder.Prototype.decode(self: Decoder, opusBuffer: buffer): buffer
 	local inputLen = buffer.len(opusBuffer)
 
-	if inputLen == 0 then
-		error("opus_decode input buffer is empty")
-	end
+	assert(self.handle, "Decoder has been destroyed")
+	assert(inputLen > 0, "opus_decode input buffer is empty")
+	assert(inputLen <= Sys.MAX_PACKET_SIZE, `opus_decode input is {inputLen} bytes, more than {Sys.MAX_PACKET_SIZE}`)
 
-	local inputPointer = Buffer.dupe(opusBuffer)
-	local outputPointer = Buffer.alloc(Sys.MAX_FRAME_SIZE * self.channels * 2)
+	Buffer.write(self.inputPointer, opusBuffer)
 
 	local ffiSuccess, samplesDecoded = pcall(function()
-		return Sys.lib.opus_decode(self.handle, inputPointer, inputLen, outputPointer, Sys.MAX_FRAME_SIZE, 0)
+		return Sys.lib.opus_decode(self.handle, self.inputPointer, inputLen, self.outputPointer, Sys.MAX_FRAME_SIZE, 0)
 	end)
 
 	if not ffiSuccess then
@@ -64,7 +77,7 @@ function Decoder.Prototype.decode(self: Decoder, opusBuffer: buffer): buffer
 		error(`opus_decode failed: {errorMessage} (code={samplesDecoded})`)
 	end
 
-	return Buffer.read(outputPointer, samplesDecoded * self.channels * 2)
+	return Buffer.read(self.outputPointer, samplesDecoded * self.channels * 2)
 end
 
 --[=[
@@ -76,15 +89,24 @@ end
 function Decoder.Prototype.decodeFec(self: Decoder, nextPacket: buffer): buffer
 	local inputLen = buffer.len(nextPacket)
 
-	if inputLen == 0 then
-		error("opus_decode FEC input buffer is empty")
-	end
+	assert(self.handle, "Decoder has been destroyed")
+	assert(inputLen > 0, "opus_decode FEC input buffer is empty")
+	assert(
+		inputLen <= Sys.MAX_PACKET_SIZE,
+		`opus_decode FEC input is {inputLen} bytes, more than {Sys.MAX_PACKET_SIZE}`
+	)
 
-	local inputPointer = Buffer.dupe(nextPacket)
-	local outputPointer = Buffer.alloc(Sys.MAX_FRAME_SIZE * self.channels * 2)
+	Buffer.write(self.inputPointer, nextPacket)
 
 	local ffiSuccess, samplesDecoded = pcall(function()
-		return Sys.lib.opus_decode(self.handle, inputPointer, inputLen, outputPointer, Sys.MAX_FRAME_SIZE, 1)
+		return Sys.lib.opus_decode(
+			self.handle,
+			self.inputPointer,
+			inputLen,
+			self.outputPointer,
+			Sys.DISCORD_FRAME_SIZE,
+			1
+		)
 	end)
 
 	if not ffiSuccess then
@@ -99,7 +121,7 @@ function Decoder.Prototype.decodeFec(self: Decoder, nextPacket: buffer): buffer
 		error(`opus_decode FEC failed: {errorMessage} (code={samplesDecoded})`)
 	end
 
-	return Buffer.read(outputPointer, samplesDecoded * self.channels * 2)
+	return Buffer.read(self.outputPointer, samplesDecoded * self.channels * 2)
 end
 
 --[=[
@@ -109,10 +131,11 @@ end
 ]=]
 function Decoder.Prototype.decodePLC(self: Decoder): buffer
 	local nullPointer = Buffer.getNull()
-	local outputPointer = Buffer.alloc(Sys.DISCORD_FRAME_SIZE * self.channels * 2)
+
+	assert(self.handle, "Decoder has been destroyed")
 
 	local ffiSuccess, samplesDecoded = pcall(function()
-		return Sys.lib.opus_decode(self.handle, nullPointer, 0, outputPointer, Sys.DISCORD_FRAME_SIZE, 0)
+		return Sys.lib.opus_decode(self.handle, nullPointer, 0, self.outputPointer, Sys.DISCORD_FRAME_SIZE, 0)
 	end)
 
 	if not ffiSuccess then
@@ -127,7 +150,7 @@ function Decoder.Prototype.decodePLC(self: Decoder): buffer
 		error(`opus_decode PLC failed: {errorMessage} (code={samplesDecoded})`)
 	end
 
-	return Buffer.read(outputPointer, samplesDecoded * self.channels * 2)
+	return Buffer.read(self.outputPointer, samplesDecoded * self.channels * 2)
 end
 
 --[=[
@@ -141,7 +164,12 @@ function Decoder.Prototype.destroy(self: Decoder)
 	end
 
 	Sys.lib.opus_decoder_destroy(self.handle)
+	Buffer.free(self.inputPointer)
+	Buffer.free(self.outputPointer)
+
 	self.handle = nil :: any
+	self.inputPointer = nil :: any
+	self.outputPointer = nil :: any
 end
 
 --[=[
@@ -151,9 +179,7 @@ end
 ]=]
 function Decoder.Interface.new(sampleRate: number, channels: number): Decoder
 	local errorPointer = Buffer.alloc(4)
-
 	local handle = Sys.lib.opus_decoder_create(sampleRate, channels, errorPointer)
-
 	local errorCode = errorPointer:readi32(0)
 
 	Buffer.free(errorPointer)
@@ -167,6 +193,8 @@ function Decoder.Interface.new(sampleRate: number, channels: number): Decoder
 	return setmetatable(
 		{
 			handle = handle,
+			inputPointer = Buffer.alloc(Sys.MAX_PACKET_SIZE),
+			outputPointer = Buffer.alloc(Sys.MAX_FRAME_SIZE * channels * 2),
 			sampleRate = sampleRate,
 			channels = channels,
 		} :: Decoder,
@@ -176,6 +204,8 @@ end
 
 export type Decoder = typeof(Decoder.Prototype) & {
 	handle: FFIPointer,
+	inputPointer: FFIPointer,
+	outputPointer: FFIPointer,
 	sampleRate: number,
 	channels: number,
 }

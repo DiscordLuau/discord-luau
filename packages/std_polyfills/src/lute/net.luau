@@ -70,11 +70,12 @@ function net.socket(url: string): any
 	local ok, netClient = pcall(require, "@lute/net/client")
 
 	if not ok then
-		error("WebSocket unavailable on Lute: @lute/net/client could not be loaded")
+		error(`WebSocket unavailable on Lute: @lute/net/client could not be loaded: {netClient}`)
 	end
 
 	local queue: { string } = {}
 	local closed = false
+	local socketError: string? = nil
 
 	local wrapper: any = {
 		closeCode = nil,
@@ -88,7 +89,8 @@ function net.socket(url: string): any
 			wrapper.closeCode = code
 			closed = true
 		end,
-		onerror = function(_err: string)
+		onerror = function(errorMessage: string)
+			socketError = tostring(errorMessage)
 			closed = true
 		end,
 	})
@@ -115,7 +117,18 @@ function net.socket(url: string): any
 			return table.remove(queue, 1)
 		end
 
+		if socketError then
+			local errorMessage = socketError
+
+			socketError = nil
+			error(`WebSocket error: {errorMessage}`)
+		end
+
 		return nil
+	end
+
+	wrapper.nextMessage = function(): (string?, boolean?)
+		return wrapper.next()
 	end
 
 	return wrapper

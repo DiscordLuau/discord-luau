@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- After joining, the example plays `packages/example/song.mp3` (git-ignored) through `audio.fromFile`, in as few steps as a bot needs
+
+### Fixed
+
+- The README names the `DISCORD_BOT_TOKEN` key the code reads, without the `Bot ` prefix the library adds
+- A failed `connectAsync` or voice `joinAsync` is logged at warn instead of dropped, and the example logs through the bot's logger
+
 ## 0.0.3
 
 ### Changed

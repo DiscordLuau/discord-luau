@@ -27,6 +27,11 @@ bot.onAllShardsReady:listenOnce(function()
 	print(`Bot '{bot.user.username}' is online!`)
 end)
 
-bot:connectAsync():await()
+local connected = bot:connectAsync():await()
+
+if connected:isErr() then
+	print(`Failed to connect: {connected:unwrapErr()}`)
+	zune.process.exit(1)
+end
 ]]
 end

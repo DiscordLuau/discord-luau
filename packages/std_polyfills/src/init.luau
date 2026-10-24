@@ -13,6 +13,7 @@ export type DateTime = datetime.DateTime
 export type RuntimeValue = runtime.RuntimeValue
 export type Capabilities = runtime.Capabilities
 export type Signal = process.Signal
+export type Process = process.Process
 
 export type WebSocket = net.WebSocket
 export type UdpSocket = net.UdpSocket

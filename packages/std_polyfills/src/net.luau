@@ -60,6 +60,10 @@ end
 
 	Connects to a TCP web socket at the given URL.
 
+	`next()` waits for the next message and returns its text, or nil once the socket has closed. `nextMessage()` does
+		the same and also returns whether the message arrived as a binary frame; on runtimes whose sockets do not say,
+		that flag is nil.
+
 	Throws an error if the server at the given URL does not support web sockets, or if a miscellaneous network or I/O
 		error occurs.
 ]=]
@@ -127,6 +131,7 @@ export type WebSocket = {
 	close: (code: number?) -> (),
 	send: (message: (string | buffer)?, asBinaryMessage: boolean?) -> (),
 	next: () -> string?,
+	nextMessage: () -> (string?, boolean?),
 }
 
 export type FetchResponse = {

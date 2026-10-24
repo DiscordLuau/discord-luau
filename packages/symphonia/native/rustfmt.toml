@@ -1,0 +1,8 @@
+# The Rust Style Guide's formatting, with two stable options changed so the crate wraps like the Luau code.
+style_edition = "2024"
+# stylua.toml wraps Luau at 120 columns; the same width keeps the two languages equally dense.
+max_width = 120
+# Every width heuristic (calls, struct literals, chains) uses max_width, as rust-lang/rust's own rustfmt.toml does.
+use_small_heuristics = "Max"
+# Spaces, not tabs: the Style Guide's first rule and the owner's choice, though the Luau code uses tabs.
+hard_tabs = false

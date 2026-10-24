@@ -39,11 +39,13 @@ local function connectManager(stub: discordStub.DiscordStub, manager: websocket.
 	end, 30)
 end
 
-local function sendPresence(manager: websocket.Manager): { resolved: boolean }
-	local request = { resolved = false }
+local function sendPresence(manager: websocket.Manager): { resolved: boolean, ok: boolean }
+	local request = { resolved = false, ok = false }
 
 	stdPolyfills.task.spawn(function()
-		manager:sendAsync(opcodes.PresenceUpdate, { status = "online" }):await()
+		local sent = manager:sendAsync(opcodes.PresenceUpdate, { status = "online" }):await()
+
+		request.ok = sent:isOk()
 		request.resolved = true
 	end)
 
@@ -70,6 +72,8 @@ return function()
 				local shard = manager.shards[1]
 				local firstConnection = server.connections[1]
 
+				-- auth goes out on Hello whatever the jitter; the 5 s upgrade hold keeps socketIdentified false long enough for a poll to see it
+				server.upgradeDelaySeconds = 5
 				firstConnection:send({ op = opcodes.Reconnect })
 
 				check.is_true(stub.clock:waitFor(function()
@@ -81,6 +85,7 @@ return function()
 				check.is_true(stub.clock:waitFor(function()
 					return request.resolved
 				end, 120))
+				check.is_true(request.ok)
 
 				local resumeConnection = assert(server.connections[2], "the server saw no second connection")
 

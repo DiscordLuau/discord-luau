@@ -111,7 +111,7 @@ local helpCommand = require("@self/defaults/help")
 
 local Commands = {}
 
-Commands.Interface = {}
+Commands.Interface = { Guards = guards }
 Commands.Prototype = {}
 
 local function splitId(id: string): { string }
@@ -173,7 +173,6 @@ local function resolveSubcommand(
 	end
 
 	local firstOption = data.options[1]
-
 	local optionType = (firstOption.type :: any) :: string
 
 	if optionType == "SubCommand" then
@@ -204,7 +203,8 @@ end
 local function waitForInteraction<T>(
 	collectorList: { { filter: (T) -> boolean, resolve: (T) -> () } },
 	filter: ((T) -> boolean)?,
-	timeout: number?
+	timeout: number?,
+	log: logger.Logger
 ): T
 	local thread = coroutine.running()
 	local settled = false
@@ -224,7 +224,11 @@ local function waitForInteraction<T>(
 				stdPolyfills.task.cancel(timeoutThread)
 			end
 
-			coroutine.resume(thread, interaction)
+			local resumed, resumeError = coroutine.resume(thread, interaction)
+
+			if not resumed then
+				log:warn(`code waiting for an interaction errored after it arrived: {resumeError}`)
+			end
 		end,
 	}
 
@@ -244,7 +248,11 @@ local function waitForInteraction<T>(
 			end
 		end
 
-		coroutine.resume(thread, nil, "timeout")
+		local resumed, resumeError = coroutine.resume(thread, nil, "timeout")
+
+		if not resumed then
+			log:warn(`code waiting for an interaction errored after it timed out: {resumeError}`)
+		end
 	end)
 
 	local interaction, errorMessage = coroutine.yield()
@@ -302,17 +310,18 @@ end
 function Commands.Prototype.usePlugin(self: Commands, plugin: PluginDefinition)
 	if self.plugins[plugin.name] then
 		self.logger:warn(`plugin '{plugin.name}' is already loaded - skipping`)
+
 		return
 	end
 
 	local setupResult: any
-
 	local success, errorMessage = xpcall(function()
 		setupResult = (plugin.setup :: (any) -> any)(self)
 	end, debug.traceback)
 
 	if not success then
 		self.logger:warn(`plugin '{plugin.name}' setup threw:\n{errorMessage}`)
+
 		return
 	end
 
@@ -331,6 +340,7 @@ function Commands.Prototype.unloadPlugin(self: Commands, name: string)
 
 	if not teardown then
 		self.logger:warn(`plugin '{name}' is not loaded`)
+
 		return
 	end
 
@@ -414,7 +424,7 @@ function Commands.Prototype.waitForComponent(
 	}
 ): future.FutureLike<classes.Component, string>
 	return future.Future.new(function()
-		return waitForInteraction(self.componentCollectors, options.filter, options.timeout) :: any
+		return waitForInteraction(self.componentCollectors, options.filter, options.timeout, self.logger) :: any
 	end) :: future.FutureLike<classes.Component, string>
 end
 
@@ -436,7 +446,7 @@ function Commands.Prototype.waitForModal(
 	}
 ): future.FutureLike<classes.Modal, string>
 	return future.Future.new(function()
-		return waitForInteraction(self.modalCollectors, options.filter, options.timeout) :: any
+		return waitForInteraction(self.modalCollectors, options.filter, options.timeout, self.logger) :: any
 	end) :: future.FutureLike<classes.Modal, string>
 end
 
@@ -449,6 +459,7 @@ end
 function Commands.Prototype.dispatchCommand(self: Commands, interaction: classes.TypesCommand)
 	if not interaction.data then
 		self.logger:warn("dispatch called with an interaction missing .data - interaction ignored")
+
 		return
 	end
 
@@ -459,6 +470,7 @@ function Commands.Prototype.dispatchCommand(self: Commands, interaction: classes
 
 		if not registeredCommand then
 			self.logger:debug(`no handler registered for command '{data.name}'`)
+
 			return
 		end
 
@@ -486,6 +498,11 @@ function Commands.Prototype.dispatchCommand(self: Commands, interaction: classes
 								content = "You lack the required permissions to use this command.",
 								flags = 64,
 							})
+							:inspectErr(function(replyError)
+								self.logger:warn(
+									`failed to send the missing user permissions reply for '{data.name}': {replyError}`
+								)
+							end)
 							:poll()
 					end
 
@@ -507,6 +524,11 @@ function Commands.Prototype.dispatchCommand(self: Commands, interaction: classes
 							content = "I lack the required permissions to execute this command.",
 							flags = 64,
 						})
+						:inspectErr(function(replyError)
+							self.logger:warn(
+								`failed to send the missing bot permissions reply for '{data.name}': {replyError}`
+							)
+						end)
 						:poll()
 				end
 
@@ -533,7 +555,6 @@ function Commands.Prototype.dispatchCommand(self: Commands, interaction: classes
 
 			if type(registeredCommand.cooldown) == "function" then
 				local cooldownResult: any
-
 				local success, errorMessage = xpcall(function()
 					cooldownResult = (registeredCommand.cooldown :: (any) -> any)(interaction)
 				end, debug.traceback)
@@ -554,11 +575,16 @@ function Commands.Prototype.dispatchCommand(self: Commands, interaction: classes
 					if registeredCommand.onCooldown then
 						registeredCommand.onCooldown(interaction, remaining)
 					else
+						local timeUnit = if remaining == 1 then "second" else "seconds"
+
 						interaction
 							:messageAsync({
-								content = `This command is on cooldown. Try again in **{remaining}** second{remaining == 1 and "" or "s"}.`,
+								content = `This command is on cooldown. Try again in **{remaining}** {timeUnit}.`,
 								flags = 64,
 							})
+							:inspectErr(function(replyError)
+								self.logger:warn(`failed to send the cooldown reply for '{data.name}': {replyError}`)
+							end)
 							:poll()
 					end
 
@@ -584,6 +610,9 @@ function Commands.Prototype.dispatchCommand(self: Commands, interaction: classes
 							content = "This command is already running. Please wait for it to finish.",
 							flags = 64,
 						})
+						:inspectErr(function(replyError)
+							self.logger:warn(`failed to send the concurrency reply for '{data.name}': {replyError}`)
+						end)
 						:poll()
 				end
 
@@ -643,7 +672,7 @@ function Commands.Prototype.dispatchCommand(self: Commands, interaction: classes
 
 				if not success then
 					self.logger:warn(`error in '{data.name}' subcommand execute:\n{errorMessage}`)
-					pipeline.sendErrorResponse(interaction, tostring(errorMessage), effectiveOnError)
+					pipeline.sendErrorResponse(interaction, tostring(errorMessage), effectiveOnError, self.logger)
 				end
 
 				pipeline.runAfterHooks(self.afterHooks, registeredCommand.afterExecute, interaction, self.logger)
@@ -669,7 +698,7 @@ function Commands.Prototype.dispatchCommand(self: Commands, interaction: classes
 
 					if not success then
 						self.logger:warn(`error in '{data.name}' userExecute:\n{errorMessage}`)
-						pipeline.sendErrorResponse(interaction, tostring(errorMessage), effectiveOnError)
+						pipeline.sendErrorResponse(interaction, tostring(errorMessage), effectiveOnError, self.logger)
 					end
 
 					pipeline.runAfterHooks(self.afterHooks, registeredCommand.afterExecute, interaction, self.logger)
@@ -688,7 +717,7 @@ function Commands.Prototype.dispatchCommand(self: Commands, interaction: classes
 
 					if not success then
 						self.logger:warn(`error in '{data.name}' messageExecute:\n{errorMessage}`)
-						pipeline.sendErrorResponse(interaction, tostring(errorMessage), effectiveOnError)
+						pipeline.sendErrorResponse(interaction, tostring(errorMessage), effectiveOnError, self.logger)
 					end
 
 					pipeline.runAfterHooks(self.afterHooks, registeredCommand.afterExecute, interaction, self.logger)
@@ -726,7 +755,7 @@ function Commands.Prototype.dispatchCommand(self: Commands, interaction: classes
 
 		if not success then
 			self.logger:warn(`error in '{data.name}' execute:\n{errorMessage}`)
-			pipeline.sendErrorResponse(interaction, tostring(errorMessage), effectiveOnError)
+			pipeline.sendErrorResponse(interaction, tostring(errorMessage), effectiveOnError, self.logger)
 		end
 
 		pipeline.runAfterHooks(self.afterHooks, registeredCommand.afterExecute, interaction, self.logger)
@@ -742,6 +771,7 @@ end
 function Commands.Prototype.dispatchComponent(self: Commands, interaction: classes.Component)
 	if not interaction.data then
 		self.logger:warn("dispatchComponent called with an interaction missing .data - interaction ignored")
+
 		return
 	end
 
@@ -749,6 +779,7 @@ function Commands.Prototype.dispatchComponent(self: Commands, interaction: class
 
 	if not customId then
 		self.logger:warn("dispatchComponent called with an interaction missing .data.customId - interaction ignored")
+
 		return
 	end
 
@@ -783,7 +814,8 @@ function Commands.Prototype.dispatchComponent(self: Commands, interaction: class
 							pipeline.sendErrorResponse(
 								interaction,
 								tostring(errorMessage),
-								registeredCommand.onError or self.onError
+								registeredCommand.onError or self.onError,
+								self.logger
 							)
 						end
 
@@ -806,6 +838,7 @@ end
 function Commands.Prototype.dispatchModal(self: Commands, interaction: classes.Modal)
 	if not interaction.data then
 		self.logger:warn("dispatchModal called with an interaction missing .data - interaction ignored")
+
 		return
 	end
 
@@ -813,6 +846,7 @@ function Commands.Prototype.dispatchModal(self: Commands, interaction: classes.M
 
 	if not customId then
 		self.logger:warn("dispatchModal called with an interaction missing .data.customId - interaction ignored")
+
 		return
 	end
 
@@ -848,7 +882,8 @@ function Commands.Prototype.dispatchModal(self: Commands, interaction: classes.M
 							pipeline.sendErrorResponse(
 								interaction,
 								tostring(errorMessage),
-								registeredCommand.onError or self.onError
+								registeredCommand.onError or self.onError,
+								self.logger
 							)
 						end
 
@@ -870,6 +905,7 @@ end
 function Commands.Prototype.dispatchAutocomplete(self: Commands, interaction: classes.Autocomplete)
 	if not interaction.data then
 		self.logger:warn("dispatchAutocomplete called with an interaction missing .data - interaction ignored")
+
 		return
 	end
 
@@ -880,6 +916,7 @@ function Commands.Prototype.dispatchAutocomplete(self: Commands, interaction: cl
 
 		if not registeredCommand then
 			self.logger:debug(`no autocomplete handler registered for command '{data.name}'`)
+
 			return
 		end
 
@@ -901,6 +938,7 @@ function Commands.Prototype.dispatchAutocomplete(self: Commands, interaction: cl
 
 		if not registeredCommand.autocomplete then
 			self.logger:debug(`no autocomplete handler registered for command '{data.name}'`)
+
 			return
 		end
 
@@ -929,12 +967,12 @@ function Commands.Prototype.registerAsync(self: Commands): future.FutureLike<str
 			local entry = registeredCommand.command
 
 			if
-				(entry.default_member_permissions == nil and registeredCommand.userPermissions)
+				(not entry.default_member_permissions and registeredCommand.userPermissions)
 				or (entry.nsfw == nil and registeredCommand.nsfw ~= nil)
 			then
 				entry = table.clone(entry)
 
-				if entry.default_member_permissions == nil and registeredCommand.userPermissions then
+				if not entry.default_member_permissions and registeredCommand.userPermissions then
 					entry.default_member_permissions =
 						builders.permission.fromPermissions(registeredCommand.userPermissions):build()
 				end
@@ -947,7 +985,9 @@ function Commands.Prototype.registerAsync(self: Commands): future.FutureLike<str
 			table.insert(payload, entry)
 		end
 
-		self.bot.application:overwriteSlashCommandsAsync(payload):await()
+		local overwriteResult = self.bot.application:overwriteSlashCommandsAsync(payload):await()
+
+		assert(overwriteResult:isOk(), `failed to register commands: {overwriteResult:unwrapErr()}`)
 	end) :: future.FutureLike<string, nil>
 end
 
@@ -959,21 +999,22 @@ end
 function Commands.Prototype.registerGuildAsync(self: Commands, guildId: string): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local guildResult = self.bot:getGuildAsync(guildId):await()
-		assert(guildResult:isOk(), `failed to fetch guild: {guildResult:unwrapErr()}`)
-		local guild = guildResult:unwrapOk()
-
 		local payload = {}
+
+		assert(guildResult:isOk(), `failed to fetch guild: {guildResult:unwrapErr()}`)
+
+		local guild = guildResult:unwrapOk()
 
 		for _, registeredCommand in self.registry:getAll() do
 			local entry = registeredCommand.command
 
 			if
-				(entry.default_member_permissions == nil and registeredCommand.userPermissions)
+				(not entry.default_member_permissions and registeredCommand.userPermissions)
 				or (entry.nsfw == nil and registeredCommand.nsfw ~= nil)
 			then
 				entry = table.clone(entry)
 
-				if entry.default_member_permissions == nil and registeredCommand.userPermissions then
+				if not entry.default_member_permissions and registeredCommand.userPermissions then
 					entry.default_member_permissions =
 						builders.permission.fromPermissions(registeredCommand.userPermissions):build()
 				end
@@ -987,7 +1028,9 @@ function Commands.Prototype.registerGuildAsync(self: Commands, guildId: string):
 		end
 
 		self.logger:info(`sending {#payload} command(s) to guild '{guildId}'`)
+
 		local overwriteResult = guild:overwriteSlashCommandsAsync(payload):await()
+
 		assert(overwriteResult:isOk(), `failed to register commands: {overwriteResult:unwrapErr()}`)
 	end) :: future.FutureLike<string, nil>
 end
@@ -1001,7 +1044,9 @@ function Commands.Prototype.unregisterAsync(self: Commands): future.FutureLike<s
 	return future.Future.new(function()
 		assert(self.bot.application, "Commands:unregisterAsync() called before bot is ready - bot.application is nil")
 
-		self.bot.application:overwriteSlashCommandsAsync({}):await()
+		local overwriteResult = self.bot.application:overwriteSlashCommandsAsync({}):await()
+
+		assert(overwriteResult:isOk(), `failed to clear commands: {overwriteResult:unwrapErr()}`)
 	end) :: future.FutureLike<string, nil>
 end
 
@@ -1013,10 +1058,12 @@ end
 function Commands.Prototype.unregisterGuildAsync(self: Commands, guildId: string): future.FutureLike<string, nil>
 	return future.Future.new(function()
 		local guildResult = self.bot:getGuildAsync(guildId):await()
-		assert(guildResult:isOk(), `failed to fetch guild: {guildResult:unwrapErr()}`)
-		local guild = guildResult:unwrapOk()
 
+		assert(guildResult:isOk(), `failed to fetch guild: {guildResult:unwrapErr()}`)
+
+		local guild = guildResult:unwrapOk()
 		local overwriteResult = guild:overwriteSlashCommandsAsync({}):await()
+
 		assert(overwriteResult:isOk(), `failed to clear commands: {overwriteResult:unwrapErr()}`)
 	end) :: future.FutureLike<string, nil>
 end
@@ -1067,7 +1114,12 @@ function Commands.Interface.new(
 	end
 
 	bot.onPingInteraction:listen(function(interaction)
-		interaction:pongAsync():poll()
+		interaction
+			:pongAsync()
+			:inspectErr(function(replyError)
+				self.logger:warn(`failed to send the ping acknowledgement: {replyError}`)
+			end)
+			:poll()
 	end)
 
 	bot.onCommandInteraction:listen(function(interaction)
@@ -1088,8 +1140,6 @@ function Commands.Interface.new(
 
 	return self
 end
-
-Commands.Interface.Guards = guards
 
 type ErrorHandler = (
 	(interaction: classes.TypesCommand | classes.Component | classes.Modal, errorMessage: string) -> ()

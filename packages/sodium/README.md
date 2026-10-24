@@ -2,7 +2,7 @@
   <img src="https://raw.githubusercontent.com/DiscordLuau/docs/master/src/assets/vector.svg" alt="discord-luau" width="96" />
 </p>
 
-FFI bindings for libsodium, providing AES-256-GCM authenticated encryption, hashing, signing, and key derivation with pre-built binaries for all supported platforms.
+FFI bindings for libsodium, providing AES-256-GCM and XChaCha20-Poly1305 authenticated encryption, hashing, signing, and key derivation with pre-built binaries for all supported platforms.
 
 **Source:** [packages/sodium](https://github.com/DiscordLuau/discord-luau/tree/main/packages/sodium)
 
@@ -33,6 +33,19 @@ if sodium.aes256gcm.isAvailable() then
 
     print(buffer.tostring(decrypted))
 end
+
+-- XChaCha20-Poly1305 (no hardware requirement)
+local chachaKey = sodium.xchacha20poly1305.keygen()
+
+local chachaNonce = sodium.randombytes.buf(sodium.xchacha20poly1305.NONCE_BYTES)
+
+local chachaSealed = sodium.xchacha20poly1305.encrypt(buffer.fromstring("hello, world"), chachaKey, chachaNonce)
+
+local chachaOpened = sodium.xchacha20poly1305.decrypt(
+    chachaSealed.cipher, chachaSealed.tag, chachaKey, chachaNonce
+)
+
+print(buffer.tostring(chachaOpened))
 
 local key = sodium.secretbox.keygen()
 

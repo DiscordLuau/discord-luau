@@ -71,6 +71,10 @@ function net.socket(url: string)
 			else message.data :: string
 	end
 
+	function value.nextMessage(): (string?, boolean?)
+		return value.next()
+	end
+
 	function value.send(message: (string | buffer)?, _asBinaryMessage: boolean?)
 		if message then
 			local data = if type(message) == "buffer" then buffer.tostring(message) else message :: string

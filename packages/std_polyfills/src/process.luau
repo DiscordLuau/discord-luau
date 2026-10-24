@@ -125,6 +125,23 @@ end
 --[=[
 	@within StdPolyfills.process
 
+	Starts a program directly, without a shell, with stdout and stderr piped and stdin ignored. Only supported on Zune;
+	other runtimes raise `process.spawn is not supported on this runtime`. Raises `could not start <command>: <reason>`
+	when the program cannot start.
+]=]
+function process.spawn(command: string, arguments: { string }): Process
+	local target = runtime.assertRuntime()
+
+	if target == "Zune" then
+		return require("./zune/process").spawn(command, arguments) :: Process
+	end
+
+	error(`process.spawn is not supported on this runtime`)
+end
+
+--[=[
+	@within StdPolyfills.process
+
 	Returns the CPU architecture the current process is executing on
 ]=]
 function process.getArch(): Arch
@@ -157,6 +174,7 @@ function process.onSignal(signal: Signal, callback: () -> ())
 	end
 
 	local target = runtime.assertRuntime()
+
 	if target == "Zune" then
 		require("./zune/process").onSignal(signal, callback)
 	elseif target == "Lute" then
@@ -173,6 +191,25 @@ export type RunResult = {
 	code: number,
 	stdout: string,
 	stderr: string,
+}
+
+--[=[
+	@interface Process
+	@within StdPolyfills.process
+	.read (count: number) -> buffer? -- up to `count` bytes of stdout (at most 1024 on Zune), or nil at the end; after `kill`, a read in flight returns nil once the program writes or exits, and a new read raises
+	.wait () -> number -- the exit code
+	.exited () -> boolean
+	.kill () -> boolean -- never yields: closes stdout and stderr (a pipe with a read in flight once that read returns), so a program blocked writing to them can exit, and stops the program in the background (SIGTERM, or TerminateProcess on Windows); false when the exit was already recorded
+	.errorTail () -> string -- the last 4 KiB of stderr, then any failed background thread
+	.errorEnded () -> boolean -- true once stderr is read to its end, or its reader stopped after a kill or failed; at the end of stderr `errorTail` holds its last line, after a kill only what was read so far
+]=]
+export type Process = {
+	read: (count: number) -> buffer?,
+	wait: () -> number,
+	exited: () -> boolean,
+	kill: () -> boolean,
+	errorTail: () -> string,
+	errorEnded: () -> boolean,
 }
 
 return process

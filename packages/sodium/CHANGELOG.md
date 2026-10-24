@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- The macOS libsodium binaries (x64 and arm64) are rebuilt by `build-binaries.sh` and are reproducible: the recipe sorts libsodium's sources before it builds them, because its `build.zig` takes them in directory order, which differs between filesystems, so each machine built different bytes
+- The README mentions XChaCha20-Poly1305 and shows `xchacha20poly1305`
+
 ## 0.0.5
 
 ### Fixed

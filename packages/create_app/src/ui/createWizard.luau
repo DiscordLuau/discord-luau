@@ -1,15 +1,6 @@
 local tui = require("../../luau_packages/cli_tui")
 local StdPolyfills = require("../../luau_packages/std_polyfills")
 
-local block = tui.block
-local paragraph = tui.paragraph
-local popup = tui.popup
-local gauge = tui.gauge
-local input = tui.input
-local layout = tui.layout
-local constraint = tui.constraint
-local step = tui.step
-
 local GRAY = 245
 local WHITE = 255
 local DARK_GRAY = 238
@@ -25,26 +16,6 @@ local MIN_HEIGHT = 17
 local VALID_IDES = { vscode = true, nvim = true, zed = true }
 local VALID_RUNTIMES = { zune = true, lune = true, lute = true }
 
-type Information = {
-	ProjectName: string,
-	IDE: string,
-	Runtime: string,
-	UseGit: string,
-	License: string,
-	DiscordToken: string,
-}
-
-type Field = {
-	key: string,
-	label: string,
-	question: string,
-	mask: string?,
-	placeholder: string,
-	default: string,
-	validate: ((value: string) -> string?)?,
-	normalise: ((value: string) -> string)?,
-}
-
 local FIELDS: { Field } = {
 	{
 		key = "ProjectName",
@@ -57,10 +28,12 @@ local FIELDS: { Field } = {
 			if #value == 0 then
 				return "Project name cannot be empty."
 			end
+
 			if not string.match(value, "^[a-z0-9][a-z0-9_]*/[a-z0-9][a-z0-9_]*$") then
 				return "Project name must be in scope/project_name format using only lowercase letters, numbers, and underscores."
 			end
-			return nil
+
+			return
 		end,
 	},
 	{
@@ -77,7 +50,8 @@ local FIELDS: { Field } = {
 			if not VALID_IDES[value] then
 				return "Invalid IDE. Expected one of: vscode, nvim, zed"
 			end
-			return nil
+
+			return
 		end,
 	},
 	{
@@ -94,7 +68,8 @@ local FIELDS: { Field } = {
 			if not VALID_RUNTIMES[value] then
 				return "Invalid runtime. Expected one of: zune, lune, lute"
 			end
-			return nil
+
+			return
 		end,
 	},
 	{
@@ -106,18 +81,21 @@ local FIELDS: { Field } = {
 		default = "Yes",
 		normalise = function(value)
 			local lowercaseValue = string.lower(value)
+
 			if lowercaseValue == "y" then
 				return "Yes"
 			elseif lowercaseValue == "n" then
 				return "No"
 			end
+
 			return value
 		end,
 		validate = function(value)
 			if value ~= "Yes" and value ~= "No" then
 				return 'Expected "Yes" or "No" (or "y" / "n").'
 			end
-			return nil
+
+			return
 		end,
 	},
 	{
@@ -139,7 +117,8 @@ local FIELDS: { Field } = {
 			if not string.match(value, "^[A-Za-z0-9_%-]+%.[A-Za-z0-9_%-]+%.[A-Za-z0-9_%-]+$") then
 				return "Discord token is invalid. Expected format: XXXXX.XXXXX.XXXXX"
 			end
-			return nil
+
+			return
 		end,
 	},
 }
@@ -149,23 +128,54 @@ local PREREQUISITES = {
 	{ name = "pesde", url = "https://pesde.dev" },
 }
 
+local block = tui.block
+local paragraph = tui.paragraph
+local popup = tui.popup
+local gauge = tui.gauge
+local input = tui.input
+local layout = tui.layout
+local constraint = tui.constraint
+local step = tui.step
+
 local function buildSidebarText(activeIndex: number, allDone: boolean): string
 	local lines = {}
 
-	for i, field in FIELDS do
+	for index, field in FIELDS do
 		local prefix
-		if allDone or i < activeIndex then
+
+		if allDone or index < activeIndex then
 			prefix = "✓ "
-		elseif i == activeIndex then
+		elseif index == activeIndex then
 			prefix = "▶ "
 		else
 			prefix = "  "
 		end
+
 		table.insert(lines, prefix .. field.label)
 	end
 
 	return table.concat(lines, "\n")
 end
+
+type Information = {
+	ProjectName: string,
+	IDE: string,
+	Runtime: string,
+	UseGit: string,
+	License: string,
+	DiscordToken: string,
+}
+
+type Field = {
+	key: string,
+	label: string,
+	question: string,
+	mask: string?,
+	placeholder: string,
+	default: string,
+	validate: ((value: string) -> string?)?,
+	normalise: ((value: string) -> string)?,
+}
 
 return function(onBuild: (
 	info: Information,
@@ -200,9 +210,7 @@ return function(onBuild: (
 
 	local state = if allPrerequisitesMet then "wizard" else "prereqs"
 	local running = true
-
-	local information: Information? = nil
-
+	local information: Information?
 	local buildProgress = 0.0
 	local progressTarget = 0.0
 	local statusMessage = "Setting up…"
@@ -211,7 +219,6 @@ return function(onBuild: (
 	local buildError: string?
 	local buildWarning: string?
 	local loadingFrames = 0
-
 	local validationError: string?
 
 	local function setStatus(msg: string, progress: number)
@@ -238,8 +245,10 @@ return function(onBuild: (
 
 		if field.validate then
 			local exception = field.validate(texts[fieldIndex])
+
 			if exception then
 				validationError = exception
+
 				return
 			end
 		end
@@ -248,9 +257,11 @@ return function(onBuild: (
 			fieldIndex += 1
 		else
 			local result: { [string]: string } = {}
-			for i, currentField in FIELDS do
-				result[currentField.key] = texts[i]
+
+			for index, currentField in FIELDS do
+				result[currentField.key] = texts[index]
 			end
+
 			information = result :: Information
 
 			state = "confirm"
@@ -258,131 +269,141 @@ return function(onBuild: (
 	end
 
 	StdPolyfills.task.spawn(function()
-		while running do
-			local character = StdPolyfills.io.stdinRead(1)
-			if not character or #character == 0 then
-				StdPolyfills.task.wait(0.01)
-				continue
-			end
+		local inputSucceeded, inputError = xpcall(function()
+			while running do
+				local character = StdPolyfills.io.stdinRead(1)
 
-			if character == "\3" then
-				running = false
-				continue
-			end
+				if not character or #character == 0 then
+					StdPolyfills.task.wait(0.01)
+					continue
+				end
 
-			if state == "done" or state == "error" then
-				running = false
-				continue
-			end
-
-			if state == "prereqs" then
-				if allPrerequisitesMet then
-					state = "wizard"
-				else
+				if character == "\3" then
 					running = false
+					continue
 				end
-				continue
-			end
 
-			if validationError ~= nil then
-				if character ~= "\27" then
-					validationError = nil
+				if state == "done" or state == "error" then
+					running = false
+					continue
 				end
-				continue
-			end
 
-			if character == "\27" then
-				local nextEscapeCharacter = StdPolyfills.io.stdinRead(1)
+				if state == "prereqs" then
+					if allPrerequisitesMet then
+						state = "wizard"
+					else
+						running = false
+					end
 
-				if nextEscapeCharacter == "[" then
-					local escapeCode = StdPolyfills.io.stdinRead(1)
+					continue
+				end
 
-					if state == "wizard" then
-						if escapeCode == "C" then
-							if cursors[fieldIndex] <= #texts[fieldIndex] then
-								cursors[fieldIndex] += 1
+				if validationError then
+					if character ~= "\27" then
+						validationError = nil
+					end
+
+					continue
+				end
+
+				if character == "\27" then
+					local nextEscapeCharacter = StdPolyfills.io.stdinRead(1)
+
+					if nextEscapeCharacter == "[" then
+						local escapeCode = StdPolyfills.io.stdinRead(1)
+
+						if state == "wizard" then
+							if escapeCode == "C" then
+								if cursors[fieldIndex] <= #texts[fieldIndex] then
+									cursors[fieldIndex] += 1
+								end
+							elseif escapeCode == "D" then
+								if cursors[fieldIndex] > 1 then
+									cursors[fieldIndex] -= 1
+								end
+							elseif escapeCode == "A" then
+								if fieldIndex > 1 then
+									fieldIndex -= 1
+									cursors[fieldIndex] = #texts[fieldIndex] + 1
+								end
+							elseif escapeCode == "B" then
+								advanceField()
 							end
-						elseif escapeCode == "D" then
-							if cursors[fieldIndex] > 1 then
-								cursors[fieldIndex] -= 1
-							end
-						elseif escapeCode == "A" then
-							if fieldIndex > 1 then
-								fieldIndex -= 1
-								cursors[fieldIndex] = #texts[fieldIndex] + 1
-							end
-						elseif escapeCode == "B" then
-							advanceField()
+						elseif state == "confirm" and escapeCode == "A" then
+							state = "wizard"
+							fieldIndex = #FIELDS
 						end
-					elseif state == "confirm" and escapeCode == "A" then
+					end
+
+					continue
+				end
+
+				if state == "confirm" then
+					local lowercaseCharacter = string.lower(character)
+
+					if lowercaseCharacter == "y" then
+						state = "loading"
+
+						StdPolyfills.task.spawn(function()
+							local buildSucceeded, buildResult =
+								pcall(onBuild, information :: Information, setStatus, setWarning)
+
+							if buildSucceeded then
+								buildPath = buildResult :: string
+							else
+								buildError = tostring(buildResult)
+							end
+
+							buildDone = true
+						end)
+					elseif lowercaseCharacter == "n" then
 						state = "wizard"
 						fieldIndex = #FIELDS
 					end
+
+					continue
 				end
 
-				continue
-			end
-
-			if state == "confirm" then
-				local lowercaseCharacter = string.lower(character)
-
-				if lowercaseCharacter == "y" then
-					state = "loading"
-
-					StdPolyfills.task.spawn(function()
-						local buildSucceeded, buildResult =
-							pcall(onBuild, information :: Information, setStatus, setWarning)
-
-						if buildSucceeded then
-							buildPath = buildResult :: string
-						else
-							buildError = tostring(buildResult)
-						end
-
-						buildDone = true
-					end)
-				elseif lowercaseCharacter == "n" then
-					state = "wizard"
-					fieldIndex = #FIELDS
+				if state ~= "wizard" then
+					continue
 				end
 
-				continue
-			end
+				if character == "\r" or character == "\n" then
+					advanceField()
 
-			if state ~= "wizard" then
-				continue
-			end
+					continue
+				end
 
-			if character == "\r" or character == "\n" then
-				advanceField()
+				if character == "\127" or character == "\8" then
+					local currentText = texts[fieldIndex]
+					local currentCursor = cursors[fieldIndex]
 
-				continue
-			end
+					if currentCursor > 1 then
+						texts[fieldIndex] = string.sub(currentText, 1, currentCursor - 2)
+							.. string.sub(currentText, currentCursor)
+						cursors[fieldIndex] = currentCursor - 1
+					end
 
-			if character == "\127" or character == "\8" then
-				local currentText = texts[fieldIndex]
-				local currentCursor = cursors[fieldIndex]
+					continue
+				end
 
-				if currentCursor > 1 then
-					texts[fieldIndex] = string.sub(currentText, 1, currentCursor - 2)
+				local characterByte = string.byte(character)
+
+				if characterByte >= 32 and characterByte < 127 then
+					local currentText = texts[fieldIndex]
+					local currentCursor = cursors[fieldIndex]
+
+					texts[fieldIndex] = string.sub(currentText, 1, currentCursor - 1)
+						.. character
 						.. string.sub(currentText, currentCursor)
-					cursors[fieldIndex] = currentCursor - 1
+					cursors[fieldIndex] = currentCursor + 1
 				end
-
-				continue
 			end
+		end, debug.traceback)
 
-			local characterByte = string.byte(character)
-
-			if characterByte >= 32 and characterByte < 127 then
-				local currentText = texts[fieldIndex]
-				local currentCursor = cursors[fieldIndex]
-
-				texts[fieldIndex] = string.sub(currentText, 1, currentCursor - 1)
-					.. character
-					.. string.sub(currentText, currentCursor)
-				cursors[fieldIndex] = currentCursor + 1
-			end
+		if not inputSucceeded then
+			buildError = `input handling failed: {inputError}`
+			running = false
 		end
 	end)
 
@@ -412,6 +433,7 @@ return function(onBuild: (
 					)
 					:setAlignment("center")
 					:setStyle(RED)
+
 				return { { widget = tooSmallText, area = fullArea } }
 			end))
 			StdPolyfills.task.wait(0.05)
@@ -424,29 +446,24 @@ return function(onBuild: (
 				:setDirection("vertical")
 				:setConstraints({ constraint.length(3), constraint.fill(1), constraint.length(3) })
 				:split(fullArea)
-
 			local headerArea = outerLayout[1]
 			local bodyArea = outerLayout[2]
 			local footerArea = outerLayout[3]
-
 			local headerBlock = block
 				.new()
 				:setBorders({ top = true, bottom = true, left = true, right = true })
 				:setBorderSet("rounded")
 				:setBorderForegroundColor(BLURPLE)
-
 			local headerText = paragraph
 				.new()
 				:setText("✦  discord-luau  ·  create a new project  ✦")
 				:setAlignment("center")
 				:setStyle(WHITE)
-
 			local footerBlock = block
 				.new()
 				:setBorders({ top = true, bottom = true, left = true, right = true })
 				:setBorderSet("rounded")
 				:setBorderForegroundColor(GRAY)
-
 			local footerHint = if state == "prereqs"
 				then if allPrerequisitesMet
 					then "Press any key to continue  ·  Ctrl+C  cancel"
@@ -457,9 +474,7 @@ return function(onBuild: (
 				elseif state == "confirm" then '"y"  confirm  ·  "n"  go back  ·  Ctrl+C  cancel'
 				elseif state == "loading" then "Building your project, please wait…"
 				else "Press any key to exit"
-
 			local footerText = paragraph.new():setText(footerHint):setAlignment("center"):setStyle(GRAY)
-
 			local widgets: { any } = {
 				{ widget = headerBlock, area = headerArea },
 				{ widget = headerText, area = headerBlock:inner(headerArea) },
@@ -469,7 +484,6 @@ return function(onBuild: (
 
 			if state == "prereqs" then
 				local borderColor = if allPrerequisitesMet then GREEN else RED
-
 				local prerequisitesBlock = block
 					.new()
 					:setBorders({ top = true, bottom = true, left = true, right = true })
@@ -477,15 +491,17 @@ return function(onBuild: (
 					:setBorderForegroundColor(borderColor)
 					:addTitle({ text = " Prerequisites ", alignment = "center" })
 					:setPadding({ left = 3, right = 3, top = 1, bottom = 1 })
-
 				local lines = {}
+
 				for _, tool in PREREQUISITES do
 					local isInstalled = toolStatus[tool.name]
 					local prefix = if isInstalled then "✓  " else "✗  "
 					local status = if isInstalled then "installed" else `not found  -  install from: {tool.url}`
 					table.insert(lines, prefix .. tool.name .. string.rep(" ", math.max(1, 10 - #tool.name)) .. status)
 				end
+
 				table.insert(lines, "")
+
 				if allPrerequisitesMet then
 					table.insert(lines, "All prerequisites met.  Press any key to begin.")
 				else
@@ -503,23 +519,19 @@ return function(onBuild: (
 				table.insert(widgets, { widget = prerequisitesText, area = prerequisitesBlock:inner(bodyArea) })
 			elseif state == "wizard" or state == "confirm" then
 				local isConfirmStep = state == "confirm"
-
 				local bodyLayout = layout
 					.new()
 					:setDirection("horizontal")
 					:setConstraints({ constraint.length(SIDEBAR_WIDTH), constraint.fill(1) })
 					:split(bodyArea)
-
 				local sidebarArea = bodyLayout[1]
 				local mainArea = bodyLayout[2]
-
 				local sidebarBlock = block
 					.new()
 					:setBorders({ top = true, bottom = true, left = true, right = true })
 					:setBorderSet("rounded")
 					:setBorderForegroundColor(GRAY)
 					:addTitle({ text = " Steps ", alignment = "center" })
-
 				local sidebarText = paragraph.new():setText(buildSidebarText(fieldIndex, isConfirmStep)):setStyle(GRAY)
 
 				table.insert(widgets, { widget = sidebarBlock, area = sidebarArea })
@@ -536,17 +548,14 @@ return function(onBuild: (
 						alignment = "left",
 					})
 					:setPadding({ left = 3, right = 3, top = 1, bottom = 1 })
-
 				local panelInnerArea = panelBlock:inner(mainArea)
 				local panelInnerLayout = layout
 					.new()
 					:setDirection("vertical")
 					:setConstraints({ constraint.fill(1), constraint.length(3) })
 					:split(panelInnerArea)
-
 				local questionText =
 					paragraph.new():setText(FIELDS[displayFieldIndex].question):setStyle(WHITE):setWrap(true)
-
 				local fieldInput = input
 					.new()
 					:setText(texts[displayFieldIndex])
@@ -580,18 +589,20 @@ return function(onBuild: (
 						:setBorderForegroundColor(BLURPLE)
 						:addTitle({ text = " Confirm Details ", alignment = "center" })
 						:setPadding({ left = 2, right = 2, top = 1, bottom = 1 })
-
 					local confirmPopupArea = confirmPopup:area(bodyArea)
-
 					local lines = {}
-					for i, field in FIELDS do
-						local value = texts[i]
+
+					for index, field in FIELDS do
+						local value = texts[index]
+
 						if field.mask then
 							value = string.rep("●", #value)
 						end
+
 						local pad = string.rep(" ", math.max(1, 16 - #field.label))
 						table.insert(lines, field.label .. pad .. value)
 					end
+
 					table.insert(lines, "")
 					table.insert(lines, `  "y"  confirm    "n"  go back`)
 
@@ -601,7 +612,7 @@ return function(onBuild: (
 					table.insert(widgets, { widget = confirmText, area = confirmPopup:inner(confirmPopupArea) })
 				end
 
-				if validationError ~= nil then
+				if validationError then
 					local validationErrorPopup = popup
 						.new()
 						:setWidth(60)
@@ -610,9 +621,7 @@ return function(onBuild: (
 						:setBorderForegroundColor(RED)
 						:addTitle({ text = " Invalid Input ", alignment = "center" })
 						:setPadding({ left = 2, right = 2, top = 1, bottom = 1 })
-
 					local validationErrorArea = validationErrorPopup:area(bodyArea)
-
 					local validationErrorText = paragraph
 						.new()
 						:setText(validationError .. "\n\nPress any key to continue.")
@@ -633,7 +642,6 @@ return function(onBuild: (
 					:setBorderForegroundColor(BLUE)
 					:addTitle({ text = " Building Project ", alignment = "center" })
 					:setPadding({ left = 3, right = 3, top = 1, bottom = 1 })
-
 				local loadingInnerArea = loadingBlock:inner(bodyArea)
 				local loadingLayout = layout
 					.new()
@@ -645,7 +653,6 @@ return function(onBuild: (
 						constraint.fill(1),
 					})
 					:split(loadingInnerArea)
-
 				local percent = math.floor(buildProgress * 100)
 				local loadingGauge = gauge
 					.new()
@@ -660,7 +667,6 @@ return function(onBuild: (
 							:setBorderSet("rounded")
 							:setBorderForegroundColor(BLUE)
 					)
-
 				local statusText = paragraph
 					.new()
 					:setText(if buildDone then "Finalising…" else statusMessage)
@@ -673,7 +679,6 @@ return function(onBuild: (
 			else
 				local isErrorState = state == "error"
 				local borderColor = if isErrorState then RED else GREEN
-
 				local completionBlock = block
 					.new()
 					:setBorders({ top = true, bottom = true, left = true, right = true })
@@ -681,14 +686,12 @@ return function(onBuild: (
 					:setBorderForegroundColor(borderColor)
 					:addTitle({ text = if isErrorState then " Error " else " Done! ", alignment = "center" })
 					:setPadding({ left = 3, right = 3, top = 1, bottom = 1 })
-
 				local completionContent = if isErrorState
 					then `✗  An error occurred:\n\n{buildError or "unknown error"}`
 					else `✓  Project created successfully!\n\n`
 						.. `Location    {buildPath}\n\n`
 						.. `Documentation and guides:\n`
 						.. `https://discordluau.devcomp.xyz/`
-
 				local completionText = paragraph
 					.new()
 					:setText(completionContent)
@@ -717,6 +720,7 @@ return function(onBuild: (
 			"\27[1;31m─────────────────────────────────────────────────────\27[0m\n\n"
 		)
 	end
+
 	if buildWarning then
 		StdPolyfills.io.stderrWrite(
 			"\n\27[1;33m── Warning ──────────────────────────────────────────\27[0m\n"

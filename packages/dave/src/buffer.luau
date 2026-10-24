@@ -52,15 +52,12 @@ end
 
 --[=[
 	@within Dave.Buffer
-]=]
-local function readRawU64(value: any): number
-	if type(value) == "number" then
-		return value
-	end
 
-	local rawBuffer = value :: buffer
-	local low = buffer.readu32(rawBuffer, 0)
-	local high = buffer.readu32(rawBuffer, 4)
+	Reads a u64 as Zune hands it over (an 8-byte little-endian buffer, from a native return or `readu64`) as a number.
+]=]
+local function readRawU64(value: buffer): number
+	local low = buffer.readu32(value, 0)
+	local high = buffer.readu32(value, 4)
 
 	return high * 4294967296 + low
 end
@@ -81,19 +78,58 @@ end
 
 --[=[
 	@within Dave.Buffer
+	@private
+
+	Returns whether `pointer` holds address 0, read back through a scratch slot.
+]=]
+local function isNull(pointer: FFIPointer): boolean
+	local slot = allocateSlot()
+
+	slot:writeptr(0, pointer)
+
+	local address = readSizeT(slot)
+
+	ffi.free(slot)
+
+	return address == 0
+end
+
+--[=[
+	@within Dave.Buffer
+
+	Makes a pointer libdave handed back, as a return value or through an out slot, safe to use. Returns nil for NULL
+	and leaves it untagged, because Zune shares one null object between every library in the process. Otherwise it
+	sets the pointer's tag to `handleType`'s, or clears it for raw memory: Zune keeps one object per address, and an
+	address libdave freed and handed out again still carries the tag of whatever lived there before.
+]=]
+local function adopt(pointer: FFIPointer, handleType: FFIPointerType?): FFIPointer?
+	if isNull(pointer) then
+		return
+	end
+
+	local tag = if handleType then handleType:tag() else 0
+	local adopted = pointer:tag(tag)
+
+	assert(adopted, "libdave returned a pointer Zune no longer tracks")
+
+	return adopted
+end
+
+--[=[
+	@within Dave.Buffer
 ]=]
 local function readLibBytes(dataSlot: FFIPointer, lengthSlot: FFIPointer): buffer
 	local length = readSizeT(lengthSlot)
-	local dataPointer = dataSlot:readptr(0)
+	local dataPointer = adopt(dataSlot:readptr(0))
+	local result = buffer.create(if dataPointer then length else 0)
 
-	if length == 0 then
-		Sys.lib.daveFree(dataPointer)
-		return buffer.create(0)
+	if dataPointer and length > 0 then
+		dataPointer:read(0, result, 0, length)
 	end
 
-	local result = buffer.create(length)
-	dataPointer:read(0, result, 0, length)
-	Sys.lib.daveFree(dataPointer)
+	if dataPointer then
+		Sys.lib.daveFree(dataPointer)
+	end
 
 	return result
 end
@@ -185,17 +221,19 @@ end
 	@within Dave.Buffer
 ]=]
 local function readU64ArrayAndFree(pointerSlot: FFIPointer, lengthSlot: FFIPointer): { string }
-	local count = readSizeT(lengthSlot)
-	local dataPointer = pointerSlot:readptr(0)
+	local dataPointer = adopt(pointerSlot:readptr(0))
+	local count = if dataPointer then readSizeT(lengthSlot) else 0
 	local results = table.create(count)
 
-	for index = 0, count - 1 do
-		local idBuffer = buffer.create(8)
-		dataPointer:read(index * 8, idBuffer, 0, 8)
-		results[index + 1] = bufferToU64String(idBuffer)
-	end
+	if dataPointer then
+		for index = 0, count - 1 do
+			local idBuffer = buffer.create(8)
+			dataPointer:read(index * 8, idBuffer, 0, 8)
+			results[index + 1] = bufferToU64String(idBuffer)
+		end
 
-	Sys.lib.daveFree(dataPointer)
+		Sys.lib.daveFree(dataPointer)
+	end
 
 	return results
 end
@@ -228,6 +266,7 @@ return {
 	toCString = toCString,
 	fromCString = fromCString,
 	allocateSlot = allocateSlot,
+	adopt = adopt,
 	readRawU64 = readRawU64,
 	readSizeT = readSizeT,
 	readU64AtOffset = readU64AtOffset,

@@ -85,3 +85,11 @@ jobs:
         run: zune run .github/scripts/seedBinaryCache.luau
       - name: Run unit-tests
         run: zune run .zune/test.luau
+      - name: Run the std_polyfills tests on Zune's epoll backend
+        run: zune run .zune/test.luau packages/std_polyfills
+        env:
+          ZUNE_ASYNC_BACKEND: epoll
+      - name: Run the audio tests on Zune's epoll backend
+        run: zune run .zune/test.luau packages/audio
+        env:
+          ZUNE_ASYNC_BACKEND: epoll

@@ -592,7 +592,6 @@ Bot.Prototype = {}
 function Bot.Prototype.queryGatewayInformation(self: Bot): future.FutureLike<string, apiTypes.GetGatewayBotResponse>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
-
 		local response = rest.gateway.getGatewayBotAsync(request):await()
 
 		assert(response:isOk(), `{response:unwrapErr()}`)
@@ -618,7 +617,7 @@ function Bot.Prototype.connectAsync(self: Bot): future.FutureLike<string, nil>
 		local gatewayInformation = self:queryGatewayInformation():await()
 
 		if not gatewayInformation:isOk() then
-			self.logger:emergency(`Failed to retrieve gateway information: {gatewayInformation:unwrapErr()}`)
+			self.logger:warn(`Failed to retrieve gateway information: {gatewayInformation:unwrapErr()}`)
 
 			error(gatewayInformation:unwrapErr())
 		end
@@ -631,6 +630,7 @@ function Bot.Prototype.connectAsync(self: Bot): future.FutureLike<string, nil>
 			self.user = user
 
 			self.state:setApplicationId(application.id)
+			self.state:setUserId(user.id)
 
 			self.onAllShardsReady:invoke()
 		end)
@@ -1024,9 +1024,9 @@ function Bot.Prototype.connectAsync(self: Bot): future.FutureLike<string, nil>
 				})
 			elseif object.event == apiTypes.gateway.receiveEvents["ThreadListSync"] then
 				local typedObject = object.payload :: apiTypes.ThreadListSyncPayload
-
 				local threadMemberArray = {}
-				for _, memberData in next, typedObject.d.members or {} do
+
+				for _, memberData in (typedObject.d.members or {}) :: { apiTypes.ThreadMemberObject } do
 					table.insert(
 						threadMemberArray,
 						classes.threadMember.new(self.state, typedObject.d.guild_id, memberData)
@@ -1047,9 +1047,9 @@ function Bot.Prototype.connectAsync(self: Bot): future.FutureLike<string, nil>
 				})
 			elseif object.event == apiTypes.gateway.receiveEvents["ThreadMembersUpdate"] then
 				local typedObject = object.payload :: apiTypes.ThreadMembersUpdatePayload
-
 				local addedMembersArray = {}
-				for _, memberData in next, typedObject.d.added_members or {} do
+
+				for _, memberData in (typedObject.d.added_members or {}) :: { apiTypes.ThreadMemberObject } do
 					table.insert(
 						addedMembersArray,
 						classes.threadMember.new(self.state, typedObject.d.guild_id, memberData)
@@ -1081,9 +1081,9 @@ function Bot.Prototype.connectAsync(self: Bot): future.FutureLike<string, nil>
 				self.onGuildAuditLogEntryCreate:invoke(classes.auditlog.entry.new(typedObject.d))
 			elseif object.event == apiTypes.gateway.receiveEvents["GuildEmojisUpdate"] then
 				local typedObject = object.payload :: apiTypes.GuildEmojisUpdatePayload
-
 				local emojiArray = {}
-				for _, emojiData in next, typedObject.d.emojis do
+
+				for _, emojiData in typedObject.d.emojis do
 					table.insert(emojiArray, classes.emoji.new(emojiData))
 				end
 
@@ -1093,9 +1093,9 @@ function Bot.Prototype.connectAsync(self: Bot): future.FutureLike<string, nil>
 				})
 			elseif object.event == apiTypes.gateway.receiveEvents["GuildStickersUpdate"] then
 				local typedObject = object.payload :: apiTypes.GuildStickersUpdatePayload
-
 				local stickerArray = {}
-				for _, stickerData in next, typedObject.d.stickers do
+
+				for _, stickerData in typedObject.d.stickers do
 					table.insert(stickerArray, classes.sticker.new(stickerData))
 				end
 
@@ -1250,9 +1250,9 @@ function Bot.Prototype.connectAsync(self: Bot): future.FutureLike<string, nil>
 				})
 			elseif object.event == apiTypes.gateway.receiveEvents["GuildMembersChunk"] then
 				local typedObject = object.payload :: apiTypes.GuildMembersChunkPayload
-
 				local membersArray: { classes.GuildMember } = {}
-				for _, memberData in next, typedObject.d.members do
+
+				for _, memberData in typedObject.d.members do
 					table.insert(membersArray, classes.guild.member.new(self.state, typedObject.d.guild_id, memberData))
 				end
 
@@ -1320,9 +1320,9 @@ function Bot.Prototype.connectAsync(self: Bot): future.FutureLike<string, nil>
 				})
 			elseif object.event == apiTypes.gateway.receiveEvents["GuildSoundboardSoundsUpdate"] then
 				local typedObject = object.payload :: apiTypes.GuildSoundboardSoundsUpdatePayload
-
 				local soundboardSounds = {}
-				for _, soundData in next, typedObject.d.soundboard_sounds do
+
+				for _, soundData in typedObject.d.soundboard_sounds do
 					table.insert(soundboardSounds, classes.soundboard.sound.new(soundData))
 				end
 
@@ -1350,13 +1350,16 @@ function Bot.Prototype.connectAsync(self: Bot): future.FutureLike<string, nil>
 			stdPolyfills.process.onSignal("INT", function()
 				self.logger:info("SIGINT received - shutting down voice and gateway connections")
 
-				for channelId, connection in self.state.voiceConnections do
-					self.logger:info(`disconnecting voice connection for channel {channelId}`)
-					connection:forceClose()
+				for guildId, connection in self.state.voiceConnections do
+					self.logger:info(`destroying the voice connection for guild {guildId}`)
+					connection:destroy()
 				end
-				table.clear(self.state.voiceConnections)
 
-				for _, shard in next, self.state.webSocketManager.shards do
+				local shards = self.state.webSocketManager.shards
+
+				for shardIndex in shards do
+					local shard = shards[shardIndex]
+
 					self.logger:info(`disconnecting shard '{shard.shardId}'`)
 					shard:forceClose()
 				end
@@ -1367,10 +1370,9 @@ function Bot.Prototype.connectAsync(self: Bot): future.FutureLike<string, nil>
 			)
 		end
 
-		self.state.webSocketManager:connectAsync(gatewayInformation:unwrapOk()):poll()
-		self.state.webSocketManager.onConnected:wait()
+		local connected = self.state.webSocketManager:connectAsync(gatewayInformation:unwrapOk()):await()
 
-		return nil
+		assert(connected:isOk(), `failed to connect to the gateway: {connected:unwrapErr()}`)
 	end) :: future.FutureLike<string, nil>
 end
 
@@ -1384,13 +1386,13 @@ function Bot.Prototype.listDefaultSoundboardSoundsAsync(
 ): future.FutureLike<string, { classes.SoundboardSound }>
 	return future.Future.new(function()
 		local request = self.state.rest:newRequest()
-
 		local response = rest.guild.listDefaultSoundboardSoundsAsync(request):await()
 
 		assert(response:isOk(), `{response:unwrapErr()}`)
 
 		local sounds = {}
-		for _, soundData in next, response:unwrapOk() do
+
+		for _, soundData in response:unwrapOk() do
 			table.insert(sounds, classes.soundboard.sound.new(soundData))
 		end
 
@@ -1417,7 +1419,6 @@ function Bot.Prototype.getGuildAsync(
 		end
 
 		local request = self.state.rest:newRequest()
-
 		local response = rest.guild
 			.getGuildAsync(request, guildId, {
 				withCounts = withCount,
@@ -1447,7 +1448,6 @@ function Bot.Prototype.getChannelAsync<T>(self: Bot, channelId: string): future.
 		end
 
 		local request = self.state.rest:newRequest()
-
 		local response = rest.channel.getChannelAsync(request, channelId):await()
 
 		assert(response:isOk(), `{response:unwrapErr()}`)
@@ -1625,7 +1625,6 @@ function Bot.Prototype.getUserAsync(self: Bot, userId: string): future.FutureLik
 		end
 
 		local request = self.state.rest:newRequest()
-
 		local response = rest.user.getUserAsync(request, userId):await()
 
 		assert(response:isOk(), `{response:unwrapErr()}`)

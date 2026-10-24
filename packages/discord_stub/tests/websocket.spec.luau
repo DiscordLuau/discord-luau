@@ -289,6 +289,54 @@ return function()
 			check.equal(stub.webSocketServer, nil)
 		end)
 
+		test.case("an undecodable client message lands in handlerErrors", function()
+			local stub = discordStub.new({ clock = "virtual" })
+			local ws = stub:createWebsocketServer()
+			local result = stub:runScenario(function()
+				local received = {}
+				local socket = connect(ws.url, received, {})
+
+				assert(
+					stub.clock:waitFor(function()
+						return findOp(received, 10)
+					end, 30),
+					"no Hello"
+				)
+
+				socket:send("this is not json")
+
+				assert(
+					stub.clock:waitFor(function()
+						return #ws.handlerErrors == 1
+					end, 30),
+					"the undecodable message was not recorded"
+				)
+			end)
+
+			check.is_true(string.find(tostring(result), "undecodable gateway message", 1, true) ~= nil)
+			check.equal(#ws.handlerErrors, 1)
+		end)
+
+		test.case("an error raised by a socket callback lands in handlerErrors", function()
+			local stub = discordStub.new({ clock = "virtual" })
+			local ws = stub:createWebsocketServer()
+			local result = stub:runScenario(function()
+				ws.heartbeatIntervalMilliseconds = (function() end) :: any
+
+				connect(ws.url, {}, {})
+
+				assert(
+					stub.clock:waitFor(function()
+						return #ws.handlerErrors >= 1
+					end, 30),
+					"the callback error was not recorded"
+				)
+			end)
+
+			check.not_nil(result)
+			check.not_nil(ws.handlerErrors[1])
+		end)
+
 		test.case("Resume replays missed dispatches after seq then RESUMED, and never READY or RESUMED", function()
 			local stub = discordStub.new({ clock = "virtual" })
 			local ws = stub:createWebsocketServer()

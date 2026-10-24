@@ -3,13 +3,20 @@ local HttpService = game:GetService("HttpService")
 
 local net = {}
 
-local function urlEncodeChar(character: string): string
-	return string.format("%%%02X", string.byte(character))
+--[=[
+	@within StdPolyfills.net
+	@private
+
+	Resumes `co` on the next scheduler step if it is still waiting; a socket event can arrive after the waiter has moved on.
+]=]
+local function wakeIfSuspended(co: thread)
+	if coroutine.status(co) == "suspended" then
+		task.defer(co)
+	end
 end
 
--- HttpService:UrlEncode only encodes individual values, not full URLs; manual encoding handles raw strings
-function net.urlEncode(url: string, _binary: boolean?): string
-	return (string.gsub(url, "[^%w%-%.%_%~]", urlEncodeChar))
+local function urlEncodeChar(character: string): string
+	return string.format("%%%02X", string.byte(character))
 end
 
 local function buildQueryString(query: { [string]: string | { string } }): string
@@ -26,6 +33,11 @@ local function buildQueryString(query: { [string]: string | { string } }): strin
 	end
 
 	return table.concat(parts, "&")
+end
+
+-- HttpService:UrlEncode only encodes individual values, not full URLs; manual encoding handles raw strings
+function net.urlEncode(url: string, _binary: boolean?): string
+	return (string.gsub(url, "[^%w%-%.%_%~]", urlEncodeChar))
 end
 
 function net.request(config: string | {
@@ -90,15 +102,13 @@ function net.socket(url: string)
 	local messageQueue: { string } = {}
 	local receiveWaiter: thread? = nil
 	local isOpen = false
-
 	local value = { closeCode = nil :: number? }
-
 	local ws = HttpService:CreateWebStreamClient(Enum.WebStreamClientType.WebSocket, {
 		Url = url,
 	})
-
 	local connectWaiter: thread? = coroutine.running()
 	local connectError: string? = nil
+	local socketError: string? = nil
 
 	ws.Opened:Connect(function(_statusCode: number, _headers: { [string]: string })
 		isOpen = true
@@ -106,7 +116,8 @@ function net.socket(url: string)
 		if connectWaiter then
 			local co = connectWaiter
 			connectWaiter = nil
-			task.defer(co)
+
+			wakeIfSuspended(co)
 		end
 	end)
 
@@ -116,17 +127,18 @@ function net.socket(url: string)
 		if receiveWaiter then
 			local co = receiveWaiter
 			receiveWaiter = nil
-			task.defer(co)
+
+			wakeIfSuspended(co)
 		end
 	end)
 
 	ws.Closed:Connect(function()
 		if connectWaiter then
-			connectError = `WebSocket closed before opening: {url}`
-
 			local co = connectWaiter
+
+			connectError = `WebSocket closed before opening: {url}`
 			connectWaiter = nil
-			task.defer(co)
+			wakeIfSuspended(co)
 		end
 
 		isOpen = false
@@ -134,25 +146,30 @@ function net.socket(url: string)
 		if receiveWaiter then
 			local co = receiveWaiter
 			receiveWaiter = nil
-			task.defer(co)
+
+			wakeIfSuspended(co)
 		end
 	end)
 
 	ws.Error:Connect(function(statusCode: number, errorMessage: string)
-		if connectWaiter then
-			connectError = `WebSocket error {statusCode}: {errorMessage}`
+		local description = `WebSocket error {statusCode}: {errorMessage}`
 
+		if connectWaiter then
 			local co = connectWaiter
+
+			connectError = description
 			connectWaiter = nil
-			task.defer(co)
+			wakeIfSuspended(co)
 		end
 
+		socketError = description
 		isOpen = false
 
 		if receiveWaiter then
 			local co = receiveWaiter
 			receiveWaiter = nil
-			task.defer(co)
+
+			wakeIfSuspended(co)
 		end
 	end)
 
@@ -163,19 +180,40 @@ function net.socket(url: string)
 		error(connectError)
 	end
 
+	local function raiseSocketError()
+		if socketError then
+			local description = socketError
+
+			socketError = nil
+			error(description)
+		end
+	end
+
 	function value.next(): string?
 		if #messageQueue > 0 then
 			return table.remove(messageQueue, 1)
 		end
 
 		if not isOpen then
-			return nil
+			raiseSocketError()
+
+			return
 		end
 
 		receiveWaiter = coroutine.running()
 		coroutine.yield()
 
-		return table.remove(messageQueue, 1)
+		local message = table.remove(messageQueue, 1)
+
+		if not message then
+			raiseSocketError()
+		end
+
+		return message
+	end
+
+	function value.nextMessage(): (string?, boolean?)
+		return value.next()
 	end
 
 	function value.send(message: (string | buffer)?, _asBinaryMessage: boolean?)

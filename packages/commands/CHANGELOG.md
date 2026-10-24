@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- `registerAsync` and `unregisterAsync` now return an Err when Discord rejects the command overwrite instead of resolving Ok
+- Failed interaction replies (permission, cooldown and concurrency denials, guard denials, error replies and ping acknowledgements) are logged at warn instead of vanishing
+- The default help command's failed replies now surface through the dispatcher's warning
+- The loader's watch now warns, naming the file and error, when a newly created command file fails to require, its factory throws, or it has the wrong shape, and includes the error when a directory cannot be read
+- Hot reload warns instead of escaping into the file watcher when writing or removing its temporary file fails
+
 ## 0.0.3
 
 ### Changed

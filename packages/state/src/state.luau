@@ -23,6 +23,27 @@
 ]=]
 
 --[=[
+	@prop userId string
+	@within State.State
+
+	The bot's own user ID, set from READY; voice connections identify with it. Empty until READY.
+]=]
+
+--[=[
+	@prop logger logger.Logger
+	@within State.State
+
+	The shared state's logger, for packages without their own.
+]=]
+
+--[=[
+	@prop voiceConnections { [string]: voice.Connection }
+	@within State.State
+
+	The bot's voice connection in each guild, keyed by guild ID.
+]=]
+
+--[=[
 	@prop stub Stub?
 	@within State.State
 ]=]
@@ -81,6 +102,15 @@ end
 --[=[
 	@within State.State
 
+	Will set the bot's own user ID, which voice connections identify with.
+]=]
+function State.Prototype.setUserId(self: State, userId: apiTypes.Snowflake)
+	self.userId = userId
+end
+
+--[=[
+	@within State.State
+
 	Constructor for the State class.
 ]=]
 function State.Interface.new(settings: {
@@ -102,7 +132,9 @@ function State.Interface.new(settings: {
 		{
 			token = secretToken,
 			applicationId = "",
+			userId = "",
 			logLevel = settings.logLevel or "Warn" :: any,
+			logger = logger.new("State", settings.logLevel),
 			stub = stub,
 
 			rest = rest.new({
@@ -149,6 +181,8 @@ export type Stub = {
 export type State = typeof(State.Prototype) & {
 	token: secret.Secret<string>,
 	applicationId: apiTypes.Snowflake,
+	userId: apiTypes.Snowflake,
+	logger: logger.Logger,
 	logLevel: logger.LogLevel,
 	stub: Stub?,
 	rest: rest.REST,

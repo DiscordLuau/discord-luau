@@ -10,6 +10,10 @@ net.socket = function(...)
 		return socket:next(...)
 	end
 
+	function value.nextMessage(): (string?, boolean?)
+		return socket:next()
+	end
+
 	function value.close(...: any)
 		return socket:close(...)
 	end

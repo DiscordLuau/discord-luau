@@ -1,14 +1,39 @@
 #!/usr/bin/env bash
 # Checks that every native library a package's sys.luau expects can be downloaded from the
 # release tag `binary.load` uses, and that its sha256 matches the checksum in sys.luau.
-# A tag for the package's own unreleased version does not exist until the release merges, so for
-# that version the file in this checkout is checked instead and reported as pending.
-# Usage: bash .github/scripts/check-binary-tags.sh [package ...]   (default: dave opus sodium)
+# A tag for a version that is not released yet does not exist until the release merges. A missing
+# tag is reported as pending, and the file in this checkout is checked instead, only when the
+# sys.luau version is newer (by sort -V) than every existing <package>-* tag. An older or equal
+# version without a tag fails.
+# Tags are read with `git ls-remote --tags origin`, because CI's checkout has none.
+# Usage: bash .github/scripts/check-binary-tags.sh [--version <package>=<version> ...] [package ...]
+#   (default packages: dave opus sodium symphonia)
+# --version replaces the version read from that package's sys.luau; CI uses it to prove that an
+# old version fails.
 set -euo pipefail
 
-packages=("$@")
+packages=()
+declare -A versionOverrides=()
+
+while [ $# -gt 0 ]; do
+	case "$1" in
+		--version)
+			if [ $# -lt 2 ] || [[ "$2" != *=* ]]; then
+				echo "--version needs <package>=<version>"
+				exit 2
+			fi
+			versionOverrides["${2%%=*}"]="${2#*=}"
+			shift 2
+			;;
+		*)
+			packages+=("$1")
+			shift
+			;;
+	esac
+done
+
 if [ ${#packages[@]} -eq 0 ]; then
-	packages=(dave opus sodium)
+	packages=(dave opus sodium symphonia)
 fi
 
 workDirectory=$(mktemp -d)
@@ -17,9 +42,21 @@ failures=0
 
 for package in "${packages[@]}"; do
 	sysFile="packages/$package/src/sys.luau"
-	version=$(grep -oE '^\s*version = "[^"]+"' "$sysFile" | head -1 | grep -oE '"[^"]+"' | tr -d '"')
-	packageVersion=$(grep -m1 -oE '^version = "[^"]+"' "packages/$package/pesde.toml" | grep -oE '"[^"]+"' | tr -d '"')
+	version=${versionOverrides[$package]:-$(grep -oE '^\s*version = "[^"]+"' "$sysFile" | head -1 | grep -oE '"[^"]+"' | tr -d '"')}
 	urlTemplate=$(grep -oE 'url = "[^"]+"' "$sysFile" | head -1 | sed -E 's/^url = "(.*)"$/\1/')
+
+	if ! remoteTags=$(git ls-remote --tags origin "refs/tags/$package-*"); then
+		echo "FAIL $package: could not read tags with git ls-remote --tags origin"
+		failures=$((failures + 1))
+		continue
+	fi
+	existingVersions=$(printf '%s\n' "$remoteTags" | { grep -oE "refs/tags/$package-[^^ ]+" || true; } | sed -E "s#^refs/tags/$package-##")
+
+	newestVersion=$(printf '%s\n' "$version" $existingVersions | sort -V | tail -1)
+	pending=0
+	if [ "$newestVersion" = "$version" ] && ! printf '%s\n' "$existingVersions" | grep -qxF "$version"; then
+		pending=1
+	fi
 
 	while read -r platform checksum; do
 		operatingSystem=${platform%-*}
@@ -40,7 +77,7 @@ for package in "${packages[@]}"; do
 		if ! curl -fsSL --retry 3 -o "$downloadPath" "$url" 2>/dev/null; then
 			checkoutPath="packages/$package/binaries/$platform/${url##*/}"
 
-			if [ "$version" != "$packageVersion" ] || [ ! -f "$checkoutPath" ]; then
+			if [ "$pending" -ne 1 ] || [ ! -f "$checkoutPath" ]; then
 				echo "FAIL $package $platform: could not download $url"
 				failures=$((failures + 1))
 				continue

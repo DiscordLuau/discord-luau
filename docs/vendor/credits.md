@@ -19,11 +19,14 @@ discord-luau builds on a number of open-source projects. Full licence texts are 
 | Library | Author | Licence |
 |---|---|---|
 | [libsodium](https://libsodium.org) | Frank Denis | ISC |
-| [libopus](https://opus-codec.org) | Xiph.Org Foundation et al. | BSD 3-Clause |
+| [libopus](https://opus-codec.org) 1.6.1, every platform | Xiph.Org Foundation et al. | BSD 3-Clause |
 | [libdave](https://github.com/discord/libdave) | Discord | MIT |
 | [BoringSSL](https://boringssl.googlesource.com/boringssl) | Google / Eric Young | OpenSSL + ISC |
 | [mlspp](https://github.com/cisco/mlspp) | Cisco Systems | BSD 2-Clause |
 | [nlohmann/json](https://github.com/nlohmann/json) | Niels Lohmann | MIT |
+| [Symphonia](https://github.com/pdeljanov/Symphonia) | Philip Deljanov et al. | MPL-2.0 |
+
+libsymphonia also links [rubato](https://github.com/HEnquist/rubato) (MIT OR Apache-2.0) and the rest of its Rust crate graph, listed with their licences in [`packages/symphonia/native/THIRD_PARTY_NOTICES.md`](https://github.com/DiscordLuau/discord-luau/blob/main/packages/symphonia/native/THIRD_PARTY_NOTICES.md).
 
 ## Luau Packages
 

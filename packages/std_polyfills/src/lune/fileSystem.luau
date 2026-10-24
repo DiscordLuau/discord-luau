@@ -1,5 +1,6 @@
 -- selene: allow(undefined_variable)
 local fs = require("@lune/fs")
+local stdio = require("@lune/stdio")
 local task = require("@lune/task")
 
 local fileSystem = {}
@@ -33,22 +34,33 @@ end
 
 function fileSystem.watch(path: string, callback: (path: string, events: { string }) -> ()): { stop: () -> () }
 	local stopped = false
+	local reportedReadFailure = false
 	local snapshots: { [string]: number } = {}
 
 	local function snapshot(): { [string]: number }?
 		local ok, entries = pcall(fs.readDir, path)
 		if not ok then
+			if not reportedReadFailure then
+				reportedReadFailure = true
+				stdio.ewrite(`fileSystem.watch: could not read '{path}': {entries}\n`)
+			end
+
 			return
 		end
+		reportedReadFailure = false
 		local current: { [string]: number } = {}
 		for _, name in entries do
 			local entryPath = path .. "/" .. name
-			local meta = fs.metadata(entryPath)
-			if meta.modifiedAt then
+			local metadataOk, meta = pcall(fs.metadata, entryPath)
+			if metadataOk and meta.modifiedAt then
 				current[name] = meta.modifiedAt.unixTimestamp
 			end
 		end
 		return current
+	end
+
+	local function notify(entryPath: string, events: { string })
+		task.spawn(callback, entryPath, events)
 	end
 
 	local initial = snapshot()
@@ -71,15 +83,15 @@ function fileSystem.watch(path: string, callback: (path: string, events: { strin
 			for name, modifiedAt in current do
 				local prev = snapshots[name]
 				if prev == nil then
-					callback(path .. "/" .. name, { "create" })
+					notify(path .. "/" .. name, { "create" })
 				elseif modifiedAt ~= prev then
-					callback(path .. "/" .. name, { "change" })
+					notify(path .. "/" .. name, { "change" })
 				end
 			end
 
 			for name in snapshots do
 				if current[name] == nil then
-					callback(path .. "/" .. name, { "remove" })
+					notify(path .. "/" .. name, { "remove" })
 				end
 			end
 
