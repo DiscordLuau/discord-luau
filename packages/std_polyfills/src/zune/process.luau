@@ -1,5 +1,9 @@
 local MAX_TAIL_BYTES = 4096
 local STDERR_READ_BYTES = 1024
+local SIGTERM = 15
+local LIBC_BY_OS: { [string]: string } = { linux = "libc.so.6", macos = "libSystem.B.dylib" }
+
+local libc: Libc?
 
 -- selene: allow(undefined_variable)
 local process = {}
@@ -26,10 +30,22 @@ function process.wrap(child: ZuneChild): ProcessHandle
 	local exited = false
 	local exitCode = 0
 	local killed = false
+	local signalled = false
 	local errorEnded = false
+	local stdoutReading = false
 	local tail = ""
 	local failures: { string } = {}
 	local waiters: { thread } = {}
+
+	local function closeStream(stream: ZuneStream, name: string)
+		local succeeded, failure = pcall(function()
+			stream:close()
+		end)
+
+		if not succeeded then
+			table.insert(failures, `closing {name} failed: {failure}`)
+		end
+	end
 
 	zune.task.spawn(function()
 		local succeeded, result = pcall(function()
@@ -37,7 +53,7 @@ function process.wrap(child: ZuneChild): ProcessHandle
 		end)
 
 		if succeeded then
-			exitCode = result.code
+			exitCode = if signalled then SIGTERM else result.code
 		else
 			exitCode = -1
 			table.insert(failures, `exit watcher failed: {result}`)
@@ -75,24 +91,47 @@ function process.wrap(child: ZuneChild): ProcessHandle
 		end
 
 		errorEnded = true
+
+		if killed then
+			closeStream(child.stderr, "stderr")
+		end
 	end)
 
-	local function closeStream(stream: ZuneStream, name: string)
-		local succeeded, failure = pcall(function()
-			stream:close()
-		end)
+	-- On macOS a second wait on the pid, which Zune's `kill` adds, takes the program's one kqueue exit event from the
+	-- exit watcher, which then never wakes, so Linux and macOS send SIGTERM through libc instead. The pid is signalled
+	-- only while the exit is unrecorded, since another program may own it after that, and the exit code then reads
+	-- SIGTERM, as it does after Zune's `kill`.
+	local function terminate()
+		local library = LIBC_BY_OS[process.os]
+		local pid = child.pid
 
-		if not succeeded then
-			table.insert(failures, `closing {name} failed: {failure}`)
+		if not library or not pid or not zune.ffi then
+			child:kill()
+		elseif not exited then
+			local types = zune.ffi.types
+			local loaded = libc
+				or zune.ffi.dlopen(library, { kill = { returns = types.i32, args = { types.i32, types.i32 } } }) :: any
+
+			libc = loaded
+			assert(loaded.kill(pid, SIGTERM) == 0, `kill({pid}, SIGTERM) failed`)
+			signalled = true
 		end
 	end
 
+	-- On kqueue (macOS) and epoll, Zune 0.5.9 reads a pipe on a thread-pool worker that closing the pipe cannot stop:
+	-- the close frees the pending read, and the worker's late result frees it again. So a stream is closed here only
+	-- while no read waits on it; otherwise the thread reading it closes it once that read returns.
 	local function stopChild()
-		closeStream(child.stdout, "stdout")
-		closeStream(child.stderr, "stderr")
+		if not stdoutReading then
+			closeStream(child.stdout, "stdout")
+		end
+
+		if errorEnded then
+			closeStream(child.stderr, "stderr")
+		end
 
 		local succeeded, failure = pcall(function()
-			return child:kill()
+			terminate()
 		end)
 
 		if not succeeded then
@@ -103,13 +142,25 @@ function process.wrap(child: ZuneChild): ProcessHandle
 	local handle = {}
 
 	function handle.read(count: number): buffer?
-		local data = child.stdout:read(count, true) :: buffer
+		local succeeded: boolean, data: any
 
-		if buffer.len(data) == 0 then
-			return
+		if killed then
+			error("file closed", 0)
 		end
 
-		return data
+		stdoutReading = true
+		succeeded, data = pcall(function()
+			return child.stdout:read(count, true)
+		end)
+		stdoutReading = false
+
+		if killed then
+			closeStream(child.stdout, "stdout")
+		elseif not succeeded then
+			error(data, 0)
+		end
+
+		return if not killed and buffer.len(data) > 0 then data else nil
 	end
 
 	function handle.wait(): number
@@ -190,7 +241,12 @@ type ZuneStream = {
 	close: (ZuneStream) -> (),
 }
 
+type Libc = {
+	kill: (pid: number, signal: number) -> number,
+}
+
 type ZuneChild = {
+	pid: number?,
 	stdout: ZuneStream,
 	stderr: ZuneStream,
 	wait: (ZuneChild) -> { code: number },

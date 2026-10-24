@@ -401,6 +401,24 @@ return function()
 			check.is_true(running.errorEnded())
 		end)
 
+		local onWindows = stdPolyfills.process.getPlatform() == "windows"
+		local pendingReadCase = (if onWindows then test.skip.case else test.case) :: typeof(test.case)
+
+		pendingReadCase("kill with a stdout read and the stderr reader pending leaves Zune running", function()
+			local env = table.clone(stdPolyfills.process.getEnv())
+
+			env.ZUNE_ASYNC_BACKEND = "epoll"
+
+			local result = stdPolyfills.process.run(
+				"zune",
+				{ "run", "packages/std_polyfills/tests/killPendingRead.luau" },
+				{ env = env }
+			)
+
+			check.equal(result.code, 0)
+			check.is_true(contains(result.stdout, "kill with pending reads finished: killed true, exited true"))
+		end)
+
 		local zunePath = realZune()
 		local stubbornSkip = stubbornSkipReason(zunePath)
 		local stubbornCase = (if stubbornSkip then test.skip.case else test.case) :: typeof(test.case)

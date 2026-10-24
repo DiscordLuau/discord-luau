@@ -196,10 +196,10 @@ export type RunResult = {
 --[=[
 	@interface Process
 	@within StdPolyfills.process
-	.read (count: number) -> buffer? -- up to `count` bytes of stdout (at most 1024 on Zune), or nil at the end; after `kill`, a read in flight returns nil and a new read raises
+	.read (count: number) -> buffer? -- up to `count` bytes of stdout (at most 1024 on Zune), or nil at the end; after `kill`, a read in flight returns nil once the program writes or exits, and a new read raises
 	.wait () -> number -- the exit code
 	.exited () -> boolean
-	.kill () -> boolean -- never yields: closes stdout and stderr, so a program blocked writing to them can exit, and stops the program in the background (SIGTERM, or TerminateProcess on Windows); false when the exit was already recorded
+	.kill () -> boolean -- never yields: closes stdout and stderr (a pipe with a read in flight once that read returns), so a program blocked writing to them can exit, and stops the program in the background (SIGTERM, or TerminateProcess on Windows); false when the exit was already recorded
 	.errorTail () -> string -- the last 4 KiB of stderr, then any failed background thread
 	.errorEnded () -> boolean -- true once stderr is read to its end, or its reader stopped after a kill or failed; at the end of stderr `errorTail` holds its last line, after a kill only what was read so far
 ]=]
