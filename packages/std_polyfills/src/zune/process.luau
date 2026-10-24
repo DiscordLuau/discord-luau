@@ -1,3 +1,10 @@
+--[=[
+	@class StdPolyfills.zune.process
+	@private
+
+	Zune's process adapter: the platform, arguments and environment, `run`, `spawn` and `onSignal`.
+]=]
+
 local MAX_TAIL_BYTES = 4096
 local STDERR_READ_BYTES = 1024
 local SIGTERM = 15
@@ -24,6 +31,7 @@ function process.run(exec: string, args: { string }?, opts: { cwd: string?, env:
 end
 
 --[=[
+	@within StdPolyfills.zune.process
 	@private
 
 	Builds the `Process` handle around a running child. It exists so the specs can inject fake children, because
