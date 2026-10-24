@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - On Zune, closing a WebSocket whose waiting thread was already closed (as a voice connection does when it tears down) no longer raises "cannot resume non-suspended coroutine"
 - On Zune, a block reused from the FFI pool no longer keeps a tag set on it before it was freed
 - On Zune, stopping a spawned program no longer crashes Zune on macOS, or on Linux without io_uring (such as a container that blocks it). There Zune reads a pipe on a worker thread that closing the pipe cannot stop, and the worker's late result freed the read a second time, so `kill` now closes a pipe only once no read waits on it. It also sends SIGTERM through libc on Linux and macOS, since the second wait Zune's own `kill` adds on macOS took the exit event and `wait` never returned
+- On Zune, stopping a spawned program on Windows no longer leaves Zune's own `kill` waiting forever. Its second wait never completed while the exit watcher waited, and now and then it corrupted the event loop, so a run printed its results and then spun without exiting. `kill` now calls TerminateProcess through kernel32 on the program's handle
 
 ### Changed
 

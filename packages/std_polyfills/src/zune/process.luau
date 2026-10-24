@@ -1,9 +1,12 @@
 local MAX_TAIL_BYTES = 4096
 local STDERR_READ_BYTES = 1024
 local SIGTERM = 15
+local TERMINATED_EXIT_CODE = 1
+local HANDLE_ADDRESS_BYTES = 8
 local LIBC_BY_OS: { [string]: string } = { linux = "libc.so.6", macos = "libSystem.B.dylib" }
 
 local libc: Libc?
+local kernel32: Kernel32?
 
 -- selene: allow(undefined_variable)
 local process = {}
@@ -97,17 +100,22 @@ function process.wrap(child: ZuneChild): ProcessHandle
 		end
 	end)
 
-	-- On macOS a second wait on the pid, which Zune's `kill` adds, takes the program's one kqueue exit event from the
-	-- exit watcher, which then never wakes, so Linux and macOS send SIGTERM through libc instead. The pid is signalled
-	-- only while the exit is unrecorded, since another program may own it after that, and the exit code then reads
-	-- SIGTERM, as it does after Zune's `kill`.
+	-- Zune's `kill` adds a second wait on the program. On macOS it takes the program's one kqueue exit event from the
+	-- exit watcher, which then never wakes. On Windows it never completes while the exit watcher waits, and now and then
+	-- it corrupts the IOCP loop, so Zune spins after the script ends. So Linux and macOS send SIGTERM through libc, and
+	-- Windows calls TerminateProcess through kernel32 on the handle Zune's `pid` holds there, with the exit code Zune's
+	-- `kill` used. The program is stopped only while its exit is unrecorded, since another program may own the pid after
+	-- that. On Linux and macOS the exit code then reads SIGTERM, as it does after Zune's `kill`.
 	local function terminate()
 		local library = LIBC_BY_OS[process.os]
 		local pid = child.pid
+		local onWindows = process.os == "windows"
 
-		if not library or not pid or not zune.ffi then
+		if not pid or not zune.ffi or not (library or onWindows) then
 			child:kill()
-		elseif not exited then
+		elseif exited then
+			return
+		elseif library then
 			local types = zune.ffi.types
 			local loaded = libc
 				or zune.ffi.dlopen(library, { kill = { returns = types.i32, args = { types.i32, types.i32 } } }) :: any
@@ -115,6 +123,20 @@ function process.wrap(child: ZuneChild): ProcessHandle
 			libc = loaded
 			assert(loaded.kill(pid, SIGTERM) == 0, `kill({pid}, SIGTERM) failed`)
 			signalled = true
+		else
+			local types = zune.ffi.types
+			local loaded = kernel32
+				or zune.ffi.dlopen("kernel32.dll", {
+					TerminateProcess = { returns = types.i32, args = { types.pointer, types.u32 } },
+				}) :: any
+			local handleAddress = buffer.create(HANDLE_ADDRESS_BYTES)
+
+			kernel32 = loaded
+			buffer.writeu32(handleAddress, 0, pid)
+			assert(
+				loaded.TerminateProcess(zune.ffi.ptrFromAddress(handleAddress), TERMINATED_EXIT_CODE) ~= 0,
+				"TerminateProcess failed"
+			)
 		end
 	end
 
@@ -243,6 +265,10 @@ type ZuneStream = {
 
 type Libc = {
 	kill: (pid: number, signal: number) -> number,
+}
+
+type Kernel32 = {
+	TerminateProcess: (handle: any, exitCode: number) -> number,
 }
 
 type ZuneChild = {

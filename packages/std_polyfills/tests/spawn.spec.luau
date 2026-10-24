@@ -271,6 +271,35 @@ return function()
 			check.is_true(pollUntil(running.exited))
 		end)
 
+		test.case("kill ends the program and finishes every call it makes into the child", function()
+			local child: any = zune.process.create(
+				"zune",
+				{ "run", getScriptPath(), "hang", "0" },
+				{ stdout = "pipe", stderr = "pipe", stdin = "ignore" } :: any
+			)
+			local unfinishedKills = 0
+			local running = wrapFake({
+				pid = child.pid,
+				stdout = child.stdout,
+				stderr = child.stderr,
+				wait = function()
+					return child:wait()
+				end,
+				kill = function()
+					unfinishedKills += 1
+					child:kill()
+					unfinishedKills -= 1
+				end,
+			})
+
+			task.wait(BLOCK_SECONDS)
+			check.is_true(running.kill())
+			check.is_true(pollUntil(running.exited))
+			check.is_true(pollUntil(function()
+				return unfinishedKills == 0
+			end))
+		end)
+
 		test.case("kill after a zero exit returns false", function()
 			local running, watchdog = start("exit", 0)
 
