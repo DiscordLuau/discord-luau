@@ -9,7 +9,9 @@ on:
       - "packages/sodium/**"
       - "packages/symphonia/**"
       - "packages/audio/**"
+      - "packages/voice/**"
       - "packages/std_polyfills/**"
+      - "packages/discord_stub/src/**"
       - ".zune/**"
       - "pesde.toml"
       - "pesde.lock"
@@ -120,6 +122,10 @@ jobs:
         run: zune run .zune/test.luau packages/dave
       - name: Test symphonia
         run: zune run .zune/test.luau packages/symphonia
+      - name: Test std_polyfills
+        run: zune run .zune/test.luau packages/std_polyfills
+      - name: Test voice
+        run: zune run .zune/test.luau packages/voice
       - name: Test audio
         run: zune run .zune/test.luau packages/audio
 
