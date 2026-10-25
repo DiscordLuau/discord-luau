@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.0.3
+
+### Added
+
+- `player:pause()` and `player:resume()` hold a playback and carry it on, and `player.paused` says whether it is held. At its next step a paused playback sends the silence tail and Speaking 0 when Speaking went out, stops reading the source and waits; `resume` sends Speaking again and plays on from the next packet on a fresh schedule, so a long pause never makes it catch up. While paused, `stop` resolves `"stopped"` at once, a close fails the playback with the close as before, and a voice resume or rejoin keeps the pause. Both return false, logged at debug, when there is nothing to do
+
 ## 0.0.2
 
 ### Added

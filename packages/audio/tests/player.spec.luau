@@ -16,6 +16,9 @@ local SILENCE = "\248\255\254"
 local RTP_HEADER_SIZE = 12
 local FRAME_BYTES = 3840
 local SPEAKING_OPCODE = 5
+local VOICE_SERVER_CRASHED = 4015
+local START_MILLIS = 1000000
+local PAUSE_MILLISECONDS = 60000
 local WAIT_SECONDS = 1200
 
 local test = frktest.test
@@ -254,8 +257,45 @@ local function sourceWhoseDestroyRaises(): audio.Source
 	return source
 end
 
+local function pausingSource(
+	player: audio.Player,
+	pauseAtRead: number,
+	packetCount: number,
+	record: PauseRecord
+): audio.Source
+	return audio.fromOpus(function(): buffer?
+		record.reads += 1
+
+		if record.reads == pauseAtRead then
+			record.paused = player:pause()
+		end
+
+		return if record.reads <= packetCount then buffer.fromstring(PACKET) else nil
+	end)
+end
+
+local function manualClock(): ManualClock
+	local manual: ManualClock = { now = START_MILLIS }
+
+	manual.clock = {
+		nowMillis = function(): number
+			return manual.now
+		end,
+		wait = function(seconds: number): number
+			manual.now += seconds * 1000
+			stdPolyfills.task.wait(0)
+
+			return seconds
+		end,
+	}
+
+	return manual
+end
+
 type World = { manager: websocket.Manager?, connection: voice.Connection? }
 type Playback = { result: any }
+type PauseRecord = { reads: number, paused: boolean }
+type ManualClock = { now: number, clock: audio.PlayerClock? }
 
 return function()
 	test.suite("Audio player", function()
@@ -776,6 +816,289 @@ return function()
 				check.is_true(finished(stub, second))
 				check.equal(second.result:unwrapOk(), "finished")
 				check.equal(player.packetsSent, 3)
+			end)
+		end)
+
+		test.case("pause sends the silence tail and Speaking 0, then nothing until resume", function()
+			local stub = discordStub.new({ clock = "virtual", polyfills = stdPolyfills })
+			local gateway = stub:createWebsocketServer()
+			local voiceServer = stub:createVoiceServer()
+			local world: World = {}
+
+			run(stub, world, function()
+				local connection = joinedConnection(stub, gateway, world)
+				local calls = recordSends(connection)
+				local player = audio.player.new(connection)
+				local lines = captureLines(player)
+				local record: PauseRecord = { reads = 0, paused = false }
+				local playback = startPlayback(player, pausingSource(player, 3, 6, record))
+				local tail = `speaking 1,{string.rep("packet,", 3)}{string.rep("silence,", 5)}speaking 0`
+
+				check.is_true(speakingReaches(stub, voiceServer, "1,0"))
+				check.is_true(record.paused)
+				check.is_true(player.paused)
+				check.equal(countLines(lines, "paused"), 1)
+				stub.clock:wait(10)
+				check.equal(record.reads, 3)
+				check.equal(table.concat(calls, ","), tail)
+				check.equal(playback.result, nil)
+				check.is_true(player:resume())
+				check.is_true(finished(stub, playback))
+				check.equal(playback.result:unwrapOk(), "finished")
+				check.equal(table.concat(calls, ","), `{tail},{tail}`)
+				check.is_true(speakingReaches(stub, voiceServer, "1,0,1,0"))
+				check.is_false(player.paused)
+			end)
+		end)
+
+		test.case("resume after a long pause plays on a fresh schedule, with no catch-up and no reset", function()
+			local stub = discordStub.new({ clock = "virtual", polyfills = stdPolyfills })
+			local gateway = stub:createWebsocketServer()
+			local voiceServer = stub:createVoiceServer()
+			local world: World = {}
+
+			run(stub, world, function()
+				local manual = manualClock()
+				local player = audio.player.new(joinedConnection(stub, gateway, world), { clock = manual.clock })
+				local lines = captureLines(player)
+				local record: PauseRecord = { reads = 0, paused = false }
+				local playback = startPlayback(player, pausingSource(player, 3, 6, record))
+
+				check.is_true(speakingReaches(stub, voiceServer, "1,0"))
+				manual.now += PAUSE_MILLISECONDS
+				check.is_true(player:resume())
+				check.is_true(finished(stub, playback))
+				check.equal(playback.result:unwrapOk(), "finished")
+				check.equal(countLines(lines, "resetting the audio schedule"), 0)
+				check.equal(player.startMillis, START_MILLIS + 160 + PAUSE_MILLISECONDS)
+				check.equal(player.packetsSent, 6)
+			end)
+		end)
+
+		test.case("stop while paused resolves stopped at once, with no second tail", function()
+			local stub = discordStub.new({ clock = "virtual", polyfills = stdPolyfills })
+			local gateway = stub:createWebsocketServer()
+			local voiceServer = stub:createVoiceServer()
+			local world: World = {}
+
+			run(stub, world, function()
+				local connection = joinedConnection(stub, gateway, world)
+				local calls = recordSends(connection)
+				local player = audio.player.new(connection)
+				local record: PauseRecord = { reads = 0, paused = false }
+				local playback = startPlayback(player, pausingSource(player, 3, 1000, record))
+
+				check.is_true(speakingReaches(stub, voiceServer, "1,0"))
+				player:stop()
+				check.is_true(stub.clock:waitFor(function()
+					return playback.result
+				end, 1))
+				check.equal(playback.result:unwrapOk(), "stopped")
+				check.equal(
+					table.concat(calls, ","),
+					`speaking 1,{string.rep("packet,", 3)}{string.rep("silence,", 5)}speaking 0`
+				)
+				check.equal(record.reads, 3)
+				check.is_false(player.playing)
+				check.is_false(player.paused)
+			end)
+		end)
+
+		test.case("resume after a stop on a paused playback returns false, and it still stops", function()
+			local stub = discordStub.new({ clock = "virtual", polyfills = stdPolyfills })
+			local gateway = stub:createWebsocketServer()
+			local voiceServer = stub:createVoiceServer()
+			local world: World = {}
+
+			run(stub, world, function()
+				local connection = joinedConnection(stub, gateway, world)
+				local calls = recordSends(connection)
+				local player = audio.player.new(connection)
+				local lines = captureLines(player)
+				local record: PauseRecord = { reads = 0, paused = false }
+				local playback = startPlayback(player, pausingSource(player, 3, 1000, record))
+
+				check.is_true(speakingReaches(stub, voiceServer, "1,0"))
+				player:stop()
+
+				local resumed = player:resume()
+
+				check.is_false(resumed)
+				check.is_true(finished(stub, playback))
+				check.equal(playback.result:unwrapOk(), "stopped")
+				check.equal(record.reads, 3)
+				check.equal(player.packetsSent, 3)
+				check.equal(countLines(lines, "the playback is stopping"), 1)
+				check.equal(
+					table.concat(calls, ","),
+					`speaking 1,{string.rep("packet,", 3)}{string.rep("silence,", 5)}speaking 0`
+				)
+			end)
+		end)
+
+		test.case("pause after a stop returns false, logged at debug, and the playback stops", function()
+			local stub = discordStub.new({ clock = "virtual", polyfills = stdPolyfills })
+			local gateway = stub:createWebsocketServer()
+			local world: World = {}
+
+			stub:createVoiceServer()
+
+			run(stub, world, function()
+				local connection = joinedConnection(stub, gateway, world)
+				local player = audio.player.new(connection)
+				local lines = captureLines(player)
+				local pausedAfterStop = true
+				local reads = 0
+				local playback = startPlayback(
+					player,
+					audio.fromOpus(function(): buffer?
+						reads += 1
+
+						if reads == 2 then
+							player:stop()
+							pausedAfterStop = player:pause()
+						end
+
+						return buffer.fromstring(PACKET)
+					end)
+				)
+
+				check.is_true(finished(stub, playback))
+				check.equal(playback.result:unwrapOk(), "stopped")
+				check.is_false(pausedAfterStop)
+				check.equal(countLines(lines, "pause while the playback is ending"), 1)
+				check.is_false(player.playing)
+				check.is_false(player.paused)
+			end)
+		end)
+
+		test.case("pause and resume return false, logged at debug, when there is nothing to do", function()
+			local stub = discordStub.new({ clock = "virtual", polyfills = stdPolyfills })
+			local gateway = stub:createWebsocketServer()
+			local voiceServer = stub:createVoiceServer()
+			local world: World = {}
+
+			run(stub, world, function()
+				local player = audio.player.new(joinedConnection(stub, gateway, world))
+				local lines = captureLines(player)
+				local idlePause = player:pause()
+				local idleResume = player:resume()
+				local record: PauseRecord = { reads = 0, paused = false }
+				local playingResume = true
+				local secondPause = true
+				local playback = startPlayback(
+					player,
+					audio.fromOpus(function(): buffer?
+						record.reads += 1
+
+						if record.reads == 2 then
+							playingResume = player:resume()
+							record.paused = player:pause()
+							secondPause = player:pause()
+						end
+
+						return if record.reads <= 4 then buffer.fromstring(PACKET) else nil
+					end)
+				)
+
+				check.is_true(speakingReaches(stub, voiceServer, "1,0"))
+				check.is_true(player:resume())
+				check.is_true(finished(stub, playback))
+				check.equal(playback.result:unwrapOk(), "finished")
+				check.is_false(idlePause)
+				check.is_false(idleResume)
+				check.is_false(playingResume)
+				check.is_true(record.paused)
+				check.is_false(secondPause)
+				check.equal(countLines(lines, "pause with nothing playing"), 1)
+				check.equal(countLines(lines, "resume with nothing playing"), 1)
+				check.equal(countLines(lines, "resume while not paused"), 1)
+				check.equal(countLines(lines, "pause while already paused"), 1)
+			end)
+		end)
+
+		test.case("pause during the closing silence tail returns false and the playback finishes", function()
+			local stub = discordStub.new({ clock = "virtual", polyfills = stdPolyfills })
+			local gateway = stub:createWebsocketServer()
+			local voiceServer = stub:createVoiceServer()
+			local world: World = {}
+
+			run(stub, world, function()
+				local connection = joinedConnection(stub, gateway, world)
+				local calls = recordSends(connection)
+				local player = audio.player.new(connection)
+				local lines = captureLines(player)
+				local hooked = false
+				local pausedInTail = true
+				local playback = playWithSilenceHook(player, audio.fromOpus(opusPackets(2)), function()
+					if not hooked then
+						hooked = true
+						pausedInTail = player:pause()
+					end
+				end)
+
+				check.is_true(finished(stub, playback))
+				check.equal(playback.result:unwrapOk(), "finished")
+				check.is_false(pausedInTail)
+				check.equal(
+					table.concat(calls, ","),
+					`speaking 1,{string.rep("packet,", 2)}{string.rep("silence,", 5)}speaking 0`
+				)
+				check.equal(countLines(lines, "pause while the playback is ending"), 1)
+				check.is_false(player.paused)
+				check.is_true(speakingReaches(stub, voiceServer, "1,0"))
+			end)
+		end)
+
+		test.case("a close while paused fails the playback with the close", function()
+			local stub = discordStub.new({ clock = "virtual", polyfills = stdPolyfills })
+			local gateway = stub:createWebsocketServer()
+			local voiceServer = stub:createVoiceServer()
+			local world: World = {}
+
+			run(stub, world, function()
+				local connection = joinedConnection(stub, gateway, world)
+				local player = audio.player.new(connection)
+				local record: PauseRecord = { reads = 0, paused = false }
+				local playback = startPlayback(player, pausingSource(player, 3, 1000, record))
+
+				check.is_true(speakingReaches(stub, voiceServer, "1,0"))
+				connection:destroy()
+				check.is_true(finished(stub, playback))
+				check.equal(failureOf(playback), "voice connection closed: the voice connection was destroyed")
+				check.equal(record.reads, 3)
+				check.is_false(player.playing)
+			end)
+		end)
+
+		test.case("a voice resume while paused keeps the pause, and resume speaks on the new session", function()
+			local stub = discordStub.new({ clock = "virtual", polyfills = stdPolyfills })
+			local gateway = stub:createWebsocketServer()
+			local voiceServer = stub:createVoiceServer()
+			local world: World = {}
+
+			run(stub, world, function()
+				local connection = joinedConnection(stub, gateway, world)
+				local calls = recordSends(connection)
+				local player = audio.player.new(connection)
+				local record: PauseRecord = { reads = 0, paused = false }
+				local playback = startPlayback(player, pausingSource(player, 3, 6, record))
+				local tail = `speaking 1,{string.rep("packet,", 3)}{string.rep("silence,", 5)}speaking 0`
+
+				check.is_true(speakingReaches(stub, voiceServer, "1,0"))
+				voiceServer:close(VOICE_SERVER_CRASHED)
+				check.is_true(stub.clock:waitFor(function()
+					return player.readyCount == 1 and connection.status == "ready"
+				end, WAIT_SECONDS))
+				stub.clock:wait(5)
+				check.is_true(player.paused)
+				check.equal(record.reads, 3)
+				check.equal(table.concat(calls, ","), tail)
+				check.is_true(player:resume())
+				check.is_true(finished(stub, playback))
+				check.equal(playback.result:unwrapOk(), "finished")
+				check.equal(table.concat(calls, ","), `{tail},{tail}`)
+				check.is_true(speakingReaches(stub, voiceServer, "1,0,1,0"))
 			end)
 		end)
 

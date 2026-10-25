@@ -7,6 +7,9 @@
 	`"stopped"` after `stop`. One player per connection plays at a time; a second `playAsync`, on this player or on
 	another player of the same connection, fails at once and leaves the running playback alone.
 
+	`pause` holds the running playback: at its next step it sends the silence tail and Speaking 0, stops reading the
+	source and waits. `resume` sends Speaking again and plays on from the next packet on a fresh schedule.
+
 	While the connection resumes or rejoins, the playback waits, woken by the connection's `onReady`, `onResumed` and
 	`onClosed`. On each new session it waits up to `mediaWaitSeconds` for DAVE media readiness, then sends Speaking
 	again; until media is ready, voice sends Opus silence in place of every packet, so nothing leaves unencrypted.
@@ -82,6 +85,13 @@
 	@within Audio.Player
 
 	Whether `stop` asked the running playback to end. A playback clears it when it starts.
+]=]
+
+--[=[
+	@prop paused boolean
+	@within Audio.Player
+
+	Whether `pause` holds the running playback. A playback clears it when it starts and when it ends.
 ]=]
 
 --[=[
@@ -221,6 +231,7 @@ function Player.Prototype.start(self: Player, source: Source)
 	self.playing = true
 	playingPlayers[connection] = self
 	self.stopRequested = false
+	self.paused = false
 	self.ending = false
 	self.readyCount = 0
 	self.spokenReadyCount = nil
@@ -269,11 +280,11 @@ end
 	@within Audio.Player
 	@private
 
-	The playback loop. Each step ends on a stop, fails on a closed connection, waits while the connection is not ready,
-	waits while a stream source is starved, reads a failed source so its error ends the playback, ends without speaking
-	when the source ended or was destroyed before Speaking went out on this session, speaks on a session it has not
-	spoken on yet, and otherwise reads one packet and sends it. A source that runs out ends the playback, unless it is
-	starved after the read, which means it has no data yet.
+	The playback loop. Each step ends on a stop, fails on a closed connection, holds while paused, waits while the
+	connection is not ready, waits while a stream source is starved, reads a failed source so its error ends the
+	playback, ends without speaking when the source ended or was destroyed before Speaking went out on this session,
+	speaks on a session it has not spoken on yet, and otherwise reads one packet and sends it. A source that runs out
+	ends the playback, unless it is starved after the read, which means it has no data yet.
 ]=]
 function Player.Prototype.run(self: Player, source: Source): PlaybackEnd
 	local connection = self.connection
@@ -287,7 +298,9 @@ function Player.Prototype.run(self: Player, source: Source): PlaybackEnd
 			error(`voice connection closed: {connection.closeDetail}`, 0)
 		end
 
-		if connection.status ~= "ready" then
+		if self.paused then
+			self:awaitResume()
+		elseif connection.status ~= "ready" then
 			self:awaitReady()
 		elseif source.starved then
 			self:awaitData(source)
@@ -354,6 +367,31 @@ function Player.Prototype.awaitData(self: Player, source: Source)
 	while source.starved and not self.stopRequested and self.connection.status == "ready" do
 		source:poll()
 		self.clock.wait(STARVED_POLL_SECONDS)
+	end
+end
+
+--[=[
+	@within Audio.Player
+	@private
+
+	Holds a paused playback. When Speaking went out on this ready session, it first sends the silence tail and
+	Speaking 0, and a tail send that fails on a session that stayed ready fails the playback, as at the end. It clears
+	the schedule, so the playback resumes on a fresh one, then waits until `resume`, a stop or a close wakes it; a wake
+	from a voice resume or rejoin finds it still paused and waits again.
+]=]
+function Player.Prototype.awaitResume(self: Player)
+	local connection = self.connection
+
+	if self:canSendTail() then
+		self:raiseTailFailures(self:sendTail())
+	end
+
+	self.logger:debug(`paused`)
+	self.startMillis = nil
+	self.elapsedSamples = 0
+
+	while self.paused and not self.stopRequested and connection.status ~= "closed" do
+		self.onWake:wait()
 	end
 end
 
@@ -715,6 +753,7 @@ function Player.Prototype.cleanup(self: Player, source: Source, played: boolean,
 	self.listenerDisconnects = {}
 	self.playing = false
 	self.ending = false
+	self.paused = false
 	playingPlayers[self.connection] = nil
 
 	for _, disconnectFailure in disconnectFailures do
@@ -765,12 +804,12 @@ end
 	@within Audio.Player
 
 	Asks the running playback to end. It ends at its next step with the silence tail and Speaking 0 when Speaking went
-	out on a ready session, and resolves `"stopped"`: at once from the readiness wait, within about one 20 ms poll from
-	a starved stream's wait (whose tail already went out), within one packet from a pace, when a send or a source read
-	returns, and when the media wait ends, which in a DAVE channel can take up to `mediaWaitSeconds`. A stream source's
-	own `read` never blocks, and killing a `fromProcess` program never waits for it to exit, so a stream whose producer
-	waits for bytes, or is blocked writing them, still stops this quickly. Does nothing, logged at debug, when nothing
-	plays or the playback is already sending its tail.
+	out on a ready session, and resolves `"stopped"`: at once from the readiness wait or a pause (whose tail already
+	went out), within about one 20 ms poll from a starved stream's wait (whose tail already went out), within one
+	packet from a pace, when a send or a source read returns, and when the media wait ends, which in a DAVE channel
+	can take up to `mediaWaitSeconds`. A stream source's own `read` never blocks, and killing a `fromProcess` program
+	never waits for it to exit, so a stream whose producer waits for bytes, or is blocked writing them, still stops
+	this quickly. Does nothing, logged at debug, when nothing plays or the playback is already sending its tail.
 ]=]
 function Player.Prototype.stop(self: Player)
 	if not self.playing then
@@ -787,6 +826,71 @@ function Player.Prototype.stop(self: Player)
 
 	self.stopRequested = true
 	self:wake()
+end
+
+--[=[
+	@within Audio.Player
+
+	Pauses the running playback and returns whether it did. At its next step the playback sends the silence tail and
+	Speaking 0 when Speaking went out on a ready session, stops reading the source and waits. `resume` plays it on,
+	`stop` ends it at once with `"stopped"`, and a close fails it with the close, as while playing; a voice resume or
+	rejoin keeps the pause. A stream that is buffering keeps buffering until it has audio, then holds. Returns false,
+	logged at debug, when nothing plays, the playback is already paused, or it is ending.
+]=]
+function Player.Prototype.pause(self: Player): boolean
+	if not self.playing then
+		self.logger:debug(`pause with nothing playing`)
+
+		return false
+	end
+
+	if self.ending or self.stopRequested then
+		self.logger:debug(`pause while the playback is ending`)
+
+		return false
+	end
+
+	if self.paused then
+		self.logger:debug(`pause while already paused`)
+
+		return false
+	end
+
+	self.paused = true
+
+	return true
+end
+
+--[=[
+	@within Audio.Player
+
+	Resumes a paused playback and returns whether it did. The playback sends Speaking again and plays on from the
+	source's next packet on a fresh schedule, as after a stall, so a long pause never makes it catch up. Returns
+	false, logged at debug, when nothing plays, the playback is not paused, or it is stopping.
+]=]
+function Player.Prototype.resume(self: Player): boolean
+	if not self.playing then
+		self.logger:debug(`resume with nothing playing`)
+
+		return false
+	end
+
+	if self.stopRequested then
+		self.logger:debug(`the playback is stopping`)
+
+		return false
+	end
+
+	if not self.paused then
+		self.logger:debug(`resume while not paused`)
+
+		return false
+	end
+
+	self.paused = false
+	self:wake()
+
+	return true
 end
 
 --[=[
@@ -828,6 +932,7 @@ function Player.Interface.new(connection: voice.Connection, options: PlayerOptio
 			playing = false,
 			ending = false,
 			stopRequested = false,
+			paused = false,
 			readyCount = 0,
 			elapsedSamples = 0,
 			packetsSent = 0,
@@ -866,6 +971,7 @@ export type Player = typeof(Player.Prototype) & {
 	playing: boolean,
 	ending: boolean,
 	stopRequested: boolean,
+	paused: boolean,
 	readyCount: number,
 	spokenReadyCount: number?,
 	startMillis: number?,
