@@ -89,7 +89,7 @@ Volume only works on audio the bot decodes. YouTube's format 251 is sent as it i
 
 ## Queueing songs
 
-`playAsync` finishes when the song ends, so a loop plays songs one after another. `player:stop()` ends the current song and the loop moves on.
+`playAsync` finishes when the song ends, so a loop plays songs one after another. `player:stop()` ends the current song and the loop moves on, and `player:pause()` and `player:resume()` hold it and carry on.
 
 ```lua
 for _, path in { "first.mp3", "second.mp3", "third.mp3" } do
