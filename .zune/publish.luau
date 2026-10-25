@@ -1,101 +1,158 @@
---> Publishes all non-private workspace packages to the pesde registry with rate limit retry handling.
+--[[
+	Publishes every non-private package under packages/ to the pesde registry, each one after the packages it
+	depends on, retrying when the registry rate-limits and skipping versions it already holds. Run from the
+	repository root after `pesde auth login`; --dry-run prints the order and publishes nothing:
+	zune run .zune/publish.luau [--dry-run]
+]]
 
-local PACKAGES_DIR = "packages"
-local PUBLISH_DELAY = 10
-local MAX_RETRIES = 5
+local Logger = require("../packages/logger/src")
 
-local entries = zune.fs.entries(PACKAGES_DIR)
-local publishable: { string } = {}
+local PACKAGES_DIRECTORY = "packages"
+local PUBLISH_DELAY_SECONDS = 10
+local MAX_ATTEMPTS = 5
+local SCOPE = "discord_luau/"
 
-local function isPrivate(packageDirectory: string): boolean
-	local manifestPath = `{PACKAGES_DIR}/{packageDirectory}/pesde.toml`
-	local success, contents = pcall(zune.fs.readFileSync, manifestPath)
+local isDryRun = if table.find(zune.process.args, "--dry-run") then true else false
+local logger = Logger.new("Publish")
+local directories: { [string]: string } = {}
+local dependenciesOf: { [string]: { string } } = {}
 
-	if not success then
-		return true
+local function scopedDependencies(manifest: { [string]: any }): { string }
+	local dependencies: { string } = {}
+
+	for _, section in { "dependencies", "peer_dependencies" } do
+		for _, specifier in manifest[section] or {} do
+			local target = specifier.workspace or specifier.name
+
+			if target and string.sub(target, 1, #SCOPE) == SCOPE then
+				table.insert(dependencies, target)
+			end
+		end
 	end
 
-	local manifest = zune.serde.toml.decode(contents)
-	return manifest.private == true
+	return dependencies
 end
 
-local function publishPackage(name: string): boolean
-	for attempt = 1, MAX_RETRIES do
+local function publishOrder(): { string }
+	local ordered: { string } = {}
+	local visited: { [string]: "visiting" | "done" } = {}
+	local names: { string } = {}
+
+	local function visit(name: string)
+		visited[name] = "visiting"
+
+		for _, dependency in dependenciesOf[name] do
+			assert(visited[dependency] ~= "visiting", `dependency cycle through {dependency}`)
+
+			if dependenciesOf[dependency] and not visited[dependency] then
+				visit(dependency)
+			end
+		end
+
+		visited[name] = "done"
+		table.insert(ordered, directories[name])
+	end
+
+	for name in dependenciesOf do
+		table.insert(names, name)
+	end
+
+	table.sort(names)
+
+	for _, name in names do
+		if not visited[name] then
+			visit(name)
+		end
+	end
+
+	return ordered
+end
+
+local function publishPackage(directory: string)
+	for attempt = 1, MAX_ATTEMPTS do
 		local result = zune.process.run("pesde", { "publish", "--yes" }, {
 			stdout = "inherit",
 			stderr = "pipe",
-			cwd = `{PACKAGES_DIR}/{name}`,
+			cwd = `{PACKAGES_DIRECTORY}/{directory}`,
 		})
+		local stderr = result.stderr or ""
+		local retrySeconds = tonumber(string.match(stderr, "retry in (%d+)s"))
 
 		if result.ok then
-			return true
-		end
+			logger:info(`published {directory}`)
 
-		local stderr = result.stderr or ""
+			return
+		end
 
 		if string.find(stderr, "package version already exists") then
-			print(`[skip] {name} (already published)`)
-			return true
+			logger:info(`skipped {directory}: this version is already published`)
+
+			return
 		end
 
-		local retryIn = string.match(stderr, "retry in (%d+)s")
-
-		if retryIn then
-			local waitTime = tonumber(retryIn) + 1
-
-			print(`[rate limit] retry {attempt}/{MAX_RETRIES} for {name} - waiting {waitTime}s...`)
-
-			zune.task.wait(waitTime)
+		if retrySeconds then
+			logger:info(
+				`rate limited publishing {directory} (attempt {attempt} of {MAX_ATTEMPTS}), retrying in {retrySeconds + 1}s`
+			)
+			zune.task.wait(retrySeconds + 1)
 		else
-			if #stderr > 0 then
-				print(stderr)
-			end
-
-			print(`\n[\27[31merror\27[0m] failed to publish {name} (exit code {result.code})`)
+			logger:warn(`could not publish {directory} (exit code {result.code}): {stderr}`)
 			zune.process.exit(result.code)
 		end
 	end
 
-	print(`\n[\27[31merror\27[0m] gave up publishing {name} after {MAX_RETRIES} attempts`)
+	logger:warn(`gave up publishing {directory} after {MAX_ATTEMPTS} attempts`)
 	zune.process.exit(1)
-	return false
 end
 
-for _, entry in entries do
-	if entry.kind ~= "directory" then
+local function publishAll()
+	local order = publishOrder()
+
+	logger:info(`{#order} package(s) in publish order: {table.concat(order, ", ")}`)
+
+	if isDryRun then
+		logger:info("dry run: nothing published")
+
+		return
+	end
+
+	for index, directory in order do
+		local tarball = `{PACKAGES_DIRECTORY}/{directory}/package.tar.gz`
+
+		if index > 1 then
+			logger:info(`waiting {PUBLISH_DELAY_SECONDS}s before {directory}`)
+			zune.task.wait(PUBLISH_DELAY_SECONDS)
+		end
+
+		publishPackage(directory)
+
+		if zune.fs.stat(tarball).kind ~= "none" then
+			zune.fs.deleteFile(tarball)
+		end
+	end
+
+	logger:info(`done: {#order} package(s) published or already up to date`)
+end
+
+for _, entry in zune.fs.entries(PACKAGES_DIRECTORY) do
+	local manifestPath = `{PACKAGES_DIRECTORY}/{entry.name}/pesde.toml`
+
+	if entry.kind ~= "directory" or zune.fs.stat(manifestPath).kind == "none" then
+		logger:debug(`skipped {entry.name}: not a package`)
+
 		continue
 	end
 
-	if isPrivate(entry.name) then
-		print(`[skip] {entry.name} (private)`)
+	local manifest = zune.serde.toml.decode(zune.fs.readFileSync(manifestPath))
+
+	if manifest.private then
+		logger:info(`skipped {entry.name}: private`)
 
 		continue
 	end
 
-	table.insert(publishable, entry.name)
+	directories[manifest.name] = entry.name
+	dependenciesOf[manifest.name] = scopedDependencies(manifest)
 end
 
-print(`publishing {#publishable} package(s)...\n`)
-
-for index, name in publishable do
-	if index > 1 then
-		print(`[wait] {PUBLISH_DELAY}s...`)
-
-		zune.task.wait(PUBLISH_DELAY)
-	end
-
-	print(`[publish] {name}`)
-
-	publishPackage(name)
-
-	local tarball = `{PACKAGES_DIR}/{name}/package.tar.gz`
-
-	local tarballStat = zune.fs.stat(tarball)
-	if tarballStat.kind ~= "none" then
-		zune.fs.deleteFile(tarball)
-	end
-
-	print(`[done] {name}`)
-end
-
-print(`\ndone - published {#publishable} package(s)`)
+publishAll()
