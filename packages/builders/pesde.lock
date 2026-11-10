@@ -10,7 +10,7 @@ ref_ty = "pesde"
 index_url = "https://github.com/pesde-pkg/index"
 
 [graph."discord_luau/api_types@0.0.4 luau"]
-direct = ["api_types", { name = "discord_luau/api_types", version = ">=0.0.0", index = "default" }, "standard"]
+direct = ["api_types", { workspace = "discord_luau/api_types", version = ">=0.0.0" }, "standard"]
 
 [graph."discord_luau/api_types@0.0.4 luau".dependencies]
 bit = ["discord_luau/bit@0.0.2 luau", "standard"]
@@ -18,8 +18,8 @@ int64 = ["4x8matrix/int64@1.0.1 luau", "standard"]
 util = ["discord_luau/util@0.0.2 luau", "standard"]
 
 [graph."discord_luau/api_types@0.0.4 luau".pkg_ref]
-ref_ty = "pesde"
-index_url = "https://github.com/pesde-pkg/index"
+ref_ty = "workspace"
+path = "packages/api_types"
 
 [graph."discord_luau/api_types@0.0.4 luau".pkg_ref.dependencies]
 bit = [{ name = "discord_luau/bit", version = ">=0.0.0", index = "https://github.com/pesde-pkg/index" }, "standard"]

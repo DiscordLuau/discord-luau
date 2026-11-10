@@ -89,7 +89,7 @@ ref_ty = "workspace"
 path = "packages/builders"
 
 [graph."discord_luau/builders@0.0.4 luau".pkg_ref.dependencies]
-api_types = [{ name = "discord_luau/api_types", version = ">=0.0.0", index = "https://github.com/pesde-pkg/index" }, "standard"]
+api_types = [{ workspace = "discord_luau/api_types", version = ">=0.0.0" }, "standard"]
 bit = [{ name = "discord_luau/bit", version = ">=0.0.0", index = "https://github.com/pesde-pkg/index" }, "standard"]
 std_polyfills = [{ name = "discord_luau/std_polyfills", version = ">=0.0.0", index = "https://github.com/pesde-pkg/index" }, "standard"]
 util = [{ name = "discord_luau/util", version = ">=0.0.0", index = "https://github.com/pesde-pkg/index" }, "standard"]

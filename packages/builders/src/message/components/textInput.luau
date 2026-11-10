@@ -187,8 +187,7 @@ function TextInput.Prototype.build(self: TextInput): JSON
 		type = 4,
 		custom_id = self.customId,
 		style = apiTypes.message.TextInputStyle[self.style],
-		-- seam: published api_types 0.0.4 types label as required, drop the cast once builders resolves the release that makes it optional
-		label = self.label :: any,
+		label = self.label,
 		min_length = self.minLength,
 		max_length = self.maxLength,
 		required = self.required,

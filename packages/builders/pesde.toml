@@ -24,6 +24,6 @@ default = "https://github.com/pesde-pkg/index"
 
 [dependencies]
 std_polyfills = { name = "discord_luau/std_polyfills", version = ">=0.0.0" }
-api_types = { name = "discord_luau/api_types", version = ">=0.0.0" }
+api_types = { workspace = "discord_luau/api_types", version = ">=0.0.0" }
 util = { name = "discord_luau/util", version = ">=0.0.0" }
 bit = { name = "discord_luau/bit", version = ">=0.0.0" }
