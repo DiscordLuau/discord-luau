@@ -16,7 +16,6 @@ local apiTypes = require("../../../luau_packages/api_types")
 local interactionBehaviour = require("../behaviour/interaction")
 local interactableBehaviour = require("../behaviour/interactable")
 
-local _actionRow = require("../../message/components/actionRow")
 local textInput = require("../../message/components/textInput")
 
 local Modal = {}
@@ -31,20 +30,25 @@ Modal.Behaviours = {
 --[=[
 	@within Classes.Interactions.Modal
 
-	Gets the content of a text input component with the specified custom ID.
+	Gets the content of a text input component with the specified custom ID. The input may sit in a Label or, in older
+	modals, in an action row.
 ]=]
 function Modal.Prototype.getContent(self: Modal, customId: string): string?
 	assert(self.data, `Expected data`)
 	assert(self.data.components, `Expected components`)
 	assert(self.data.components[1], `Expected component list`)
 
-	for _, value in self.data.components :: { textInput.TextInput } do
-		if value.customId == customId then
-			return value.value
+	for _, component in self.data.components :: { any } do
+		local inputs: { textInput.TextInput } = if component.type == 1 then component.components else { component }
+
+		for _, input in inputs do
+			if input.customId == customId then
+				return input.value
+			end
 		end
 	end
 
-	return nil
+	return
 end
 
 --[=[

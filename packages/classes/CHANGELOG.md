@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- `Modal:getContent()` reads a text input inside a Label component as well as one inside an action row; it used to throw on modals built with Labels
+
 ## 0.0.7
 
 ### Added

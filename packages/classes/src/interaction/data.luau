@@ -104,13 +104,15 @@ function Data.Prototype.sync(self: Data, dataObject: apiTypes.InteractionDataObj
 	local optionArray = {}
 	local componentsArray: { button.Button | textInput.TextInput | selectMenu.SelectMenu | actionRow.ActionRow } = {}
 
-	for _, option in next, dataObject.options or {} do
-		table.insert(optionArray, dataOption.new(option))
+	if dataObject.options then
+		for _, option in dataObject.options do
+			table.insert(optionArray, dataOption.new(option))
+		end
 	end
 
 	if dataObject.components then
 		for _, component in dataObject.components do
-			if component.component then
+			if component.type == 18 then
 				component = component.component
 			end
 
