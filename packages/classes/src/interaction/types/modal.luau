@@ -16,7 +16,7 @@ local apiTypes = require("../../../luau_packages/api_types")
 local interactionBehaviour = require("../behaviour/interaction")
 local interactableBehaviour = require("../behaviour/interactable")
 
-local actionRow = require("../../message/components/actionRow")
+local _actionRow = require("../../message/components/actionRow")
 local textInput = require("../../message/components/textInput")
 
 local Modal = {}
@@ -38,11 +38,9 @@ function Modal.Prototype.getContent(self: Modal, customId: string): string?
 	assert(self.data.components, `Expected components`)
 	assert(self.data.components[1], `Expected component list`)
 
-	for _, componentList in self.data.components :: { actionRow.ActionRow } do
-		for _, value in componentList.components :: { textInput.TextInput } do
-			if value.customId == customId then
-				return value.value
-			end
+	for _, value in self.data.components :: { textInput.TextInput } do
+		if value.customId == customId then
+			return value.value
 		end
 	end
 

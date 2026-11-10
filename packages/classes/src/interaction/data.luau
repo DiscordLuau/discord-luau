@@ -110,6 +110,10 @@ function Data.Prototype.sync(self: Data, dataObject: apiTypes.InteractionDataObj
 
 	if dataObject.components then
 		for _, component in dataObject.components do
+			if component.component then
+				component = component.component
+			end
+
 			if component.type == 1 then
 				local actionRowComponent = component :: apiTypes.ActionRowComponentObject
 
