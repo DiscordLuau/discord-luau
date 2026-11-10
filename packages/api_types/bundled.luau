@@ -2563,7 +2563,7 @@ type OAuth2Scopes__DARKLUA_TYPE_df =
 	| "voice"
 	| "webhook.incoming"
 
-type ActivityType__DARKLUA_TYPE_dg = "Game" | "Streaming" | "Listening" | "Watching" | "Competing"
+type ActivityType__DARKLUA_TYPE_dg = "Game" | "Streaming" | "Listening" | "Watching" | "Custom" | "Competing"
 
 type Status__DARKLUA_TYPE_dh = "Online" | "DoNotDisturb" | "Idle" | "Invisible" | "Offline"
 
@@ -6155,6 +6155,7 @@ do
 				Streaming = 1,
 				Listening = 2,
 				Watching = 3,
+				Custom = 4,
 				Competing = 5,
 			}))
 

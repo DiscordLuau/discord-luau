@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `ActivityType` has `Custom` (4), the type a custom status uses
+
 ### Fixed
 
 - `TextInputComponentObject.label` is optional; Discord deprecated it and rejects it on a text input inside a Label component
