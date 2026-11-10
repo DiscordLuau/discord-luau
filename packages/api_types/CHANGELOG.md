@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- `TextInputComponentObject.label` is optional; Discord deprecated it and rejects it on a text input inside a Label component
+
 ## 0.0.4
 
 ### Added

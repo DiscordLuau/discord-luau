@@ -1839,7 +1839,7 @@ type TextInputComponentObject__DARKLUA_TYPE_b2 = {
 	type: number,
 	custom_id: string,
 	style: TextInputStyles__DARKLUA_TYPE_aC,
-	label: string,
+	label: string?,
 	min_length: number?,
 	max_length: number?,
 	required: boolean?,

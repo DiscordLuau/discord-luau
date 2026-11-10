@@ -21,6 +21,7 @@ return function()
 		local ti = TextInput.new():setStyle("Short"):setLabel("Name")
 		check.should_error(function()
 			ti:build()
+
 			return
 		end)
 	end)
@@ -29,16 +30,16 @@ return function()
 		local ti = TextInput.new():setCustomId("x"):setLabel("Name")
 		check.should_error(function()
 			ti:build()
+
 			return
 		end)
 	end)
 
-	test.case("TextInput build errors when label is missing", function()
-		local ti = TextInput.new():setCustomId("x"):setStyle("Short")
-		check.should_error(function()
-			ti:build()
-			return
-		end)
+	test.case("TextInput builds without a label so it can sit inside a Label component", function()
+		local json = TextInput.new():setCustomId("x"):setStyle("Short"):build()
+
+		check.equal(json.custom_id, "x")
+		check.equal(json.label, nil)
 	end)
 
 	test.case("TextInput Paragraph style is mapped correctly", function()
@@ -52,10 +53,12 @@ return function()
 		local ti = TextInput.new()
 		check.should_error(function()
 			ti:setMinLength(-1)
+
 			return
 		end)
 		check.should_error(function()
 			ti:setMaxLength(4001)
+
 			return
 		end)
 	end)
@@ -65,6 +68,7 @@ return function()
 		ti:setMinLength(10):setMaxLength(5)
 		check.should_error(function()
 			ti:build()
+
 			return
 		end)
 	end)

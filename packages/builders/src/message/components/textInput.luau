@@ -22,7 +22,8 @@
 --[=[
 	@prop label string?
 	@within Builders.Message.TextInput
-	The label text that appears above the text input field.
+	The label text that appears above the text input field. Leave it unset when the text input goes inside a Label
+	component, which carries the label instead; Discord rejects a text input with its own label there.
 ]=]
 
 --[=[
@@ -90,7 +91,8 @@ end
 --[=[
 	@within Builders.Message.TextInput
 
-	Sets the label text that appears above the text input field.
+	Sets the label text that appears above the text input field. Skip it when the text input goes inside a Label
+	component.
 ]=]
 function TextInput.Prototype.setLabel(self: TextInput, label: string): TextInput
 	assert(#label >= 1, "label must be at least 1 character")
@@ -168,14 +170,15 @@ end
 function TextInput.Prototype.build(self: TextInput): JSON
 	assert(self.customId, `TextInput.customId is required.`)
 	assert(self.style, `TextInput.style is required.`)
-	assert(self.label, `TextInput.label is required.`)
 
 	if self.minLength and self.maxLength then
 		assert(self.maxLength >= self.minLength, "maxLength must be >= minLength")
 	end
+
 	if self.value then
 		assert(#self.value <= 4000, "value must be at most 4000 characters")
 	end
+
 	if self.placeholder then
 		assert(#self.placeholder <= 100, "placeholder must be at most 100 characters")
 	end
@@ -184,7 +187,8 @@ function TextInput.Prototype.build(self: TextInput): JSON
 		type = 4,
 		custom_id = self.customId,
 		style = apiTypes.message.TextInputStyle[self.style],
-		label = self.label,
+		-- seam: published api_types 0.0.4 types label as required, drop the cast once builders resolves the release that makes it optional
+		label = self.label :: any,
 		min_length = self.minLength,
 		max_length = self.maxLength,
 		required = self.required,

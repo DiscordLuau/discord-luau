@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- `TextInput:build()` no longer requires a label, so a text input can go inside a Label component; Discord rejects a text input that sets its own label there
+
 ## 0.0.4
 
 ### Changed

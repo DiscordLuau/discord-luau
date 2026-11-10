@@ -1085,7 +1085,7 @@ export type TextInputComponentObject = {
 	type: number, -- 4 for a text input
 	custom_id: string, -- Developer-defined identifier for the input; max 100 characters
 	style: TextInputStyles, -- The Text Input Style
-	label: string, -- Label for this component; max 45 characters
+	label: string?, -- Deprecated label for this component; max 45 characters; Discord rejects it inside a Label component
 	min_length: number?, -- Minimum input length for a text input; min 0, max 4000
 	max_length: number?, -- Maximum input length for a text input; min 1, max 4000
 	required: boolean?, -- Whether this component is required to be filled (defaults to true)
