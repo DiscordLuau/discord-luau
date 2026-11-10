@@ -234,7 +234,7 @@ logger = ["discord_luau/logger@0.0.4 luau", "standard"]
 rest = ["discord_luau/rest@0.0.5 luau", "standard"]
 secret = ["discord_luau/secret@0.0.2 luau", "standard"]
 std_polyfills = ["discord_luau/std_polyfills@0.0.5 luau", "standard"]
-utils = ["discord_luau/util@0.0.2 luau", "standard"]
+utils = ["discord_luau/util@0.0.3 luau", "standard"]
 websocket = ["discord_luau/websocket@0.0.5 luau", "standard"]
 
 [graph."discord_luau/state@0.0.5 luau".pkg_ref]
