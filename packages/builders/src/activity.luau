@@ -12,7 +12,7 @@
 --[=[
 	@prop name string
 	@within Builders.Activity
-	The name of the activity that is displayed.
+	The name of the activity that is displayed. A custom status does not show it, so it defaults to "Custom Status" there.
 ]=]
 
 --[=[
@@ -25,6 +25,12 @@
 	@prop streamingURL string?
 	@within Builders.Activity
 	The URL of the stream, only YouTube and Twitch URLs are supported.
+]=]
+
+--[=[
+	@prop state string?
+	@within Builders.Activity
+	The text of a custom status, or the party status shown under the name on other activity types.
 ]=]
 
 local apiTypes = require("../luau_packages/api_types")
@@ -53,7 +59,7 @@ end
 function Activity.Prototype.setActivityType(self: Activity, activityType: apiTypes.ActivityType): Activity
 	assert(
 		apiTypes.client.ActivityType[activityType],
-		`Expected ActivityType to be one of Game, Streaming, Listening, Watching or Competing`
+		`Expected ActivityType to be one of Game, Streaming, Listening, Watching, Custom or Competing`
 	)
 
 	self.activityType = activityType
@@ -67,12 +73,22 @@ end
 	Sets the streaming URL of the activity. Only YouTube and Twitch URLs are allowed.
 ]=]
 function Activity.Prototype.setStreamingURL(self: Activity, streamURL: string): Activity
-	local hasYouTube = string.find(streamURL, "youtube.com") ~= nil
-	local hasTwitch = string.find(streamURL, "twitch.tv") ~= nil
+	local supportedHost = string.find(streamURL, "youtube.com") or string.find(streamURL, "twitch.tv")
 
-	assert(hasYouTube or hasTwitch, `Expected either Twitch or YouTube for streaming URLs!`)
+	assert(supportedHost, `Expected either Twitch or YouTube for streaming URLs!`)
 
 	self.streamingURL = streamURL
+
+	return self
+end
+
+--[=[
+	@within Builders.Activity
+
+	Sets the state of the activity: the text of a custom status, or the party status on other activity types.
+]=]
+function Activity.Prototype.setState(self: Activity, state: string): Activity
+	self.state = state
 
 	return self
 end
@@ -83,13 +99,16 @@ end
 	Builds the activity JSON payload that can be parsed by the Discord API.
 ]=]
 function Activity.Prototype.build(self: Activity): JSON
-	assert(self.activityType ~= nil, `Activity requires ActivityType`)
-	assert(self.name ~= nil, `Activity requires Name`)
+	local name = if self.activityType == "Custom" then self.name or "Custom Status" else self.name
+
+	assert(self.activityType, `Activity requires ActivityType`)
+	assert(name, `Activity requires Name`)
 
 	return {
-		name = self.name,
+		name = name,
 		url = self.streamingURL,
 		type = apiTypes.client.ActivityType[self.activityType],
+		state = self.state,
 	}
 end
 
@@ -104,12 +123,18 @@ end
 		activityType = "Game",
 		streamingURL = "https://twitch.tv/example"
 	})
+
+	local customStatus = Activity.new({
+		activityType = "Custom",
+		state = "Watching over the staff team!"
+	})
 	```
 ]=]
 function Activity.Interface.new(resource: {
 	name: string?,
 	activityType: apiTypes.ActivityType?,
 	streamingURL: string?,
+	state: string?,
 }?): Activity
 	local self = setmetatable(
 		{
@@ -118,6 +143,8 @@ function Activity.Interface.new(resource: {
 			activityType = nil,
 
 			streamingURL = nil,
+
+			state = nil,
 		} :: Activity,
 		{ __index = Activity.Prototype }
 	)
@@ -126,11 +153,17 @@ function Activity.Interface.new(resource: {
 		if resource.name then
 			self:setActivityName(resource.name)
 		end
+
 		if resource.activityType then
 			self:setActivityType(resource.activityType)
 		end
+
 		if resource.streamingURL then
 			self:setStreamingURL(resource.streamingURL)
+		end
+
+		if resource.state then
+			self:setState(resource.state)
 		end
 	end
 
@@ -141,6 +174,7 @@ export type Activity = typeof(Activity.Prototype) & {
 	name: string,
 	activityType: apiTypes.ActivityType,
 	streamingURL: string?,
+	state: string?,
 }
 
 export type JSON = typeof(Activity.Prototype.build(nil :: any))

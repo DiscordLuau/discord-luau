@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `Activity` builds a custom status: `activityType = "Custom"` with the new `state` field (`setState`), and the name defaults to "Custom Status" since Discord does not show it; `state` also works on the other activity types
+
 ### Fixed
 
 - `TextInput:build()` no longer requires a label, so a text input can go inside a Label component; Discord rejects a text input that sets its own label there
